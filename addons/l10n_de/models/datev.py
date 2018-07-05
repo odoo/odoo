@@ -17,35 +17,17 @@ class AccountTax(models.Model):
 
     l10n_de_datev_code = fields.Char(size=2, help="2 digits code use by Datev")
 
-class AccountInvoiceLine(models.Model):
-    _inherit = "account.invoice.line"
+class AccountInvoice(models.Model):
+    _inherit = "account.invoice"
 
-    def write(self, vals):
-        if (vals.get('account_id') or vals.get('invoice_line_tax_ids')):
-            account_id = vals.get('account_id', False)
-            account = account_id and self.env['account.account'].browse(account_id) or self.account_id
-            account_name = account.name
-            account_tax = account.tax_ids.ids
-            if account_tax:
-                if vals.get('invoice_line_tax_ids'):
-                    invoice_line_tax = vals.get('invoice_line_tax_ids')[0][2]
-                else:
-                    invoice_line_tax = self.invoice_line_tax_ids
-                for tax in invoice_line_tax:
-                    if tax not in account_tax:
-                        tax_name = self.env['account.tax'].browse(tax).name
-                        raise UserError(_('Account %s does not authorize to have tax %s specified on the line.') % (tax_name, account_name))
-        return super(AccountInvoiceLine, self).write(vals)
-
-    @api.model
-    def create(self, vals):
-        if vals.get('invoice_line_tax_ids'):
-            account = self.env['account.account'].browse(vals.get('account_id'))
-            account_name = account.name
-            account_tax = account.tax_ids.ids
-            if account_tax:
-                for tax in vals.get('invoice_line_tax_ids')[0][2]:
-                    if tax not in account_tax:
-                        tax_name = self.env['account.tax'].browse(tax).name
-                        raise UserError(_('Account %s does not authorize to have tax %s specified on the line.') % (tax_name, account_name))
-        return super(AccountInvoiceLine, self).create(vals)
+    def invoice_validate(self):
+        for invoice in self:
+            for line in invoice.invoice_line_ids:
+                account_tax = line.account_id.tax_ids.ids
+                if account_tax and invoice.company_id.country_id.code == 'DE':
+                    account_name = line.account_id.name
+                    for tax in line.invoice_line_tax_ids:
+                        if tax.id not in account_tax:
+                            raise UserError(_('Account %s does not authorize to have tax %s specified on the line. \
+                                Change the tax used in this invoice or remove all taxes from the account') % (account_name, tax.name))
+        return super(AccountInvoice, self).invoice_validate()
