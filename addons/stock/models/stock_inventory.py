@@ -397,13 +397,13 @@ class InventoryLine(models.Model):
     def _check_no_duplicate_line(self):
         for line in self:
             existings = self.search([
-                ('id', '!=', self.id),
-                ('product_id', '=', self.product_id.id),
+                ('id', '!=', line.id),
+                ('product_id', '=', line.product_id.id),
                 ('inventory_id.state', '=', 'confirm'),
-                ('location_id', '=', self.location_id.id),
-                ('partner_id', '=', self.partner_id.id),
-                ('package_id', '=', self.package_id.id),
-                ('prod_lot_id', '=', self.prod_lot_id.id)])
+                ('location_id', '=', line.location_id.id),
+                ('partner_id', '=', line.partner_id.id),
+                ('package_id', '=', line.package_id.id),
+                ('prod_lot_id', '=', line.prod_lot_id.id)])
             if existings:
                 raise UserError(_("You cannot have two inventory adjustments in state 'In Progress' with the same product,"
                                    " same location, same package, same owner and same lot. Please first validate"
