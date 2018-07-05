@@ -67,6 +67,7 @@ class account_abstract_payment(models.AbstractModel):
         help='Change label of the counterpart that will hold the payment difference',
         default='Write-Off')
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account")
+    show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know wether the field `partner_bank_account_id` needs to be display or not in the payments form views')
 
     @api.model
     def default_get(self, fields):
@@ -114,6 +115,13 @@ class account_abstract_payment(models.AbstractModel):
     def _check_amount(self):
         if self.amount < 0:
             raise ValidationError(_('The payment amount cannot be negative.'))
+
+    @api.depends('payment_method_code')
+    def _compute_show_partner_bank(self):
+        """ Computes if the destination bank account must be displayed in the payment form view. By default, it
+        won't be displayed but some modules might change that, depending on the payment type."""
+        for payment in self:
+            payment.show_partner_bank_account = False
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
