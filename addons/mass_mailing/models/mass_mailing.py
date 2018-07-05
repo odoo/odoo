@@ -8,7 +8,7 @@ import random
 import threading
 from ast import literal_eval
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
@@ -218,7 +218,8 @@ class MassMailingCampaign(models.Model):
     _inherits = {'utm.campaign': 'campaign_id'}
 
     stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', ondelete='restrict', required=True, 
-        default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1))
+        default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1),
+        group_expand='_group_expand_stage_ids')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         required=True, default=lambda self: self.env.uid)
@@ -322,31 +323,12 @@ class MassMailingCampaign(models.Model):
         return res
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Override read_group to always display all states. """
-        if groupby and groupby[0] == "stage_id":
-            # Default result structure
-            states_read = self.env['mail.mass_mailing.stage'].search_read([], ['name'])
-            states = [(state['id'], state['name']) for state in states_read]
-            read_group_all_states = [{
-                '__context': {'group_by': groupby[1:]},
-                '__domain': domain + [('stage_id', '=', state_value)],
-                'stage_id': state_value,
-                'state_count': 0,
-            } for state_value, state_name in states]
-            # Get standard results
-            read_group_res = super(MassMailingCampaign, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
-            # Update standard results with default results
-            result = []
-            for state_value, state_name in states:
-                res = [x for x in read_group_res if x['stage_id'] == (state_value, state_name)]
-                if not res:
-                    res = [x for x in read_group_all_states if x['stage_id'] == state_value]
-                res[0]['stage_id'] = [state_value, state_name]
-                result.append(res[0])
-            return result
-        else:
-            return super(MassMailingCampaign, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
+    def _group_expand_stage_ids(self, stages, domain, order):
+        """ Read group customization in order to display all the stages in the
+            kanban view, even if they are empty
+        """
+        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
 
 class MassMailing(models.Model):
@@ -399,7 +381,7 @@ class MassMailing(models.Model):
                                 help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
-        string='Status', required=True, copy=False, default='draft')
+        string='Status', required=True, copy=False, default='draft', group_expand='_group_expand_states')
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Mailing Manager', default=lambda self: self.env.user)
     # mailing options
@@ -424,6 +406,7 @@ class MassMailing(models.Model):
     statistics_ids = fields.One2many('mail.mail.statistics', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
+    expected = fields.Integer(compute="_compute_statistics")
     sent = fields.Integer(compute="_compute_statistics")
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
@@ -465,7 +448,7 @@ class MassMailing(models.Model):
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
-                COUNT(s.id) AS total,
+                COUNT(s.id) AS expected,
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null THEN 1 ELSE null END) AS scheduled,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
@@ -486,7 +469,7 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = row.pop('total') or 1
+            total = row['expected'] or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['clicks_ratio'] = 100.0 * row['clicked'] / total
@@ -568,31 +551,8 @@ class MassMailing(models.Model):
                        name=_('%s (copy)') % self.name)
         return super(MassMailing, self).copy(default=default)
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Override read_group to always display all states. """
-        if groupby and groupby[0] == "state":
-            # Default result structure
-            states = [('draft', _('Draft')), ('in_queue', _('In Queue')), ('sending', _('Sending')), ('done', _('Sent'))]
-            read_group_all_states = [{
-                '__context': {'group_by': groupby[1:]},
-                '__domain': domain + [('state', '=', state_value)],
-                'state': state_value,
-                'state_count': 0,
-            } for state_value, state_name in states]
-            # Get standard results
-            read_group_res = super(MassMailing, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
-            # Update standard results with default results
-            result = []
-            for state_value, state_name in states:
-                res = [x for x in read_group_res if x['state'] == state_value]
-                if not res:
-                    res = [x for x in read_group_all_states if x['state'] == state_value]
-                res[0]['state'] = state_value
-                result.append(res[0])
-            return result
-        else:
-            return super(MassMailing, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
+    def _group_expand_states(self, states, domain, order):
+        return [key for key, val in type(self).state.selection]
 
     def update_opt_out(self, email, res_ids, value):
         model = self.env[self.mailing_model_real].with_context(active_test=False)
