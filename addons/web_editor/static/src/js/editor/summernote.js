@@ -1676,8 +1676,11 @@ $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutI
         }
         begin = true;
         var li = document.createElement('li');
+        adjustLIFont(childNodes[i],li);
         ul.appendChild(li);
         li.appendChild(childNodes[i]);
+
+
         if (li.firstChild === p1) {
             break;
         }
@@ -1902,6 +1905,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
             } else if (ancestor.tagName.toLowerCase() !== sTagName) {
                 var tag = document.createElement(sTagName);
                 ancestor.parentNode.insertBefore(tag, ancestor);
+                adjustLIFont(tag, tag.parentElement);
                 dom.moveContent(ancestor, tag);
                 if (ancestor.className) {
                     tag.className = ancestor.className;
@@ -1912,6 +1916,36 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     }
     r.select();
 };
+
+function adjustLIFont(tag,liNode){
+    if(liNode.tagName == "LI"){
+        if(tag.tagName == "H1")
+                liNode.style.fontSize = "24px";
+        else if(tag.tagName == "H2")
+                liNode.style.fontSize = "22px";
+        else if(tag.tagName == "H3")
+                liNode.style.fontSize = "18px";
+        else if(tag.tagName == "H4")
+                liNode.style.fontSize = "16px";
+        else if(tag.tagName == "H5")
+                liNode.style.fontSize = "12px";
+        else if(tag.tagName == "H6")
+                liNode.style.fontSize = "10px";
+        else{
+            var max = 13;
+            if(tag.childElementCount > 0){
+                for(var k=0;k<tag.children.length;k++){
+                    if(tag.children[k].tagName == "FONT" && parseInt(tag.children[k].style.fontSize) > max){
+                        liNode.style.fontSize = tag.children[k].style.fontSize;
+                    }
+                }
+            }
+        }
+    }else{
+        return false;
+    }
+}
+
 $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, value) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable);
