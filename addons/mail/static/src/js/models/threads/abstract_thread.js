@@ -13,7 +13,7 @@ var AbstractThread = Class.extend({
     /**
      * @param {Object} params
      * @param {Object} params.data
-     * @param {Object} params.data.id the ID of this thread
+     * @param {integer|string} params.data.id the ID of this thread
      */
     init: function (params) {
         this._id = params.data.id;

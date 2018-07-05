@@ -10,21 +10,14 @@ var AbstractThreadWindow = require('mail.AbstractThreadWindow');
  */
 var LivechatWindow = AbstractThreadWindow.extend({
     /**
-     * The thread of a live chat window is just an object containing some
-     * server data of the livechat
-     *
      * @override
-     * @param {mail.Manager} parent
-     * @param {Object} data
-     * @param {integer} data.id
-     * @param {string} data.name
-     * @param {string} data.state
-     * @param {integer} [data.message_unread_counter=0]
+     * @param {?} parent
+     * @param {im_livechat.model.WebsiteLivechat} thread
      */
-    init: function (parent, data) {
+    init: function (parent, thread) {
         this._super.apply(this, arguments);
 
-        this._data = data;
+        this._thread = thread;
     },
 
     //--------------------------------------------------------------------------
@@ -42,35 +35,35 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @returns {string}
      */
     getTitle: function () {
-        return this._data.name;
+        return this._thread.getTitle();
     },
     /**
      * @override
      * @returns {integer}
      */
     getUnreadCounter: function () {
-        return this._data.message_unread_counter;
+        return this._thread.getUnreadCounter();
     },
     /**
      * @override
      * @returns {boolean}
      */
     hasThread: function () {
-        return !!this._data;
+        return !!this._thread;
     },
     /**
      * Increment the unread counter of this thread window, which is equivalent
      * to incrementing the unread counter of the related channel
      */
     incrementUnreadCounter: function () {
-        this._data.message_unread_counter++;
+        this._thread.incrementUnreadCounter();
     },
     /**
      * @override
      * @returns {boolean}
      */
     isFolded: function () {
-        return (this._data.state === 'folded');
+        return this._thread.isFolded();
     },
     /**
      * Warn the parent widget (LivechatButton)
@@ -86,7 +79,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * Reset the unread counter of the livechat window
      */
     resetUnreadCounter: function () {
-        this._data.message_unread_counter = 0;
+        this._thread.resetUnreadCounter();
         this._renderHeader();
     },
 
@@ -102,7 +95,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @returns {integer}
      */
     _getThreadID: function () {
-        return this._data.id;
+        return this._thread.getID();
     },
     /**
      * @override
@@ -118,14 +111,9 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {boolean} folded
      */
     _updateThreadFoldState: function (folded) {
-        this._data.state = folded ? 'folded' : 'open';
+        this._thread.updateFoldState(folded);
         this.updateVisualFoldState();
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
 });
 
 return LivechatWindow;

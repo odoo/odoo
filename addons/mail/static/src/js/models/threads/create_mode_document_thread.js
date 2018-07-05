@@ -12,7 +12,7 @@ var _t = core._t;
 /**
  * Special document thread that is linked to a new document that is in create
  * mode. This thread only display a single (fake) message which displays the
- * user avatar and the message 'creating a new record...'.
+ * user avatar and the message 'Creating a new record...'.
  *
  * Note: it uses AbstractThread and AbstractMessage, because this is a fake
  * thread which contains a fake message. We do not want to register both of them

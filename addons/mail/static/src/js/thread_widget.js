@@ -122,7 +122,7 @@ var ThreadWidget = Widget.extend({
             selectedMessageID: this._selectedMessageID,
         });
 
-        // dict where key is message ID, and value is whether it should hide
+        // dict where key is message ID, and value is whether it should display
         // the author of message or not visually
         var displayAuthorMessages = {};
 

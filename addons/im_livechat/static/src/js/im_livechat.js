@@ -196,19 +196,19 @@ var LivechatButton = Widget.extend({
                 anonymous_name : this.options.default_username,
             }, {shadow: true});
         }
-        def.then(function (channel) {
-            if (!channel || !channel.operator_pid) {
+        def.then(function (livechatData) {
+            if (!livechatData || !livechatData.operator_pid) {
                 alert(_t("None of our collaborators seems to be available, please try again later."));
             } else {
-                self._channel = channel;
-                self._openChatWindow(channel);
+                self._channel = new WebsiteLivechat(livechatData);
+                self._openChatWindow(channel); // AKU: TODO
                 self._sendWelcomeMessage();
                 self._renderMessages();
 
-                self._busBus.add_channel(channel.uuid);
+                self._busBus.add_channel(channel.uuid); // AKU: TODO
                 self._busBus.start_polling();
 
-                utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
+                utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60); // AKU: TODO
                 utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
             }
         }).always(function () {
