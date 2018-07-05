@@ -17,7 +17,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
     @api.model
     def execute(self):
         res = super(WizardMultiChartsAccounts, self).execute()
-        self.company_id.write({'external_report_layout': 'din5008', 'paperformat_id': self.env.ref('l10n_de.paperformat_euro_din')})
+        if self.company_id.country_id.code == 'DE':
+            self.company_id.write({'external_report_layout': 'din5008', 'paperformat_id': self.env.ref('l10n_de.paperformat_euro_din').id})
         return res
 
 class Company(models.Model):
