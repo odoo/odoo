@@ -36,7 +36,6 @@ Dashboard / Reports for Project Management will include:
     'data': [
         'security/project_security.xml',
         'security/ir.model.access.csv',
-        'data/project_data.xml',
         'report/project_report_views.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
@@ -46,6 +45,7 @@ Dashboard / Reports for Project Management will include:
         'data/web_planner_data.xml',
         'data/project_mail_template_data.xml',
         'wizard/project_task_merge_wizard_views.xml',
+        'data/project_data.xml',
     ],
     'qweb': ['static/src/xml/project.xml'],
     'demo': ['data/project_demo.xml'],
