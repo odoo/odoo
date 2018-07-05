@@ -27,6 +27,8 @@ class StockPackageLevel(models.Model):
     is_fresh_package = fields.Boolean(compute='_compute_fresh_pack')
 
     picking_source_location = fields.Many2one('stock.location', related='picking_id.location_id')
+    show_lots_m2o = fields.Boolean(compute='_compute_show_lot')
+    show_lots_text = fields.Boolean(compute='_compute_show_lot')
 
     @api.depends('move_line_ids', 'move_line_ids.qty_done')
     def _compute_is_done(self):
@@ -90,6 +92,23 @@ class StockPackageLevel(models.Model):
                 package_level.state = 'done'
             elif package_level.move_line_ids.filtered(lambda ml: ml.state == 'cancel') or package_level.move_ids.filtered(lambda m: m.state == 'cancel'):
                 package_level.state = 'cancel'
+
+    def _compute_show_lot(self):
+        for package_level in self:
+            if any(ml.product_id.tracking != 'none' for ml in package_level.move_line_ids):
+                if package_level.picking_id.picking_type_id.use_existing_lots or package_level.state == 'done':
+                    package_level.show_lots_m2o = True
+                    package_level.show_lots_text = False
+                else:
+                    if self.picking_id.picking_type_id.use_create_lots and package_level.state != 'done':
+                        package_level.show_lots_m2o = False
+                        package_level.show_lots_text = True
+                    else:
+                        package_level.show_lots_m2o = False
+                        package_level.show_lots_text = False
+            else:
+                package_level.show_lots_m2o = False
+                package_level.show_lots_text = False
 
 
     @api.onchange('package_id')

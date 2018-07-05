@@ -559,7 +559,7 @@
             <field name="arch" type="xml">
                 <kanban>
                     <field name='color'/>
-                    <field name='total'/>
+                    <field name='expected'/>
                     <field name='failed'/>
                     <field name='sent_date'/>
                     <templates>
@@ -618,7 +618,7 @@
                                                 </div>
                                             </div>
                                             <div class='o_kanban_primary_bottom'>
-                                                <field name="delivered" widget="progressbar" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
+                                                <field name="delivered" widget="progressbar" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'expected', 'editable': false}"/>
                                             </div>
                                         </t>
                                     </div>

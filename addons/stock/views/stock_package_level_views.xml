@@ -11,10 +11,12 @@
                 <group>
                     <field name="picking_id" invisible="1"/>
                     <field name="picking_source_location" invisible="1"/>
+                    <field name="show_lots_m2o" invisible="1"/>
+                    <field name="show_lots_text" invisible="1"/>
                     <group>
                         <field name="package_id"/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                         <field name="is_done"/>
                     </group>
                     <field name="move_ids" attrs="{'invisible': [('state', 'in', ('new', 'draft', 'assigned', 'done'))]}">
@@ -29,9 +31,12 @@
                     <field name="move_line_ids" attrs="{'invisible': [('state', 'in', ('draft', 'confirmed', 'cancel'))]}">
                         <tree>
                             <field name="product_id"/>
+                            <field name="lot_id" attrs="{'column_invisible': [('parent.show_lots_m2o', '=', False)]}" groups="stock.group_production_lot"/>
+                            <field name="lot_name" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)]}" groups="stock.group_production_lot"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
                             <field name="product_uom_qty"/>
-                            <field name="product_uom_id"/>
                             <field name="qty_done"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="uom.group_uom"/>
                             <field name="state" invisible="1"/>
                         </tree>
                     </field>
