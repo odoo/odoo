@@ -1418,12 +1418,85 @@ Possible children elements of the search view are:
 
     ``string`` (required)
         the label of the filter
-    ``domain``
+    ``domain`` (optional)
         an Odoo :ref:`domain <reference/orm/domains>`, will be appended to the
-        action's domain as part of the search domain
+        action's domain as part of the search domain.
+    ``date`` (optional)
+        the name of a field of type ``date`` or ``datetime``.
+        Using this attribute has the effect to create
+        a set of filters available in a submenu
+        of the filters menu.
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="filter_create_date" date="create_date" string="Creation Date"/>
+
+        The example above allows to easily search for records with creation date field
+        values in one of the periods below.
+
+        .. code-block:: text
+
+          Create Date >
+            Today
+            This Week
+            This Month
+            This Quarter
+            This Year
+          --------------
+            Yesterday
+            Last Week
+            Last Month
+            Last Quarter
+            Last Year
+          --------------
+            Last 7 Days
+            Last 30 Days
+            Last 365 Days
+
+        Note that the generated domains are dynamic and can be saved as such (via the favorites menu).
+
+    ``default_period`` (optional)
+        only makes sense for a filter with non empty ``date`` attribute.
+        determines which period is activated if the filter is in the
+        default set of filters activated at the view initialization. If not provided,
+        'this_month' is used by default.
+
+        To choose among the following options:
+        today, this_week, this_month, this_quarter, this_year,
+        yesterday, last_week, last_month,
+        last_quarter, last_year, last_7_days, last_30_days, last_365_days
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="filter_create_date" date="create_date" string="Creation Date" default_period="this_week"/>
+
     ``context``
         a Python dictionary, merged into the action's domain to generate the
         search domain
+
+        The key ``group_by`` can be used to define a groupby available in the
+        'Group By' menu.
+        The 'group_by' value can be a valid field name or a list of field names.
+
+        .. code-block:: xml
+
+          <filter name="groupby_category" string="Category" context = {'group_by': 'category_id'}/>
+
+        The groupby defined above allows to group data by category.
+
+        When the field is of type ``date`` or ``datetime``, the records are grouped by month by default.
+        This can be modified by using one of the following options: day, week, quarter, year.
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="groupby_create_date" string="Creation Date" context = {'group_by': 'create_date:week'}/>
+
     ``name``
         logical name for the filter, can be used to :ref:`enable it by default
         <reference/views/search/defaults>`, can also be used as
