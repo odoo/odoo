@@ -31,41 +31,6 @@ var LivechatWindow = AbstractThreadWindow.extend({
         this.trigger('close');
     },
     /**
-     * @override
-     * @returns {string}
-     */
-    getTitle: function () {
-        return this._thread.getTitle();
-    },
-    /**
-     * @override
-     * @returns {integer}
-     */
-    getUnreadCounter: function () {
-        return this._thread.getUnreadCounter();
-    },
-    /**
-     * @override
-     * @returns {boolean}
-     */
-    hasThread: function () {
-        return !!this._thread;
-    },
-    /**
-     * Increment the unread counter of this thread window, which is equivalent
-     * to incrementing the unread counter of the related channel
-     */
-    incrementUnreadCounter: function () {
-        this._thread.incrementUnreadCounter();
-    },
-    /**
-     * @override
-     * @returns {boolean}
-     */
-    isFolded: function () {
-        return this._thread.isFolded();
-    },
-    /**
      * Warn the parent widget (LivechatButton)
      *
      * @override
@@ -74,13 +39,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
     toggleFold: function () {
         this._super.apply(this, arguments);
         this.trigger('save_chat');
-    },
-    /**
-     * Reset the unread counter of the livechat window
-     */
-    resetUnreadCounter: function () {
-        this._thread.resetUnreadCounter();
-        this._renderHeader();
+        this.updateVisualFoldState();
     },
 
     //--------------------------------------------------------------------------
@@ -88,31 +47,12 @@ var LivechatWindow = AbstractThreadWindow.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * AKU: TODO drop this method when there's the website livechat thread
-     * model linked to this website livechat window.
-     *
-     * @override
-     * @returns {integer}
-     */
-    _getThreadID: function () {
-        return this._thread.getID();
-    },
-    /**
      * @override
      * @private
      * @param {Object} messageData
      */
     _postMessage: function (messageData) {
         this.trigger('post_message', messageData);
-    },
-    /**
-     * @override
-     * @private
-     * @param {boolean} folded
-     */
-    _updateThreadFoldState: function (folded) {
-        this._thread.updateFoldState(folded);
-        this.updateVisualFoldState();
     },
 });
 
