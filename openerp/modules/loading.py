@@ -125,7 +125,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and module_name in skip_modules:
             continue
 
-        migrations.migrate_module(package, 'pre')
+        needs_update = (
+            hasattr(package, "init")
+            or hasattr(package, "update")
+            or package.state in ("to install", "to upgrade")
+        )
+        if needs_update:
+            if package.name != 'base':
+                registry.setup_models(cr, partial=True)
+            migrations.migrate_module(package, 'pre')
+
         load_openerp_module(package.name)
 
         new_install = package.state == 'to install'
@@ -139,8 +148,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         model_names = [m._name for m in models]
 
         loaded_modules.append(package.name)
-        if (hasattr(package, 'init') or hasattr(package, 'update')
-                or package.state in ('to install', 'to upgrade')):
+        if needs_update:
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry.setup_models(cr, partial=True)
@@ -159,7 +167,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or package.state == 'to install':
             mode = 'init'
 
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        if needs_update:
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_module_models() above.
             modobj = registry['ir.module.module']
