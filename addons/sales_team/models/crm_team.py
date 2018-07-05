@@ -209,7 +209,7 @@ class CrmTeam(models.Model):
 
         self.ensure_one()
         values = []
-        today = date.today()
+        today = fields.Date.from_string(fields.Date.context_today(self))
         start_date, end_date = self._graph_get_dates(today)
         graph_data = self._graph_data(start_date, end_date)
 
