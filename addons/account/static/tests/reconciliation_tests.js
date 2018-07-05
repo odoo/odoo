@@ -941,11 +941,11 @@ QUnit.module('account', {
 
         // Simulate changing partner with SelectCreateDialog
         widget = clientAction.widgets[1];
-        assert.strictEqual($('[role="dialog"]').length, 0, "shouldn't have any opened modal");
+        assert.strictEqual($('.modal').length, 0, "shouldn't have any opened modal");
         widget.$('.o_input_dropdown input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(Search More):eq(1)').trigger('mouseenter').trigger('click');
-        assert.strictEqual($('[role="dialog"]').length, 1, "should open a SelectCreateDialog");
-        $('[role="dialog"] table.o_list_view td:contains(Camptocamp)').click();
+        assert.strictEqual($('.modal').length, 1, "should open a SelectCreateDialog");
+        $('.modal table.o_list_view td:contains(Camptocamp)').click();
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
 
         widget = clientAction.widgets[2];
@@ -1100,7 +1100,7 @@ QUnit.module('account', {
         widget.$('.create .create_account_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(Search)').trigger('mouseenter').trigger('click');
         // select the account who does not appear in the drop drown
-        $('[role="dialog"] tr.o_data_row:contains(502)').click();
+        $('.modal tr.o_data_row:contains(502)').click();
         assert.strictEqual(widget.$('.create .create_account_id input').val(), "101200 Account Receivable", "Selected account does not change");
         // wait the name_get to render the changes
         def.resolve();

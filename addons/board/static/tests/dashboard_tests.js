@@ -161,17 +161,17 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.ok(form.$('.oe_content').is(':visible'), "content is visible again");
     assert.verifySteps(['load action', 'edit custom', 'edit custom']);
 
-    assert.strictEqual($('[role="dialog"]').length, 0, "should have no modal open");
+    assert.strictEqual($('.modal').length, 0, "should have no modal open");
 
     form.$('button.oe_dashboard_link_change_layout').click();
 
-    assert.strictEqual($('[role="dialog"]').length, 1, "should have opened a modal");
-    assert.strictEqual($('[role="dialog"] li[data-layout="2-1"] i.oe_dashboard_selected_layout').length, 1,
+    assert.strictEqual($('.modal').length, 1, "should have opened a modal");
+    assert.strictEqual($('.modal li[data-layout="2-1"] i.oe_dashboard_selected_layout').length, 1,
         "should mark currently selected layout");
 
-    $('[role="dialog"] .oe_dashboard_layout_selector li[data-layout="1-1"]').click();
+    $('.modal .oe_dashboard_layout_selector li[data-layout="1-1"]').click();
 
-    assert.strictEqual($('[role="dialog"]').length, 0, "should have no modal open");
+    assert.strictEqual($('.modal').length, 0, "should have no modal open");
     assert.strictEqual(form.$('table.oe_dashboard[data-layout="1-1"]').length, 1,
         "should have rendered a table with correct layout");
 
@@ -179,12 +179,12 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.strictEqual(form.$('.oe_action').length, 1, "should have one displayed action");
     form.$('span.oe_close').click();
 
-    assert.strictEqual($('[role="dialog"]').length, 1, "should have opened a modal");
+    assert.strictEqual($('.modal').length, 1, "should have opened a modal");
 
     // confirm the close operation
-    $('[role="dialog"] button.btn-primary').click();
+    $('.modal button.btn-primary').click();
 
-    assert.strictEqual($('[role="dialog"]').length, 0, "should have no modal open");
+    assert.strictEqual($('.modal').length, 0, "should have no modal open");
     assert.strictEqual(form.$('.oe_action').length, 0, "should have no displayed action");
 
     assert.verifySteps(['load action', 'edit custom', 'edit custom', 'edit custom', 'edit custom']);

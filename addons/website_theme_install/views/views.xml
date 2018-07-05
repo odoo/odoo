@@ -91,7 +91,7 @@ action = {
 
     <!-- Add link to theme install in default customize modal -->
     <template id="customize_modal" inherit_id="website.theme_customize" priority="1">
-        <xpath expr='//*[@role="dialog"]//header' position="inside">
+        <xpath expr="//*[hasclass('modal-header')]" position="inside">
             <a href="/web#action=website_theme_install.theme_install_kanban_action">See themes here</a>
         </xpath>
     </template>

@@ -160,7 +160,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     update: function (tour_name) {
         if (this.paused) return;
 
-        this.$modal_displayed = $('[role="dialog"]:visible').last();
+        this.$modal_displayed = $('.modal:visible').last();
 
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
@@ -325,14 +325,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _set_running_tour_timeout: function (tour_name, step) {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
-            var message;
-            if (step.extra_trigger) {
-                message = _.str.sprintf('Tour %s failed at step "%s" with trigger "%s" and extra trigger "%s"',
-                    tour_name, step.content, step.trigger, step.extra_trigger);
-            } else {
-                message = _.str.sprintf('Tour %s failed at step "%s" with trigger "%s"', tour_name, step.content, step.trigger);
-            }
-            this._consume_tour(tour_name, message);
+            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
         }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
@@ -365,7 +358,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         MENU_MORE: {
             edition: "community",
             trigger: "body > header > nav",
-            content: _t('Click on the <i>More icon</i> to show hidden apps.'),
             position: "bottom",
             auto: true,
             run: function (actions) {

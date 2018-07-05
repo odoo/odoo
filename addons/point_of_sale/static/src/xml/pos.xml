@@ -334,7 +334,7 @@
                 <t t-if='partner.id'>
                     <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner"/>
                 </t>
-                <input type='file' class='image-uploader'></input>   
+                <input type='file' class='image-uploader'></input>
             </div>
             <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
             <div class='edit-buttons'>
@@ -360,7 +360,7 @@
                         <select class='detail client-address-country needsclick' name='country_id'>
                             <option value=''>None</option>
                             <t t-foreach='widget.pos.countries' t-as='country'>
-                                <option t-att-value='country.id' t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
+                                <option t-att-value='country.id' t-att-selected="partner.country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined">
                                     <t t-esc='country.name'/>
                                 </option>
                             </t>
@@ -389,7 +389,7 @@
                         <select class='detail needsclick' name='property_product_pricelist'>
                             <t t-foreach='widget.pos.pricelists' t-as='pricelist'>
                                 <option t-att-value='pricelist.id'
-                                        t-att-selected="partner.property_product_pricelist ? (pricelist.id === partner.property_product_pricelist[0] ? true : undefined) : undefined"> 
+                                        t-att-selected="partner.property_product_pricelist ? (pricelist.id === partner.property_product_pricelist[0] ? true : undefined) : undefined">
                                     <t t-esc='pricelist.display_name'/>
                                 </option>
                             </t>
@@ -531,7 +531,7 @@
                     <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                 </div>
                 <div class='message'>
-                    Please select a payment method. 
+                    Please select a payment method.
                 </div>
             </div>
         </t>
@@ -559,19 +559,19 @@
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
                                 <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
-                                <td class='col-tendered edit'> 
+                                <td class='col-tendered edit'>
                                     <t t-esc='widget.inputbuffer' />
                                     <!-- <t t-esc='line.get_amount()' /> -->
                                 </td>
                                 <t t-if='order.get_change(line)'>
-                                    <td class='col-change highlight' > 
+                                    <td class='col-change highlight' >
                                         <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
                                     </td>
                                 </t>
                                 <t t-if='!order.get_change(line)'>
                                     <td class='col-change' ></td>
                                 </t>
-                                    
+
                                 <td class='col-name' > <t t-esc='line.name' /> </td>
                                 <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete" title="Delete"> <i class='fa fa-times-circle' /> </td>
                             </tr>
@@ -580,7 +580,7 @@
                             <tr class='paymentline' t-att-data-cid='line.cid'>
                                 <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
-                                <td class='col-change'> 
+                                <td class='col-change'>
                                     <t t-if='order.get_change(line)'>
                                         <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
                                      </t>
@@ -668,8 +668,8 @@
 
                     <div class='payment-buttons'>
                         <div class='button js_set_customer'>
-                            <i class='fa fa-user' role="img" aria-label="Customer" title="Customer"/> 
-                            <span class='js_customer_name'> 
+                            <i class='fa fa-user' role="img" aria-label="Customer" title="Customer"/>
+                            <span class='js_customer_name'>
                                 <t t-if="widget.pos.get_client()">
                                     <t t-esc="widget.pos.get_client().name" />
                                 </t>
@@ -687,7 +687,7 @@
                         </t>
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
-                                <i class='fa fa-heart' /> Tip 
+                                <i class='fa fa-heart' /> Tip
                             </div>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
@@ -700,7 +700,7 @@
              </div>
          </div>
      </t>
-        
+
     <t t-name="ReceiptScreenWidget">
         <div class='receipt-screen screen'>
             <div class='screen-content'>
@@ -795,9 +795,9 @@
                                     <t t-esc='line.quantity' />
                                 </value>
                                 <t t-if='line.unit_name !== "Unit(s)"'>
-                                    <t t-esc='line.unit_name' /> 
+                                    <t t-esc='line.unit_name' />
                                 </t>
-                                x 
+                                x
                                 <value t-att-value-decimals='pos.dp["Product Price"]'>
                                     <t t-esc='line.price' />
                                 </value>
@@ -841,14 +841,14 @@
                     <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.get_amount()'/></value></right>
                 </line>
             </t>
-            <br/> 
+            <br/>
 
             <line size='double-height'>
                 <left><pre>        CHANGE</pre></left>
                 <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.change' /></value></right>
             </line>
             <br/>
-            
+
             <!-- Extra Payment Info -->
 
             <t t-if='receipt.total_discount'>
@@ -918,7 +918,7 @@
                                 <t t-esc='line.quantity' />
                             </value>
                             <t t-if='line.uom !== "Unit(s)"'>
-                                <t t-esc='line.uom' /> 
+                                <t t-esc='line.uom' />
                             </t>
                         </right>
                         <right>
@@ -1057,10 +1057,10 @@
                 <main class="body"><t t-esc="  widget.options.body || '' "/></main>
                 <footer class="footer">
                     <div class="button confirm">
-                        Confirm 
+                        Confirm
                     </div>
                     <div class="button cancel">
-                        Cancel 
+                        Cancel
                     </div>
                 </footer>
             </div>
@@ -1074,10 +1074,10 @@
                 <input type='text' t-att-value="widget.options.value || ''"></input>
                 <div class="footer">
                     <div class="button confirm">
-                        Ok 
+                        Ok
                     </div>
                     <div class="button cancel">
-                        Cancel 
+                        Cancel
                     </div>
                 </div>
             </div>
@@ -1116,14 +1116,14 @@
     <t t-name="TextAreaPopupWidget">
         <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
-                <title class="title"><t t-esc=" widget.options.title || '' " /></title>
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
                 <textarea rows="10" cols="40"><t t-esc="widget.options.value" /></textarea>
                 <footer class="footer">
                     <div class="button confirm">
-                        Ok 
+                        Ok
                     </div>
                     <div class="button cancel">
-                        Cancel 
+                        Cancel
                     </div>
                 </footer>
             </div>
@@ -1143,7 +1143,7 @@
                 </div>
                 <footer class="footer">
                     <div class="button cancel">
-                        Cancel 
+                        Cancel
                     </div>
                 </footer>
             </div>
@@ -1195,7 +1195,7 @@
                 </div>
                 <footer class="footer centered">
                     <div class="button cancel">
-                        Cancel 
+                        Cancel
                     </div>
                     <div class="button confirm">
                         Ok
@@ -1222,11 +1222,11 @@
                                     <li><b><t t-esc="report.unpaid_skipped_session || 0" /></b> belong to another session:
                                         <t t-if="report.unpaid_skipped_sessions">
                                             <ul>
-                                                <li>Session ids: <b><t t-esc="JSON.stringify(report.unpaid_skipped_sessions)" /></b></li> 
+                                                <li>Session ids: <b><t t-esc="JSON.stringify(report.unpaid_skipped_sessions)" /></b></li>
                                             </ul>
                                         </t>
                                     </li>
-                                    
+
                                 </ul>
                             </li>
                         </t>
@@ -1244,7 +1244,7 @@
     <t t-name="Product">
         <article class='product' t-att-data-product-id="product.id" tabindex="0" t-attf-aria-labelledby="article_product_#{product.id}">
             <div class="product-img">
-                <img t-att-src='image_url' alt="Product image"/> 
+                <img t-att-src='image_url' alt="Product image"/>
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
                         <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
@@ -1291,7 +1291,7 @@
                 </t>
                 <t t-if="line.get_discount_str() !== '0'">
                     <li class="info">
-                        With a 
+                        With a
                         <em>
                             <t t-esc="line.get_discount_str()" />%
                         </em>
@@ -1446,7 +1446,7 @@
 
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
-            
+
             <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
@@ -1545,7 +1545,7 @@
         </div>
     </t>
 
-    <!-- Onscreen Keyboard : 
+    <!-- Onscreen Keyboard :
          http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ -->
     <t t-name="OnscreenKeyboardFull">
         <div class="keyboard_frame">

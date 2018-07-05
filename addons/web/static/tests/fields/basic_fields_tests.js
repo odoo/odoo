@@ -1880,7 +1880,7 @@ QUnit.module('basic_fields', {
 
         // Actual flow: click on an element of the m2m to get its form view
         form.$('tbody td:contains(gold)').click();
-        assert.strictEqual($('[role="dialog"]').length, 1,
+        assert.strictEqual($('.modal').length, 1,
             'The modal should have opened');
         assert.verifySteps([
             "The view's image should have been fetched",
@@ -2608,7 +2608,7 @@ QUnit.module('basic_fields', {
 
         // switch to form view
         form.$('.o_field_widget[name=p] .o_data_row').click();
-        assert.strictEqual($('[role="dialog"] .o_field_date[name=datetime]').text(), '02/07/2017',
+        assert.strictEqual($('.modal .o_field_date[name=datetime]').text(), '02/07/2017',
             'the datetime (date widget) should be correctly displayed in form view');
 
         form.destroy();
@@ -2652,7 +2652,7 @@ QUnit.module('basic_fields', {
 
         // switch to form view
         form.$('.o_field_widget[name=p] .o_data_row').click();
-        assert.strictEqual($('[role="dialog"] .o_field_date[name=datetime]').text(), '02/08/2017',
+        assert.strictEqual($('.modal .o_field_date[name=datetime]').text(), '02/08/2017',
             'the datetime (date widget) should be correctly displayed in form view');
 
         form.destroy();
@@ -4640,13 +4640,13 @@ QUnit.module('basic_fields', {
 
         // open the selection
         form.$(".o_domain_show_selection_button").click();
-        assert.strictEqual($('[role="dialog"] .o_list_view .o_data_row').length, 2,
+        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 2,
             "should have open a list view with 2 records in a dialog");
 
         // click on a record -> should not open the record
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
-        $('[role="dialog"] .o_list_view .o_data_row:first .o_data_cell').click();
+        $('.modal .o_list_view .o_data_row:first .o_data_cell').click();
 
         form.destroy();
     });

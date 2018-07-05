@@ -232,7 +232,7 @@ var RecordQuickCreate = Widget.extend({
         }
 
         // ignore clicks in modals
-        if ($(ev.target).closest('[role="dialog"]').length) {
+        if ($(ev.target).closest('.modal').length) {
             return;
         }
 

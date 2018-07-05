@@ -118,12 +118,12 @@ QUnit.module('project', {
         assert.strictEqual(kanban.$('img').length, 0, "Initially there is no image.");
         kanban.$('.o_dropdown_kanban [data-type=set_cover]').eq(0).click();
         // single click on image
-        $('[role="dialog"]').find("img[data-id='1']").click();
-        $('footer.modal-footer .btn-primary').click();
+        $('.modal').find("img[data-id='1']").click();
+        $('.modal-footer .btn-primary').click();
         assert.strictEqual(kanban.$('img[data-src*="/web/image/1"]').length, 1, "Image inserted in record");
         $('.o_dropdown_kanban [data-type=set_cover]').eq(1).click();
         // double click on image
-        $('[role="dialog"]').find("img[data-id='2']").dblclick();
+        $('.modal').find("img[data-id='2']").dblclick();
         assert.strictEqual(kanban.$('img[data-src*="/web/image/2"]').length, 1, "Image inserted after double click");
         // varify write on both kanban record
         assert.verifySteps([1,2]);

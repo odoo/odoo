@@ -122,7 +122,7 @@ tour.register('main_flow_tour', {
     position: 'right',
 }, {
     trigger:  ".o_field_widget[name=name] input",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -135,12 +135,12 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  "footer.modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:first",
     extra_trigger: ".o_field_widget[name=name] > .o_external_button", // Wait name_create
     content: _t('Save & Close'),
     position: 'bottom',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
 },
@@ -176,7 +176,7 @@ tour.register('main_flow_tour', {
     position: 'right',
 }, {
     trigger:  ".o_field_widget[name=name] input",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -190,11 +190,11 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  "footer.modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:first",
     content: _t('Save & Close'),
     position: 'bottom',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     // Wait Save & Close and check value
     extra_trigger: ".o_field_widget[name=seller_ids] .o_data_row td:nth-child(2):contains('the_flow.vendor')",
     content: _t('Save'),
@@ -326,8 +326,8 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.auto();
         // if the one2many isn't editable, we have to close the dialog
-        if ($("footer.modal-footer .btn-primary").length) {
-            actions.auto("footer.modal-footer .btn-primary");
+        if ($(".modal-footer .btn-primary").length) {
+            actions.auto(".modal-footer .btn-primary");
         }
     },
 }, {
@@ -338,7 +338,7 @@ tour.register('main_flow_tour', {
     trigger: ".o_field_widget[name=product_id] input",
     // the one2many may be editable or not according to the modules installed, so
     // we have to handle both cases
-    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, [role="dialog"]',
+    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, .modal-dialog',
     content: _t("Select a product"),
     position: "right",
     run: "text the_flow.service",
@@ -349,8 +349,8 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.auto();
         // if the one2many isn't editable, we have to close the dialog
-        if ($("footer.modal-footer .btn-primary").length) {
-            actions.auto("footer.modal-footer .btn-primary");
+        if ($(".modal-footer .btn-primary").length) {
+            actions.auto(".modal-footer .btn-primary");
         }
     },
 }, {
@@ -368,11 +368,11 @@ tour.register('main_flow_tour', {
     position: "right",
     run: "text test@the_flow.com",
 },{
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t("Save your changes"),
     position: "bottom",
 },  {
-    trigger: "footer.modal-footer .btn-primary span:contains('Send')",
+    trigger: ".modal-footer .btn-primary span:contains('Send')",
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
@@ -440,8 +440,8 @@ tour.register('main_flow_tour', {
     content: _t("Click on schedulers"),
     position: "bottom"
 }, {
-    trigger: "footer.modal-footer .btn-primary",
-    extra_trigger: "[role=\"dialog\"]",
+    trigger: ".modal-footer .btn-primary",
+    extra_trigger: ".modal-dialog",
     content: _t("Run Schedulers"),
     position: "bottom",
 }, {
@@ -471,8 +471,8 @@ tour.register('main_flow_tour', {
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: "footer.modal-footer .btn-primary",
-    extra_trigger: "[role=\"dialog\"]",
+    trigger: ".modal-footer .btn-primary",
+    extra_trigger: ".modal-dialog",
     content: _t("Apply"),
     position: "bottom",
 }, {
@@ -497,12 +497,12 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
     run: 'text(Bank (USD))',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     extra_trigger: ".o_field_widget[name=payment_method_id]", // FIXME: Wait onchange
     content: _t("Validate"),
     position: "bottom",
@@ -538,7 +538,7 @@ tour.register('main_flow_tour', {
     content: _t("Produce"),
     position: "bottom",
 }, {
-    trigger:  "footer.modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:first",
     content: _t('Record Production'),
     position: 'bottom',
 }, {
@@ -617,7 +617,7 @@ tour.register('main_flow_tour', {
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t("Create and View Invoices"),
     position: "bottom",
 }, {
@@ -630,12 +630,12 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
     run: 'text(Bank (USD))',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t("Validate"),
     position: "bottom",
 }, {

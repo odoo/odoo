@@ -468,12 +468,12 @@ QUnit.test('specification of widget barcode_handler with keypress and notifyChan
     setTimeout(function () {
         var keycode = $.ui.keyCode.ENTER;
 
-        assert.strictEqual($('main.modal-body').length, 1, 'should open a modal with a quantity as input');
-        assert.strictEqual($('main.modal-body .o_set_qty_input').val(), '5', 'the quantity by default in the modal shoud be 5');
+        assert.strictEqual($('.modal .modal-body').length, 1, 'should open a modal with a quantity as input');
+        assert.strictEqual($('.modal .modal-body .o_set_qty_input').val(), '5', 'the quantity by default in the modal shoud be 5');
 
-        $('main.modal-body .o_set_qty_input').val('7');
+        $('.modal .modal-body .o_set_qty_input').val('7');
 
-        $('main.modal-body .o_set_qty_input').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+        $('.modal .modal-body .o_set_qty_input').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
         assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(1)').text(), '7',
         "quantity checked should be 7");
 
@@ -524,7 +524,7 @@ QUnit.test('barcode_scanned only trigger error for active view', function (asser
 
     form.$('.o_data_row:first').click();
 
-    // We do not trigger on the body since modal and 
+    // We do not trigger on the body since modal and
     // form view are both inside it.
     function modalTriggerKeypressEvent(char) {
         var keycode;
@@ -533,7 +533,7 @@ QUnit.test('barcode_scanned only trigger error for active view', function (asser
         } else {
             keycode = char.charCodeAt(0);
         }
-        return $('[role="dialog"]').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+        return $('.modal').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
     }
     _.each(['O','-','B','T','N','.','c','a','n','c','e','l','Enter'], modalTriggerKeypressEvent);
     assert.verifySteps(['warning'], "only one event should be triggered");

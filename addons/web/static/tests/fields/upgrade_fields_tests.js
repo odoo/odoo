@@ -33,7 +33,7 @@ QUnit.module('upgrade_fields', {
         });
 
         form.$('input:checkbox').click();
-        assert.strictEqual($('[role="dialog"]').length, 1,
+        assert.strictEqual($('.modal').length, 1,
             "the 'Upgrade to Enterprise' dialog should be opened");
 
         form.destroy();

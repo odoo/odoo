@@ -2672,12 +2672,12 @@ QUnit.module('ActionManager', {
         // go back to kanban view
         $('.o_control_panel .breadcrumb li:first a').click();
 
-        assert.strictEqual($('main.modal-body:first').text(),
+        assert.strictEqual($('.modal .modal-body').text(),
             "The record has been modified, your changes will be discarded. Do you want to proceed?",
             "should display a modal dialog to confirm discard action");
 
         // cancel
-        $('footer.modal-footer button.btn-default').click();
+        $('.modal .modal-footer button.btn-default').click();
 
         assert.strictEqual(actionManager.$('.o_form_view').length, 1,
             "should still be in form view");
@@ -2686,7 +2686,7 @@ QUnit.module('ActionManager', {
         $('.o_control_panel .breadcrumb li:first a').click();
 
         // confirm discard
-        $('footer.modal-footer button.btn-primary').click();
+        $('.modal .modal-footer button.btn-primary').click();
 
         assert.strictEqual(actionManager.$('.o_form_view').length, 0,
             "should no longer be in form view");
@@ -3049,7 +3049,7 @@ QUnit.module('ActionManager', {
 
         assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
             "should have rendered a form view in a modal");
-        assert.ok($('.o_technical_modal main').hasClass('o_act_window'),
+        assert.ok($('.o_technical_modal .modal-body').hasClass('o_act_window'),
             "dialog main element should have classname 'o_act_window'");
         assert.ok($('.o_technical_modal .o_form_view').hasClass('o_form_editable'),
             "form view should be in edit mode");
@@ -3105,11 +3105,11 @@ QUnit.module('ActionManager', {
         });
         actionManager.doAction(5);
 
-        assert.strictEqual($('.o_technical_modal main button.infooter').length, 0,
+        assert.strictEqual($('.o_technical_modal .modal-body button.infooter').length, 0,
             "the button should not be in the body");
-        assert.strictEqual($('.o_technical_modal footer button.infooter').length, 1,
+        assert.strictEqual($('.o_technical_modal .modal-footer button.infooter').length, 1,
             "the button should be in the footer");
-        assert.strictEqual($('.o_technical_modal footer button').length, 1,
+        assert.strictEqual($('.o_technical_modal .modal-footer button').length, 1,
             "the modal footer should only contain one button");
 
         actionManager.destroy();
@@ -3139,7 +3139,7 @@ QUnit.module('ActionManager', {
             type: 'ir.actions.client',
         });
 
-        assert.strictEqual($('[role="dialog"] .o_test').length, 1,
+        assert.strictEqual($('.modal .o_test').length, 1,
             "should have rendered the client action in a dialog");
         assert.verifySteps(['on_attach_callback']);
 

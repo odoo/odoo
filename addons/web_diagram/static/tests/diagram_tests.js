@@ -152,9 +152,9 @@ QUnit.module('Views', {
                 "diagram should only have the default nodes at start");
 
             diagram.$buttons.find('.o_diagram_new_button').click();
-            $('main.modal-body input:first').val('a new node').trigger('input');
-            $('main.modal-body input:last').val(1).trigger('input');
-            $('footer.modal-footer button.btn-primary').click();  // save
+            $('.modal-body input:first').val('a new node').trigger('input');
+            $('.modal-body input:last').val(1).trigger('input');
+            $('.modal-footer button.btn-primary').click();  // save
 
             assert.strictEqual(diagram.$('.o_diagram ellipse').length, 3,
                 "diagram should contain 3 'ellipse' nodes now (nodes 2, 3 and the new one)");
@@ -184,8 +184,8 @@ QUnit.module('Views', {
                 "diagram first node should have default name at first");
 
             CuteNode.double_click_callback({id: 1});
-            $('main.modal-body input:first').val('An edited node').trigger('input');
-            $('footer.modal-footer button.btn-primary').click();  // save
+            $('.modal-body input:first').val('An edited node').trigger('input');
+            $('.modal-footer button.btn-primary').click();  // save
 
             assert.strictEqual(diagram.$('text').first().text(), 'An edited node',
                 "diagram first node should now have new name");
@@ -212,7 +212,7 @@ QUnit.module('Views', {
                 "diagram should contain 2 'ellipse' nodes (nodes 2 and 3)");
 
             CuteNode.destruction_callback({id: 2});
-            $('footer.modal-footer button.btn-primary').click();  // Confirm
+            $('.modal-footer button.btn-primary').click();  // Confirm
 
             assert.strictEqual(diagram.$('.o_diagram ellipse').length, 1,
                 "diagram should contain 1 'ellipse' nodes (node 2)");
@@ -245,8 +245,8 @@ QUnit.module('Views', {
                 get_start: function () {return {id: 1};},
                 get_end: function () {return {id: 3};},
             });
-            $('main.modal-body input:first').val('a transition from 1 to 3').trigger('input');
-            $('footer.modal-footer button.btn-primary').click();  // Confirm
+            $('.modal-body input:first').val('a transition from 1 to 3').trigger('input');
+            $('.modal-footer button.btn-primary').click();  // Confirm
 
             assert.strictEqual(diagram.$('.o_diagram path').length, 5,
                 "diagram should contain 4 'path' nodes (#raphael-marker-block, transitions 1, 2, 3, and the new one)");
@@ -278,8 +278,8 @@ QUnit.module('Views', {
                 "diagram should only have the default edges at start");
 
             CuteEdge.double_click_callback({id: 1});
-            $('main.modal-body input:first').val('An edited edge').trigger('input');
-            $('footer.modal-footer button.btn-primary').click();  // save
+            $('.modal-body input:first').val('An edited edge').trigger('input');
+            $('.modal-footer button.btn-primary').click();  // save
 
             assert.strictEqual(diagram.$('text:contains(a transition from 1 to 2)').length, 0,
                 "diagram edge should not have default name anymore");
@@ -310,7 +310,7 @@ QUnit.module('Views', {
                 "diagram edge should have default name at start");
 
             CuteEdge.destruction_callback({id: 3});
-            $('footer.modal-footer button.btn-primary').click();  // Confirm
+            $('.modal-footer button.btn-primary').click();  // Confirm
 
             assert.strictEqual(diagram.$('.o_diagram path').length, 3,
                 "diagram should contain 3 'path' nodes (#raphael-marker-block, and transitions 1 and 2)");

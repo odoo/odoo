@@ -400,7 +400,7 @@ var FieldTextHtml = AbstractField.extend({
         return src;
     },
     old_initialize_content: function () {
-        this.$el.closest('main.modal-body').css('max-height', 'none');
+        this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
         this.document = null;
         this.$body = $();

@@ -90,9 +90,9 @@ QUnit.module('Views', {
             res_id: 1,
         }).open();
 
-        assert.notOk($('main.modal-body button').length,
+        assert.notOk($('.modal-body button').length,
             "should not have any button in body");
-        assert.strictEqual($('footer.modal-footer button').length, 1,
+        assert.strictEqual($('.modal-footer button').length, 1,
             "should have only one button in footer");
         parent.destroy();
     });
@@ -118,7 +118,7 @@ QUnit.module('Views', {
             res_id: 1,
         }).open();
 
-        assert.strictEqual($('[role="dialog"] button.btn-primary').length, 1,
+        assert.strictEqual($('.modal button.btn-primary').length, 1,
             "should have 1 buttons in modal");
 
         $('.o_field_x2many_list_row_add a').click();
@@ -127,7 +127,7 @@ QUnit.module('Views', {
             keyCode: $.ui.keyCode.ESCAPE,
         }));
 
-        assert.strictEqual($('[role="dialog"] button.btn-primary').length, 1,
+        assert.strictEqual($('.modal button.btn-primary').length, 1,
             "should still have 1 buttons in modal");
         parent.destroy();
     });
@@ -321,7 +321,7 @@ QUnit.module('Views', {
                     return $.when(false);
                 }
                 if (route === '/web/dataset/call_kw/instrument/create') {
-                    assert.deepEqual(args.args, [{badassery: [[6, false, [1]]], name: false}], 
+                    assert.deepEqual(args.args, [{badassery: [[6, false, [1]]], name: false}],
                         'The method create should have been called with the right arguments');
                     return $.when(false);
                 }

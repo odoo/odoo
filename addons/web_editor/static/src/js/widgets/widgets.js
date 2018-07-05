@@ -1171,7 +1171,7 @@ var MediaDialog = Dialog.extend({
         var self = this;
         var defs = [this._super.apply(this, arguments)];
         this.$modal.addClass('note-image-dialog');
-        this.$modal.find('[role="dialog"]').addClass('o_select_media_dialog');
+        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
 
         if (this.imageDialog) {
             defs.push(this.imageDialog.appendTo(this.$("#editor-media-image")));

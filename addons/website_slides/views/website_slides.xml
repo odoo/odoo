@@ -124,7 +124,7 @@
                 <div class="col-md-8 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs nav-tabs-border" role="tablist">
                         <li t-attf-class="#{not slide_type and 'active' ''}">
-                            <a  t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}"> <span class="fa fa-home"> Home</span></a>
+                            <a  t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}"> <i class="fa fa-home"/> Home</a>
                         </li>
                         <li t-if="header_object.nbr_presentations" t-attf-class="#{slide_type == 'presentation' and 'active' ''}">
                             <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/presentation">
@@ -272,7 +272,7 @@
                                             <t t-esc="category['name']"/>
                                         </span>
                                         <a t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="pull-right" t-if="category['total'] - 4 > 0 and category['id']">
-                                            <span class="fa fa-arrow-right"> See all</span>
+                                            <i class="fa fa-arrow-right"/> See all
                                         </a>
                                     </div>
                                 </div>
@@ -698,7 +698,7 @@
                         data-loading-text="Sending..."
                         t-attf-data-slide-id="#{slide.id}"
                         style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;">
-                        <span class="fa fa-envelope-o">Send Email</span>
+                        <i class="fa fa-envelope-o"/> Send Email
                     </button>
                 </span>
             </div>

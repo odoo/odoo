@@ -157,7 +157,7 @@ tour.register('rte', {
     trigger: '#editor-media-icon.active span.fa:first',
 }, {
     content: "save pictogram",
-    trigger: 'footer.modal-footer .btn-primary',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: '#editor-media-icon.active span.o_selected',
 }, {
     content: "select a size for the pictogram",
@@ -180,7 +180,7 @@ tour.register('rte', {
     extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
 }, {
     content: "save link",
-    trigger: 'footer.modal-footer .btn-primary',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: 'a#link-preview.btn.btn-success span.fa.fa-3x.pull-right',
 }, {
     content: "click on other picture",
@@ -200,7 +200,7 @@ tour.register('rte', {
     extra_trigger: 'a#link-preview:containsRegex(/^<img [^>]+>$/) img',
 }, {
     content: "save link",
-    trigger: 'footer.modal-footer .btn-primary',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: 'a#link-preview.btn.btn-success[href="mailto:test@test.test"]:containsRegex(/^<img [^>]+>$/) img',
 }, {
     content: "select for triple enter then double backspace",

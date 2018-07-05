@@ -349,7 +349,7 @@ FormController.include({
         }
         // only catch the event if we're not focused in
         // another field and it's a number
-        if (!$(event.target).is('body, [role="dialog"]') || !/[0-9]/.test(character)) {
+        if (!$(event.target).is('body, .modal') || !/[0-9]/.test(character)) {
             return;
         }
 

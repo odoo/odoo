@@ -31,9 +31,8 @@
                 <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
                 <li id="my_wish" t-att-style="not wishcount and 'display:none;'">
                     <a href="/shop/wishlist">
-                        <span class="fa fa-heart">
-                            Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink label label-primary"><t t-esc='wishcount'/></sup>
-                        </span>
+                        <i class="fa fa-heart"/>
+                        Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink label label-primary"><t t-esc='wishcount'/></sup>
                     </a>
                 </li>
             </t>

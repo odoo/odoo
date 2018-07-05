@@ -1603,7 +1603,7 @@ var AttachmentImage = AbstractField.extend({
             this.$el.empty().append($('<img>/', {
                 src: "/web/image/" + this.value.data.id + "?unique=1",
                 title: this.value.data.display_name,
-                alt: _("Image")
+                alt: _t("Image")
             }));
         }
     }

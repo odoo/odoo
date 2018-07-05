@@ -184,7 +184,7 @@ QUnit.module('pad widget', {
         });
         var def = form.canBeDiscarded();
 
-        assert.strictEqual($('[role="dialog"]').length, 0,
+        assert.strictEqual($('.modal').length, 0,
             "should have no confirmation modal opened");
 
         assert.strictEqual(def.state(), 'resolved',
@@ -221,7 +221,7 @@ QUnit.module('pad widget', {
         form.$buttons.find('.o_form_button_edit').click();
         var def = form.canBeDiscarded();
 
-        assert.strictEqual($('[role="dialog"]').length, 0,
+        assert.strictEqual($('.modal').length, 0,
             "should have no confirmation modal opened");
 
         assert.strictEqual(def.state(), 'resolved',

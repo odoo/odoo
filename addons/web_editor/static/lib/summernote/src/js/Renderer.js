@@ -817,7 +817,7 @@ define([
       $dialog.addClass('note-air-layout');
       $dialog.attr('id', 'note-dialog-' + id);
       $dialog.find('button.close, a.modal-close').click(function () {
-        $(this).closest('[role="dialog"]').modal('hide');
+        $(this).closest('.modal').modal('hide');
       });
       $dialog.appendTo($container);
     };
@@ -905,7 +905,7 @@ define([
       var $dialogContainer = options.dialogsInBody ? $(document.body) : $editor;
       var $dialog = $(tplDialogs(langInfo, options)).prependTo($dialogContainer);
       $dialog.find('button.close, a.modal-close').click(function () {
-        $(this).closest('[role="dialog"]').modal('hide');
+        $(this).closest('.modal').modal('hide');
       });
 
       //09. Editor/Holder switch

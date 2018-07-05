@@ -740,7 +740,7 @@ registry.gallery = Animation.extend({
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             $(this).remove();
         });
-        $modal.find('[role="dialog"] .modal-content, main.modal-body.o_slideshow').css('height', '100%');
+        $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
         $modal.appendTo(document.body);
 
         this.carousel = new registry.gallery_slider($modal.find('.carousel').carousel());

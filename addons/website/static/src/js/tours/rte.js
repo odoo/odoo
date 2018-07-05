@@ -16,8 +16,8 @@ tour.register('rte_translator', {
     run: 'text "fr_BE"',
 }, {
     content: "load french",
-    trigger: 'footer.modal-footer button:first',
-    extra_trigger: '[role="dialog"] select[name="lang"]:propValueContains(fr_BE)',
+    trigger: '.modal-footer button:first',
+    extra_trigger: '.modal select[name="lang"]:propValueContains(fr_BE)',
 }, {
     content : "click language dropdown",
     trigger : '.js_language_selector .dropdown-toggle',
@@ -72,7 +72,7 @@ tour.register('rte_translator', {
     trigger: 'html:not(:has(#wrap p span)) .o_menu_systray a[data-action="translate"]',
 }, {
     content: "close modal",
-    trigger: 'footer.modal-footer .btn-default',
+    trigger: '.modal-footer .btn-default',
 }, {
     content: "check if translation is activate",
     trigger: '[data-oe-translation-id]',
@@ -101,8 +101,8 @@ tour.register('rte_translator', {
     run: 'text test french placeholder',
 }, {
     content: "close modal",
-    trigger: 'footer.modal-footer .btn-primary',
-    extra_trigger: '[role="dialog"] input:propValue(test french placeholder)',
+    trigger: '.modal-footer .btn-primary',
+    extra_trigger: '.modal input:propValue(test french placeholder)',
 }, {
     content: "save translation",
     trigger: 'button[data-action=save]',

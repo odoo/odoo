@@ -27,7 +27,7 @@ tour.register('project_tour', {
     content: _t('This will create new project and redirect us to its tasks.'),
     position: 'right',
     run: function (actions) {
-        actions.auto('[role="dialog"]:visible .btn.btn-primary');
+        actions.auto('.modal:visible .btn.btn-primary');
     },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create input",
