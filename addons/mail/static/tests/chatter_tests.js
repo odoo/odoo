@@ -686,7 +686,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "always"'
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
-    assert.strictEqual($modal.find('.modal-body p').text(),
+    assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
 
@@ -862,7 +862,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
 
             var $modal = $('.modal-dialog');
             assert.strictEqual($modal.length, 1, "should have a modal opened");
-            assert.strictEqual($modal.find('.modal-body p').text(),
+            assert.strictEqual($modal.find('.modal-body').text(),
                 "The record has been modified, your changes will be discarded. Do you want to proceed?",
                 "should warn the user that any unsaved changes will be lost");
 
@@ -915,7 +915,7 @@ QUnit.test('chatter: discard changes on opening full-composer', function (assert
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
-    assert.strictEqual($modal.find('.modal-body p').text(),
+    assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
 
@@ -994,7 +994,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
-    $('[role="dialog"] .arrow.arrow-right.move_next span').click();
+    $('.modal .arrow.arrow-right.move_next span').click();
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
@@ -1467,8 +1467,8 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
 
     // click to unfollow
     form.$('.o_followers_follow_button').click(); // click to open the dropdown
-    assert.ok($('[role="dialog"]').length, 'a confirm modal should be opened');
-    $('footer.modal-footer .btn-primary').click(); // click on 'OK'
+    assert.ok($('.modal').length, 'a confirm modal should be opened');
+    $('.modal .modal-footer .btn-primary').click(); // click on 'OK'
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
     assert.ok(form.$('.o_followers_follow_button.o_followers_notfollow').length,
         'should display the "Follow" button');
@@ -1672,16 +1672,16 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         done();
     });
 
-    assert.strictEqual($('main.modal-body.o_act_window').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('main.modal-body input[name="display_name"]').val(), "silver",
+    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
         "the opened modal should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('main.modal-body input[name="email"]').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will render the form view)
-    $('main.modal-body input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('footer.modal-footer .btn-primary').click();
+    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('.modal-footer .btn-primary').click();
 });
 
 QUnit.test('fieldmany2many tags email (edition)', function (assert) {
@@ -1724,16 +1724,16 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     $input.click(); // opens the dropdown
     $input.autocomplete('widget').find('li:first').click(); // add 'silver'
 
-    assert.strictEqual($('main.modal-body.o_act_window').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('main.modal-body input[name="display_name"]').val(), "silver",
+    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
         "the opened modal in edit mode should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('main.modal-body input[name="email"]').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    $('main.modal-body input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('footer.modal-footer .btn-primary').click();
+    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('.modal-footer .btn-primary').click();
 
     assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
         "should contain the second tag");

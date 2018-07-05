@@ -177,7 +177,7 @@
       </xpath>
   </template>
 
-    <!-- duplicata of the template payment.payment_confirmation_status. 
+    <!-- duplicata of the template payment.payment_confirmation_status.
         The duplication avoid to break an existing installation in stable version-->
     <template id="payment_confirmation_status">
         <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable" role="status">
@@ -217,10 +217,10 @@
                       <div class="bs-sidebar">
                           <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
                               <a role="button" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <span class="fa fa-check"> Accept Order</span>
+                                  <i class="fa fa-check"/> Accept Order
                               </a>
                               <a role="button" t-elif="order_valid and quotation.has_to_be_paid()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <span class="fa fa-check"> <t t-if="not quotation.signature">Accept &amp; </t>Pay</span>
+                                  <i class="fa fa-check"/> <t t-if="not quotation.signature">Accept &amp; </t>Pay
                               </a>
                               <a role="button" t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
@@ -701,6 +701,6 @@
             <t t-else="">
                 <a t-attf-href="/my/orders/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
             </t>
-        </xpath>              
+        </xpath>
     </template>
 </odoo>

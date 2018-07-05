@@ -41,12 +41,12 @@ tour.register('crm_tour', {
     content: _t("Let's schedule an activity."),
     position: "bottom"
 }, {
-    trigger: 'main.modal-body .o_field_many2one',
+    trigger: '.modal-body .o_field_many2one',
     extra_trigger: ".o_opportunity_kanban",
     content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now.</i></p>"),
     position: "bottom",
     run: function (actions) {
-        actions.auto('footer.modal-footer button[special=cancel]');
+        actions.auto('.modal-footer button[special=cancel]');
     },
 }, {
     trigger: ".o_kanban_record",

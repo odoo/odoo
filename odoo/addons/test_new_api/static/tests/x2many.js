@@ -31,7 +31,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "insert a name into the modal form",
         trigger: 'input.o_field_widget.o_required_modifier:first',
-        extra_trigger: '[role="dialog"]:visible',
+        extra_trigger: '.modal:visible',
         run: function (action_helper) {
             action_helper.text('user_test_' + (inc = new Date().getTime()));
         }
@@ -44,7 +44,7 @@ odoo.define('web.test.x2many', function (require) {
         }
     }, {
         content: "save the modal content and create the new moderator",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'input.o_field_widget.o_required_modifier:propValueContains(@test)',
     }, {
         content: "check if the modal is saved",
@@ -82,12 +82,12 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a'
     }, {
         content: "insert body a",
-        trigger: 'main.modal-body textarea:first',
+        trigger: '.modal-body textarea:first',
         run: 'text a',
     }, {
         content: "save new message a",
-        trigger: 'footer.modal-footer button:contains(Save):first',
-        extra_trigger: 'main.modal-body textarea:first:propValue(a)',
+        trigger: '.modal-footer button:contains(Save):first',
+        extra_trigger: '.modal-body textarea:first:propValue(a)',
     }, { // add message b
         content: "create new message b",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
@@ -98,7 +98,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text b',
     }, {
         content: "save new message b",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(b)',
     }, { // change content to trigger on change
         content: "insert content",
@@ -123,7 +123,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text bbb',
     }, {
         content: "save changes",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(bbb)',
     }, { // add message c
         content: "create new message c",
@@ -135,7 +135,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text c',
     }, {
         content: "save new message c",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(c)',
     }, { // add participants
         content: "change tab to Participants",
@@ -186,7 +186,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text d',
     }, {
         content: "save new message d",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(d)',
     }, { // add message e
         content: "create new message e",
@@ -198,7 +198,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text e',
     }, {
         content: "save new message e",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(e)',
     }, { // change message a
         content: "edit message a",
@@ -210,7 +210,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text aaa',
     }, {
         content: "save changes",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(aaa)',
     }, { // change message e
         content: "edit message e",
@@ -235,7 +235,7 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // don't change texarea content
     }, {
         content: "save changes",
-        trigger: 'footer.modal-footer button:contains(Save):contains(Close)'
+        trigger: '.modal-footer button:contains(Save):contains(Close)'
     }, {
         content: "test one2many triggered the onchange on save for the line",
         trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tbody tr td.o_readonly_modifier:contains([test_trigger] Demo User))',
@@ -283,7 +283,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "select another user",
         trigger: '.o_field_many2one .o_input_dropdown > input',
-        extra_trigger: 'body:has([role="dialog"]) .tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact(d))',
+        extra_trigger: 'body:has(.modal) .tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact(d))',
         run: 'text Demo',
     }, {
         content: "select demo user",
@@ -299,7 +299,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text ddd',
     }, {
         content: "save new message ddd",
-        trigger: 'footer.modal-footer button:contains(Save):first',
+        trigger: '.modal-footer button:contains(Save):first',
         extra_trigger: 'textarea[name="body"]:first:propValue(ddd)',
     }, { // trigger onchange
         content: "blur the one2many",
@@ -321,7 +321,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'click',
     }, {
         content: "confirm cancel change",
-        trigger: 'footer.modal-footer button:contains(Ok)',
+        trigger: '.modal-footer button:contains(Ok)',
     },
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -516,6 +516,6 @@ odoo.define('web.test.x2many', function (require) {
         run: 'click',
     }, {
         content: "confirm cancel change",
-        trigger: 'footer.modal-footer button:contains(Ok)',
+        trigger: '.modal-footer button:contains(Ok)',
     }]);
 });

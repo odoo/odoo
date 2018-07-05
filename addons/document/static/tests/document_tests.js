@@ -70,7 +70,7 @@ odoo.define('document.tests', function (require) {
 
             assert.strictEqual(form.sidebar.$('.o_sidebar_delete_attachment').length, 2, "there should be two attachments");
             form.sidebar.$('.o_sidebar_delete_attachment:eq(0)').click();
-            $('footer.modal-footer .btn-primary').click();
+            $('.modal-footer .btn-primary').click();
             assert.strictEqual(form.sidebar.$('.o_sidebar_delete_attachment').length, 1, "there should be only one attachment");
             form.destroy();
         });

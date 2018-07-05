@@ -183,12 +183,12 @@ QUnit.module('Views', {
             "last column should contain 3 records");
         envIDs = [4];
         kanban.$('.o_kanban_group:last .o_column_archive_records').click(); // Click on 'Archive All'
-        assert.ok($('[role="dialog"]').length, 'a confirm modal should be displayed');
-        $('footer.modal-footer .btn-default').click(); // Click on 'Cancel'
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-default').click(); // Click on 'Cancel'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3, "still last column should contain 3 records");
         kanban.$('.o_kanban_group:last .o_column_archive_records').click();
-        assert.ok($('[role="dialog"]').length, 'a confirm modal should be displayed');
-        $('footer.modal-footer .btn-primary').click(); // Click on 'Ok'
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-primary').click(); // Click on 'Ok'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0, "last column should not contain any records");
         kanban.destroy();
     });
@@ -1205,16 +1205,16 @@ QUnit.module('Views', {
                 which: $.ui.keyCode.ENTER,
             }));
 
-        assert.strictEqual($('[role="dialog"] .o_form_view.o_form_editable').length, 1,
+        assert.strictEqual($('.modal .o_form_view.o_form_editable').length, 1,
             "a form view dialog should have been opened (in edit)");
-        assert.strictEqual($('[role="dialog"] .o_field_many2one input').val(), 'hello',
+        assert.strictEqual($('.modal .o_field_many2one input').val(), 'hello',
             "the correct product_id should already be set");
 
         // specify a name and save
-        $('[role="dialog"] input[name=foo]').val('test').trigger('input');
-        $('footer.modal-footer .btn-primary').click();
+        $('.modal input[name=foo]').val('test').trigger('input');
+        $('.modal-footer .btn-primary').click();
 
-        assert.strictEqual($('[role="dialog"]').length, 0, "the modal should be closed");
+        assert.strictEqual($('.modal').length, 0, "the modal should be closed");
         assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 3,
             "there should be 3 records in first column");
         var $firstRecord = kanban.$('.o_kanban_group:first .o_kanban_record:first');
@@ -1794,13 +1794,13 @@ QUnit.module('Views', {
 
         // delete second column (first cancel the confirm request, then confirm)
         kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
-        assert.ok($('[role="dialog"]').length, 'a confirm modal should be displayed');
-        $('footer.modal-footer .btn-default').click(); // click on cancel
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-default').click(); // click on cancel
         assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 5,
             'column [5, "xmo"] should still be there');
         kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
-        assert.ok($('[role="dialog"]').length, 'a confirm modal should be displayed');
-        $('footer.modal-footer .btn-primary').click(); // click on confirm
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-primary').click(); // click on confirm
         assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 3,
             'last column should now be [3, "hello"]');
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should still have two columns");
@@ -1871,7 +1871,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have two columns");
 
         kanban.$('.o_kanban_group:last .o_column_delete').click();
-        $('footer.modal-footer .btn-primary').click();
+        $('.modal-footer .btn-primary').click();
 
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have twos columns");
 
@@ -1913,33 +1913,33 @@ QUnit.module('Views', {
 
         // edit the title of column [5, 'xmo'] and close without saving
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
-        assert.ok($('[role="dialog"] .o_form_editable').length, 'a form view should be open in a modal');
-        assert.strictEqual($('[role="dialog"] .o_form_editable input').val(), 'xmo',
+        assert.ok($('.modal .o_form_editable').length, 'a form view should be open in a modal');
+        assert.strictEqual($('.modal .o_form_editable input').val(), 'xmo',
             'the name should be "xmo"');
-        $('[role="dialog"] .o_form_editable input').val('ged').trigger('input'); // change the value
+        $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
-        $('header.modal-header .close').click(); // click on the cross to close the modal
-        assert.ok(!$('[role="dialog"]').length, 'the modal should be closed');
+        $('.modal-header .close').click(); // click on the cross to close the modal
+        assert.ok(!$('.modal').length, 'the modal should be closed');
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'xmo',
             'title of the column should still be "xmo"');
         assert.strictEqual(nbRPCs, 0, 'no RPC should have been done');
 
         // edit the title of column [5, 'xmo'] and discard
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
-        $('[role="dialog"] .o_form_editable input').val('ged').trigger('input'); // change the value
+        $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
-        $('footer.modal-footer .btn-default').click(); // click on discard
-        assert.ok(!$('[role="dialog"]').length, 'the modal should be closed');
+        $('.modal-footer .btn-default').click(); // click on discard
+        assert.ok(!$('.modal').length, 'the modal should be closed');
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'xmo',
             'title of the column should still be "xmo"');
         assert.strictEqual(nbRPCs, 0, 'no RPC should have been done');
 
         // edit the title of column [5, 'xmo'] and save
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
-        $('[role="dialog"] .o_form_editable input').val('ged').trigger('input'); // change the value
+        $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
-        $('footer.modal-footer .btn-primary').click(); // click on save
-        assert.ok(!$('[role="dialog"]').length, 'the modal should be closed');
+        $('.modal-footer .btn-primary').click(); // click on save
+        assert.ok(!$('.modal').length, 'the modal should be closed');
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'ged',
             'title of the column should be "ged"');
         assert.strictEqual(nbRPCs, 4, 'should have done 1 write, 1 read_group and 2 search_read');
@@ -2059,16 +2059,16 @@ QUnit.module('Views', {
         // click to see the examples
         kanban.$('.o_column_quick_create .o_kanban_examples').click();
 
-        assert.strictEqual($('[role="dialog"] .o_kanban_examples_dialog').length, 1,
+        assert.strictEqual($('.modal .o_kanban_examples_dialog').length, 1,
             "should have open the examples dialog");
-        assert.strictEqual($('[role="dialog"] .o_kanban_examples_dialog_nav li').length, 2,
+        assert.strictEqual($('.modal .o_kanban_examples_dialog_nav li').length, 2,
             "should have two examples (in the menu)");
-        assert.strictEqual($('[role="dialog"] .o_kanban_examples_dialog_nav a').text(),
+        assert.strictEqual($('.modal .o_kanban_examples_dialog_nav a').text(),
             ' A first example  A second example ', "example names should be correct");
-        assert.strictEqual($('[role="dialog"] .o_kanban_examples_dialog_content .tab-pane').length, 2,
+        assert.strictEqual($('.modal .o_kanban_examples_dialog_content .tab-pane').length, 2,
             "should have two examples");
 
-        var $firstPane = $('[role="dialog"] .o_kanban_examples_dialog_content .tab-pane:first');
+        var $firstPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:first');
         assert.strictEqual($firstPane.find('.o_kanban_examples_group').length, 3,
             "there should be 3 stages in the first example");
         assert.strictEqual($firstPane.find('h6').text(), 'Column 1Column 2Column 3',
@@ -2076,7 +2076,7 @@ QUnit.module('Views', {
         assert.strictEqual($firstPane.find('.o_kanban_examples_description').text().trim(),
             "Some description", "the correct description should be displayed");
 
-        var $secondPane = $('[role="dialog"] .o_kanban_examples_dialog_content .tab-pane:nth(1)');
+        var $secondPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:nth(1)');
         assert.strictEqual($secondPane.find('.o_kanban_examples_group').length, 2,
             "there should be 2 stages in the second example");
         assert.strictEqual($secondPane.find('h6').text(), 'Col 1Col 2',

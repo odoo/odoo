@@ -30,12 +30,12 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Click here to change your post cover."),
         position: "right",
     }, {
-        trigger: ".o_existing_attachment_cell:nth(1) img",
-        extra_trigger: '.modal-dialog:has(.o_existing_attachment_cell:nth(1))',
+        trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
+        extra_trigger: '.modal:has(.o_existing_attachment_cell:nth(1))',
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: "footer.modal-footer .btn-primary",
+        trigger: ".o_select_media_dialog .modal-footer > .btn-primary",
         extra_trigger: ".o_existing_attachment_cell.o_selected",
         content: _t("Click on <b>Save</b> to set the picture as cover."),
         position: "top",
@@ -59,7 +59,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "bottom",
     }, {
         trigger: "button[data-dismiss=modal]",
-        extra_trigger: '[role="dialog"]:has(#mobile-viewport)',
+        extra_trigger: '.modal:has(#mobile-viewport)',
         content: _t("Once you have reviewed the content on mobile, close the preview."),
         position: "right",
     }, {

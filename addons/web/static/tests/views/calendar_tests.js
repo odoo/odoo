@@ -213,8 +213,8 @@ QUnit.module('Views', {
         $sidebar.find('input[type="text"]').trigger('click');
         assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
         $sidebar.find('.o_calendar_filter_item .o_remove').first().trigger('click');
-        assert.ok($('footer.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
-        $('footer.modal-footer button.btn:contains(Ok)').trigger('click');
+        assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
+        $('.modal-footer button.btn:contains(Ok)').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
         calendar.destroy();
     });
@@ -295,19 +295,19 @@ QUnit.module('Views', {
 
         calendar.$('.fc-event:contains(event 4) .fc-content').trigger('click');
 
-        assert.ok($('main.modal-body').length, "should open the form view in dialog when click on event");
-        assert.ok($('footer.modal-footer button.btn:contains(Edit)').length, "formViewDialog should be in readonly mode");
-        assert.ok($('footer.modal-footer button.btn:contains(Delete)').length, "formViewDialog should have a delete button");
+        assert.ok($('.modal-body').length, "should open the form view in dialog when click on event");
+        assert.ok($('.modal-footer button.btn:contains(Edit)').length, "formViewDialog should be in readonly mode");
+        assert.ok($('.modal-footer button.btn:contains(Delete)').length, "formViewDialog should have a delete button");
 
-        $('footer.modal-footer button.btn:contains(Edit)').trigger('click');
+        $('.modal-footer button.btn:contains(Edit)').trigger('click');
 
-        assert.ok($('main.modal-body').length, "should switch the modal in edit mode");
-        assert.notOk($('footer.modal-footer button.btn:contains(Delete)').length, "formViewDialog should not have a delete button in edit mode");
+        assert.ok($('.modal-body').length, "should switch the modal in edit mode");
+        assert.notOk($('.modal-footer button.btn:contains(Delete)').length, "formViewDialog should not have a delete button in edit mode");
 
-        $('main.modal-body input:first').val('event 4 modified').trigger('input');
-        $('footer.modal-footer button.btn:contains(Save)').trigger('click');
+        $('.modal-body input:first').val('event 4 modified').trigger('input');
+        $('.modal-footer button.btn:contains(Save)').trigger('click');
 
-        assert.notOk($('main.modal-body').length, "save button should close the modal");
+        assert.notOk($('.modal-body').length, "save button should close the modal");
         assert.ok(calendar.$('.fc-event:contains(event 4 modified)').length, "should display the updated records");
 
         // create a new event, quick create only
@@ -319,8 +319,8 @@ QUnit.module('Views', {
 
         assert.ok($('.modal-sm').length, "should open the quick create dialog");
 
-        $('main.modal-body input:first').val('new event in quick create').trigger('input');
-        $('footer.modal-footer button.btn:contains(Create)').trigger('click').trigger('click');
+        $('.modal-body input:first').val('new event in quick create').trigger('input');
+        $('.modal-footer button.btn:contains(Create)').trigger('click').trigger('click');
 
         assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create)').length, 1, "should display the new record after quick create");
         assert.strictEqual(calendar.$('td.fc-event-container[colspan]').length, 2, "should the new record have only one day");
@@ -332,7 +332,7 @@ QUnit.module('Views', {
 
         assert.ok($('.modal-sm').length, "should open the quick create dialog");
 
-        $('main.modal-body input:first')
+        $('.modal-body input:first')
             .val('new event in quick create validated by pressing enter key.')
             .trigger($.Event('keyup', {keyCode: $.ui.keyCode.ENTER}))
             .trigger($.Event('keyup', {keyCode: $.ui.keyCode.ENTER}));
@@ -349,8 +349,8 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.modal-sm').length, 1, "should open the quick create dialog");
 
-        $('main.modal-body input:first').val('coucou').trigger('input');
-        $('footer.modal-footer button.btn:contains(Edit)').trigger('click');
+        $('.modal-body input:first').val('coucou').trigger('input');
+        $('.modal-footer button.btn:contains(Edit)').trigger('click');
 
         assert.strictEqual($('.modal-lg .o_form_view').length, 1, "should open the slow create dialog");
         assert.strictEqual($('.modal-lg .modal-title').text(), "Create: Events",
@@ -371,13 +371,13 @@ QUnit.module('Views', {
         testUtils.triggerMouseEvent($cell.next(), "mouseup");
 
         $('.modal-dialog input:first').val('new event in quick create 2').trigger('input');
-        $('footer.modal-footer button.btn:contains(Edit)').trigger('click');
+        $('.modal-footer button.btn:contains(Edit)').trigger('click');
 
         assert.strictEqual($('.modal-lg input:first').val(), 'new event in quick create 2', "should open the formViewDialog with default values");
 
         $('.modal-lg button.btn:contains(Save)').trigger('click');
 
-        assert.notOk($('[role="dialog"]').length, "should close dialogs");
+        assert.notOk($('.modal').length, "should close dialogs");
         var $newevent2 = calendar.$('.fc-event:contains(new event in quick create 2)');
         assert.ok($newevent2.length, "should display the 2 days new record");
         assert.strictEqual($newevent2.closest('.fc-event-container').attr('colspan'), "2", "the new record should have 2 days");
@@ -385,9 +385,9 @@ QUnit.module('Views', {
         // delete the a record
 
         calendar.$('.fc-event:contains(event 4) .fc-content').trigger('click');
-        $('footer.modal-footer button.btn:contains(Delete)').trigger('click');
-        assert.ok($('footer.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
-        $('footer.modal-footer button.btn:contains(Ok)').trigger('click');
+        $('.modal-footer button.btn:contains(Delete)').trigger('click');
+        assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
+        $('.modal-footer button.btn:contains(Ok)').trigger('click');
         assert.notOk(calendar.$('.fc-event:contains(event 4) .fc-content').length, "the record should be deleted");
 
         assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 10, "should display 10 events");
@@ -442,8 +442,8 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal-sm .modal-title').text(), 'Create: Events',
             "should open the quick create dialog");
 
-        $('main.modal-body input:first').val('new event in quick create').trigger('input');
-        $('footer.modal-footer button.btn:contains(Create)').trigger('click').trigger('click');
+        $('.modal-body input:first').val('new event in quick create').trigger('input');
+        $('.modal-footer button.btn:contains(Create)').trigger('click').trigger('click');
 
         // If the event is not default-prevented, a traceback will be raised, which we do not want
         assert.ok(event.isDefaultPrevented(), "fail deferred event should have been default-prevented");
@@ -1328,7 +1328,7 @@ QUnit.module('Views', {
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(4) .fc-day:eq(2)');
         testUtils.triggerMouseEvent($cell, "mousedown");
         testUtils.triggerMouseEvent($cell, "mouseup");
-        $('main.modal-body input:first').val('coucou').trigger('input');
+        $('.modal-body input:first').val('coucou').trigger('input');
 
         testUtils.intercept(calendar, 'do_action', function (event) {
             assert.deepEqual(event.data.action,
@@ -1385,7 +1385,7 @@ QUnit.module('Views', {
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(4) .fc-day:eq(2)');
         testUtils.triggerMouseEvent($cell, "mousedown");
         testUtils.triggerMouseEvent($cell, "mouseup");
-        $('main.modal-body input:first').val('coucou').trigger('input');
+        $('.modal-body input:first').val('coucou').trigger('input');
 
         testUtils.intercept(calendar, 'do_action', function (event) {
             assert.deepEqual(event.data.action,
@@ -1463,7 +1463,7 @@ QUnit.module('Views', {
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(4) .fc-day:eq(2)');
         testUtils.triggerMouseEvent($cell, "mousedown");
         testUtils.triggerMouseEvent($cell, "mouseup");
-        $('main.modal-body input:first').val('coucou').trigger('input');
+        $('.modal-body input:first').val('coucou').trigger('input');
 
         testUtils.intercept(calendar, 'do_action', function (event) {
             assert.deepEqual(event.data.action,
@@ -1600,8 +1600,8 @@ QUnit.module('Views', {
         testUtils.triggerPositionalMouseEvent(left, top + 200, "mousemove");
         testUtils.triggerPositionalMouseEvent(left, top + 200, "mouseup");
 
-        $('main.modal-body input:first').val('coucou').trigger('input');
-        $('footer.modal-footer button.btn:contains(Create)').trigger('click');
+        $('.modal-body input:first').val('coucou').trigger('input');
+        $('.modal-footer button.btn:contains(Create)').trigger('click');
 
         assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should add the missing filter (active)");
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should display the created item");
@@ -1617,8 +1617,8 @@ QUnit.module('Views', {
         testUtils.triggerPositionalMouseEvent(left, top + 200, "mousemove");
         testUtils.triggerPositionalMouseEvent(left, top + 200, "mouseup");
 
-        $('main.modal-body input:first').val('coucou 2').trigger('input');
-        $('footer.modal-footer button.btn:contains(Create)').trigger('click');
+        $('.modal-body input:first').val('coucou 2').trigger('input');
+        $('.modal-footer button.btn:contains(Create)').trigger('click');
 
         assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should have the same filters");
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should not display the created item");
@@ -1697,10 +1697,10 @@ QUnit.module('Views', {
         testUtils.triggerPositionalMouseEvent(left, top + 200, "mousemove");
         testUtils.triggerPositionalMouseEvent(left, top + 200, "mouseup");
 
-        $('main.modal-body input:first').val('coucou').trigger('input');
+        $('.modal-body input:first').val('coucou').trigger('input');
 
-        $('footer.modal-footer button.btn:contains(Edit)').trigger('click');
-        $('footer.modal-footer button.btn:contains(Save)').trigger('click');
+        $('.modal-footer button.btn:contains(Edit)').trigger('click');
+        $('.modal-footer button.btn:contains(Save)').trigger('click');
 
         assert.strictEqual(calendar.$('.o_calendar_filter_item').length, 6, "should add the missing filter (active)");
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should display the created item");
@@ -1906,8 +1906,8 @@ QUnit.module('Views', {
             "should open the quick create dialog");
 
         // Creating the event
-        $('main.modal-body input:first').val('new event in quick create').trigger('input');
-        $('footer.modal-footer button.btn:contains(Create)').trigger('click').trigger('click');
+        $('.modal-body input:first').val('new event in quick create').trigger('input');
+        $('.modal-footer button.btn:contains(Create)').trigger('click').trigger('click');
         assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create)').length, 1,
             "should display the new record after quick create dialog");
 
@@ -1989,14 +1989,14 @@ QUnit.module('Views', {
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
         testUtils.triggerMouseEvent($cell, "mousedown");
         testUtils.triggerMouseEvent($cell, "mouseup");
-        var $input = $('[role="dialog"] input:first');
+        var $input = $('.modal input:first');
         $input.val('new event in quick create').trigger('input');
         // Simulate ENTER pressed on Create button (after a TAB)
         $input.trigger($.Event('keyup', {
             which: $.ui.keyCode.ENTER,
             keyCode: $.ui.keyCode.ENTER,
         }));
-        $('footer.modal-footer button:first').click();
+        $('.modal-footer button:first').click();
         def.resolve();
         assert.strictEqual(createCount, 1,
             "should create only one event");
@@ -2221,7 +2221,7 @@ QUnit.module('Views', {
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
         testUtils.triggerMouseEvent($cell, "mousedown");
         testUtils.triggerMouseEvent($cell, "mouseup");
-        var $input = $('main.modal-body input:first');
+        var $input = $('.modal-body input:first');
         $input.val("It's just a fleshwound").trigger('input');
         $('.modal button.btn:contains(Create)').trigger('click');
 
@@ -2268,7 +2268,7 @@ QUnit.module('Views', {
         var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
         testUtils.triggerMouseEvent($cell, "mousedown");
         testUtils.triggerMouseEvent($cell, "mouseup");
-        var $input = $('main.modal-body input:first');
+        var $input = $('.modal-body input:first');
         $input.val("It's just a fleshwound").trigger('input');
         $('.modal button.btn:contains(Create)').trigger('click');
 

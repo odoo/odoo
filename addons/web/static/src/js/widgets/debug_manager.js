@@ -848,7 +848,7 @@ if (config.debug) {
                         if (action) {
                             var controller = parent.getCurrentControllerInDialog();
                             self.debugManager = new DebugManager(self);
-                            var $header = self.$modal.find('header.modal-header:first');
+                            var $header = self.$modal.find('.modal-header:first');
                             return self.debugManager.prependTo($header).then(function () {
                                 self.debugManager.update('action', action, controller.widget);
                             });

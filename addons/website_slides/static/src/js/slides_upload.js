@@ -355,12 +355,12 @@ var SlideDialog = Widget.extend({
                 values.website_published = true;
             }
             this.$('.oe_slides_upload_loading').show();
-            this.$('footer.modal-footer, main.modal-body').hide();
+            this.$('.modal-footer, .modal-body').hide();
             ajax.jsonRpc("/slides/add_slide", 'call', values).then(function (data) {
                 if (data.error) {
                     self.display_alert(data.error);
                     self.$('.oe_slides_upload_loading').hide();
-                    self.$('footer.modal-footer, main.modal-body').show();
+                    self.$('.modal-footer, .modal-body').show();
 
                 } else {
                     window.location = data.url;

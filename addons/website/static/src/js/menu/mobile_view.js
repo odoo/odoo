@@ -17,7 +17,7 @@ var MobilePreviewDialog = Dialog.extend({
     start: function () {
         var self = this;
         this.$modal.addClass('oe_mobile_preview');
-        this.$modal.on('click', 'header.modal-header', function () {
+        this.$modal.on('click', '.modal-header', function () {
             self.$el.toggleClass('o_invert_orientation');
         });
         this.$iframe = $('<iframe/>', {

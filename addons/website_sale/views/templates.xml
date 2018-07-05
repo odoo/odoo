@@ -1300,7 +1300,7 @@
                                 <div class="panel panel-default">
                                   <div class="panel-headisng"></div>
                                   <div class="panel-body">
-                                      <a class='pull-right no-decoration' href='/shop/checkout'><span class='fa fa-edit'> Edit</span></a>
+                                      <a class='pull-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>

@@ -758,7 +758,7 @@ ListRenderer.include({
                 break;
         }
     },
-    /** 
+    /**
      * It will returns the first visible widget that is editable
      *
      * @private
@@ -768,9 +768,9 @@ ListRenderer.include({
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
         var firstWidget = _.find(recordWidgets, function (widget) {
-            var isFirst = widget.$el.is(':visible') && 
+            var isFirst = widget.$el.is(':visible') &&
                                 (widget.$el.has('input').length > 0 ||
-                                widget.tagName== 'input') && 
+                                widget.tagName== 'input') &&
                             !widget.$el.hasClass('o_readonly_modifier');
             return isFirst;
         });
@@ -923,9 +923,9 @@ ListRenderer.include({
 
         // ignore clicks in modals, except if the list is in a modal, and the
         // click is performed in that modal
-        var $clickModal = $(event.target).closest('[role="dialog"]');
+        var $clickModal = $(event.target).closest('.modal');
         if ($clickModal.length) {
-            var $listModal = this.$el.closest('[role="dialog"]');
+            var $listModal = this.$el.closest('.modal');
             if ($clickModal.prop('id') !== $listModal.prop('id')) {
                 return;
             }

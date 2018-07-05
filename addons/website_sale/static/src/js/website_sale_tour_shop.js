@@ -20,11 +20,11 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Select <b>New Product</b> to create it and manage its properties to boost your sales."),
         position: "bottom",
     }, {
-        trigger: "#editor_new_product input[type=text]",
+        trigger: ".modal-dialog #editor_new_product input[type=text]",
         content: _t("Enter a name for your new product"),
         position: "right",
     }, {
-        trigger: "footer.modal-footer button.btn-primary.btn-continue",
+        trigger: ".modal-footer button.btn-primary.btn-continue",
         content: _t("Click on <em>Continue</em> to create the product."),
         position: "right",
     }, {
@@ -38,11 +38,11 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Click here to set an image describing your product."),
         position: "top",
     }, {
-        trigger: ".o_upload_image_button",
+        trigger: ".o_select_media_dialog .o_upload_image_button",
         content: _t("Upload an image from your local library."),
         position: "bottom",
         run: function (actions) {
-            actions.auto("footer.modal-footer .btn-default");
+            actions.auto(".modal-footer .btn-default");
         },
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",
