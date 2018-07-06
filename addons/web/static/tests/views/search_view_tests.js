@@ -78,11 +78,18 @@ QUnit.module('Search View', {
             search_view_id: [5, 'search'],
         }, {
             id: 7,
-            name: 'Partners Action 8',
+            name: 'Partners Action 7',
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [6, 'search'],
+        }, {
+            id: 8,
+            name: 'Partners Action 8',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [7, 'search'],
         }
         ];
 
@@ -118,12 +125,35 @@ QUnit.module('Search View', {
             'partner,5,search': '<search>'+
                     '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
                     '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
-            '</search>',
+                '</search>',
             'partner,6,search': '<search>'+
                     '<filter string="Date" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
                     '<separator/>' +
                     '<filter string="Bar" name="superName" context="{\'group_by\': \'bar\'}"/>' +
-            '</search>',
+                '</search>',
+            'partner,7,search': '<search>'+
+                    '<filter string="1" name="coolName1" date="date_field"/>' +
+                    '<separator/>' +
+                    '<filter string="2" name="coolName2" date="birthday"/>' +
+                    '<separator/>' +
+                    '<filter string="3" name="coolName3" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="4" name="coolName4" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="5" name="coolName5" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="6" name="coolName6" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="7" name="coolName7" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="8" name="coolName8" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="9" name="coolName9" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="10" name="coolName10" domain="[]"/>' +
+                    '<separator/>' +
+                    '<filter string="11" name="coolName11" domain="[]"/>' +
+                '</search>',
         };
     },
 }, function () {
@@ -473,6 +503,24 @@ QUnit.module('Search View', {
         $('span.fa-star').click();
         $('.o_favorites_menu .o_save_search a').click();
         $('.o_favorites_menu .o_save_name button').click();
+        actionManager.destroy();
+    });
+
+    QUnit.test('arch order of groups of filters preserved', function (assert) {
+        assert.expect(12);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(8);
+        $('span.fa-filter').click();
+        assert.strictEqual($('.o_filters_menu .o_menu_item').length, 11);
+        for (var i = 0;  i < 11; i++) {
+            assert.strictEqual($('.o_filters_menu .o_menu_item').eq(i).text().trim(), (i+1).toString());
+        }
         actionManager.destroy();
     });
 });
