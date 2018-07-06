@@ -131,6 +131,8 @@ class OAuthController(http.Controller):
     def signin(self, **kw):
         state = json.loads(kw['state'])
         dbname = state['d']
+        if not http.db_filter([dbname]):
+            return BadRequest()
         provider = state['p']
         context = state.get('c', {})
         registry = registry_get(dbname)
@@ -179,6 +181,8 @@ class OAuthController(http.Controller):
         if not dbname:
             dbname = db_monodb()
         if not dbname:
+            return BadRequest()
+        if not http.db_filter([dbname]):
             return BadRequest()
 
         registry = registry_get(dbname)
