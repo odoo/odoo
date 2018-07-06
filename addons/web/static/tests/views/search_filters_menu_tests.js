@@ -129,7 +129,47 @@ QUnit.module('FiltersMenu', {
         filterMenu.destroy();
     });
 
+    QUnit.test('adding a date filter', function (assert) {
+        assert.expect(5);
+        var filters = [{
+                itemId: 1,
+                isActive: false,
+                description: 'some filter',
+                isPeriod: true,
+                name: 'Filter Date',
+                fieldName: 'date_field',
+                groupId: 1,
+            },
+        ];
 
+        var filterMenu = createFiltersMenu(filters, this.fields, {
+            intercepts: {
+                menu_item_toggled: function (ev) {
+                    assert.strictEqual(ev.data.optionId, 'this_quarter',
+                        "should trigger event with proper period");
+                },
+            },
+        });
 
+        // open menu dropdown
+        filterMenu.$('span.fa-filter').click();
+
+        assert.strictEqual(filterMenu.$('.o_menu_item ul').length, 0,
+            "there should not be a sub menu item list");
+
+        // open date sub menu
+        filterMenu.$('.o_submenu_switcher').click();
+        assert.strictEqual(filterMenu.$('.o_menu_item ul').length, 1,
+            "there should be a sub menu item list");
+
+        // click on This Quarter option
+        assert.notOk(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"]').hasClass('selected'),
+            "menu item should not be selected");
+        filterMenu.$('.o_menu_item li[data-option_id="this_quarter"] a').click();
+        assert.ok(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"]').hasClass('selected'),
+            "menu item should be selected");
+
+        filterMenu.destroy();
+    });
 });
 });

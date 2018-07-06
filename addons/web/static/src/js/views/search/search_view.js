@@ -4,10 +4,11 @@ odoo.define('web.SearchView', function (require) {
 var AutoComplete = require('web.AutoComplete');
 var config = require('web.config');
 var core = require('web.core');
+var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
 var FiltersMenu = require('web.FiltersMenu');
 var GroupByMenu = require('web.GroupByMenu');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var search_inputs = require('web.search_inputs');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -20,6 +21,9 @@ var FacetValue = Backbone.Model.extend({});
 var FacetValues = Backbone.Collection.extend({
     model: FacetValue
 });
+
+var DEFAULT_INTERVAL = 'month';
+var DEFAULT_PERIOD = 'this_month';
 
 var Facet = Backbone.Model.extend({
     initialize: function (attrs) {
@@ -187,10 +191,21 @@ var FacetView = Widget.extend({
             }
         }
     },
-    init: function (parent, model, intervalMapping) {
+    /*
+     * @param {Widget} parent
+     * @param {Object} model
+     * @param {Object} intervalMapping, a key is a field name and the corresponding value
+     *                   is the current interval used
+     *                   (necessarily the field is of type 'date' or 'datetime')
+     * @param {Object} periodMapping, a key is a field name and the corresponding value
+     *                   is the current interval used
+     *                   (necessarily the field is of type 'date' or 'datetime')
+     */
+    init: function (parent, model, intervalMapping, periodMapping) {
         this._super(parent);
         this.model = model;
         this.intervalMapping = intervalMapping;
+        this.periodMapping = periodMapping;
         this.model.on('change', this.model_changed, this);
     },
     destroy: function () {
@@ -205,9 +220,21 @@ var FacetView = Widget.extend({
                 if (index > 0) {
                     $('<span/>', {html: self.model.get('separator') || _t(" or ")}).addClass('o_facet_values_sep').appendTo($e);
                 }
-                var couple = _.findWhere(self.intervalMapping, {groupby: value.attributes.value});
-                var interval = couple ? couple.interval : undefined;
-                return new FacetValueView(self, value, interval).appendTo($e);
+                var couple;
+                var option;
+                if (value.attributes.value && value.attributes.value.attrs) {
+                    if (value.attributes.value.attrs.isPeriod) {
+                        couple = _.findWhere(self.periodMapping, {filter: value.attributes.value});
+                        option = couple ? couple.period : value.attributes.value.attrs.default_period;
+                    }
+                    if (value.attributes.value.attrs.isDate) {
+                        couple = _.findWhere(self.intervalMapping, {groupby: value.attributes.value});
+                        option = couple ?
+                                    couple.interval :
+                                    (value.attributes.value.attrs.defaultInterval || DEFAULT_INTERVAL);
+                    }
+                }
+                return new FacetValueView(self, value, option).appendTo($e);
             }));
         });
     },
@@ -218,21 +245,41 @@ var FacetView = Widget.extend({
 
 var FacetValueView = Widget.extend({
     template: 'SearchView.FacetView.Value',
-    init: function (parent, model, interval) {
+    /*
+     * @param {Widget} parent
+     * @param {Object} model
+     * @param {Object} interval (optional) is used in case the facet value
+     *                  corresponds to a groupby with an associated 'date'
+     *                  'datetime' field.
+     */
+    init: function (parent, model, option) {
         this._super(parent);
         this.model = model;
 
-        var intervalDescription = {
+        var optionDescription = _.extend({}, {
             day: 'Day',
             week: 'Week',
             month: 'Month',
             quarter: 'Quarter',
             year: 'Year',
-        };
-        // to do: put a test on interval
-        if (interval) {
-            var intervalLabel = intervalDescription[interval];
-            this.intervalLabel = _t(intervalLabel);
+        }, {
+            today: 'Today',
+            this_week: 'This Week',
+            this_month: 'This Month',
+            this_quarter: 'This Quarter',
+            this_year: 'This Year',
+            yesterday: 'Yesterday',
+            last_week: 'Last Week',
+            last_month: 'Last Month',
+            last_quarter: 'Last Quarter',
+            last_year: 'Last Year',
+            last_7_days: 'Last 7 Days',
+            last_30_days: 'Last 30 Days',
+            last_365_days: 'Last 365 Days',
+        });
+        if (option) {
+            var optionLabel = optionDescription[option];
+            this.optionLabel = _t(optionLabel);
         }
         this.model.on('change', this.model_changed, this);
     },
@@ -275,10 +322,10 @@ var SearchView = Widget.extend({
         },
     },
     custom_events: {
-        'menu_item_toggled': '_onItemToggled',
-        'item_option_changed': '_onItemOptionChanged',
-        'new_groupby': '_onNewGroupby',
-        'new_filter': '_onNewFilter',
+        menu_item_toggled: '_onItemToggled',
+        item_option_changed: '_onItemOptionChanged',
+        new_groupby: '_onNewGroupby',
+        new_filters: '_onNewFilters',
     },
     defaults: _.extend({}, Widget.prototype.defaults, {
         hidden: false,
@@ -312,6 +359,8 @@ var SearchView = Widget.extend({
         this.action = this.options.action || {};
         this.search_fields = [];
 
+        this.hasFavorites = false;
+
         this.selectedGroupIds = {
             groupByCategory: [],
             filterCategory: []
@@ -320,6 +369,7 @@ var SearchView = Widget.extend({
         this.groupbysMapping = [];
         this.filtersMapping = [];
         this.intervalMapping = [];
+        this.periodMapping = [];
 
         this.filters = [];
         this.groupbys = [];
@@ -392,13 +442,15 @@ var SearchView = Widget.extend({
         var self = this,
             default_custom_filter = this.$buttons && this.favorite_menu && this.favorite_menu.get_default_filter();
         if (!self.options.disable_custom_filters && default_custom_filter) {
+            this.hasFavorites = true;
             return this.favorite_menu.toggle_filter(default_custom_filter, true);
         }
         if (!_.isEmpty(this.search_defaults)) {
-            var inputs = this.search_fields.concat(this.filters, this.groupbys),
-                search_defaults = _.invoke(inputs, 'facet_for_defaults', this.search_defaults);
+            var inputs = this.search_fields.concat(this.filters, this.groupbys);
+            var search_defaults = _.invoke(inputs, 'facet_for_defaults', this.search_defaults);
             return $.when.apply(null, search_defaults).then(function () {
-                self.query.reset(_(arguments).compact(), {preventSearch: true});
+                var facets = _.compact(arguments);
+                self.query.reset(facets, {preventSearch: true});
             });
         }
         this.query.reset([], {preventSearch: true});
@@ -424,6 +476,9 @@ var SearchView = Widget.extend({
         this.trigger_up('search', search);
     },
     /**
+     * @param {boolean} noDomainEvaluation determines if domain are evaluated or not.
+     *                   By default, domains are evaluated.
+     *
      * Extract search data from the view's facets.
      *
      * Result is an object with 3 (own) properties:
@@ -437,12 +492,13 @@ var SearchView = Widget.extend({
      *
      * @return {Object}
      */
-    build_search_data: function () {
+    build_search_data: function (noDomainEvaluation) {
         var domains = [], contexts = [], groupbys = [];
-
+        noDomainEvaluation = noDomainEvaluation || false;
         this.query.each(function (facet) {
+            // field is actually a FilterGroup!
             var field = facet.get('field');
-            var domain = field.get_domain(facet);
+            var domain = field.get_domain(facet, noDomainEvaluation);
             if (domain) {
                 domains.push(domain);
             }
@@ -456,7 +512,6 @@ var SearchView = Widget.extend({
             }
         });
         var intervalMappingNormalized = {};
-
         _.each(this.intervalMapping, function (couple) {
             var fieldName = couple.groupby.fieldName;
             var interval = couple.interval;
@@ -575,7 +630,6 @@ var SearchView = Widget.extend({
             groupByCategory: [],
             filterCategory: [],
         };
-
         this.query.each(function (facet) {
 
             if (facet.attributes.cat === "groupByCategory") {
@@ -609,7 +663,7 @@ var SearchView = Widget.extend({
                 );
             }
 
-            var f = new FacetView(this, facet, this.intervalMapping);
+            var f = new FacetView(this, facet, this.intervalMapping, this.periodMapping);
             started.push(f.appendTo(self.$('.o_searchview_input_container')));
             self.input_subviews.push(f);
         }, this);
@@ -669,14 +723,20 @@ var SearchView = Widget.extend({
             var category = 'filters';
             if (item.attrs.context) {
                 try {
-                    var context = pyeval.eval('context', item.attrs.context);
+                    var context = pyUtils.eval('context', item.attrs.context);
                     if (context.group_by) {
                         category = 'group_by';
                         item.attrs.fieldName = context.group_by.split(':')[0];
+                        item.attrs.isDate = _.contains(['date', 'datetime'], self.fields[item.attrs.fieldName].type);
                         item.attrs.defaultInterval = context.group_by.split(':')[1];
                     }
                 } catch (e) {}
             }
+            if (item.attrs.date) {
+                item.attrs.default_period = item.attrs.default_period || DEFAULT_PERIOD;
+                item.attrs.type = self.fields[item.attrs.date].type;
+            }
+            item.attrs.isPeriod = !!item.attrs.date;
             return {
                 item: item,
                 category: category,
@@ -691,7 +751,7 @@ var SearchView = Widget.extend({
                 return current_group.push(new search_inputs.Filter(filter.item, self));
             }
             if (current_group.length) {
-                var group = new search_inputs.FilterGroup(current_group, self, self.intervalMapping);
+                var group = new search_inputs.FilterGroup(current_group, self, self.intervalMapping, self.periodMapping);
                 categories[current_category].push(group);
                 current_group = [];
             }
@@ -704,7 +764,6 @@ var SearchView = Widget.extend({
                 if (field.type === "many2one" && attrs.widget === "selection") {
                     attrs.widget = undefined;
                 }
-
                 var Obj = core.search_widgets_registry.getAny([attrs.widget, field.type]);
                 if (Obj) {
                     self.search_fields.push(new (Obj) (filter.item, field, self));
@@ -738,11 +797,15 @@ var SearchView = Widget.extend({
     updateFilters: function (newFilters, filtersToRemove) {
         var self = this;
         var addedFilters = _.map(newFilters, function (filter) {
+            var domain = filter.domain;
+            if (domain instanceof Array) {
+                domain =  Domain.prototype.arrayToString(domain);
+            }
             filter = {
-                attrs: {domain: filter.domain, help: filter.help},
+                attrs: {domain: domain, help: filter.help},
             };
             var filterWidget = new search_inputs.Filter(filter);
-            var filterGroup = new search_inputs.FilterGroup([filterWidget], self, self.intervalMapping);
+            var filterGroup = new search_inputs.FilterGroup([filterWidget], self, self.intervalMapping, self.periodMapping);
             var facet = filterGroup.make_facet([filterGroup.make_value(filter)]);
             self.query.add([facet], {silent: true});
 
@@ -790,14 +853,23 @@ var SearchView = Widget.extend({
             group.filters.forEach(function (filter) {
                 if (!filter.attrs.invisible) {
                     var filterId = _.uniqueId('__filter__');
+                    var isPeriod = filter.attrs.isPeriod;
+                    var defaultPeriod = filter.attrs.default_period;
                     filters.push({
-                        isActive: !!self.search_defaults[filter.attrs.name],
-                        description: filter.attrs.string || filter.attrs.help || filter.attrs.name || filter.attrs.domain || 'Ω',
                         itemId: filterId,
+                        description: filter.attrs.string || filter.attrs.help ||
+                            filter.attrs.name || filter.attrs.domain || 'Ω',
                         domain: filter.attrs.domain,
+                        fieldName: filter.attrs.date,
+                        isPeriod: isPeriod,
+                        currentOptionId: defaultPeriod,
+                        isActive: !self.hasFavorites && !!self.search_defaults[filter.attrs.name],
                         groupId: groupId,
                     });
                     self.filtersMapping.push({filterId: filterId, filter: filter, groupId: groupId});
+                    if (isPeriod) {
+                        self.periodMapping.push({filter: filter, period: defaultPeriod, type: filter.attrs.type});
+                    }
                 }
             });
             self.groupsMapping.push({groupId: groupId, group: group, category: 'Filters'});
@@ -821,20 +893,22 @@ var SearchView = Widget.extend({
             var groupId = _.uniqueId('__group__');
             group.filters.forEach(function (groupby) {
                 if (!groupby.attrs.invisible) {
-                    var fieldName = groupby.attrs.fieldName;
-                    var defaultOptionId = groupby.attrs.defaultInterval;
                     var groupbyId = _.uniqueId('__groupby__');
+                    var fieldName = groupby.attrs.fieldName;
+                    var isDate = groupby.attrs.isDate;
+                    var defaultInterval = groupby.attrs.defaultInterval || DEFAULT_INTERVAL;
                     groupbys.push({
-                        isActive: !!self.search_defaults[groupby.attrs.name],
-                        description: groupby.attrs.string,
                         itemId: groupbyId,
+                        description: groupby.attrs.string || groupby.attrs.help || groupby.attrs.name
+                            || groupby.attrs.fieldName || 'Ω',
+                        isDate: isDate,
                         fieldName: fieldName,
+                        currentOptionId: defaultInterval,
+                        isActive: !self.hasFavorites && !!self.search_defaults[groupby.attrs.name],
                         groupId: groupId,
-                        defaultOptionId: defaultOptionId,
                     });
-                    if (self._fieldIsDate(fieldName)) {
-                        self.intervalMapping.push({groupby: groupby, interval: defaultOptionId || 'month'});
-
+                    if (isDate) {
+                        self.intervalMapping.push({groupby: groupby, interval: defaultInterval});
                     }
                     self.groupbysMapping.push({groupbyId: groupbyId, groupby: groupby, groupId: groupId});
                 }
@@ -844,15 +918,6 @@ var SearchView = Widget.extend({
         });
         return new GroupByMenu(this, groupbys, this.fields);
     },
-
-
-    _fieldIsDate: function (fieldName) {
-        if (_.contains(['date', 'datetime'], this.fields[fieldName].type)) {
-            return true;
-        }
-        return false;
-    },
-
     /**
      * Processes a fieldsView in place. In particular, parses its arch.
      *
@@ -869,14 +934,20 @@ var SearchView = Widget.extend({
         return fv;
     },
     /**
+     * This function ask the groupby menu to deactive all groupbys with
+     * corresponding groupId in the list selectedGroupIds.
+     * (TO DO: simplify method... actually there is only one group of groupbys)
+     *
      * @private
-     * @param {string[]]} selectedGroupIds
+     * @param {string[]]} selectedGroupIds list of group ids to deactivate
      */
     _unsetUnusedGroupbys: function (selectedGroupIds) {
-        var groupIds = this.selectedGroupIds.groupByCategory.reduce(
-            function (acc, id) {
-                if (!_.contains(selectedGroupIds, id)) {
-                    acc.push(id);
+        var groupIds = this.groupsMapping.reduce(
+            function (acc, triple) {
+                if (triple.category === 'Group By') {
+                    if (!_.contains(selectedGroupIds, triple.groupId)) {
+                        acc.push(triple.groupId);
+                    }
                 }
                 return acc;
             },
@@ -886,14 +957,19 @@ var SearchView = Widget.extend({
         this.groupby_menu.unsetGroups(groupIds);
     },
     /**
+     * This function ask the filters menu to deactive all filters with
+     * corresponding groupId in the list selectedGroupIds.
+     *
      * @private
      * @param {string[]]} selectedGroupIds
      */
     _unsetUnusedFilters: function (selectedGroupIds) {
-        var groupIds = this.selectedGroupIds.filterCategory.reduce(
-            function (acc, id) {
-                if (!_.contains(selectedGroupIds, id)) {
-                    acc.push(id);
+        var groupIds = this.groupsMapping.reduce(
+            function (acc, triple) {
+                if (triple.category === 'Filters') {
+                    if (!_.contains(selectedGroupIds, triple.groupId)) {
+                        acc.push(triple.groupId);
+                    }
                 }
                 return acc;
             },
@@ -908,6 +984,11 @@ var SearchView = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     *
+     * this function is called in response to an event 'on_item_toggled'.
+     * this kind of event is triggered by the filters menu or the groupby menu
+     * when a user has clicked on a item (a filter or a groupby).
+     * The query is modified accordingly to the new state (active or not) of that item
      *
      * @private
      * @param {OdooEvent} event
@@ -927,27 +1008,36 @@ var SearchView = Widget.extend({
         if (event.data.category === 'filterCategory') {
             var filter = _.findWhere(this.filtersMapping, {filterId: event.data.itemId}).filter;
             group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
+            if (event.data.optionId) {
+                var period = event.data.optionId;
+                _.findWhere(this.periodMapping, {filter: filter}).period = period;
+                group.updatePeriodMapping(this.periodMapping);
+            }
             group.toggle(filter);
         }
     },
     /**
+     * this function is called when a new groupby has been added to the groupby menu
+     * via the 'Add Custom Groupby' submenu. The query is modified with the new groupby
+     * added to it as active. The communication betwenn the groupby menu and the search view
+     * is maintained by properly updating the mappings.
      * @private
      * @param {OdooEvent} event
      */
     _onNewGroupby: function (event) {
+        var isDate = event.data.isDate;
         var attrs = {
-                context:"{'group_by':'" + event.data.fieldName + "''}",
-                name: event.data.description,
-                fieldName: event.data.fieldName,
-            };
-
+            context:"{'group_by':'" + event.data.fieldName + "''}",
+            name: event.data.description,
+            fieldName: event.data.fieldName,
+            isDate: isDate,
+        };
         var groupby = new search_inputs.Filter({attrs: attrs}, this);
         if (event.data.optionId) {
             var interval = event.data.optionId;
             this.intervalMapping.push({groupby: groupby, interval: interval});
         }
-        var group = new search_inputs.FilterGroup([groupby], this, this.intervalMapping);
-        group.toggle(groupby);
+        var group = new search_inputs.FilterGroup([groupby], this, this.intervalMapping, this.periodMapping);
         this.groupbysMapping.push({
             groupbyId: event.data.itemId,
             groupby: groupby,
@@ -958,44 +1048,49 @@ var SearchView = Widget.extend({
             group: group,
             category: 'Group By',
         });
+        group.toggle(groupby);
     },
-        /**
+    /**
+     * this function is called when a new filter has been added to the filters menu
+     * via the 'Add Custom Filter' submenu. The query is modified with the new filter
+     * added to it as active. The communication betwenn the filters menu and the search view
+     * is maintained by properly updating the mappings.
      * @private
      * @param {OdooEvent} event
      */
-    _onNewFilter: function (event) {
+    _onNewFilters: function (event) {
         var self= this;
         var filter;
         var filters = [];
         var groupId;
 
         _.each(event.data, function (filterDescription) {
-                filter = new search_inputs.Filter(filterDescription.filter, this);
-                filters.push(filter);
-                self.filtersMapping.push({
-                    filterId: filterDescription.itemId,
-                    filter: filter,
-                    groupId: filterDescription.groupId,
-                });
-                // filters belong to the same group
-                if (!groupId) {
-                    groupId = filterDescription.groupId;
-                }
+            filter = new search_inputs.Filter(filterDescription.filter, this);
+            filters.push(filter);
+            self.filtersMapping.push({
+                filterId: filterDescription.itemId,
+                filter: filter,
+                groupId: filterDescription.groupId,
             });
-        var group = new search_inputs.FilterGroup(filters, this, this.intervalMapping);
+            // filters belong to the same group
+            if (!groupId) {
+                groupId = filterDescription.groupId;
+            }
+        });
+        var group = new search_inputs.FilterGroup(filters, this, this.intervalMapping, this.periodMapping);
         filters.forEach(function (filter) {
             group.toggle(filter, {silent: true});
         });
-        this.query.trigger('reset');
-
-
         this.groupsMapping.push({
             groupId: groupId,
             group: group,
             category: 'Filters',
         });
+        this.query.trigger('reset');
     },
     /**
+     * this function is called when the option related to an item (filter or groupby) has been
+     * changed by the user. The query is modified appropriately.
      *
      * @private
      * @param {OdooEvent} event
@@ -1012,8 +1107,11 @@ var SearchView = Widget.extend({
         }
         if (event.data.category === 'filterCategory') {
             var filter = _.findWhere(this.filtersMapping, {filterId: event.data.itemId}).filter;
+            var period = event.data.optionId;
+            _.findWhere(this.periodMapping, {filter: filter}).period = period;
             group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
-            group.toggle(filter);
+            group.updatePeriodMapping(this.periodMapping);
+            this.query.trigger('reset');
         }
     },
 });

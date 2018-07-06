@@ -9,6 +9,8 @@ var QWeb = core.qweb;
 
 var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
 
+var DEFAULT_INTERVAL = 'month';
+
 var GroupByMenu = DropdownMenu.extend({
     events: _.extend({}, DropdownMenu.prototype.events,
     {
@@ -26,12 +28,12 @@ var GroupByMenu = DropdownMenu.extend({
      *      fieldName: string; field name without interval!
      *      description: string; label printed on screen
      *      groupId: string;
+     *      isDate: boolean;
      *      isActive: boolean; (optional) determines if the groupby is considered active
      *      isOpen: boolean; (optional) in case there are options the submenu presenting the options
      *                                is opened or closed according to isOpen
      *      isRemovable: boolean; (optional) can be removed from menu
      *      options: array of objects with 'optionId' and 'description' keys; (optional)
-     *      defaultOptionId: string refers to an optionId (optional)
      *      currentOptionId: string refers to an optionId that is activated if item is active (optional)
      *   }
      * @param {Object} fields 'field_get' of a model: mapping from field name
@@ -46,15 +48,12 @@ var GroupByMenu = DropdownMenu.extend({
         this.generatorMenuIsOpen = false;
         // determines list of options used by groupbys of type 'date'
         this.intervalOptions = [
-            {description: 'Day', optionId: 'day'},
-            {description: 'Week', optionId: 'week'},
-            {description: 'Month', optionId: 'month'},
-            {description: 'Quarter', optionId: 'quarter'},
-            {description: 'Year', optionId: 'year'},
+            {description: 'Day', optionId: 'day', groupId: 1},
+            {description: 'Week', optionId: 'week', groupId: 1},
+            {description: 'Month', optionId: 'month', groupId: 1},
+            {description: 'Quarter', optionId: 'quarter', groupId: 1},
+            {description: 'Year', optionId: 'year', groupId: 1},
         ];
-        // determines the default option used in case
-        // it has not been provided for a groupby
-        this.defaultOptionId = "month";
         this.groupableFields = [];
         _.each(fields, function (field, name) {
             if (field.sortable && _.contains(GROUPABLE_TYPES, field.type)) {
@@ -114,7 +113,7 @@ var GroupByMenu = DropdownMenu.extend({
      * method called via the 'Add Custom Groupby' menu to create
      * a new groupby and add it (activated) to the menu
      * In case the field is of type date, it is activated using
-     * the option determined by the parameter 'this.defaultOptionId'
+     * the option determined by the parameter 'DEFAULT_INTERVAL'
      *
      * @private
      * @param {string} fieldName
@@ -132,8 +131,10 @@ var GroupByMenu = DropdownMenu.extend({
         var eventData = _.clone(groupby);
         this._prepareItem(groupby);
         if (groupby.hasOptions) {
-            groupby.currentOptionId = groupby.defaultOptionId;
+            groupby.currentOptionId = DEFAULT_INTERVAL;
+            groupby.isDate = true;
             eventData.optionId = groupby.currentOptionId;
+            eventData.isDate = true;
         }
         this.items.push(groupby);
         var fieldIndex = this.presentedFields.indexOf(field);
@@ -151,7 +152,6 @@ var GroupByMenu = DropdownMenu.extend({
      _prepareItem: function (item) {
         if (_.contains(['date', 'datetime'], this.fields[item.fieldName].type)) {
             item.options = this.intervalOptions;
-            item.defaultOptionId = item.defaultOptionId || this.defaultOptionId;
         }
         // the idea is that we have only one group in the groupby menu
         // like in the search view.

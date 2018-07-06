@@ -1,14 +1,62 @@
-odoo.define('web.pyeval', function (require) {
+(function (py) {
 "use strict";
 
-var core = require('web.core');
-var utils = require('web.utils');
+/**
+ * This file add extra functionality to the python interpreter exported by py.js
+ *
+ * Main extra functionality is about time management, more precisely:
+ * - date
+ * - datetime
+ * - relativedelta
+ *
+ * These python modules are exported in the py.extras object, and can be added
+ * to the evaluation context.  For example,
+ *
+ *  var context = {
+ *      datetime: py.extras.datetime,
+ *      date: py.extras.date,
+ *      time: py.extras.time,
+ *  };
+ *  var result = py.eval(some_python_expression, context);
+ */
 
-var _t = core._t;
-var py = window.py; // to silence linters
 /*
  * py.js helpers and setup
  */
+
+/**
+ * computes (Math.floor(a/b), a%b and passes that to the callback.
+ *
+ * returns the callback's result
+ */
+function divmod (a, b, fn) {
+    var mod = a%b;
+    // in python, sign(a % b) === sign(b). Not in JS. If wrong side, add a
+    // round of b
+    if (mod > 0 && b < 0 || mod < 0 && b > 0) {
+        mod += b;
+    }
+    return fn(Math.floor(a/b), mod);
+}
+
+/**
+ * Passes the fractional and integer parts of x to the callback, returns
+ * the callback's result
+ */
+function modf(x, fn) {
+    var mod = x%1;
+    if (mod < 0) {
+        mod += 1;
+    }
+    return fn(mod, Math.floor(x));
+}
+
+function assert(bool) {
+    if (!bool) {
+        throw new Error("AssertionError");
+    }
+}
+
 
 var obj = function () {};
 obj.prototype = py.object;
@@ -71,13 +119,13 @@ var DI4Y = days_before_year(5);
 function ord2ymd(n) {
     --n;
     var n400, n100, n4, n1, n0;
-    utils.divmod(n, DI400Y, function (_n400, n) {
+    divmod(n, DI400Y, function (_n400, n) {
         n400 = _n400;
-        utils.divmod(n, DI100Y, function (_n100, n) {
+        divmod(n, DI100Y, function (_n100, n) {
             n100 = _n100;
-            utils.divmod(n, DI4Y, function (_n4, n) {
+            divmod(n, DI4Y, function (_n4, n) {
                 n4 = _n4;
-                utils.divmod(n, 365, function (_n1, n) {
+                divmod(n, 365, function (_n1, n) {
                     n1 = _n1;
                     n0 = n;
                 });
@@ -88,7 +136,7 @@ function ord2ymd(n) {
     n = n0;
     var year = n400 * 400 + 1 + n100 * 100 + n4 * 4 + n1;
     if (n1 == 4 || n100 == 100) {
-        utils.assert(n0 === 0);
+        assert(n0 === 0);
         return {
             year: year - 1,
             month: 12,
@@ -97,7 +145,7 @@ function ord2ymd(n) {
     }
 
     var leapyear = n1 === 3 && (n4 !== 24 || n100 == 3);
-    utils.assert(leapyear == is_leap(year));
+    assert(leapyear == is_leap(year));
     var month = (n + 50) >> 5;
     var preceding = DAYS_BEFORE_MONTH[month] + ((month > 2 && leapyear) ? 1 : 0);
     if (preceding > n) {
@@ -120,25 +168,25 @@ function tmxxx(year, month, day, hour, minute, second, microsecond) {
     microsecond = microsecond || 0;
 
     if (microsecond < 0 || microsecond > 999999) {
-        utils.divmod(microsecond, 1000000, function (carry, ms) {
+        divmod(microsecond, 1000000, function (carry, ms) {
             microsecond = ms;
             second += carry;
         });
     }
     if (second < 0 || second > 59) {
-        utils.divmod(second, 60, function (carry, s) {
+        divmod(second, 60, function (carry, s) {
             second = s;
             minute += carry;
         });
     }
     if (minute < 0 || minute > 59) {
-        utils.divmod(minute, 60, function (carry, m) {
+        divmod(minute, 60, function (carry, m) {
             minute = m;
             hour += carry;
         });
     }
     if (hour < 0 || hour > 23) {
-        utils.divmod(hour, 24, function (carry, h) {
+        divmod(hour, 24, function (carry, h) {
             hour = h;
             day += carry;
         });
@@ -150,7 +198,7 @@ function tmxxx(year, month, day, hour, minute, second, microsecond) {
     // themselves).
     // Saying 12 months == 1 year should be non-controversial.
     if (month < 1 || month > 12) {
-        utils.divmod(month-1, 12, function (carry, m) {
+        divmod(month-1, 12, function (carry, m) {
             month = m + 1;
             year += carry;
         });
@@ -214,10 +262,10 @@ datetime.timedelta = py.type('timedelta', null, {
 
         // Get rid of all fractions, and normalize s and us.
         // Take a deep breath <wink>.
-        var daysecondsfrac = utils.modf(days, function (dayfrac, days) {
+        var daysecondsfrac = modf(days, function (dayfrac, days) {
             d = days;
             if (dayfrac) {
-                return utils.modf(dayfrac * 24 * 3600, function (dsf, dsw) {
+                return modf(dayfrac * 24 * 3600, function (dsf, dsw) {
                     s = dsw;
                     return dsf;
                 });
@@ -225,19 +273,19 @@ datetime.timedelta = py.type('timedelta', null, {
             return 0;
         });
 
-        var secondsfrac = utils.modf(seconds, function (sf, s) {
+        var secondsfrac = modf(seconds, function (sf, s) {
             seconds = s;
             return sf + daysecondsfrac;
         });
-        utils.divmod(seconds, 24*3600, function (days, seconds) {
+        divmod(seconds, 24*3600, function (days, seconds) {
             d += days;
             s += seconds;
         });
         // seconds isn't referenced again before redefinition
 
         microseconds += secondsfrac * 1e6;
-        utils.divmod(microseconds, 1000000, function (seconds, microseconds) {
-            utils.divmod(seconds, 24*3600, function (days, seconds) {
+        divmod(microseconds, 1000000, function (seconds, microseconds) {
+            divmod(seconds, 24*3600, function (days, seconds) {
                 d += days;
                 s += seconds;
                 m += Math.round(microseconds);
@@ -252,8 +300,8 @@ datetime.timedelta = py.type('timedelta', null, {
     },
     __str__: function () {
         var hh, mm, ss;
-        utils.divmod(this.seconds, 60, function (m, s) {
-            utils.divmod(m, 60, function (h, m) {
+        divmod(this.seconds, 60, function (m, s) {
+            divmod(m, 60, function (h, m) {
                 hh = h;
                 mm = m;
                 ss = s;
@@ -396,6 +444,14 @@ datetime.datetime = py.type('datetime', null, {
                 throw new Error('ValueError: No known conversion for ' + m);
             }));
     },
+    to_utc: function () {
+        var d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+        var offset = d.getTimezoneOffset();
+        var kwargs = {minutes: py.float.fromJSON(offset)};
+        var timedelta = py.PY_call(py.extras.datetime.timedelta,[],kwargs);
+        var s = tmxxx(this.year, this.month, this.day + timedelta.days, this.hour, this.minute, this.second + timedelta.seconds);
+        return datetime.datetime.fromJSON(s.year, s.month, s.day, s.hour, s.minute, s.second);
+    },
     now: py.classmethod.fromJSON(function () {
         var d = new Date();
         return py.PY_call(datetime.datetime, [
@@ -414,6 +470,7 @@ datetime.datetime = py.type('datetime', null, {
              d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(),
              d.getUTCMilliseconds() * 1000]);
     }),
+
     combine: py.classmethod.fromJSON(function () {
         var args = py.PY_parseArgs(arguments, 'date time');
         return py.PY_call(datetime.datetime, [
@@ -529,17 +586,6 @@ datetime.date = py.type('date', null, {
             d.getFullYear(), d.getMonth() + 1, d.getDate()]);
     }),
 });
-/**
- * Returns the current local date, which means the date on the client (which can be different
- * compared to the date of the server).
- *
- * @return {datetime.date}
- */
-function context_today() {
-    var d = new Date();
-    return py.PY_call(
-        datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
-}
 
 datetime.time = py.type('time', null, {
     __init__: function () {
@@ -645,7 +691,7 @@ var relativedelta = py.type('relativedelta', null, {
         var months = asJS(this.ops.months);
         if (Math.abs(months) > 11) {
             var s = months > 0 ? 1 : -1;
-            var r = utils.divmod(months * s, 12);
+            var r = divmod(months * s, 12);
             this.ops.months = py.float.fromJSON(r.mod*s);
             this.ops.years = py.float.fromJSON(
                 asJS(this.ops.years) + r.div*s);
@@ -738,309 +784,10 @@ var relativedelta = py.type('relativedelta', null, {
     }
 });
 
-// recursively wraps JS objects passed into the context to attributedicts
-// which jsonify back to JS objects
-function wrap(value) {
-    if (value === null) { return py.None; }
-
-    switch (typeof value) {
-    case 'undefined': throw new Error("No conversion for undefined");
-    case 'boolean': return py.bool.fromJSON(value);
-    case 'number': return py.float.fromJSON(value);
-    case 'string': return py.str.fromJSON(value);
-    }
-
-    switch(value.constructor) {
-    case Object: return wrapping_dict.fromJSON(value);
-    case Array: return wrapping_list.fromJSON(value);
-    }
-
-    throw new Error("ValueError: unable to wrap " + value);
-}
-
-var wrapping_dict = py.type('wrapping_dict', null, {
-    __init__: function () {
-        this._store = {};
-    },
-    __getitem__: function (key) {
-        var k = key.toJSON();
-        if (!(k in this._store)) {
-            throw new Error("KeyError: '" + k + "'");
-        }
-        return wrap(this._store[k]);
-    },
-    __getattr__: function (key) {
-        return this.__getitem__(py.str.fromJSON(key));
-    },
-    __len__: function () {
-        return Object.keys(this._store).length;
-    },
-    __nonzero__: function () {
-        return py.PY_size(this) > 0 ? py.True : py.False;
-    },
-    get: function () {
-        var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
-
-        if (!(args.k.toJSON() in this._store)) { return args.d; }
-        return this.__getitem__(args.k);
-    },
-    fromJSON: function (d) {
-        var instance = py.PY_call(wrapping_dict);
-        instance._store = d;
-        return instance;
-    },
-    toJSON: function () {
-        return this._store;
-    },
-});
-
-var wrapping_list = py.type('wrapping_list', null, {
-    __init__: function () {
-        this._store = [];
-    },
-    __getitem__: function (index) {
-        return wrap(this._store[index.toJSON()]);
-    },
-    __len__: function () {
-        return this._store.length;
-    },
-    __nonzero__: function () {
-        return py.PY_size(this) > 0 ? py.True : py.False;
-    },
-    fromJSON: function (ar) {
-        var instance = py.PY_call(wrapping_list);
-        instance._store = ar;
-        return instance;
-    },
-    toJSON: function () {
-        return this._store;
-    },
-});
-
-function wrap_context(context) {
-    for (var k in context) {
-        if (!context.hasOwnProperty(k)) { continue; }
-        var val = context[k];
-
-        if (val === null) { continue; }
-        if (val.constructor === Array) {
-            context[k] = wrapping_list.fromJSON(val);
-        } else if (val.constructor === Object
-                   && !py.PY_isInstance(val, py.object)) {
-            context[k] = wrapping_dict.fromJSON(val);
-        }
-    }
-    return context;
-}
-
-function eval_contexts(contexts, evaluation_context) {
-    evaluation_context = _.extend(pycontext(), evaluation_context || {});
-    return _(contexts).reduce(function (result_context, ctx) {
-        // __eval_context evaluations can lead to some of `contexts`'s
-        // values being null, skip them as well as empty contexts
-        if (_.isEmpty(ctx)) { return result_context; }
-        if (_.isString(ctx)) {
-            // wrap raw strings in context
-            ctx = { __ref: 'context', __debug: ctx };
-        }
-        var evaluated = ctx;
-        switch(ctx.__ref) {
-        case 'context':
-            evaluation_context.context = evaluation_context;
-            evaluated = py.eval(ctx.__debug, wrap_context(evaluation_context));
-            break;
-        case 'compound_context':
-            var eval_context = eval_contexts([ctx.__eval_context]);
-            evaluated = eval_contexts(
-                ctx.__contexts, _.extend({}, evaluation_context, eval_context));
-            break;
-        }
-        // add newly evaluated context to evaluation context for following
-        // siblings
-        _.extend(evaluation_context, evaluated);
-        return _.extend(result_context, evaluated);
-    }, {});
-}
-
-function eval_domains(domains, evaluation_context) {
-    evaluation_context = _.extend(pycontext(), evaluation_context || {});
-    var result_domain = [];
-    // Normalize only if the first domain is the array ["|"] or ["!"]
-    var need_normalization = (
-        domains &&
-        domains.length > 0 &&
-        domains[0].length === 1 &&
-        (domains[0][0] === "|" || domains[0][0] === "!")
-    );
-    _(domains).each(function (domain) {
-        if (_.isString(domain)) {
-            // wrap raw strings in domain
-            domain = { __ref: 'domain', __debug: domain };
-        }
-        var domain_array_to_combine;
-        switch(domain.__ref) {
-        case 'domain':
-            evaluation_context.context = evaluation_context;
-            domain_array_to_combine = py.eval(domain.__debug, wrap_context(evaluation_context));
-            break;
-        default:
-            domain_array_to_combine = domain;
-        }
-        if (need_normalization) {
-            domain_array_to_combine = get_normalized_domain(domain_array_to_combine);
-        }
-        result_domain.push.apply(result_domain, domain_array_to_combine);
-    });
-    return result_domain;
-}
-
-/**
- * Returns a normalized copy of the given domain array. Normalization is
- * is making the implicit "&" at the start of the domain explicit, e.g.
- * [A, B, C] would become ["&", "&", A, B, C].
- *
- * @param {Array} domain_array
- * @returns {Array} normalized copy of the given array
- */
-function get_normalized_domain(domain_array) {
-    var expected = 1; // Holds the number of expected domain expressions
-    _.each(domain_array, function (item) {
-        if (item === "&" || item === "|") {
-            expected++;
-        } else if (item !== "!") {
-            expected--;
-        }
-    });
-    var new_explicit_ands = _.times(-expected, _.constant("&"));
-    return new_explicit_ands.concat(domain_array);
-}
-
-function eval_groupbys(contexts, evaluation_context) {
-    evaluation_context = _.extend(pycontext(), evaluation_context || {});
-    var result_group = [];
-    _(contexts).each(function (ctx) {
-        if (_.isString(ctx)) {
-            // wrap raw strings in context
-            ctx = { __ref: 'context', __debug: ctx };
-        }
-        var group;
-        var evaluated = ctx;
-        switch(ctx.__ref) {
-        case 'context':
-            evaluation_context.context = evaluation_context;
-            evaluated = py.eval(ctx.__debug, wrap_context(evaluation_context));
-            break;
-        case 'compound_context':
-            var eval_context = eval_contexts([ctx.__eval_context]);
-            evaluated = eval_contexts(
-                ctx.__contexts, _.extend({}, evaluation_context, eval_context));
-            break;
-        }
-        group = evaluated.group_by;
-        if (!group) { return; }
-        if (typeof group === 'string') {
-            result_group.push(group);
-        } else if (group instanceof Array) {
-            result_group.push.apply(result_group, group);
-        } else {
-            throw new Error('Got invalid groupby {{'
-                    + JSON.stringify(group) + '}}');
-        }
-        _.extend(evaluation_context, evaluated);
-    });
-    return result_group;
-}
-
-
-function pycontext() {
-    return {
-        datetime: datetime,
-        context_today: context_today,
-        time: time,
-        relativedelta: relativedelta,
-        current_date: py.PY_call(
-            time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
-    };
-}
-
-/**
- * @param {String} type "domains", "contexts" or "groupbys"
- * @param {Array} object domains or contexts to evaluate
- * @param {Object} [context] evaluation context
- */
-function pyeval(type, object, context) {
-    context = _.extend(pycontext(), context || {});
-
-    //noinspection FallthroughInSwitchStatementJS
-    switch(type) {
-    case 'context':
-    case 'contexts':
-        if (type === 'context') {
-            object = [object];
-        }
-        return eval_contexts(object, context);
-    case 'domain':
-    case 'domains':
-        if (type === 'domain')
-            object = [object];
-        return eval_domains(object, context);
-    case 'groupbys':
-        return eval_groupbys(object, context);
-    }
-    throw new Error("Unknow evaluation type " + type);
-}
-
-function eval_arg(arg) {
-    if (typeof arg !== 'object' || !arg.__ref) { return arg; }
-    switch(arg.__ref) {
-    case 'domain':
-        return pyeval('domains', [arg]);
-    case 'context': case 'compound_context':
-        return pyeval('contexts', [arg]);
-    default:
-        throw new Error(_t("Unknown nonliteral type ") + ' ' + arg.__ref);
-    }
-}
-
-/**
- * If args or kwargs are unevaluated contexts or domains (compound or not),
- * evaluated them in-place.
- *
- * Potentially mutates both parameters.
- *
- * @param args
- * @param kwargs
- */
-function ensure_evaluated(args, kwargs) {
-    for (var i=0; i<args.length; ++i) {
-        args[i] = eval_arg(args[i]);
-    }
-    for (var k in kwargs) {
-        if (!kwargs.hasOwnProperty(k)) { continue; }
-        kwargs[k] = eval_arg(kwargs[k]);
-    }
-}
-
-function eval_domains_and_contexts(source) {
-    // see Session.eval_context in Python
-    return {
-        context: pyeval('contexts', source.contexts || [], source.eval_context),
-        domain: pyeval('domains', source.domains, source.eval_context),
-        group_by: pyeval('groupbys', source.group_by_seq || [], source.eval_context),
-    };
-}
-
-function py_eval(expr, context) {
-    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
-}
-
-
-return {
-    context: pycontext,
-    ensure_evaluated: ensure_evaluated,
-    eval: pyeval,
-    eval_domains_and_contexts: eval_domains_and_contexts,
-    py_eval: py_eval,
+py.extras = {
+    datetime: datetime,
+    time: time,
+    relativedelta: relativedelta,
 };
 
-});
+})(typeof exports === 'undefined' ? py : exports);

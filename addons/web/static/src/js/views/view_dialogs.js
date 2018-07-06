@@ -7,7 +7,7 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var ListController = require('web.ListController');
 var ListView = require('web.ListView');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var SearchView = require('web.SearchView');
 var view_registry = require('web.view_registry');
 
@@ -293,7 +293,7 @@ var SelectCreateDialog = ViewDialog.extend({
         var user_context = this.getSession().user_context;
 
         var _super = this._super.bind(this);
-        var context = pyeval.eval_domains_and_contexts({
+        var context = pyUtils.eval_domains_and_contexts({
             domains: [],
             contexts: [user_context, this.context]
         }).context;
@@ -397,7 +397,7 @@ var SelectCreateDialog = ViewDialog.extend({
         });
     },
     _process_search_data: function (domains, contexts, groupbys) {
-        var results = pyeval.eval_domains_and_contexts({
+        var results = pyUtils.eval_domains_and_contexts({
             domains: [this.domain].concat(domains),
             contexts: [this.context].concat(contexts),
             group_by_seq: groupbys || [],

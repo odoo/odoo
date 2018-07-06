@@ -43,8 +43,16 @@
                 }
             }
         }
+        li.divider:first-child {
+            display: none;
+        }
         .o_item_option {
+            color: $o-main-text-color;
             padding-left: 20px;
+            &:hover {
+                color: darken($o-main-text-color, 10%);
+                background-color: $dropdown-link-hover-bg;
+            }
         }
     }
 }

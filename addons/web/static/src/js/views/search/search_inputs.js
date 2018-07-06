@@ -5,7 +5,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -416,7 +416,7 @@ var ManyToOneField = CharField.extend({
     expand: function (needle) {
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
-        var context = pyeval.eval(
+        var context = pyUtils.eval(
             'contexts', [this.searchview.dataset.get_context()]);
         var args = this.attrs.domain;
         if (typeof args === 'string') {
@@ -458,7 +458,7 @@ var ManyToOneField = CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        var context = pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
+        var context = pyUtils.eval('contexts', [this.searchview.dataset.get_context()]);
 
         return this._rpc({
                 model: this.attrs.relation,
@@ -514,14 +514,17 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      *
      * @param {Array<instance.web.search.Filter>} filters elements of the group
      * @param {instance.web.SearchView} parent parent in which the filters are contained
+     * @param {Object} intervalMapping, a key is a field name and the corresponding value
+     *                   is the current interval used
+     *                   (necessarily the field is of type 'date' or 'datetime')
      */
-    init: function (filters, parent, intervalMapping) {
+    init: function (filters, parent, intervalMapping, periodMapping) {
         // If all filters are group_by and we're not initializing a GroupbyGroup,
         // create a GroupbyGroup instead of the current FilterGroup
         if (!(this instanceof GroupbyGroup) &&
               _(filters).all(function (f) {
                   if (!f.attrs.context) { return false; }
-                  var c = pyeval.eval('context', f.attrs.context);
+                  var c = pyUtils.eval('context', f.attrs.context);
                   return !_.isEmpty(c.group_by);})) {
             return new GroupbyGroup(filters, parent, intervalMapping);
         }
@@ -529,6 +532,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
         this.filters = filters;
         this.searchview = parent;
         this.intervalMapping = intervalMapping;
+        this.periodMapping = periodMapping || [];
         this.searchview.query.on('add remove change reset', this.proxy('search_change'));
     },
     start: function () {
@@ -637,29 +641,45 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      * Handles domains-fetching for all the filters within it: groups them.
      *
      * @param {VS.model.SearchFacet} facet
+     * @param {boolean} noEvaluation determines if the domains are evaluated or not.
+                            By default, domains are evaluated.
      * @return {*} combined domains of the enabled filters in this group
      */
-    get_domain: function (facet) {
+    get_domain: function (facet, noEvaluation) {
+        noEvaluation = noEvaluation || false;
+        var self = this;
         var userContext = this.getSession().user_context;
         var domains = facet.values.chain()
-            .map(function (f) { return f.get('value').attrs.domain; })
+            .map(function (f) {
+                var filter = f.get('value');
+                var attributes = filter.attrs;
+                var domain = attributes.domain;
+                var fieldName = attributes.date;
+                if (!domain && fieldName) {
+                    var couple = _.findWhere(self.periodMapping, {filter: filter});
+                    var period = couple ? couple.period: 'this_month';
+                    var type = couple ? couple.type: 'date';
+                    domain = Domain.prototype.constructDomain(fieldName, period, type);
+                }
+                return domain;
+            })
             .without('[]')
             .reject(_.isEmpty)
-            .map(function (d) {
-                return Domain.prototype.stringToArray(d, userContext);
+            .map(function (domain) {
+                domain = domain.replace(/%%/g, '%');
+                return domain;
             })
             .value();
 
         if (!domains.length) {
             return;
         }
-        if (domains.length === 1) {
-            return domains[0];
+        // domains belong the same groups. We need to make a union.
+        var domain = pyUtils.assembleDomains(domains, 'OR');
+        if (!noEvaluation) {
+            return Domain.prototype.stringToArray(domain, userContext);
         }
-
-        _.each(domains, Domain.prototype.normalizeArray);
-        var ors = _.times(domains.length - 1, _.constant("|"));
-        return ors.concat.apply(ors, domains);
+        return domain;
     },
     toggle_filter: function (e) {
         e.preventDefault();
@@ -701,9 +721,22 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
             };
         }));
     },
+    /*
+     * @param {Object} intervalMapping
+     */
     updateIntervalMapping: function (intervalMapping) {
         this.intervalMapping = intervalMapping;
-    }
+    },
+    /*
+     * @param {Object} periodMapping
+     */
+    updatePeriodMapping: function (periodMapping) {
+        this.intervalMapping = periodMapping;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
 });
 

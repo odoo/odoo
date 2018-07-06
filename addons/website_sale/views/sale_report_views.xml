@@ -5,24 +5,7 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <search string="Sales">
-                <filter name="week" string="Last Week"
-                        domain="[
-                            '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(days=7)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
-                        ]"/>
-                <filter name="month" string="Last Month"
-                        domain="[
-                            '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(months=1)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
-                        ]"/>
-                <filter name="year" string="Last Year"
-                        domain="[
-                            '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
-                         ]"/>
+                <filter name="year" string="Date" date="date"/>
             </search>
         </field>
     </record>
