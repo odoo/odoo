@@ -841,8 +841,16 @@ ListRenderer.include({
      */
     _onTrashIconClick: function (event) {
         event.stopPropagation();
-        var id = $(event.target).closest('tr').data('id');
-        this.trigger_up('list_record_delete', {id: id});
+        var $row = $(event.target).closest('tr')
+        var id = $row.data('id');
+        if ($row.hasClass('o_selected_row')) {
+            this.trigger_up('list_record_delete', {id: id});
+        } else {
+            var self = this;
+            this.unselectRow().then(function () {
+                self.trigger_up('list_record_delete', {id: id});
+            });
+        }
     },
     /**
      * When a click happens outside the list view, or outside a currently
