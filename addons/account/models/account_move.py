@@ -232,6 +232,7 @@ class AccountMove(models.Model):
     @api.multi
     def _reverse_move(self, date=None, journal_id=None):
         self.ensure_one()
+        date = date or fields.Date.today()
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
