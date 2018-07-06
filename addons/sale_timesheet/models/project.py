@@ -105,7 +105,7 @@ class ProjectTask(models.Model):
     @api.multi
     def unlink(self):
         if any(task.sale_line_id for task in self):
-            raise ValidationError(_('You cannot delete a task related to a sales order. You can only archive it.'))
+            raise ValidationError(_('You have to unlink the task from the sale order item in order to delete it.'))
         return super(ProjectTask, self).unlink()
 
     @api.multi
