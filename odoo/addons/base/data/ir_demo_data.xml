@@ -1,0 +1,22 @@
+<odoo>
+    <record model="ir.actions.act_window" id="demo_force_install_action">
+        <field name="name">Load demo data</field>
+        <field name="res_model">ir.demo</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.ui.view" id="demo_force_install_form">
+        <field name="name">ir.demo.form</field>
+        <field name="model">ir.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>Installing demo data in an already instantiated DB can make things go boom boom, are you sure you want to proceed?</p>
+                <footer>
+                    <button name="install_demo" string="Proceed" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Close" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

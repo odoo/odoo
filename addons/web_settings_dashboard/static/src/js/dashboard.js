@@ -331,11 +331,7 @@ var DashboardShare = Widget.extend({
      */
     _onClickForceDemo: function (ev) {
         ev.preventDefault();
-        this._rpc({
-            model: 'ir.demo',
-            method: 'install_demo',
-            args: [],
-        });
+        this.do_action('base.demo_force_install_action');
     },
 });
 
