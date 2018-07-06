@@ -170,7 +170,7 @@ var ControlPanel = Widget.extend({
 
             // Update the searchview and switch buttons
             if (status.searchview || options.clear) {
-                this._update_search_view(status.searchview, status.search_view_hidden, status.groupable);
+                this._update_search_view(status.searchview, status.search_view_hidden, status.groupable, status.enableTimeRangeMenu);
             }
             if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
@@ -266,11 +266,14 @@ var ControlPanel = Widget.extend({
      * @param {boolean} [groupable] visibility of the groupable menu (only
      *      relevant if searchview is visible)
      */
-    _update_search_view: function (searchview, isHidden, groupable) {
+    _update_search_view: function (searchview, isHidden, groupable, enableTimeRangeMenu) {
         if (searchview) {
             searchview.toggle_visibility(!isHidden);
             if (groupable !== undefined){
                 searchview.groupby_menu.do_toggle(groupable);
+            }
+            if (enableTimeRangeMenu !== undefined){
+                searchview.displayTimeRangeMenu(enableTimeRangeMenu);
             }
         }
         this.nodes.$searchview.toggle(!isHidden);

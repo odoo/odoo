@@ -67,6 +67,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.searchView = params.searchView;
         this.searchViewHidden = params.searchViewHidden;
         this.groupable = params.groupable;
+        this.enableTimeRangeMenu = params.enableTimeRangeMenu;
         this.actionViews = params.actionViews;
         this.viewType = params.viewType;
         this.withControlPanel = params.withControlPanel !== false;
@@ -428,6 +429,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             searchview: this.searchView,
             search_view_hidden: !this.searchable || this.searchviewHidden,
             groupable: this.groupable,
+            enableTimeRangeMenu: this.enableTimeRangeMenu,
         });
 
         this._pushState();

@@ -18,9 +18,12 @@ odoo.define('web.PivotModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
+var dataComparisonUtils = require('web.dataComparisonUtils');
 var core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
+
+var computeVariation = dataComparisonUtils.computeVariation;
 
 var _t = core._t;
 

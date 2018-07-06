@@ -10,9 +10,14 @@ var FiltersMenu = require('web.FiltersMenu');
 var GroupByMenu = require('web.GroupByMenu');
 var pyUtils = require('web.py_utils');
 var search_inputs = require('web.search_inputs');
+var TimeRangeMenu = require('web.TimeRangeMenu');
+var TimeRangeMenuOptions = require('web.TimeRangeMenuOptions');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+
 var _t = core._t;
+var ComparisonOptions = TimeRangeMenuOptions.ComparisonOptions;
+var PeriodOptions = TimeRangeMenuOptions.PeriodOptions;
 
 var Backbone = window.Backbone;
 
@@ -198,7 +203,7 @@ var FacetView = Widget.extend({
      *                   is the current interval used
      *                   (necessarily the field is of type 'date' or 'datetime')
      * @param {Object} periodMapping, a key is a field name and the corresponding value
-     *                   is the current interval used
+     *                   is the current period used
      *                   (necessarily the field is of type 'date' or 'datetime')
      */
     init: function (parent, model, intervalMapping, periodMapping) {
@@ -248,9 +253,11 @@ var FacetValueView = Widget.extend({
     /*
      * @param {Widget} parent
      * @param {Object} model
-     * @param {Object} interval (optional) is used in case the facet value
+     * @param {Object} option (optional) is used in case the facet value
      *                  corresponds to a groupby with an associated 'date'
      *                  'datetime' field.
+     * @param {Object} comparison (optional) is used in case the facet value
+     *                  comes from the time range menu and comparison is active
      */
     init: function (parent, model, option) {
         this._super(parent);
@@ -326,13 +333,16 @@ var SearchView = Widget.extend({
         item_option_changed: '_onItemOptionChanged',
         new_groupby: '_onNewGroupby',
         new_filters: '_onNewFilters',
+        time_range_modified: '_onTimeRangeModified',
+        time_range_removed: '_onTimeRangeRemoved',
     },
     defaults: _.extend({}, Widget.prototype.defaults, {
         hidden: false,
-        disable_filters: false,
+        disable_custom_filters: false,
         disable_groupby: false,
         disable_favorites: false,
-        disable_custom_filters: false,
+        disable_filters: false,
+        disableTimeRangeMenu: true,
     }),
     template: "SearchView",
 
@@ -361,6 +371,15 @@ var SearchView = Widget.extend({
 
         this.hasFavorites = false;
 
+        this.noDateFields = true;
+        var field;
+        for (var key in this.fields) {
+            field = this.fields[key];
+            if (_.contains(['date', 'datetime'], field.type) && field.sortable) {
+                this.noDateFields = false;
+                break;
+            }
+        }
         this.selectedGroupIds = {
             groupByCategory: [],
             filterCategory: []
@@ -373,6 +392,8 @@ var SearchView = Widget.extend({
 
         this.filters = [];
         this.groupbys = [];
+        this.timeRanges = options.action && options.action.context ?
+            options.action.context.time_ranges : undefined;
         var visibleSearchMenu = this.call('local_storage', 'getItem', 'visible_search_menu');
         this.visible_filters = (visibleSearchMenu !== 'false');
         this.input_subviews = []; // for user input in searchbar
@@ -421,6 +442,12 @@ var SearchView = Widget.extend({
             .then(this.set_default_filters.bind(this))
             .then(function ()  {
                 var menu_defs = [];
+                self.timeRangeMenu = self._createTimeRangeMenu();
+                menu_defs.push(self.timeRangeMenu.prependTo($buttons));
+                self.timeRangeMenu.do_hide();
+                var display = self.options.disableTimeRangeMenu !== undefined &&
+                    !self.options.disableTimeRangeMenu;
+                self.displayTimeRangeMenu(display);
                 if (!self.options.disable_groupby) {
                     self.groupby_menu = self._createGroupByMenu();
                     menu_defs.push(self.groupby_menu.prependTo($buttons));
@@ -431,6 +458,17 @@ var SearchView = Widget.extend({
                 }
                 return $.when.apply($, menu_defs);
             });
+    },
+    /*
+     *
+     * @param {boolean}
+     */
+    displayTimeRangeMenu: function (b) {
+        if (!b || this.noDateFields) {
+            this.timeRangeMenu.do_hide();
+        } else {
+            this.timeRangeMenu.do_show();
+        }
     },
     on_attach_callback: function () {
         this._focusInput();
@@ -448,6 +486,8 @@ var SearchView = Widget.extend({
         if (!_.isEmpty(this.search_defaults)) {
             var inputs = this.search_fields.concat(this.filters, this.groupbys);
             var search_defaults = _.invoke(inputs, 'facet_for_defaults', this.search_defaults);
+            var defaultTimeRange = this._searchDefaultTimeRange();
+            search_defaults.push(defaultTimeRange);
             return $.when.apply(null, search_defaults).then(function () {
                 var facets = _.compact(arguments);
                 self.query.reset(facets, {preventSearch: true});
@@ -502,7 +542,7 @@ var SearchView = Widget.extend({
             if (domain) {
                 domains.push(domain);
             }
-            var context = field.get_context(facet);
+            var context = field.get_context(facet, noDomainEvaluation);
             if (context) {
                 contexts.push(context);
             }
@@ -630,8 +670,8 @@ var SearchView = Widget.extend({
             groupByCategory: [],
             filterCategory: [],
         };
+        var timeRangeMenuIsActive;
         this.query.each(function (facet) {
-
             var values = facet.get('values');
             if (facet.attributes.cat === "groupByCategory") {
                 selectedGroupIds.groupByCategory = _.uniq(
@@ -665,7 +705,9 @@ var SearchView = Widget.extend({
                     )
                 );
             }
-
+            if (facet.attributes.cat === "timeRangeCategory") {
+                timeRangeMenuIsActive = true;
+            }
             var f = new FacetView(this, facet, this.intervalMapping, this.periodMapping);
             started.push(f.appendTo(self.$('.o_searchview_input_container')));
             self.input_subviews.push(f);
@@ -691,6 +733,9 @@ var SearchView = Widget.extend({
             }
             if (self.filters_menu) {
                 self._unsetUnusedFilters(selectedGroupIds.filterCategory);
+            }
+            if (self.timeRangeMenu && !timeRangeMenuIsActive) {
+                self.timeRangeMenu.deactivate();
             }
         });
     },
@@ -747,7 +792,7 @@ var SearchView = Widget.extend({
         }
         var current_group = [],
             current_category = 'filters',
-            categories = {filters: this.filters, group_by: this.groupbys};
+            categories = {filters: this.filters, group_by: this.groupbys, timeRanges: this.timeRanges};
 
         _.each(filters.concat({category:'filters', item: 'separator'}), function (filter) {
             if (filter.item.tag === 'filter' && filter.category === current_category) {
@@ -922,6 +967,15 @@ var SearchView = Widget.extend({
         return new GroupByMenu(this, groupbys, this.fields);
     },
     /**
+     * Create a time range menu.
+     *
+     * @private
+     * @returns {Widget} the range menu
+     */
+     _createTimeRangeMenu: function () {
+        return new TimeRangeMenu(this, this.fields, this.timeRanges);
+     },
+    /**
      * Processes a fieldsView in place. In particular, parses its arch.
      *
      * @todo: this function is also defined in AbstractView ; this code
@@ -936,6 +990,81 @@ var SearchView = Widget.extend({
         fv.arch = utils.xml_to_json(doc, true);
         return fv;
     },
+    _searchDefaultTimeRange: function () {
+        if (this.timeRanges) {
+            var timeRange = "[]";
+            var timeRangeDescription;
+            var comparisonTimeRange = "[]";
+            var comparisonTimeRangeDescription;
+
+            var dateField = {
+                name: this.timeRanges.field,
+                type: this.fields[this.timeRanges.field].type,
+                description: this.fields[this.timeRanges.field].string,
+            };
+
+            timeRange = Domain.prototype.constructDomain(
+                dateField.name,
+                this.timeRanges.range,
+                dateField.type
+            );
+            timeRangeDescription = _.findWhere(
+                PeriodOptions,
+                {optionId: this.timeRanges.range}
+            ).description;
+
+            if (this.timeRanges.comparison_range) {
+                comparisonTimeRange = Domain.prototype.constructDomain(
+                    dateField.name,
+                    this.timeRanges.range,
+                    dateField.type,
+                    null,
+                    this.timeRanges.comparison_range
+                );
+                comparisonTimeRangeDescription = _.findWhere(
+                    ComparisonOptions,
+                    {optionId: this.timeRanges.comparison_range}
+                ).description;
+            }
+
+            return $.when({
+                cat: 'timeRangeCategory',
+                category: _t("Time Range"),
+                icon: 'fa fa-calendar',
+                field: {
+                    get_context: function (facet, noDomainEvaluation) {
+                        if (!noDomainEvaluation) {
+                            timeRange = Domain.prototype.stringToArray(timeRange);
+                            comparisonTimeRange = Domain.prototype.stringToArray(comparisonTimeRange);
+                        }
+                        return {
+                            timeRangeMenuData: {
+                                timeRange: timeRange,
+                                timeRangeDescription: timeRangeDescription,
+                                comparisonTimeRange: comparisonTimeRange,
+                                comparisonTimeRangeDescription: comparisonTimeRangeDescription,
+                            }
+                        };
+                },
+                    get_groupby: function () {},
+                    get_domain: function () {}
+                },
+                isRange: true,
+                values: [{
+                    label: dateField.description + ': ' + timeRangeDescription +
+                        (
+                            comparisonTimeRangeDescription ?
+                                (' / ' + comparisonTimeRangeDescription) :
+                                ''
+                        ),
+                    value: null,
+                }],
+            });
+        } else {
+            return $.when();
+        }
+    },
+
     /**
      * This function ask the groupby menu to deactive all groupbys if no
      * groupby is used.
@@ -1113,6 +1242,31 @@ var SearchView = Widget.extend({
             group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
             group.updatePeriodMapping(this.periodMapping);
             this.query.trigger('reset');
+        }
+    },
+    /*
+     * @private
+     * @param {JQueryEvent} event
+     */
+    _onTimeRangeModified: function () {
+        var facet = this.timeRangeMenu.facetFor();
+        var current = this.query.find(function (facet) {
+            return facet.get('cat') === 'timeRangeCategory';
+        });
+        if (current) {
+            this.query.remove(current, {silent: true});
+        }
+        this.query.add(facet);
+    },
+    /*
+     * @private
+     */
+    _onTimeRangeRemoved: function () {
+        var current = this.query.find(function (facet) {
+            return facet.get('cat') === 'timeRangeCategory';
+        });
+        if (current) {
+            this.query.remove(current);
         }
     },
 });

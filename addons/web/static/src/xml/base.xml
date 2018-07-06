@@ -1127,6 +1127,72 @@
     </div>
 </t>
 
+<div t-name="web.TimeRangeMenu" class="btn-group o_dropdown">
+    <button class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle o_time_range_menu_button" data-toggle="dropdown"
+        aria-expanded="false" tabindex="-1">
+        <span class="fa fa-calendar"/> Time Ranges <span class="caret"/>
+    </button>
+    <div class="dropdown-menu o_dropdown_menu o_time_range_menu" role="menu">
+        <div class="dropdown-item-text">
+            <label for="date_field_selector">Date Field</label>
+            <select id="date_field_selector" class="o_input o_date_field_selector">
+                <t t-foreach="widget.dateFields" t-as="field">
+                    <t t-if="widget.dateField.name === field.name">
+                    <option t-att-value="field.name" selected="selected">
+                        <t t-esc="field.string"/>
+                    </option>
+                    </t>
+                    <t t-else="">
+                        <option t-att-value="field.name">
+                            <t t-esc="field.string"/>
+                        </option>
+                    </t>
+                </t>
+            </select>
+        </div>
+        <div class="dropdown-item-text">
+            <label for="time_range_selector">Date Range</label>
+            <select id="time_range_selector" class="o_input o_time_range_selector">
+                <t t-foreach="widget.periodOptions" t-as="option">
+                    <t t-if="widget.timeRangeId === option.optionId">
+                        <option t-att-value="option.optionId" selected="selected">
+                            <t t-esc="option.description"/>
+                        </option>
+                    </t>
+                    <t t-else="">
+                        <option t-att-value="option.optionId">
+                            <t t-esc="option.description"/>
+                        </option>
+                    </t>
+                </t>
+            </select>
+        </div>
+        <div class="dropdown-item-text">
+            <t t-set="isSelected" t-value="widget.comparisonIsSelected"/>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="comparison_checkbox" class="custom-control-input o_comparison_checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
+                <label for="comparison_checkbox" class="custom-control-label">Compare To</label>
+            </div>
+            <select t-att-class="'o_input o_comparison_time_range_selector' + (widget.comparisonIsSelected ? '' : ' o_hidden')">
+                <t t-foreach="widget.comparisonOptions" t-as="option">
+                    <t t-if="widget.comparisonTimeRangeId === option.optionId">
+                        <option t-att-value="option.optionId" selected="selected">
+                            <t t-esc="option.description"/>
+                        </option>
+                    </t>
+                    <t t-else="">
+                        <option t-att-value="option.optionId">
+                            <t t-esc="option.description"/>
+                        </option>
+                    </t>
+                </t>
+            </select>
+        </div>
+        <div class="dropdown-item-text">
+            <button class="btn btn-primary o_apply_range" type="button">Apply</button>
+        </div>
+    </div>
+</div>
 
 
 <div t-name="SearchView" class="o_searchview" role="search" aria-autocomplete="list">

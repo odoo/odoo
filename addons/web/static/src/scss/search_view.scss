@@ -142,11 +142,13 @@
     }
 }
 
-// Filters
-.o_filters_menu {
+.o_filters_menu, .o_group_by_menu, .o_time_range_menu {
     max-height: calc(100vh - 125px);
     overflow: auto;
+}
 
+// Filters
+.o_filters_menu {
     .o_filter_condition {
         @include o-search-options-dropdown-custom-item;
         margin-bottom: 8px;
@@ -182,8 +184,6 @@
     }
 }
 
-
-
 // Favorites
 .o_favorites_menu {
     max-height: 75vh;
@@ -209,5 +209,12 @@
     .o_save_name { // save button
         display: none; // hidden by default
         @include o-search-options-dropdown-custom-item;
+    }
+}
+
+// Time Ranges
+.o_time_range_menu {
+    .dropdown-item-text > label,  .custom-control-label {
+        font-weight: bold;
     }
 }
