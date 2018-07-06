@@ -18,6 +18,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         return expense_sheet.address_id.id or expense_sheet.employee_id.id and expense_sheet.employee_id.address_home_id.id
 
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, default=_default_partner_id)
+    partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account")
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True, required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True)
@@ -27,12 +28,31 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     communication = fields.Char(string='Memo')
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
+    show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        active_ids = self._context.get('active_ids', [])
+        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+        if expense_sheet.employee_id.id and expense_sheet.employee_id.sudo().bank_account_id.id:
+            self.partner_bank_account_id = expense_sheet.employee_id.sudo().bank_account_id.id
+        elif self.partner_id and len(self.partner_id.bank_ids) > 0:
+            self.partner_bank_account_id = self.partner_id.bank_ids[0]
+        else:
+            self.partner_bank_account_id = False
 
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
         if not self.amount > 0.0:
             raise ValidationError(_('The payment amount must be strictly positive.'))
+
+    @api.depends('payment_method_id')
+    def _compute_show_partner_bank(self):
+        """ Computes if the destination bank account must be displayed in the payment form view. By default, it
+        won't be displayed but some modules might change that, depending on the payment type."""
+        for payment in self:
+            payment.show_partner_bank_account = payment.payment_method_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
 
     @api.one
     @api.depends('journal_id')
@@ -59,6 +79,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
             'partner_type': 'supplier',
             'payment_type': 'outbound',
             'partner_id': self.partner_id.id,
+            'partner_bank_account_id': self.partner_bank_account_id.id,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'payment_method_id': self.payment_method_id.id,
