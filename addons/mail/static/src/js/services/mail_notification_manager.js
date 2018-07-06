@@ -556,7 +556,7 @@ MailManager.include({
      */
     _onNotification: function (notifs) {
         var self = this;
-        notifs = this._filterNotificationsOnUnsubscribe(notifs);
+        notifs = this._filterNotificationsOnUnsubscribe(notifs.data);
         _.each(notifs, function (notif) {
             var model = notif[0][1];
             if (model === 'ir.needaction') {

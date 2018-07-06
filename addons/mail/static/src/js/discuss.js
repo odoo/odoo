@@ -1377,7 +1377,7 @@ var Discuss = AbstractAction.extend({
      * @param {string} [type] the channel
      */
     _onMessageUpdated: function (ev) {
-        var message = ev.data.message;
+        var message = ev.data;
         var type = ev.data.type;
         var self = this;
         var currentThreadID = this._thread.getID();

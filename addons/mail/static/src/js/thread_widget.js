@@ -605,7 +605,7 @@ var ThreadWidget = Widget.extend({
      */
     _onClickMessageStar: function (ev) {
         var messageID = $(ev.currentTarget).data('message-id');
-        this.trigger('toggle_star_status', messageID);
+        this.trigger('toggle_star_status', {messageID: messageID});
     },
     /**
      * @private
