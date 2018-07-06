@@ -429,9 +429,9 @@ var ListController = BasicController.extend({
      */
     _onAddRecord: function (ev) {
         ev.stopPropagation();
-        var recordID = event.data.id || this.handle;
+        var recordID = ev.data.id || this.handle;
         if (this.activeActions.create) {
-            event.data.group_id ? this._addGroupRecord(recordID) : this._addRecord(recordID);
+            ev.data.group_id ? this._addGroupRecord(recordID) : this._addRecord(recordID);
         } else if (ev.data.onFail) {
             ev.data.onFail();
         }
