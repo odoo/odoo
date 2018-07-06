@@ -11,7 +11,8 @@
         <field name="model">ir.demo</field>
         <field name="arch" type="xml">
             <form>
-                <p>Installing demo data in an already instantiated DB can make things go boom boom, are you sure you want to proceed?</p>
+                <p>Loading demo data is intended for throwaway databases only, doing so in a production database with real data could cause issues.</p>
+                <p>Are you sure you want to proceed?</p>
                 <footer>
                     <button name="install_demo" string="Proceed" type="object" class="btn-primary"/>
                     <button special="cancel" string="Close" class="btn-default"/>
