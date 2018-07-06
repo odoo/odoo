@@ -1284,9 +1284,13 @@ There are 5 possible type of tags in a dashboard view:
         If not provided, By default, the group_operator from the field definition is used.
         Note that no aggregation of field values is achieved if the group_operator value is "".
 
+        .. note:: The special aggregate function ``count_distinct`` (defined in odoo) can also be used here
+
         .. code-block:: xml
 
           <aggregate name="price_total_max" field="price_total" group_operator="max"/>
+
+
 
     - ``col`` (optional)
         The number of columns spanned by this tag (only makes sense inside a
@@ -1295,6 +1299,9 @@ There are 5 possible type of tags in a dashboard view:
     - ``widget`` (optional)
         A widget to format the value (like the widget attribute for fields).
         For example, monetary.
+
+    - ``help`` (optional)
+        A help message to dipslay in a tooltip (equivalent of help for a field in python)
 
 ``formula``
     declares a derived value.  Formulas are values computed from aggregates.
@@ -1323,6 +1330,9 @@ There are 5 possible type of tags in a dashboard view:
     - ``widget`` (optional)
         A widget to format the value (like the widget attribute for fields).
         For example, monetary. By default, it is 'float'.
+
+    - ``help`` (optional)
+        A help message to dipslay in a tooltip (equivalent of help for a field in python)
 
 ``widget``
     Declares a specialized widget to be used to display the information. This is
