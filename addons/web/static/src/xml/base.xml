@@ -1055,14 +1055,19 @@
                 <a href="#">
                     <t t-esc="item.description"/>
                     <span t-if="item.isRemovable" t-att-data-id="item.itemId" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
-                    <span t-if="item.hasOptions" t-att-data-id="item.itemId" class="o_submenu_switcher"> <span class="fa fa-caret-down"></span> </span>
+                    <span t-if="item.hasOptions" t-att-data-id="item.itemId" class="o_submenu_switcher">
+                        <span t-att-class="item.isOpen ? 'fa fa-caret-down' : 'fa fa-caret-right'"></span>
+                    </span>
                 </a>
                 <ul t-if="item.hasOptions &amp;&amp; item.isOpen">
+                    <t t-set="subgroup" t-value="0"/>
                     <t t-foreach="_.values(item.options)" t-as="option">
+                        <li t-if="subgroup !== option.groupId" class="divider" data-removable="1"/>
                         <li t-att-class="'o_item_option ' + (item.currentOptionId === option.optionId ? 'selected': '')"
                             t-att-data-item_id="item.itemId" t-att-data-option_id="option.optionId">
                             <a href="#"><t t-esc="option.description"/></a>
                         </li>
+                        <t t-set="subgroup" t-value="option.groupId"/>
                     </t>
                 </ul>
             </li>
@@ -1145,7 +1150,7 @@
     <div class="fa fa-sm fa-remove o_facet_remove" role="img" aria-label="Remove" title="Remove"/>
 </div>
 <span t-name="SearchView.FacetView.Value">
-    <t t-esc="widget.model.get('label') + (widget.intervalLabel ? (': ' + widget.intervalLabel) : '')"/>
+    <t t-esc="widget.model.get('label') + (widget.optionLabel ? (': ' + widget.optionLabel) : '')"/>
 </span>
 <t t-name="SearchView.autocomplete">
     <ul class="dropdown-menu o_searchview_autocomplete" role="menu"></ul>

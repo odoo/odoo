@@ -6,7 +6,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -64,7 +64,7 @@ FavoriteMenu.include({
         });
 
         context.add({
-            group_by: pyeval.eval('groupbys', search_data.groupbys || [])
+            group_by: pyUtils.eval('groupbys', search_data.groupbys || [])
         });
         // AAB: trigger_up an event that will be intercepted by the controller,
         // as soon as the controller is the parent of the control panel
@@ -77,7 +77,7 @@ FavoriteMenu.include({
         var currentAction = am.getCurrentAction();
         var controller = am.getCurrentController();
         context.add(controller.widget.getContext());
-        var c = pyeval.eval('context', context);
+        var c = pyUtils.eval('context', context);
         for (var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
                 delete c[k];
