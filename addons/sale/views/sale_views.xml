@@ -194,6 +194,17 @@
                 </tree>
             </field>
         </record>
+        <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="view_quotation_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="banner_route">/sales/onboarding_quotation_panel</attribute>
+                </xpath>
+            </field>
+        </record>
 
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
@@ -706,6 +717,23 @@
             sequence="5" active="False"/>
 
 
+        <record id="action_quotations_with_onboarding" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_quotation_tree_with_onboarding"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+              </p><p>
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+              </p>
+            </field>
+        </record>
+
         <record id="action_quotations" model="ir.actions.act_window">
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
@@ -724,7 +752,7 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-                action="action_quotations"
+                action="action_quotations_with_onboarding"
                 parent="sale_order_menu"
                 sequence="1" groups="sales_team.group_sale_salesman"/>
 
@@ -985,7 +1013,6 @@
                 }
             </field>
         </record>
-
         <record id="action_quotations_salesteams" model="ir.actions.act_window">
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
@@ -1009,7 +1036,6 @@
               </p>
             </field>
         </record>
-
         <record id="action_invoice_salesteams" model="ir.actions.act_window">
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>

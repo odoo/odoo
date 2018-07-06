@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ONBOARDING STEPS -->
+    <template id="onboarding_signature_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Signature</t>
+            <t t-set="description">Request a digital signature to confirm orders.</t>
+            <t t-set="done_icon" t-value="'fa-star'" />
+            <t t-set="done_text">Looks great!</t>
+            <t t-set="method" t-value="'action_open_sale_onboarding_signature'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="done" t-value="company.sale_onboarding_signature_done" />
+        </t>
+    </template>
+    <template id="sale_onboarding_payment_acquirer_step" primary="True"
+        inherit_id="payment.onboarding_payment_acquirer_step">
+        <xpath expr="//t[@t-set='method']" position="replace">
+            <t t-set="method" t-value="'action_open_sale_onboarding_payment_acquirer'" />
+        </xpath>
+        <xpath expr="//t[@t-set='done']" position="replace">
+            <t t-set="done" t-value="company.sale_onboarding_payment_acquirer_done" />
+        </xpath>
+    </template>
+    <template id="onboarding_quotation_layout_step" primary="True" inherit_id="account.onboarding_invoice_layout_step">
+       <xpath expr="//t[@t-set='title']" position="replace">
+            <t t-set="title">Quotation Layout</t>
+       </xpath>
+       <xpath expr="//t[@t-set='description']" position="replace">
+            <t t-set="description">Create and send professional looking quotations.</t>
+        </xpath>
+    </template>
+    <!-- ONBOARDING PANEL-->
+    <template id="onboarding_quotation_panel" name="sale.quotation.onboarding.panel">
+        <t t-call="base.onboarding_container">
+            <t t-set="classes">o_onboarding_violet</t>
+            <t t-set="bg_image">/sale/static/src/img/sale_quotation_onboarding_bg.jpg</t>
+            <t t-set="close_method">action_close_sale_quotation_onboarding</t>
+            <t t-set="close_model">res.company</t>
+            <t t-set="fold_method">action_toggle_fold_sale_quotation_onboarding</t>
+            <t t-set="fold_model">res.company</t>
+            <t t-set="folded_by_default" t-value="company.sale_quotation_onboarding_folded" />
+
+            <t t-call="base.onboarding_company_step" name="company_step" />
+            <t t-call="sale.onboarding_quotation_layout_step" name="quotation_layout_step" />
+            <t t-call="sale.onboarding_signature_step" name="signature_step" />
+            <t t-call="sale.sale_onboarding_payment_acquirer_step" name="payment_acquirer_step" />
+        </t>
+    </template>
+    <!-- SIGNATURE FORM -->
+    <record model="ir.ui.view" id="sale_onboarding_signature_form">
+        <field name="name">sale.onboarding.signature.form</field>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <form string="Request an electronic signature">
+                <div class="panel-body row">
+                    Quotations can be confirmed automatically based on a customer signature, in
+                    order to automate the delivery process. This functionality is convenient for all
+                    the parties and offers as much legal guarantee as a paper signature.
+                    <br />
+                    <br />
+                    Do you want to activate the digital signature?
+                </div>
+                <div class="panel-body row">
+                    <field name="portal_confirmation_sign_radio" widget="radio" />
+                </div>
+                <footer>
+                    <button name="action_save_onboarding_signature" string="OK" class="oe_highlight"
+                            type="object" />
+                    <button special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_sale_onboarding_signature" model="ir.actions.act_window">
+        <field name="name">Request a digital signature</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale.sale_onboarding_signature_form" />
+        <field name="target">new</field>
+    </record>
+    <!-- PAYMENT ACQUIRER -->
+    <record id="sale_onboarding_payment_acquirer_form" model="ir.ui.view">
+        <field name="name">sale.onboarding.payment.acquirer.form</field>
+        <field name="model">sale.payment.acquirer.onboarding.wizard</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_onboarding_wizard_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='skip_step_text']" position="replace">
+                <div class="mb16">
+                    You can skip this step if you don't manage payments on quotations.
+                </div>
+            </xpath>
+         </field>
+    </record>
+    <record id="action_open_sale_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
+        <field name="name">Choose a payment method</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.payment.acquirer.onboarding.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale.sale_onboarding_payment_acquirer_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>
