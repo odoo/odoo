@@ -11,11 +11,11 @@
         <field name="model">ir.demo</field>
         <field name="arch" type="xml">
             <form>
-                <p>Loading demo data is intended for throwaway databases only, doing so in a production database with real data could cause issues.</p>
-                <p>Are you sure you want to proceed?</p>
+                <p>Demo data should only be used on test databases. Once they are loaded, they cannot be removed.</p>
+                <p>Are you sure you want to load demo data?</p>
                 <footer>
-                    <button name="install_demo" string="Proceed" type="object" class="btn-primary"/>
-                    <button special="cancel" string="Close" class="btn-default"/>
+                    <button name="install_demo" string="Load demo data" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Discard" class="btn-default"/>
                 </footer>
             </form>
         </field>

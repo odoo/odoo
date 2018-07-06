@@ -8,4 +8,8 @@ class IrDemo(models.TransientModel):
 
     def install_demo(self):
         force_demo(self.env.cr)
-        return True
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/web',
+        }
