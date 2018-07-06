@@ -27,7 +27,7 @@ class SaleTimesheetController(http.Controller):
         return {
             'html_content': view.render(values),
             'project_ids': projects.ids,
-            'actions': self._plan_prepare_actions(projects),
+            'actions': self._plan_prepare_actions(projects, values),
         }
 
     def _plan_prepare_values(self, projects):
@@ -312,7 +312,7 @@ class SaleTimesheetController(http.Controller):
     # Actions: Stat buttons, ...
     # --------------------------------------------------
 
-    def _plan_prepare_actions(self, projects):
+    def _plan_prepare_actions(self, projects, values):
         actions = []
         if len(projects) == 1:
             if request.env.user.has_group('sales_team.group_sale_salesman'):
@@ -324,8 +324,9 @@ class SaleTimesheetController(http.Controller):
                         'context': json.dumps({'active_id': projects.id, 'active_model': 'project.project'}),
                     })
             if request.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+                to_invoice_amount = values['dashboard']['profit'].get('to_invoice', False)  # plan project only takes services SO line with timesheet into account
                 sale_orders = projects.tasks.mapped('sale_line_id.order_id').filtered(lambda so: so.invoice_status == 'to invoice')
-                if sale_orders:
+                if to_invoice_amount and sale_orders:
                     if len(sale_orders) == 1:
                         actions.append({
                             'label': _("Create Invoice"),
@@ -417,5 +418,5 @@ class SaleTimesheetController(http.Controller):
         elif res_model == 'account.invoice':
             action = clean_action(request.env.ref('account.action_invoice_tree1').read()[0])
             action['domain'] = domain
-            action['context'] = {'create': False, 'edit': False, 'delete': False}  # No CRUD operation when coming from overview
+            action['context'] = {'create': False, 'delete': False}  # only edition of invoice from overview
         return action
