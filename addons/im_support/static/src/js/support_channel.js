@@ -20,7 +20,9 @@ var _t = core._t;
  * mail.model.ThreadWithCache
  */
 var SupportChannel = ThreadWithCache.extend({
+
     /**
+     * @override
      * @param {Object} params
      * @param {Object} params.data
      * @param {boolean} params.data.available

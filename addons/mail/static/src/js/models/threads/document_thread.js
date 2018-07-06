@@ -319,7 +319,6 @@ var DocumentThread = Thread.extend({
 
         });
     },
-
 });
 
 return DocumentThread;

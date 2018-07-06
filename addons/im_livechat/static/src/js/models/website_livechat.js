@@ -8,24 +8,27 @@ var AbstractThread = require('mail.model.AbstractThread');
  * is not linked to the mail service.
  */
 var WebsiteLivechat = AbstractThread.extend({
+
     /**
-     * @param {Object} livechatData
-     * @param {boolean} [livechatData.folded] states whether the livechat is
+     * @override
+     * @private
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {boolean} [params.data.folded] states whether the livechat is
      *   folded or not. It is considered only if this is defined and it is a
-     *   boolean value.
-     * @param {integer} livechatData.id the ID of this livechat.
-     * @param {integer} [livechatData.message_unread_counter=undefined] the
+     *   boolean.
+     * @param {integer} params.data.id the ID of this livechat.
+     * @param {integer} [params.data.message_unread_counter=undefined] the
      *   unread counter of this livechat.
-     * @param {Array} livechatData.operator_pid
-     * @param {string} livechatData.name the name of this livechat.
-     * @param {string} [livechatData.state] if 'folded', the livechat is folded.
+     * @param {Array} params.data.operator_pid
+     * @param {string} params.data.name the name of this livechat.
+     * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
-     * @param {string} livechatData.uuid the UUID of this livechat.
+     * @param {string} params.data.uuid the UUID of this livechat.
      */
     init: function (livechatData) {
         var params = { data: livechatData };
-
-        this._super(params);
+        this._super.call(this, params);
 
         this._operatorPID = livechatData.operator_pid;
         this._uuid = livechatData.uuid;
@@ -45,12 +48,6 @@ var WebsiteLivechat = AbstractThread.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @param {boolean} folded
-     */
-    fold: function (folded) {
-        this._folded = folded;
-    },
     /**
      * @override
      * @returns {im_livechat.model.WebsiteLivechatMessage[]}

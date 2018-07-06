@@ -30,6 +30,14 @@ var AbstractThread = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Updates the folded state of the thread
+     *
+     * @param {boolean} folded
+     */
+    fold: function (folded) {
+        this._folded = folded;
+    },
+    /**
      * Get the ID of this thread
      *
      * @returns {integer|string}

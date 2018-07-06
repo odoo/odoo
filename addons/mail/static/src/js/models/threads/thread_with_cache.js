@@ -14,6 +14,7 @@ var session = require('web.session');
  * in order to make searches on messages in a thread.
  */
 var ThreadWithCache = Thread.extend({
+
     /**
      * @override
      * @param {Object} params
