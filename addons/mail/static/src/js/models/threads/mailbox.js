@@ -207,7 +207,6 @@ var Mailbox = ThreadWithCache.extend({
             throw _t(_.str("Missing domain for mailbox with ID '%s'", this._id));
         }
     },
-
 });
 
 return Mailbox;

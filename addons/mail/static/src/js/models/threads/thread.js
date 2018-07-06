@@ -16,20 +16,20 @@ var ServicesMixin = require('web.ServicesMixin');
  * In particular, channels and mailboxes are two different kinds of threads.
  */
 var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
+
     /**
      * @override
-     * @param {Object} params
      * @param {mail.Manager} param.parent
+     * @param {Object} params
      * @param {Object} params.data
      * @param {string} [params.data.channel_type]
      * @param {string} params.data.name
      * @param {string} [params.data.type]
      */
     init: function (params) {
-        this._super.apply(this, arguments);
         Mixins.EventDispatcherMixin.init.call(this, arguments);
         this.setParent(params.parent);
-
+        this._super.apply(this, arguments);
         // threads are not detached by default
         this._detached = false;
         // if this._massMailing is set, display subject on messages, use
@@ -100,14 +100,15 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return $.when([]);
     },
     /**
-     * Updates the _folded state of the thread. Must be overriden to reflect
+     * Updates the folded state of the thread. Must be overriden to reflect
      * the new state in the interface.
      *
+     * @override
      * @param {boolean} boolean
      */
     fold: function (folded) {
-        this._detached = true;
-        this._folded = folded;
+        this._super.apply(this, arguments);
+        this._detached = true; // auto-detach the thread
         this._warnUpdatedWindowState();
     },
     /**
@@ -300,8 +301,7 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     markAsRead: function () {
         if (this._unreadCounter > 0) {
-            this._unreadCounter = 0;
-            this._warnUpdatedUnreadCounter();
+            this.resetUnreadCounter();
         }
         return $.when();
     },
