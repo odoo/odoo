@@ -36,7 +36,6 @@ def load_data(cr, module_name, idref, mode, kind, package, report):
     """
 
     def _get_files_of_kind(kind):
-        nonlocal package
         if kind == 'demo':
             kind = ['demo_xml', 'demo']
         elif kind == 'data':
@@ -202,8 +201,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 module.write(module.get_values_from_terp(package.data))
             load_data(cr, module_name, idref, mode, kind='data', package=package, report=report)
             has_demo = load_demo(cr, package, idref, mode, report)
-            cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
-            module.invalidate_cache(['demo'])
+            if has_demo:
+                cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
+                module.invalidate_cache(['demo'])
 
             migrations.migrate_module(package, 'post')
 
