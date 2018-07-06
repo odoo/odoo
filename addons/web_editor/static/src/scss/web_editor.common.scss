@@ -7,6 +7,22 @@ html, body {
     height: 100%;
 }
 
+
+//
+// FIXED li alignment
+//
+#wrapwrap,.oe_form_field_html_text{
+    ol, ul {
+    list-style-position: inside;
+        li > {
+            h1, h2, h3, h4, h5, h6, p{
+                margin: 0 0 9px;
+                display: inline-block;
+            }
+        }
+    }
+}
+
 .css_non_editable_mode_hidden {
     display: none !important;
 }
