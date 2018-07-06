@@ -44,6 +44,8 @@ ActivityMenu.include({
         var noteDateTime = this.noteDateTimeWidget.getValue();
         if (noteDateTime) {
             params = _.extend(params, {'date_deadline': noteDateTime});
+        } else {
+            params = _.extend(params, { 'date_deadline': moment() });
         }
         this.$('.o_note_show').removeClass('hidden');
         this.$('.o_note').addClass('hidden');
@@ -83,9 +85,7 @@ ActivityMenu.include({
      */
     _onAddNoteClick: function (ev) {
         ev.stopPropagation();
-        if (!this.noteDateTimeWidget){
-            this.noteDateTimeWidget = new datepicker.DateWidget(this, {useCurrent: true});
-        }
+        this.noteDateTimeWidget = new datepicker.DateWidget(this, { useCurrent: true });
         this.noteDateTimeWidget.appendTo(this.$('.o_note_datetime'));
         this.noteDateTimeWidget.$input.attr('placeholder', _t("Today"));
         this.$('.o_note_show, .o_note').toggleClass('hidden');
