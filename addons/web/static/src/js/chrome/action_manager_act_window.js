@@ -515,7 +515,8 @@ ActionManager.include({
      * @param {Object} [searchData.contexts=[]]
      * @param {Object} [searchData.domains=[]]
      * @param {Object} [searchData.groupbys=[]]
-     * @returns {Object} an object with keys 'context', 'domain', 'groupBy'
+     * @param {Object} [searchData.viewGroupBys={}]
+     * @returns {Object} an object with keys 'context', 'domain', 'groupBy', 'viewGroupBys'
      */
     _processSearchData: function (action, searchData) {
         var contexts = searchData.contexts;
@@ -544,6 +545,7 @@ ActionManager.include({
             context: context,
             domain: results.domain,
             groupBy: groupBy,
+            viewGroupBys: searchData.viewGroupBys,
         };
     },
     /**

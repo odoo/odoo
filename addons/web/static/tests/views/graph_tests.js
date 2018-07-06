@@ -277,7 +277,7 @@ QUnit.module('Views', {
             assert.notOk(graph.$('text:contains(red)').length,
                         "should not contain a text element with color in legend");
 
-            graph.update({groupBy: ['color_id']});
+            graph.update({viewGroupBys: {graphGroupBy: ['color_id']}});
 
             return concurrency.delay(0);
         }).then(function () {
@@ -332,7 +332,7 @@ QUnit.module('Views', {
                 graph_intervalMapping: {},
             }, "context should be correct");
 
-            graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
+            graph.update({viewGroupBys: {graphGroupBy: ['product_id', 'color_id']}}); // change groupbys
 
             return concurrency.delay(0);
         }).then(function () {

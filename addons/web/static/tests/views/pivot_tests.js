@@ -177,6 +177,7 @@ QUnit.module('Views', {
             },
             viewOptions: {
                 action: {
+                    context: {},
                     views: [
                         { viewID: 2, type: 'form' },
                         { viewID: 5, type: 'kanban' },
@@ -616,7 +617,7 @@ QUnit.module('Views', {
         assert.strictEqual(pivot.$('tbody tr').length, 1,
             "should have 1 rows");
 
-        pivot.update({groupBy: ['product_id']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['product_id']}});
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
             "should have 3 cells");
@@ -680,7 +681,7 @@ QUnit.module('Views', {
 
         // expand on date:days, product
         nbReadGroups = 0;
-        pivot.update({groupBy: ['date:days', 'product_id']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['date:days', 'product_id']}});
 
         assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
         assert.strictEqual(pivot.$('tbody tr').length, 8,
@@ -726,7 +727,7 @@ QUnit.module('Views', {
         });
 
         // expand on date:days, product
-        pivot.update({groupBy: ['date:days', 'product_id']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['date:days', 'product_id']}});
 
         assert.strictEqual(pivot.$('tbody tr').length, 8,
             "should have 7 rows (total + 3 for December and 2 for October and April)");
@@ -1172,8 +1173,8 @@ QUnit.module('Views', {
         });
 
         def = $.Deferred();
-        pivot.update({groupBy: ['product_id']});
-        pivot.update({groupBy: ['product_id', 'customer']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['product_id']}});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['product_id', 'customer']}});
         def.resolve();
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 6,

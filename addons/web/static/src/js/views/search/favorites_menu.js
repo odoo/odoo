@@ -113,6 +113,12 @@ return Widget.extend({
         if (!_.isEmpty(results.group_by)) {
             results.context.group_by = results.group_by;
         }
+        if (search.viewGroupBys.pivotRowGroupBy.length) {
+            results.context.pivot_row_groupby = search.viewGroupBys.pivotRowGroupBy;
+        }
+        if (search.viewGroupBys.graphGroupBy.length) {
+            results.context.graph_groupbys = search.viewGroupBys.graphGroupBy;
+        }
         // Don't save user_context keys in the custom filter, otherwise end
         // up with e.g. wrong uid or lang stored *and used in subsequent
         // reqs*
