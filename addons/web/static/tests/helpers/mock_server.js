@@ -3,7 +3,7 @@ odoo.define('web.MockServer', function (require) {
 
 var Class = require('web.Class');
 var Domain = require('web.Domain');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var MockServer = Class.extend({
     /**
@@ -235,7 +235,7 @@ var MockServer = Class.extend({
             // 'transfer_node_to_modifiers' simulation
             var attrs = node.getAttribute('attrs');
             if (attrs) {
-                attrs = pyeval.py_eval(attrs);
+                attrs = pyUtils.py_eval(attrs);
                 _.extend(modifiers, attrs);
             }
 
@@ -250,7 +250,7 @@ var MockServer = Class.extend({
                 var mod = node.getAttribute(a);
                 if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
-                    var v = pyeval.py_eval(mod, {context: pyevalContext}) ? true: false;
+                    var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
                     if (inTreeView && a === 'invisible') {
                         modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {

@@ -12,7 +12,7 @@ var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
 
@@ -1320,7 +1320,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     _onSearch: function (ev) {
         ev.stopPropagation();
         var session = this.getSession();
-        var result = pyeval.eval_domains_and_contexts({
+        var result = pyUtils.eval_domains_and_contexts({
             domains: ev.data.domains,
             contexts: [session.user_context],
         });

@@ -4,7 +4,8 @@ odoo.define('web.FavoriteMenu', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
-var pyeval = require('web.pyeval');
+var Domain = require('web.Domain');
+var pyUtils = require('web.py_utils');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -98,15 +99,17 @@ return Widget.extend({
             return;
         }
         var user_context = this.getSession().user_context;
-        var search = this.searchview.build_search_data();
+        // get search params with domains not evaluated
+        var search = this.searchview.build_search_data(true);
+        var domain = pyUtils.assembleDomains(search.domains, 'AND');
         var controllerContext;
         this.trigger_up('get_controller_context', {
             callback: function (ctx) {
                 controllerContext = ctx;
             },
         });
-        var results = pyeval.eval_domains_and_contexts({
-                domains: search.domains,
+        var results = pyUtils.eval_domains_and_contexts({
+                domains: [],
                 contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
                 group_by_seq: search.groupbys || [],
             });
@@ -125,7 +128,7 @@ return Widget.extend({
             user_id: shared_filter ? false : session.uid,
             model_id: this.target_model,
             context: results.context,
-            domain: results.domain,
+            domain: domain,
             sort: JSON.stringify(this.searchview.dataset._sort),
             is_default: default_filter,
             action_id: this.action_id,
@@ -180,13 +183,23 @@ return Widget.extend({
      * @return {Object}
      */
     facet_for: function (filter) {
+        var self = this;
         return {
             category: _t("Custom Filter"),
             icon: 'fa-star',
             field: {
                 get_context: function () { return filter.context; },
                 get_groupby: function () { return [filter.context]; },
-                get_domain: function () { return filter.domain; }
+                // facet is not used
+                get_domain: function (facet, noEvaluation) {
+                    noEvaluation = noEvaluation || false;
+                    var userContext = self.getSession().user_context;
+                    var domain = pyUtils.assembleDomains([filter.domain]);
+                    if (!noEvaluation) {
+                        return Domain.prototype.stringToArray(domain, userContext);
+                    }
+                    return domain;
+                }
             },
             _id: filter.id,
             is_custom_filter: true,

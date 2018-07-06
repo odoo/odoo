@@ -6,33 +6,39 @@ var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
-// interface IItem {
-//     itemId: string;
-//     description: string;
-//     groupId: string;
-//     isActive: boolean; (optional)
-//     isOpen: boolean; (optional)
-//     isRemovable: boolean; (optional)
-//     options: array of objects with 'optionId' and 'description' keys; (optional)
-//     defaultOptionId: string refers to an optionId (optional)
-//     currentOptionId: string refers to an optionId that is activated if item is active (optional)
-// }
+
 
 var DropdownMenu = Widget.extend({
     template: 'web.DropdownMenu',
     events: {
         'click li.o_menu_item': '_onItemClick',
         'click li.o_item_option': '_onOptionClick',
-        'click li.o_menu_item span.o_submenu_switcher': '_openItemOptions',
         'click span.o_trash_button': '_onTrashClick',
         'hidden.bs.dropdown': '_onBootstrapClose',
     },
 
     /**
+     * override
+     *
      * @param {Widget} parent
-     * @param {Object} dropdowHeader object with keys 'title' and 'icon'
-     * @param {Object} items values are arrays of items (see interface IItems)
-     * @param {Object} itemGenerator
+     * @param {Object} dropdowHeader object used to customize the dropdown menu. The keys:
+     *                      - 'title' (e.g. 'Group By')
+     *                      - 'icon' (e.g. 'fa-bars')
+     *                      - 'symbol' (e.g. 'caret')
+     *                      - 'category' (describes the type of items)
+     *                      - 'style' (button style)
+     * @param {Object} items list of menu items (type IGMenuItem below)
+     *   interface IMenuItem {
+     *      itemId: string; (optional) unique id associated with the item
+     *      description: string; label printed on screen
+     *      groupId: string;
+     *      isActive: boolean; (optional) determines if the item is considered active
+     *      isOpen: boolean; (optional) in case there are options the submenu presenting the options
+     *                                is opened or closed according to isOpen
+     *      isRemovable: boolean; (optional) can be removed from menu
+     *      options: array of objects with 'optionId' and 'description' keys; (optional)
+     *      currentOptionId: string refers to an optionId that is activated if item is active (optional)
+     *   }
      */
     init: function (parent, dropdownHeader, items) {
         this._super(parent);
@@ -49,7 +55,9 @@ var DropdownMenu = Widget.extend({
         this.items = _.sortBy(items, 'groupId');
         _.each(this.items, this._prepareItem.bind(this));
     },
-
+    /**
+     * override
+     */
     start: function () {
         this.$menu = this.$('.o_dropdown_menu');
     },
@@ -93,7 +101,6 @@ var DropdownMenu = Widget.extend({
         };
         this.trigger_up('menu_item_deleted', eventData);
     },
-
     /**
      * @private
      */
@@ -103,17 +110,21 @@ var DropdownMenu = Widget.extend({
         this.$('ul.o_dropdown_menu').prepend($(newMenuItems));
     },
     /**
+     * this function computes some default values for some of the item keys
+     * according to values passed at initialization
+     *
      * @private
      * @param {Object} item
      */
      _prepareItem: function (item) {
+        item.itemId = item.itemId || _.uniqueId('__item__');
         item.isOpen = item.isOpen || false;
         item.isRemovable = item.isRemovable || false;
-        item.hasOptions = item.options && item.options.length !== 0 ? true : false;
-        item.defaultOptionId = item.hasOptions ?
-            (item.defaultOptionId || item.options[0].optionId) :
-            false;
-        item.currentOptionId = item.isActive ? (item.currentOptionId || item.defaultOptionId ) : false;
+        if (item.options && item.options.length !== 0) {
+            item.options = _.sortBy(item.options, 'groupId');
+            item.hasOptions = true;
+            item.currentOptionId = item.isActive && item.currentOptionId ? item.currentOptionId : false;
+        }
     },
     /**
      * @private
@@ -121,23 +132,21 @@ var DropdownMenu = Widget.extend({
      */
     _toggleMenuItem: function (itemId) {
         var item = _.findWhere(this.items, {itemId: itemId});
-        item.isActive = !item.isActive;
-        var eventData = {
-            category: this.dropdownCategory,
-            itemId: itemId,
-            isActive: item.isActive,
-            groupId: item.groupId,
-        };
-        if (item.hasOptions) {
-            if (item.isActive) {
-                item.currentOptionId = item.defaultOptionId;
-                eventData.optionId = item.currentOptionId;
-            } else {
-                item.currentOptionId = false;
-            }
+        if (!item.hasOptions) {
+            item.isActive = !item.isActive;
+            var eventData = {
+                category: this.dropdownCategory,
+                itemId: itemId,
+                isActive: item.isActive,
+                groupId: item.groupId,
+            };
+            this._renderMenuItems();
+            this.trigger_up('menu_item_toggled', eventData);
         }
-        this._renderMenuItems();
-        this.trigger_up('menu_item_toggled', eventData);
+        if (item.hasOptions) {
+            item.isOpen = !item.isOpen;
+            this._renderMenuItems();
+        }
     },
     /**
      * @private
@@ -168,19 +177,11 @@ var DropdownMenu = Widget.extend({
             this.trigger_up('item_option_changed', eventData);
         }
     },
-    /**
-     * @private
-     * @param {string} itemId
-     */
-    _toggleMenuOptions: function (itemId) {
-        var item = _.findWhere(this.items, {itemId: itemId});
-        item.isOpen = !item.isOpen;
-        this._renderMenuItems();
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
      * This method is called when Bootstrap trigger a 'close' event (for example
      * when the user clicks outside the dropdown menu).
@@ -223,18 +224,6 @@ var DropdownMenu = Widget.extend({
         event.stopPropagation();
         var itemId = $(event.currentTarget).data('id');
         this._removeItem(itemId);
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _openItemOptions: function (event) {
-        // we preventdefault the event here to avoid changing the hash # in the
-        // url.
-        event.preventDefault();
-        event.stopPropagation();
-        var itemId = $(event.currentTarget).data('id');
-        this._toggleMenuOptions(itemId);
     },
 });
 

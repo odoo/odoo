@@ -862,6 +862,12 @@ var py = {};
             }
             return py.float.fromJSON(this._value + other._value);
         },
+        __mod__: function (other) {
+            if (!py.PY_isInstance(other, py.float)) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value % other._value);
+        },
         __neg__: function () {
             return py.float.fromJSON(-this._value);
         },
