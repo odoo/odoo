@@ -1158,7 +1158,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * @private
      * @param {mail.model.Message} message
-     * @param {string} type the channel type
+     * @param {string} [type] the channel
      */
     _onMessageUpdated: function (message, type) {
         var self = this;
