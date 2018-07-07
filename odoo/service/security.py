@@ -18,7 +18,8 @@ def compute_session_token(session, env):
 
 def check_session(session, env):
     self = env['res.users'].browse(session.uid)
-    if odoo.tools.misc.consteq(self._compute_session_token(session.sid), session.session_token):
-        return True
-    self._invalidate_session_cache()
+    if self.exists():
+        if odoo.tools.misc.consteq(self._compute_session_token(session.sid), session.session_token):
+            return True
+        self._invalidate_session_cache()
     return False
