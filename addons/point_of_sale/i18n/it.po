@@ -1094,6 +1094,10 @@ msgid ""
 "                category, you can not sell it through the point of sale\n"
 "                interface."
 msgstr ""
+"Non scordarsi di impostare il prezzo e la categoria punto vendita nel\n"
+"                quale dovrebbe comparire. Se quest'ultima non viene definita,\n"
+"                il prodotto non può essere venduto attraverso l'interfaccia\n"
+"                del punto vendita."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -1172,7 +1176,7 @@ msgstr "Ordine Vuoto"
 #: code:addons/point_of_sale/static/src/js/screens.js:420
 #, python-format
 msgid "Empty Serial/Lot Number"
-msgstr ""
+msgstr "Numero di serie/lotto mancante"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
@@ -1260,7 +1264,7 @@ msgstr "Esporta gli Ordini NON Pagati"
 #: model:product.product,name:point_of_sale.chicon_flandria_extra
 #: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
 msgid "Extra Flandria chicory"
-msgstr ""
+msgstr "Cicoria extra Flandria"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1411,6 +1415,9 @@ msgid ""
 "                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens."
 msgstr ""
+"Se viene assegnata una foto alla categoria, l'interfaccia\n"
+"                touchscreen verrà automaticamente riordinata. L'operazione\n"
+"                non è consigliata in presenza di schermi piccoli (1024x768)."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
@@ -1438,7 +1445,7 @@ msgstr "Dati importabili Punto Vendita"
 #: model:product.product,name:point_of_sale.tomate_en_grappe
 #: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
 msgid "In Cluster Tomatoes"
-msgstr ""
+msgstr "Pomodori a grappolo"
 
 #. module: point_of_sale
 #: selection:pos.session,state:0
@@ -1595,7 +1602,7 @@ msgstr "Data chiusura dell'ultima sessione"
 #: model:product.product,name:point_of_sale.poireaux_poireaux
 #: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
 msgid "Leeks"
-msgstr ""
+msgstr "Porri"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.citron
@@ -1655,12 +1662,12 @@ msgstr "Nome lotto"
 #: code:addons/point_of_sale/static/src/js/models.js:2016
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr ""
+msgstr "Richiesto numero(i) di lotto/serie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Numero di lotto/serie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_loyalty
@@ -1807,7 +1814,7 @@ msgstr "Nessuna ristampa"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:24
 #, python-format
 msgid "No sequence defined on the journal"
-msgstr ""
+msgstr "Nessuna sequenza definita nel registro"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1828,6 +1835,8 @@ msgid ""
 "Note that you may use the menu <i>Your Session</i>\n"
 "                to quickly open a new session."
 msgstr ""
+"Notare che è possibile usare il menù <i>Sessione</i>\n"
+"                per aprire rapidamente una nuova sessione."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1873,7 +1882,7 @@ msgstr "Ok"
 #: code:addons/point_of_sale/static/src/js/screens.js:421
 #, python-format
 msgid "One or more product(s) required serial/lot number."
-msgstr ""
+msgstr "Uno o più prodotti richiedevano numero di serie/lotto."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.Onions
@@ -2164,6 +2173,10 @@ msgid ""
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
 msgstr ""
+"I metodi di pagamento sono definiti dai registri contabili che hanno il\n"
+"                campo <i>Metodo di pagamento POS</i> selezionato. Per utilizzarlo\n"
+"                dall'interfaccia touchscreen, il metodo deve essere impostato nella\n"
+"                configurazione del <i>Punto vendita</i> ."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
@@ -2587,7 +2600,7 @@ msgstr "Peperone Rosso"
 #: model:product.product,name:point_of_sale.pamplemousse_rouge_pamplemousse
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
 msgid "Red grapefruit"
-msgstr ""
+msgstr "Uva rossa"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -2782,7 +2795,7 @@ msgstr "Numero di Sequenza"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1055
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Numero di serie/lotto"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2894,6 +2907,7 @@ msgstr "Alcuni ordini non possono essere inviati a"
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
 msgstr ""
+"Specificare il n. di lotto/serie del prodotto nella riga d'ordine del POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
@@ -3233,6 +3247,9 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"Il sistema aprirà tutti i registri di cassa per poter iniziare la "
+"registrazione dei pagamenti. È consigliato tenere sotto controllo il saldo "
+"di apertura di ciascun registro usando la relativa scheda Cassa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_mercury
@@ -3326,6 +3343,8 @@ msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
 msgstr ""
+"Questo campo contiene l'immagine usata per la categoria, con limite a "
+"1024x1024 px."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
@@ -3371,6 +3390,9 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Questa operazione eliminerà in modo permanente dal local storage tutti gli "
+"ordini pagati e verranno persi tutti i dati. Questa operazione non può "
+"essere annullata."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3545,6 +3567,9 @@ msgid ""
 "                orders, you may use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface."
 msgstr ""
+"Usare questo menù per scorrere gli ordini precedenti. Per\n"
+"                registrarne di nuovi, usare il menù <i>Sessione</i> per\n"
+"                l'interfaccia touchscreen."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3647,6 +3672,8 @@ msgid ""
 "You can define another list of available currencies on the\n"
 "                                <i>Cash Registers</i> tab of the"
 msgstr ""
+"È possibile definire un'altro elenco di valute disponibili nella\n"
+"                                scheda <i>Registri cassa</i> del"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:390
@@ -3689,6 +3716,8 @@ msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
 msgstr ""
+"Non è possibile eliminare un prodotto del punto vendita mentre è ancora "
+"aperta una sessione."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3720,6 +3749,12 @@ msgid ""
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
 msgstr ""
+"Deve essere definito il metodo di pagamento da rendere disponibile nel punto"
+" vendita con il riuso di banca e cassa esistenti attraverso \"Contabilità / "
+"Configurazione / Registri / Registri\". Selezionare un registro e il campo "
+"\"Metodo di pagamento POS\" dalla scheda \"Punto vendita\". Inoltre è "
+"possibile creare nuovo metodi di pagamento direttamente dal menù \"Backend "
+"POS / Configurazione / Metodi di pagamento\"."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:658
@@ -3731,7 +3766,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:763
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
-msgstr ""
+msgstr "Deve essere selezionato un listino prezzi dal modulo vendita !"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:751
@@ -3747,7 +3782,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:24
 #, python-format
 msgid "You have to set a Sale Journal for the POS:%s"
-msgstr ""
+msgstr "Deve essere selezionato un registro vendite per il POS:%s"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -3832,7 +3867,7 @@ msgstr "barcode.rule"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1178
 #, python-format
 msgid "belong to another session:"
-msgstr ""
+msgstr "appartengono a un'altra sessione:"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_8
@@ -3981,4 +4016,4 @@ msgstr "gli ordini non pagati non possono essere importati"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1177
 #, python-format
 msgid "were duplicates of existing orders"
-msgstr ""
+msgstr "erano duplicati di ordini esistenti"
