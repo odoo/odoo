@@ -10,6 +10,7 @@
                         <div class="oe_button_box" name="button_box">
                             <field name="ref_ir_act_window" invisible="1"/>
                             <button class="oe_stat_button" name="create_action" type="object"
+                                    groups="base.group_system"
                                     attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template">
                                 <div class="o_field_widget o_stat_info">
@@ -18,6 +19,7 @@
                                 </div>
                             </button>
                             <button name="unlink_action" type="object" 
+                                    groups="base.group_system"
                                     class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo">
