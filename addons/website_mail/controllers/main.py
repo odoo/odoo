@@ -49,7 +49,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
     """
     record = request.env[res_model].browse(res_id)
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
-    if token and record and token == getattr(record.sudo(), token_field, None):
+    if token and record and token == getattr(record.sudo(), record._mail_post_token_field, None):
         record = record.sudo()
         if request.env.user == request.env.ref('base.public_user'):
             author_id = record.partner_id.id if hasattr(record, 'partner_id') else author_id
@@ -57,6 +57,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
             if not author_id:
                 raise NotFound()
     kw.pop('csrf_token', None)
+    kw.pop('attachment_ids', None)
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
                                                                                    subtype=kw.pop('subtype', "mt_comment"),
