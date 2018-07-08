@@ -266,6 +266,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Kaupiamas produktas yra produktas, kurio atsargas valdote. \"Inventoriaus\" programa turi būti įdiegta.\n"
+"Vartojamas produktas, kita vertus, yra produktas, kurio atsargos nėra valdomos.\n"
+"Paslauga yra nematerialus produktas, kurį suteikiate.\n"
+"Skaitmeninis turinys yra nematerialus produktas, kurį parduodate internetu. Failai, prisegti prie produkto, yra parduodami e-komercijoje, pvz., el. knygos, muzika, nuotraukos... \"Skaitmeninio produkto\" modulis turi būti įdiegtas."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -443,6 +447,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Bazinė kaina skaičiavimui.\n"
+"Viešoji kaina: Bazinė kaina bus pardavimo kaina.\n"
+"Kaštų kaina: Bazinė kaina bus kaštų kaina.\n"
+"Kitas kainoraštis: Bazinės kainos skaičiavimas pagrįstas kitu kainoraščiu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -782,6 +790,9 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Kaina, naudojama atsargų įvertinimui standartinei kainai ir kaip pirmoji "
+"kaina vidurkui/FIFO. Taip pat naudojama kaip bazinė kaina kainų sąrašams. "
+"Išreikšta numatytuoju produkto matavimo vienetu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
@@ -790,12 +801,15 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product. "
 msgstr ""
+"Kaina, naudojama atsargų įvertinimui standartinei kainai ir kaip pirmoji "
+"kaina vidurkui/FIFO. Taip pat naudojama kaip bazinė kaina kainų sąrašams. "
+"Išreikšta numatytuoju produkto matavimo vienetu."
 
 #. module: product
 #: model:product.product,name:product.service_delivery
 #: model:product.template,name:product.service_delivery_product_template
 msgid "Cost-plus Contract"
-msgstr ""
+msgstr "Kaina-plius kontraktas"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1003,6 +1017,9 @@ msgid ""
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
 msgstr ""
+"Kiekviena taisyklė turi pritaikymo kriterijų rinkinį (laikotarpis,\n"
+"                produkto kategorija...) ir skaičiavimą, kuris padeda lengvai pasiekti\n"
+"                bet kokią kainodarą."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -1166,6 +1183,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"Kad taisyklė būtų pritaikyta, nupirktas/parduotas kiekis turi būti didesnis arba lygus minimaliam kiekiui, nurodytam šiame lauke.\n"
+"Išreikštas numatytaisiais produkto matavimo vienetais."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1200,7 +1219,7 @@ msgstr "Ateities veiklos"
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
-msgstr ""
+msgstr "GAP analizės paslauga"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1219,13 +1238,13 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
 #: model:ir.model.fields,help:product.field_product_template_packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr ""
+msgstr "Pateikia skirtingus būdus supakuoti tą patį produktą."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "Suteikia eilės tvarką, kai rodomas produktų sąrašas"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1314,6 +1333,9 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Kiek kartų šis matavimo vienetas yra didesnis nei lyginamasis matavimo "
+"vienetas šioje kategorijoje:  1 * (šis vienetas) = santykis * (lyginamasis "
+"vienetas)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
@@ -1321,6 +1343,9 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Kiek kartų didesnis ar mažesnis yra šis vienetas, lyginant su šios "
+"kategorijos lyginamuoju vienetu:  1 * (lyginamasis vienetas) = santykis * "
+"(šis vienetas)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1361,6 +1386,8 @@ msgstr ""
 msgid ""
 "If not set, the vendor price will apply to all variants of this products."
 msgstr ""
+"Jei nenustatyta, pardavėjo kaina bus pritaikoma visiems šio produkto "
+"variantams."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
@@ -1879,7 +1906,7 @@ msgstr "Kainoraščio prekė"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "Kainoraščio įrašas, galiojantis pasirinktam pasirinkimui"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
@@ -2174,7 +2201,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_6c
 #: model:product.template,name:product.product_product_6c_product_template
 msgid "Repair"
-msgstr ""
+msgstr "Taisyti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
@@ -2339,6 +2366,9 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+"Pasidalinkite savo produktu su visomis kompanijomis, nurodytomis jūsų sistemoje.\n"
+"* Pažymėta: Produktai yra matomi visoms kompanijoms, net jei kompanija yra nurodyta  kaip partneris.\n"
+"* Nepažymėta: Visos kompanijos gali matyti savo produktą (produktą, kur nurodyta kompanija). Produktai nesusiję su kompanija yra matomi visoms kompanijos."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2615,13 +2645,15 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"Minimalus kiekis pirkimui iš šio pardavėjo, išreikštas pardavėjo matavimo "
+"vienetais, jei nenurodyta, numatytaisiais produkto matavimo vienetais."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "Produktų kiekis šioje kategorijoje (neįtraukia dukterinių kategorijų)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -3122,6 +3154,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Jūs negalite nustatyti dešimtainio \"Paskyros\" tikslumo didesnio nei "
+"kompanijos pagrindinės valiutos apvalinimo faktorius"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
