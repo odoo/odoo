@@ -14,27 +14,6 @@ class Partner(models.Model):
     opportunity_count = fields.Integer("Opportunity", compute='_compute_opportunity_count')
     meeting_count = fields.Integer("# Meetings", compute='_compute_meeting_count')
 
-    @api.model
-    def default_get(self, fields):
-        rec = super(Partner, self).default_get(fields)
-        active_model = self.env.context.get('active_model')
-        if active_model == 'crm.lead':
-            lead = self.env[active_model].browse(self.env.context.get('active_id'))
-            rec.update(
-                phone=lead.phone,
-                mobile=lead.mobile,
-                function=lead.function,
-                title=lead.title.id,
-                website=lead.website,
-                street=lead.street,
-                street2=lead.street2,
-                city=lead.city,
-                state_id=lead.state_id.id,
-                country_id=lead.country_id.id,
-                zip=lead.zip,
-            )
-        return rec
-
     @api.multi
     def _compute_opportunity_count(self):
         for partner in self:

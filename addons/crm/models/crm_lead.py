@@ -1203,11 +1203,16 @@ class Lead(models.Model):
     def message_partner_info_from_emails(self, emails, link_mail=False):
         result = super(Lead, self).message_partner_info_from_emails(emails, link_mail=link_mail)
         for partner_info in result:
-            if not partner_info.get('partner_id') and (self.partner_name or self.contact_name):
+            if not partner_info.get('partner_id'):
                 emails = email_re.findall(partner_info['full_name'] or '')
                 email = emails and emails[0] or ''
                 if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = '%s <%s>' % (self.contact_name or self.partner_name, email)
+                    partner_info['context'].update({
+                        'default_%s' % field: value
+                        for field, value in self._create_lead_partner_data(
+                            self.contact_name or self.partner_name, False).items()
+                        if value
+                    })
                     break
         return result
 
