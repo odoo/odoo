@@ -1795,11 +1795,21 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
-        """ Convert a list of emails into a list partner_ids and a list
-            new_partner_ids. The return value is non conventional because
-            it is meant to be used by the mail widget.
+        """ Convert a list of emails into a list of dictionaries containing the
+            following keys:
+            - `full_name`: the partner's name. By default, it is filled with
+              the provided e-mail
+            - `partner_id`: the id of the partner whose e-mail matches the
+              provided one, or `False` if it could not be found
+            - `popup_values`: a dictionary containing all values to be set in
+              the pop-up dialog shown when creating a new partner from the
+              chatter
 
-            :return dict: partner_ids and new_partner_ids """
+            The return value is non conventional, because it is meant to be
+            used by the chatter composer.
+
+            :return dict: full_name, partner_id, popup_values
+        """
         self.ensure_one()
         MailMessage = self.env['mail.message'].sudo()
         partner_ids = self._find_partner_from_emails(emails)
@@ -1808,6 +1818,20 @@ class MailThread(models.AbstractModel):
             email_address = emails[idx]
             partner_id = partner_ids[idx]
             partner_info = {'full_name': email_address, 'partner_id': partner_id}
+            partner_info['popup_values'] = {
+                'res_model': 'res.partner',
+                'res_id': partner_id,
+                'context': {
+                    'active_model': self._name,
+                    'active_id': self.id,
+                    'force_email': True,
+                    'ref': 'compound_context',
+                    'default_name': email_address,
+                    'default_email': email_address,
+                },
+                'title': _("Please complete customer's informations"),
+                'disable_multiple_selection': True,
+            }
             result.append(partner_info)
             # link mail with this from mail to the new partner id
             if link_mail and partner_info['partner_id']:

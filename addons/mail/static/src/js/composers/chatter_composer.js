@@ -105,24 +105,9 @@ var ChatterComposer = BasicComposer.extend({
                 var deferred = $.Deferred();
                 emailDefs.push(deferred);
 
-                var partnerName = partnerInfo.full_name;
-                var partnerID = partnerInfo.partner_id;
-                var parsedEmail = mailUtils.parseEmail(partnerName);
+                var popupValues = partnerInfo.popup_values;
 
-                var dialog = new viewDialogs.FormViewDialog(self, {
-                    res_model: 'res.partner',
-                    res_id: partnerID,
-                    context: {
-                        active_model: self._model,
-                        active_id: self.context.default_res_id,
-                        force_email: true,
-                        ref: 'compound_context',
-                        default_name: parsedEmail[0],
-                        default_email: parsedEmail[1],
-                    },
-                    title: _t("Please complete customer's informations"),
-                    disable_multiple_selection: true,
-                }).open();
+                var dialog = new viewDialogs.FormViewDialog(self, popupValues).open();
                 dialog.on('closed', self, function () {
                     deferred.resolve();
                 });
