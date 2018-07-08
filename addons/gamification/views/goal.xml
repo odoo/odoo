@@ -6,10 +6,9 @@
         <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a goal.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal
+            </p><p>
                 A goal is defined by a user and a goal definition.
                 Goals can be created automatically by using challenges.
             </p>
@@ -129,7 +128,7 @@
         <field name="name">Goal Kanban View</field>
         <field name="model">gamification.goal</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey">
+            <kanban class="oe_background_grey" create="false">
                 <field name="definition_id"/>
                 <field name="user_id"/>
                 <field name="current"/>
@@ -151,15 +150,15 @@
                             <div class="o_kanban_content">
                                 <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
                                 <div class="pull-left">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" />
                                 </div>
                                 <field name="user_id" />
                                 <div class="o_goal_state_block">
                                     <t t-if="record.definition_display.raw_value == 'boolean'">
                                         <div class="o_goal_state text-center">
-                                            <t t-if="record.state.raw_value=='reached'"><i class="o_green fa fa-check fa-3x" title="Goal Reached"/></t>
-                                            <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o fa-3x" title="Goal in Progress"/></t>
-                                            <t t-if="record.state.raw_value=='failed'"><i class="o_red fa fa-times fa-3x" title="Goal Failed"/></t>
+                                            <t t-if="record.state.raw_value=='reached'"><i role="img" class="o_green fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
+                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
+                                            <t t-if="record.state.raw_value=='failed'"><i role="img" class="o_red fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
                                         </div>
                                     </t>
                                     <t t-if="record.definition_display.raw_value == 'progress'">
@@ -199,10 +198,9 @@
         <field name="res_model">gamification.goal.definition</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a goal definition.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal definition
+            </p><p>
                 A goal definition is a technical model of goal defining a condition to reach.
                 The dates, values to reach or users are defined in goal instance.
             </p>

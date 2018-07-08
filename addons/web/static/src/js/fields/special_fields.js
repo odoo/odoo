@@ -20,7 +20,8 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      * @override
      */
     start: function () {
-        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), 1000);
+        var interval = navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? 60000 : 1000;
+        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), interval);
         return this._super.apply(this, arguments);
     },
     /**
@@ -90,7 +91,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         if (this.mismatch){
             var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
             $span.insertAfter(this.$el);
-            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."));
+            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to the timezone set on your user's preferences."));
             this.$el = this.$el.add($span);
 
             this.$option = this.$('option').filter(function () {

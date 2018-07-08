@@ -3,7 +3,7 @@
     <t t-name="website.Twitter.Tweet">
         <div class="tweet" t-attf-data-url="http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id_str}" t-attf-data-tweet-id="#{tweet.id_str}">
             <div class="left">
-                <img t-att-src="tweet.user.profile_image_url_https"/>
+                <img t-att-src="tweet.user.profile_image_url_https" alt="Twitter's user"/>
             </div>
             <div class="right">
                 <div class="top">
@@ -34,7 +34,7 @@
     </t>
     <t t-name="website.Twitter.Error">
         <div class="container" contenteditable="false">
-            <div class="alert alert-warning">
+            <div class="alert alert-warning" role="alert">
                 <t t-esc="data.error"/>
                 <t t-if='!data.nodata'>
                     <a class="lnk_configure" href="/web#action=website.action_website_configuration"><i class="fa fa-plus-circle"/> Twitter Configuration</a>

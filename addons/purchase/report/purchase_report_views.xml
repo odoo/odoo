@@ -60,7 +60,6 @@
                 <field name="product_id"/>
                 <group expand="0" string="Extended Filters">
                     <field name="user_id"/>
-                    <field name="picking_type_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_order"/>
                     <field name="date_approve"/>
@@ -74,7 +73,7 @@
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
-                    <filter string="Order Month" name="order_month" context="{'group_by':'date_order:month'}" help="Order of Day"/>
+                    <filter string="Order Date" name="order_month" context="{'group_by':'date_order:month'}"/>
                     <filter string="Fiscal Position" name="fiscal_position" context="{'group_by':'fiscal_position_id'}" help="Purchase Order Fiscal Position"/>
                 </group>
             </search>
@@ -91,7 +90,7 @@
         <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your vendors, etc.</field>
     </record>
 
-    <menuitem id="purchase_report" name="Reporting" parent="menu_purchase_root" sequence="99"
+    <menuitem id="purchase_report" name="Reporting" parent="purchase.menu_purchase_root" sequence="99"
         groups="purchase.group_purchase_manager" action="action_purchase_order_report_all"/>
 
 </odoo>

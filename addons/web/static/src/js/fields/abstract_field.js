@@ -172,6 +172,20 @@ var AbstractField = Widget.extend({
         // calls to the format (resp. parse) function.
         this.formatOptions = {};
         this.parseOptions = {};
+
+        // if we add decorations, we need to reevaluate the field whenever any
+        // value from the record is changed
+        if (this.attrs.decorations) {
+            this.resetOnAnyFieldChange = true;
+        }
+    },
+    /**
+     * Loads the libraries listed in this.jsLibs and this.cssLibs
+     *
+     * @override
+     */
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,
@@ -186,14 +200,6 @@ var AbstractField = Widget.extend({
             self.$el.addClass('o_field_widget');
             return self._render();
         });
-    },
-    /**
-     * Loads the libraries listed in this.jsLibs and this.cssLibs
-     *
-     * @override
-     */
-    willStart: function () {
-        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
 
     //--------------------------------------------------------------------------
@@ -299,10 +305,55 @@ var AbstractField = Widget.extend({
         return this._render() || $.when();
     },
 
+    /**
+     * Remove the invalid class on a field
+     */
+    removeInvalidClass: function () {
+        this.$el.removeClass('o_field_invalid');
+        this.$el.removeAttr('aria-invalid');
+    },
+
+    /**
+     * add the invalid class on a field
+     */
+    setInvalidClass: function () {
+        this.$el.addClass('o_field_invalid');
+        this.$el.attr('aria-invalid', 'true');
+    },
+
+    /**
+     * Update the modifiers with the newest value.
+     * Now this.attrs.modifiersValue can be used consistantly even with
+     * conditional modifiers inside field widgets, and without needing new
+     * events or synchronization between the widgets, renderer and controller
+     *
+     * @param {Object | null} modifiers  the updated modifiers
+     * @override
+     */
+    updateModifiersValue: function(modifiers) {
+        this.attrs.modifiersValue = modifiers || {};
+    },
+
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Apply field decorations (only if field-specific decorations have been
+     * defined in an attribute).
+     *
+     * @private
+     */
+    _applyDecorations: function () {
+        var self = this;
+        this.attrs.decorations.forEach(function (dec) {
+            var isToggled = py.PY_isTrue(
+                py.evaluate(dec.expression, self.record.evalContext)
+            );
+            self.$el.toggleClass(dec.className, isToggled);
+        });
+    },
     /**
      * Converts the value from the field to a string representation.
      *
@@ -349,6 +400,9 @@ var AbstractField = Widget.extend({
      * @returns {Deferred|undefined}
      */
     _render: function () {
+        if (this.attrs.decorations) {
+            this._applyDecorations();
+        }
         if (this.mode === 'edit') {
             return this._renderEdit();
         } else if (this.mode === 'readonly') {
@@ -459,11 +513,13 @@ var AbstractField = Widget.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.TAB:
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {
+                var event = this.trigger_up('navigation_move', {
                     direction: ev.shiftKey ? 'previous' : 'next',
                 });
+                if (event.is_stopped()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
                 break;
             case $.ui.keyCode.ENTER:
                 ev.stopPropagation();

@@ -10,7 +10,7 @@
 
   <template id="assets_editor" inherit_id="web_editor.assets_editor" name="Website Quote Editor assets">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/website_quote/static/src/less/website_quotation.less"/>
+            <link rel="stylesheet" type="text/scss" href="/website_quote/static/src/scss/website_quotation.scss"/>
         </xpath>
   </template>
 
@@ -82,7 +82,7 @@
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
                               <td class="text-center">
-                                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
+                                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id" aria-label="Remove" title="Remove">
                                       <span class="fa fa-trash-o"></span>
                                   </a>
                               </td>
@@ -145,23 +145,65 @@
       </section>
   </template>
 
+  <template id="signature" name="Signature">
+      <div t-if="quotation.signature" class="row mt64" name="signature">
+          <div class="col-xs-offset-8 col-xs-4">
+              <strong>Signature</strong>
+          </div>
+          <div class="col-xs-offset-8 col-xs-4">
+              <img t-att-src="'data:image/png;base64,%s' % to_text(quotation.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+          </div>
+          <div class="col-xs-offset-8 col-xs-4 text-center">
+              <p t-field="quotation.signed_by"/>
+          </div>
+      </div>
+  </template>
+
   <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group oe_website_spinner">
               <span class="input-group-addon hidden-print">
-                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
+                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Remove one" title="Remove one">
                       <span class="fa fa-minus"/>
                   </a>
               </span>
               <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
               <span class="input-group-addon hidden-print">
-                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
+                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Add one" title="Add one">
                       <span class="fa fa-plus"/>
                   </a>
               </span>
           </div>
       </xpath>
   </template>
+
+    <!-- duplicata of the template payment.payment_confirmation_status. 
+        The duplication avoid to break an existing installation in stable version-->
+    <template id="payment_confirmation_status">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable" role="status">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable" role="status">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            Your payment has been authorized.
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+    </template>
 
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
@@ -174,13 +216,13 @@
                   <div class="col-md-3 hidden-print">
                       <div class="bs-sidebar">
                           <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
-                              <a t-if="order_valid and not quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Accept Order
+                              <a role="button" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                                  <span class="fa fa-check"> Accept Order</span>
                               </a>
-                              <a t-if="order_valid and quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Accept &amp; Pay
+                              <a role="button" t-elif="order_valid and quotation.has_to_be_paid()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                                  <span class="fa fa-check"> <t t-if="not quotation.signature">Accept &amp; </t>Pay</span>
                               </a>
-                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
+                              <a role="button" t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
                                   Contact us for new quote.
                               </a>
@@ -190,8 +232,8 @@
                                   </a>
                               </div>
                           </div>
-                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
-                              <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
+                              <a role="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Pay Now
                               </a>
                           </div>
@@ -203,7 +245,7 @@
                               <div class="mt8" t-if="days_valid &gt; 0">
                                   <strong>This offer expires in</strong>
                                   <div class="day_counter mt8 mb16">
-                                      <i class="fa fa-clock-o"></i>
+                                      <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
                                       <t t-esc="days_valid"/>
                                       <t t-if="days_valid &gt; 1">
                                           days
@@ -243,55 +285,44 @@
                   <!-- Page content -->
                   <div id="quote_content" class="col-md-9">
 
-                      <div class="alert alert-success alert-dismissable" t-if="message==1">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                      <div class="alert alert-success alert-dismissable" t-if="message==1" role="status">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           Your message has been successfully sent!
                       </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="message==2">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==2" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This quotation has been rejected. <a href="#discussion">Contact us</a> if you want a new one.
                       </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="message==3">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==3" role="status">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This order has been validated. Thanks for your trust
                           and do not hesitate to <a href="#discussion">contact us</a> for
                           any question.
                       </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="tx_id and tx_state == 'done'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                          Your payment has been received, thank you for your trust.
-                          <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
-                      </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="tx_id and tx_state == 'pending'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                          Your transaction is waiting confirmation.
-                          <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
-                      </div>
-                      <div class="alert alert-success alert-dismissable" t-if="tx_id and tx_state == 'authorized'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                          Your payment has been authorized.
-                          <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
-                      </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                      <t t-if="payment_tx">
+                          <t t-set="payment_tx_id" t-value="payment_tx"/>
+                          <t t-call="website_quote.payment_confirmation_status"/>
+                      </t>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This order
-                            <t t-if="quotation.state=='draft'">has not yet been sent</t>
-                            <t t-if="quotation.state=='cancel'">has already been cancelled</t>
-                            <t t-if="quotation.state not in ('cancel','draft')">has already been validated</t>
-                          ! You can <a href="#discussion">contact us</a> for
-                          any question.
+                            <t t-if="quotation.state=='draft'">has not yet been sent!</t>
+                            <t t-if="quotation.state=='cancel'">has already been cancelled!</t>
+                            <t t-if="quotation.state not in ('cancel','draft')">has already been validated!</t>
+                          You can <a href="#discussion">contact us</a> for
+                          any questions.
                       </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
-                      <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
+                      <div role="dialog" class="modal fade" id="modalaccept">
+                        <div class="modal-dialog" t-if="not quotation.signature and quotation.has_to_be_signed()">
                            <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <header class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
-                            </div>
-                            <div class="modal-body" id="sign-dialog">
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
                                 <p>
                                     <span>I agree that by signing this proposal, I
                                     accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
@@ -305,16 +336,16 @@
                                     <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
                                     <t t-set="accessToken" t-value="quotation.access_token"/>
                                 </t>
-                            </div>
+                            </main>
                           </form>
                         </div>
 
-                        <div class="modal-dialog modal-content" t-if="quotation.require_payment or need_payment">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <div class="modal-dialog modal-content" t-if="not (quotation.has_to_be_signed() and not quotation.signature) and (quotation.has_to_be_paid() or need_payment)">
+                          <header class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             <h4 class="modal-title">Validate Order</h4>
-                          </div>
-                          <div class="modal-body" id="sign-dialog">
+                          </header>
+                          <main class="modal-body" id="sign-dialog">
                             <p>
                                 <span>I agree that by paying this proposal, I
                                 accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
@@ -322,8 +353,8 @@
                                   t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                 <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                             </p>
-                        </div>
-                        <div class="modal-footer">
+                        </main>
+                        <footer class="modal-footer">
                             <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
                                 <h3 class="mb24">Pay with</h3>
                                 <t t-call="payment.payment_tokens_list">
@@ -332,54 +363,55 @@
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
                                     <t t-set="form_action" t-value="'/quote/' + str(quotation.id) + '/transaction/token'"/>
                                     <t t-set="prepare_tx_url" t-value="'/quote/' + str(quotation.id) + '/transaction/'"/>
+                                    <t t-set="access_token" t-value="quotation.access_token"/>
                                 </t>
                             </div>
-                          </div>
+                          </footer>
                         </div>
                       </div>
 
-                      <div class="modal fade" id="modaldecline" role="dialog" aria-hidden="true">
+                      <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <header class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Reject This Quote</h4>
-                            </div>
-                            <div class="modal-body">
+                            </header>
+                            <main class="modal-body">
                               <p>
                                   Tell us why you are refusing this quotation, this will help us improve our services.
                               </p>
                               <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
-                            </div>
-                            <div class="modal-footer">
+                            </main>
+                            <footer class="modal-footer">
                                 <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
+                            </footer>
                           </form>
                         </div>
                       </div>
 
-                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
 
                       <t t-call="website_quote.so_quotation_content"/>
 
                       <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
+                          <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.has_to_be_paid()">
                               <i class="fa fa-check"></i> Accept
                           </a>
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
+                          <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.has_to_be_paid()">
                               <i class="fa fa-check"></i> Accept &amp; Pay
                           </a>
-                          <a class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
+                          <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
                               <i class="fa fa-times"></i> Reject
                           </a>
                       </div>
-                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
-                          <a class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
+                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
+                          <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
                               <i class="fa fa-check"></i> Pay Now
                           </a>
                       </div>
@@ -405,7 +437,7 @@
           </a>
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
-          <a class="btn btn-info" type="submit" href="#discussion">
+          <a role="button" class="btn btn-info" type="submit" href="#discussion">
               <i class="fa fa-comment"></i> Feedback
           </a>
       </xpath>
@@ -427,14 +459,11 @@
             <div t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman">
-                    <a t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
-                    <a t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
+                    <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
+                    <a role="button" t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
                   </li>
                   <li>
-                     <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
-                  </li>
-                  <li>
-                    <t t-call='portal.record_pager'/>
+                     <a role="button" class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
                   </li>
                </ul>
             </div>
@@ -442,7 +471,7 @@
       </div>
       <!-- Informations -->
       <div class="row mt32">
-          <div class="col-md-6 col-xs-6">
+          <div class="col-sm-6 col-xs-12">
               <div class="row">
                   <label class="col-sm-4 col-xs-4 text-right">Customer:</label>
                   <div class="col-sm-8 col-xs-8">
@@ -468,10 +497,10 @@
                   </div>
               </div>
           </div>
-          <div class="col-md-6 col-xs-6">
+          <div class="col-sm-6 col-xs-12">
               <div class="row">
-                  <label class="col-sm-5 col-xs-5 text-right">Your Contact:</label>
-                  <div class="col-sm-7 col-xs-7">
+                  <label class="col-sm-5 col-xs-4 text-right">Your Contact:</label>
+                  <div class="col-sm-7 col-xs-8">
                       <div t-field="quotation.user_id" t-options='{
                           "widget": "contact",
                           "fields": ["name", "phone", "email"]
@@ -479,28 +508,28 @@
                   </div>
               </div>
               <div class="row">
-                  <label class="col-sm-5 col-xs-5 text-right">Quote Date:</label>
-                  <div class="col-sm-7 col-xs-7">
+                  <label class="col-sm-5 col-xs-4 text-right">Quote Date:</label>
+                  <div class="col-sm-7 col-xs-8">
                       <span t-field="quotation.date_order"/>
                   </div>
                   <div class="clearfix"/>
                   <div t-if="quotation.validity_date and quotation.state in ['draft', 'sent']">
-                    <label class="col-sm-5 col-xs-5 text-right">Expiration Date:</label>
-                    <div class="col-sm-7 col-xs-7">
+                    <label class="col-sm-5 col-xs-4 text-right">Expiration Date:</label>
+                    <div class="col-sm-7 col-xs-8">
                         <span t-field="quotation.validity_date"/>
                     </div>
                   </div>
                   <div class="clearfix"/>
                   <div t-if="quotation.client_order_ref">
-                      <label class="col-sm-5 col-xs-5 text-right">Your Reference:</label>
-                      <div class="col-sm-7 col-xs-7">
+                      <label class="col-sm-5 col-xs-4 text-right">Your Reference:</label>
+                      <div class="col-sm-7 col-xs-8">
                           <span t-field="quotation.client_order_ref"/>
                       </div>
                   </div>
                   <div class="clearfix"/>
                   <div t-if="quotation.payment_term_id">
-                      <label class="col-sm-5 col-xs-5 text-right">Payment Terms:</label>
-                      <div class="col-sm-7 col-xs-7">
+                      <label class="col-sm-5 col-xs-4 text-right">Payment Terms:</label>
+                      <div class="col-sm-7 col-xs-8">
                           <span t-field="quotation.payment_term_id"/>
                       </div>
                   </div>
@@ -509,13 +538,19 @@
       </div>
       <!-- Descriptions -->
       <div t-field="quotation.website_description" class="oe_no_empty"/>
+      <t t-set="product_tmpl_ids" t-value="[]"/>
       <t t-foreach="quotation.order_line" t-as="line">
-          <a t-att-id="line.id"/>
-          <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty hidden-print'" t-field="line.website_description"/>
+          <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
+              <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
+              <a t-att-id="line.id"/>
+              <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty hidden-print'" t-field="line.website_description"/>
+          </t>
       </t>
       <div class="oe_structure"/>
       <!-- Pricing -->
       <t t-call="website_quote.pricing"/>
+      <!-- Signature -->
+      <t t-call="website_quote.signature"/>
       <!-- Options -->
       <t t-call="website_quote.optional_products"/>
   </template>
@@ -567,7 +602,7 @@
                                 </strong>
                             </td>
                             <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
-                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
+                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print" aria-label="Add to cart" title="Add to cart">
                                     <span class="fa fa-shopping-cart"/>
                                 </a>
                             </td>
@@ -593,13 +628,13 @@
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <div class="row">
+                        <div class="row mb8">
                             <div t-ignore="true" class="css_editable_mode_hidden col-md-offset-11">
-                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
+                              <a role="button" class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
                             </div>
                         </div>
-                        <div class="alert alert-info alert-dismissable" t-ignore="True">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <div class="alert alert-info alert-dismissable" t-ignore="True" role="status">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                             <p>
                                 <strong>Template Header:</strong> this content
                                 will appear on all quotations using this
@@ -612,23 +647,31 @@
                             </p>
                         </div>
                         <div id="template_introduction" t-field="template.website_description" class="oe_no_empty"/>
+                        <t t-set="product_tmpl_ids" t-value="[]"/>
                         <t t-foreach="template.quote_line" t-as="line">
-                            <div class="alert alert-info alert-dismissable" t-ignore="True">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                                Product: <strong t-esc="line.product_id.name"/>:
-                                this content will appear on the quotation only if this
-                                product is put on the quote.
-                            </div>
-                            <div t-field="line.website_description" class="oe_no_empty"/>
+                            <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
+                                <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
+                                <div class="alert alert-info alert-dismissable mt16" t-ignore="True" role="status">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                                    Product: <strong t-esc="line.product_id.name"/>:
+                                    this content will appear on the quotation only if this
+                                    product is put on the quote.
+                                </div>
+                                <div t-field="line.website_description" class="oe_no_empty"/>
+                            </t>
                         </t>
+                        <t t-set="product_tmpl_ids" t-value="[]"/>
                         <t t-foreach="template.options" t-as="option_line">
-                            <div class="alert alert-info alert-dismissable" t-ignore="True">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                                Optional Product: <strong t-esc="option_line.product_id.name"/>:
-                                this content will appear on the quotation only if this
-                                product is used in the quote.
-                            </div>
-                            <div t-field="option_line.website_description" class="oe_no_empty"/>
+                            <t t-if="option_line.product_id.product_tmpl_id.id not in product_tmpl_ids">
+                                <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [option_line.product_id.product_tmpl_id.id]"/>
+                                <div class="alert alert-info alert-dismissable mt16" t-ignore="True" role="status">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                                    Optional Product: <strong t-esc="option_line.product_id.name"/>:
+                                    this content will appear on the quotation only if this
+                                    product is used in the quote.
+                                </div>
+                                <div t-field="option_line.website_description" class="oe_no_empty"/>
+                            </t>
                         </t>
                         <section id="terms" class="container" t-if="template.note">
                             <h1 t-ignore="True">Terms &amp; Conditions</h1>
@@ -641,16 +684,11 @@
         </t>
   </template>
 
-  <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
-      <xpath expr="//footer" position="inside">
-          <div class="container mt16 mb8">
-              <div class="pull-right" t-ignore="true" t-if="not editable">
-                  Powered by <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                  an awesome <a target="_blank" href="http://www.odoo.com/page/crm">Open Source CRM</a>.
-              </div>
-              <div class="pull-left text-muted">
-                  Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
-              </div>
+  <template id="website_quote.brand_promotion" inherit_id="website.brand_promotion">
+      <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
+          <div class="o_brand_promotion">
+              Powered by <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+              an awesome <a target="_blank" href="http://www.odoo.com/page/crm">Open Source CRM</a>.
           </div>
       </xpath>
   </template>

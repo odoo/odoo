@@ -60,7 +60,7 @@ FormController.include({
      */
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
-            this.do_warn(_t('Error : Document not editable'),
+            this.do_warn(_t('Error: Document not editable'),
                 _t('To modify this document, please first start edition.'));
             return new $.Deferred().reject();
         }
@@ -91,6 +91,10 @@ FormController.include({
     _barcodePagerFirst: function () {
         var self = this;
         return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
             self.pager.updateState({
                 current_min: 1,
             }, {notifyChange: true});
@@ -102,6 +106,10 @@ FormController.include({
     _barcodePagerLast: function () {
         var self = this;
         return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
             var state = self.model.get(self.handle, {raw: true});
             self.pager.updateState({
                 current_min: state.count,
@@ -112,13 +120,27 @@ FormController.include({
      * @private
      */
     _barcodePagerNext: function () {
-        return this.mutex.exec(function () {}).then(this.pager.next.bind(this.pager));
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
+            self.pager.next();
+        });
     },
     /**
      * @private
      */
     _barcodePagerPrevious: function () {
-        return this.mutex.exec(function () {}).then(this.pager.previous.bind(this.pager));
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
+            self.pager.previous();
+        });
     },
     /**
      * Returns true iff the given barcode matches the given record (candidate).
@@ -146,16 +168,16 @@ FormController.include({
      * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
-    _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode) {
+    _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode, quantity) {
         var changes = {};
         var candidateChanges = {};
-        candidateChanges[activeBarcode.quantity] = candidate.data[activeBarcode.quantity] + 1;
+        candidateChanges[activeBarcode.quantity] = quantity ? quantity : candidate.data[activeBarcode.quantity] + 1;
         changes[activeBarcode.fieldName] = {
             operation: 'UPDATE',
             id: candidate.id,
             data: candidateChanges,
         };
-        return this.model.notifyChanges(this.handle, changes);
+        return this.model.notifyChanges(this.handle, changes, {notifyChange: activeBarcode.notifyChange});
     },
     /**
      * @private
@@ -211,6 +233,8 @@ FormController.include({
      * @param {OdooEvent} event
      * @param {string} event.data.name: the current field name
      * @param {string} [event.data.fieldName] optional for x2many sub field
+     * @param {boolean} [event.data.notifyChange] optional for x2many sub field
+     *     do not trigger on change server side if a candidate has been found
      * @param {string} [event.data.quantity] optional field to increase quantity
      * @param {Object} [event.data.commands] optional added methods
      *     can use comand with specific barcode (with ReservedBarcodePrefixes)
@@ -225,7 +249,9 @@ FormController.include({
             handle: this.handle,
             target: event.target,
             widget: event.target.attrs && event.target.attrs.widget,
+            setQuantityWithKeypress: !! event.data.setQuantityWithKeypress,
             fieldName: event.data.fieldName,
+            notifyChange: (event.data.notifyChange !== undefined) ? event.data.notifyChange : true,
             quantity: event.data.quantity,
             commands: event.data.commands || {},
             candidate: this.activeBarcode[name] && this.activeBarcode[name].handle === this.handle ?
@@ -279,15 +305,14 @@ FormController.include({
                     function (reserved) {return barcode.indexOf(reserved) === 0;});
             var hasCommand = false;
             var defs = [];
+            if (! $.contains(target, self.el)) {
+                return;
+            }
             for (var k in self.activeBarcode) {
                 var activeBarcode = self.activeBarcode[k];
                 // Handle the case where there are several barcode widgets on the same page. Since the
                 // event is global on the page, all barcode widgets will be triggered. However, we only
                 // want to keep the event on the target widget.
-                if (! $.contains(target, self.el)) {
-                    continue;
-                }
-
                 var methods = self.activeBarcode[k].commands;
                 var method = prefixed ? methods[barcode] : methods.barcode;
                 if (method) {
@@ -298,10 +323,12 @@ FormController.include({
                 }
             }
             if (prefixed && !hasCommand) {
-                self.do_warn(_t('Error : Barcode command is undefined'), barcode);
+                self.do_warn(_t('Error: Barcode command is undefined'), barcode);
             }
             return self.alive($.when.apply($, defs)).then(function () {
                 if (!prefixed) {
+                    // remember the barcode scanned for the quantity listener
+                    self.current_barcode = barcode;
                     // redraw the view if we scanned a real barcode (required if
                     // we manually apply the change in JS, e.g. incrementing the
                     // quantity)
@@ -317,9 +344,12 @@ FormController.include({
     _quantityListener: function (event) {
         var character = String.fromCharCode(event.which);
 
+        if (! $.contains(event.target, this.el)) {
+            return;
+        }
         // only catch the event if we're not focused in
         // another field and it's a number
-        if (!$(event.target).is('body') || !/[0-9]/.test(character)) {
+        if (!$(event.target).is('body, [role="dialog"]') || !/[0-9]/.test(character)) {
             return;
         }
 
@@ -329,7 +359,7 @@ FormController.include({
         }
 
         if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
-            return this.do_warn(_t('Error : No last scanned barcode'),
+            return this.do_warn(_t('Error: No last scanned barcode'),
                 _t('To set the quantity please scan a barcode first.'));
         }
 
@@ -351,9 +381,10 @@ FormController.include({
             title: _t('Set quantity'),
             buttons: [{text: _t('Select'), classes: 'btn-primary', close: true, click: function () {
                 var new_qty = this.$content.find('.o_set_qty_input').val();
-                var values = {};
-                values[activeBarcode.quantity] = parseFloat(new_qty);
-                return self.model.notifyChanges(activeBarcode.candidate.id, values).then(function () {
+                var record = self.model.get(self.handle);
+                return self._barcodeSelectedCandidate(activeBarcode.candidate, record,
+                        self.current_barcode, activeBarcode, parseFloat(new_qty))
+                .then(function () {
                     self.update({}, {reload: false});
                 });
             }}, {text: _t('Discard'), close: true}],
@@ -397,8 +428,13 @@ FormRenderer.include({
             }
             return $.when();
         };
+        var name = node.attrs.name;
+        if (node.attrs.string) {
+            name = name + '_' + node.attrs.string;
+        }
+
         this.trigger_up('activeBarcode', {
-            name: node.attrs.name,
+            name: name,
             commands: commands
         });
     },

@@ -26,6 +26,7 @@ class DeliveryCarrier(models.Model):
        <my_provider>_send_shipping
        <my_provider>_get_tracking_link
        <my_provider>_cancel_shipment
+       _<my_provider>_get_default_custom_package_code
        (they are documented hereunder)
     '''
 
@@ -33,7 +34,7 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
@@ -73,7 +74,7 @@ class DeliveryCarrier(models.Model):
             'res_model': 'ir.module.module',
             'domain': [['name', 'ilike', 'delivery_']],
             'type': 'ir.actions.act_window',
-            'help': _('''<p class="oe_view_nocontent">
+            'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>'''),
         }
@@ -183,6 +184,16 @@ class DeliveryCarrier(models.Model):
             except psycopg2.Error:
                 pass
 
+    def _get_default_custom_package_code(self):
+        """ Some delivery carriers require a prefix to be sent in order to use custom
+        packages (ie not official ones). This optional method will return it as a string.
+        """
+        self.ensure_one()
+        if hasattr(self, '_%s_get_default_custom_package_code' % self.delivery_type):
+            return getattr(self, '_%s_get_default_custom_package_code' % self.delivery_type)()
+        else:
+            return False
+
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #
     # ------------------------------------------------ #
@@ -199,8 +210,11 @@ class DeliveryCarrier(models.Model):
             carrier.product_id.list_price = carrier.fixed_price
 
     def fixed_rate_shipment(self, order):
+        price = self.fixed_price
+        if self.company_id.currency_id.id != order.currency_id.id:
+            price = self.env['res.currency']._compute(self.company_id.currency_id, order.currency_id, price)
         return {'success': True,
-                'price': self.fixed_price,
+                'price': price,
                 'error_message': False,
                 'warning_message': False}
 

@@ -15,7 +15,9 @@ Running the server
 
 .. option:: -d <database>, --database <database>
 
-    database used when installing or updating modules.
+    database(s) used when installing or updating modules.
+    Providing a comma-separated list restrict access to databases provided in
+    list.
 
 .. option:: -i <modules>, --init <modules>
 
@@ -54,7 +56,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 640MB.
+        Defaults to 2048MB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -62,7 +64,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 768MB.
+        Defaults to 2560MB.
 
     .. option:: --limit-time-cpu <limit>
 
@@ -165,14 +167,98 @@ database
       databases (so domain ``odoo.com`` using ``(?i)%d`` matches the database
       ``Odoo``).
 
+    Since version 11, it's also possible to restrict access to a given database
+    listen by using the --database parameter and specifying a comma-separated
+    list of databases
+
+    When combining the two parameters, db-filter superseed the comma-separated
+    database list for restricting database list, while the comma-separated list
+    is used for performing requested operations like upgrade of modules.
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$
+
+    Restrict access to databases whose name starts with 11
+
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase
+    
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        
+    Restrict access to databases whose name starts with 11,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
-    specified `template database`_. Defaults to ``template1``.
+    specified `template database`_. Defaults to ``template0``.
 
 .. option:: --no-database-list
 
     Suppresses the ability to list databases available on the system
+    
+.. option:: --db_sslmode
+
+    Control the SSL security of the connection between Odoo and PostgreSQL.
+    Value should bve one of 'disable', 'allow', 'prefer', 'require',
+    'verify-ca' or 'verify-full'
+    Default value is 'prefer'
+
+.. _reference/cmdline/server/internationalisation:
+
+Internationalisation
+--------------------
+
+Use these options to translate Odoo to another language. See i18n section of
+the user manual. Option '-d' is mandatory. Option '-l' is mandatory in case
+of importation
+
+.. option:: --load-language <languages>
+
+    specifies the languages (separated by commas) for the translations you
+    want to be loaded
+
+.. option:: -l, --language <language>
+
+    specify the language of the translation file. Use it with --i18n-export
+    or --i18n-import
+
+.. option:: --i18n-export <filename>
+
+    export all sentences to be translated to a CSV file, a PO file or a TGZ
+    archive and exit.
+
+.. option:: --i18n-import <filename>
+
+    import a CSV or a PO file with translations and exit. The '-l' option is
+    required.
+
+.. option:: --i18n-overwrite
+
+    overwrites existing translation terms on updating a module or importing
+    a CSV or a PO file.
+
+.. option:: --modules
+
+    specify modules to export. Use in combination with --i18n-export
+
 
 built-in HTTP
 -------------

@@ -18,7 +18,6 @@
         'data/stock_demo2.xml',
         'data/stock_location_demo_cpu1.xml',
         'data/stock_location_demo_cpu3.xml',
-        'data/stock_quant_demo.xml',
     ],
     'data': [
         'security/stock_security.xml',
@@ -44,6 +43,8 @@
         'wizard/stock_overprocessed_transfer_views.xml',
         'wizard/stock_quantity_history.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
+        'wizard/product_replenish_views.xml',
+        'wizard/stock_track_confirmation_views.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
@@ -62,6 +63,8 @@
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
         'views/procurement_views.xml',
+        'views/res_users_views.xml',
+        'views/stock_package_level_views.xml',
 
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
@@ -74,4 +77,5 @@
     'installable': True,
     'application': True,
     'auto_install': False,
+    'pre_init_hook': 'pre_init_hook',
 }

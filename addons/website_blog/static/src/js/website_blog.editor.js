@@ -54,7 +54,7 @@ odoo.define('website_blog.editor', function (require) {
 'use strict';
 
 require('web.dom_ready');
-var widget = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var options = require('web_editor.snippets.options');
 var rte = require('web_editor.rte');
 
@@ -132,9 +132,16 @@ options.registry.blog_cover = options.Class.extend({
         this.$image.css("background-image", "");
     },
     change: function (previewMode, value, $li) {
-        var $image = $("<img/>", {src: this.$image.css("background-image")});
+        var $image = $("<img/>");
+        var background = this.$image.css("background-image");
+        if (background && background !== "none") {
+            $image.attr('src', background.match(/^url\(["']?(.+?)["']?\)$/)[1]);
+        }
 
-        var editor = new widget.MediaDialog(this, {only_images: true}, $image, $image[0]).open();
+        var editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            firstFilters: ['background']
+        }, $image, $image[0]).open();
         editor.on("save", this, function (event, img) {
             var src = $image.attr("src");
             this.$image.css("background-image", src ? ("url(" + src + ")") : "");

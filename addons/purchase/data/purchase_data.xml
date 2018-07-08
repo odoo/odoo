@@ -18,17 +18,7 @@
             <field name="res_model">purchase.order</field>
         </record>
 
-        <!--
-             Procurement rules and routes
-        -->
-
-        <record id="route_warehouse0_buy" model='stock.location.route'>
-            <field name="name">Buy</field>
-            <field name="company_id"></field>
-            <field name="sequence">5</field>
-        </record>
-
-        <!-- Sequences for purchase.order --> 
+        <!-- Sequences for purchase.order -->
         <record id="seq_purchase_order" model="ir.sequence">
             <field name="name">Purchase Order</field>
             <field name="code">purchase.order</field>
@@ -37,9 +27,5 @@
             <field name="company_id" eval="False"/>
         </record>
 
-        <!-- enable purchase on main warehouse -->
-        <record id="stock.warehouse0" model="stock.warehouse">
-            <field name="buy_to_resupply" eval="True"/>
-        </record>
     </data>
 </odoo>

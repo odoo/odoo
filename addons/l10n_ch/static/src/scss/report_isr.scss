@@ -1,0 +1,218 @@
+body.l10n_ch_isr {
+    /*
+        all elements are positionned for A4 format (210 x 297mm) but the viewport
+        is bigger than this, hence we zoom the whole page to be bigger than the viewport
+        which will then be resized down by wkhtmltopdf to get back to an A4 format
+     */
+    zoom: 1.25;
+
+    &.o_in_iframe {
+        zoom: 1;
+
+        /* display dummy check bacground in html rendering to help see the end result */
+        #isr {
+            background: url(/l10n_ch/static/src/img/background_virgin_isr.png) bottom no-repeat;
+            background-size: 100%;
+
+            &.isr-print-bank {
+                background-image: url(/l10n_ch/static/src/img/background_virgin_isr_bank.png);
+            }
+        }
+    }
+
+    /* content outside isr needs margins to not overlap header */
+    #content_outside_isr {
+        padding: 15px;
+        padding-top: 150px;
+    }
+
+    /* ISR is intended for pre-printed paper, we don't want stylistic background */
+    .o_report_layout_background {
+        background: none;
+        min-height: 0;
+    }
+}
+
+body.l10n_ch_isr #isr {
+    height: 106mm;
+    width: 210mm;
+
+    position: absolute;
+    /* position bvr at bottom of page */
+    top: 297 - 106mm;
+    left: 0;
+
+    overflow: hidden;
+    font-family: "Work Sans", Verdana, Geneva, sans-serif;
+    line-height: 1;
+    font-size: 13px;
+
+    p, address {
+        line-height: 15px;
+    }
+
+    #voucher {
+        height: 4in;
+        width: 2 + 4/10in;
+
+        position: absolute;
+        /* header title of BVR section */
+        top: 1/6in;
+        /* right of voucher corresponds to left of slip */
+        right: 5 + 9/10in;
+    }
+
+    #voucher > * {
+        position: absolute;
+        /* default left margin for fields content */
+        left: 3/20in;
+
+        &#voucher-for-contact {
+            top: 0.25in;
+        }
+
+        &#voucher-for-bank {
+            top: 0.18in;
+        }
+
+        &#voucher-for-bank + #voucher-for-contact {
+            top: 0.68in;
+        }
+
+        &#voucher-bank {
+            top: 1.51in;
+            left: 11/10in;
+        }
+
+        /* TODO: remove in master */
+        &#voucher-currency {
+            top: 9/6 + 3/20in;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        &#voucher-amount_units {
+            width: 15/10in;
+            top: 1.84in;
+
+            text-align: right;
+            font-size: 14px;
+        }
+
+        &#voucher-amount_cents {
+            width: 4/10in;
+            top: 1.84in;
+            left: 20/10in;
+
+            font-size: 14px;
+        }
+
+        &#voucher-by {
+            top: 2.18in;
+        }
+    }
+
+    #slip {
+        height: 4in;
+        width: 5 + 9/10in;
+
+        position: absolute;
+        /* header title of BVR section */
+        top: 1/6in;
+        /* right of slip corresponds to right of slip */
+        right: 0;
+    }
+
+    #slip > * {
+        position: absolute;
+        /* default left margin for fields content */
+        left: 3/20in;
+
+        &#slip-for-contact {
+            top: 0.25in;
+        }
+
+        &#slip-for-bank {
+            top: 0.18in;
+        }
+
+        &#slip-for-bank + #slip-for-contact {
+            top: 0.68in;
+        }
+
+        &#slip-bank {
+            top: 1.51in;
+            left: 11/10in;
+        }
+
+        /* TODO: remove in master */
+        &#slip-currency {
+            top: 9/6 + 3/20in;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        &#slip-amount_units {
+            width: 15/10in;
+            top: 1.84in;
+
+            text-align: right;
+            font-size: 14px;
+        }
+
+        &#slip-amount_cents {
+            width: 4/10in;
+            top: 1.84in;
+            left: 20/10in;
+
+            font-size: 14px;
+        }
+
+        &#slip-reference {
+            width: 3.3in;
+            top: 1.17in;
+            left: 2.5in;
+            text-align: center;
+        }
+
+        &#slip-by {
+            top: 1.85in;
+            left: 2.55in;
+        }
+
+        &#slip-optical-line {
+            right: 3/10in;
+            bottom: 4/6in;
+
+            /* Positioning is set for OCRB of Tsukurimashou Font Family */
+            font-family: OCRB, Courier, monospace;
+            font-size: 10pt;
+            line-height: 0.1in;
+
+            > div {
+                position: relative;
+
+                > div {
+                    position: absolute;
+                    bottom: 0;
+                }
+            }
+        }
+
+        /* TODO: remove in master */
+        &#slip-optical {
+            right: 3/10in;
+            bottom: 4/6in;
+
+            text-align: right;
+
+            /* Letter spacing is set for OCRB of Tsukurimashou Font Family */
+            font-family: OCRB, Courier, monospace;
+            line-height: 0.1in;
+            font-size: 10pt;
+            letter-spacing: -0.3px;
+        }
+    }
+}

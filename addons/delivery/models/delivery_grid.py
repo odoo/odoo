@@ -58,7 +58,8 @@ class ProviderGrid(models.Model):
                     'error_message': e.name,
                     'warning_message': False}
         if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
-            price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
+            price_unit = order.company_id.currency_id._convert(
+                price_unit, order.pricelist_id.currency_id, order.company_id, order.date_order or fields.Date.today())
 
         return {'success': True,
                 'price': price_unit,
@@ -82,7 +83,8 @@ class ProviderGrid(models.Model):
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
-        total = order.currency_id.with_context(date=order.date_order).compute(total, order.company_id.currency_id)
+        total = order.currency_id._convert(
+            total, order.company_id.currency_id, order.company_id, order.date_order or fields.Date.today())
 
         return self._get_price_from_picking(total, weight, volume, quantity)
 
@@ -106,7 +108,7 @@ class ProviderGrid(models.Model):
         for p in pickings:
             carrier = self._match_address(p.partner_id)
             if not carrier:
-                raise ValidationError(_('Error: no matching grid.'))
+                raise ValidationError(_('There is no matching delivery rule.'))
             res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
                           'tracking_number': False}]
         return res

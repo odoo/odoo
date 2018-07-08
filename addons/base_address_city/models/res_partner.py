@@ -4,12 +4,14 @@
 from lxml import etree
 
 from odoo import api, models, fields
+from odoo.tools.translate import _
+
 
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    country_enforce_cities = fields.Boolean(related='country_id.enforce_cities')
-    city_id = fields.Many2one('res.city', string='Company')
+    country_enforce_cities = fields.Boolean(related='country_id.enforce_cities', readonly=True)
+    city_id = fields.Many2one('res.city', string='City of Address')
 
     @api.onchange('city_id')
     def _onchange_city_id(self):
@@ -24,14 +26,15 @@ class Partner(models.Model):
         doc = etree.fromstring(arch)
         if doc.xpath("//field[@name='city_id']"):
            return arch
+        label = _('City')
         for city_node in doc.xpath("//field[@name='city']"):
             replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
-                <field name='city' attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
-                <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
+                <field name='city' placeholder="%s" attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
+                <field name='city_id' placeholder="%s" string="%s" attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
             </div>
-            """
+            """ % (label, label, label)
             city_id_node = etree.fromstring(replacement_xml)
             city_node.getparent().replace(city_node, city_id_node)
 

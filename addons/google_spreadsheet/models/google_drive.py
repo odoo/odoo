@@ -80,7 +80,7 @@ class GoogleDrive(models.Model):
                 timeout=TIMEOUT,
             )
         except IOError:
-            _logger.warning("An error occured while writting the formula on the Google Spreadsheet.")
+            _logger.warning("An error occured while writing the formula on the Google Spreadsheet.")
 
         description = '''
         formula: %s

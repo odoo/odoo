@@ -48,10 +48,10 @@ for name, field in MODELS:
             return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
         @api.model
-        def name_search(self, name='', args=None, operator='ilike', limit=100):
+        def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
             if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
-                records = self.search([('value', operator, int(name.split(':')[1]))])
-                return records.name_get()
+                record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
+                return self.browse(record_ids).name_get()
             else:
                 return []
 
@@ -70,10 +70,10 @@ class One2ManyChild(models.Model):
         return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
-            records = self.search([('value', operator, int(name.split(':')[1]))])
-            return records.name_get()
+            record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
+            return self.browse(record_ids).name_get()
         else:
             return []
 
@@ -124,10 +124,10 @@ class Many2ManyChild(models.Model):
         return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
-            records = self.search([('value', operator, int(name.split(':')[1]))])
-            return records.name_get()
+            record_ids = self._search([('value', operator, int(name.split(':')[1]))], access_rights_uid=name_get_uid)
+            return self.browse(record_ids).name_get()
         else:
             return []
 

@@ -15,7 +15,7 @@ QUnit.module('HR Attendance', {
                     attendance_state: {
                         string: 'State',
                         type: 'selection',
-                        selection: [[1, "In"], [2, "Out"]],
+                        selection: [['checked_in', "In"], ['checked_out', "Out"]],
                         default: 1,
                     },
                     user_id: {string: 'user ID', type: 'integer'},
@@ -23,7 +23,7 @@ QUnit.module('HR Attendance', {
                 records: [{
                     id: 1,
                     name: "Employee A",
-                    attendance_state: 1,
+                    attendance_state: 'checked_out',
                     user_id: 1,
                 }],
             },
@@ -45,7 +45,7 @@ QUnit.module('HR Attendance', {
         });
         clientAction.appendTo($target);
 
-        assert.strictEqual(clientAction.$('.o_hr_attendance_kiosk_mode h1').text(), 'Welcome Employee A',
+        assert.strictEqual(clientAction.$('.o_hr_attendance_kiosk_mode h1').text(), 'Employee A',
             "should have rendered the client action without crashing");
 
         clientAction.destroy();

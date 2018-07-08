@@ -77,8 +77,7 @@ class ProcurementRule(models.Model):
 
         data = self._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
         # Since action_confirm launch following procurement_group we should activate it.
-        move = self.env['stock.move'].sudo().create(data)
-        move._assign_picking()
+        move = self.env['stock.move'].sudo().with_context(force_company=data.get('company_id', False)).create(data)
         move._action_confirm()
         return True
 
@@ -182,7 +181,7 @@ class ProcurementGroup(models.Model):
         rule = self._get_rule(product_id, location_id, values)
 
         if not rule:
-            raise UserError(_('No procurement rule found. Please verify the configuration of your routes'))
+            raise UserError(_('No procurement rule found in location "%s" for product "%s".\n Check routes configuration.') % (location_id.display_name, product_id.display_name))
 
         if hasattr(rule, '_run_%s' % rule.action):
             getattr(rule, '_run_%s' % rule.action)(product_id, product_qty, product_uom, location_id, name, origin, values)
@@ -232,30 +231,17 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
-    def _get_exceptions_domain(self):
-        return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False)]
-
-    @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
+        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed'), ('product_uom_qty', '!=', 0.0)], limit=None, order='priority desc, date_expected asc')
         for moves_chunk in split_every(100, confirmed_moves.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
                 self._cr.commit()
 
-        exception_moves = self.env['stock.move'].search(self._get_exceptions_domain())
-        for move in exception_moves:
-            values = move._prepare_procurement_values()
-            try:
-                with self._cr.savepoint():
-                    origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
-                    self.run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin, values)
-            except UserError as error:
-                self.env['procurement.rule']._log_next_activity(move.product_id, error.name)
         if use_new_cursor:
             self._cr.commit()
 

@@ -8,14 +8,6 @@
             </xpath>
         </template>
 
-        <!-- Layout add nav and footer -->
-        <template id="header_footer_custom" inherit_id="website.footer_default"
-            name="Footer Documentation Link">
-            <xpath expr="//ul[@id='products']" position="inside">
-                <li><a href="/forum/how-to">Documentation</a></li>
-            </xpath>
-        </template>
-
         <!-- Page Index -->
         <template id="toc" name="Documentation Index">
             <t t-set="level" t-value="level+1"/>
@@ -171,8 +163,8 @@
                 </li>
             </xpath>
             <xpath expr="//hr" position="before">
-                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id" role="status">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                     This question has been included in the <a href="/forum/how-to">official documentation</a>.
                 </div>
             </xpath>
@@ -222,7 +214,7 @@
                                 <div class="col-md-offset-3 col-md-8">
                                     <button class="btn btn-primary">Push to documentation</button>
                                     <span class="text-muted">or</span>
-                                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
+                                    <a role="button" class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
                                 </div>
                             </div>
                         </form>

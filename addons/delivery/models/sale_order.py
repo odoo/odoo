@@ -14,11 +14,18 @@ class SaleOrder(models.Model):
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_rating_success = fields.Boolean(copy=False)
     invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery", copy=False)
+    available_carrier_ids = fields.Many2many("delivery.carrier", compute="_compute_available_carrier", string="Available Carriers")
 
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
         return self.amount_total - delivery_cost
+
+    @api.depends('partner_id')
+    def _compute_available_carrier(self):
+        carriers = self.env['delivery.carrier'].search([])
+        for rec in self:
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_id) if rec.partner_id else carriers
 
     def get_delivery_price(self):
         for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
@@ -45,7 +52,7 @@ class SaleOrder(models.Model):
     @api.onchange('partner_id')
     def onchange_partner_id_carrier_id(self):
         if self.partner_id:
-            self.carrier_id = self.partner_id.property_delivery_carrier_id
+            self.carrier_id = self.partner_id.property_delivery_carrier_id.filtered('active')
 
     # TODO onchange sol, clean delivery price
 
@@ -91,7 +98,7 @@ class SaleOrder(models.Model):
         # Create the sales order line
         values = {
             'order_id': self.id,
-            'name': carrier.name,
+            'name': carrier.with_context(lang=self.partner_id.lang).name,
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
@@ -117,3 +124,7 @@ class SaleOrderLine(models.Model):
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+
+    def _is_delivery(self):
+        self.ensure_one()
+        return self.is_delivery

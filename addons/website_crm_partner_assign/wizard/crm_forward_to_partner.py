@@ -134,7 +134,7 @@ class CrmLeadAssignation(models.TransientModel):
     lead_location = fields.Char('Lead Location')
     partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner')
     partner_location = fields.Char('Partner Location')
-    lead_link = fields.Char('Lead Single Links')
+    lead_link = fields.Char('Link to Lead')
 
     @api.onchange('lead_id')
     def _onchange_lead_id(self):

@@ -70,6 +70,7 @@ def py2exe_options():
                     'dist_dir': 'dist',
                     'packages': [
                         'asynchat', 'asyncore',
+                        'BeautifulSoup',
                         'commands',
                         'dateutil',
                         'decimal',
@@ -141,6 +142,7 @@ setup(
         'html2text',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'libsass',
         'mako',
         'mock',
         'ofxparse',

@@ -21,6 +21,11 @@ class View(models.Model):
     customize_show = fields.Boolean("Show As Optional Inherit", default=False)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', compute='_compute_page_ids', store=False)
+    first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
+
+    @api.one
+    def _compute_first_page_id(self):
+        self.first_page_id = self.env['website.page'].search([('view_id', '=', self.id)], limit=1)
 
     @api.one
     def _compute_page_ids(self):
@@ -92,7 +97,7 @@ class View(models.Model):
         return super(View, self).get_view_id(xml_id)
 
     @api.multi
-    def render(self, values=None, engine='ir.qweb'):
+    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         new_context = dict(self._context)
         if request and getattr(request, 'is_frontend', False):
@@ -110,7 +115,7 @@ class View(models.Model):
 
         if self._context != new_context:
             self = self.with_context(new_context)
-        return super(View, self).render(values, engine=engine)
+        return super(View, self).render(values, engine=engine, minimal_qcontext=minimal_qcontext)
 
     @api.model
     def _prepare_qcontext(self):

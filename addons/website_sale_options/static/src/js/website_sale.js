@@ -9,7 +9,7 @@ require('website_sale.website_sale');
 $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
     .off('click')
     .removeClass('a-submit')
-    .click(function (event) {
+    .click(_.debounce(function (event) {
         var $form = $(this).closest('form');
         var quantity = parseFloat($form.find('input[name="add_qty"]').val() || 1);
         var product_id = parseInt($form.find('input[type="hidden"][name="product_id"], input[type="radio"][name="product_id"]:checked').first().val(),10);
@@ -35,7 +35,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         $(this).remove();
                     });
 
-                $modal.on('click', '.a-submit', function () {
+                $modal.on('click', '.a-submit', function (ev) {
                     var $a = $(this);
                     $form.ajaxSubmit({
                         url:  '/shop/cart/update_option',
@@ -50,6 +50,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         }
                     });
                     $modal.modal('hide');
+                    ev.preventDefault();
                 });
 
                 $modal.on('click', '.css_attribute_color input', function (event) {
@@ -95,6 +96,6 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                 });
             });
         return false;
-    });
+    }, 200, true));
 
 });

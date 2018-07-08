@@ -14,7 +14,7 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: "integer", store: true},
                     bar: {string: "bar", type: "boolean"},
-                    product_id: {string: "Product", type: "many2one", relation: 'product'},
+                    product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     color_id: {string: "Color", type: "many2one", relation: 'color'},
                 },
                 records: [
@@ -90,7 +90,6 @@ QUnit.module('Views', {
         });
     });
 
-
     QUnit.test('default type attribute', function (assert) {
         assert.expect(1);
 
@@ -105,7 +104,6 @@ QUnit.module('Views', {
         assert.strictEqual(graph.renderer.state.mode, "pie", "should be in pie chart mode by default");
         graph.destroy();
     });
-
 
     QUnit.test('switching mode', function (assert) {
         assert.expect(6);
@@ -150,7 +148,7 @@ QUnit.module('Views', {
         });
         return concurrency.delay(0).then(function () {
             assert.ok(!graph.$('svg').length, "should not have a svg");
-            assert.ok(graph.$('.oe_view_nocontent').length, "should have an error message");
+            assert.ok(graph.$('.o_view_nocontent').length, "should have an error message");
             graph.destroy();
             done();
         });
@@ -191,7 +189,6 @@ QUnit.module('Views', {
         });
     });
 
-
     QUnit.test('no content helper', function (assert) {
         var done = assert.async();
         assert.expect(4);
@@ -207,13 +204,13 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should contain a div with a svg element");
-            assert.notOk(graph.$('div.oe_view_nocontent').length,
+            assert.notOk(graph.$('div.o_view_nocontent').length,
                 "should not display the no content helper");
             graph.update({domain: [['product_id', '=', 4]]});
 
             assert.notOk(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should not contain a div with a svg element");
-            assert.ok(graph.$('div.oe_view_nocontent').length,
+            assert.ok(graph.$('div.o_view_nocontent').length,
                 "should display the no content helper");
             graph.destroy();
             done();
@@ -251,7 +248,7 @@ QUnit.module('Views', {
         });
     });
 
-    QUnit.test('getContext correctly returns mode, measure and groupbys', function (assert) {
+    QUnit.test('getContext correctly returns mode, measure, groupbys and interval mapping', function (assert) {
         var done = assert.async();
         assert.expect(4);
 
@@ -268,6 +265,7 @@ QUnit.module('Views', {
                 graph_mode: 'bar',
                 graph_measure: '__count__',
                 graph_groupbys: ['product_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.$buttons.find('li[data-field="foo"] a').click(); // change measure
@@ -278,6 +276,7 @@ QUnit.module('Views', {
                 graph_mode: 'bar',
                 graph_measure: 'foo',
                 graph_groupbys: ['product_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.$buttons.find('button[data-mode="line"]').click(); // change mode
@@ -288,6 +287,7 @@ QUnit.module('Views', {
                 graph_mode: 'line',
                 graph_measure: 'foo',
                 graph_groupbys: ['product_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
@@ -298,6 +298,7 @@ QUnit.module('Views', {
                 graph_mode: 'line',
                 graph_measure: 'foo',
                 graph_groupbys: ['product_id', 'color_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.destroy();
@@ -440,6 +441,185 @@ QUnit.module('Views', {
 
         graph.reload({groupBy: []});
 
+        graph.destroy();
+    });
+
+    QUnit.test('initial groupby is kept when reloading', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph>' +
+                    '<field name="product_id" type="row"/>' +
+                    '<field name="foo" type="measure"/>' +
+                '</graph>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, ['product_id'],
+                        "should group by the correct field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('.nv-groups rect').length, 2,
+                "should display two groups");
+
+            graph.reload({groupBy: []});
+            return concurrency.delay(0).then(function () {
+                assert.strictEqual(graph.$('.nv-groups rect').length, 2,
+                    "should still display two groups");
+
+                graph.destroy();
+                done();
+            });
+        });
+    });
+
+    QUnit.test('use a many2one as a measure should work (without groupBy)', function (assert) {
+        assert.expect(3);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id" type="measure"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+                        "should contain a div with a svg element");
+
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+            assert.strictEqual(graph.model.chart.data[0].value, 2,
+                "should have a datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure should work (with groupBy)', function (assert) {
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="bar" type="row"/>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+                        "should contain a div with a svg element");
+
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+            assert.strictEqual(graph.model.chart.data[0].value, 1,
+                "should have first datapoint with value 2");
+            assert.strictEqual(graph.model.chart.data[1].value, 2,
+                "should have second datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure and as a groupby should work', function (assert) {
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id" type="row"/>' +
+                '</graph>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            // need to set the measure this way because it cannot be set in the
+            // arch.
+            graph.$buttons.find('li[data-field="product_id"] a').click();
+
+            assert.strictEqual(graph.model.chart.data[0].value, 1,
+                "should have first datapoint with value 1");
+            assert.strictEqual(graph.model.chart.data[1].value, 1,
+                "should have second datapoint with value 1");
+
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('not use a many2one as a measure by default', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.notOk(graph.measures.product_id,
+                "should not have product_id as measure");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure if set as additional fields', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.ok(graph.measures.product_id,
+                "should have product_id as measure");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('graph view crash when moving from search view using Down key', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners" type="pie">' +
+                        '<field name="bar"/>' +
+                '</graph>',
+        });
+        graph.renderer.giveFocus();
+        assert.ok(true,"should not generate any error");
         graph.destroy();
     });
 });

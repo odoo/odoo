@@ -189,7 +189,7 @@ class Property(models.Model):
         if not values:
             return
 
-        if not default_value:
+        if default_value is None:
             domain = self._get_domain(name, model)
             if domain is None:
                 raise Exception()
@@ -212,7 +212,11 @@ class Property(models.Model):
             id = refs.pop(prop.res_id)
             value = clean(values[id])
             if value == default_value:
-                prop.unlink()
+                # avoid prop.unlink(), as it clears the record cache that can
+                # contain the value of other properties to set on record!
+                prop.check_access_rights('unlink')
+                prop.check_access_rule('unlink')
+                self._cr.execute("DELETE FROM ir_property WHERE id=%s", [prop.id])
             elif value != clean(prop.get_by_record()):
                 prop.write({'value': value})
 

@@ -20,7 +20,7 @@ class TestInventory(TestStockCommon):
             location_id=self.env.ref('stock.stock_location_suppliers').id,  # TDE FIXME: locations
             location_dest_id=self.location_1.id)
 
-        incoming_move.picking_id.with_context(active_model='stock.picking', active_id=incoming_move.picking_id.id, active_ids=[incoming_move.picking_id.id]).do_transfer()
+        incoming_move.picking_id.with_context(active_model='stock.picking', active_id=incoming_move.picking_id.id, active_ids=[incoming_move.picking_id.id]).action_done()
 
         # check backorder shipment after receiving partial shipment and check remaining shipment
         for move_line in incoming_move.picking_id.move_lines:
@@ -39,7 +39,7 @@ class TestInventory(TestStockCommon):
             location_id=self.env.ref('stock.stock_location_suppliers').id,  # TDE FIXME: locations
             location_dest_id=self.location_1.id)
 
-        backorder.do_transfer()
+        backorder.action_done()
 
         # check the incoming shipment after receipt
         backorder = self.env['stock.picking'].search([('backorder_id', '=', incoming_move.picking_id.id)])

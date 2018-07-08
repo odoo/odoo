@@ -14,7 +14,7 @@ class Website(models.Model):
     _inherit = 'website'
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
+    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
@@ -149,8 +149,11 @@ class Website(models.Model):
 
     @api.model
     def sale_get_payment_term(self, partner):
-        DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
-        return partner.property_payment_term_id.id or self.env.ref(DEFAULT_PAYMENT_TERM, False).id
+        return (
+            partner.property_payment_term_id or
+            self.env.ref('account.account_payment_term_immediate', False) or
+            self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
+        ).id
 
     @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):
@@ -158,6 +161,8 @@ class Website(models.Model):
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
         addr = partner.address_get(['delivery', 'invoice'])
+        if len(partner.sale_order_ids):  # first = me
+            addr['delivery'] = partner.sale_order_ids[0].partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
             'partner_id': partner.id,
@@ -228,7 +233,7 @@ class Website(models.Model):
 
             request.session['sale_order_id'] = sale_order.id
 
-            if request.website.partner_id.id != partner.id:
+            if request.website.partner_id.id != partner.id and partner.last_website_so_id.id != sale_order.id:
                 partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
@@ -297,28 +302,9 @@ class Website(models.Model):
 
         return sale_order
 
-    def sale_get_transaction(self):
-        tx_id = request.session.get('sale_transaction_id')
-        if tx_id:
-            transaction = self.env['payment.transaction'].sudo().browse(tx_id)
-            # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
-            # payment was not not proceeded. For example:
-            # - Select SIPS for payment
-            # - Be redirected to SIPS website
-            # - Go back to eCommerce without paying
-            # - Be redirected to SIPS website again => error
-            # Since there is no link module between 'website_sale' and 'payment_sips', we prevent
-            # here to reuse any previous transaction for SIPS.
-            if transaction.state != 'cancel' and transaction.acquirer_id.provider != 'sips':
-                return transaction
-            else:
-                request.session['sale_transaction_id'] = False
-        return False
-
     def sale_reset(self):
         request.session.update({
             'sale_order_id': False,
-            'sale_transaction_id': False,
             'website_sale_current_pl': False,
         })
 

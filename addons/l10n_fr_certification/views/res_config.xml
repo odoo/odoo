@@ -1,0 +1,18 @@
+<odoo>
+    <record id="view_general_fr_inalterability_inherit_config" model="ir.ui.view">
+        <field name="name">Inalterability settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <h2>Data Inalterability</h2>
+                <div>
+                    <div>
+                        <button name="%(l10n_fr_certification.action_check_hash_integrity)d" type="action" string="Data Inalterability Check" class="oe_link"/>
+                        <button name="%(l10n_fr_certification.odoo_french_certification)d" type="action" string="Get the certification now!" class="oe_link"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

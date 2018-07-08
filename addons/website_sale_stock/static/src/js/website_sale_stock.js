@@ -39,15 +39,18 @@ $('.oe_website_sale').each(function() {
     $(oe_website_sale).on('change', 'ul[data-attribute_value_ids]', function(event) {
         var $ul = $(event.target).closest('.js_add_cart_variants');
         var $parent = $ul.closest('.js_product');
-        var variant_ids = JSON.parse($ul.data("attribute_value_ids").replace(/'/g, '"'));
+        var variant_ids = $ul.data("attribute_value_ids");
         var values = [];
         $parent.find('input.js_variant_change:checked, select.js_variant_change').each(function() {
             values.push(+$(this).val());
         });
+        var list_variant_id = parseInt($parent.find('input.js_product_change:checked').val());
         var qty = $parent.find('input[name="add_qty"]').val();
         for (var k in variant_ids) {
-            if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                var info = variant_ids[k][4];
+            if (_.isEmpty(_.difference(variant_ids[k][1], values)) ||
+                variant_ids[k][0] === list_variant_id) {
+                // clone so permanent object is not modified
+                var info = _.clone(variant_ids[k][4]);
                 if(_.contains(['always', 'threshold'], info['inventory_availability'])) {
                     info['virtual_available'] -= parseInt(info['cart_qty']);
                     if (info['virtual_available'] < 0) {

@@ -95,7 +95,7 @@ class IrActionsReport(models.Model):
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
     print_report_name = fields.Char('Printed Report Name',
-                                    help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the object and time variables.")
+                                    help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
@@ -206,6 +206,9 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: A list of string representing the wkhtmltopdf process command args.
         '''
+        if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
+            landscape = specific_paperformat_args.get('data-report-landscape')
+
         command_args = []
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
@@ -519,20 +522,24 @@ class IrActionsReport(models.Model):
                     # we look on the pdf structure using pypdf to compute the outlines_pages that is
                     # an array like [0, 3, 5] that means a new document start at page 0, 3 and 5.
                     reader = PdfFileReader(pdf_content_stream)
-                    outlines_pages = sorted(
-                        [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
-                    assert len(outlines_pages) == len(res_ids)
-                    for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
-                        attachment_writer = PdfFileWriter()
-                        for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
-                        stream = io.BytesIO()
-                        attachment_writer.write(stream)
-                        if res_ids[i] and res_ids[i] not in save_in_attachment:
-                            self.postprocess_pdf_report(record_map[res_ids[i]], stream)
-                        streams.append(stream)
-                    close_streams([pdf_content_stream])
+                    if reader.trailer['/Root'].get('/Dests'):
+                        outlines_pages = sorted(
+                            [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
+                        assert len(outlines_pages) == len(res_ids)
+                        for i, num in enumerate(outlines_pages):
+                            to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
+                            attachment_writer = PdfFileWriter()
+                            for j in range(num, to):
+                                attachment_writer.addPage(reader.getPage(j))
+                            stream = io.BytesIO()
+                            attachment_writer.write(stream)
+                            if res_ids[i] and res_ids[i] not in save_in_attachment:
+                                self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                            streams.append(stream)
+                        close_streams([pdf_content_stream])
+                    else:
+                        # If no outlines available, do not save each record
+                        streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
@@ -559,7 +566,7 @@ class IrActionsReport(models.Model):
     def render_qweb_pdf(self, res_ids=None, data=None):
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
-        if tools.config['test_enable'] and not tools.config['test_report_directory']:
+        if tools.config['test_enable']:
             return self.render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
@@ -678,7 +685,7 @@ class IrActionsReport(models.Model):
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
         if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
-            template = self.env.ref('base.view_company_report_form_with_print')
+            template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),
                 'type': 'ir.actions.act_window',

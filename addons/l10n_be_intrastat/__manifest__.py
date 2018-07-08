@@ -17,6 +17,7 @@ Based on invoices.
         'security/l10n_be_intrastat_security.xml',
         'security/ir.model.access.csv',
         'views/l10n_be_intrastat_view.xml',
+        'views/res_users_views.xml',
         'wizard/l10n_be_intrastat_declaration_view.xml',
     ],
 }

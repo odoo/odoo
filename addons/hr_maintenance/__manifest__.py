@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'HR - Equipments',
+    'name': 'Maintenance - HR',
     'version': '1.0',
     'sequence': 125,
     'description': """
@@ -14,5 +14,5 @@
     ],
     'demo': [],
     'installable': True,
-    'auto-install': True,
+    'auto_install': True,
 }

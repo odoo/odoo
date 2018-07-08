@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.mrp.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <group name="applications" position="inside">
+                <field name='group_mrp_user'/>
+            </group>
+            <group name="technical" position="inside">
+                <label for="has_group_mrp_routings" colspan="3"/>
+                <div>
+                    <field name='has_group_mrp_routings' colspan="1" class="oe_inline"/>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

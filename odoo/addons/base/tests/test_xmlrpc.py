@@ -4,9 +4,8 @@
 from odoo.tests import common
 
 
+@common.tagged('post_install', '-at_install')
 class TestXMLRPC(common.HttpCase):
-    at_install = False
-    post_install = True
 
     def test_01_xmlrpc_login(self):
         """ Try to login on the common service. """

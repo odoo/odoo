@@ -24,6 +24,7 @@ with Chart of account under Circular No. 200/2014/TT-BTC
         "base_iban"
     ],
     "data": [
+         'data/res.country.state.csv',
          'data/l10n_vn_chart_data.xml',
          'data/account_data.xml',
          'data/account_tax_data.xml',

@@ -122,8 +122,14 @@ class FunctionDoc(CommentDoc):
     @property
     def params(self):
         tag_texts = self.get_as_list('param')
-        if self.get('guessed_params') is None:
-            return [ParamDoc(text) for text in tag_texts]
+        # turns out guessed_params is *almost* (?) always set to a list,
+        # if empty list of guessed params fall back to @params
+        if not self['guessed_params']:
+            # only get "primary" params (no "." in name)
+            return [
+                p for p in map(ParamDoc, tag_texts)
+                if '.' not in p.name
+            ]
         else:
             param_dict = {}
             for text in tag_texts:

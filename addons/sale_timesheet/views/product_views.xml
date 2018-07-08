@@ -12,11 +12,9 @@
             <xpath expr="//field[@name='service_type']" position="after">
                 <field name="service_policy" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
                 <field name="service_tracking" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
-                <field name="project_id" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"
-                />
+                <field name="project_id" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"/>
+                <field name="project_template_id" context="{'active_test': False}" attrs="{'invisible':[('service_tracking','not in',['task_new_project', 'project_only'])]}"/>
             </xpath>
-            <field name="service_type" position="after">
-            </field>
         </field>
     </record>
 

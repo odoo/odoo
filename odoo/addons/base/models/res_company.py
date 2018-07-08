@@ -5,7 +5,7 @@ import os
 import re
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class Company(models.Model):
@@ -15,16 +15,7 @@ class Company(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        """
-        Duplicating a company without specifying a partner duplicate the partner
-        """
-        self.ensure_one()
-        default = dict(default or {})
-        if not default.get('name') and not default.get('partner_id'):
-            copy_partner = self.partner_id.copy()
-            default['partner_id'] = copy_partner.id
-            default['name'] = copy_partner.name
-        return super(Company, self).copy(default)
+        raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
         return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'static', 'img', 'res_company_logo.png'), 'rb') .read())
@@ -144,8 +135,8 @@ class Company(models.Model):
         self.ensure_one()
         currency_id = self._get_user_currency()
         if country_id:
-            currency_id = self.env['res.country'].browse(country_id).currency_id.id
-        return {'value': {'currency_id': currency_id}}
+            currency_id = self.env['res.country'].browse(country_id).currency_id
+        return {'value': {'currency_id': currency_id.id}}
 
     @api.onchange('country_id')
     def _onchange_country_id_wrapper(self):
@@ -158,7 +149,7 @@ class Company(models.Model):
         return res
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         context = dict(self.env.context)
         newself = self
         if context.pop('user_preference', None):
@@ -169,7 +160,7 @@ class Company(models.Model):
             companies = self.env.user.company_id + self.env.user.company_ids
             args = (args or []) + [('id', 'in', companies.ids)]
             newself = newself.sudo()
-        return super(Company, newself.with_context(context)).name_search(name=name, args=args, operator=operator, limit=limit)
+        return super(Company, newself.with_context(context))._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -227,18 +218,31 @@ class Company(models.Model):
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)
+        # The write is made on the user to set it automatically in the multi company group.
+        self.env.user.write({'company_ids': [(4, company.id)]})
         partner.write({'company_id': company.id})
+
+        # Make sure that the selected currency is enabled
+        if vals.get('currency_id'):
+            currency = self.env['res.currency'].browse(vals['currency_id'])
+            if not currency.active:
+                currency.write({'active': True})
         return company
 
     @api.multi
     def write(self, values):
         self.clear_caches()
+        # Make sure that the selected currency is enabled
+        if values.get('currency_id'):
+            currency = self.env['res.currency'].browse(values['currency_id'])
+            if not currency.active:
+                currency.write({'active': True})
         return super(Company, self).write(values)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You cannot create recursive companies.'))
+            raise ValidationError(_('You cannot create recursive companies.'))
 
     @api.multi
     def open_company_edit_report(self):

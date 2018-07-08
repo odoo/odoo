@@ -4,10 +4,9 @@ import json
 import logging
 import re
 
-from operator import attrgetter, add
 from lxml import etree
 
-from odoo import api, models, registry, SUPERUSER_ID, _
+from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
 
@@ -341,6 +340,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 default_foo = fields.type(..., default_model='my.model'),
                 group_bar = fields.Boolean(..., group='base.group_user', implied_group='my.group'),
                 module_baz = fields.Boolean(...),
+                config_qux = fields.Char(..., config_parameter='my.parameter')
                 other_field = fields.type(...),
 
         The method ``execute`` provides some support based on a naming convention:
@@ -366,14 +366,17 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             ``execute`` triggers the immediate installation of the module named 'XXX' 
             if the field has the integer value ``1``.
 
-        *   For the other fields, the method ``execute`` invokes all methods with a name
-            that starts with 'set_'; such methods can be defined to implement the effect
-            of those fields.
+        *   For a field with no specific prefix BUT an attribute 'config_parameter',
+            ``execute``` will save its value in an ir.config.parameter (global setting for the
+            database).
+
+        *   For the other fields, the method ``execute`` invokes `set_values`.
+            Override it to implement the effect of those fields.
 
         The method ``default_get`` retrieves values that reflect the current status of the
-        fields like 'default_XXX', 'group_XXX' and 'module_XXX'.  It also invokes all methods
-        with a name that starts with 'get_default_'; such methods can be defined to provide
-        current values for other fields.
+        fields like 'default_XXX', 'group_XXX', 'module_XXX' and config_XXX.
+        It also invokes all methods with a name that starts with 'get_default_';
+        such methods can be defined to provide current values for other fields.
     """
     _name = 'res.config.settings'
 
@@ -437,6 +440,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 {   'default': [('default_foo', 'model', 'foo'), ...],
                     'group':   [('group_bar', [browse_group], browse_implied_group), ...],
                     'module':  [('module_baz', browse_module), ...],
+                    'config':  [('config_qux', 'my.parameter'), ...],
                     'other':   ['other_field', ...],
                 }
         """
@@ -444,22 +448,33 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         Groups = self.env['res.groups']
         ref = self.env.ref
 
-        defaults, groups, modules, others = [], [], [], []
+        defaults, groups, modules, configs, others = [], [], [], [], []
         for name, field in self._fields.items():
-            if name.startswith('default_') and hasattr(field, 'default_model'):
+            if name.startswith('default_'):
+                if not hasattr(field, 'default_model'):
+                    raise Exception("Field %s without attribute 'default_model'" % field)
                 defaults.append((name, field.default_model, name[8:]))
-            elif name.startswith('group_') and field.type in ('boolean', 'selection') and \
-                    hasattr(field, 'implied_group'):
+            elif name.startswith('group_'):
+                if field.type not in ('boolean', 'selection'):
+                    raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
+                if not hasattr(field, 'implied_group'):
+                    raise Exception("Field %s without attribute 'implied_group'" % field)
                 field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
                 field_groups = Groups.concat(*(ref(it) for it in field_group_xmlids))
                 groups.append((name, field_groups, ref(field.implied_group)))
-            elif name.startswith('module_') and field.type in ('boolean', 'selection'):
+            elif name.startswith('module_'):
+                if field.type not in ('boolean', 'selection'):
+                    raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
                 module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)
                 modules.append((name, module))
+            elif hasattr(field, 'config_parameter'):
+                if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one'):
+                    raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection' or 'many2one'" % field)
+                configs.append((name, field.config_parameter))
             else:
                 others.append(name)
 
-        return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
+        return {'default': defaults, 'group': groups, 'module': modules, 'config': configs, 'other': others}
 
     def get_values(self):
         """
@@ -470,6 +485,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     @api.model
     def default_get(self, fields):
         IrDefault = self.env['ir.default']
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
         classified = self._get_classified_fields()
 
         res = super(ResConfigSettings, self).default_get(fields)
@@ -491,6 +507,36 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             res[name] = module.state in ('installed', 'to install', 'to upgrade')
             if self._fields[name].type == 'selection':
                 res[name] = int(res[name])
+
+        # config: get & convert stored ir.config_parameter (or default)
+        WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
+        for name, icp in classified['config']:
+            field = self._fields[name]
+            value = IrConfigParameter.get_param(icp, field.default(self) if field.default else False)
+            if value is not False:
+                if field.type == 'many2one':
+                    try:
+                        # Special case when value is the id of a deleted record, we do not want to
+                        # block the settings screen
+                        value = self.env[field.comodel_name].browse(int(value)).exists().id
+                    except ValueError:
+                        _logger.warning(WARNING_MESSAGE, value, field, icp)
+                        value = False
+                elif field.type == 'integer':
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        _logger.warning(WARNING_MESSAGE, value, field, icp)
+                        value = 0
+                elif field.type == 'float':
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        _logger.warning(WARNING_MESSAGE, value, field, icp)
+                        value = 0.0
+                elif field.type == 'boolean':
+                    value = value.lower() == 'true'
+            res[name] = value
 
         # other fields: call the method 'get_values'
         # The other methods that start with `get_default_` are deprecated
@@ -529,12 +575,30 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             IrDefault.set(model, field, value)
 
         # group fields: modify group / implied groups
-        for name, groups, implied_group in classified['group']:
-            if self[name]:
-                groups.write({'implied_ids': [(4, implied_group.id)]})
-            else:
-                groups.write({'implied_ids': [(3, implied_group.id)]})
-                implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
+        with self.env.norecompute():
+            for name, groups, implied_group in classified['group']:
+                if self[name]:
+                    groups.write({'implied_ids': [(4, implied_group.id)]})
+                else:
+                    groups.write({'implied_ids': [(3, implied_group.id)]})
+                    implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
+        self.recompute()
+
+        # config fields: store ir.config_parameters
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        for name, icp in classified['config']:
+            field = self._fields[name]
+            value = self[name]
+            if field.type == 'char':
+                # storing developer keys as ir.config_parameter may lead to nasty
+                # bugs when users leave spaces around them
+                value = (value or "").strip() or False
+            elif field.type in ('integer', 'float'):
+                value = repr(value) if value else False
+            elif field.type == 'many2one':
+                # value is a (possibly empty) recordset
+                value = value.id
+            IrConfigParameter.set_param(icp, value)
 
         # other fields: execute method 'set_values'
         # Methods that start with `set_` are now deprecated

@@ -50,7 +50,11 @@ class AccountBankStatementImport(models.TransientModel):
         # Create the bank statements
         statement_ids, notifications = self._create_bank_statements(stmts_vals)
         # Now that the import worked out, set it as the bank_statements_source of the journal
-        journal.bank_statements_source = 'file_import'
+        if journal.bank_statements_source != 'file_import':
+            # Use sudo() because only 'account.group_account_manager'
+            # has write access on 'account.journal', but 'account.group_account_user'
+            # must be able to import bank statement files
+            journal.sudo().bank_statements_source = 'file_import'
         # Finally dispatch to reconciliation interface
         action = self.env.ref('account.action_bank_reconcile_bank_statements')
         return {
@@ -160,7 +164,7 @@ class AccountBankStatementImport(models.TransientModel):
             if currency and currency != journal_currency:
                 statement_cur_code = not currency and company_currency.name or currency.name
                 journal_cur_code = not journal_currency and company_currency.name or journal_currency.name
-                raise UserError(_('The currency of the bank statement (%s) is not the same as the currency of the journal (%s) !') % (statement_cur_code, journal_cur_code))
+                raise UserError(_('The currency of the bank statement (%s) is not the same as the currency of the journal (%s).') % (statement_cur_code, journal_cur_code))
 
         # If we couldn't find / can't create a journal, everything is lost
         if not journal and not account_number:
@@ -186,19 +190,12 @@ class AccountBankStatementImport(models.TransientModel):
                 if not line_vals.get('bank_account_id'):
                     # Find the partner and his bank account or create the bank account. The partner selected during the
                     # reconciliation process will be linked to the bank when the statement is closed.
-                    partner_id = False
-                    bank_account_id = False
                     identifying_string = line_vals.get('account_number')
                     if identifying_string:
                         partner_bank = self.env['res.partner.bank'].search([('acc_number', '=', identifying_string)], limit=1)
                         if partner_bank:
-                            bank_account_id = partner_bank.id
-                            partner_id = partner_bank.partner_id.id
-                        else:
-                            bank_account_id = self.env['res.partner.bank'].create({'acc_number': line_vals['account_number']}).id
-                    line_vals['partner_id'] = partner_id
-                    line_vals['bank_account_id'] = bank_account_id
-
+                            line_vals['bank_account_id'] = partner_bank.id
+                            line_vals['partner_id'] = partner_bank.partner_id.id
         return stmts_vals
 
     def _create_bank_statements(self, stmts_vals):
@@ -224,13 +221,11 @@ class AccountBankStatementImport(models.TransientModel):
             if len(filtered_st_lines) > 0:
                 # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)
-                for line_vals in filtered_st_lines:
-                    line_vals.pop('account_number', None)
-                # Create the satement
+                # Create the statement
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
                 statement_ids.append(BankStatement.create(st_vals).id)
         if len(statement_ids) == 0:
-            raise UserError(_('You have already imported that file.'))
+            raise UserError(_('You already have imported that file.'))
 
         # Prepare import feedback
         notifications = []

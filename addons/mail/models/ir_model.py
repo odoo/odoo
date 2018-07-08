@@ -15,6 +15,12 @@ class IrModel(models.Model):
         help="Whether this model supports messages and notifications.",
     )
 
+    def unlink(self):
+        # Delete followers for models that will be unlinked.
+        query = "DELETE FROM mail_followers WHERE res_model IN %s"
+        self.env.cr.execute(query, [tuple(self.mapped('model'))])
+        return super(IrModel, self).unlink()
+
     @api.multi
     def write(self, vals):
         if self and 'is_mail_thread' in vals:
@@ -46,12 +52,6 @@ class IrModel(models.Model):
             model_class._inherit = parents + ['mail.thread']
         return model_class
 
-    def unlink(self):
-        # Delete followers for models that will be unlinked.
-        query = "DELETE FROM mail_followers WHERE res_model IN %s"
-        self.env.cr.execute(query, [tuple(self.mapped('model'))])
-        return super(IrModel, self).unlink()
-
 
 class IrModelField(models.Model):
     _inherit = 'ir.model.fields'
@@ -68,6 +68,6 @@ class IrModelField(models.Model):
 
     def _instanciate_attrs(self, field_data):
         attrs = super(IrModelField, self)._instanciate_attrs(field_data)
-        if field_data.get('track_visibility'):
+        if attrs and field_data.get('track_visibility'):
             attrs['track_visibility'] = field_data['track_visibility']
         return attrs

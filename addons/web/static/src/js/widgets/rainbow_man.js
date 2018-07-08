@@ -33,8 +33,6 @@ var RainbowMan = Widget.extend({
      *   [options.fadeout='no'] will keep rainbowman on screen until user clicks
      *     anywhere outside rainbowman
      * @param {string} [options.img_url] URL of the image to be displayed
-     * @param {boolean} [options.click_close=true] If true, destroys rainbowman on
-     *   click outside
      */
     init: function (options) {
         this._super.apply(this, arguments);
@@ -43,23 +41,19 @@ var RainbowMan = Widget.extend({
             fadeout: 'medium',
             img_url: '/web/static/src/img/smile.svg',
             message: _t('Well Done!'),
-            click_close: true,
         });
         this.delay = rainbowDelay[this.options.fadeout];
-        core.bus.on('clear_uncommitted_changes', this, this.destroy);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-        if (this.options.click_close) {
-            core.bus.on('click', this, function (ev) {
-                if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
-                    this.destroy();
-                }
-            });
-        }
+        core.bus.on('click', this, function (ev) {
+            if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
+                this.destroy();
+            }
+        });
         if (this.delay) {
             setTimeout(function () {
                 self.$el.addClass('o_reward_fading');

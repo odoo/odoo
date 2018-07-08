@@ -8,18 +8,17 @@
             <div id="languages_setting" position="after">
                 <div class="col-xs-12 col-md-6 o_setting_box" id="slides_install_setting">
                     <div class="o_setting_right_pane">
-                        <label string="Slides"/>
+                        <span class="o_form_label">Slides</span>
                         <div class="text-muted">
                             Google Drive API Key
                         </div>
                         <div class="content-group">
                             <div class="row mt16">
-                                <label class="col-md-3 o_light_label" string="API Key"/>
+                                <label for="website_slide_google_app_key" class="col-md-3 o_light_label" string="API Key"/>
                                 <field name="website_slide_google_app_key" class="oe_inline"/>
                             </div>
                             <div class="oe_link">
-                                <span class="fa fa-arrow-right"/>
-                                <a href="https://console.developers.google.com/flows/enableapi?apiid=drive,youtube">
+                                <a href="https://console.developers.google.com/flows/enableapi?apiid=drive,youtube"><span class="fa fa-arrow-right"/>
                                     Create a Google Project and Get a Key
                                 </a>
                             </div>

@@ -20,9 +20,13 @@ odoo.define('website_form.animation', function (require) {
             return $.when(this._super.apply(this, arguments), def);
         },
 
-        start: function () {
+        start: function (editable_mode) {
+            if (editable_mode) {
+                this.stop();
+                return;
+            }
             var self = this;
-            qweb.add_template('/website_form/static/src/xml/website_form.xml');
+            this.templates_loaded = ajax.loadXML('/website_form/static/src/xml/website_form.xml', qweb);
             this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);});
 
             // Initialize datetimepickers
@@ -40,12 +44,12 @@ odoo.define('website_form.animation', function (require) {
                     down: 'fa fa-chevron-down',
                    },
                 locale : moment.locale(),
-                format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+                format : time.getLangDatetimeFormat(),
             };
             this.$target.find('.o_website_form_datetime').datetimepicker(datepickers_options);
 
             // Adapt options to date-only pickers
-            datepickers_options.format = time.strftime_to_moment_format(l10n.date_format);
+            datepickers_options.format = time.getLangDateFormat();
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
 
             return this._super.apply(this, arguments);
@@ -58,7 +62,7 @@ odoo.define('website_form.animation', function (require) {
 
         send: function (e) {
             e.preventDefault();  // Prevent the default submit behavior
-            this.$target.find('.o_website_form_send').off();  // Prevent users from crazy clicking
+            this.$target.find('.o_website_form_send').off().addClass('disabled');  // Prevent users from crazy clicking
 
             var self = this;
 
@@ -209,8 +213,8 @@ odoo.define('website_form.animation', function (require) {
 
         // This is a stripped down version of format.js parse_value function
         parse_date: function (value, type_of_date, value_if_empty) {
-            var date_pattern = time.strftime_to_moment_format(_t.database.parameters.date_format),
-                time_pattern = time.strftime_to_moment_format(_t.database.parameters.time_format);
+            var date_pattern = time.getLangDateFormat(),
+                time_pattern = time.getLangTimeFormat();
             var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
                 time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
             switch (type_of_date) {
@@ -231,9 +235,12 @@ odoo.define('website_form.animation', function (require) {
         update_status: function (status) {
             var self = this;
             if (status !== 'success') {  // Restore send button behavior if result is an error
-                this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);});
+                this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);}).removeClass('disabled');
             }
-            this.$target.find('#o_website_form_result').replaceWith(qweb.render("website_form.status_" + status));
+            var $result = this.$('#o_website_form_result');
+            this.templates_loaded.done(function () {
+                $result.replaceWith(qweb.render("website_form.status_" + status));
+            });
         },
     });
 });

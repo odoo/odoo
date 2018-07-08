@@ -28,7 +28,7 @@ tour.register('main_flow_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
     content: _t('Let\'s create your first product.'),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
@@ -57,6 +57,22 @@ tour.register('main_flow_tour', {
     content: _t('Uncheck  Make To Order'),
     position: 'right',
 }, {
+    trigger: '.o_notebook a:contains("General Information")',
+    content: _t('Go to main tab'),
+    position: 'top',
+}, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: function(actions) {
+        actions.click();
+        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        if ($e.length) {
+            actions.click($e);
+        } else {
+            actions.click();    // close dropdown
+        }
+    },
+}, {
     trigger: '.o_form_button_save',
     content: _t('Save this product and the modifications you\'ve made to it.'),
     position: 'bottom',
@@ -68,7 +84,7 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_list_button_add",
     content: _t("Let's create a new bill of material"),
-    position: "right",
+    position: "bottom",
 }, {
 // Add first component
     trigger: ".o_field_x2many_list_row_add > a",
@@ -106,7 +122,7 @@ tour.register('main_flow_tour', {
     position: 'right',
 }, {
     trigger:  ".o_field_widget[name=name] input",
-    extra_trigger: ".modal-dialog",
+    extra_trigger: "[role=\"dialog\"]",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -119,27 +135,30 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  ".modal-footer .btn-primary:first",
+    trigger:  "footer.modal-footer .btn-primary:first",
     extra_trigger: ".o_field_widget[name=name] > .o_external_button", // Wait name_create
     content: _t('Save & Close'),
     position: 'bottom',
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: "footer.modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
-}, {
+},
+ {
 // Add second component
     trigger: ".o_field_x2many_list_row_add > a",
-    extra_trigger: "body:not(.modal-open)",
+    extra_trigger: "body:not(:has(table.o_list_view div.o_field_widget[name='product_id'] input))",
     content: _t("Click here to add some lines."),
     position: "bottom",
-}, {
+},
+{
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
     extra_trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component2",
-}, {
+},
+{
     trigger: ".ui-menu-item > a:contains('the_flow.component2')",
     auto: true,
 }, {
@@ -157,7 +176,7 @@ tour.register('main_flow_tour', {
     position: 'right',
 }, {
     trigger:  ".o_field_widget[name=name] input",
-    extra_trigger: ".modal-dialog",
+    extra_trigger: "[role=\"dialog\"]",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -171,11 +190,11 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  ".modal-footer .btn-primary:first",
+    trigger:  "footer.modal-footer .btn-primary:first",
     content: _t('Save & Close'),
     position: 'bottom',
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: "footer.modal-footer .btn-primary",
     // Wait Save & Close and check value
     extra_trigger: ".o_field_widget[name=seller_ids] .o_data_row td:nth-child(2):contains('the_flow.vendor')",
     content: _t('Save'),
@@ -195,7 +214,7 @@ tour.register('main_flow_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
     content: _t('Let\'s create your second product.'),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
@@ -207,6 +226,18 @@ tour.register('main_flow_tour', {
     content: _t('Set to service'),
     position: 'left',
     run: 'text "service"',
+}, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: function(actions) {
+        actions.click();
+        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        if ($e.length) {
+            actions.click($e);
+        } else {
+            actions.click();    // close dropdown
+        }
+    },
 }, {
     trigger: '.o_notebook a:contains("Sales")',
     content: _t('Go to sales tab'),
@@ -246,34 +277,32 @@ tour.register('main_flow_tour', {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
-    position: "right"
+    position: "bottom"
 }, {
-    trigger: ".modal-body input:first",
-    content: _t("Enter the opportunity title."),
+    trigger: ".o_kanban_quick_create input:first",
+    content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
     run: "text the_flow.opportunity",
 }, {
-    trigger: ".o_field_widget[name=partner_id] input",
+    trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] input",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     position: "left",
     run: "text the_flow.customer",
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.customer')",
-    in_modal: false,
     auto: true,
 }, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
-    content: _t("Create"),
-    position: "bottom",
+    trigger: ".o_kanban_quick_create .o_kanban_add",
+    extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
+    content: _t("Click here to <b>add your opportunity</b>."),
+    position: "right",
 }, {
-    trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
+    trigger: ".o_kanban_group:first .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:has(span:contains('the_flow.opportunity'))",
-    extra_trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))", // FIXME: this is required due to an issue in tour_manager (see [*])
+    trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("Click on an opportunity to zoom to it."),
     position: "bottom",
 }, {
@@ -297,8 +326,8 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.auto();
         // if the one2many isn't editable, we have to close the dialog
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
+        if ($("footer.modal-footer .btn-primary").length) {
+            actions.auto("footer.modal-footer .btn-primary");
         }
     },
 }, {
@@ -309,7 +338,7 @@ tour.register('main_flow_tour', {
     trigger: ".o_field_widget[name=product_id] input",
     // the one2many may be editable or not according to the modules installed, so
     // we have to handle both cases
-    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, .modal-dialog',
+    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, [role="dialog"]',
     content: _t("Select a product"),
     position: "right",
     run: "text the_flow.service",
@@ -320,8 +349,8 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.auto();
         // if the one2many isn't editable, we have to close the dialog
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
+        if ($("footer.modal-footer .btn-primary").length) {
+            actions.auto("footer.modal-footer .btn-primary");
         }
     },
 }, {
@@ -338,12 +367,12 @@ tour.register('main_flow_tour', {
     content: _t("Enter an email address"),
     position: "right",
     run: "text test@the_flow.com",
-}, {
-    trigger: ".modal-footer .btn-primary",
+},{
+    trigger: "footer.modal-footer .btn-primary",
     content: _t("Save your changes"),
     position: "bottom",
-}, {
-    trigger: ".modal-footer .btn-primary span:contains('Send')",
+},  {
+    trigger: "footer.modal-footer .btn-primary span:contains('Send')",
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
@@ -411,8 +440,8 @@ tour.register('main_flow_tour', {
     content: _t("Click on schedulers"),
     position: "bottom"
 }, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".modal-dialog",
+    trigger: "footer.modal-footer .btn-primary",
+    extra_trigger: "[role=\"dialog\"]",
     content: _t("Run Schedulers"),
     position: "bottom",
 }, {
@@ -442,8 +471,8 @@ tour.register('main_flow_tour', {
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".modal-dialog",
+    trigger: "footer.modal-footer .btn-primary",
+    extra_trigger: "[role=\"dialog\"]",
     content: _t("Apply"),
     position: "bottom",
 }, {
@@ -468,12 +497,12 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: ".modal-dialog",
+    extra_trigger: "[role=\"dialog\"]",
     content: _t("Select Journal"),
     position: "bottom",
     run: 'text(Bank (USD))',
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: "footer.modal-footer .btn-primary",
     extra_trigger: ".o_field_widget[name=payment_method_id]", // FIXME: Wait onchange
     content: _t("Validate"),
     position: "bottom",
@@ -487,6 +516,16 @@ tour.register('main_flow_tour', {
     content: _t('Go to Manufacturing'),
     position: 'bottom',
 }, {
+    edition: "enterprise",
+    trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
+    content: _t('Click on Operations menuitem'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_production_action']",
+    content: _t('Open manufacturing orders'),
+    position: 'bottom',
+}, {
     trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first',
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
@@ -495,11 +534,11 @@ tour.register('main_flow_tour', {
     content: _t("Check availability"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button.oe_highlight:enabled:contains('Produce')",
+    trigger: ".o_statusbar_buttons > button.btn-primary:enabled:contains('Produce')",
     content: _t("Produce"),
     position: "bottom",
 }, {
-    trigger:  ".modal-footer .btn-primary:first",
+    trigger:  "footer.modal-footer .btn-primary:first",
     content: _t('Record Production'),
     position: 'bottom',
 }, {
@@ -578,7 +617,7 @@ tour.register('main_flow_tour', {
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: "footer.modal-footer .btn-primary",
     content: _t("Create and View Invoices"),
     position: "bottom",
 }, {
@@ -591,12 +630,12 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: ".modal-dialog",
+    extra_trigger: "[role=\"dialog\"]",
     content: _t("Select Journal"),
     position: "bottom",
     run: 'text(Bank (USD))',
 }, {
-    trigger: ".modal-footer .btn-primary",
+    trigger: "footer.modal-footer .btn-primary",
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -611,7 +650,44 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_default_cta] > a[data-name=create_bank_statement], div[name=bank_journal_cta] > a[data-name=create_bank_statement]',
+    trigger: 'div[name=bank_journal_cta] > button[data-name=action_cofigure_bank_journal], div[name=bank_journal_cta] > button[data-name=action_configure_bank_journal]',
+    content: _t('Configure Bank Journal'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: '.js_configure_manually',
+    content: _t('Enter manual data for bank account'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: '.o_field_widget[name=create_or_link_option] .o_radio_input[data-value="link"]',
+    content: _t('Link to existing journal'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: ".o_field_widget[name=acc_number]",
+    content: _t("Enter an account number"),
+    position: "right",
+    run: "text 867656544",
+}, {
+    edition: "enterprise",
+    trigger: ".o_field_widget[name=linked_journal_id] input",
+    extra_trigger: ".modal-dialog",
+    content: _t("Select Journal"),
+    position: "bottom",
+    run: 'text Bank',
+}, {
+    edition: "enterprise",
+    trigger: ".ui-menu-item > a",
+    auto: true,
+    in_modal:false,
+}, {
+    trigger: ".modal-footer .btn-primary",
+    content: _t('Save'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
 }, {

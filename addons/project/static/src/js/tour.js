@@ -16,31 +16,26 @@ tour.register('project_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_project_kanban',
     content: _t('Let\'s create your first project.'),
-    position: 'right',
+    position: 'bottom',
     width: 200,
 }, {
     trigger: 'input.o_project_name',
     content: _t('Choose a <b>project name</b>. (e.g. Website Launch, Product Development, Office Party, etc.)'),
     position: 'right',
-    run: function (actions) {
-        actions.auto();
-    },
 }, {
     trigger: '.o_open_tasks',
     content: _t('This will create new project and redirect us to its tasks.'),
     position: 'right',
     run: function (actions) {
-        actions.auto(".modal:visible .btn.btn-primary");
+        actions.auto('[role="dialog"]:visible .btn.btn-primary');
     },
 }, {
-    trigger: ".o_kanban_project_tasks .o_column_quick_create",
+    trigger: ".o_kanban_project_tasks .o_column_quick_create input",
     content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. Specification &gt; Development &gt; Done</i>"),
     position: "right"
 }, {
-    trigger: ".o-kanban-button-new",
-    extra_trigger: '.o_kanban_project_tasks',
-    content: _t("Now that the project is set up, <b>create a few tasks</b>."),
-    position: "right"
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+    auto: true,
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_project_tasks',
@@ -48,21 +43,15 @@ tour.register('project_tour', {
     position: 'right',
     width: 200,
 }, {
-    trigger: 'input.o_task_name',
+    trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
+    extra_trigger: '.o_kanban_project_tasks',
     content: _t('Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)'),
     position: 'right',
-    run: function (actions) {
-        actions.auto();
-    },
 }, {
-    trigger: '.o_form_button_save',
+    trigger: '.o_kanban_quick_create .o_kanban_add',
+    extra_trigger: '.o_kanban_project_tasks',
     content: _t("<p>Once your task is ready, you can save it.</p>"),
     position: 'bottom',
-}, {
-    trigger: ".breadcrumb li:not(.active):last",
-    extra_trigger: '.o_form_project_tasks.o_form_readonly',
-    content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
-    position: "bottom"
 }, {
     trigger: ".o_kanban_record .o_priority_star",
     extra_trigger: '.o_kanban_project_tasks',
@@ -105,13 +94,13 @@ tour.STEPS.MENU_MORE, {
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom"
 }, {
-    trigger: ".o_web_settings_dashboard textarea#user_emails",
+    trigger: ".o_web_settings_dashboard .o_user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
-    content: _t("Good job! Your completed the Project Management tour."),
+    content: _t("Good job! You completed the Project Management tour."),
     position: 'bottom',
 }]);
 

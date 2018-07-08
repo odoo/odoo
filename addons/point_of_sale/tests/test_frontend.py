@@ -10,14 +10,7 @@ import odoo.tests
 
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
-        cr = self.registry.cursor()
-        assert cr == self.registry.test_cr
-        env = Environment(cr, self.uid, {})
-
-        # By default parent_store computation is deferred until end of
-        # tests. Pricelist items however are sorted based on these
-        # fields, so they need to be computed.
-        env['product.category']._parent_store_compute()
+        env = self.env
 
         journal_obj = env['account.journal']
         account_obj = env['account.account']
@@ -28,16 +21,14 @@ class TestUi(odoo.tests.HttpCase):
                                                  'name': 'Account Receivable - Test',
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
-        field = self.env['ir.model.fields'].search([('name', '=', 'property_account_receivable_id'),
-                                                    ('model', '=', 'res.partner'),
-                                                    ('relation', '=', 'account.account')], limit=1)
+        field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
         env['ir.property'].create({'name': 'property_account_receivable_id',
                                    'company_id': main_company.id,
                                    'fields_id': field.id,
                                    'value': 'account.account,' + str(account_receivable.id)})
 
         # test an extra price on an attribute
-        pear = env.ref('point_of_sale.poire_conference')
+        pear = env.ref('point_of_sale.whiteboard')
         attribute_value = env['product.attribute.value'].create({
             'name': 'add 2',
             'product_ids': [(6, 0, [pear.id])],
@@ -60,12 +51,12 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             })],
         })
 
@@ -75,17 +66,17 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.citron').id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             })],
         })
 
@@ -96,33 +87,33 @@ class TestUi(odoo.tests.HttpCase):
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.citron').id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.limon').id,
+                'product_id': env.ref('point_of_sale.monitor_stand').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.pamplemousse_rouge_pamplemousse').id,
+                'product_id': env.ref('point_of_sale.desk_pad').id,
             })],
         })
 
@@ -133,13 +124,13 @@ class TestUi(odoo.tests.HttpCase):
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -155,7 +146,7 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
-                'product_tmpl_id': env.ref('point_of_sale.boni_orange_product_template').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -294,7 +285,6 @@ class TestUi(odoo.tests.HttpCase):
         # that are returned by the backend in module_boot. Without
         # this you end up with js, css but no qweb.
         env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
-        cr.release()
 
         self.phantom_js("/pos/web",
                         "odoo.__DEBUG__.services['web_tour.tour'].run('pos_pricelist')",

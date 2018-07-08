@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.footer_default" name="Footer Partners Link">
-    <xpath expr="//div[@id='info']/ul" position="inside">
-        <li><a href="/partners">Resellers</a></li>
-    </xpath>
-</template>
-
 <!-- Page -->
 <template id="layout" name="Partners Layout">
     <t t-call="website.layout">
@@ -89,8 +82,8 @@
                         </t>
                         <div class="media">
                             <a class="pull-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
-                               t-field="partner.image"
-                               t-options='{"widget": "image", "class": "media-object", "max_width": 128}'
+                               t-field="partner.image_medium"
+                               t-options='{"widget": "image", "class": "media-object"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
                                 <a class="media-heading" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
@@ -120,20 +113,20 @@
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
-            <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <header class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         <h4 class="modal-title">World Map</h4>
-                    </div>
+                    </header>
                     <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
                     style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
                 </div>
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
                     style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
@@ -234,10 +227,9 @@
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">
-            <h3>
-                My Leads
-                <t t-call="portal.portal_searchbar"/>
-            </h3>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Leads</t>
+            </t>
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
             </div>
@@ -269,20 +261,19 @@
 
     <template id="portal_my_opportunities" name="My Opportunities">
         <t t-call="portal.portal_layout">
-            <h3>
-                My Opportunities
-                <t t-call="portal.portal_searchbar"/>
-                <button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>
-            </h3>
-            <div class="modal fade modal_new_opp" role="form" aria-hidden="true">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Opportunities</t>
+                <li class="pull-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>
+            </t>
+            <div class="modal fade modal_new_opp" role="form">
                 <div class="modal-dialog">
                     <form method="POST" class="modal-content js_website_submit_form new_opp_form">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <header class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             <h4 class="modal-title">New Opportunity</h4>
-                        </div>
-                        <div class="modal-body" id="new-opp-dialog">
+                        </header>
+                        <main class="modal-body" id="new-opp-dialog">
                             <div class="form-group">
                                 <label class="control-label hdd4" for="contact_name">Contact name</label>
                                 <input type='text' name="contact_name" class="form-control contact_name"/>
@@ -295,11 +286,11 @@
                                 <label class="control-label hdd4" for="description">Description</label>
                                 <textarea row="3" name="description" class="form-control description"></textarea>
                             </div>
-                        </div>
-                        <div class="modal-footer">
+                        </main>
+                        <footer class="modal-footer">
                             <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button> or
                             <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
-                        </div>
+                        </footer>
                     </form>
                 </div>
             </div>
@@ -330,7 +321,7 @@
                             </td>
                             <td><span t-field="opp.contact_name" /></td>
                             <td>
-                                <span class="label label-primary" title="Current stage of the opp" t-esc="opp.stage_id.name" />
+                                <span class="label label-primary" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
                             </td>
                         </tr>
                     </tbody>
@@ -348,7 +339,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12">
-                            <span class="pull-right" title="Rating">
+                            <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
                                 </t>
@@ -369,13 +360,13 @@
                                     <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
                                 </div>
                                 <div t-if="lead.phone">
-                                    <span class="fa fa-phone" /> <span itemprop="telephone" t-field="lead.phone" />
+                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
                                 </div>
                                 <div t-if="lead.mobile">
-                                    <span class="fa fa-mobile" /> <span itemprop="telephone" t-field="lead.mobile" />
+                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
                                 </div>
                                 <div t-if="lead.email_from">
-                                    <span class="fa fa-envelope"/> <span itemprop="email" t-field="lead.email_from" />
+                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
                                 </div>
                             </address>
                         </div>
@@ -430,18 +421,18 @@
                 </div>
             </div>
             <div>
-                <a class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
-                <a class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
-                <div class="modal fade modal_partner_assign_interested" role="form" aria-hidden="true">
+                <a role="button" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
+                <a role="button" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
+                <div class="modal fade modal_partner_assign_interested" role="form">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <header class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                 <h4 class="modal-title">Lead Feedback</h4>
-                            </div>
-                            <div class="modal-body" id="sign-dialog">
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
                                     <label class="control-label" for="comment">What is the next action? When? What is the expected revenue?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
@@ -453,24 +444,24 @@
                                 <div>
                                     <span class="text-danger error_partner_assign_interested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
+                            </main>
+                            <footer class="modal-footer">
                                 <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
+                            </footer>
                         </form>
                     </div>
                 </div>
-                <div class="modal fade modal_partner_assign_desinterested" role="form" aria-hidden="true">
+                <div role="dialog" class="modal fade modal_partner_assign_desinterested">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form desinterested_partner_assign_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <header class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                 <h4 class="modal-title">Lead Feedback</h4>
-                            </div>
-                            <div class="modal-body" id="sign-dialog">
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
                                     <label class="control-label" for="comment">Why aren't you interested by this lead?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
@@ -486,11 +477,11 @@
                                 <div>
                                     <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
+                            </main>
+                            <footer class="modal-footer">
                                 <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
+                            </footer>
                         </form>
                     </div>
                 </div>
@@ -534,9 +525,9 @@
                                 <strong>Expected Closing: <span t-field="opportunity.date_deadline" /></strong>
                         </div>
                         <div class="col-md-4">
-                            <span class="pull-right" title="Rating">
+                            <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
                                 <t t-foreach="range(1, 4)" t-as="i">
-                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}"/>
+                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
                                 </t>
                             </span>
                         </div>
@@ -546,16 +537,16 @@
                     <div class="col-md-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Edit Contact</button>
-                            <div class="modal fade modal_edit_contact" role="form" aria-hidden="true">
+                            <div role="dialog" class="modal fade modal_edit_contact">
                                 <div class="modal-dialog">
                                     <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_contact_form">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                                        <header class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                             <h4 class="modal-title">Edit Contact</h4>
-                                        </div>
-                                        <div class="modal-body" id="sign-dialog">
+                                        </header>
+                                        <main class="modal-body" id="sign-dialog">
                                             <t t-if="opportunity.partner_name">
                                                 <div class="form-group">
                                                     <label class="control-label" for="partner_name">Customer Name</label>
@@ -617,11 +608,11 @@
                                                     </t>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
+                                        </main>
+                                        <footer class="modal-footer">
                                             <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        </div>
+                                        </footer>
                                     </form>
                                 </div>
                             </div>
@@ -634,13 +625,13 @@
                                     <span t-if="not opportunity.partner_name" itemprop="name" t-field="opportunity.contact_name" />
                                 </div>
                                 <div t-if="opportunity.phone">
-                                    <span class="fa fa-phone" /> <span itemprop="telephone" t-field="opportunity.phone" />
+                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="opportunity.phone" />
                                 </div>
                                 <div t-if="opportunity.mobile">
-                                    <span class="fa fa-mobile" /> <span itemprop="mobile" t-field="opportunity.mobile" />
+                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="mobile" t-field="opportunity.mobile" />
                                 </div>
                                 <div t-if="opportunity.email_from">
-                                    <span class="fa fa-envelope"/> <span itemprop="email" t-field="opportunity.email_from" />
+                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="opportunity.email_from" />
                                 </div>
                             </address>
                         </div>
@@ -661,16 +652,16 @@
                     <div class="col-md-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Edit Opportunity</button>
-                            <div class="modal fade modal_edit_opp" role="form" aria-hidden="true">
+                            <div role="dialog" class="modal fade modal_edit_opp">
                                 <div class="modal-dialog">
                                     <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_opp_form">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                                        <header class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                             <h4 class="modal-title">Edit Opportunity</h4>
-                                        </div>
-                                        <div class="modal-body" id="sign-dialog">
+                                        </header>
+                                        <main class="modal-body" id="sign-dialog">
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-sm-6">
@@ -696,16 +687,16 @@
                                                       <label>Priority: </label>
                                                       <div class="input-group">
                                                         <label class="radio-inline">
-                                                          <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']"/><i class="fa fa-star-o"></i>
+                                                          <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/><i class="fa fa-star-o"></i>
                                                         </label>
                                                         <label class="radio-inline">
-                                                          <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'"/><i class="fa fa-star"></i>
+                                                          <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/><i class="fa fa-star"></i>
                                                         </label>
                                                         <label class="radio-inline">
-                                                          <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'"/><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                          <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/><i class="fa fa-star"></i><i class="fa fa-star"></i>
                                                         </label>
                                                         <label class="radio-inline">
-                                                          <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                          <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
                                                         </label>
                                                       </div>
                                                     </div>
@@ -713,7 +704,7 @@
                                                         <label>Deadline: </label>
                                                         <div class='input-group date'>
                                                             <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
-                                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                                            <span class="input-group-addon"><span class="fa fa-calendar" role="img" aria-label="Calendar"></span></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -734,14 +725,14 @@
                                                 <label class="control-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class='input-group date'>
                                                     <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
-                                                    <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                                    <span class="input-group-addon"><span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span></span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
+                                        </main>
+                                        <footer class="modal-footer">
                                             <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        </div>
+                                        </footer>
                                     </form>
                                 </div>
                             </div>

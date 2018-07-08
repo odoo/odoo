@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="website.prompt">
-        <div class="modal o_technical_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div role="dialog" class="modal o_technical_modal" tabindex="-1">
                 <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" t-if="window_title">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <header class="modal-header" t-if="window_title">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         <h3 class="modal-title"><t t-esc="window_title"/></h3>
-                    </div>
-                    <div class="modal-body">
+                    </header>
+                    <main class="modal-body">
                         <form class="form-horizontal" role="form" t-att-id="id">
                             <div class="form-group mb0">
                                 <label for="page-name" class="col-sm-3 control-label">
@@ -21,11 +21,11 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
+                    </main>
+                    <footer class="modal-footer">
                         <button type="button" class="btn btn-sm btn-primary btn-continue">Continue</button>
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                    </div>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                    </footer>
                 </div>
             </div>
         </div>

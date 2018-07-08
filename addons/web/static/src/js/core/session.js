@@ -3,6 +3,7 @@ odoo.define('web.Session', function (require) {
 
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
@@ -28,7 +29,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
           "override_session" is set to true.
      */
     init: function (parent, origin, options) {
-        mixins.EventDispatcherMixin.init.call(this, parent);
+        mixins.EventDispatcherMixin.init.call(this);
+        this.setParent(parent);
         options = options || {};
         this.module_list = (options.modules && options.modules.slice()) || (window.odoo._modules && window.odoo._modules.slice()) || [];
         this.server = null;
@@ -37,8 +39,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
-        var debug_param = $.deparam($.param.querystring()).debug;
-        this.debug = (debug_param !== undefined ? debug_param || 1 : false);
+        this.debug = config.debug;
 
         // for historic reasons, the session requires a name to properly work
         // (see the methods get_cookie and set_cookie).  We should perhaps
@@ -48,6 +49,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.qweb_mutex = new concurrency.Mutex();
         this.currencies = {};
         this._groups_def = {};
+        core.bus.on('invalidate_session', this, this._onInvalidateSession);
     },
     setup: function (origin, options) {
         // must be able to customize server
@@ -326,23 +328,31 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     rpc: function (url, params, options) {
         var self = this;
         options = _.clone(options || {});
-        var shadow = options.shadow || false;
         options.headers = _.extend({}, options.headers);
         if (odoo.debug) {
             options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
-        delete options.shadow;
+        var deferred = self.check_session_id();
+        var aborted = false;
+        var xhrDef;
+        deferred.abort = function () {
+            if (xhrDef) {
+                xhrDef.abort();
+            } else {
+                aborted = true;
+            }
+        };
 
-        return self.check_session_id().then(function () {
+        return deferred.then(function () {
+            if (aborted) {
+                return $.Deferred().reject('communication', $.Event(), 'abort', 'abort');
+            }
             // TODO: remove
             if (! _.isString(url)) {
                 _.extend(options, url);
                 url = url.url;
             }
-            // TODO correct handling of timeouts
-            if (! shadow)
-                self.trigger('request');
             var fct;
             if (self.origin_server) {
                 fct = ajax.jsonRpc;
@@ -361,37 +371,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 url = self.url(url, null);
                 options.session_id = self.session_id || '';
             }
-            var p = fct(url, "call", params, options);
-            p = p.then(function (result) {
-                if (! shadow)
-                    self.trigger('response');
-                return result;
-            }, function (type, error, textStatus, errorThrown) {
-                if (type === "server") {
-                    if (! shadow)
-                        self.trigger('response');
-                    if (error.code === 100) {
-                        self.uid = false;
-                    }
-                    return $.Deferred().reject(error, $.Event());
-                } else {
-                    if (! shadow)
-                        self.trigger('response_failed');
-                    var nerror = {
-                        code: -32098,
-                        message: "XmlHttpRequestError " + errorThrown,
-                        data: {type: "xhr"+textStatus, debug: error.responseText, objects: [error, errorThrown] }
-                    };
-                    return $.Deferred().reject(nerror, $.Event());
-                }
-            });
-            return p.fail(function () { // Allow deferred user to disable rpc_error call in fail
-                p.fail(function (error, event) {
-                    if (!event.isDefaultPrevented()) {
-                        self.trigger('error', error, event);
-                    }
-                });
-            });
+            xhrDef = fct(url, "call", params, options);
+            return xhrDef;
         });
     },
     url: function (path, params) {
@@ -416,6 +397,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     getTZOffset: function (date) {
         return -new Date(date).getTimezoneOffset();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onInvalidateSession: function () {
+        this.uid = false;
     },
 });
 

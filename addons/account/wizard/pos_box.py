@@ -46,7 +46,7 @@ class CashBoxIn(CashBox):
     @api.multi
     def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
-            raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise UserError(_("You have to define an 'Internal Transfer Account' in your cash register's journal."))
         return {
             'date': record.date,
             'statement_id': record.id,
@@ -64,7 +64,7 @@ class CashBoxOut(CashBox):
     @api.multi
     def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
-            raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise UserError(_("You have to define an 'Internal Transfer Account' in your cash register's journal."))
         amount = self.amount or 0.0
         return {
             'date': record.date,

@@ -3,18 +3,19 @@
 # * sms
 # 
 # Translators:
+# Florian Hatat, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Bertrand LATOUR <divoir@gmail.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 11:35+0000\n"
 "PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +64,7 @@ msgstr "ID"
 #: code:addons/sms/models/mail_thread.py:53
 #, python-format
 msgid "Insufficient credit, unable to send SMS message: %s"
-msgstr ""
+msgstr "Impossible d'envoyer le SMS car vous n'avez pas assez de crédit : %s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api___last_update
@@ -90,13 +91,14 @@ msgstr "Message"
 #: code:addons/sms/wizard/send_sms.py:48
 #, python-format
 msgid "Missing mobile number for %s."
-msgstr ""
+msgstr "Numéro de mobile manquant pour %s."
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:55
 #, python-format
 msgid "No mobile number defined, unable to send SMS message: %s"
 msgstr ""
+"Impossible d'envoyer le SMS car aucun numéro de mobile n'a été indiqué : %s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms_recipients
@@ -107,7 +109,7 @@ msgstr "Destinataires"
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
-msgstr ""
+msgstr "SMS envoyé : %s"
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -118,17 +120,17 @@ msgstr "Envoyer"
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
 msgid "Send SMS"
-msgstr ""
+msgstr "Envoyer le SMS"
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "Envoyer un SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "sms.api"
-msgstr ""
+msgstr "sms.api"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_send_sms

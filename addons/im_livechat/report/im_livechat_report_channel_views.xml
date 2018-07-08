@@ -33,17 +33,14 @@
                     <filter name="missed_session" string="Missed sessions" domain="[('nbr_speaker','&lt;=', 1)]"/>
                     <filter name="treated_session" string="Treated sessions" domain="[('nbr_speaker','&gt;', 1)]"/>
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
-                    <filter name="last_week" string="Last Week" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(weeks=1)).strftime('%%Y-%%m-%%d') )]"/>
+                    <filter name="start_date_filter" string="Start Date" date="start_date" default_period="this_week"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_session" string="Code" domain="[]" context="{'group_by':'technical_name'}"/>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter name="group_by_operator" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter name="group_by_hour" string="Creation date (hour)" domain="[]" context="{'group_by':'start_date_hour'}"/>
-                        <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'start_date:day'}"/>
-                        <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'start_date:week'}"/>
-                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'start_date:month'}" />
-                        <filter name="group_by_year" string="Creation date (year)" domain="[]" context="{'group_by':'start_date:year'}"/>
+                        <filter name="group_by_month" string="Creation date" domain="[]" context="{'group_by':'start_date:month'}" />
                     </group>
                 </search>
             </field>

@@ -11,12 +11,14 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_delivery = $('#order_delivery span.oe_currency_value');
         var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amount_tax = $('#order_total_taxes span.oe_currency_value');
+        var $amount_total = $('#order_total span.oe_currency_value');
         var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
         if (result.status === true) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
             $amount_tax.text(result.new_amount_tax);
+            $amount_total.text(result.new_amount_total);
             $carrier_badge.children('span').text(result.new_amount_delivery);
             $carrier_badge.removeClass('hidden');
             $compute_badge.addClass('hidden');
@@ -25,6 +27,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         else {
             console.error(result.error_message);
             $compute_badge.text(result.error_message);
+            $amount_delivery.text(result.new_amount_delivery);
+            $amount_untaxed.text(result.new_amount_untaxed);
+            $amount_tax.text(result.new_amount_tax);
+            $amount_total.text(result.new_amount_total);
         }
     };
 
@@ -38,6 +44,12 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     var $carriers = $("#delivery_carrier input[name='delivery_type']");
     $carriers.click(_onCarrierClick);
+    // Workaround to:
+    // - update the amount/error on the label at first rendering
+    // - prevent clicking on 'Pay Now' if the shipper rating fails
+    if ($carriers.length > 0) {
+        $carriers.filter(':checked').click();
+    }
 
     /* Handle stuff */
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {

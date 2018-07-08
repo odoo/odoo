@@ -1,78 +1,109 @@
-odoo.define('google_drive.google_drive', function (require) {
+odoo.define('google_drive.sidebar', function (require) {
 "use strict";
 
-var data = require('web.data');
+/**
+ * The purpose of this file is to include the Sidebar widget to add Google
+ * Drive related items.
+ */
+
 var Sidebar = require('web.Sidebar');
 
+
 Sidebar.include({
-    init: function () {
-        var self = this;
-        var ids;
-        this._super.apply(this, arguments);
-        var view = self.getParent();
-        var result;
-        if (view.fields_view && view.fields_view.type === "form") {
-            ids = [];
-            view.on("load_record", self, function (r) {
-                ids = [r.id];
-                self.add_gdoc_items(view, r.id);
-            });
+    // TO DO: clean me in master
+    /**
+     * @override
+     */
+    start: function () {
+        var def;
+        if (this.options.viewType === "form") {
+            def = this._addGoogleDocItems(this.env.model, this.env.activeIds[0]);
         }
+        return $.when(def).then(this._super.bind(this));
     },
-    add_gdoc_items: function (view, res_id) {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} model
+     * @param {integer} resID
+     * @returns {Deferred}
+     */
+    _addGoogleDocItems: function (model, resID) {
         var self = this;
+        if (!resID) {
+            return $.when();
+        }
         var gdoc_item = _.indexOf(_.pluck(self.items.other, 'classname'), 'oe_share_gdoc');
         if (gdoc_item !== -1) {
             self.items.other.splice(gdoc_item, 1);
         }
-        if (res_id) {
-            view.sidebar_eval_context().done(function (context) {
-                var ds = new data.DataSet(this, 'google.drive.config', context);
-                ds.call('get_google_drive_config', [view.dataset.model, res_id, context]).done(function (r) {
-                    if (!_.isEmpty(r)) {
-                        _.each(r, function (res) {
-                            var already_there = false;
-                            for (var i = 0;i < self.items.other.length;i++){
-                                if (self.items.other[i].classname === "oe_share_gdoc" && self.items.other[i].label.indexOf(res.name) > -1){
-                                    already_there = true;
-                                    break;
-                                }
-                            }
-                            if (!already_there){
-                                self.add_items('other', [{
-                                        label: res.name,
-                                        config_id: res.id,
-                                        res_id: res_id,
-                                        res_model: view.dataset.model,
-                                        callback: self.on_google_doc,
-                                        classname: 'oe_share_gdoc'
-                                    },
-                                ]);
-                            }
-                        });
+        return this._rpc({
+            args: [this.env.model, resID],
+            context: this.env.context,
+            method: 'get_google_drive_config',
+            model: 'google.drive.config',
+        }).then(function (r) {
+            if (!_.isEmpty(r)) {
+                _.each(r, function (res) {
+                    var already_there = false;
+                    for (var i = 0; i < self.items.other.length; i++) {
+                        var item = self.items.other[i];
+                        if (item.classname === 'oe_share_gdoc' && item.label.indexOf(res.name) > -1) {
+                            already_there = true;
+                            break;
+                        }
+                    }
+                    if (!already_there) {
+                        self._addItems('other', [{
+                            callback: self._onGoogleDocItemClicked.bind(self, res.id, resID),
+                            classname: 'oe_share_gdoc',
+                            config_id: res.id,
+                            label: res.name,
+                            res_id: resID,
+                            res_model: model,
+                        }]);
                     }
                 });
-            });
-        }
+            }
+        });
     },
-    on_google_doc: function (doc_item) {
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {integer} configID
+     * @param {integer} resID
+     */
+    _onGoogleDocItemClicked: function (configID, resID) {
         var self = this;
-        var domain = [['id', '=', doc_item.config_id]];
+        var domain = [['id', '=', configID]];
         var fields = ['google_drive_resource_id', 'google_drive_client_id'];
         this._rpc({
+            args: [domain, fields],
+            method: 'search_read',
+            model: 'google.drive.config',
+        }).then(function (configs) {
+            self._rpc({
+                args: [configID, resID, configs[0].google_drive_resource_id],
+                context: self.env.context,
+                method: 'get_google_drive_url',
                 model: 'google.drive.config',
-                method: 'search_read',
-                args: [domain, fields],
-            })
-            .then(function (configs) {
-                var ds = new data.DataSet(self, 'google.drive.config');
-                ds.call('get_google_drive_url', [doc_item.config_id, doc_item.res_id,configs[0].google_drive_resource_id, self.dataset.context]).done(function (url) {
-                    if (url){
-                        window.open(url, '_blank');
-                    }
-                });
+            }).then(function (url) {
+                if (url){
+                    window.open(url, '_blank');
+                }
             });
+        });
     },
+
 });
 
+return Sidebar;
 });

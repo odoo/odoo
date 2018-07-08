@@ -8,14 +8,21 @@
         -->
         <template id="assets_frontend" name="im_livechat assets frontend" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
+                    <!-- thread window -->
+                    <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/livechat_window.js"></script>
                 <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-                <link rel="stylesheet" href="/mail/static/src/less/chat_window.less"></link>
-                <link rel="stylesheet" href="/mail/static/src/less/thread.less"></link>
-                <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat.less"/>
+                <!-- Models -->
+                    <!-- messages -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/models/livechat_message.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
             </xpath>
         </template>
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
@@ -27,13 +34,6 @@
                         </t>
                     </script>
                 </t>
-            </xpath>
-        </template>
-
-        <!-- Layout add footer -->
-        <template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Rating Livechat Link">
-            <xpath expr="//ul[@id='products']" position="inside">
-                <li><a href="/livechat/">Livechat Support</a></li>
             </xpath>
         </template>
 
@@ -59,7 +59,7 @@
                                         <div class="col-md-3">
                                             <div class="panel panel-warming">
                                                 <div class="panel-body text-center bg-warning">
-                                                    <img src="/rating/static/src/img/rating_5.png" style="height:50px"/>
+                                                    <img src="/rating/static/src/img/rating_5.png" style="height:50px" alt="Neutral face"/>
                                                 </div>
                                                 <div class="panel-body text-center bg-warning">
                                                     <h2 style="margin: 0">
@@ -74,7 +74,7 @@
                                         <div class="col-md-4">
                                             <div class="panel panel-success">
                                                 <div class="panel-body text-center bg-success">
-                                                    <img src="/rating/static/src/img/rating_10.png" style="height:60px"/>
+                                                    <img src="/rating/static/src/img/rating_10.png" style="height:60px" alt="Happy face"/>
                                                 </div>
                                                 <div class="panel-body text-center bg-success">
                                                     <h2 style="margin: 0">
@@ -89,7 +89,7 @@
                                         <div class="col-md-3">
                                             <div class="panel panel-danger">
                                                 <div class="panel-body text-center bg-danger">
-                                                    <img src="/rating/static/src/img/rating_1.png" style="height:40px"/>
+                                                    <img src="/rating/static/src/img/rating_1.png" style="height:40px" alt="Sad face"/>
                                                 </div>
                                                 <div class="panel-body text-center bg-danger">
                                                     <h2 style="margin: 0">

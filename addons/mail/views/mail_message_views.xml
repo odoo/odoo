@@ -32,6 +32,7 @@
                                 <field name="email_from"/>
                                 <field name="author_id"/>
                                 <field name="record_name"/>
+                                <field name="moderator_id"/>
                             </group>
                             <group>
                                 <field name="parent_id"/>
@@ -39,6 +40,7 @@
                                 <field name="res_id"/>
                                 <field name="message_type"/>
                                 <field name="subtype_id"/>
+                                <field name="moderation_status"/>
                             </group>
                         </group>
                         <notebook>
@@ -152,7 +154,7 @@
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
                                                 <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
+                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1" alt="Download"/>
                                                 </div>
                                             </a>
                                         </div>
@@ -167,8 +169,8 @@
         <record id="base.action_attachment" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to attach a new document.
+              <p class="o_view_nocontent_smiling_face">
+                Attach a new document
               </p>
             </field>
         </record>

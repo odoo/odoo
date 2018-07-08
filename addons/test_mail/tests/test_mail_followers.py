@@ -26,7 +26,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         test_record = self.test_record.sudo(self.user_employee)
         followed_before = test_record.search([('message_is_follower', '=', True)])
         self.assertFalse(test_record.message_is_follower)
-        test_record.message_subscribe_users(user_ids=[self.user_employee.id])
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id])
         followed_after = test_record.search([('message_is_follower', '=', True)])
         self.assertTrue(test_record.message_is_follower)
         self.assertEqual(followed_before | test_record, followed_after)
@@ -80,7 +80,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(follower, test_record.message_follower_ids)
         self.assertEqual(follower.subtype_ids, self.mt_mg_nodef)
 
-    def test_followers_multiple_subscription(self):
+    def test_followers_multiple_subscription_force(self):
         test_record = self.test_record.sudo(self.user_employee)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
@@ -91,7 +91,21 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
-        self.assertEqual(test_record.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_admin.partner_id).subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+        self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+    def test_followers_multiple_subscription_noforce(self):
+        test_record = self.test_record.sudo(self.user_employee)
+
+        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
+        self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
+        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
+        self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+        # set new subtypes with force=False, meaning no rewriting of the subscription is done -> result should not change
+        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
+        self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
+        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
+        self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_no_DID(self):
         """Test that a follower cannot suffer from dissociative identity disorder.
@@ -123,6 +137,10 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         })
 
         Subtype = cls.env['mail.message.subtype']
+
+        # clean demo data to avoid interferences
+        Subtype.search([('res_model', 'in', ['mail.test', 'mail.test.track'])]).unlink()
+
         cls.sub_nodef = Subtype.create({'name': 'Sub NoDefault', 'default': False, 'res_model': 'mail.test'})
         cls.sub_umb1 = Subtype.create({'name': 'Sub Umbrella1', 'default': False, 'res_model': 'mail.test.track'})
         cls.sub_umb2 = Subtype.create({'name': 'Sub Umbrella2', 'default': False, 'res_model': 'mail.test.track'})
@@ -187,7 +205,7 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
             'umbrella_id': umbrella.id,
         })
 
-        all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.full'), ('res_model', '=', False)])
+        all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])
         external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
 
         self.assertEqual(sub1.message_partner_ids, self.user_portal.partner_id | self.user_employee.partner_id)

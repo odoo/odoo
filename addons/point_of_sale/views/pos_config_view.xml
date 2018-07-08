@@ -77,7 +77,7 @@
                                 <field name="start_category"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="iface_start_categ_id"/>
+                                <label for="start_category"/>
                                 <div class="text-muted">
                                     Start selling from a default product category
                                 </div>
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Don’t turn this option on if you take orders on smartphones or tablets. Such devices already benefit from a native keyboard.">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Don't turn this option on if you take orders on smartphones or tablets. Such devices already benefit from a native keyboard.">
                             <div class="o_setting_left_pane">
                                 <field name="iface_vkeyboard"/>
                             </div>
@@ -211,20 +211,6 @@
                     </div>
                     <h2>Pricing</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="product_prices">
-                            <div class="o_setting_right_pane">
-                                <label for="iface_tax_included" string="Product Prices"/>
-                                <div class="text-muted">
-                                    Product prices on receipts
-                                </div>
-                                <div class="content-group">
-                                    <div class="mt16">
-                                        <field name="iface_tax_included" class="o_light_label" widget="radio"/>
-                                    </div>
-                                    <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/10.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" >
                             <div class="o_setting_left_pane">
                                 <field name="module_pos_discount"/>
@@ -267,7 +253,7 @@
                         </div>
                         <div class="col-xs-12 col-md-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="module_pos_loyalty" widget="upgrade_boolean"/>
+                                <field name="module_pos_loyalty" widget="upgrade_boolean" nolabel="1"/>
                             </div>
                             <div class="o_setting_right_pane" title="Loyalty program to use for this point of sale. ">
                                 <label for="module_pos_loyalty"/>
@@ -297,7 +283,7 @@
                     <div class="row mt16 o_settings_container">
                         <div class="col-xs-12 col-md-6 o_setting_box" id="payment_methods">
                             <div class="o_setting_right_pane">
-                                <label string="Payment Methods"/>
+                                <span class="o_form_label">Payment Methods</span>
                                 <div class="text-muted">
                                     Payment methods available
                                 </div>
@@ -306,22 +292,6 @@
                                 </div>
                                 <div>
                                     <button name="%(account_journal_action_point_of_sale)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="module_pos_mercury"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_pos_mercury" string="Integrated Card Reader"/>
-                                <div class="text-muted">
-                                    Accept payments with an integrated card reader
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('module_pos_mercury', '=', False)]}">
-                                    <div class="mt16" id="btn_use_pos_mercury">
-                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -361,7 +331,7 @@
                     <div class="row mt16 o_settings_container" id="receipt">
                         <div id="order_reference" class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
                             <div class="o_setting_right_pane">
-                                <label string="Order Reference"/>
+                                <span class="o_form_label">Order Reference</span>
                                 <div class="text-muted">
                                     Generation of your order references
                                 </div>
@@ -398,7 +368,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="iface_print_auto"/>
                                 <div class="text-muted">
-                                    Print receipts automatically once the payment registered
+                                    Print receipts automatically once the payment is registered
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible' : [('iface_print_auto', '=', False)]}">
                                     <div>
@@ -425,14 +395,14 @@
                         </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" id="iface_invoicing">
                             <div class="o_setting_left_pane">
-                                <field name="iface_invoicing"/>
+                                <field name="module_account_invoicing"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="iface_invoicing"/>
+                                <label for="module_account_invoicing"/>
                                 <div class="text-muted" id="invoice_journal">
                                    Print invoices on customer request
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible': [('iface_invoicing', '=', False)]}">
+                                <div class="content-group mt16" attrs="{'invisible': [('module_account_invoicing', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-md-3 o_light_label"/>
                                         <field name="invoice_journal_id"/>
@@ -466,11 +436,11 @@
                             </div>
                         </div>
                     </div>
-                    <h2 attrs="{'invisible': [('is_installed_account_accountant', '=', False)]}">Accounting</h2>
-                    <div class="row mt16 o_settings_container" attrs="{'invisible': [('is_installed_account_accountant', '=', False)]}">
+                    <h2>Accounting</h2>
+                    <div class="row mt16 o_settings_container">
                         <div class="col-xs-12 col-md-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <label string="Journal Entries"/>
+                                <span class="o_form_label">Journal Entries</span>
                                 <div class="text-muted">
                                     Configuration for journal entries of PoS orders
                                 </div>
@@ -528,7 +498,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.config</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_config_search" />
     </record>
 
@@ -536,7 +506,7 @@
         id="menu_pos_config_pos"
         name="Point of Sale"
         parent="menu_point_config_product"
-        sequence="0"
+        sequence="1"
         action="action_pos_config_pos"
         groups="group_pos_manager"/>
 
@@ -549,8 +519,8 @@
         <field name="domain"></field>
         <field name="search_view_id" ref="view_pos_config_search" />
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a new PoS config.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new PoS config
             </p><p>
                 Configure at least one Point of Sale to be able to sell through the PoS interface.
             </p>

@@ -39,12 +39,15 @@ class WebsiteEventSaleController(WebsiteEventController):
         # free tickets -> order with amount = 0: auto-confirm, no checkout
         if not order.amount_total:
             order.action_confirm()  # tde notsure: email sending ?
-            attendees = request.env['event.registration'].browse(list(attendee_ids))
+            attendees = request.env['event.registration'].browse(list(attendee_ids)).sudo()
             # clean context and session, then redirect to the confirmation page
             request.website.sale_reset()
+            urls = event._get_event_resource_urls(list(attendee_ids))
             return request.render("website_event.registration_complete", {
                 'attendees': attendees,
                 'event': event,
+                'google_url': urls.get('google_url'),
+                'iCal_url': urls.get('iCal_url')
             })
 
         return request.redirect("/shop/checkout")

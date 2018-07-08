@@ -4,8 +4,7 @@
 from odoo.tests import common
 
 
-@common.at_install(False)
-@common.post_install(True)
+@common.tagged('post_install','-at_install')
 class base_automation_test(common.TransactionCase):
 
     def setUp(self):

@@ -24,6 +24,13 @@ class IrModule(models.Model):
 
     imported = fields.Boolean(string="Imported Module")
 
+    @api.depends('name')
+    def _get_latest_version(self):
+        imported_modules = self.filtered(lambda m: m.imported and m.latest_version)
+        for module in imported_modules:
+            module.installed_version = module.latest_version
+        super(IrModule, self - imported_modules)._get_latest_version()
+
     @api.multi
     def _import_module(self, module, path, force=False):
         known_mods = self.search([])
@@ -32,6 +39,8 @@ class IrModule(models.Model):
 
         terp = load_information_from_description_file(module, mod_path=path)
         values = self.get_values_from_terp(terp)
+        if 'version' in terp:
+            values['latest_version'] = terp['version']
 
         unmet_dependencies = set(terp['depends']).difference(installed_mods)
 
@@ -45,7 +54,7 @@ class IrModule(models.Model):
                 )
             raise UserError(err)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
-            raise UserError(_("Studio customizations require Studio"))
+            raise UserError(_("Studio customizations require the Odoo Studio app."))
 
         mod = known_mods_names.get(module)
         if mod:
@@ -103,7 +112,7 @@ class IrModule(models.Model):
         if not module_file:
             raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
-            raise UserError(_('File is not a zip file!'))
+            raise UserError(_('Only zip files are supported.'))
 
         success = []
         errors = dict()
@@ -145,12 +154,13 @@ def _is_studio_custom(path):
     Returns True if any of the records contains a context with the key
     studio in it, False if none of the records do
     """
-    path = os.path.join(path, 'data')
-    filenames = next(iter(os.walk(path)))[2]
-    filenames = [f for f in filenames if f.lower().endswith('.xml')]
+    filepaths = []
+    for level in os.walk(path):
+        filepaths += [os.path.join(level[0], fn) for fn in level[2]]
+    filepaths = [fp for fp in filepaths if fp.lower().endswith('.xml')]
 
-    for filename in filenames:
-        root = lxml.etree.parse(os.path.join(path, filename)).getroot()
+    for fp in filepaths:
+        root = lxml.etree.parse(fp).getroot()
 
         for record in root:
             # there might not be a context if it's a non-studio module

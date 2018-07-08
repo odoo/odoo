@@ -5,8 +5,10 @@ import time
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class ISRTest(AccountingTestCase):
 
     def create_invoice(self, currency_to_use='base.CHF'):

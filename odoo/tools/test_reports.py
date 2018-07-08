@@ -40,9 +40,6 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)
 
-    if config['test_report_directory']:
-        open(os.path.join(config['test_report_directory'], rname+ '.'+res_format), 'wb+').write(res_data)
-
     _logger.debug("Have a %s report for %s, will examine it", res_format, rname)
     if res_format == 'pdf':
         if res_data[:5] != b'%PDF-':

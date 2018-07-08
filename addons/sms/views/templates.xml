@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="sms_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/sms/static/src/js/sms_widget.js"></script>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="sms_widget_tests" inherit_id="web.qunit_suite">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/sms/static/src/tests/sms_widget_test.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

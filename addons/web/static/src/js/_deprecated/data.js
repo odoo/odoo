@@ -7,7 +7,7 @@ var concurrency = require('web.concurrency');
 var mixins = require('web.mixins');
 var session = require('web.session');
 var translation = require('web.translation');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var _t = translation._t;
 
@@ -85,9 +85,9 @@ var Query = Class.extend({
         return session.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
-            domain: pyeval.eval('domains',
+            domain: pyUtils.eval('domains',
                     [this._model.domain(this._filter)]),
-            context: pyeval.eval('contexts',
+            context: pyUtils.eval('contexts',
                     [this._model.context(this._context)]),
             offset: this._offset,
             limit: this._limit,
@@ -138,7 +138,7 @@ var Query = Class.extend({
      * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
     group_by: function (grouping) {
-        var ctx = pyeval.eval(
+        var ctx = pyUtils.eval(
             'context', this._model.context(this._context));
 
         // undefined passed in explicitly (!)
@@ -314,6 +314,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      */
     init: function (parent, model, context) {
         mixins.PropertiesMixin.init.call(this);
+        this.setParent(parent);
         this.model = model;
         this.context = context || {};
         this.index = null;
@@ -608,7 +609,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
-            context: pyeval.eval(
+            context: pyUtils.eval(
                 'context', this.get_context(options.context)),
         }).then(function (results) {
             return results;
@@ -796,7 +797,7 @@ var Model = Class.extend({
      * Call a method (over RPC) on the bound OpenERP model.
      *
      * @param {String} method name of the method to call
-     * @param {Array} [args] positional arguments
+     * @param {Array} [args] positipyEvalonal arguments
      * @param {Object} [kwargs] keyword arguments
      * @param {Object} [options] additional options for the rpc() method
      * @returns {jQuery.Deferred<>} call result
@@ -809,7 +810,7 @@ var Model = Class.extend({
             kwargs = args;
             args = [];
         }
-        pyeval.ensure_evaluated(args, kwargs);
+        pyUtils.ensure_evaluated(args, kwargs);
         var call_kw = '/web/dataset/call_kw/' + this.name + '/' + method;
         return session.rpc(call_kw, {
             model: this.name,
@@ -819,7 +820,7 @@ var Model = Class.extend({
         }, options);
     },
     call_button: function (method, args) {
-        pyeval.ensure_evaluated(args, {});
+        pyUtils.ensure_evaluated(args, {});
         return session.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,

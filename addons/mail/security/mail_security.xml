@@ -51,5 +51,10 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
+        <record id="mail_moderation_rule_user" model="ir.rule">
+            <field name="name">White/Black List: moderators: moderated channels only</field>
+            <field name="model_id" ref="model_mail_moderation"/>
+            <field name="domain_force">[('channel_id.moderator_ids', 'in', user.id)]</field>
+        </record>
     </data>
 </odoo>

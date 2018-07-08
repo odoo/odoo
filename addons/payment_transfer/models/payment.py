@@ -15,6 +15,19 @@ class TransferPaymentAcquirer(models.Model):
 
     provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')], default='transfer')
 
+    @api.model
+    def _create_missing_journal_for_acquirers(self, company=None):
+        # By default, the wire transfer method uses the default Bank journal.
+        company = company or self.env.user.company_id
+        acquirers = self.env['payment.acquirer'].search(
+            [('provider', '=', 'transfer'), ('journal_id', '=', False), ('company_id', '=', company.id)])
+
+        bank_journal = self.env['account.journal'].search(
+            [('type', '=', 'bank'), ('company_id', '=', company.id)], limit=1)
+        if bank_journal:
+            acquirers.write({'journal_id': bank_journal.id})
+        return super(TransferPaymentAcquirer, self)._create_missing_journal_for_acquirers(company=company)
+
     def transfer_get_form_action_url(self):
         return '/payment/transfer/feedback'
 
@@ -85,4 +98,5 @@ class TransferPaymentTransaction(models.Model):
 
     def _transfer_form_validate(self, data):
         _logger.info('Validated transfer payment for tx %s: set as pending' % (self.reference))
-        return self.write({'state': 'pending'})
+        self._set_transaction_pending()
+        return True

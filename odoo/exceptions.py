@@ -63,6 +63,13 @@ class AccessError(except_orm):
         super(AccessError, self).__init__(msg)
 
 
+class CacheMiss(except_orm, KeyError):
+    """ Missing value(s) in cache.
+    Example: When you try to read a value in a flushed cache."""
+    def __init__(self, record, field):
+        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
+
+
 class MissingError(except_orm):
     """ Missing record(s).
     Example: When you try to write on a deleted record."""

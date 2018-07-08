@@ -1,23 +1,23 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.slide.upload">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div role="dialog" class="modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <header class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         <h3 class="modal-title">Upload Presentation</h3>
-                    </div>
-                    <div class="oe_slides_upload_loading text-center" style="display:none">
+                    </header>
+                    <div class="oe_slides_upload_loading text-center" style="display:none" aria-hidden="true" role="status">
                         <h4><i class='fa fa-spinner fa-spin'></i> Uploading presentation...  </h4>
                     </div>
-                    <div class="modal-body">
+                    <main class="modal-body">
                         <form class="clearfix form-horizontal">
                             <div class="form-group">
                                 <div class="col-sm-4">
                                     <div class="img-thumbnail">
                                         <div class="o_slide_preview">
-                                            <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" class="img-responsive"/>
+                                            <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-responsive"/>
                                         </div>
                                     </div>
                                 </div>
@@ -64,12 +64,12 @@
                             </div>
                             <canvas id="data_canvas" style="display: none;"></canvas>
                         </form>
-                    </div>
-                    <div class="modal-footer">
+                    </main>
+                    <footer class="modal-footer">
                         <button type="button" data-loading-text="Loading..." class="btn btn-primary save">Save as Draft</button>
                         <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Save and Publish</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Discard</button>
-                    </div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
+                    </footer>
                 </div>
             </div>
         </div>

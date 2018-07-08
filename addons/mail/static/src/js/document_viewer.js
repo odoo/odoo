@@ -17,13 +17,16 @@ var DocumentViewer = Widget.extend({
         'click .o_viewer_video': '_onVideoClicked',
         'click .move_next': '_onNext',
         'click .move_previous': '_onPrevious',
+        'click .o_rotate': '_onRotate',
         'click .o_zoom_in': '_onZoomIn',
         'click .o_zoom_out': '_onZoomOut',
+        'click .o_zoom_reset': '_onZoomReset',
         'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
         'click .o_print_btn': '_onPrint',
         'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
         'mousewheel .o_viewer_content': '_onScroll',        // Chrome, Safari, IE
         'keydown': '_onKeydown',
+        'keyup': '_onKeyUp',
         'mousedown .o_viewer_img': '_onStartDrag',
         'mousemove .o_viewer_content': '_onDrag',
         'mouseup .o_viewer_content': '_onEndDrag'
@@ -58,6 +61,7 @@ var DocumentViewer = Widget.extend({
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
     },
 
@@ -101,7 +105,32 @@ var DocumentViewer = Widget.extend({
             widget: this
         }));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
+    },
+    /**
+     * Get CSS transform property based on scale and angle
+     *
+     * @private
+     * @param {float} scale
+     * @param {float} angle
+     */
+    _getTransform: function(scale, angle) {
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)'
+    },
+    /**
+     * Rotate image clockwise by provided angle
+     *
+     * @private
+     * @param {float} angle
+     */
+    _rotate: function (angle) {
+        this._reset();
+        var new_angle = (this.angle || 0) + angle;
+        this.$('.o_viewer_img').css('transform', this._getTransform(this.scale, new_angle));
+        this.$('.o_viewer_img').css('max-width', new_angle % 180 !== 0 ? $(document).height() : '100%');
+        this.$('.o_viewer_img').css('max-height', new_angle % 180 !== 0 ? $(document).width() : '100%');
+        this.angle = new_angle;
     },
     /**
      * Zoom in/out image by provided scale
@@ -111,9 +140,10 @@ var DocumentViewer = Widget.extend({
      */
     _zoom: function (scale) {
         if (scale > 0.5) {
-            this.$('.o_viewer_img').css('transform', 'scale3d(' + scale + ', ' + scale + ', 1)');
+            this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
         }
+        this.$('.o_zoom_reset').add('.o_zoom_out').toggleClass('disabled', scale === 1);
     },
 
     //--------------------------------------------------------------------------
@@ -127,6 +157,7 @@ var DocumentViewer = Widget.extend({
     _onClose: function (e) {
         e.preventDefault();
         this.$el.modal('hide');
+        this.trigger_up('document_viewer_closed');
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
@@ -159,6 +190,7 @@ var DocumentViewer = Widget.extend({
             var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
             var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d("+ left +"px, " + top + "px, 0)");
+            $image.css('cursor', 'move');
         }
     },
     /**
@@ -171,6 +203,7 @@ var DocumentViewer = Widget.extend({
             this.enableDrag = false;
             this.dragstopX = e.clientX - this.dragStartX;
             this.dragstopY = e.clientY - this.dragStartY;
+            this.$('.o_viewer_img').css('cursor', '');
         }
     },
     /**
@@ -204,6 +237,20 @@ var DocumentViewer = Widget.extend({
             case $.ui.keyCode.LEFT:
                 e.preventDefault();
                 this._previous();
+                break;
+        }
+    },
+    /**
+     * Close popup on ESCAPE keyup
+     *
+     * @private
+     * @param {KeyEvent} e
+     */
+    _onKeyUp: function (e) {
+        switch (e.which) {
+            case $.ui.keyCode.ESCAPE:
+                e.preventDefault();
+                this._onClose(e);
                 break;
         }
     },
@@ -284,6 +331,14 @@ var DocumentViewer = Widget.extend({
      * @private
      * @param {MouseEvent} e
      */
+    _onRotate: function (e) {
+        e.preventDefault();
+        this._rotate(90);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
     _onZoomIn: function (e) {
         e.preventDefault();
         var scale = this.scale + ZOOM_STEP;
@@ -297,6 +352,15 @@ var DocumentViewer = Widget.extend({
         e.preventDefault();
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onZoomReset: function (e) {
+        e.preventDefault();
+        this.$('.o_viewer_zoomer').css("transform", "");
+        this._zoom(1);
     },
 });
 return DocumentViewer;

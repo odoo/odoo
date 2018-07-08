@@ -1,7 +1,6 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
-var bus = require('bus.bus').bus;
 var BasicModel = require('web.BasicModel');
 var field_registry = require('web.field_registry');
 var Notification = require('web.Notification');
@@ -41,8 +40,10 @@ var CalendarNotification = Notification.extend({
             },
 
             'click .link2showed': function() {
-                this.destroy(true);
-                this._rpc({route: '/calendar/notify_ack'});
+                var self = this;
+                this._rpc({route: '/calendar/notify_ack'}).always(function() {
+                    self.destroy();
+                });
             },
         });
     },
@@ -99,7 +100,7 @@ WebClient.include({
         // in which the current user is involved is created, edited or deleted
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
-        bus.on('notification', this, function (notifications) {
+        this.call('bus_service', 'getBus').on('notification', this, function (notifications) {
             _.each(notifications, (function (notification) {
                 if (notification[0][1] === 'calendar.alarm') {
                     this.display_calendar_notif(notification[1]);

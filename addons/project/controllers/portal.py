@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+from operator import itemgetter
 
 from odoo import http, _
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
+from odoo.tools import groupby as groupbyelem
 
 from odoo.osv.expression import OR
 
@@ -14,10 +16,12 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        values.update({
-            'project_count': request.env['project.project'].search_count([('privacy_visibility', '=', 'portal')]),
-            'task_count': request.env['project.task'].search_count([('project_id.privacy_visibility', '=', 'portal')])
-        })
+        Project = request.env['project.project']
+        Task = request.env['project.task']
+        # portal users can't view projects they don't follow
+        projects = Project.sudo().search([('privacy_visibility', '=', 'portal')])
+        values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
+        values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
         return values
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
@@ -75,10 +79,8 @@ class CustomerPortal(CustomerPortal):
         return request.render("project.portal_my_project", vals)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby='project', **kw):
         values = self._prepare_portal_layout_values()
-        domain = [('project_id.privacy_visibility', '=', 'portal')]
-
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Title'), 'order': 'name'},
@@ -95,8 +97,14 @@ class CustomerPortal(CustomerPortal):
             'stage': {'input': 'stage', 'label': _('Search in Stages')},
             'all': {'input': 'all', 'label': _('Search in All')},
         }
+        searchbar_groupby = {
+            'none': {'input': 'none', 'label': _('None')},
+            'project': {'input': 'project', 'label': _('Project')},
+        }
         # extends filterby criteria with project (criteria name is the project id)
-        projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
+        # Note: portal users can't view projects they don't follow
+        projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
+        domain = [('project_id', 'in', projects.ids)]
         for proj in projects:
             searchbar_filters.update({
                 str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
@@ -134,28 +142,36 @@ class CustomerPortal(CustomerPortal):
         # pager
         pager = portal_pager(
             url="/my/tasks",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby, 'search_in': search_in, 'search': search},
             total=task_count,
             page=page,
             step=self._items_per_page
         )
         # content according to pager and archive selected
+        if groupby == 'project':
+            order = "project_id, %s" % order  # force sort on project first to group by project in view
         tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_tasks_history'] = tasks.ids[:100]
+        if groupby == 'project':
+            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('project_id'))]
+        else:
+            grouped_tasks = [tasks]
 
         values.update({
             'date': date_begin,
             'date_end': date_end,
             'projects': projects,
-            'tasks': tasks,
+            'grouped_tasks': grouped_tasks,
             'page_name': 'task',
             'archive_groups': archive_groups,
             'default_url': '/my/tasks',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_groupby': searchbar_groupby,
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
             'sortby': sortby,
+            'groupby': groupby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
         })

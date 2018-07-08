@@ -5,24 +5,34 @@
         <field name="groups_id" eval="[(4, ref('fleet.fleet_group_manager'))]" />
       </record>
 
-      <record id="vehicle_state_inshop" model="fleet.vehicle.state">
-        <field name="name">In shop</field>
-        <field name="sequence">1</field>
+      <record id="fleet_vehicle_state_new_request" model="fleet.vehicle.state">
+          <field name="name">New Request</field>
+          <field name="sequence">5</field>
       </record>
 
-      <record id="vehicle_state_active" model="fleet.vehicle.state">
-        <field name="name">Active</field>
-        <field name="sequence">2</field>
+      <record id="fleet_vehicle_state_ordered" model="fleet.vehicle.state">
+          <field name="name">Ordered</field>
+          <field name="sequence">6</field>
       </record>
 
-      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
-        <field name="name">Inactive</field>
-        <field name="sequence">3</field>
+      <record id="fleet_vehicle_state_registered" model="fleet.vehicle.state">
+          <field name="name">Registered</field>
+          <field name="sequence">7</field>
       </record>
 
-      <record id="vehicle_state_sold" model="fleet.vehicle.state">
-        <field name="name">Sold</field>
-        <field name="sequence">4</field>
+      <record id="fleet_vehicle_state_downgraded" model="fleet.vehicle.state">
+          <field name="name">Downgraded</field>
+          <field name="sequence">8</field>
+      </record>
+
+      <record id="fleet_vehicle_state_reserve" model="fleet.vehicle.state">
+          <field name="name">Reserve</field>
+          <field name="sequence">9</field>
+      </record>
+
+      <record id="fleet_vehicle_state_waiting_list" model="fleet.vehicle.state">
+          <field name="name">Waiting List</field>
+          <field name="sequence">10</field>
       </record>
 
       <record id="type_service_service_1" model="fleet.service.type">
@@ -675,7 +685,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.user_demo_res_partner" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -690,7 +700,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_25" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_inactive"/>
+          <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
@@ -705,7 +715,7 @@
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_17" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -720,7 +730,7 @@
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_16" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -735,7 +745,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_15" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>

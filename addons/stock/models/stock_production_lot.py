@@ -18,7 +18,7 @@ class ProductionLot(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     create_date = fields.Datetime('Creation Date')
@@ -34,25 +34,23 @@ class ProductionLot(models.Model):
         if active_picking_id:
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
-                raise UserError(_("You are not allowed to create a lot for this picking type"))
+                raise UserError(_("You are not allowed to create a lot for this operation type."))
         return super(ProductionLot, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'product_id' in vals:
+            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
+            if move_lines:
+                raise UserError(_(
+                    'You are not allowed to change the product linked to a serial or lot number ' +
+                    'if some stock moves have already been created with that number. ' +
+                    'This would lead to inconsistencies in your stock.'
+                ))
+        return super(ProductionLot, self).write(vals)
 
     @api.one
     def _product_qty(self):
         # We only care for the quants in internal or transit locations.
         quants = self.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
         self.product_qty = sum(quants.mapped('quantity'))
-
-    @api.multi
-    def action_traceability(self):
-        move_ids = self.mapped('quant_ids').mapped('history_ids').ids
-        if not move_ids:
-            return False
-        return {
-            'domain': [('id', 'in', move_ids)],
-            'name': _('Traceability'),
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'context': {'tree_view_ref': 'stock.view_move_tree'},
-            'res_model': 'stock.move',
-            'type': 'ir.actions.act_window'}

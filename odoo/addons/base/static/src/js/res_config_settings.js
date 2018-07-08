@@ -1,6 +1,7 @@
 odoo.define('base.settings', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var config = require('web.config');
 var FormView = require('web.FormView');
@@ -31,17 +32,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         }
     },
 
-    /**
-     * enable case insensitive search in jQuery contains function
-     *
-     * @private
-     */
-    _activeCaseInsensitiveSearch: function () {
-        $.expr[':'].contains = function (a, i, m) {
-            return $(a).text().toUpperCase()
-                .indexOf(m[3].toUpperCase()) >= 0;
-        };
-    },
     /**
      * initialize modules list.
      * remove module that restricted in groups
@@ -141,6 +131,22 @@ var BaseSettingRenderer = FormRenderer.extend({
             return module.key === self.activeSettingTab;
         });
         return index;
+    },
+    /**
+     * Enables swipe navigation between settings pages
+     *
+     * @private
+     */
+    _enableSwipe: function () {
+        var self = this;
+        this.$('.settings').swipe({
+            swipeLeft: function () {
+                self._moveToTab(self.currentIndex + 1);
+            },
+            swipeRight: function () {
+                self._moveToTab(self.currentIndex - 1);
+            }
+        });
     },
     /**
      *
@@ -251,12 +257,12 @@ var BaseSettingRenderer = FormRenderer.extend({
 
     _render: function () {
         var res = this._super.apply(this, arguments);
-        if (!this.modules) {
-            this._initModules();
-            this._activeCaseInsensitiveSearch();
-        }
+        this._initModules();
         this._renderLeftPanel();
         this._initSearch();
+        if (config.device.isMobile) {
+            this._enableSwipe();
+        }
         return res;
     },
 
@@ -289,7 +295,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find("label:contains('" + self.searchText + "')");
+            var resultSetting = module.settingView.find("label:containsTextLike('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {
                     var settingBox = $(this).closest('.o_setting_box');
@@ -333,28 +339,54 @@ var BaseSettingRenderer = FormRenderer.extend({
 });
 
 var BaseSettingController = FormController.extend({
-    custom_events: _.extend({}, FormController.prototype.custom_events, {}),
-
     init: function () {
         this._super.apply(this, arguments);
         this.renderer.activeSettingTab = this.initialState.context.module;
     },
 });
 
+var BaseSettingsModel = BasicModel.extend({
+    /**
+     * @override
+     */
+    save: function (recordID) {
+        var self = this;
+        return this._super.apply(this, arguments).then(function (result) {
+            // we remove here the res_id, because the record should still be
+            // considered new.  We want the web client to always perform a
+            // default_get to fetch the settings anew.
+            delete self.localData[recordID].res_id;
+            return result;
+        });
+    },
+});
+
 var BaseSettingView = FormView.extend({
+    jsLibs: [],
+
     config: _.extend({}, FormView.prototype.config, {
+        Model: BaseSettingsModel,
         Renderer: BaseSettingRenderer,
         Controller: BaseSettingController,
     }),
 
-    getRenderer: function (parent, state) {
-        return new BaseSettingRenderer(parent, state, this.rendererParams);
-    }
+    /**
+     * Overrides to lazy-load touchSwipe library in mobile.
+     *
+     * @override
+    */
+    init: function () {
+        if (config.device.isMobile) {
+            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 view_registry.add('base_settings', BaseSettingView);
 
 return {
+    Model: BaseSettingsModel,
     Renderer: BaseSettingRenderer,
     Controller: BaseSettingController,
 };

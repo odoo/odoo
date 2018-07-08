@@ -98,13 +98,13 @@ class Product(models.Model):
 
         domain_move_in = [('product_id', 'in', self.ids)] + domain_move_in_loc
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
-        if lot_id:
+        if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
-        if owner_id:
+        if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
             domain_move_out += [('restrict_partner_id', '=', owner_id)]
-        if package_id:
+        if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
             domain_move_in_done = list(domain_move_in)
@@ -195,31 +195,41 @@ class Product(models.Model):
         domain = company_id and ['&', ('company_id', '=', company_id)] or []
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
-        # The code has been modified because having one location with parent_left being
-        # 0 make the whole domain unusable
-        hierarchical_locations = locations.filtered(lambda location: location.parent_left != 0 and operator == "child_of")
-        other_locations = locations.filtered(lambda location: location not in hierarchical_locations)  # TDE: set - set ?
+        hierarchical_locations = locations if operator == 'child_of' else locations.browse()
+        other_locations = locations - hierarchical_locations
         loc_domain = []
         dest_loc_domain = []
+        # this optimizes [('location_id', 'child_of', hierarchical_locations.ids)]
+        # by avoiding the ORM to search for children locations and injecting a
+        # lot of location ids into the main query
         for location in hierarchical_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain += ['&',
-                           ('location_id.parent_left', '>=', location.parent_left),
-                           ('location_id.parent_left', '<', location.parent_right)]
+            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain += ['&',
-                                ('location_dest_id.parent_left', '>=', location.parent_left),
-                                ('location_dest_id.parent_left', '<', location.parent_right)]
+            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
         if other_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain = loc_domain + [('location_id', operator, [location.id for location in other_locations])]
+            loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, [location.id for location in other_locations])]
+            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
         return (
             domain + loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
             domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
         )
+
+    def _search_qty_available(self, operator, value):
+        # In the very specific case we want to retrieve products with stock available, we only need
+        # to use the quants, not the stock moves. Therefore, we bypass the usual
+        # '_search_product_quantity' method and call '_search_qty_available_new' instead. This
+        # allows better performances.
+        if value == 0.0 and operator == '>' and not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+            product_ids = self._search_qty_available_new(
+                operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
+                self.env.context.get('package_id')
+            )
+            return [('id', 'in', product_ids)]
+        return self._search_product_quantity(operator, value, 'qty_available')
 
     def _search_virtual_available(self, operator, value):
         # TDE FIXME: should probably clean the search methods
@@ -245,24 +255,13 @@ class Product(models.Model):
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        for product in self.search([]):
+        for product in self.with_context(prefetch_fields=False).search([]):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
         return [('id', 'in', ids)]
 
-    def _search_qty_available(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        if value == 0.0 and operator in ('=', '>=', '<='):
-            return self._search_product_quantity(operator, value, 'qty_available')
-        product_ids = self._search_qty_available_new(operator, value, self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'))
-        if (value > 0 and operator in ('<=', '<')) or (value < 0 and operator in ('>=', '>')):
-            # include also unavailable products
-            domain = self._search_product_quantity(operator, value, 'qty_available')
-            product_ids += domain[0][2]
-        return [('id', 'in', product_ids)]
-
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
-        # TDE FIXME: should probably clean the search methods
+        ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
@@ -347,6 +346,9 @@ class Product(models.Model):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
+    def action_update_quantity_on_hand(self):
+        return self.product_tmpl_id.with_context({'default_product_id': self.id}).action_update_quantity_on_hand()
+
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
@@ -365,14 +367,22 @@ class Product(models.Model):
 
     def write(self, values):
         res = super(Product, self).write(values)
-        if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
-            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
+        if 'active' in values and not values['active']:
+            products = self.mapped('orderpoint_ids').filtered(lambda r: r.active).mapped('product_id')
+            if products:
+                msg = _('You still have some active reordering rules on this product. Please archive or delete them first.')
+                msg += '\n\n'
+                for product in products:
+                    msg += '- %s \n' % product.display_name
+                raise UserError(msg)
         return res
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    responsible_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid, required=True)
+    responsible_id = fields.Many2one(
+        'res.users', string='Responsible', default=lambda self: self.env.uid, required=True,
+        help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Stockable Product')])
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
@@ -404,8 +414,11 @@ class ProductTemplate(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         digits=dp.get_precision('Product Unit of Measure'))
-    location_id = fields.Many2one('stock.location', 'Location')
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
+    # The goal of these fields is not to be able to search a location_id/warehouse_id but
+    # to properly make these fields "dummy": only used to put some keys in context from
+    # the search view in order to influence computed field
+    location_id = fields.Many2one('stock.location', 'Location', store=False, search=lambda operator, operand, vals: [])
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False, search=lambda operator, operand, vals: [])
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -495,11 +508,11 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         if 'uom_id' in vals:
-            new_uom = self.env['product.uom'].browse(vals['uom_id'])
+            new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
-                raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
+                raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
@@ -516,6 +529,30 @@ class ProductTemplate(models.Model):
         action = self.env.ref('stock.action_routes_form').read()[0]
         action['domain'] = [('id', 'in', routes.ids)]
         return action
+
+    def action_update_quantity_on_hand(self):
+        default_product_id = self.env.context.get('default_product_id', self.product_variant_id.id)
+        if self.env.user.user_has_groups('stock.group_stock_multi_locations') or (self.env.user.user_has_groups('stock.group_production_lot') and self.tracking != 'none'):
+            product_ref_name = self.name + ' - ' + datetime.today().strftime('%m/%d/%y')
+            ctx = {'default_filter': 'product', 'default_product_id': default_product_id, 'default_name': product_ref_name}
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.inventory',
+                'context': ctx,
+            }
+        else:
+            wiz = self.env['stock.change.product.qty'].create({'product_id': default_product_id})
+            return {
+                    'name': _('Update quantity on hand'),
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'res_model': 'stock.change.product.qty',
+                    'target': 'new',
+                    'res_id': wiz.id,
+                    'context': {'default_product_id': self.env.context.get('default_product_id')}
+                }
 
     def action_open_quants(self):
         products = self.mapped('product_variant_ids')
@@ -572,3 +609,27 @@ class ProductCategory(models.Model):
             category = category.parent_id
             routes |= category.route_ids
         self.total_route_ids = routes
+
+
+class UoM(models.Model):
+    _inherit = 'uom.uom'
+
+    def write(self, values):
+        # Users can not update the factor if open stock moves are based on it
+        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
+            changed = self.filtered(
+                lambda u: any(u[f] != values[f] if f in values else False
+                              for f in {'factor', 'factor_inv', 'category_id'}))
+            if changed:
+                stock_move_lines = self.env['stock.move.line'].search_count([
+                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
+                    ('state', '!=', 'cancel'),
+                ])
+
+                if stock_move_lines:
+                    raise UserError(_(
+                        "You cannot change the ratio of this unit of mesure as some"
+                        " products with this UoM have already been moved or are "
+                        "currently reserved."
+                    ))
+        return super(UoM, self).write(values)

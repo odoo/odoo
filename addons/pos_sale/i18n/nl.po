@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:09+0000\n"
+"PO-Revision-Date: 2018-03-22 14:09+0000\n"
+"Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,12 +36,12 @@ msgid "Day"
 msgstr "Dag"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_dashboard_graph_group_pos
+#: model:ir.ui.view,arch_db:pos_sale.crm_team_view_form_inherit_pos_sale
 msgid "Group by"
 msgstr "Groepeer op"
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_crm_team_dashboard_graph_group_pos
+#: model:ir.model.fields,help:pos_sale.field_crm_team__dashboard_graph_group_pos
 msgid "How this channel's dashboard graph will group the results."
 msgstr "Hoe dit kanaal zijn dashboard grafieken het resultaat groeperen."
 
@@ -52,14 +51,19 @@ msgid "Month"
 msgstr "Maand"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_pos_sessions_open_count
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr "Open kassa sessies"
+msgstr "Open POS sessies"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
 msgid "Open Sessions"
 msgstr "Open sessies"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__dashboard_graph_group_pos
+msgid "POS Grouping"
+msgstr "POS groepering"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
@@ -68,19 +72,19 @@ msgid "Point of Sale"
 msgstr "Kassa"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_pos_config_ids
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
 msgstr "Kassa's"
 
 #. module: pos_sale
 #: model:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
 msgid "Sales"
-msgstr "Verkoop"
+msgstr "Verkopen"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
-#: model:ir.model.fields,field_description:pos_sale.field_pos_config_crm_team_id
-#: model:ir.model.fields,field_description:pos_sale.field_pos_session_crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Channel"
 msgstr "Verkoopkanaal"
 
@@ -101,7 +105,7 @@ msgid "Session Running"
 msgstr "Sessie draait"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team_pos_order_amount_total
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
 msgstr "Sessie verkoopbedrag"
 
@@ -111,8 +115,8 @@ msgid "Sessions Running"
 msgstr "Lopende sessies"
 
 #. module: pos_sale
-#: model:ir.model.fields,help:pos_sale.field_pos_config_crm_team_id
-#: model:ir.model.fields,help:pos_sale.field_pos_session_crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Channel."
 msgstr ""
 "Deze kassa zijn verkopen zullen gerelateerd zijn aan dit verkoopkanaal."

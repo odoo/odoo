@@ -140,7 +140,7 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
     },
     /**
-     * Launches the ace editor to be able to edit the templates and less files
+     * Launches the ace editor to be able to edit the templates and scss files
      * which are used by the current page.
      *
      * @private

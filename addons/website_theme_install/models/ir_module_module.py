@@ -43,15 +43,14 @@ class IrModuleModule(models.Model):
     @api.multi
     def button_choose_theme(self):
         theme_category = self.env.ref('base.module_category_theme', False)
-        hidden_category = self.env.ref('base.module_category_hidden', False)
         theme_hidden_category = self.env.ref('base.module_category_theme_hidden', False)
 
         theme_category_id = theme_category.id if theme_category else 0
-        hidden_categories_ids = [hidden_category.id if hidden_category else 0, theme_hidden_category.id if theme_hidden_category else 0]
+        hidden_categories_ids = [theme_hidden_category.id if theme_hidden_category else 0]
 
         self.search([ # Uninstall the theme(s) which is (are) installed
             ('state', '=', 'installed'),
-            '|', ('category_id', 'not in', hidden_categories_ids), ('name', '=', 'theme_default'),
+            ('category_id', 'not in', hidden_categories_ids),
             '|', ('category_id', '=', theme_category_id), ('category_id.parent_id', '=', theme_category_id)
         ]).button_immediate_uninstall()
 

@@ -74,14 +74,14 @@ class IrTranslationImport(object):
             params['type'] = 'model'
             params['name'] = 'ir.model.fields,field_description'
             params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
 
         elif params['type'] == 'help':
             model, field = params['name'].split(',')
             params['type'] = 'model'
             params['name'] = 'ir.model.fields,help'
             params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
 
         elif params['type'] == 'view':
             params['type'] = 'model'
@@ -161,7 +161,8 @@ class IrTranslationImport(object):
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                        SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s AS ti
-                       WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
+                       WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s)
+                       ON CONFLICT DO NOTHING;
                    """ % (self._model_table, self._table, self._model_table, find_expr),
                    (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
@@ -185,7 +186,7 @@ class IrTranslation(models.Model):
 
     name = fields.Char(string='Translated field', required=True)
     res_id = fields.Integer(string='Record ID', index=True)
-    lang = fields.Selection(selection='_get_languages', string='Language')
+    lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
     type = fields.Selection(TRANSLATION_TYPE, string='Type', index=True)
     src = fields.Text(string='Internal Source')  # stored in database, kept for backward compatibility
     source = fields.Text(string='Source term', compute='_compute_source',
@@ -261,14 +262,9 @@ class IrTranslation(models.Model):
         res = super(IrTranslation, self)._auto_init()
         # Add separate md5 index on src (no size limit on values, and good performance).
         tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
-        tools.create_index(self._cr, 'ir_translation_ltn', self._table, ['name', 'lang', 'type'])
+        tools.create_unique_index(self._cr, 'ir_translation_unique', self._table,
+                                  ['type', 'name', 'lang', 'res_id', 'md5(src)'])
         return res
-
-    @api.model
-    def _check_selection_field_value(self, field, value):
-        if field == 'lang':
-            return
-        return super(IrTranslation, self)._check_selection_field_value(field, value)
 
     @api.model
     def _get_ids(self, name, tt, lang, ids):
@@ -462,13 +458,18 @@ class IrTranslation(models.Model):
                 continue
 
             # remap existing translations on terms when possible
+            trans_src = record_trans.mapped('src')
             for trans in record_trans:
                 if trans.src == trans.value:
                     discarded += trans
                 elif trans.src not in terms:
                     matches = get_close_matches(trans.src, terms, 1, 0.9)
                     if matches:
-                        trans.write({'src': matches[0], 'state': trans.state})
+                        if matches[0] in trans_src:
+                            # there is already a translation for this term; discard this one
+                            discarded += trans
+                        else:
+                            trans.write({'src': matches[0], 'state': trans.state})
                     else:
                         outdated += trans
 
@@ -590,7 +591,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
-                        WHERE l.active AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
@@ -610,7 +611,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
-                        WHERE l.active AND l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );

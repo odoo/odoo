@@ -1,12 +1,12 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
+var base = require('web_editor.base');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var summernote = require('web_editor.summernote');
-var weWidgets = require('web_editor.widget');
 
 var _t = core._t;
 
@@ -257,7 +257,7 @@ var RTEWidget = Widget.extend({
 
         this._getConfig = getConfig || this._getDefaultConfig;
 
-        weWidgets.computeFonts();
+        base.computeFonts();
     },
     /**
      * @override
@@ -269,6 +269,20 @@ var RTEWidget = Widget.extend({
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 
+        $(document).on('click.rte keyup.rte', function () {
+            var current_range = {};
+            try {
+                current_range = range.create() || {};
+            } catch (e) {
+                // if range is on Restricted element ignore error
+            }
+            var $popover = $(current_range.sc).closest('[contenteditable]');
+            var popover_history = ($popover.data()||{}).NoteHistory;
+            if (!popover_history || popover_history === history) return;
+            var editor = $popover.parent('.note-editor');
+            $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
+            $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
+        });
         $(document).on('mousedown.rte activate.rte', this, this._onMousedown.bind(this));
         $(document).on('mouseup.rte', this, this._onMouseup.bind(this));
 
@@ -281,16 +295,21 @@ var RTEWidget = Widget.extend({
         .each(function () {
             var $node = $(this);
 
+            // fallback for firefox iframe display:none see https://github.com/odoo/odoo/pull/22610
+            var computedStyles = window.getComputedStyle(this) || window.parent.getComputedStyle(this);
             // add class to display inline-block for empty t-field
-            if (window.getComputedStyle(this).display === 'inline' && $node.data('oe-type') !== 'image') {
+            if (computedStyles.display === 'inline' && $node.data('oe-type') !== 'image') {
                 $node.addClass('o_is_inline_editable');
             }
         });
 
         // start element observation
-        $(document).on('content_changed', '.o_editable', function (event) {
-            self.trigger_up('rte_change', {target: event.target});
-            $(this).addClass('o_dirty');
+        $(document).on('content_changed', '.o_editable', function (ev) {
+            self.trigger_up('rte_change', {target: ev.target});
+            if (!ev.__isDirtyHandled) {
+                $(this).addClass('o_dirty');
+                ev.__isDirtyHandled = true;
+            }
         });
 
         $('#wrapwrap, .o_editable').on('click.rte', '*', this, this._onClick.bind(this));
@@ -342,6 +361,8 @@ var RTEWidget = Widget.extend({
         $('#wrapwrap, .o_editable').off('.rte');
 
         $('.o_not_editable').removeAttr('contentEditable');
+
+        $(document).off('click.rte keyup.rte mousedown.rte activate.rte mouseup.rte');
         $(document).off('content_changed').removeClass('o_is_inline_editable').removeData('rte');
         $(document).tooltip('destroy');
         $('body').removeClass('editor_enable');
@@ -374,15 +395,24 @@ var RTEWidget = Widget.extend({
      * @param {boolean} internal_history
      */
     historyRecordUndo: function ($target, event, internal_history) {
+        $target = $($target);
         var rng = range.create();
         var $editable = $(rng && rng.sc).closest('.o_editable');
         if (!rng || !$editable.length) {
-            $editable = $($target).closest('.o_editable');
+            $editable = $target.closest('.o_editable');
             rng = range.create($target.closest('*')[0],0);
         } else {
             rng = $editable.data('range') || rng;
         }
-        rng.select();
+        try {
+            // TODO this line might break for unknown reasons. I suppose that
+            // the created range is an invalid one. As it might be tricky to
+            // adapt that line and that it is not a critical one, temporary fix
+            // is to ignore the errors that this generates.
+            rng.select();
+        } catch (e) {
+            console.log('error', e);
+        }
         history.recordUndo($editable, event, internal_history);
     },
     /**
@@ -397,6 +427,10 @@ var RTEWidget = Widget.extend({
     save: function (context) {
         var self = this;
 
+        $('.o_editable')
+            .destroy()
+            .removeClass('o_editable o_is_inline_editable');
+
         var $dirty = $('.o_dirty');
         $dirty
             .removeAttr('contentEditable')
@@ -405,7 +439,7 @@ var RTEWidget = Widget.extend({
             var $el = $(el);
 
             $el.find('[class]').filter(function () {
-                if (!this.className.match(/\S/)) {
+                if (!this.getAttribute('class').match(/\S/)) {
                     this.removeAttribute('class');
                 }
             });
@@ -650,26 +684,16 @@ var RTEWidget = Widget.extend({
             self.historyRecordUndo($target, 'activate',  true);
         });
 
-        // To Fix Google Chrome Tripleclick Issue, which selects the ending
-        // whitespace characters (so Tripleclicking then typing text will remove
-        // the whole paragraph instead of its content).
-        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
-        if ($.browser.chrome === true && ev.originalEvent.detail === 3) {
-            var currentSelection = range.create();
-            if (currentSelection.sc.parentNode === currentSelection.ec) {
-                _selectSC(currentSelection);
-            } else if (currentSelection.eo === 0) {
-                var $hasNext = $(currentSelection.sc).parent();
-                while (!$hasNext.next().length && !$hasNext.is('body')) {
-                    $hasNext = $hasNext.parent();
-                }
-                if ($hasNext.next()[0] === currentSelection.ec) {
-                    _selectSC(currentSelection);
-                }
-            }
-        }
-        function _selectSC(selection) {
-            range.create(selection.sc, selection.so, selection.sc, selection.sc.length).select();
+        // Browsers select different content from one to another after a
+        // triple click (especially: if triple-clicking on a paragraph on
+        // Chrome, blank characters of the element following the paragraph are
+        // selected too)
+        //
+        // The triple click behavior is reimplemented for all browsers here
+        if (ev.originalEvent.detail === 3) {
+            // Select the whole content inside the deepest DOM element that was
+            // triple-clicked
+            range.create(ev.target, 0, ev.target, ev.target.childNodes.length).select();
         }
     },
 });

@@ -58,7 +58,7 @@ class Survey(models.Model):
     title = fields.Char('Title', required=True, translate=True)
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
-                               ondelete="set null", copy=False, group_expand='_read_group_stage_ids')
+                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey",
         oldname="authenticate")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
@@ -227,9 +227,8 @@ class Survey(models.Model):
 
         # Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            answers = {}
             comments = []
-            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id}) for label in question.labels_ids)
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.value_suggested.id]['count'] += 1
@@ -364,7 +363,7 @@ class Survey(models.Model):
 
     @api.multi
     def action_test_survey(self):
-        """ Open the website page with the survey form into test mode"""
+        ''' Open the website page with the survey form into test mode'''
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
@@ -680,11 +679,12 @@ class SurveyLabel(models.Model):
     value = fields.Char('Suggested value', translate=True, required=True)
     quizz_mark = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
+    @api.one
     @api.constrains('question_id', 'question_id_2')
     def _check_question_not_empty(self):
         """Ensure that field question_id XOR field question_id_2 is not null"""
         if not bool(self.question_id) != bool(self.question_id_2):
-            raise ValidationError(_("A label must be attached to one and only one question"))
+            raise ValidationError(_("A label must be attached to only one question."))
 
 
 class SurveyUserInput(models.Model):
@@ -727,7 +727,6 @@ class SurveyUserInput(models.Model):
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
-        ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
 
     @api.model
@@ -803,7 +802,7 @@ class SurveyUserInputLine(models.Model):
     def _answered_or_skipped(self):
         for uil in self:
             if not uil.skipped != bool(uil.answer_type):
-                raise ValidationError(_('A question cannot be unanswered and skipped'))
+                raise ValidationError(_('This question cannot be unanswered or skipped.'))
 
     @api.constrains('answer_type')
     def _check_answer_type(self):

@@ -4,7 +4,8 @@
         <t t-set="count" t-value="widget.get('message_count')"/>
         <div class="o_message_counter">
             <t t-if="count">
-                <span class="o_message_count fa fa-comments"> <t t-esc="count"/></span>
+                <span class="fa fa-comments" />
+                <span class="o_message_count"> <t t-esc="count"/></span>
                 <t t-if="count == 1">comment</t>
                 <t t-else="">comments</t>
             </t>
@@ -23,7 +24,7 @@
             <t t-if="widget.options['display_composer']">
                 <div class="media">
                     <div class="media-left">
-                        <img class="o_portal_chatter_avatar pull-left" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_small/50x50"/>
+                        <img alt="Avatar" class="o_portal_chatter_avatar pull-left" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_small/50x50"/>
                     </div>
                     <div class="media-body">
                         <form class="o_portal_chatter_composer_form" t-attf-action="/mail/chatter_post" method="POST">
@@ -35,7 +36,7 @@
                                 <input type='hidden' name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>
                                 <input type='hidden' name="sha_in" t-att-value="widget.options['sha_in']" t-if="widget.options['sha_in']"/>
                                 <input type='hidden' name="sha_time" t-att-value="widget.options['sha_time']" t-if="widget.options['sha_time']"/>
-                                <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;">
+                                <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;" role="alert">
                                     Oops! Something went wrong. Try to reload the page and log in.
                                 </div>
                                 <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
@@ -84,7 +85,7 @@
             <t t-if="!_.isEmpty(widget.get('pager'))">
                 <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="o_portal_chatter_pager_btn">
-                        <a href="#"><i class="fa fa-chevron-left"/></a>
+                        <a href="#"><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
                     </li>
                     <t t-foreach="widget.get('pager')['pages']" t-as="page">
                         <li t-att-data-page="page" t-att-class="page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'">
@@ -92,7 +93,7 @@
                         </li>
                     </t>
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="o_portal_chatter_pager_btn">
-                        <a href="#"><i class="fa fa-chevron-right"/></a>
+                        <a href="#"><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/></a>
                     </li>
                 </ul>
             </t>

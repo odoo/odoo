@@ -51,6 +51,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             var layoutInfo = this.$textarea.data('layoutInfo');
             $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
         }
+        if (this._getValue() !== this.value) {
+            this._isDirty = true;
+        }
         this._super.apply(this, arguments);
     },
     /**
@@ -58,6 +61,12 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      */
     isSet: function () {
         return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
+    },
+    /**
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$content || this._super.apply(this, arguments);
     },
     /**
      * Do not re-render this field if it was the origin of the onchange call.
@@ -81,11 +90,49 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the domain for attachments used in media dialog.
+     * We look for attachments related to the current document. If there is a value for the model
+     * field, it is used to search attachments, and the attachments from the current document are
+     * filtered to display only user-created documents.
+     * In the case of a wizard such as mail, we have the documents uploaded and those of the model
+     *
+     * @private
+     * @returns {Array} "ir.attachment" odoo domain.
+     */
+    _getAttachmentsDomain: function () {
+        var domain = ['|', ['id', 'in', _.pluck(this.attachments, 'id')]];
+        var attachedDocumentDomain = [
+            '&',
+            ['res_model', '=', this.model],
+            ['res_id', '=', this.res_id|0]
+        ];
+        // if the document is not yet created, do not see the documents of other users
+        if (!this.res_id) {
+            attachedDocumentDomain.unshift('&');
+            attachedDocumentDomain.push(['create_uid', '=', session.uid]);
+        }
+        if (this.recordData.model) {
+            var relatedDomain = ['&',
+                ['res_model', '=', this.recordData.model],
+                ['res_id', '=', this.recordData.res_id|0]];
+            if (!this.recordData.res_id) {
+                relatedDomain.unshift('&');
+                relatedDomain.push(['create_uid', '=', session.uid]);
+            }
+            domain = domain.concat(['|'], attachedDocumentDomain, relatedDomain);
+        } else {
+            domain = domain.concat(attachedDocumentDomain);
+        }
+        return domain;
+    },
+    /**
      * @private
      * @returns {Object} the summernote configuration
      */
     _getSummernoteConfig: function () {
         var summernoteConfig = {
+            model: this.model,
+            id: this.res_id,
             focus: false,
             height: 180,
             toolbar: [
@@ -104,6 +151,22 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             lang: "odoo",
             onChange: this._doDebouncedAction.bind(this),
         };
+
+        var fieldNameAttachment =_.chain(this.recordData)
+            .pairs()
+            .find(function (value) {
+                return _.isObject(value[1]) && value[1].model === "ir.attachment";
+            })
+            .first()
+            .value();
+
+        if (fieldNameAttachment) {
+            this.fieldNameAttachment = fieldNameAttachment;
+            this.attachments = [];
+            summernoteConfig.onUpload = this._onUpload.bind(this);
+            summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
+        }
+
         if (config.debug) {
             summernoteConfig.toolbar.splice(7, 0, ['view', ['codeview']]);
         }
@@ -115,10 +178,39 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      */
     _getValue: function () {
         if (this.nodeOptions['style-inline']) {
+            transcoder.linkImgToAttachmentThumbnail(this.$content);
             transcoder.classToStyle(this.$content);
             transcoder.fontToImg(this.$content);
         }
         return this.$content.html();
+    },
+    /**
+     * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
+     * This method is called when an image is uploaded by the media dialog.
+     *
+     * For e.g. when sending email, this allows people to add attachments with the content
+     * editor interface and that they appear in the attachment list.
+     * The new documents being attached to the email, they will not be erased by the CRON
+     * when closing the wizard.
+     *
+     * @private
+     */
+    _onUpload: function (attachments) {
+        var self = this;
+        attachments = _.filter(attachments, function (attachment) {
+            return !_.findWhere(self.attachments, {id: attachment.id});
+        });
+        if (!attachments.length) {
+            return;
+        }
+        this.attachments = this.attachments.concat(attachments);
+        this.trigger_up('field_changed', {
+            dataPointID: this.dataPointID,
+            changes: _.object([this.fieldNameAttachment], [{
+                operation: 'ADD_M2M',
+                ids: attachments
+            }])
+        });
     },
     /**
      * @override
@@ -218,7 +310,8 @@ var FieldTextHtml = AbstractField.extend({
     start: function () {
         var self = this;
 
-        this.loaded = false;
+        this.editorLoadedDeferred = $.Deferred();
+        this.contentLoadedDeferred = $.Deferred();
         this.callback = _.uniqueId('FieldTextHtml_');
         window.odoo[this.callback+"_editor"] = function (EditorBar) {
             setTimeout(function () {
@@ -307,10 +400,8 @@ var FieldTextHtml = AbstractField.extend({
         return src;
     },
     old_initialize_content: function () {
-        this.$el.closest('.modal-body').css('max-height', 'none');
+        this.$el.closest('main.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
-        // deactivate any button to avoid saving a not ready iframe
-        $('.o_cp_buttons, .o_statusbar_buttons').find('button').addClass('o_disabled').attr('disabled', true);
         this.document = null;
         this.$body = $();
         this.$content = $();
@@ -325,9 +416,7 @@ var FieldTextHtml = AbstractField.extend({
         this.$content = this.$body.find("#editable_area");
         this.render();
         this.add_button();
-        this.loaded = true;
-        // reactivate all the buttons when the field's content (the iframe) is loaded
-        $('.o_cp_buttons, .o_statusbar_buttons').find('button').removeClass('o_disabled').attr('disabled', false);
+        this.contentLoadedDeferred.resolve();
         setTimeout(self.resize, 0);
     },
     on_editor_loaded: function (EditorBar) {
@@ -336,6 +425,7 @@ var FieldTextHtml = AbstractField.extend({
         if (this.value && window.odoo[self.callback+"_updown"] && !(this.$content.html()||"").length) {
             this.render();
         }
+        this.editorLoadedDeferred.resolve();
         setTimeout(function () {
             setTimeout(self.resize,0);
         }, 0);
@@ -392,20 +482,37 @@ var FieldTextHtml = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Set the value when the widget is fully loaded (content + editor).
+     *
      * @override
      */
     commitChanges: function () {
-        if (!this.loaded || this.mode === 'readonly') {
+        var self = this;
+        var result = this._super.bind(this, arguments);
+        if (this.mode === 'readonly') {
             return;
         }
-        // switch to WYSIWYG mode if currently in code mode to get all changes
-        if (config.debug && this.mode === 'edit' && this.editor.rte) {
-            var layoutInfo = this.editor.rte.editable().data('layoutInfo');
-            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
-        }
-        this.editor.snippetsMenu && this.editor.snippetsMenu.cleanForSave();
-        this._setValue(this.$content.html());
-        return this._super.apply(this, arguments);
+        return $.when(this.contentLoadedDeferred, this.editorLoadedDeferred, result).then(function () {
+            // switch to WYSIWYG mode if currently in code mode to get all changes
+            if (config.debug && self.editor.rte) {
+                var layoutInfo = self.editor.rte.editable().data('layoutInfo');
+                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+            }
+            var $ancestors = self.$iframe.filter(':not(:visible)').parentsUntil(':visible').addBack();
+            var ancestorsStyle = [];
+            // temporarily force displaying iframe (needed for firefox)
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                ancestorsStyle.unshift($el.attr('style') || null);
+                $el.css({display: 'initial', visibility: 'hidden', height: 1});
+            });
+            self.editor.snippetsMenu && self.editor.snippetsMenu.cleanForSave();
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                $el.attr('style', ancestorsStyle.pop());
+            });
+            self._setValue(self.$content.html());
+        });
     },
 });
 

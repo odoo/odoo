@@ -97,7 +97,13 @@ def _create_empty_database(name):
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
             cr.autocommit(True)     # avoid transaction block
-            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
+
+            # 'C' collate is only safe with template0, but provides more useful indexes
+            collate = "LC_COLLATE 'C'" if chosen_template == 'template0' else ""
+            cr.execute(
+                """CREATE DATABASE "%s" ENCODING 'unicode' %s TEMPLATE "%s" """ %
+                (name, collate, chosen_template)
+            )
 
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
@@ -231,9 +237,13 @@ def dump_db(db_name, stream, backup_format='zip'):
 
 @check_db_management_enabled
 def exp_restore(db_name, data, copy=False):
+    def chunks(d, n=8192):
+        for i in range(0, len(d), n):
+            yield d[i:i+n]
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(base64.b64decode(data))
+        for chunk in chunks(data):
+            data_file.write(base64.b64decode(chunk))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
@@ -390,6 +400,7 @@ def list_db_incompatible(databases):
                         incompatible_databases.append(database_name)
             else:
                 incompatible_databases.append(database_name)
+    for database_name in incompatible_databases:
         # release connection
         odoo.sql_db.close_db(database_name)
     return incompatible_databases

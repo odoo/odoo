@@ -74,9 +74,7 @@
                 <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
                 <separator/>
-                <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
-                <filter string="Last Month" name="last_month" domain="['&amp;', ('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
-                <separator/>
+                <filter string="Date" name="date_filter" date="date"/>
                 <filter string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
                 <filter string="Vendor" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
                 <separator/>
@@ -94,7 +92,7 @@
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
                     <filter string="Date" name="date" context="{'group_by':'date'}"/>
-                    <filter string="Due Month" name="duemonth" context="{'group_by':'date_due:month'}"/>
+                    <filter string="Due Date" name="duemonth" context="{'group_by':'date_due:month'}"/>
                     <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                 </group>
             </search>
@@ -121,15 +119,6 @@
     </record>
 
     <menuitem name="Invoices" action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.account_reports_management_menu" sequence="18"/>
-
-    <act_window
-        id="act_account_invoice_partner_relation"
-        name="Monthly Turnover"
-        groups="account.group_account_manager"
-        context="{'search_default_partner_id':[active_id], 'search_default_month':1,'search_default_user':1,'group_by_no_leaf':1,'group_by':[]}"
-        res_model="account.invoice.report"
-        src_model="res.partner"
-        view_mode="graph"/>
 
 </data>
 </odoo>

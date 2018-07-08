@@ -360,13 +360,6 @@ Source installation requires manually installing dependencies:
     Install ``psycopg`` using the installer here
     http://www.stickpeople.com/projects/python/win-psycopg/
 
-    Then edit the requirements.txt file:
-
-    - remove ``psycopg2`` as you already have it.
-    - remove the optional ``python-ldap``, ``gevent`` and ``psutil`` because
-      they require compilation.
-    - add ``pypiwin32`` because it's needed under windows.
-
     Then use pip to install the dependencies using the following
     command from a cmd.exe prompt (replace ``\YourOdooPath`` by the actual
     path where you downloaded Odoo):
@@ -375,50 +368,6 @@ Source installation requires manually installing dependencies:
 
         C:\> cd \YourOdooPath
         C:\YourOdooPath> C:\Python35\Scripts\pip.exe install -r requirements.txt
-
-* *Less CSS* via nodejs
-
-  - on Linux, use your distribution's package manager to install nodejs and
-    npm.
-
-    .. warning::
-
-        In debian wheezy and Ubuntu 13.10 and before you need to install
-        nodejs manually:
-
-        .. code-block:: console
-
-            $ wget -qO- https://deb.nodesource.com/setup | bash -
-            $ apt-get install -y nodejs
-
-        In later debian (>jessie) and ubuntu (>14.04) you may need to add a
-        symlink as npm packages call ``node`` but debian calls the binary
-        ``nodejs``
-
-        .. code-block:: console
-
-            $ apt-get install -y npm
-            $ sudo ln -s /usr/bin/nodejs /usr/bin/node
-
-    Once npm is installed, use it to install less:
-
-    .. code-block:: console
-
-        $ sudo npm install -g less
-
-  - on OS X, install nodejs via your preferred package manager (homebrew_,
-    macports_) then install less:
-
-    .. code-block:: console
-
-        $ sudo npm install -g less
-
-  - on Windows, `install nodejs <http://nodejs.org/download/>`_, reboot (to
-    update the :envvar:`PATH`) and install less:
-
-    .. code-block:: doscon
-
-        C:\> npm install -g less
 
 Fetch the sources
 -----------------

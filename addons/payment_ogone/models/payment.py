@@ -15,9 +15,8 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
-from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
-from odoo.tools.float_utils import float_compare, float_repr
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, ustr
+from odoo.tools.float_utils import float_compare, float_repr, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -151,6 +150,9 @@ class PaymentAcquirerOgone(models.Model):
     def ogone_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         ogone_tx_values = dict(values)
+        param_plus = {
+            'return_url': ogone_tx_values.pop('return_url', False)
+        }
         temp_ogone_tx_values = {
             'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
@@ -168,7 +170,7 @@ class PaymentAcquirerOgone(models.Model):
             'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
             'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
-            'PARAMPLUS': 'return_url=%s' % ogone_tx_values.pop('return_url') if ogone_tx_values.get('return_url') else False,
+            'PARAMPLUS': url_encode(param_plus),
         }
         if self.save_token in ['ask', 'always']:
             temp_ogone_tx_values.update({
@@ -211,9 +213,9 @@ class PaymentAcquirerOgone(models.Model):
 class PaymentTxOgone(models.Model):
     _inherit = 'payment.transaction'
     # ogone status
-    _ogone_valid_tx_status = [5, 9]
+    _ogone_valid_tx_status = [5, 9, 8]
     _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99]
-    _ogone_pending_tx_status = [46]   # 3DS HTML response
+    _ogone_pending_tx_status = [46, 81, 82]   # 46 = 3DS HTML response
     _ogone_cancel_tx_status = [1]
 
     # --------------------------------------------------
@@ -281,15 +283,14 @@ class PaymentTxOgone(models.Model):
         return invalid_parameters
 
     def _ogone_form_validate(self, data):
-        if self.state in ['done', 'refunded']:
+        if self.state != 'draft':
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = int(data.get('STATUS', '0'))
         if status in self._ogone_valid_tx_status:
             vals = {
-                'state': 'done',
-                'date_validate': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             }
             if data.get('ALIAS') and self.partner_id and \
@@ -305,6 +306,7 @@ class PaymentTxOgone(models.Model):
             self.write(vals)
             if self.payment_token_id:
                 self.payment_token_id.verified = True
+            self._set_transaction_done()
             self.execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
             if self.type == 'validation':
@@ -312,15 +314,11 @@ class PaymentTxOgone(models.Model):
 
             return True
         elif status in self._ogone_cancel_tx_status:
-            self.write({
-                'state': 'cancel',
-                'acquirer_reference': data.get('PAYID'),
-            })
+            self.write({'acquirer_reference': data.get('PAYID')})
+            self._set_transaction_cancel()
         elif status in self._ogone_pending_tx_status or status in self._ogone_wait_tx_status:
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('PAYID'),
-            })
+            self.write({'acquirer_reference': data.get('PAYID')})
+            self._set_transaction_pending()
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
                 'error_str': data.get('NCERRORPLUS'),
@@ -329,10 +327,10 @@ class PaymentTxOgone(models.Model):
             }
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('PAYID'),
             })
+            self._set_transaction_cancel()
             return False
 
     # --------------------------------------------------
@@ -355,7 +353,7 @@ class PaymentTxOgone(models.Model):
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
             'OPERATION': 'SAL',
-            'ECI': 2,   # Recurring (from MOTO)
+            'ECI': 9,   # Recurring (from eCommerce)
             'ALIAS': self.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
             'PARAMPLUS' : url_encode(param_plus)
@@ -395,12 +393,6 @@ class PaymentTxOgone(models.Model):
         return self._ogone_s2s_validate_tree(tree)
 
     def ogone_s2s_do_refund(self, **kwargs):
-
-        # we refund only if this transaction hasn't been already refunded and was paid.
-        if self.state != 'done':
-            return False
-
-        self.state = 'refunding'
         account = self.acquirer_id
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
 
@@ -411,13 +403,12 @@ class PaymentTxOgone(models.Model):
             'ORDERID': reference,
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
-            'OPERATION': 'RFD',
-            'ECI': 2,   # Recurring (from MOTO)
-            'ALIAS': self.payment_token_id.acquirer_ref,
-            'RTIMEOUT': 30,
+            'OPERATION': 'RFS',
+            'PAYID': self.acquirer_reference,
         }
+        data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % (self.acquirer_id.environment)
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -440,16 +431,14 @@ class PaymentTxOgone(models.Model):
         return self._ogone_s2s_validate_tree(tree)
 
     def _ogone_s2s_validate_tree(self, tree, tries=2):
-        if self.state not in ('draft', 'pending', 'refunding'):
+        if self.state != 'draft':
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = int(tree.get('STATUS') or 0)
         if status in self._ogone_valid_tx_status:
-            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': new_state,
-                'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
             if tree.get('ALIAS') and self.partner_id and \
@@ -464,20 +453,23 @@ class PaymentTxOgone(models.Model):
                 self.write({'payment_token_id': pm.id})
             if self.payment_token_id:
                 self.payment_token_id.verified = True
+            self._set_transaction_done()
             self.execute_callback()
+            # if this transaction is a validation one, then we refund the money we just withdrawn
+            if self.type == 'validation':
+                self.s2s_do_refund()
             return True
         elif status in self._ogone_cancel_tx_status:
-            self.write({
-                'state': 'cancel',
-                'acquirer_reference': tree.get('PAYID'),
-            })
+            self.write({'acquirer_reference': tree.get('PAYID')})
+            self._set_transaction_cancel()
         elif status in self._ogone_pending_tx_status:
-            new_state = 'refunding' if self.state == 'refunding' else 'pending'
-            self.write({
-                'state': new_state,
+            vals = {
                 'acquirer_reference': tree.get('PAYID'),
-                'html_3ds': base64.b64decode(tree.HTML_ANSWER.decode('ascii')),
-            })
+            }
+            if status == 46: # HTML 3DS
+                vals['html_3ds'] = ustr(base64.b64decode(tree.HTML_ANSWER.text))
+            self.write(vals)
+            self._set_transaction_done()
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)
             self.write({'acquirer_reference': tree.get('PAYID')})
@@ -491,10 +483,10 @@ class PaymentTxOgone(models.Model):
             }
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': tree.get('PAYID'),
             })
+            self._set_transaction_cancel()
             return False
 
     def _ogone_s2s_get_tx_status(self):

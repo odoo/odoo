@@ -16,11 +16,12 @@ CREATE TABLE res_users (
     id serial NOT NULL,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
-    password varchar(64) default null,
+    password varchar default null,
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id integer, -- references res_company,
     partner_id integer, -- references res_partner,
+    create_date timestamp without time zone,
     primary key(id)
 );
 
@@ -106,6 +107,7 @@ CREATE TABLE res_company (
     name varchar NOT NULL,
     partner_id integer,
     currency_id integer,
+    create_date timestamp without time zone,
     primary key(id)
 );
 
@@ -113,6 +115,7 @@ CREATE TABLE res_partner (
     id serial,
     name varchar,
     company_id integer,
+    create_date timestamp without time zone,
     primary key(id)
 );
 
@@ -124,15 +127,15 @@ insert into res_currency (id, name, symbol) VALUES (1, 'EUR', '€');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
 select setval('res_currency_id_seq', 2);
 
-insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'My Company', 1, 1);
+insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (1, 'My Company', 1, 1, now() at time zone 'UTC');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
 select setval('res_company_id_seq', 2);
 
-insert into res_partner (id, name, company_id) VALUES (1, 'My Company', 1);
+insert into res_partner (id, name, company_id, create_date) VALUES (1, 'My Company', 1, now() at time zone 'UTC');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
 select setval('res_partner_id_seq', 2);
 
-insert into res_users (id, login, password, active, partner_id, company_id) VALUES (1, 'admin', 'admin', true, 1, 1);
+insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (1, 'admin', 'admin', true, 1, 1, now() at time zone 'UTC');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
 select setval('res_users_id_seq', 2);
 

@@ -51,6 +51,8 @@ return AbstractModel.extend({
      * @param {string[]} params.groupBys a list of valid field names
      * @param {Object} params.context
      * @param {string[]} params.domain
+     * @param {Object} params.intervalMapping object linking fieldNames with intervals.
+     *   this could be useful to simplify the code. For now this parameter is not used.
      * @returns {Deferred} The deferred does not return a handle, we don't need
      *   to keep track of various entities.
      */
@@ -62,12 +64,17 @@ return AbstractModel.extend({
         this.chart = {
             data: [],
             groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
+            // this parameter is not used anywhere for now.
+            // the idea would be to seperate intervals from
+            // fieldnames in groupbys. This could be done
+            // in graph view only or everywhere but this is
+            // a big refactoring.
+            intervalMapping: params.intervalMapping,
             measure: params.context.graph_measure || params.measure,
             mode: params.context.graph_mode || params.mode,
             domain: params.domain,
             context: params.context,
         };
-        this.defaultGroupedBy = params.groupedBy;
         return this._loadGraph();
     },
     /**
@@ -96,7 +103,10 @@ return AbstractModel.extend({
             this.chart.domain = params.domain;
         }
         if ('groupBy' in params) {
-            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
+            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
+        }
+        if ('intervalMapping' in params) {
+            this.chart.intervalMapping = params.intervalMapping;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;
@@ -121,12 +131,17 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadGraph: function () {
-        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
+        var groupedBy = this.chart.groupedBy;
         var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
         if (this.chart.measure !== '__count__') {
-            fields = fields.concat(this.chart.measure);
+            if (this.fields[this.chart.measure].type === 'many2one') {
+                fields = fields.concat(this.chart.measure + ":count_distinct");
+            }
+            else {
+                fields = fields.concat(this.chart.measure);
+            }
         }
         return this._rpc({
                 model: this.modelName,
@@ -161,8 +176,19 @@ return AbstractModel.extend({
             labels = _.map(this.chart.groupedBy, function (field) {
                 return self._sanitizeValue(data_pt[field], field);
             });
+            var value = is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure];
+            if (value instanceof Array) {
+                // when a many2one field is used as a measure AND as a grouped
+                // field, bad things happen.  The server will only return the
+                // grouped value and will not aggregate it.  Since there is a
+                // nameclash, we are then in the situation where this value is
+                // an array.  Fortunately, if we group by a field, then we can
+                // say for certain that the group contains exactly one distinct
+                // value for that field.
+                value = 1;
+            }
             this.chart.data.push({
-                value: is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure],
+                value: value,
                 labels: labels
             });
         }

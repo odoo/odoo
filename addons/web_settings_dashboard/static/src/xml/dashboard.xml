@@ -24,7 +24,7 @@
 
     <t t-name="DashboardApps">
         <div class="text-center o_web_settings_dashboard_apps">
-            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;"></i>
+            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;" role="img" aria-label="Browse Apps" title="Browse Apps"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="installed_apps" t-value="widget.data.installed_apps"/>
                 <t t-if="installed_apps">
@@ -46,9 +46,19 @@
             <div class="clearfix"/>
         </div>
     </t>
+
+    <t t-name="EmailBadge">
+        <span t-foreach="emails" t-as="email" class="badge">
+            <span class="o_badge_text">
+                <t t-esc='email'/>
+            </span>
+            <a href="#" class="fa fa-times o_badge_remove" title="Remove Email" aria-label="Remove Email" role="button"/>
+        </span>
+    </t>
+
     <t t-name="DashboardInvitations">
         <div class="text-center o_web_settings_dashboard_invitations">
-            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;"></i>
+            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;" role="img" aria-label="Access rights" title="Access rights"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
                 <t t-set="pending_users" t-value="widget.data.pending_users"></t>
@@ -63,31 +73,28 @@
             </div>
             <hr/>
             <div class="o_web_settings_dashboard_invitation_form">
-                <strong>Invite new users:</strong>
-                <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses (one per line)"></textarea>
-                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Invite</strong></button>
+                <p><strong>Invite new users:</strong></p>
+                <input class="o_user_emails o_input mt8" type="text" placeholder="Enter e-mail addresses"/>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invite mt16" data-loading-text="Inviting..."><strong>Invite</strong></button>
             </div>
-            <div>
-                <small class="o_web_settings_dashboard_pending_users text-muted text-center">
-                    <t t-if="pending_users.length">
+            <div class="o_web_settings_dashboard_pending_users mt8">
+                <t t-if="pending_users.length">
+                    <p><strong>Pending invitations:</strong></p>
+                    <span t-foreach="pending_users" t-as="pending">
+                        <a href="#" class="badge o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
+                    </span>
+                    <t t-if="pending_users.length &lt; widget.data.pending_count">
                         <br/>
-                        <strong>Pending invitations:</strong><br/>
-                        <t t-foreach="pending_users" t-as="pending">
-                            <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
-                        </t>
-                        <t t-if="pending_users.length &lt; widget.data.pending_count">
-                            <br/>
-                            <a href="#"><div class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more</div></a>
-                        </t>
+                        <a href="#" class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more </a>
                     </t>
-                </small>
+                </t>
             </div>
         </div>
     </t>
 
     <t t-name="DashboardShare">
         <div class="text-center o_web_settings_dashboard_share">
-            <i class="fa fa-share-alt fa-4x text-muted"/>
+            <i class="fa fa-share-alt fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
             <div class="o_web_settings_dashboard_header">Share the Love</div>
             <div>
                 <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
@@ -95,9 +102,9 @@
                 </small>
             </div>
             <div class="row mt16">
-                <div class="col-xs-4"><a href="#"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
-                <div class="col-xs-4"><a href="#"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
-                <div class="col-xs-4"><a href="#"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
+                <div class="col-xs-4"><a href="#" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
+                <div class="col-xs-4"><a href="#" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
+                <div class="col-xs-4"><a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
             </div>
             <hr/>
             <t t-set="server_version" t-value="widget.data.server_version"/>
@@ -112,7 +119,7 @@
                     </div>
                     <div>
                         <div class="tab-content">
-                            <div id="settings" class="tab-pane active text-muted text-center o_web_settings_dashboard_compact_subtitle">
+                            <div role="tabpanel" id="settings" class="tab-pane active text-muted text-center o_web_settings_dashboard_compact_subtitle">
                                 <small>Copyright © 2004-2016 <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a> <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU LGPL Licensed</a></small>
                             </div>
                         </div>
@@ -138,7 +145,7 @@
             <div class="text-center o_web_settings_dashboard_enterprise">
                 <div class="text-center o_web_settings_dashboard_header">Odoo Enterprise</div>
                 <div class="mb16"><a href="http://www.odoo.com/editions" target="_blank">Get more features with the Enterprise Edition!</a></div>
-                <div><img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"'/></div>
+                <div><img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' alt="Upgrade to enterprise"/></div>
                 <div>
                     <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
                 </div>
@@ -148,7 +155,7 @@
 
     <t t-name="DashboardTranslations">
         <div class="text-center o_web_settings_dashboard_translations mt8">
-            <i class="fa fa-globe fa-4x text-muted"></i>
+            <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations"></i>
             <div class="o_web_settings_dashboard_header">
                 Translations
             </div>
@@ -158,14 +165,14 @@
                 </small>
             </div>
             <div class="mt16">
-                <a class="btn btn-primary btn-block o_load_translations"><strong>Load a Translation</strong></a>
+                <a role="button" class="btn btn-primary btn-block o_load_translations"><strong>Load a Translation</strong></a>
             </div>
         </div>
     </t>
 
     <t t-name="DashboardCompany">
         <div class="text-center o_web_settings_dashboard_company mt8">
-            <i class="fa fa-suitcase fa-4x text-muted"></i>
+            <i class="fa fa-suitcase fa-4x text-muted" role="img" aria-label="Company" title="Company"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-esc="widget.data.company_name"></t>
             </div>
@@ -175,7 +182,7 @@
                 </small>
             </div>
             <div class="mt16">
-                <a class="btn btn-primary btn-block o_setup_company"><strong>Set Up</strong></a>
+                <a role="button" class="btn btn-primary btn-block o_setup_company"><strong>Set Up</strong></a>
             </div>
         </div>
     </t>

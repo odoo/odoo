@@ -17,6 +17,7 @@ odoo.define('web.PivotModel', function (require) {
  */
 
 var AbstractModel = require('web.AbstractModel');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -32,6 +33,7 @@ var PivotModel = AbstractModel.extend({
         this._super.apply(this, arguments);
         this.numbering = {};
         this.data = null;
+        this._loadDataDropPrevious = new concurrency.DropPrevious();
     },
 
     //--------------------------------------------------------------------------
@@ -73,7 +75,12 @@ var PivotModel = AbstractModel.extend({
 
         var other_root = header.root.other_root;
         var other_groupbys = header.root.other_root.groupbys;
-        var fields = [].concat(field, other_groupbys, this.data.measures);
+
+        var measures = _.map(this.data.measures, function(measure) {
+            var type = self.fields[measure].type;
+            return (type === 'many2one') ? measure + ":count_distinct" : measure;
+        });
+
         var groupbys = [];
 
         for (var i = 0; i <= other_groupbys.length; i++) {
@@ -86,7 +93,7 @@ var PivotModel = AbstractModel.extend({
                     method: 'read_group',
                     context: self.data.context,
                     domain: header.domain.length ? header.domain : self.data.domain,
-                    fields: _.map(fields, function (field) { return field.split(':')[0]; }),
+                    fields: measures,
                     groupBy: groupBy,
                     lazy: false,
                 });
@@ -113,7 +120,19 @@ var PivotModel = AbstractModel.extend({
                         continue;
                     }
                     for (cell_value = {}, l=0; l < self.data.measures.length; l++) {
-                        cell_value[self.data.measures[l]] = datapt[self.data.measures[l]];
+                        var _value = datapt[self.data.measures[l]];
+                        if (_value instanceof Array) {
+                            // when a many2one field is used as a measure AND as
+                            // a grouped field, bad things happen.  The server
+                            // will only return the grouped value and will not
+                            // aggregate it.  Since there is a nameclash, we are
+                            // then in the situation where this value is an
+                            // array.  Fortunately, if we group by a field,
+                            // then we can say for certain that the group contains
+                            // exactly one distinct value for that field.
+                            _value = 1;
+                        }
+                        cell_value[self.data.measures[l]] =_value;
                     }
                     // cell_value.__count = attrs.length;
                     if (!self.data.cells[row.id]) {
@@ -135,7 +154,7 @@ var PivotModel = AbstractModel.extend({
     exportData: function () {
         var measureNbr = this.data.measures.length;
         var headers = this._computeHeaders();
-        var measureRow = measureNbr > 1 ? _.last(headers) : [];
+        var measureRow = measureNbr >= 1 ? _.last(headers) : [];
         var rows = this._computeRows();
         var i, j, value;
         headers[0].splice(0,1);
@@ -250,6 +269,7 @@ var PivotModel = AbstractModel.extend({
             this.data.colGroupBys = params.context.pivot_column_groupby || this.data.colGroupBys;
             this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
             this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
+            this.defaultGroupedBy = this.data.groupedBy.length ? this.data.groupedBy : this.defaultGroupedBy;
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
@@ -278,7 +298,7 @@ var PivotModel = AbstractModel.extend({
 
             self._updateTree(old_col_root, self.data.main_col.root);
             new_groupby_length = self._getHeaderDepth(self.data.main_col.root) - 1;
-            self.data.main_row.groupbys = old_col_root.groupbys.slice(0, new_groupby_length);
+            self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
         });
     },
     /**
@@ -523,7 +543,14 @@ var PivotModel = AbstractModel.extend({
         var groupBys = [];
         var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
-        var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
+        var measures = _.map(this.data.measures, function(measure) {
+            if (self.fields[measure].type === 'many2one') {
+                return measure + ":count_distinct";
+            }
+            else {
+                return measure;
+            }
+        });
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -531,21 +558,20 @@ var PivotModel = AbstractModel.extend({
             }
         }
 
-        return $.when.apply(null, groupBys.map(function (groupBy) {
+        return this._loadDataDropPrevious.add($.when.apply(null, groupBys.map(function (groupBy) {
             return self._rpc({
                     model: self.modelName,
                     method: 'read_group',
                     context: self.data.context,
                     domain: self.data.domain,
-                    fields: _.map(fields, function (field) { return field.split(':')[0]; }),
+                    fields: measures,
                     groupBy: groupBy,
                     lazy: false,
                 });
-        })).then(function () {
+        }))).then(function () {
             var data = Array.prototype.slice.call(arguments);
             if (data[0][0].__count === 0) {
                 self.data.has_data = false;
-                return;
             }
             self._prepareData(data);
         });
@@ -634,7 +660,19 @@ var PivotModel = AbstractModel.extend({
                     }
                     if (!this.data.cells[row.id]) this.data.cells[row.id] = [];
                     for (cell_value = {}, m=0; m < this.data.measures.length; m++) {
-                        cell_value[this.data.measures[m]] = datapt[this.data.measures[m]];
+                        var _value = datapt[this.data.measures[m]];
+                        if (_value instanceof Array) {
+                            // when a many2one field is used as a measure AND as
+                            // a grouped field, bad things happen.  The server
+                            // will only return the grouped value and will not
+                            // aggregate it.  Since there is a nameclash, we are
+                            // then in the situation where this value is an
+                            // array.  Fortunately, if we group by a field,
+                            // then we can say for certain that the group contains
+                            // exactly one distinct value for that field.
+                            _value = 1;
+                        }
+                        cell_value[this.data.measures[m]] = _value;
                     }
                     this.data.cells[row.id][col.id] = cell_value;
                 }

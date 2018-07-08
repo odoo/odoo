@@ -67,23 +67,21 @@ class FormatAddressMixin(models.AbstractModel):
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.category'
-    _order = 'parent_left, name'
+    _order = 'name'
     _parent_store = True
-    _parent_order = 'name'
 
     name = fields.Char(string='Tag Name', required=True, translate=True)
     color = fields.Integer(string='Color Index')
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_left = fields.Integer(string='Left parent', index=True)
-    parent_right = fields.Integer(string='Right parent', index=True)
+    parent_path = fields.Char(index=True)
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You can not create recursive tags.'))
+            raise ValidationError(_('You can not create recursive tags.'))
 
     @api.multi
     def name_get(self):
@@ -108,13 +106,14 @@ class PartnerCategory(models.Model):
         return res
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         if name:
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        return self.search(args, limit=limit).name_get()
+        partner_category_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(partner_category_ids).name_get()
 
 
 class PartnerTitle(models.Model):
@@ -179,7 +178,9 @@ class Partner(models.Model):
         [('contact', 'Contact'),
          ('invoice', 'Invoice address'),
          ('delivery', 'Shipping address'),
-         ('other', 'Other address')], string='Address Type',
+         ('other', 'Other address'),
+         ("private", "Private Address"),
+        ], string='Address Type',
         default='contact',
         help="Used to select automatically the right address according to the context in sales and purchases documents.")
     street = fields.Char()
@@ -206,14 +207,13 @@ class Partner(models.Model):
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
-        help="Either customer (no user), either shared user. Indicated the current partner is a customer without "
+        help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
                                              string='Commercial Entity', store=True, index=True)
-    commercial_partner_country_id = fields.Many2one('res.country', related='commercial_partner_id.country_id', store=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
@@ -235,6 +235,13 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
+
+    @api.multi
+    def toggle_active(self):
+        for partner in self:
+            if partner.active and partner.user_ids:
+                raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
+        super(Partner, self).toggle_active()
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -488,6 +495,10 @@ class Partner(models.Model):
 
     @api.multi
     def write(self, vals):
+        if vals.get('active') is False:
+            for partner in self:
+                if partner.active and partner.user_ids:
+                    raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
@@ -503,13 +514,14 @@ class Partner(models.Model):
                 if partner.user_ids:
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
-                        raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
-        tools.image_resize_images(vals)
+                        raise UserError(
+                            ("The selected company is not compatible with the companies of the related user(s)"))
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
         if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
-            result = super(Partner, self).sudo().write({'is_company': vals.get('is_company')})
+            result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
         for partner in self:
@@ -528,7 +540,7 @@ class Partner(models.Model):
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
@@ -539,7 +551,7 @@ class Partner(models.Model):
         self.ensure_one()
         if self.company_name:
             # Create parent company
-            values = dict(name=self.company_name, is_company=True)
+            values = dict(name=self.company_name, is_company=True, vat=self.vat)
             values.update(self._update_fields_values(self._address_fields()))
             new_company = self.create(values)
             # Set new company as my parent
@@ -637,7 +649,8 @@ class Partner(models.Model):
                                             count=count, access_rights_uid=access_rights_uid)
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        self = self.sudo(name_get_uid or self.env.uid)
         if args is None:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -684,7 +697,7 @@ class Partner(models.Model):
                 return self.browse(partner_ids).name_get()
             else:
                 return []
-        return super(Partner, self).name_search(name, args, operator=operator, limit=limit)
+        return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
     def find_or_create(self, email):
@@ -708,6 +721,8 @@ class Partner(models.Model):
             if res.status_code != requests.codes.ok:
                 return False
         except requests.exceptions.ConnectionError as e:
+            return False
+        except requests.exceptions.Timeout as e:
             return False
         return base64.b64encode(res.content)
 

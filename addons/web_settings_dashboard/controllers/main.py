@@ -32,6 +32,7 @@ class WebSettingsDashboard(http.Controller):
             SELECT count(u.*)
             FROM res_users u
             WHERE active=true AND
+                  share=false AND
                   NOT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id)
         """)
         pending_count = cr.dictfetchall()[0].get('count')
@@ -39,8 +40,9 @@ class WebSettingsDashboard(http.Controller):
         cr.execute("""
            SELECT id, login
              FROM res_users u
-            WHERE active=true
-              AND NOT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id)
+            WHERE active=true AND
+                  share=false AND
+                  NOT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id)
          ORDER BY id desc
             LIMIT 10
         """)

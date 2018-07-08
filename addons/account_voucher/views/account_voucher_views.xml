@@ -86,6 +86,7 @@
                             <field name="account_id"/>
                             <field name="tax_ids" widget="many2many_tags"/>
                             <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -104,6 +105,7 @@
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>
@@ -230,16 +232,20 @@
                         <group>
                             <field name="voucher_type" invisible="True"/>
                             <field name="currency_id" invisible="True"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="pay_now" required="1"/>
+                            <field name="payment_journal_id"
+                                   attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="account_id" groups="account.group_account_user"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="journal_id" domain="[('type','=','sale')]" widget="selection" groups="account.group_account_user"/>
+                            <field name="journal_id"
+                                   domain="[('type','=','sale')]"
+                                   widget="selection"
+                                   groups="account.group_account_user"/>
                             <field name="date"/>
                             <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                            <field name="account_date"/>
                             <field name="name" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
                         </group>
@@ -252,6 +258,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
@@ -270,6 +277,7 @@
                         </page>
                         <page string="Journal Items" groups="account.group_account_user">
                             <group>
+                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -295,8 +303,8 @@
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a sale receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new sale receipt
               </p><p>
                 When the sale receipt is confirmed, you can record the customer
                 payment related to this sales receipt.
@@ -338,26 +346,27 @@
                     <h1>
                         <field name="number" readonly="1"/>
                     </h1>
-                    <field name="voucher_type" invisible="True"/>
                     <group>
                         <group>
+                            <field name="voucher_type" invisible="True"/>
+                            <field name="currency_id" invisible="True"/>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Vendor" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
                             <field name="pay_now" required="1"/>
+                            <field name="payment_journal_id"
+                                   attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="account_id" groups="account.group_account_user"/>
-                            <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
-                            <field name="reference"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="reference"/>
                         </group>
                         <group>
+                            <field name="journal_id"
+                                   domain="[('type','=','purchase')]"
+                                   widget="selection"
+                                   groups="account.group_account_user"/>
                             <field name="date" string="Bill Date"/>
                             <field name="date_due" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_date"/>
+                            <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="journal_id"
-                                domain="[('type','=','purchase')]"
-                                widget="selection"
-                                groups="account.group_account_user"/>
                         </group>
                     </group>
                     <notebook>
@@ -368,6 +377,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>
@@ -387,6 +397,7 @@
                         </page>
                         <page string="Journal Items" groups="account.group_account_user">
                             <group>
+                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -410,8 +421,8 @@
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a purchase receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Register a new purchase receipt
               </p><p>
                 When the purchase receipt is confirmed, you can record the
                 vendor payment related to this purchase receipt.

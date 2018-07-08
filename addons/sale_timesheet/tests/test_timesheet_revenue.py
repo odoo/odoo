@@ -4,8 +4,10 @@
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleTimesheet(TestSale):
 
     def setUp(self):
@@ -16,6 +18,11 @@ class TestSaleTimesheet(TestSale):
         # is required to remove the `base.rateUSDbis` to avoid rounding error
         # after the 6 june of current year.
         self.env.ref('base.rateUSDbis').unlink()
+
+        # Make sure the company is in USD
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            [self.env.ref('base.USD').id, self.env.user.company_id.id])
 
         # create project
         self.project = self.env['project.project'].create({
@@ -30,8 +37,8 @@ class TestSaleTimesheet(TestSale):
             'list_price': 90,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': self.env.ref('product.product_uom_hour').id,
-            'uom_po_id': self.env.ref('product.product_uom_hour').id,
+            'uom_id': self.env.ref('uom.product_uom_hour').id,
+            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -44,8 +51,8 @@ class TestSaleTimesheet(TestSale):
             'list_price': 51,
             'type': 'service',
             'invoice_policy': 'order',
-            'uom_id': self.env.ref('product.product_uom_hour').id,
-            'uom_po_id': self.env.ref('product.product_uom_hour').id,
+            'uom_id': self.env.ref('uom.product_uom_hour').id,
+            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-ORDER',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -133,7 +140,7 @@ class TestSaleTimesheet(TestSale):
         })
 
         # check we don't compare apples and pears
-        self.assertEquals(timesheet1.company_currency_id, sale_order.currency_id, 'Currencies should not differ (%s vs %s)' % (timesheet1.company_currency_id.name, sale_order.currency_id.name))
+        self.assertEquals(timesheet1.currency_id, sale_order.currency_id, 'Currencies should not differ (%s vs %s)' % (timesheet1.currency_id.name, sale_order.currency_id.name))
         # check theorical revenue
         self.assertEquals(timesheet1.timesheet_invoice_type, 'billable_time', "Billable type on task from delivered service should be 'billabe time'")
         self.assertEquals(timesheet2.timesheet_invoice_type, 'billable_time', "Billable type on task from delivered service should be 'billabe time'")

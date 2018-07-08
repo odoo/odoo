@@ -1,12 +1,12 @@
 odoo.define('hr_attendance.kiosk_confirm', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
 var QWeb = core.qweb;
 
 
-var KioskConfirm = Widget.extend({
+var KioskConfirm = AbstractAction.extend({
     events: {
         "click .o_hr_attendance_back_button": function () { this.do_action(this.next_action, {clear_breadcrumbs: true}); },
         "click .o_hr_attendance_sign_in_out_icon": function () {
@@ -76,9 +76,9 @@ var KioskConfirm = Widget.extend({
     },
 
     start_clock: function () {
-        this.clock_start = setInterval(function() {this.$(".o_hr_attendance_clock").text(new Date().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));}, 500);
+        this.clock_start = setInterval(function() {this.$(".o_hr_attendance_clock").text(new Date().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', second:'2-digit'}));}, 500);
         // First clock refresh before interval to avoid delay
-        this.$(".o_hr_attendance_clock").text(new Date().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+        this.$(".o_hr_attendance_clock").show().text(new Date().toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit', second:'2-digit'}));
     },
 
     destroy: function () {

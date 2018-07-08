@@ -40,7 +40,7 @@ tour.register('sale_tour', {
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: function (actions) {
-        actions.text("Ipad", this.$anchor.find("input"));
+        actions.text("DESK0001", this.$anchor.find("input"));
     },
 }, {
     trigger: ".ui-menu-item > a",
@@ -48,8 +48,8 @@ tour.register('sale_tour', {
     in_modal: false,
     run: function (actions) {
         actions.auto();
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
+        if ($('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').length) {
+            $('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').trigger('click');
         }
     },
     id: "quotation_product_selected",

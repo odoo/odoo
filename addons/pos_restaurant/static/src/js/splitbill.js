@@ -193,5 +193,10 @@ screens.define_action_button({
     },
 });
 
+return {
+    SplitbillButton: SplitbillButton,
+    SplitbillScreenWidget: SplitbillScreenWidget,
+}
+
 });
 

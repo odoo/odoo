@@ -53,6 +53,15 @@ class TestPortalProject(TestPortalProjectBase):
         tmp_task.sudo(self.user_projectuser).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
+    def test_favorite_project_access_rights(self):
+        pigs = self.project_pigs.sudo(self.user_projectuser)
+
+        # we can't write on project name
+        self.assertRaises(AccessError, pigs.write, {'name': 'False Pigs'})
+        # we can write on is_favorite
+        pigs.write({'is_favorite': True})
+
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_followers_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
@@ -70,7 +79,7 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
 
-        pigs.message_subscribe_users(user_ids=[self.user_projectuser.id])
+        pigs.message_subscribe(partner_ids=[self.user_projectuser.partner_id.id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
         prout = pigs.sudo(self.user_projectuser)
@@ -84,7 +93,7 @@ class TestPortalProject(TestPortalProjectBase):
             'name': 'Pigs task', 'project_id': pigs.id
         })
         # not follower user should not be able to create a task
-        pigs.sudo(self.user_projectuser).message_unsubscribe_users(user_ids=[self.user_projectuser.id])
+        pigs.sudo(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_projectuser.partner_id.id])
         self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_projectuser).with_context({
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 

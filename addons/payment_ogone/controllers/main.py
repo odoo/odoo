@@ -2,6 +2,7 @@
 import logging
 import pprint
 import werkzeug
+from werkzeug.urls import url_unquote_plus
 
 from odoo import http
 from odoo.http import request
@@ -26,15 +27,19 @@ class OgoneController(http.Controller):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
-        return werkzeug.utils.redirect(post.pop('return_url', '/'))
+        return werkzeug.utils.redirect(url_unquote_plus(post.pop('return_url', '/')))
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):
+        if not kwargs.get('partner_id'):
+            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         return new_id.id
 
     @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+        if not kwargs.get('partner_id'):
+            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
 
         if not token:
@@ -105,7 +110,7 @@ class OgoneController(http.Controller):
     def feedback(self, **kwargs):
         try:
             tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
-            tx._ogone_s2s_validate()
+            tx._ogone_s2s_validate_tree(kwargs)
         except ValidationError:
             return 'ko'
         return 'ok'

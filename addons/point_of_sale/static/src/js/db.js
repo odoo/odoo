@@ -225,6 +225,9 @@ var PosDB = core.Class.extend({
         if(partner.email){
             str += '|' + partner.email;
         }
+        if(partner.vat){
+            str += '|' + partner.vat;
+        }
         str = '' + partner.id + ':' + str.replace(':','') + '\n';
         return str;
     },
@@ -301,7 +304,7 @@ var PosDB = core.Class.extend({
     search_partner: function(query){
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
-            query = query.replace(' ','.+');
+            query = query.replace(/ /g,'.+');
             var re = RegExp("([0-9]+):.*?"+query,"gi");
         }catch(e){
             return [];

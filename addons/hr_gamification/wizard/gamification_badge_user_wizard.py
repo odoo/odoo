@@ -18,7 +18,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
             raise UserError(_('You can send badges only to employees linked to a user.'))
 
         if self.env.uid == self.user_id.id:
-            raise UserError(_('You can not send a badge to yourself'))
+            raise UserError(_('You can not send a badge to yourself.'))
 
         values = {
             'user_id': self.user_id.id,

@@ -26,17 +26,6 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
     def setUp(self):
         super(TestTracking, self).setUp()
 
-        self.track_subtype_umbrella = self.env['mail.message.subtype'].create({
-            'name': 'Umbrella',
-            'description': 'Umbrella Changed',
-        })
-        self.env['ir.model.data'].create({
-            'name': 'track_subtype_umbrella',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': self.track_subtype_umbrella.id
-        })
-
         record = self.env['mail.test.full'].sudo(self.user_employee).with_context(self._quick_create_ctx).create({
             'name': 'Test',
         })
@@ -51,7 +40,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(self.record.message_ids, self.env['mail.message'])
 
     def test_message_track_no_subtype(self):
-        """ Update some tracked fields not linked to some subtype -> message with onchange + always tracked values """
+        """ Update some tracked fields not linked to some subtype -> message with onchange """
         customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
         self.record.write({
             'name': 'Test2',
@@ -70,18 +59,17 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         # verify tracked value
         self.assertTracking(
             self.record.message_ids,
-            [('email_from', 'char', False, False),  # always tracked field
-             ('customer_id', 'many2one', False, customer)  # onchange tracked field
+            [('customer_id', 'many2one', False, customer)  # onchange tracked field
              ])
 
     def test_message_track_subtype(self):
-        """ Update some tracked fields linked to some subtype -> message with onchange + always tracked values """
+        """ Update some tracked fields linked to some subtype -> message with onchange """
         self.record.message_subscribe(
             partner_ids=[self.user_admin.partner_id.id],
-            subtype_ids=[self.track_subtype_umbrella.id]
+            subtype_ids=[self.env.ref('test_mail.st_mail_test_full_umbrella_upd').id]
         )
 
-        umbrella = self.env['mail.test'].create({'name': 'Umbrella'})
+        umbrella = self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'})
         self.record.write({
             'name': 'Test2',
             'email_from': 'noone@example.com',
@@ -89,7 +77,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         })
         # one new message containing tracking; subtype linked to tracking
         self.assertEqual(len(self.record.message_ids), 1)
-        self.assertEqual(self.record.message_ids.subtype_id, self.track_subtype_umbrella)
+        self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
 
         # no specific recipients except those following umbrella
         self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
@@ -98,19 +86,12 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         # verify tracked value
         self.assertTracking(
             self.record.message_ids,
-            [('email_from', 'char', False, 'noone@example.com'),  # always tracked field
-             ('umbrella_id', 'many2one', False, umbrella)  # onchange tracked field
+            [('umbrella_id', 'many2one', False, umbrella)  # onchange tracked field
              ])
 
     def test_message_track_template(self):
-        """ Update some tracked fields linked to some template -> message with onchange + always tracked values """
-        mail_template = self.env['mail.template'].create({
-            'model_id': self.env.ref('test_mail.model_mail_test_full').id,
-            'body_html': '<p>Hello ${object.name}</p>',
-            'subject': 'Test Template',
-            'partner_to': '${object.customer_id.id | safe}',
-        })
-        self.record.write({'mail_template': mail_template.id})
+        """ Update some tracked fields linked to some template -> message with onchange """
+        self.record.write({'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id})
         self.assertEqual(self.record.message_ids, self.env['mail.message'])
 
         self.record.write({

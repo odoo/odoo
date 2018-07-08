@@ -14,6 +14,8 @@ class ReportTax(models.AbstractModel):
         return {
             'data': data['form'],
             'lines': self.get_lines(data.get('form')),
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }
 
     def _sql_from_amls_one(self):

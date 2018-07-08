@@ -3,16 +3,18 @@
 # * phone_validation
 # 
 # Translators:
+# Florian Hatat, 2017
+# Bertrand LATOUR <divoir@gmail.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Martin Trigaux, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +25,7 @@ msgstr ""
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "Add international prefix"
-msgstr ""
+msgstr "Ajouter un indicatif international"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_res_company_phone_international_format
@@ -32,6 +34,10 @@ msgid ""
 "coming from the company's country are nationaly formatted. International "
 "numbers are always using international format."
 msgstr ""
+"Utilisez toujours le format international pour le codage des numéros de "
+"téléphone. Sinon, les numéros provenant du pays de l'entreprise utilisera "
+"toujours le format national. Les numéros internationaux utilisent toujours "
+"le format international."
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_company
@@ -53,12 +59,13 @@ msgstr "ID"
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits"
 msgstr ""
+"Numéro %s non valide : le nombre de chiffres est probablement incorrect."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:25
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix"
-msgstr ""
+msgstr "Numéro %s non valide : l'indicatif est probablement incorrect."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin___last_update
@@ -68,12 +75,12 @@ msgstr "Dernière modification le"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_res_company_phone_international_format
 msgid "Local Numbers"
-msgstr ""
+msgstr "Numéros locaux"
 
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
-msgstr ""
+msgstr "Sans indicatif"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:44
@@ -82,6 +89,8 @@ msgid ""
 "Unable to format %s:\n"
 "%s"
 msgstr ""
+"Impossible de formater %s:\n"
+"%s"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:20
@@ -90,8 +99,10 @@ msgid ""
 "Unable to parse %s:\n"
 "%s"
 msgstr ""
+"Impossible d'interpréter %s:\n"
+"%s"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "phone.validation.mixin"
-msgstr ""
+msgstr "phone.validation.mixin"

@@ -20,11 +20,35 @@ class Notification(models.Model):
         ('ready', 'Ready to Send'),
         ('sent', 'Sent'),
         ('bounce', 'Bounced'),
-        ('exception', 'Exception')], 'Email Status',
+        ('exception', 'Exception'),
+        ('canceled', 'Canceled')], 'Email Status',
         default='ready', index=True)
+    mail_id = fields.Many2one('mail.mail', 'Mail', index=True)
+    # it would be technically possible to find notification from mail without adding a mail_id field on notification,
+    # comparing partner_ids and message_ids, but this will involve to search notifications one by one since we want to match
+    # bot value. Working with set inclusion, we could have a notif matching message from mail 1 and partner from mail 2, we dont want that.
+    # The solution would be to iterate over mail or to filter mail after search,... or add a mail_id field on notification to KISS
+    failure_type = fields.Selection(selection=[
+            ("NONE", "No error"),
+            ("SMTP", "Error while connecting to smtp server"),
+            ("RECIPIENT", "Invalid email adress"),
+            ("BOUNCE", "Email address not found"),
+            ("UNKNOWN", "Unknown error occured"),
+            ], default='NONE', string='Failure type')
+    failure_reason = fields.Text('Failure reason', copy=False)
 
     @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_res_partner_id_is_read_email_status_mail_message_id',))
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_email_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, is_read, email_status, mail_message_id)')
+
+    @api.multi
+    def format_failure_reason(self):
+        self.ensure_one()
+        if self.failure_type != 'UNKNOWN':
+            return dict(type(self).failure_type.selection).get(self.failure_type)
+        else:
+            return "Unknow error occured: %s" % (self.failure_reason)
+
+

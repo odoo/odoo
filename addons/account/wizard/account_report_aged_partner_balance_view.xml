@@ -7,13 +7,14 @@
         <field name="arch" type="xml">
             <form string="Report Options">
                 <separator string="Aged Partner Balance"/>
-                <label string="Aged Partner Balance is a more detailed report of your receivables by intervals. Odoo calculates a table of credit balance by start Date. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on. "/>
+                <span class="o_form_label">Aged Partner Balance is a more detailed report of your receivables by intervals. Odoo calculates a table of credit balance by start Date. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on. </span>
                 <group col="4">
                     <field name="date_from"/>
                     <field name="period_length"/>
                     <newline/>
                     <field name="result_selection" widget="radio"/>
                     <field name="target_move" widget="radio"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </group>
                 <field name="journal_ids" required="0" invisible="1"/>
                 <footer>

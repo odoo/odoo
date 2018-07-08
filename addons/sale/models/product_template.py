@@ -17,14 +17,14 @@ class ProductTemplate(models.Model):
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
         [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Expenses',
+        string='Re-Invoice Policy',
         default='no')
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
     def _sales_count(self):
         for product in self:
-            product.sales_count = sum([p.sales_count for p in product.product_variant_ids])
+            product.sales_count = sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids])
 
     @api.multi
     def action_view_sales(self):
@@ -52,3 +52,10 @@ class ProductTemplate(models.Model):
         help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
              'Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries).',
         default='order')
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        """ Force values to stay consistent with integrity constraints """
+        if self.type == 'consu':
+            self.invoice_policy = 'order'
+            self.service_type = 'manual'

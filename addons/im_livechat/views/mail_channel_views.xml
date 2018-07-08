@@ -11,10 +11,7 @@
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
-                        <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
-                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}"/>
-                        <filter name="group_by_year" string="Creation date (year)" domain="[]" context="{'group_by':'create_date:year'}"/>
+                        <filter name="group_by_month" string="Creation Date" domain="[]" context="{'group_by':'create_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -75,8 +72,10 @@
             <field name="domain">[('livechat_channel_id', '!=', None)]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
-                <p>
-                    Your chatter history is empty. Create a channel and start chatting to fill up your history.
+                <p class="o_view_nocontent_empty_folder">
+                    Your chatter history is empty
+                </p><p>
+                    Create a channel and start chatting to fill up your history.
                 </p>
             </field>
         </record>

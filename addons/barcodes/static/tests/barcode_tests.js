@@ -8,6 +8,7 @@ var fieldRegistry = require('web.field_registry');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var NotificationService = require('web.NotificationService');
 
 var createView = testUtils.createView;
 var triggerKeypressEvent = testUtils.triggerKeypressEvent;
@@ -42,8 +43,8 @@ QUnit.module('Barcodes', {
                     barcode: {string: "Barcode", type: "char"},
                 },
                 records: [
-                    {id: 1, name: "iPad Mini", barcode: '1234567890'},
-                    {id: 2, name: "Mouse, Optical", barcode: '0987654321'},
+                    {id: 1, name: "Large Cabinet", barcode: '1234567890'},
+                    {id: 2, name: "Cabinet with Doors", barcode: '0987654321'},
                 ],
             },
         };
@@ -64,13 +65,15 @@ QUnit.test('Button with barcode_trigger', function (assert) {
                 '</header>' +
             '</form>',
         res_id: 2,
+        services: [NotificationService.extend({
+            notify: function (params) {
+                assert.step(params.type);
+            }
+        })],
         intercepts: {
             execute_action: function (event) {
                 assert.strictEqual(event.data.action_data.name, 'do_something',
                     "do_something method call verified");
-            },
-            warning: function () {
-                assert.step('warn');
             },
         },
     });
@@ -142,19 +145,19 @@ QUnit.test('pager buttons', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-NEXT
     _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-PREV
     _.each(["O","-","C","M","D",".","P","R","E","V","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-LAST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-FIRST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
 
     form.destroy();
 });
@@ -164,11 +167,12 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
 
     var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-    var formUpdate = FormController.prototype.update;
-    FormController.prototype.update = function () {
-        assert.step('update');
-        return formUpdate.apply(this, arguments);
-    };
+    testUtils.patch(FormController, {
+        update: function () {
+            assert.step('update');
+            return this._super.apply(this, arguments);
+        },
+    });
 
     var form = createView({
         View: FormView,
@@ -206,7 +210,7 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
 
     form.destroy();
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-    FormController.prototype.update = formUpdate;
+    testUtils.unpatch(FormController);
 });
 
 QUnit.test('widget field_float_scannable', function (assert) {
@@ -402,5 +406,137 @@ QUnit.test('specification of widget barcode_handler', function (assert) {
     form.destroy();
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
     delete fieldRegistry.map.test_barcode_handler;
+});
+
+QUnit.test('specification of widget barcode_handler with keypress and notifyChange', function (assert) {
+    assert.expect(6);
+    var done = assert.async();
+
+    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
+
+    this.data.order.onchanges = {
+        _barcode_scanned: function () {},
+    };
+
+    // Define a specific barcode_handler widget for this test case
+    var TestBarcodeHandler = AbstractField.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.trigger_up('activeBarcode', {
+                name: 'test',
+                fieldName: 'line_ids',
+                notifyChange: false,
+                setQuantityWithKeypress: true,
+                quantity: 'quantity',
+                commands: {
+                    barcode: '_barcodeAddX2MQuantity',
+                }
+            });
+        },
+    });
+    fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
+
+    var form = createView({
+        View: FormView,
+        model: 'order',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="_barcode_scanned" widget="test_barcode_handler"/>' +
+                    '<field name="line_ids">' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                            '<field name="product_barcode" invisible="1"/>' +
+                            '<field name="quantity"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        mockRPC: function (route, args) {
+            assert.step(args.method);
+            return this._super.apply(this, arguments);
+        },
+        res_id: 1,
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+    _.each(['1','2','3','4','5','6','7','8','9','0','Enter'], triggerKeypressEvent);
+         // Quantity listener should open a dialog.
+    triggerKeypressEvent('5');
+
+    setTimeout(function () {
+        var keycode = $.ui.keyCode.ENTER;
+
+        assert.strictEqual($('main.modal-body').length, 1, 'should open a modal with a quantity as input');
+        assert.strictEqual($('main.modal-body .o_set_qty_input').val(), '5', 'the quantity by default in the modal shoud be 5');
+
+        $('main.modal-body .o_set_qty_input').val('7');
+
+        $('main.modal-body .o_set_qty_input').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(1)').text(), '7',
+        "quantity checked should be 7");
+
+        assert.verifySteps(['read', 'read']);
+
+        form.destroy();
+        barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
+        delete fieldRegistry.map.test_barcode_handler;
+        done();
+    });
+});
+QUnit.test('barcode_scanned only trigger error for active view', function (assert) {
+    assert.expect(2);
+
+    this.data.order_line.fields._barcode_scanned = {string: 'Barcode scanned', type: 'char'};
+
+    var form = createView({
+        View: FormView,
+        model: 'order',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="_barcode_scanned" widget="barcode_handler"/>' +
+                    '<field name="line_ids">' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                            '<field name="product_barcode" invisible="1"/>' +
+                            '<field name="quantity"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        archs: {
+            "order_line,false,form":
+                '<form string="order line">' +
+                    '<field name="_barcode_scanned" widget="barcode_handler"/>' +
+                    '<field name="product_id"/>' +
+                '</form>',
+        },
+        res_id: 1,
+        services: [NotificationService.extend({
+            notify: function (params) {
+                assert.step(params.type);
+            }
+        })],
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    form.$('.o_data_row:first').click();
+
+    // We do not trigger on the body since modal and 
+    // form view are both inside it.
+    function modalTriggerKeypressEvent(char) {
+        var keycode;
+        if (char === "Enter") {
+            keycode = $.ui.keyCode.ENTER;
+        } else {
+            keycode = char.charCodeAt(0);
+        }
+        return $('[role="dialog"]').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+    }
+    _.each(['O','-','B','T','N','.','c','a','n','c','e','l','Enter'], modalTriggerKeypressEvent);
+    assert.verifySteps(['warning'], "only one event should be triggered");
+    form.destroy();
 });
 });

@@ -14,8 +14,7 @@ class Location(models.Model):
     _description = "Inventory Locations"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'complete_name'
     _rec_name = 'complete_name'
 
     @api.model
@@ -55,8 +54,7 @@ class Location(models.Model):
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
     posz = fields.Integer('Height (Z)', default=0, help="Optional localization details, for information purpose only")
-    parent_left = fields.Integer('Left Parent', index=True)
-    parent_right = fields.Integer('Right Parent', index=True)
+    parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('stock.location'), index=True,
@@ -64,27 +62,40 @@ class Location(models.Model):
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
     removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
-    putaway_strategy_id = fields.Many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
+    putaway_strategy_id = fields.Many2one('product.putaway', 'Put Away Strategy', help="Allows to suggest the exact location (shelf) where to store the product.")
     barcode = fields.Char('Barcode', copy=False, oldname='loc_barcode')
     quant_ids = fields.One2many('stock.quant', 'location_id')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     @api.one
-    @api.depends('name', 'location_id.name')
+    @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
-        name = self.name
-        current = self
-        while current.location_id:
-            current = current.location_id
-            name = '%s/%s' % (current.name, name)
-        self.complete_name = name
+        if self.location_id.complete_name:
+            self.complete_name = '%s/%s' % (self.location_id.complete_name, self.name)
+        else:
+            self.complete_name = self.name
 
     def write(self, values):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
+        if 'usage' in values or 'scrap_location' in values:
+
+            modified_locations = self.filtered(
+                lambda l: any(l[f] != values[f] if f in values else False
+                              for f in {'usage', 'scrap_location'}))
+            reserved_quantities = self.env['stock.move.line'].search_count([
+                ('location_id', 'in', modified_locations.ids),
+                ('product_qty', '>', 0),
+            ])
+            if reserved_quantities:
+                raise UserError(_(
+                    "You cannot change the location type or its use as a scrap"
+                    " location as there are products reserved in this location."
+                    " Please unreserve the products first."
+                ))
         return super(Location, self).write(values)
 
     def name_get(self):
@@ -101,12 +112,12 @@ class Location(models.Model):
         return ret_list
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         """ search full name and barcode """
         if args is None:
             args = []
-        recs = self.search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit)
-        return recs.name_get()
+        location_ids = self._search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(location_ids).name_get()
 
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
@@ -121,9 +132,8 @@ class Location(models.Model):
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """
-        return self.env['stock.warehouse'].search([
-            ('view_location_id.parent_left', '<=', self.parent_left),
-            ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
+        domain = [('view_location_id', 'parent_of', self.ids)]
+        return self.env['stock.warehouse'].search(domain, limit=1)
 
     def should_bypass_reservation(self):
         self.ensure_one()
@@ -210,7 +220,7 @@ class PushedFlow(models.Model):
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',
         default='manual', index=True, required=True,
-        help="The 'Manual Operation' value will create a stock move after the current one."
+        help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     propagate = fields.Boolean('Propagate cancel and split', default=True, help='If checked, when the previous move is cancelled or split, the move generated by this move will too')
     active = fields.Boolean('Active', default=True)

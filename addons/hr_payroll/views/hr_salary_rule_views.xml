@@ -132,18 +132,6 @@
             </tree>
         </field>
     </record>
-    <record id="hr_salary_rule_category_tree_view" model="ir.ui.view">
-        <field name="name">hr.salary.rule.category.tree.view</field>
-        <field name="model">hr.salary.rule.category</field>
-        <field name="field_parent">children_ids</field>
-        <field name="arch" type="xml">
-            <tree string="Salary Rule Categories">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="parent_id" invisible="1"/>
-            </tree>
-        </field>
-    </record>
 
     <record id="view_hr_salary_rule_category_filter" model="ir.ui.view">
         <field name="name">hr.salary.rule.category.select</field>
@@ -167,20 +155,6 @@
         action="action_hr_salary_rule_category"
         parent="menu_hr_payroll_configuration"
         sequence="11"
-        groups="base.group_no_one"
-    />
-    <record id="action_hr_salary_rule_category_tree_view" model="ir.actions.act_window">
-        <field name="name">Salary Rule Categories Hierarchy</field>
-        <field name="res_model">hr.salary.rule.category</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="hr_salary_rule_category_tree_view"/>
-    </record>
-    <menuitem
-        id="menu_hr_salary_rule_category_tree_view"
-        action="action_hr_salary_rule_category_tree_view"
-        parent="menu_hr_payroll_configuration"
-        sequence="12"
         groups="base.group_no_one"
     />
 
@@ -249,12 +223,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a new contribution register.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new contribution register
           </p><p>
             A contribution register is a third party involved in the salary
             payment of the employees. It can be the social security, the
-            estate or anyone that collect or inject money on payslips.
+            state or anyone that collect or inject money on payslips.
           </p>
         </field>
     </record>

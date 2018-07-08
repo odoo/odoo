@@ -16,6 +16,9 @@ KanbanRecord.include({
     _openRecord: function () {
         if (this.modelName === 'mail.mass_mailing.campaign') {
             this.$('.oe_mailings').click();
+        } else if (this.modelName === 'mail.mass_mailing.list' &&
+                   this.$('.o_mailing_list_kanban_boxes a')) {
+            this.$('.o_mailing_list_kanban_boxes a').first().click();
         } else {
             this._super.apply(this, arguments);
         }
@@ -38,7 +41,7 @@ FieldTextHtml.include({
         var datarecord = this._super();
         if (this.model === 'mail.mass_mailing') {
             // these fields can potentially get very long, let's remove them
-            datarecord = _.omit(datarecord, ['mailing_domain', 'contact_list_ids', 'body_html']);
+            datarecord = _.omit(datarecord, ['mailing_domain', 'contact_list_ids', 'body_html', 'attachment_ids']);
         }
         return datarecord;
     },

@@ -61,9 +61,6 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # In order to easily support rounding to arbitrary 'steps' (e.g. coin values),
     # we normalize the value before rounding it as an integer, and de-normalize
     # after rounding: e.g. float_round(1.3, precision_rounding=.5) == 1.5
-
-    # TIE-BREAKING: HALF-UP (for normal rounding)
-    # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
     # Due to IEE754 float/double representation limits, the approximation of the
     # real value may be slightly below the tie limit, resulting in an error of
     # 1 unit in the last place (ulp) after rounding.
@@ -74,25 +71,31 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # Credit: discussion with OpenERP community members on bug 882036
 
     normalized_value = value / rounding_factor # normalize
+    sign = math.copysign(1.0, normalized_value)
     epsilon_magnitude = math.log(abs(normalized_value), 2)
     epsilon = 2**(epsilon_magnitude-53)
-    if rounding_method == 'HALF-UP':
-        normalized_value += math.copysign(epsilon, normalized_value)
-        rounded_value = round(normalized_value)     # round to integer
 
-    # TIE-BREAKING: UP (for ceiling[resp. flooring] operations)
-    # When rounding the value up[resp. down], we instead subtract the epsilon value
+    # TIE-BREAKING: UP/DOWN (for ceiling[resp. flooring] operations)
+    # When rounding the value up[resp. down], we instead subtract[resp. add] the epsilon value
     # as the the approximation of the real value may be slightly *above* the
     # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
     # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
     # round "away from zero" and not "towards infinity", then the sign is
     # restored.
 
-    else:
-        func = math.floor if rounding_method == 'DOWN' else math.ceil
-        sign = math.copysign(1.0, normalized_value)
+    if rounding_method == 'UP':
         normalized_value -= sign*epsilon
-        rounded_value = func(abs(normalized_value)) * sign
+        rounded_value = math.ceil(abs(normalized_value)) * sign
+
+    elif rounding_method == 'DOWN':
+        normalized_value += sign*epsilon
+        rounded_value = math.floor(abs(normalized_value)) * sign
+
+    # TIE-BREAKING: HALF-UP (for normal rounding)
+    # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
+    else:
+        normalized_value += math.copysign(epsilon, normalized_value)
+        rounded_value = round(normalized_value)     # round to integer
 
     result = rounded_value * rounding_factor # de-normalize
     return result

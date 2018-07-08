@@ -16,6 +16,9 @@ Odoo Web tours.
         'views/tour_templates.xml',
         'views/tour_views.xml'
     ],
+    'demo': [
+        'data/web_tour_demo.xml',
+    ],
     'qweb': [
         "static/src/xml/*.xml",
     ],

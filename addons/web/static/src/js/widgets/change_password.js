@@ -6,14 +6,14 @@ odoo.define('web.ChangePassword', function (require) {
  * allows the user to change his password.
  */
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var Widget = require('web.Widget');
 var web_client = require('web.web_client');
 
 var _t = core._t;
 
-var ChangePassword = Widget.extend({
+var ChangePassword = AbstractAction.extend({
     template: "ChangePassword",
 
     /**
@@ -28,7 +28,7 @@ var ChangePassword = Widget.extend({
         var $button = self.$('.oe_form_button');
         $button.appendTo(this.getParent().$footer);
         $button.eq(1).click(function () {
-            self.$el.parents('.modal').modal('hide');
+            self.$el.parents('[role="dialog"]').modal('hide');
         });
         $button.eq(0).click(function () {
             self._rpc({

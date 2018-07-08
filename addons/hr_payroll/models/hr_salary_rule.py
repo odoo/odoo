@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons import decimal_precision as dp
@@ -33,9 +33,10 @@ class HrPayrollStructure(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You cannot create a recursive Salary Structure.'))
+            raise ValidationError(_('You cannot create a recursive salary structure.'))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, code=_("%s (copy)") % (self.code))
@@ -76,7 +77,7 @@ class HrSalaryRuleCategory(models.Model):
     _name = 'hr.salary.rule.category'
     _description = 'Salary Rule Category'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)
     parent_id = fields.Many2one('hr.salary.rule.category', string='Parent',
         help="Linking a salary category to its parent is used only for the reporting purpose.")
@@ -85,11 +86,16 @@ class HrSalaryRuleCategory(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env['res.company']._company_default_get())
 
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of Salary Rule Category.'))
+
 
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True,
         help="The code of salary rules can be used as reference in computation of other rules. "
              "In that case, it is case sensitive.")
@@ -164,6 +170,11 @@ class HrSalaryRule(models.Model):
         help="Eventual third party involved in the salary payment of the employees.")
     input_ids = fields.One2many('hr.rule.input', 'input_id', string='Inputs', copy=True)
     note = fields.Text(string='Description')
+
+    @api.constrains('parent_rule_id')
+    def _check_parent_rule_id(self):
+        if not self._check_recursion(parent='parent_rule_id'):
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of Salary Rules.'))
 
     @api.multi
     def _recursive_search_of_rules(self):

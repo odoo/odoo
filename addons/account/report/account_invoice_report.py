@@ -15,18 +15,17 @@ class AccountInvoiceReport(models.Model):
     def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
-        context = dict(self._context or {})
         user_currency_id = self.env.user.company_id.currency_id
         currency_rate_id = self.env['res.currency.rate'].search([
             ('rate', '=', 1),
             '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
         base_currency_id = currency_rate_id.currency_id
-        ctx = context.copy()
         for record in self:
-            ctx['date'] = record.date
-            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
-            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
+            date = record.date or fields.Date.today()
+            company = record.company_id
+            record.user_currency_price_total = base_currency_id._convert(record.price_total, user_currency_id, company, date)
+            record.user_currency_price_average = base_currency_id._convert(record.price_average, user_currency_id, company, date)
+            record.user_currency_residual = base_currency_id._convert(record.residual, user_currency_id, company, date)
 
     date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
@@ -42,11 +41,11 @@ class AccountInvoiceReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     price_total = fields.Float(string='Total Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_total = fields.Float(string="Total Without Tax in Currency", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_average = fields.Float(string="Average Price in Currency", compute='_compute_amounts_in_user_currency', digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg", groups="base.group_multi_currency")
-    nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    nbr = fields.Integer(string='Line Count', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
@@ -83,7 +82,7 @@ class AccountInvoiceReport(models.Model):
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
-        'product.uom': ['category_id', 'factor', 'name', 'uom_type'],
+        'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
         'res.currency.rate': ['currency_id', 'name'],
         'res.partner': ['country_id'],
     }
@@ -130,8 +129,8 @@ class AccountInvoiceReport(models.Model):
                 JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
-                LEFT JOIN product_uom u ON u.id = ail.uom_id
-                LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
+                LEFT JOIN uom_uom u ON u.id = ail.uom_id
+                LEFT JOIN uom_uom u2 ON u2.id = pt.uom_id
                 JOIN (
                     -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE
@@ -172,3 +171,17 @@ class AccountInvoiceReport(models.Model):
         )""" % (
                     self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))
+
+
+class ReportInvoiceWithPayment(models.AbstractModel):
+    _name = 'report.account.report_invoice_with_payments'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
+        return {
+            'doc_ids': docids,
+            'doc_model': report.model,
+            'docs': self.env[report.model].browse(docids),
+            'type_html': data and data.get('report_type') == 'html',
+        }

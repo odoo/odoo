@@ -38,6 +38,15 @@ class MailTestActivity(models.Model):
     name = fields.Char()
     email_from = fields.Char()
 
+    def action_start(self, action_summary):
+        self.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary=action_summary
+        )
+
+    def action_close(self, action_feedback):
+        self.activity_feedback(['test_mail.mail_act_test_todo'], feedback=action_feedback)
+
 
 class MailTestFull(models.Model):
     """ This model can be used in tests when complex chatter features are
@@ -62,13 +71,13 @@ class MailTestFull(models.Model):
         if 'customer_id' in changes and record.mail_template:
             res['customer_id'] = (record.mail_template, {'composition_mode': 'mass_mail'})
         elif 'datetime' in changes:
-            res['datetime'] = ('mail.track_template', {'composition_mode': 'mass_mail'})
+            res['datetime'] = ('test_mail.mail_test_full_tracking_view', {'composition_mode': 'mass_mail'})
         return res
 
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'umbrella_id' in init_values and self.umbrella_id:
-            return 'mail.track_subtype_umbrella'
+            return 'test_mail.st_mail_test_full_umbrella_upd'
         return super(MailTestFull, self)._track_subtype(init_values)
 
 
@@ -82,6 +91,7 @@ class MailTestAlias(models.Model):
 
     name = fields.Char()
     description = fields.Text()
+    customer_id = fields.Many2one('res.partner', 'Customer')
     alias_id = fields.Many2one(
         'mail.alias', 'Alias',
         delegate=True)

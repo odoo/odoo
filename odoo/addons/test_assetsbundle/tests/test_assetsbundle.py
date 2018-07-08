@@ -38,7 +38,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
     def _get_asset(self, xmlid, env=None):
         env = (env or self.env)
         files, remains = env['ir.qweb']._get_asset_content(xmlid, env.context)
-        return AssetsBundle(xmlid, files, remains, env=env)
+        return AssetsBundle(xmlid, files, env=env)
 
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
@@ -118,7 +118,6 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle0 = self._get_asset(self.jsbundle_xmlid)
         bundle0.js()
         files0 = bundle0.files
-        remains0 = bundle0.remains
         version0 = bundle0.version
 
         self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
@@ -141,11 +140,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle1 = self._get_asset(self.jsbundle_xmlid, env=self.env(context={'check_view_ids': view.ids}))
         bundle1.js()
         files1 = bundle1.files
-        remains1 = bundle1.remains
         version1 = bundle1.version
 
         self.assertNotEquals(files0, files1)
-        self.assertEquals(remains0, remains1)
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
@@ -247,7 +244,6 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
         bundle0.css()
         files0 = bundle0.files
-        remains0 = bundle0.remains
         version0 = bundle0.version
 
         self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
@@ -270,11 +266,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': view.ids, 'max_css_rules': 1}))
         bundle1.css()
         files1 = bundle1.files
-        remains1 = bundle1.remains
         version1 = bundle1.version
 
         self.assertNotEquals(files0, files1)
-        self.assertEquals(remains0, remains1)
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
@@ -318,6 +312,48 @@ class TestJavascriptAssetsBundle(TransactionCase):
         content = bundle0.to_html()
         self.assertEqual(content.count('test_assetsbundle.bundle2.0.css'), 1)
 
+    def test_15_exteral_lib_assets(self):
+        html = self.env['ir.ui.view'].render_template('test_assetsbundle.template2')
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
+        self.assertEquals(len(attachments), 2)
+        self.assertEqual(html.strip(), ("""<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+        <link type="text/css" rel="stylesheet" href="%(css)s"/>
+        <meta/>
+        <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
+        <script type="text/javascript" src="%(js)s"></script>
+    </head>
+    <body>
+    </body>
+</html>""" % {"js": attachments[0].url, "css": attachments[1].url}).encode('utf8'))
+
+    def test_16_exteral_lib_assets_debug_mode(self):
+        html = self.env['ir.ui.view'].render_template('test_assetsbundle.template2', {"debug": "assets"})
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
+        self.assertEquals(len(attachments), 0)
+        self.assertEqual(html.strip(), ("""<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css"/>
+        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile2.css"/>
+        <meta/>
+        <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js"></script>
+    </head>
+    <body>
+    </body>
+</html>""").encode('utf8'))
+
+
 
 class TestAssetsBundleInBrowser(HttpCase):
     def test_01_js_interpretation(self):
@@ -332,22 +368,21 @@ class TestAssetsBundleInBrowser(HttpCase):
     def test_02_js_interpretation_inline(self):
         """ Checks that the javascript of a bundle is correctly interpretet when mixed with inline.
         """
-        with self.registry.cursor() as test_cursor:
-            view_arch = """
-            <data>
-                <xpath expr="." position="inside">
-                    <script type="text/javascript">
-                        var d = 4;
-                    </script>
-                </xpath>
-            </data>
-            """
-            self.env(cr=test_cursor)['ir.ui.view'].create({
-                'name': 'test bundle inheritance inline js',
-                'type': 'qweb',
-                'arch': view_arch,
-                'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
-            })
+        view_arch = """
+        <data>
+            <xpath expr="." position="inside">
+                <script type="text/javascript">
+                    var d = 4;
+                </script>
+            </xpath>
+        </data>
+        """
+        self.env['ir.ui.view'].create({
+            'name': 'test bundle inheritance inline js',
+            'type': 'qweb',
+            'arch': view_arch,
+            'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
+        })
 
         self.phantom_js(
             "/test_assetsbundle/js",
@@ -359,7 +394,7 @@ class TestAssetsBundleInBrowser(HttpCase):
 class TestAssetsBundleWithIRAMock(TransactionCase):
     def setUp(self):
         super(TestAssetsBundleWithIRAMock, self).setUp()
-        self.lessbundle_xmlid = 'test_assetsbundle.bundle3'
+        self.stylebundle_xmlid = 'test_assetsbundle.bundle3'
         self.counter = counter = Counter()
 
         # patch methods 'create' and 'unlink' of model 'ir.attachment'
@@ -380,8 +415,8 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.addCleanup(self.env['ir.attachment']._revert_method, 'unlink')
 
     def _get_asset(self):
-        files, remains = self.env['ir.qweb']._get_asset_content(self.lessbundle_xmlid, {})
-        return AssetsBundle(self.lessbundle_xmlid, files, remains, env=self.env)
+        files, remains = self.env['ir.qweb']._get_asset_content(self.stylebundle_xmlid, {})
+        return AssetsBundle(self.stylebundle_xmlid, files, remains, env=self.env)
 
     def _bundle(self, asset, should_create, should_unlink):
         self.counter.clear()
@@ -390,7 +425,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.assertEquals(self.counter['unlink'], int(should_unlink))
 
     def test_01_debug_mode_assets(self):
-        """ Checks that the ir.attachments records created for compiled less assets in debug mode
+        """ Checks that the ir.attachments records created for compiled assets in debug mode
         are correctly invalidated.
         """
         # Compile for the first time
@@ -400,7 +435,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self._bundle(self._get_asset(), False, False)
 
         # Touch the file and compile a third time
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'less', 'test_lessfile1.less')
+        path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         _touch(path, asset, t=t)

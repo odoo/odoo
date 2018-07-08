@@ -50,6 +50,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                There's no product move yet
+              </p>
+            </field>
         </record>
 
         <record id="mrp_unbuild_kanban_view" model="ir.ui.view">
@@ -118,11 +123,11 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id" required="True"/>
+                                <field name="mo_id" domain="[('state','=','done')]"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="has_tracking" invisible="1"/>
@@ -149,7 +154,7 @@
                     <field name="bom_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 </tree>
@@ -163,10 +168,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click here to create a Unbuild Order. 
+          <p class="o_view_nocontent_smiling_face">
+            Create an unbuild order
           </p><p>
-            Unbuild Orders are used to break down a product you manufactured or purchased into its components, based on its Bill of Material.</p>
+            An unbuild order is used to break down a finished product into its components.
+          </p>
         </field>
     </record>
 

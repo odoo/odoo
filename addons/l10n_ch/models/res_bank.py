@@ -3,7 +3,7 @@
 
 import re
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.misc import mod10r
 
 
@@ -28,27 +28,32 @@ class ResBank(models.Model):
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    l10n_ch_postal = fields.Char(help='The ISR number of the company within the bank', compute='_compute_l10n_ch_postal')
+    l10n_ch_postal = fields.Char(string='ISR reference', help='The ISR number of the company within the bank')
 
-    @api.depends('acc_number')
-    def _compute_acc_type(self):
+    @api.model
+    def _get_supported_account_types(self):
+        rslt = super(ResPartnerBank, self)._get_supported_account_types()
+        rslt.append(('postal', _('Postal')))
+        return rslt
+
+    @api.model
+    def retrieve_acc_type(self, acc_number):
         """ Overridden method enabling the recognition of swiss postal bank
         account numbers.
         """
-        for record in self:
-            if _is_l10n_ch_postal(record.acc_number):
-                record.acc_type = 'postal'
-            else:
-                super(ResPartnerBank, record)._compute_acc_type()
+        if _is_l10n_ch_postal(acc_number):
+            return 'postal'
+        else:
+            return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
-    @api.depends('acc_number')
-    def _compute_l10n_ch_postal(self):
-        for record in self:
-            if record.acc_type == 'iban':
-                record.l10n_ch_postal = record._retrieve_l10n_ch_postal(record.sanitized_acc_number)
-            else:
-                record.l10n_ch_postal = record.sanitized_acc_number
+    @api.onchange('acc_number')
+    def _onchange_set_l10n_ch_postal(self):
+        if self.acc_type == 'iban':
+            self.l10n_ch_postal = self._retrieve_l10n_ch_postal(self.sanitized_acc_number)
+        else:
+            self.l10n_ch_postal = self.sanitized_acc_number
 
+    @api.model
     def _retrieve_l10n_ch_postal(self, iban):
         """ Reads a swiss postal account number from a an IBAN and returns it as
         a string. Returns None if no valid postal account number was found, or

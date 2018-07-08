@@ -10,6 +10,7 @@
                         is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
                         user_id: <t t-esc="json.dumps(request.env.user.id)" />,
                         is_frontend: true,
+                        translationURL: '/website/translations',
                     };
                 </script>
 
@@ -31,12 +32,15 @@
                                 </a>
                             </div>
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                <!-- Note: pull-right instead of navbar-right for two reasons: -->
+                                <!-- 1) We want menu to open to the right by default (except cases handled in JS) -->
+                                <!-- 2) navbar-right combined will navbar-static-top misaligns contained elements -->
+                                <ul class="nav navbar-nav pull-right" id="top_menu">
                                     <li class="divider" t-ignore="true" t-if="not user_id._is_public()"/>
                                     <li class="dropdown" t-ignore="true" t-if="not user_id._is_public()">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
-                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') if user_id.name else user_id.name"/>
+                                                <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                                                 <span class="caret"></span>
                                             </b>
                                         </a>
@@ -53,7 +57,10 @@
                     <t t-raw="0"/>
                 </main>
                 <footer >
-                    <div id="footer">
+                    <div class="container mt16 mb16" id="footer">
+                        <div class="pull-right" t-ignore="true" t-if="not editable">
+                            Powered by <a target="_blank" href="http://www.odoo.com">Odoo</a>
+                        </div>
                     </div>
                 </footer>
             </div>
@@ -62,14 +69,15 @@
 
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
-            <div class="container mt16 o_portal">
+            <div class="container mt16 mb16 o_portal">
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
-                        <div class="col-sm-12">
-                            <ol class="breadcrumb o_portal_submenu">
-                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                        <div t-attf-class="col-sm-12">
+                            <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
+                                <li><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'">Your Details</li>
                             </ol>
+                            <t t-call='portal.record_pager'/>
                         </div>
                     </div>
                 </div>
@@ -86,7 +94,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
                                 <div class="o_my_archives" t-if="archive_groups">
@@ -143,57 +151,93 @@
         :param string filterby : name of the filter criteria
         :param default_url : the base url of the pages (like '/my/orders')
         :param boolean o_portal_search_panel : set to True to active the input search
-        :param html $0 : content of the t-call, <li>a</li><li>b</li>
+        :param html $0 : content of the t-call, <li class="pull-left">Link</li>
+        :param title : bavbar title
+        :param classes : navbar classes
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
-        <t t-if='searchbar_inputs'>
-            <div class='hidden-xs pull-right o_portal_search_panel'>
-                 <div class="input-group">
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span id="search_label">Search</span> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
-                                <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <input type="text" class="form-control o_portal_search_panel_fixed_width" t-att-value='search' name="search"/>
-                    <span class="input-group-btn">
-                        <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
-                    </span>
+        <nav t-attf-class="navbar o_portal_navbar {{classes if classes else 'o_portal_navbar_default'}}">
+            <div class="container-fluid">
+                <!--  Navbar title only -->
+                <div class="navbar-header pull-left">
+                    <t t-set="no_title">No title</t>
+                    <h3 class="navbar-brand"><t t-esc="title or no_title"/></h3>
                 </div>
-            </div>
-        </t>
-        <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_sortby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
-                <span class="fa fa-sort fa-lg" />
-                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
-                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
-                        <span t-esc="searchbar_sortings[option].get('label')"/>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div t-if="searchbar_filters" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_filters" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
-                <span class="fa fa-filter fa-lg" />
-                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
-                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
-                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
-                        <span t-esc="searchbar_filters[option].get('label')"/>
-                    </a>
-                </li>
-            </ul>
-        </div>
+
+                <!-- Non-collapsing menu item(s) -->
+                <div class="navbar-header navbar-right pull-right">
+                    <ul class="nav pull-left">
+                        <t t-raw="0"/>
+                        <li t-if="searchbar_sortings" class="dropdown pull-left ml16">
+                            <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                                <span class="fa fa-sort"/>
+                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/></span>
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                                        <span t-esc="searchbar_sortings[option].get('label')"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li t-if="searchbar_filters" class="dropdown pull-left ml4">
+                            <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                                <span class="fa fa-filter"/>
+                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_filters[filterby].get('label', 'All')"/></span>
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
+                                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
+                                        <span t-esc="searchbar_filters[option].get('label')"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li t-if="searchbar_groupby" class="dropdown pull-left ml4">
+                            <button id="portal_searchbar_groupby" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                                <span class="fa fa-object-group"/>
+                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_groupby[groupby].get('label', 'None')"/></span>
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
+                                <li t-foreach="searchbar_groupby" t-as="option" t-att-class="groupby == option and 'active'">
+                                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)">
+                                        <span t-esc="searchbar_groupby[option].get('label')"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <button t-if='searchbar_inputs' type="button" class="navbar-toggle collapsed btn ml16" data-toggle="collapse" data-target="#o_portal_searchbar_collapse"><span class="fa fa-search"/></button>
+                </div>
+                <div t-if='searchbar_inputs' class="visible-xs-block clearfix"/>
+
+                <!-- Collapsing content (searchbar_inputs) -->
+                <div t-if='searchbar_inputs' class="collapse navbar-collapse text-right" id="o_portal_searchbar_collapse">
+                    <div class="navbar-form o_portal_search_panel">
+                         <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span id="search_label" class="hidden-xs mr4">Search</span><span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
+                                        <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control" t-att-value='search' name="search"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default search-submit" type="button"><span class="fa fa-search hidden-xs"/><span class="fa fa-arrow-right visible-xs-inline-block"/></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.container-fluid -->
+        </nav>
     </template>
 
     <template id="portal_contact" name="Contact">
@@ -232,7 +276,7 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-12">
-                              <div t-if="error_message" class="alert alert-danger">
+                              <div t-if="error_message" class="alert alert-danger" role="alert">
                                   <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                               </div>
                             </div>
@@ -253,11 +297,11 @@
                             <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
                                 <label class="control-label label-optional" for="company_name">Company Name</label>
                                 <p t-if="partner.commercial_partner_id.is_company" class="form-control" t-esc="partner.commercial_company_name"/>
-                                <input t-else="" type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name"/>
+                                <input t-else="" type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'"/>
                             </div>
-                            <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
                                 <label class="control-label label-optional" for="vat">VAT Number</label>
-                                <input type="text" name="vat" class="form-control" t-att-value="vat or partner.vat" />
+                                <input type="text" name="vat" class="form-control" t-att-value="vat or partner.vat" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'" />
                             </div>
 
                             <div class="clearfix" />
@@ -278,7 +322,7 @@
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
-                                        <option t-att-value="country.id" t-att-selected="country.id == partner.country_id.id">
+                                        <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
                                             <t t-esc="country.name" />
                                         </option>
                                     </t>
@@ -312,8 +356,8 @@
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
           <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
-            <a t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-            <a t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
+            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>
         </t>
     </template>
@@ -349,7 +393,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="hidden-print o_portal_chatter"
+        <div id="discussion" class="hidden-print o_portal_chatter o_not_editable"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>
@@ -371,5 +415,14 @@
             t-att-data-call-url="callUrl"
             t-att-data-sign-label="signLabel"
             t-att-data-access-token="accessToken"/>
+    </template>
+
+    <template id="portal_sidebar" name="Sidebar">
+        <t t-call="portal.portal_layout">
+            <body data-spy="scroll" data-target=".navspy" data-offset="50">
+                <div class="container o_portal_sidebar"></div>
+                <div class="oe_structure mb32"/>
+            </body>
+        </t>
     </template>
 </odoo>

@@ -13,5 +13,5 @@ Bridge module for rating on website stuff.
         'views/website_rating_templates.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'auto_installable': True,
+    'auto_install': True,
 }

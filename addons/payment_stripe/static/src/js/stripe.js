@@ -38,8 +38,9 @@ odoo.define('payment_stripe.stripe', function(require) {
                     });
                 }
                 ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
-                    tokenid: token.id,
-                    email: token.email,
+                    tokenid: token.id,  // TBE TODO: for backward compatibility, remove on master
+                    email: token.email, // TBE TODO: for backward compatibility, remove on master
+                    token: token,
                     amount: $("input[name='amount']").val(),
                     acquirer_id: $("#acquirer_stripe").val(),
                     currency: $("input[name='currency']").val(),
@@ -53,8 +54,8 @@ odoo.define('payment_stripe.stripe', function(require) {
                 }).done(function(data){
                     handler.isTokenGenerate = false;
                     window.location.href = data;
-                }).fail(function(){
-                    var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.arguments && arguments[1].data.arguments[0];
+                }).fail(function(data){
+                    var msg = data && data.data && data.data.message;
                     var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
                     wizard.appendTo($('body')).modal({'keyboard': true});
                 });
@@ -86,59 +87,32 @@ odoo.define('payment_stripe.stripe', function(require) {
             payment_form.append('<i class="fa fa-spinner fa-spin"/>');
             payment_form.attr('disabled','disabled');
 
-        var acquirer_id = payment_form.find('input[type="radio"][data-provider="stripe"]:checked').data('acquirer-id');
-        if (! acquirer_id) {
-            return false;
+        var payment_tx_url = payment_form.find('input[name="prepare_tx_url"]').val();
+        var access_token = $("input[name='access_token']").val() || $("input[name='token']").val() || '';
+
+        var get_input_value = function(name) {
+            return provider_form.find('input[name="' + name + '"]').val();
         }
 
-        var access_token = $("input[name='access_token']").val() || $("input[name='token']").val();
-        var so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined;
-        if (so_id) {
-            so_id = parseInt(so_id[1]);
-        }
+        var acquirer_id = parseInt(provider_form.find('#acquirer_stripe').val());
+        var amount = parseFloat(get_input_value("amount") || '0.0');
+        var currency = get_input_value("currency");
+        var email = get_input_value("email");
+        var invoice_num = get_input_value("invoice_num");
+        var merchant = get_input_value("merchant");
 
-
-        var currency = $("input[name='currency']").val();
-        var currency_id = $("input[name='currency_id']").val();
-        var amount = parseFloat($("input[name='amount']").val() || '0.0');
-
-
-        if ($('.o_website_payment').length !== 0) {
-            var create_tx = ajax.jsonRpc('/website_payment/transaction', 'call', {
-                    reference: $("input[name='invoice_num']").val(),
-                    amount: amount, // exact amount, not stripe cents
-                    currency_id: currency_id,
-                    acquirer_id: acquirer_id
-            });
-        }
-        else if ($('.o_website_quote').length !== 0) {
-            var url = _.str.sprintf("/quote/%s/transaction/", so_id);
-            var create_tx = ajax.jsonRpc(url, 'call', {
-                access_token: access_token,
-                acquirer_id: acquirer_id
-            }).then(function (data) {
-                try { provider_form[0].innerHTML = data; } catch (e) {};
-            });
-        }
-        else {
-            var create_tx = ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
-                    so_id: so_id,
-                    access_token: access_token,
-                    acquirer_id: acquirer_id
-            }).then(function (data) {
-                try { provider_form.innerHTML = data; } catch (e) {};
-            });
-        }
-        create_tx.done(function () {
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
+        ajax.jsonRpc(payment_tx_url, 'call', {
+            acquirer_id: acquirer_id,
+            access_token: access_token,
+        }).then(function(data) {
+            try { provider_form[0].innerHTML = data; } catch (e) {};
+        }).done(function () {
             getStripeHandler().open({
-                name: $("input[name='merchant']").val(),
-                description: $("input[name='invoice_num']").val(),
-                email: $("input[name='email']").val(),
+                name: merchant,
+                description: invoice_num,
+                email: email,
                 currency: currency,
-                amount: amount,
+                amount: _.contains(int_currencies, currency) ? amount : amount * 100,
             });
         });
     }

@@ -96,7 +96,7 @@ class IrSequence(models.Model):
 
     def _set_number_next_actual(self):
         for seq in self:
-            seq.write({'number_next': seq.number_next_actual or 0})
+            seq.write({'number_next': seq.number_next_actual or 1})
 
     @api.model
     def _get_current_sequence(self):
@@ -119,14 +119,14 @@ class IrSequence(models.Model):
     implementation = fields.Selection([('standard', 'Standard'), ('no_gap', 'No gap')],
                                       string='Implementation', required=True, default='standard',
                                       help="Two sequence object implementations are offered: Standard "
-                                           "and 'No gap'. The later is slower than the former but forbids any"
+                                           "and 'No gap'. The later is slower than the former but forbids any "
                                            "gap in the sequence (while they are possible in the former).")
     active = fields.Boolean(default=True)
     prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
     suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
     number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
-                                        string='Next Number',
+                                        string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "
                                         "frequently so the displayed value might already be obsolete")
     number_increment = fields.Integer(string='Step', required=True, default=1,
@@ -327,7 +327,7 @@ class IrSequenceDateRange(models.Model):
 
     def _set_number_next_actual(self):
         for seq in self:
-            seq.write({'number_next': seq.number_next_actual or 0})
+            seq.write({'number_next': seq.number_next_actual or 1})
 
     @api.model
     def default_get(self, fields):
@@ -340,7 +340,7 @@ class IrSequenceDateRange(models.Model):
     sequence_id = fields.Many2one("ir.sequence", string='Main Sequence', required=True, ondelete='cascade')
     number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
     number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
-                                        string='Next Number',
+                                        string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "
                                              "frequently so the displayed value might already be obsolete")
 

@@ -36,6 +36,14 @@ return Widget.extend({
         this.$el.addClass(this.arch.attrs.class);
         return $.when(this._render(), this._super());
     },
+    /**
+     * Called each time the renderer is attached into the DOM.
+     */
+    on_attach_callback: function () {},
+    /**
+     * Called each time the renderer is detached from the DOM.
+     */
+    on_detach_callback: function () {},
 
     //--------------------------------------------------------------------------
     // Public
@@ -57,6 +65,11 @@ return Widget.extend({
      * @returns {any}
      */
     getLocalState: function () {
+    },
+    /**
+     * Order to focus to be given to the content of the current view
+     */
+    giveFocus: function () {
     },
     /**
      * This is the reverse operation from getLocalState.  With this method, we

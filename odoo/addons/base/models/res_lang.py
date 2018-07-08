@@ -33,6 +33,13 @@ class Lang(models.Model):
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
     time_format = fields.Char(string='Time Format', required=True, default=DEFAULT_TIME_FORMAT)
+    week_start = fields.Selection([(1, 'Monday'),
+                                   (2, 'Tuesday'),
+                                   (3, 'Wednesday'),
+                                   (4, 'Thursday'),
+                                   (5, 'Friday'),
+                                   (6, 'Saturday'),
+                                   (7, 'Sunday')], string='First Day of Week', required=True, default=7)
     grouping = fields.Char(string='Separator Format', required=True, default='[]',
         help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit. "
              "-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500; "
@@ -218,7 +225,7 @@ class Lang(models.Model):
             raise UserError(_("Language code cannot be modified."))
         if vals.get('active') == False:
             if self.env['res.users'].search([('lang', 'in', lang_codes)]):
-                raise UserError(_("Cannot unactivate a language that is currently used by users."))
+                raise UserError(_("Cannot deactivate a language that is currently used by users."))
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
@@ -230,10 +237,10 @@ class Lang(models.Model):
     def unlink(self):
         for language in self:
             if language.code == 'en_US':
-                raise UserError(_("Base Language 'en_US' can not be deleted!"))
+                raise UserError(_("Base Language 'en_US' can not be deleted."))
             ctx_lang = self._context.get('lang')
             if ctx_lang and (language.code == ctx_lang):
-                raise UserError(_("You cannot delete the language which is User's Preferred Language!"))
+                raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
             self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()

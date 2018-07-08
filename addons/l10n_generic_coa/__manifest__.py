@@ -24,4 +24,5 @@ Install some generic chart of accounts.
         'data/account_invoice_demo.xml',
     ],
     'website': 'https://www.odoo.com/page/accounting',
+    'uninstall_hook': 'uninstall_hook',
 }

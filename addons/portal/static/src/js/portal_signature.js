@@ -80,8 +80,9 @@ odoo.define('portal.signature_form', function (require){
                 },
             }).then(function (data) {
                 self.$('.fa-spinner').remove();
-                self.$('#o_portal_sign_accept').prepend('<div>PROUT' + data + '</div>');
                 if (data.error) {
+                    self.$('.o_portal_sign_error_msg').remove();
+                    $confirm_btn.before(qweb.render('portal.portal_signature_error', {message: data.error}));
                     $confirm_btn.attr('disabled', false);
                 }
                 else if (data.success) {

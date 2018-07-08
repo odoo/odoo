@@ -34,9 +34,10 @@
         <field name="arch" type="xml">
             <form string="Stage">
                 <group>
+                    <field name="team_count" invisible="1"/>
                     <group>
                         <field name="name"/>
-                        <field name="team_id"/>
+                        <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
                         <field name="fold"/>
                     </group>
                     <group>
@@ -45,7 +46,7 @@
                     </group>
                 </group>
                 <separator string="Requirements"/>
-                <field name="requirements" nolabel="1"/>
+                <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
             </form>
         </field>
     </record>
@@ -56,8 +57,8 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_stage_tree"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to set a new stage in your opportunity pipeline.
+          <p class="o_view_nocontent_smiling_face">
+            Set a new stage in your opportunity pipeline
           </p><p>
             Stages allow salespersons to easily track how a specific opportunity
             is positioned in the sales cycle.

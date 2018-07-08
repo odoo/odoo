@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+from collections import OrderedDict
 
 from odoo import api, models
 from odoo.tools import pycompat
@@ -42,7 +43,8 @@ class Image(models.AbstractModel):
 
         sha = hashlib.sha1(getattr(record, '__last_update').encode('utf-8')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
-        src = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field_name, max_size, sha)
+        avoid_if_small = '&avoid_if_small=true' if options.get('avoid_if_small') else ''
+        src = '/web/image/%s/%s/%s%s?unique=%s%s' % (record._name, record.id, field_name, max_size, sha, avoid_if_small)
 
         alt = None
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
@@ -56,6 +58,24 @@ class Image(models.AbstractModel):
         elif options.get('zoom'):
             src_zoom = options['zoom']
 
-        img = '<img class="%s" src="%s" style="%s"%s%s/>' % \
-            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '', ' data-zoom="1" data-zoom-image="%s"' % src_zoom if src_zoom else '')
-        return pycompat.to_text(img)
+        atts = OrderedDict()
+        atts["src"] = src
+        atts["class"] = classes
+        atts["style"] = options.get('style')
+        atts["alt"] = alt
+        atts["data-zoom"] = src_zoom and u'1' or None
+        atts["data-zoom-image"] = src_zoom
+
+        atts = self.env['ir.qweb']._post_processing_att('img', atts, options.get('template_options'))
+
+        img = ['<img']
+        for name, value in atts.items():
+            if value:
+                img.append(' ')
+                img.append(escape(pycompat.to_text(name)))
+                img.append('="')
+                img.append(escape(pycompat.to_text(value)))
+                img.append('"')
+        img.append('/>')
+
+        return u''.join(img)

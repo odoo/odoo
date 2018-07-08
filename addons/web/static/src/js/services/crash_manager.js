@@ -41,7 +41,8 @@ var CrashManager = core.Class.extend({
             core.bus.trigger('connection_lost');
             this.connection_lost = true;
             var timeinterval = setInterval(function() {
-                ajax.jsonRpc('/web/webclient/version_info').then(function() {
+                var options = {shadow: true};
+                ajax.jsonRpc('/web/webclient/version_info', 'call', {}, options).then(function () {
                     clearInterval(timeinterval);
                     core.bus.trigger('connection_restored');
                     self.connection_lost = false;
@@ -103,12 +104,12 @@ var CrashManager = core.Class.extend({
         if (!this.active) {
             return;
         }
-        new Dialog(this, {
+        return new Dialog(this, {
             size: 'medium',
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
             $content: $(QWeb.render('CrashManager.warning', {error: error}))
-        }).open();
+        }).open({shouldFocusButtons:true});
     },
     show_error: function(error) {
         if (!this.active) {
@@ -149,10 +150,10 @@ var CrashManager = core.Class.extend({
             clipboard.destroy();
         });
 
-        dialog.open();
+        return dialog.open();
     },
     show_message: function(exception) {
-        this.show_error({
+        return this.show_error({
             type: _t("Odoo Client Error"),
             message: exception,
             data: {debug: ""}

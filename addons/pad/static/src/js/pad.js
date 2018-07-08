@@ -178,6 +178,7 @@ var FieldPad = AbstractField.extend({
     _onToggleFullScreen: function () {
         this.$el.toggleClass('oe_pad_fullscreen mb0');
         this.$('.oe_pad_switch').toggleClass('fa-expand fa-compress');
+        this.$el.parents('.o_touch_device').toggleClass('o_scroll_hidden');
     },
 });
 

@@ -303,16 +303,8 @@ class Module(models.Model):
             return True
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
-                raise UserError(_('You try to remove a module that is installed or will be installed'))
+                raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
         self.clear_caches()
-        # Installing a module creates entries in base.module.uninstall, during
-        # the unlink process of ir.module.module we try to update the
-        # base.module.uninstall table's module_id to null, which violates a
-        # non-null constraint, effectively raising an Exception.
-        # V11-only !!DO NOT FORWARD-PORT!!
-        self.env['base.module.uninstall'].search(
-            [('module_id', 'in', self.ids)]
-        ).unlink()
         return super(Module, self).unlink()
 
     @staticmethod
@@ -418,17 +410,19 @@ class Module(models.Model):
                 todo = todo.mapped('dependencies_id.depend_id')
             return result
 
-        for category in install_mods.mapped('category_id').filtered('exclusive'):
-            # the installation is valid if all installed modules in category
-            # correspond to one module and all its dependencies in category
-            category_mods = install_mods.filtered(lambda mod: mod.category_id == category)
-            if not any(closure(module) & category_mods == category_mods
-                       for module in category_mods):
+        exclusives = self.env['ir.module.category'].search([('exclusive', '=', True)])
+        for category in exclusives:
+            # retrieve installed modules in category and sub-categories
+            categories = category.search([('id', 'child_of', category.ids)])
+            modules = install_mods.filtered(lambda mod: mod.category_id in categories)
+            # the installation is valid if all installed modules in categories
+            # belong to the transitive dependencies of one of them
+            if modules and not any(modules <= closure(module) for module in modules):
                 msg = _('You are trying to install incompatible modules in category "%s":')
                 labels = dict(self.fields_get(['state'])['state']['selection'])
                 raise UserError("\n".join([msg % category.name] + [
                     "- %s (%s)" % (module.shortdesc, labels[module.state])
-                    for module in category_mods
+                    for module in modules
                 ]))
 
         return dict(ACTION_DICT, name=_('Install'))
@@ -674,7 +668,7 @@ class Module(models.Model):
         res = [0, 0]    # [update, add]
 
         default_version = modules.adapt_version('1.0')
-        known_mods = self.search([])
+        known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
 
         # iterate through detected modules and update/create them in db

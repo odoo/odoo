@@ -135,9 +135,11 @@ if(!the_form.length) {
             for (var i=0; i < date_fields.length; i++) {
                 var el = date_fields[i];
                 var moment_date = $(el).data('DateTimePicker').date();
-                moment_date.toJSON = function () {
-                    return this.clone().locale('en').format('YYYY-MM-DD');
-                };
+                if (moment_date) {
+                    moment_date.toJSON = function () {
+                        return this.clone().locale('en').format('YYYY-MM-DD');
+                    };
+                }
                 var field_obj = _.findWhere(formData, {'name': el.name});
                 field_obj.value = JSON.parse(JSON.stringify(moment_date));
             }
@@ -181,9 +183,8 @@ if(!the_form.length) {
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
     ready_with_locale.then(function(){
-        var l10n = _t.database.parameters;
         $('.form-control.date').datetimepicker({
-            format : time.strftime_to_moment_format(l10n.date_format),
+            format : time.getLangDateFormat(),
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),
             calendarWeeks: true,

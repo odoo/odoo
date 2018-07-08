@@ -21,17 +21,17 @@
 
                         <div class="o_theme_preview_top bg-white mb4">
                             <div class="o_browser_bar"/>
-                            <i states="installed" class="text-center bg-white text-success img-circle fa fa-check-circle"/>
+                            <i states="installed" class="text-center bg-white text-success img-circle fa fa-check-circle" role="img" aria-label="Installed" title="Installed"/>
                             <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
                             <div states="uninstalled" class="o_button_area">
                                 <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
                                 <hr t-if="record.url.value"/>
-                                <a t-if="record.url.value" class="btn btn-default" t-att-href="record.url.value" target="_blank">Live Preview</a>
+                                <a role="button" t-if="record.url.value" class="btn btn-default" t-att-href="record.url.value" target="_blank">Live Preview</a>
                             </div>
                         </div>
                         <div class="o_theme_preview_bottom clearfix">
                             <h5 t-if="record.display_name.value" class="text-uppercase pull-left">
-                                <img class="pull-left mr4"  t-att-src="record.icon.value" height="16" width="16"/>
+                                <img class="pull-left mr4"  t-att-src="record.icon.value" height="16" width="16" alt="Theme preview"/>
                                 <b><t t-esc="record.display_name.value.replace(('Theme'), '').replace(('theme'), '')"/></b>
                             </h5>
                             <h6 t-if="record.category_id.value" class="text-muted pull-right">
@@ -67,7 +67,7 @@
         <field name="view_id" ref="theme_view_kanban"/>
         <field name="search_view_id" ref="theme_view_search"/>
         <field name="domain" eval="[
-            '|', ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]), ('name', '=', 'theme_default'),
+            ('category_id', 'not in', [ref('base.module_category_theme_hidden', False)]),
             '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
         ]"/>
     </record>
@@ -91,7 +91,7 @@ action = {
 
     <!-- Add link to theme install in default customize modal -->
     <template id="customize_modal" inherit_id="website.theme_customize" priority="1">
-        <xpath expr="//div[hasclass('modal-header')]" position="inside">
+        <xpath expr='//*[@role="dialog"]//header' position="inside">
             <a href="/web#action=website_theme_install.theme_install_kanban_action">See themes here</a>
         </xpath>
     </template>

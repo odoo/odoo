@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 class HolidaysType(models.Model):
-    _inherit = "hr.holidays.status"
+    _inherit = "hr.leave.type"
 
     def _default_project_id(self):
         company = self.company_id if self.company_id else self.env.user.company_id
@@ -35,11 +35,11 @@ class HolidaysType(models.Model):
         for holiday_status in self:
             if holiday_status.timesheet_generate:
                 if not holiday_status.timesheet_project_id or not holiday_status.timesheet_task_id:
-                    raise ValidationError(_('For the leaves to generate timesheet, the internal project and task are requried.'))
+                    raise ValidationError(_('Both the internal project and task are required to generate timesheet for the leaves.'))
 
 
 class Holidays(models.Model):
-    _inherit = "hr.holidays"
+    _inherit = "hr.leave"
 
     timesheet_ids = fields.One2many('account.analytic.line', 'holiday_id', string="Analytic Lines")
 
@@ -50,17 +50,19 @@ class Holidays(models.Model):
         """
         # create the timesheet on the vacation project
         for holiday in self.filtered(
-                lambda request: request.type == 'remove' and
-                                request.holiday_type == 'employee' and
+                lambda request: request.holiday_type == 'employee' and
                                 request.holiday_status_id.timesheet_project_id and
                                 request.holiday_status_id.timesheet_task_id):
             holiday_project = holiday.holiday_status_id.timesheet_project_id
             holiday_task = holiday.holiday_status_id.timesheet_task_id
 
-            work_hours_data = [item for item in holiday.employee_id.iter_work_hours_count(fields.Datetime.from_string(holiday.date_from), fields.Datetime.from_string(holiday.date_to))]
+            work_hours_data = holiday.employee_id.list_work_time_per_day(
+                fields.Datetime.from_string(holiday.date_from),
+                fields.Datetime.from_string(holiday.date_to),
+            )
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 self.env['account.analytic.line'].create({
-                    'name': "%s (%s/%s)" % (holiday.name, index + 1, len(work_hours_data)),
+                    'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),
                     'project_id': holiday_project.id,
                     'task_id': holiday_task.id,
                     'account_id': holiday_project.analytic_account_id.id,
@@ -77,6 +79,7 @@ class Holidays(models.Model):
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """
         result = super(Holidays, self).action_refuse()
-        self.mapped('timesheet_ids').write({'holiday_id': False})
-        self.mapped('timesheet_ids').unlink()
+        timesheets = self.sudo().mapped('timesheet_ids')
+        timesheets.write({'holiday_id': False})
+        timesheets.unlink()
         return result

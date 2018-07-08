@@ -5,7 +5,7 @@
     <record id="group_hr_payroll_user" model="res.groups">
         <field name="name">Officer</field>
         <field name="category_id" ref="base.module_category_hr_payroll"/>
-        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user')), (4, ref('hr_contract.group_hr_contract_manager'))]"/>
     </record>
 
     <record id="group_hr_payroll_manager" model="res.groups">

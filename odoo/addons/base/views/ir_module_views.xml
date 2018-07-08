@@ -157,7 +157,7 @@
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette oe_kanban_global_click">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
+                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon"/>
                         <div class="oe_module_desc" t-att-title="record.shortdesc.value">
                           <h4 class="o_kanban_record_title"><field name="shortdesc"/></h4>
                           <p class="oe_module_name">
@@ -183,8 +183,11 @@
             <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
-              <p><b>No module found!</b></p>
-              <p>You should try other search criteria.</p>
+              <p class="o_view_nocontent_empty_folder">
+                No website module found!
+              </p><p>
+                You should try other search criteria.
+              </p>
             </field>
         </record>
         <menuitem id="menu_module_tree" parent="menu_management" name="Apps" sequence="5" action="open_module_tree" />

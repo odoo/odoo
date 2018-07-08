@@ -17,9 +17,11 @@
     </div>
 
     <t t-extend="DashboardApps">
-        <t t-jquery=".o_web_settings_dashboard_pills" t-operation="append">
-            <a class="pull-right" t-att-href="widget.data.url" target="_blank">
-            <i class="fa fa-money fa-2x text-muted"/> In-App Purchases</a>
+        <t t-jquery=".o_web_settings_dashboard_pills" t-operation="after">
+            <div class="text-center" style="display: inline-block">
+                <a t-att-href="widget.data.url" target="_blank">
+                <i class="fa fa-money fa-2x text-muted"/> In-App Purchases</a>
+            </div>
         </t>
     </t>
 

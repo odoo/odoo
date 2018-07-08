@@ -10,6 +10,8 @@ class ProductProduct(models.Model):
     @api.multi
     def _sales_count(self):
         r = {}
+        if not self.user_has_groups('sales_team.group_sale_salesman'):
+            return r
         domain = [
             ('state', 'in', ['sale', 'done']),
             ('product_id', 'in', self.ids),
@@ -21,3 +23,6 @@ class ProductProduct(models.Model):
         return r
 
     sales_count = fields.Integer(compute='_sales_count', string='# Sales')
+
+    def _get_invoice_policy(self):
+        return self.invoice_policy

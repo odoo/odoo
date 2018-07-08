@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import collections
 import copy
 import datetime
@@ -11,6 +12,7 @@ import time
 
 import itertools
 from dateutil.relativedelta import relativedelta
+from functools import partial
 from operator import itemgetter
 
 import json
@@ -39,6 +41,20 @@ MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpa
 # Note: natural _order has `name`, but only because that makes list browsing easier
 INHERIT_ORDER = 'priority,id'
 
+# attributes in views that may contain references to field names
+ATTRS_WITH_FIELD_NAMES = {
+    'context',
+    'domain',
+    'decoration-bf',
+    'decoration-it',
+    'decoration-danger',
+    'decoration-info',
+    'decoration-muted',
+    'decoration-primary',
+    'decoration-success',
+    'decoration-warning',
+}
+
 
 def keep_query(*keep_params, **additional_params):
     """
@@ -55,7 +71,7 @@ def keep_query(*keep_params, **additional_params):
     if not keep_params and not additional_params:
         keep_params = ('*',)
     params = additional_params.copy()
-    qs_keys = list(request.httprequest.args)
+    qs_keys = list(request.httprequest.args) if request else []
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
@@ -76,11 +92,11 @@ class ViewCustom(models.Model):
         return [(rec.id, rec.user_id.name) for rec in self]
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if name:
-            recs = self.search([('user_id', operator, name)] + (args or []), limit=limit)
-            return recs.name_get()
-        return super(ViewCustom, self).name_search(name, args=args, operator=operator, limit=limit)
+            view_ids = self._search([('user_id', operator, name)] + (args or []), limit=limit, access_rights_uid=name_get_uid)
+            return self.browse(view_ids).name_get()
+        return super(ViewCustom, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model_cr_context
     def _auto_init(self):
@@ -99,33 +115,31 @@ def _hasclass(context, *cls):
 
 def get_view_arch_from_file(filename, xmlid):
     doc = etree.parse(filename)
-    node = None
-    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
-        if n.tag in ('template', 'record'):
-            node = n
-            break
-    if node is None:
-        # fallback search on template with implicit module name
-        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
-            if n.tag in ('template', 'record'):
-                node = n
-                break
-    if node is not None:
-        if node.tag == 'record':
-            field = node.find('field[@name="arch"]')
-            _fix_multiple_roots(field)
-            inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
-            return field.text + inner
-        elif node.tag == 'template':
-            # The following dom operations has been copied from convert.py's _tag_template()
-            if not node.get('inherit_id'):
-                node.set('t-name', xmlid)
-                node.tag = 't'
-            else:
-                node.tag = 'data'
-            node.attrib.pop('id', None)
-            return etree.tostring(node, encoding='unicode')
-    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
+
+    xmlid_search = (xmlid, xmlid.split('.')[1])
+
+    # when view is created from model with inheritS of ir_ui_view, the xml id has been suffixed by '_ir_ui_view'
+    suffix = '_ir_ui_view'
+    if xmlid.endswith(suffix):
+        xmlid_search += (xmlid.rsplit(suffix, 1)[0], xmlid.split('.')[1].rsplit(suffix, 1)[0])
+
+    for node in doc.xpath('//*[%s]' % ' or '.join(["@id='%s'" % _id for _id in xmlid_search])):
+        if node.tag in ('template', 'record'):
+            if node.tag == 'record':
+                field = node.find('field[@name="arch"]')
+                _fix_multiple_roots(field)
+                inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
+                return field.text + inner
+            elif node.tag == 'template':
+                # The following dom operations has been copied from convert.py's _tag_template()
+                if not node.get('inherit_id'):
+                    node.set('t-name', xmlid)
+                    node.tag = 't'
+                else:
+                    node.tag = 'data'
+                node.attrib.pop('id', None)
+                return etree.tostring(node, encoding='unicode')
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid_search)
     return None
 
 def add_text_before(node, text):
@@ -151,6 +165,7 @@ def add_text_inside(node, text):
 def remove_element(node):
     """ Remove ``node`` but not its tail, from its XML tree. """
     add_text_before(node, node.tail)
+    node.tail = None
     node.getparent().remove(node)
 
 xpath_utils = etree.FunctionNamespace(None)
@@ -158,6 +173,7 @@ xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
+READONLY = re.compile(r"\breadonly\b")
 
 
 class View(models.Model):
@@ -179,7 +195,7 @@ class View(models.Model):
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture', nodrop=True)
-    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='View Architecture')
+    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture')
     arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch')
     arch_fs = fields.Char(string='Arch Filename')
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
@@ -191,7 +207,7 @@ class View(models.Model):
                          help="ID of the view defined in xml file")
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
                                  string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only.")
-    model_ids = fields.One2many('ir.model.data', 'res_id', domain=[('model', '=', 'ir.ui.view')], auto_join=True)
+    model_ids = fields.One2many('ir.model.data', 'res_id', string="Models", domain=[('model', '=', 'ir.ui.view')], auto_join=True)
     create_date = fields.Datetime(readonly=True)
     write_date = fields.Datetime(string='Last Modification Date', readonly=True)
 
@@ -231,7 +247,7 @@ actual arch.
                 if fullpath:
                     arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id)
+                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id).replace('%%', '%')
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
                     arch_fs = False
@@ -240,16 +256,12 @@ actual arch.
     def _inverse_arch(self):
         for view in self:
             data = dict(arch_db=view.arch)
-            if 'install_mode_data' in self._context:
-                imd = self._context['install_mode_data']
-                if '.' not in imd['xml_id']:
-                    imd['xml_id'] = '%s.%s' % (imd['module'], imd['xml_id'])
-                if self._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
-                    # we store the relative path to the resource instead of the absolute path, if found
-                    # (it will be missing e.g. when importing data-only modules using base_import_module)
-                    path_info = get_resource_from_path(imd['xml_file'])
-                    if path_info:
-                        data['arch_fs'] = '/'.join(path_info[0:2])
+            if 'install_filename' in self._context:
+                # we store the relative path to the resource instead of the absolute path, if found
+                # (it will be missing e.g. when importing data-only modules using base_import_module)
+                path_info = get_resource_from_path(self._context['install_filename'])
+                if path_info:
+                    data['arch_fs'] = '/'.join(path_info[0:2])
             view.write(data)
 
     @api.depends('arch')
@@ -310,6 +322,7 @@ actual arch.
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
+        self = self.with_context(check_field_names=True)
         for view in self:
             view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
@@ -325,8 +338,11 @@ actual arch.
                     # A <data> element is a wrapper for multiple root nodes
                     view_docs = view_docs[0]
                 for view_arch in view_docs:
-                    if not valid_view(view_arch):
-                        raise ValidationError(_('Invalid view definition'))
+                    check = valid_view(view_arch)
+                    if not check:
+                        raise ValidationError(_('Invalid view %s definition in %s') % (view.name, view.arch_fs))
+                    if check == "Warning":
+                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view.name, view.arch_fs, view.arch)
         return True
 
     @api.constrains('type', 'groups_id')
@@ -387,7 +403,7 @@ actual arch.
     def write(self, vals):
         # If view is modified we remove the arch_fs information thus activating the arch_db
         # version. An `init` of the view will restore the arch_fs for the --dev mode
-        if ('arch' in vals or 'arch_base' in vals) and 'install_mode_data' not in self._context:
+        if ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
             vals['arch_fs'] = False
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
@@ -398,6 +414,12 @@ actual arch.
 
         self.clear_caches()
         return super(View, self).write(self._compute_defaults(vals))
+
+    def unlink(self):
+        # if in uninstall mode and has children views, emulate an ondelete cascade
+        if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
+            self.mapped('inherit_children_ids').unlink()
+        super(View, self).unlink()
 
     @api.multi
     def toggle(self):
@@ -457,7 +479,7 @@ actual arch.
             # cannot currently use relationships that are
             # not required. The root cause is the INNER JOIN
             # used to implement it.
-            modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
             views = self.search(conditions + [('model_ids.module', 'in', modules)])
             views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
             views = self.search(conditions + views_cond, order=INHERIT_ORDER)
@@ -554,6 +576,22 @@ actual arch.
         # changes to apply to some parent architecture).
         specs = [specs_tree]
 
+        def extract(spec):
+            """
+            Utility function that locates a node given a specification, remove
+            it from the source and returns it.
+            """
+            if len(spec):
+                self.raise_view_error(_("Invalid specification for moved nodes: '%s'") %
+                                      etree.tostring(spec), inherit_id)
+            to_extract = self.locate_node(source, spec)
+            if to_extract is not None:
+                remove_element(to_extract)
+                return to_extract
+            else:
+                self.raise_view_error(_("Element '%s' cannot be located in parent view") %
+                                      etree.tostring(spec), inherit_id)
+
         while len(specs):
             spec = specs.pop(0)
             if isinstance(spec, SKIPPED_ELEMENT_TYPES):
@@ -572,6 +610,8 @@ actual arch.
                         source = copy.deepcopy(spec[0])
                     else:
                         for child in spec:
+                            if child.get('position') == 'move':
+                                child = extract(child)
                             node.addprevious(child)
                         node.getparent().remove(node)
                 elif pos == 'attributes':
@@ -600,6 +640,8 @@ actual arch.
                 elif pos == 'inside':
                     add_text_inside(node, spec.text)
                     for child in spec:
+                        if child.get('position') == 'move':
+                            child = extract(child)
                         node.append(child)
                 elif pos == 'after':
                     # add a sentinel element right after node, insert content of
@@ -608,11 +650,15 @@ actual arch.
                     node.addnext(sentinel)
                     add_text_before(sentinel, spec.text)
                     for child in spec:
+                        if child.get('position') == 'move':
+                            child = extract(child)
                         sentinel.addprevious(child)
                     remove_element(sentinel)
                 elif pos == 'before':
                     add_text_before(node, spec.text)
                     for child in spec:
+                        if child.get('position') == 'move':
+                            child = extract(child)
                         node.addprevious(child)
                 else:
                     self.raise_view_error(_("Invalid position attribute: '%s'") % pos, inherit_id)
@@ -773,12 +819,16 @@ actual arch.
                 attrs = {}
                 field = Model._fields.get(node.get('name'))
                 if field:
+                    editable = self.env.context.get('view_is_editable', True) and self._field_is_editable(field, node)
                     children = False
                     views = {}
                     for f in node:
                         if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
-                            xarch, xfields = self.with_context(base_model_name=model).postprocess_and_fields(field.comodel_name, f, view_id)
+                            xarch, xfields = self.with_context(
+                                base_model_name=model,
+                                view_is_editable=editable,
+                            ).postprocess_and_fields(field.comodel_name, f, view_id)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields,
@@ -853,6 +903,105 @@ actual arch.
 
         return arch
 
+    def _view_is_editable(self, node):
+        """ Return whether the node is an editable view. """
+        return node.tag == 'form' or node.tag == 'tree' and node.get('editable')
+
+    def _field_is_editable(self, field, node):
+        """ Return whether a field is editable (not always readonly). """
+        return (
+            (not field.readonly or READONLY.search(str(field.states or ""))) and
+            (node.get('readonly') != "1" or READONLY.search(node.get('attrs') or ""))
+        )
+
+    def get_attrs_symbols(self):
+        """ Return a set of predefined symbols for evaluating attrs. """
+        return {
+            'True', 'False', 'None',    # those are identifiers in Python 2.7
+            'self',
+            'parent',
+            'id',
+            'uid',
+            'context',
+            'context_today',
+            'active_id',
+            'active_ids',
+            'active_model',
+            'time',
+            'datetime',
+            'relativedelta',
+            'current_date',
+        }
+
+    def get_attrs_field_names(self, arch, model, editable):
+        """ Retrieve the field names appearing in context, domain and attrs, and
+            return a list of triples ``(field_name, attr_name, attr_value)``.
+        """
+        VIEW_TYPES = {item[0] for item in type(self).type.selection}
+        symbols = self.get_attrs_symbols() | {None}
+        result = []
+
+        def get_name(node):
+            """ return the name from an AST node, or None """
+            if isinstance(node, ast.Name):
+                return node.id
+
+        def get_subname(get, node):
+            """ return the subfield name from an AST node, or None """
+            if isinstance(node, ast.Attribute) and get(node.value) == 'parent':
+                return node.attr
+
+        def process_expr(expr, get, key, val):
+            """ parse `expr` and collect triples """
+            for node in ast.walk(ast.parse(expr.strip(), mode='eval')):
+                name = get(node)
+                if name not in symbols:
+                    result.append((name, key, val))
+
+        def process_attrs(expr, get, key, val):
+            """ parse `expr` and collect field names in lhs of conditions. """
+            for domain in safe_eval(expr).values():
+                if not isinstance(domain, list):
+                    continue
+                for arg in domain:
+                    if isinstance(arg, (tuple, list)):
+                        process_expr(str(arg[0]), get, key, expr)
+
+        def process(node, model, editable, get=get_name):
+            """ traverse `node` and collect triples """
+            if node.tag in VIEW_TYPES:
+                # determine whether this view is editable
+                editable = editable and self._view_is_editable(node)
+            elif node.tag == 'field':
+                # determine whether the field is editable
+                field = model._fields.get(node.get('name'))
+                if field:
+                    editable = editable and self._field_is_editable(field, node)
+
+            for key, val in node.items():
+                if not val:
+                    continue
+                if key in ATTRS_WITH_FIELD_NAMES:
+                    process_expr(val, get, key, val)
+                elif key == 'attrs':
+                    process_attrs(val, get, key, val)
+
+            if node.tag == 'field' and field and field.relational:
+                if editable and not node.get('domain'):
+                    domain = field._description_domain(self.env)
+                    # process the field's domain as if it was in the view
+                    if isinstance(domain, pycompat.string_types):
+                        process_expr(domain, get, 'domain', domain)
+                # retrieve subfields of 'parent'
+                model = self.env[field.comodel_name]
+                get = partial(get_subname, get)
+
+            for child in node:
+                process(child, model, editable, get)
+
+        process(arch, model, editable)
+        return result
+
     @api.model
     def postprocess_and_fields(self, model, node, view_id):
         """ Return an architecture and a description of all the fields.
@@ -888,6 +1037,12 @@ actual arch.
             fields = Model.fields_get(None)
 
         node = self.add_on_change(model, node)
+
+        attrs_fields = []
+        if self.env.context.get('check_field_names'):
+            editable = self.env.context.get('view_is_editable', True)
+            attrs_fields = self.get_attrs_field_names(node, Model, editable)
+
         fields_def = self.postprocess(model, node, view_id, False, fields)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
@@ -917,6 +1072,20 @@ actual arch.
             else:
                 message = _("Field `%(field_name)s` does not exist") % dict(field_name=field)
                 self.raise_view_error(message, view_id)
+
+        missing = [item for item in attrs_fields if item[0] not in fields]
+        if missing:
+            msg_lines = []
+            msg_fmt = _("Field %r used in attributes must be present in view but is missing:")
+            line_fmt = _(" - %r in %s=%r")
+            for name, lines in itertools.groupby(sorted(missing), itemgetter(0)):
+                if msg_lines:
+                    msg_lines.append("")
+                msg_lines.append(msg_fmt % name)
+                for line in lines:
+                    msg_lines.append(line_fmt % line)
+            self.raise_view_error("\n".join(msg_lines), view_id)
+
         return arch, fields
 
     #------------------------------------------------------
@@ -1052,10 +1221,10 @@ actual arch.
         return self.browse(self.get_view_id(template)).render(values, engine)
 
     @api.multi
-    def render(self, values=None, engine='ir.qweb'):
+    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, pycompat.integer_types)
 
-        qcontext = self._prepare_qcontext()
+        qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
         return self.env[engine].render(self.id, qcontext)
@@ -1173,7 +1342,7 @@ actual arch.
         query = """SELECT max(v.id)
                      FROM ir_ui_view v
                 LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                    WHERE md.module NOT IN (SELECT name FROM ir_module_module)
+                    WHERE md.module IN (SELECT name FROM ir_module_module) IS NOT TRUE
                       AND v.model = %s
                       AND v.active = true
                  GROUP BY coalesce(v.inherit_id, v.id)"""

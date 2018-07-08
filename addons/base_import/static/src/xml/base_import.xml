@@ -8,17 +8,17 @@
             <input type="hidden" name="import_id"/>
             <div class="oe_import_box col-sm-9">
                 <div class="col-sm-12">
-                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/10.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
+                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/11.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
                 </div>
                 <div class="col-sm-10">
                     <div class="input-group">
                       <input type="text" class="oe_import_file_show form-control" placeholder="No file chosen..."/>
                       <span class="input-group-btn">
-                        <label class="btn btn-primary" for="my-file-selector">
+                        <button class="btn btn-primary">
                         <input accept=".csv, .xls, .xlsx, .xlsm, .ods" id-attf-id="file_#{_id}"
                        name="file" id="my-file-selector" class="oe_import_file" type="file" style="display:none;"/>
                         Load File
-                        </label>
+                        </button>
                       </span>
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default oe_import_file_reload" disabled="disabled">Reload File</button>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="template-import mt24 hidden">
                         <h5>
-                            <a href="#" class="import-link fa fa-download"></a>
+                            <a href="#" class="import-link fa fa-download" aria-label="Download" title="Download"></a>
                         </h5>
                     </div>
                 </div>
@@ -68,14 +68,23 @@
                         Track history during import
                     </label>
                 </div>
+                <div title="If the model uses parent/child relations, computing the
+                    parent / child relation occurs on every line, and lead to a slower import.
+                    Defering it can speed up import."
+                    class="oe_import_deferparentstore">
+                    <input type="checkbox" id="oe_import_deferparentstore" checked="checked"/>
+                    <label for="oe_import_deferparentstore">
+                        Defer parent/child computation
+                    </label>
+                </div>
                 <input type="checkbox" class="oe_import_has_header"
                        id="oe_import_has_header" checked="checked"/>
                 <label for="oe_import_has_header">The first row
                  contains the label of the column</label>
-                <input type="checkbox" class="oe_import_advanced_mode" disabled="disabled"
+                <input type="checkbox" class="oe_import_advanced_mode" checked="checked"
                        id="oe_import_advanced_mode"/>
                 <label for="oe_import_advanced_mode">Show fields of relation fields (advanced)</label>
-                <p class="oe_import_noheaders">If the file contains
+                <p class="oe_import_noheaders text-muted">If the file contains
                 the column names, Odoo can try auto-detecting the
                 field corresponding to the column. This makes imports
                 simpler especially when the file has many columns.</p>
@@ -115,7 +124,7 @@
         </tbody>
     </t>
     <t t-name="ImportView.preview.error">
-        <div class="oe_import_report oe_import_report_error">
+        <div class="oe_import_report bg-danger text-danger">
             <p>Import preview failed due to: <t t-esc="error"/>.</p>
             <p>For CSV files, the issue could be an incorrect encoding.</p>
             <p t-if="preview">Here is the start of the file we could not import:</p>
@@ -124,7 +133,7 @@
     </t>
     <ul t-name="ImportView.error">
         <li t-foreach="errors" t-as="error"
-            t-attf-class="oe_import_report oe_import_report_#{error_value[0].type}">
+            t-attf-class="oe_import_report bg-#{error_value[0].type} text-#{error_value[0].type}">
             <t t-call="ImportView.error.each">
                 <t t-set="error" t-value="error_value[0]"/>
             </t>
@@ -159,7 +168,7 @@
         </t>
     </t>
     <t t-extend="KanbanView.buttons">
-        <t t-jquery="button.o-kanban-button-new" t-operation="after">
+        <t t-jquery="button" t-operation="after">
             <t t-call="ImportView.import_button"/>
         </t>
     </t>

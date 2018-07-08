@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+from json import dumps, loads
+
+import json
 
 from contextlib import contextmanager
 from email.utils import formataddr
 
 from odoo import api
-from odoo.tests import common
+from odoo.addons.bus.models.bus import json_dump
+from odoo.tests import common, tagged
 
 
 class BaseFunctionalTest(common.SavepointCase):
@@ -78,6 +82,39 @@ class BaseFunctionalTest(common.SavepointCase):
             if hasattr(self, 'assertEmails') and len(new_messages) == 1:
                 self.assertEmails(new_messages.author_id, new_notifications.filtered(lambda n: n.is_email).mapped('res_partner_id'))
 
+    def assertBusNotification(self, channels, message_dicts=None, init=True):
+        """ Check for bus notifications. Basic check is about used channels.
+        Verifying content is optional.
+
+        :param channels: list of channel
+        :param messages: if given, list of message making a valid pair (channel,
+          message) to be found in bus.bus
+        """
+        if init:
+            self.assertEqual(len(self.env['bus.bus'].search([])), len(channels))
+        notifications = self.env['bus.bus'].search([('channel', 'in', [json_dump(channel) for channel in channels])])
+        self.assertEqual(len(notifications), len(channels))
+        if message_dicts:
+            notif_messages = [json.loads(n.message) for n in notifications]
+            for expected in message_dicts:
+                found = False
+                for returned in notif_messages:
+                    for key, val in expected.items():
+                        if key not in returned:
+                            continue
+                        if isinstance(returned[key], list):
+                            if set(returned[key]) != set(val):
+                                continue
+                        else:
+                            if returned[key] != val:
+                                continue
+                            found = True
+                            break
+                    if found:
+                        break
+                if not found:
+                    raise AssertionError("Bus notification content %s not found" % (repr(expected)))
+
     @contextmanager
     def sudoAs(self, login):
         old_uid = self.uid
@@ -144,8 +181,12 @@ class MockEmails(common.SingleTransactionCase):
         """ Tools method to ease the check of send emails """
         expected_email_values = []
         for partners in recipients:
+            if partner_from:
+                email_from = formataddr((partner_from.name, partner_from.email))
+            else:
+                email_from = values['email_from']
             expected = {
-                'email_from': formataddr((partner_from.name, partner_from.email)),
+                'email_from': email_from,
                 'email_to': [formataddr((partner.name, partner.email)) for partner in partners]
             }
             if 'reply_to' in values:
@@ -204,6 +245,7 @@ class MockEmails(common.SingleTransactionCase):
         super(MockEmails, cls).tearDownClass()
 
     def _init_mock_build_email(self):
+        self.env['mail.mail'].search([]).unlink()
         self._mails_args[:] = []
         self._mails[:] = []
 
@@ -220,3 +262,57 @@ class MockEmails(common.SingleTransactionCase):
         mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
+
+
+@tagged('moderation')
+class Moderation(MockEmails, BaseFunctionalTest):
+
+    @classmethod
+    def setUpClass(cls):
+        super(Moderation, cls).setUpClass()
+        Channel = cls.env['mail.channel']
+        Users = cls.env['res.users'].with_context(cls._quick_create_user_ctx)
+
+        cls.channel_moderation_1 = Channel.create({
+            'name': 'Moderation_1',
+            'email_send': True,
+            'moderation': True
+            })
+        cls.channel_1 = cls.channel_moderation_1
+        cls.channel_moderation_2 = Channel.create({
+            'name': 'Moderation_2',
+            'email_send': True,
+            'moderation': True
+            })
+        cls.channel_2 = cls.channel_moderation_2
+
+        cls.user_employee.write({'moderation_channel_ids': [(6, 0, [cls.channel_1.id])]})
+
+        cls.user_employee_2 = Users.create({
+            'name': 'Roboute',
+            'login': 'roboute',
+            'email': 'roboute@guilliman.com',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'moderation_channel_ids': [(6, 0, [cls.channel_2.id])]
+            })
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+
+        cls.channel_moderation_1.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': cls.partner_employee.id})]})
+        cls.channel_moderation_2.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': cls.partner_employee_2.id})]})
+
+    def _create_new_message(self, channel_id, status='pending_moderation', author=None, body='', message_type="email"):
+        author = author if author else self.env.user.partner_id
+        message = self.env['mail.message'].create({
+            'model': 'mail.channel',
+            'res_id': channel_id,
+            'message_type': 'email',
+            'body': body,
+            'moderation_status': status,
+            'author_id': author.id,
+            'email_from': formataddr((author.name, author.email)),
+            'subtype_id': self.env['mail.message.subtype'].search([('name', '=', 'Discussions')]).id
+            })
+        return message
+
+    def _clear_bus(self):
+        self.env['bus.bus'].search([]).unlink()

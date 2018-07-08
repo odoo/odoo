@@ -48,5 +48,5 @@ a notification in you Odoo which ever the page you are.
 Google Calendar
 ---------------
 
-With the plugin Google\_calendar, you can synchronize your Odoo calendar with Google Calendar.
+With this plugin, you can synchronize your Odoo calendar with Google Calendar.
 

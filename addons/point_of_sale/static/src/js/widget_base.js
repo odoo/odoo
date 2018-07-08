@@ -22,6 +22,10 @@ var PosBaseWidget = Widget.extend({
         this.pos    = options.pos    || (parent ? parent.pos : undefined);
         this.chrome = options.chrome || (parent ? parent.chrome : undefined);
         this.gui    = options.gui    || (parent ? parent.gui : undefined); 
+
+        // the widget class does not support anymore using $el/el before the
+        // 'start' lifecycle method, but point of sale actually needs it.
+        this.setElement(this._makeDescriptive());
     },
     format_currency: function(amount,precision){
         var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};

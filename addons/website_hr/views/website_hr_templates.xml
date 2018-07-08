@@ -3,7 +3,7 @@
 <!-- Page --> 
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_hr_assets">
     <xpath expr="." position="inside">
-        <link rel='stylesheet' type="text/less" href='/website_hr/static/src/less/website_hr.less'/>
+        <link rel="stylesheet" type="text/scss" href="/website_hr/static/src/scss/website_hr.scss"/>
     </xpath>
 </template>
 
@@ -22,7 +22,7 @@
                     <t t-set="publish_edit" t-value="True"/>
                 </t>
                 <div class="clearfix"/>
-                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded"/>
+                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded" alt="Employee"/>
                 <div class="mt8">
                     <strong t-field="employee.name"></strong>
                 </div>

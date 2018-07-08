@@ -22,6 +22,8 @@ from odoo.tools import ustr, pycompat
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
+SMTP_TIMEOUT = 60
+
 
 class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
@@ -61,7 +63,7 @@ def encode_header(header_text):
     header_text = ustr(header_text) # FIXME: require unicode higher up?
     if is_ascii(header_text):
         return pycompat.to_native(header_text)
-    Header(header_text, 'utf-8')
+    return Header(header_text, 'utf-8')
 
 def encode_header_param(param_text):
     """Returns an appropriate RFC2047 encoded representation of the given
@@ -133,8 +135,8 @@ class IrMailServer(models.Model):
     name = fields.Char(string='Description', required=True, index=True)
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', size=5, required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
-    smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication")
-    smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication")
+    smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
+    smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
     smtp_encryption = fields.Selection([('none', 'None'),
                                         ('starttls', 'TLS (STARTTLS)'),
                                         ('ssl', 'SSL/TLS')],
@@ -144,15 +146,11 @@ class IrMailServer(models.Model):
                                             "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
                                             "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)")
     smtp_debug = fields.Boolean(string='Debugging', help="If enabled, the full output of SMTP sessions will "
-                                                         "be written to the server log at DEBUG level"
+                                                         "be written to the server log at DEBUG level "
                                                          "(this is very verbose and may include confidential info!)")
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
-
-    @api.multi
-    def name_get(self):
-        return [(server.id, "(%s)" % server.name) for server in self]
 
     @api.multi
     def test_smtp_connection(self):
@@ -160,12 +158,37 @@ class IrMailServer(models.Model):
             smtp = False
             try:
                 smtp = self.connect(mail_server_id=server.id)
+                # simulate sending an email from current user's address - without sending it!
+                email_from, email_to = self.env.user.email, 'noreply@odoo.com'
+                if not email_from:
+                    raise UserError(_('Please configure an email on the current user to simulate '
+                                      'sending an email message via this outgoing server'))
+                # Testing the MAIL FROM step should detect sender filter problems
+                (code, repl) = smtp.mail(email_from)
+                if code != 250:
+                    raise UserError(_('The server refused the sender address (%(email_from)s) '
+                                      'with error %(repl)s') % locals())
+                # Testing the RCPT TO step should detect most relaying problems
+                (code, repl) = smtp.rcpt(email_to)
+                if code not in (250, 251):
+                    raise UserError(_('The server refused the test recipient (%(email_to)s) '
+                                      'with error %(repl)s') % locals())
+                # Beginning the DATA step should detect some deferred rejections
+                # Can't use self.data() as it would actually send the mail!
+                smtp.putcmd("data")
+                (code, repl) = smtp.getreply()
+                if code != 354:
+                    raise UserError(_('The server refused the test connection '
+                                      'with error %(repl)s') % locals())
+            except UserError as e:
+                # let UserErrors (messages) bubble up
+                raise e
             except Exception as e:
                 raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % ustr(e))
             finally:
                 try:
                     if smtp:
-                        smtp.quit()
+                        smtp.close()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
@@ -221,13 +244,13 @@ class IrMailServer(models.Model):
         if smtp_encryption == 'ssl':
             if 'SMTP_SSL' not in smtplib.__all__:
                 raise UserError(
-                    _("Your OpenERP Server does not support SMTP-over-SSL. "
-                      "You could use STARTTLS instead."
+                    _("Your Odoo Server does not support SMTP-over-SSL. "
+                      "You could use STARTTLS instead. "
                        "If SSL is needed, an upgrade to Python 2.6 on the server-side "
                        "should do the trick."))
-            connection = smtplib.SMTP_SSL(smtp_server, smtp_port)
+            connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
         else:
-            connection = smtplib.SMTP(smtp_server, smtp_port)
+            connection = smtplib.SMTP(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
         connection.set_debuglevel(smtp_debug)
         if smtp_encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
@@ -426,6 +449,7 @@ class IrMailServer(models.Model):
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
+        del message['Bcc']
 
         smtp_to_list = [
             address
@@ -443,22 +467,20 @@ class IrMailServer(models.Model):
             message['To'] = x_forge_to
 
         # Do not actually send emails in testing mode!
-        if getattr(threading.currentThread(), 'testing', False):
+        if getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode():
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
         try:
             message_id = message['Message-Id']
             smtp = smtp_session
-            try:
-                smtp = smtp or self.connect(
-                    smtp_server, smtp_port, smtp_user, smtp_password,
-                    smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
-                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
-            finally:
-                # do not quit() a pre-established smtp_session
-                if smtp is not None and not smtp_session:
-                    smtp.quit()
+            smtp = smtp or self.connect(
+                smtp_server, smtp_port, smtp_user, smtp_password,
+                smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
+            smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
+            # do not quit() a pre-established smtp_session
+            if not smtp_session:
+                smtp.quit()
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % params

@@ -36,7 +36,7 @@ class EventSaleTest(common.TransactionCase):
         self.env['sale.order.line'].create({
             'product_id': product.id,
             'price_unit': 190.50,
-            'product_uom': self.env.ref('product.product_uom_unit').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': 8.0,
             'order_id': self.sale_order.id,
             'name': 'sales order line',

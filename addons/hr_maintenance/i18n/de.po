@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
-# Tom <github@strohmeier.email>, 2017
-# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Wolfgang Taferner, 2017
+# Tom, 2017
+# Dejan Dinic, 2017
+# Martin Trigaux, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -24,12 +24,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment_department_id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__department_id
 msgid "Assigned to Department"
 msgstr "Zu Abteilung zugewiesen"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment_employee_id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__employee_id
 msgid "Assigned to Employee"
 msgstr "Mitarbeiterzuweisungen"
 
@@ -40,7 +40,7 @@ msgid "Created By"
 msgstr "Angelegt von"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request_department_id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__department_id
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
@@ -49,7 +49,7 @@ msgid "Department"
 msgstr "Abteilung"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request_employee_id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
@@ -78,6 +78,11 @@ msgid "Other"
 msgstr "Andere"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment_equipment_assign_to
+#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr
+msgid "Unassigned"
+msgstr "Nicht zugewiesen"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__equipment_assign_to
 msgid "Used By"
 msgstr "Nutzung von"

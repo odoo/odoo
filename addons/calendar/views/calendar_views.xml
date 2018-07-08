@@ -75,7 +75,7 @@
                 <field name="partner_ids"/>
                 <field name="location"/>
                 <field name="state" invisible="True"/>
-                <field name="duration"/>
+                <field name="duration" widget="float_time"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
@@ -112,7 +112,7 @@
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
-                                <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
+                                <p class='alert alert-warning' role="status"> This event is linked to a recurrence...<br/>
                                     <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
                                 </p>
                             </group>
@@ -122,10 +122,10 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
@@ -194,7 +194,6 @@
                                 <group>
                                     <field name="privacy"/>
                                     <field name="show_as"/>
-                                    <field name="rrule" invisible="1" readonly="0" />
                                     <field name="recurrent_id" invisible="1" />
                                 </group>
                             </group>
@@ -312,8 +311,8 @@
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to schedule a new meeting.
+          <p class="o_view_nocontent_smiling_face">
+            Schedule a new meeting
           </p><p>
             The calendar is shared between employees and fully integrated with
             other applications such as the employee leaves or the business

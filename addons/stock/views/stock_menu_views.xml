@@ -17,7 +17,7 @@
         sequence="50" groups="base.group_no_one"/>
 
     <menuitem id="product_uom_menu" name="Units of Measures" parent="menu_stock_config_settings"
-        sequence="5" groups="product.group_uom"/>
+        sequence="5" groups="uom.group_uom"/>
 
     <menuitem
         action="product.product_category_action_form" id="menu_product_category_config_stock"
@@ -29,14 +29,14 @@
         action="product.variants_action" id="menu_variants_action"
         parent="menu_product_in_config_stock" sequence="5" groups="product.group_product_variant"/>
     <menuitem
-        action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
+        action="uom.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
         name="UoM Categories"
         parent="product_uom_menu" sequence="5"/>
     <menuitem
         id="menu_stock_unit_measure_stock" name="Units of Measure"
-        parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
+        parent="stock.menu_product_in_config_stock"  sequence="35" groups="uom.group_uom"/>
 
-    <menuitem id="menu_stock_uom_form_action" action="product.product_uom_form_action"
+    <menuitem id="menu_stock_uom_form_action" action="uom.product_uom_form_action"
         name="UoM"
         parent="product_uom_menu" sequence="35"/>
 

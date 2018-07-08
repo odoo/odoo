@@ -154,9 +154,14 @@ class AuthorizeAPI():
         etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
         billTo = etree.SubElement(payment_profile, "billTo")
         etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
+        
+        missing_fields = [partner._fields[field].string for field in ['city', 'country_id'] if not partner[field]]
+        if missing_fields:
+            raise ValidationError({'missing_fields': missing_fields})
+        
         etree.SubElement(billTo, "city").text = partner.city
         etree.SubElement(billTo, "state").text = partner.state_id.name or None
-        etree.SubElement(billTo, "zip").text = partner.zip
+        etree.SubElement(billTo, "zip").text = partner.zip or ''
         etree.SubElement(billTo, "country").text = partner.country_id.name or None
         payment = etree.SubElement(payment_profile, "payment")
         creditCard = etree.SubElement(payment, "creditCard")
@@ -165,6 +170,22 @@ class AuthorizeAPI():
         etree.SubElement(creditCard, "cardCode").text = card_code
         etree.SubElement(root, "validationMode").text = 'liveMode'
         response = self._authorize_request(root)
+
+        # If the user didn't set up authorize.net properly then the response
+        # won't contain stuff like customerProfileId and accessing text
+        # will raise a NoneType has no text attribute
+        msg = response.find('messages')
+        if msg is not None:
+            rc = msg.find('resultCode')
+            if rc is not None and rc.text == 'Error':
+                err = msg.find('message')
+                err_code = err.find('code').text
+                err_msg = err.find('text').text
+                raise UserError(
+                    "Authorize.net Error:\nCode: %s\nMessage: %s"
+                    % (err_code, err_msg)
+                )
+
         res = dict()
         res['profile_id'] = response.find('customerProfileId').text
         res['payment_profile_id'] = response.find('customerPaymentProfileIdList/numericString').text
@@ -256,7 +277,7 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfile")
         etree.SubElement(payment_profile, "paymentProfileId").text = token.acquirer_ref
         order = etree.SubElement(tx, "order")
-        etree.SubElement(order, "invoiceNumber").text = reference
+        etree.SubElement(order, "invoiceNumber").text = reference[:20]
         response = self._authorize_request(root)
         res = dict()
         (has_error, error_msg) = error_check(response)
@@ -291,7 +312,7 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfile")
         etree.SubElement(payment_profile, "paymentProfileId").text = token.acquirer_ref
         order = etree.SubElement(tx, "order")
-        etree.SubElement(order, "invoiceNumber").text = reference
+        etree.SubElement(order, "invoiceNumber").text = reference[:20]
         response = self._authorize_request(root)
         res = dict()
         (has_error, error_msg) = error_check(response)

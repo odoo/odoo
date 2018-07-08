@@ -6,6 +6,7 @@ import traceback
 import os
 import unittest
 
+import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
@@ -17,9 +18,10 @@ from odoo.http import request
 from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import FALSE_DOMAIN
+from odoo.osv.expression import FALSE_DOMAIN, OR
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
 
@@ -62,25 +64,32 @@ class Http(models.AbstractModel):
         if not request.session.uid:
             env = api.Environment(request.cr, SUPERUSER_ID, request.context)
             website = env['website'].get_current_website()
-            if website:
+            if website and website.user_id:
                 request.uid = website.user_id.id
         if not request.uid:
             super(Http, cls)._auth_method_public()
 
     @classmethod
     def _add_dispatch_parameters(cls, func):
-        if request.is_frontend:
-            context = dict(request.context)
-            if not context.get('tz'):
-                context['tz'] = request.session.get('geoip', {}).get('time_zone')
 
-            request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
-            context['website_id'] = request.website.id
+        context = {}
+        if not request.context.get('tz'):
+            context['tz'] = request.session.get('geoip', {}).get('time_zone')
+            try:
+                pytz.timezone(context['tz'] or '')
+            except pytz.UnknownTimeZoneError:
+                context.pop('tz')
+
+        request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
+        context['website_id'] = request.website.id
+
+        # modify bound context
+        request.context = dict(request.context, **context)
 
         super(Http, cls)._add_dispatch_parameters(func)
 
-        if request.is_frontend and request.routing_iteration == 1:
-            request.website = request.website.with_context(context)
+        if request.routing_iteration == 1:
+            request.website = request.website.with_context(request.context)
 
     @classmethod
     def _get_languages(cls):
@@ -90,7 +99,7 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_language_codes(cls):
-        if request.website:
+        if getattr(request, 'website', False):
             return request.website._get_languages()
         return super(Http, cls)._get_language_codes()
 
@@ -99,6 +108,11 @@ class Http(models.AbstractModel):
         if getattr(request, 'website', False):
             return request.website.default_lang_id
         return super(Http, cls)._get_default_lang()
+
+    @classmethod
+    def _get_translation_frontend_modules_domain(cls):
+        domain = super(Http, cls)._get_translation_frontend_modules_domain()
+        return OR([domain, [('name', 'ilike', 'website')]])
 
     @classmethod
     def _serve_page(cls):
@@ -113,18 +127,12 @@ class Http(models.AbstractModel):
         mypage = pages[0] if pages else False
         _, ext = os.path.splitext(req_page)
         if mypage:
-            return request.render(mypage.view_id.id, {
+            return request.render(mypage.get_view_identifier(), {
                 # 'path': req_page[1:],
                 'deletable': True,
                 'main_object': mypage,
             }, mimetype=_guess_mimetype(ext))
         return False
-
-    @classmethod
-    def _serve_404(cls):
-        req_page = request.httprequest.path
-        page404 = 'website.%s' % (request.website.is_publisher() and 'page_404' or '404')
-        return request.render(page404, {'path': req_page[1:]})
 
     @classmethod
     def _serve_redirect(cls):
@@ -148,9 +156,9 @@ class Http(models.AbstractModel):
 
         redirect = cls._serve_redirect()
         if redirect:
-            return request.redirect(redirect.url_to, code=redirect.type)
+            return request.redirect(_build_url_w_params(redirect.url_to, request.params), code=redirect.type)
 
-        return cls._serve_404()
+        return False
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -209,11 +217,16 @@ class Http(models.AbstractModel):
                 status_code=code,
             )
 
+            view_id = code
+            if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
+                view_id = 'page_404'
+                values['path'] = request.httprequest.path[1:]
+
             if not request.uid:
                 cls._auth_method_public()
 
             try:
-                html = request.env['ir.ui.view'].render_template('website.%s' % code, values)
+                html = request.env['ir.ui.view'].render_template('website.%s' % view_id, values)
             except Exception:
                 html = request.env['ir.ui.view'].render_template('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')

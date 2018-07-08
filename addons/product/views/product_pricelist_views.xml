@@ -52,13 +52,13 @@
                             </div>
                         </group>
                     </group>
-                    <div class="oe_grey" groups="product.group_uom">
+                    <div class="oe_grey" groups="uom.group_uom">
                         <p>The computed price is expressed in the default Unit of Measure of the product.</p>
                     </div>
                     <group col="6" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
                         <field name="base" colspan="6"/>
 
-                        <label string="New Price ="/>
+                        <span class="o_form_label">New Price =</span>
                         <div>
                             <span attrs="{'invisible':[('base', '!=', 'list_price')]}">Public Price  -  </span>
                             <span attrs="{'invisible':[('base', '!=', 'standard_price')]}">Cost  -  </span>
@@ -119,7 +119,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
                                     </div>
-                                    <strong><i class="fa fa-money" aria-hidden="true"></i> <field name="currency_id"/></strong>
+                                    <strong><i class="fa fa-money" role="img" aria-label="Currency" title="Currency"></i> <field name="currency_id"/></strong>
                                 </div>
                             </div>
                         </t>
@@ -188,15 +188,13 @@
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_base":'list_price'}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a pricelist.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new pricelist
               </p><p>
-                A price list contains rules to be evaluated in order to compute
-                the sale price of the products.
+                A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.
+                This is the perfect tool to handle several pricings, seasonal discounts, etc.
               </p><p>
-                Each rule include a set of applicability criteria (date range,
-                product category...) and a computation that easily helps to achieve
-                any kind of pricing.
+                You can assign pricelists to your customers or select one when creating a new sales quotation.
               </p>
             </field>
         </record>

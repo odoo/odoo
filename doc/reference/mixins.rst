@@ -77,7 +77,7 @@ to manage followers on your record:
 
 .. rubric:: Posting messages
 
-.. method:: message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs)
+.. method:: message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, **kwargs)
     
     Post a new message in an existing thread, returning the new
     mail.message ID.
@@ -85,7 +85,6 @@ to manage followers on your record:
     :param str body: body of the message, usually raw HTML that will
         be sanitized
     :param str message_type: see mail_message.type field
-    :param str content_subtype: if plaintext: convert body into html
     :param int parent_id: handle reply to a previous message by adding the
         parent partners to the message in case of private discussion
     :param list(tuple(str,str)) attachments: list of attachment tuples in the form

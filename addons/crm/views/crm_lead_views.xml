@@ -44,7 +44,7 @@
             <form string="Leads Form">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
-                            help="Convert to Opportunity" class="oe_highlight"/>
+                            help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -133,28 +133,6 @@
         </field>
         </record>
 
-        <record id="crm_case_pivot_view_leads" model="ir.ui.view">
-            <field name="name">crm.lead.pivot.lead</field>
-            <field name="model">crm.lead</field>
-            <field name="arch" type="xml">
-                <pivot string="Opportunities" display_quantity="true">
-                    <field name="stage_id" type="row"/>
-                    <field name="planned_revenue" type="measure"/>
-                </pivot>
-            </field>
-        </record>
-
-        <record id="crm_case_graph_view_leads" model="ir.ui.view">
-            <field name="name">crm.lead.graph.lead</field>
-            <field name="model">crm.lead</field>
-            <field name="arch" type="xml">
-                <graph string="Opportunities" type="bar">
-                    <field name="stage_id" type="row"/>
-                    <field name="planned_revenue" type="measure"/>
-                </graph>
-            </field>
-        </record>
-
         <record id="crm_case_tree_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.tree.lead</field>
             <field name="model">crm.lead</field>
@@ -211,14 +189,14 @@
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments" aria-label="Messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <div class="o_kanban_inline_block">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -251,8 +229,13 @@
                             <group>
                                 <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
                                 <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
-                                <field name="email_from" invisible="1"/>
-                                <field name="phone" invisible="1"/>
+                                <field name="partner_name" invisible="1"/>
+                                <field name="street" invisible="1"/>
+                                <field name="street2" invisible="1"/>
+                                <field name="city" invisible="1"/>
+                                <field name="state_id" invisible="1"/>
+                                <field name="zip" invisible="1"/>
+                                <field name="country_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="company_currency" invisible="1"/>
                                 <label for="planned_revenue"/>
@@ -267,6 +250,20 @@
                             <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
                             <button string="Discard" class="btn-default" special="cancel"/>
                         </footer>
+                        <field name="partner_name" invisible="1"/>
+                        <field name="contact_name" invisible="1"/>
+                        <field name="title" invisible="1"/>
+                        <field name="street" invisible="1"/>
+                        <field name="street2" invisible="1"/>
+                        <field name="city" invisible="1"/>
+                        <field name="state_id" invisible="1"/>
+                        <field name="country_id" invisible="1"/>
+                        <field name="email_from" invisible="1"/>
+                        <field name="phone" invisible="1"/>
+                        <field name="mobile" invisible="1"/>
+                        <field name="zip" invisible="1"/>
+                        <field name="function" invisible="1"/>
+                        <field name="website" invisible="1"/>
                     </sheet>
                 </form>
             </field>
@@ -281,12 +278,30 @@
             <field name="target">new</field>
         </record>
 
+        <record id="quick_create_opportunity_form" model="ir.ui.view">
+            <field name="name">crm.lead.form.quick_create</field>
+            <field name="model">crm.lead</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
+                        <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                        <field name="company_currency" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="priority" nolabel="1" widget="priority"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="crm_case_kanban_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.kanban.lead</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="crm.create_opportunity_simplified">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -303,22 +318,21 @@
                     <field name="company_currency"/>
                     <field name="activity_state" />
                     <field name="activity_ids" />
-                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="planned_revenue"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="planned_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
-                        <field name="date_deadline"/>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
-                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li t-if="! record.active.value"><a name="action_set_active" type="object">Restore</a></li>
-                                        <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit</a></li></t>
+                                        <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
+                                        <li t-if="! record.active.value"><a role="menuitem" name="action_set_active" type="object">Restore</a></li>
+                                        <li t-if="record.active.value"><a role="menuitem" name="action_set_unactive" type="object">Archive</a></li>
+                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
@@ -336,12 +350,12 @@
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
                                             <t t-if="record.message_needaction_counter.raw_value">
-                                                <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                                <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                             </t>
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <div class="oe_kanban_bottom_right">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -385,7 +399,7 @@
                             domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all records which has next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
@@ -403,7 +417,7 @@
                         <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
                         <filter string="Medium" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
-                        <filter string="Creation Month" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Creation Date" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
             </field>
@@ -426,8 +440,8 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False),('probability', '&lt;', 100)]}"/>
-                        <field name="stage_id" widget="statusbar" clickable="True"
-                            options="{'fold_field': 'fold'}"
+                        <field name="stage_id" widget="statusbar"
+                            options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
@@ -482,8 +496,22 @@
                                         'default_phone': phone, 'default_mobile': mobile,
                                         'default_email': email_from,
                                         'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website}"/>
-                                <field name="email_from" string="Email" widget="email"/>
-                                <field name="phone" widget="phone"/>
+                                <field name="partner_address_email"
+                                       attrs="{'invisible': [('partner_address_email', '==', False)]}"
+                                       widget="email"
+                                       string="Email"/>
+                                <field name="email_from"
+                                       attrs="{'invisible': [('partner_address_email', '!=', False)]}"
+                                       string="Email"
+                                       widget="email"/>
+                                <field name="partner_address_phone"
+                                       attrs="{'invisible': [('partner_address_phone', '==', False)]}"
+                                       readonly="1"
+                                       widget="phone"
+                                       string="Phone"/>
+                                <field name="phone"
+                                       attrs="{'invisible': [('partner_address_phone', '!=', False)]}"
+                                       widget="phone"/>
                             </group>
 
                             <group>
@@ -506,9 +534,9 @@
                         <page string="Internal Notes">
                             <field name="description"/>
                         </page>
-                        <page name="lead" string="Contact Information">
+                        <page name="lead" string="Followup">
                             <group>
-                                <group>
+                                <group string="Initial Contact Information">
                                     <field name="partner_name"/>
                                     <label for="street" string="Address"/>
                                     <div class="o_address_format">
@@ -522,7 +550,7 @@
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                                 </group>
 
-                                <group>
+                                <group class="mt48">
                                     <label for="contact_name"/>
                                     <div class="o_row">
                                         <field name="contact_name"/>
@@ -630,7 +658,7 @@
                             domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities for which the next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
@@ -639,28 +667,16 @@
                         ]"/>
 
                     <separator/>
+                    <filter string="Creation Date" name="creation_date" date="create_date"/>
+                    <filter string="Expected Closing" name="close_this_month" date="date_deadline"/>
+                    <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <filter string="Overdue Opportunities" name="overdue_opp"
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
-                            help="Show all opportunities with a deadline for which the next action date is before today"/>
+                            help="Opportunities with a date of Expected Closing which is in the past"/>
 
-                    <filter string="To Close Today" name="close_today"
-                            domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="To Close This Week" name="close_this_week"
-                            domain="[
-                                '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
-                                ('date_deadline', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
-                            ]"/>
-                    <filter string="To Close This Month" name="close_this_month"
-                            domain="[
-                                '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
-                                ('date_deadline', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
-                            ]"/>
                     <separator/>
-                    <filter string="Lost" name="lost" domain="[('active', '=', False)]"/>
-                    <filter string="Won" name="won"
-                            domain="[('stage_id.probability', '=', 100)]"/>
+                    <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
+                    <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.probability', '=', 100)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -671,8 +687,9 @@
                         <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Closed Date" name="close_date_groupby" context="{'group_by':'date_closed'}"/>
                         <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>
@@ -709,7 +726,7 @@
         <!--
             MASS MAILING
         -->
-        <act_window name="Lead/Opportunity Mass Mail"
+        <act_window name="Send an email"
                 res_model="mail.compose.message"
                 src_model="crm.lead"
                 view_mode="form"
@@ -749,6 +766,34 @@ if record:
         </record>
 
         <!--
+            'Mark Late Activities as Done' in action dropdown
+        -->
+        <record id="action_mark_late_activities_done" model="ir.actions.server">
+            <field name="name">Mark Late Activities as Done</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+for rec in records:
+    rec.activity_ids.filtered(lambda a: a.state == 'overdue').action_feedback(feedback='Closed automatically in batch')
+            </field>
+        </record>
+
+        <!--
+            'Mark All Activities as Done' in action dropdown
+        -->
+        <record id="action_mark_activities_done" model="ir.actions.server">
+            <field name="name">Mark All Activities as Done</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+for rec in records:
+    rec.activity_ids.action_feedback(feedback='Closed automatically in batch')
+            </field>
+        </record>
+
+        <!--
             Menu Actions
         -->
         <menuitem
@@ -776,20 +821,8 @@ if record:
             <field name="context">{
                     'default_type':'lead',
                     'search_default_type': 'lead',
-                    'needaction_menu_ref': 'crm.menu_crm_opportunities',
                     'search_default_to_process':1,
                 }
-            </field>
-            <field name="help" type="html">
-                <p>
-                    Use leads if you need a qualification step before creating an
-                    opportunity or a customer. It can be a business card you received,
-                    a contact form filled in your website, or a file of unqualified
-                    prospects you import, etc.
-                </p><p>
-                    Once qualified, the lead can be converted into a business
-                    opportunity and/or a new customer in your address book.
-                </p>
             </field>
         </record>
 
@@ -813,16 +846,6 @@ if record:
                 }
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
-            <field name="help" type="html">
-                <p>
-                    Odoo helps you keep track of your sales pipeline to follow
-                    up potential sales and better forecast your future revenues.
-                </p><p>
-                    You will be able to plan meetings and phone calls from
-                    opportunities, convert them into quotations, attach related
-                    documents, track all discussions, and much more.
-                </p>
-            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_oppor11">
@@ -862,6 +885,7 @@ if record:
                     'default_type': 'opportunity',
                     'default_user_id': uid,
                     'search_default_assigned_to_me': 1,
+                    'search_default_creation_date': 1,
             }</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
@@ -872,16 +896,6 @@ if record:
                           (0, 0, {'view_mode': 'pivot'}),
                           (0, 0, {'view_mode': 'graph'})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
-            <field name="help" type="html">
-                <p>
-                    Odoo helps you keep track of your sales pipeline to follow
-                    up potential sales and better forecast your future revenues.
-                </p><p>
-                    You will be able to plan meetings and phone calls from
-                    opportunities, convert them into quotations, attach related
-                    documents, track all discussions, and much more.
-                </p>
-            </field>
         </record>
 
         <menuitem
@@ -911,11 +925,13 @@ if record:
             <field name="context">{
                     'default_type': 'opportunity',
                     'default_user_id': uid,
-                    'search_default_activities_my': 1
+                    'search_default_activities_my': 1,
                 }
             </field>
             <field name="help" type="html">
-                <p>
+                <p class="o_view_nocontent_empty_folder">
+                    No next activity
+                </p><p>
                    Here is the list of your next activities. Those are linked to your opportunities.
                    To set a next activity, go on an opportunity and add one. It will then appear in this list.
                 </p>
@@ -924,25 +940,22 @@ if record:
 
         <!-- Configuration/Lead & Opporotunities/Lead Tags Menu -->
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
-            <field name="name">Lead Tags</field>
+            <field name="name">Tags</field>
             <field name="res_model">crm.lead.tag</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_lead_tag_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new sales tag.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tag for your opportunities
               </p><p>
-                Create specific tags that fit your company's activities
-                to better classify and analyse your leads and opportunities.
-                Such categories could for instance reflect your product
-                structure or the different types of sales you do.
+                Create tags that fit your business (product structure, sales type, etc.) to better manage and tack your opportunities.
               </p>
             </field>
         </record>
 
         <menuitem
             id="menu_crm_lead_categ"
-            name="Lead Tags"
+            name="Tags"
             action="crm_lead_tag_action"
             parent="menu_crm_config_lead"
             sequence="1"/>
@@ -954,8 +967,8 @@ if record:
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new lost reason.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new lost reason
               </p><p>
                 Use lost reasons to explain why an opportunity is lost.
               </p><p>

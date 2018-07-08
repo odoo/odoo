@@ -14,6 +14,7 @@ from . import mail_template
 from . import mail_shortcode
 from . import res_partner
 from . import res_users
+from . import res_company
 from . import res_config_settings
 from . import update
 from . import ir_actions

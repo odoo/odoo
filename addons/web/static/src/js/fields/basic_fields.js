@@ -8,7 +8,6 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
@@ -207,6 +206,13 @@ var InputField = DebouncedField.extend({
             this.isDirty = false;
         }
         if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
+            if (this.attrs.decorations) {
+                // if a field is modified, then it could have triggered an onchange
+                // which changed some of its decorations. Since we bypass the
+                // render function, we need to apply decorations here to make
+                // sure they are recomputed.
+                this._applyDecorations();
+            }
             return $.when();
         } else {
             return this._render();
@@ -313,12 +319,22 @@ var InputField = DebouncedField.extend({
         this._super.apply(this, arguments);
 
         // the following code only makes sense in edit mode, with an input
-        if (this.mode === 'edit') {
+        if (this.mode === 'edit' && ev.data.direction !== 'cancel') {
             var input = this.$input[0];
             var selecting = (input.selectionEnd !== input.selectionStart);
             if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
                 ev.stopPropagation();
+            }
+            if (ev.data.direction ==='next' &&
+                this.attrs.modifiersValue &&
+                this.attrs.modifiersValue.required) {
+                if (!this.$input.val()){
+                    this.setInvalidClass();
+                    ev.stopPropagation();
+                } else {
+                    this.removeInvalidClass();
+                }
             }
         }
     },
@@ -381,9 +397,10 @@ var LinkButton = AbstractField.extend({
         if (this.value) {
             var className = this.attrs.icon || 'fa-globe';
 
-            this.$el.html("<span />");
+            this.$el.html("<span role='img'/>");
             this.$el.addClass("fa "+ className);
             this.$el.attr('title', this.value);
+            this.$el.attr('aria-label', this.value);
         }
     },
 
@@ -438,7 +455,7 @@ var FieldDate = InputField.extend({
             def = this.datewidget.appendTo('<div>').done(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
-                self.replaceElement(self.datewidget.$el);
+                self._replaceElement(self.datewidget.$el);
             });
         }
         return $.when(def, this._super.apply(this, arguments));
@@ -482,7 +499,13 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(this, {defaultDate: this.value});
+        return new datepicker.DateWidget(
+            this,
+            _.defaults(
+                this.nodeOptions.datepicker || {},
+                {defaultDate: this.value}
+            )
+        );
     },
 
     /**
@@ -576,12 +599,13 @@ var FieldMonetary = InputField.extend({
             this.tagName = 'div';
             this.className += ' o_input';
 
-            // use the formatFloat function in edit
-            this.formatType = 'float';
+            // do not display currency symbol in edit
+            this.formatOptions.noSymbol = true;
         }
 
         this.formatOptions.currency = this.currency;
         this.formatOptions.digits = [16, 2];
+        this.formatOptions.field_digits = this.nodeOptions.field_digits;
     },
 
     //--------------------------------------------------------------------------
@@ -612,7 +636,7 @@ var FieldMonetary = InputField.extend({
         this.$el.empty();
 
         // Prepare and add the input
-        this._prepareInput().appendTo(this.$el);
+        this._prepareInput(this.$input).appendTo(this.$el);
 
         if (this.currency) {
             // Prepare and add the currency symbol
@@ -859,6 +883,10 @@ var FieldFloatTime = FieldFloat.extend({
     formatType: 'float_time',
 });
 
+var FieldPercentage = FieldFloat.extend({
+    formatType:'percentage',
+});
+
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
@@ -972,72 +1000,22 @@ var FieldPhone = FieldEmail.extend({
     className: 'o_field_phone',
     prefix: 'tel',
 
-    /**
-     * The phone widget is an extension of email, with the distinction that, in
-     * some cases, we do not want to show a clickable widget in readonly.
-     * In particular, we only want to make it clickable if the device can call
-     * this particular number. This is controlled by the _canCall function.
-     *
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        if (this.mode === 'readonly' && !this._canCall()) {
-            this.tagName = 'span';
-        }
-    },
-    /**
-     * Returns the associated link only if there is one.
-     *
-     * @override
-     */
-    getFocusableElement: function () {
-        if (this.mode !== 'readonly' || this._canCall()) {
-            return this._super.apply(this, arguments);
-        }
-        return $();
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
-     * In readonly, we only make the widget clickable if the device can call it.
-     * Additionally, we obfuscate the phone number to prevent Skype from seeing it.
-     *
      * @override
      * @private
      */
     _renderReadonly: function () {
         this._super();
-        if (this._canCall()) {
-            // Split phone number into two to prevent Skype app from finding it
-            var text = this.$el.text();
-            var part1 = _.escape(text.substr(0, text.length/2));
-            var part2 = _.escape(text.substr(text.length/2));
-            this.$el.html(part1 + "&shy;" + part2);
-        } else {
-            this.$el.removeClass('o_form_uri');
-        }
+
         // This class should technically be there in case of a very very long
         // phone number, but it breaks the o_row mechanism, which is more
         // important right now.
         this.$el.removeClass('o_text_overflow');
     },
-
-    /**
-     * Phone fields are clickable in readonly on small screens ~= on phones.
-     * This can be overriden by call-capable modules to display a clickable
-     * link in different situations, like always regardless of screen size,
-     * or only allow national calls for example.
-     *
-     * @override
-     * @private
-     */
-    _canCall: function () {
-        return config.device.size_class <= config.device.SIZES.XS;
-    }
 });
 
 var UrlWidget = InputField.extend({
@@ -1081,7 +1059,79 @@ var UrlWidget = InputField.extend({
     _renderReadonly: function () {
         this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
+            .attr('target', '_blank')
             .attr('href', this.value);
+    }
+});
+
+var CopyClipboard = {
+
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.clipboard.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Instatiates the Clipboad lib.
+     */
+    _initClipboard: function () {
+        var self = this;
+        var $clipboardBtn = this.$('.o_clipboard_button');
+        $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
+        this.clipboard = new Clipboard($clipboardBtn.get(0), {
+            text: function () {
+                return self.value.trim();
+            }
+        });
+        this.clipboard.on('success', function () {
+            _.defer(function () {
+                $clipboardBtn.tooltip('show');
+                _.delay(function () {
+                    $clipboardBtn.tooltip('hide');
+                }, 800);
+            });
+        });
+    },
+};
+
+var TextCopyClipboard = FieldText.extend(CopyClipboard, {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+        this.$el.append($(qweb.render('CopyClipboardText')));
+        this._initClipboard();
+    }
+});
+
+var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+        this.$el.append($(qweb.render('CopyClipboardChar')));
+        this._initClipboard();
     }
 });
 
@@ -1216,6 +1266,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             }
         }
         var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+        // override css size attributes (could have been defined in css files)
+        // if specified on the widget
+        var width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+        var height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+        if (width) {
+            $img.attr('width', width);
+            $img.css('max-width', width + 'px');
+        }
+        if (height) {
+            $img.attr('height', height);
+            $img.css('max-height', height + 'px');
+        }
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
@@ -1224,16 +1286,13 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
     },
-    isSet: function () {
-        return true;
-    },
 });
 
 var FieldBinaryFile = AbstractFieldBinary.extend({
     template: 'FieldBinaryFile',
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click': function (event) {
-            if (this.mode === 'readonly' && this.value) {
+            if (this.mode === 'readonly' && this.value && this.recordData.id) {
                 this.on_save_as(event);
             }
         },
@@ -1250,9 +1309,19 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         this.do_toggle(!!this.value);
         if (this.value) {
             this.$el.empty().append($("<span/>").addClass('fa fa-download'));
+            if (this.recordData.id) {
+                this.$el.css('cursor', 'pointer');
+            } else {
+                this.$el.css('cursor', 'not-allowed');
+            }
             if (this.filename_value) {
                 this.$el.append(" " + this.filename_value);
             }
+        }
+        if (!this.res_id) {
+            this.$el.css('cursor', 'not-allowed');
+        } else {
+            this.$el.css('cursor', 'pointer');
         }
     },
     _renderEdit: function () {
@@ -1278,7 +1347,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
         if (!this.value) {
             this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
             ev.stopPropagation();
-        } else {
+        } else if (this.res_id) {
             framework.blockUI();
             var c = crash_manager;
             var filename_fieldname = this.attrs.filename;
@@ -1299,6 +1368,109 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
             ev.stopPropagation();
         }
     },
+});
+
+var FieldPdfViewer = FieldBinaryFile.extend({
+    supportedFieldTypes: ['binary'],
+    template: 'FieldPdfViewer',
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.PDFViewerApplication = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {DOMElement} iframe
+     */
+    _disableButtons: function (iframe) {
+        $(iframe).contents().find('button#openFile').hide();
+    },
+    /**
+     * @private
+     * @returns {string} the pdf viewer URI
+     */
+    _getURI: function () {
+        var queryObj = {
+            model: this.model,
+            field: this.name,
+            id: this.res_id,
+        };
+        var page = this.recordData[this.name + '_page'] || 1;
+        var queryString = $.param(queryObj);
+        var url = encodeURIComponent('/web/image?' + queryString);
+        var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
+        return viewerURL + url + '#page=' + page;
+    },
+    /**
+     * @private
+     * @override
+     */
+    _render: function () {
+        var self = this;
+        var $pdfViewer = this.$('.o_form_pdf_controls').children().add(this.$('.o_pdfview_iframe'));
+        var $selectUpload = this.$('.o_select_file_button').first();
+        var $iFrame = this.$('.o_pdfview_iframe');
+
+        $iFrame.on('load', function () {
+            self.PDFViewerApplication = this.contentWindow.window.PDFViewerApplication;
+            self._disableButtons(this);
+        });
+        if (this.mode === "readonly" && this.value) {
+            $iFrame.attr('src', this._getURI());
+        } else {
+            if (this.value) {
+                var binSize = utils.is_bin_size(this.value);
+                $pdfViewer.removeClass('o_hidden');
+                $selectUpload.addClass('o_hidden');
+                if (binSize) {
+                    $iFrame.attr('src', this._getURI());
+                }
+            } else {
+                $pdfViewer.addClass('o_hidden');
+                $selectUpload.removeClass('o_hidden');
+            }
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @param {Event} ev
+     */
+    on_file_change: function (ev) {
+        this._super.apply(this, arguments);
+        if (this.PDFViewerApplication) {
+            var files = ev.target.files;
+            if (!files || files.length === 0) {
+              return;
+            }
+            var file = files[0];
+            // TOCheck: is there requirement to fallback on FileReader if browser don't support URL
+            this.PDFViewerApplication.open(URL.createObjectURL(file), 0);
+        }
+    },
+    /**
+     * Remove the behaviour of on_save_as in FieldBinaryFile.
+     *
+     * @override
+     * @private
+     * @param {MouseEvent} ev
+     */
+    on_save_as: function (ev) {
+        ev.stopPropagation();
+    },
+
 });
 
 var PriorityWidget = AbstractField.extend({
@@ -1360,6 +1532,7 @@ var PriorityWidget = AbstractField.extend({
     _renderStar: function (tag, isFull, index, tip) {
         return $(tag)
             .attr('title', tip)
+            .attr('aria-label', tip)
             .attr('data-index', index)
             .addClass('o_priority_star fa')
             .toggleClass('fa-star', isFull)
@@ -1429,7 +1602,8 @@ var AttachmentImage = AbstractField.extend({
         if (this.value) {
             this.$el.empty().append($('<img>/', {
                 src: "/web/image/" + this.value.data.id + "?unique=1",
-                title: this.value.data.display_name
+                title: this.value.data.display_name,
+                alt: _("Image")
             }));
         }
     }
@@ -1498,7 +1672,9 @@ var StateSelectionWidget = AbstractField.extend({
         this.$('.o_status')
             .removeClass('o_status_red o_status_green')
             .addClass(currentState.state_class)
-            .prop('special_click', true);
+            .prop('special_click', true)
+            .parent().attr('title', currentState.state_name)
+            .attr('aria-label', currentState.state_name);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {
@@ -1562,8 +1738,9 @@ var FavoriteWidget = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s"></i></a>' : '<a href="#"><i class="fa %s"></i> %s</a>';
-        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', this.value ? _t('Remove from Favorites') : _t('Add to Favorites')));
+        var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
+        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"> %s</i></a>';
+        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
     },
 
     //--------------------------------------------------------------------------
@@ -1759,7 +1936,7 @@ var StatInfo = AbstractField.extend({
 
 var FieldPercentPie = AbstractField.extend({
     template: 'FieldPercentPie',
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['integer', 'float'],
 
     /**
      * Register some useful references for later use throughout the widget.
@@ -1943,7 +2120,10 @@ var FieldProgressBar = AbstractField.extend({
             widthComplete = 100;
         }
 
-        this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value);
+        this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value)
+            .attr('aria-valuemin', '0')
+            .attr('aria-valuemax', max_value)
+            .attr('aria-valuenow', value);
         this.$('.o_progressbar_complete').css('width', widthComplete + '%');
 
         if (!this.write_mode) {
@@ -1995,10 +2175,12 @@ var FieldToggleBoolean = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var className = this.value ? 'o_toggle_button_success' : 'text-muted';
-        this.$('i').addClass('fa fa-circle ' + className);
+        this.$('i')
+            .toggleClass('o_toggle_button_success', !!this.value)
+            .toggleClass('text-muted', !this.value);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
+        this.$el.attr('aria-pressed', this.value);
     },
 
     //--------------------------------------------------------------------------
@@ -2084,7 +2266,7 @@ var JournalDashboardGraph = AbstractField.extend({
                     self.chart.forceY([0]);
                     self.chart.options({
                         x: function (d, u) { return u; },
-                        margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
+                        margin: {'left': 0, 'right': 0, 'top': 5, 'bottom': 0},
                         showYAxis: false,
                         showLegend: false,
                     });
@@ -2385,7 +2567,7 @@ var FieldDomain = AbstractField.extend({
 var AceEditor = DebouncedField.extend({
     template: "AceEditor",
     jsLibs: [
-        '/web/static/lib/ace/ace.odoo-custom.js',
+        '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-python.js',
             '/web/static/lib/ace/mode-xml.js'
@@ -2415,6 +2597,21 @@ var AceEditor = DebouncedField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Format value
+     *
+     * Note: We have to overwrite this method to always return a string.
+     * AceEditor works with string and not boolean value.
+     *
+     * @override
+     * @private
+     * @param {boolean|string} value
+     * @returns {string}
+     */
+    _formatValue: function (value) {
+        return this._super.apply(this, arguments) || '';
+    },
+
+    /**
      * @override
      * @private
      */
@@ -2436,6 +2633,7 @@ var AceEditor = DebouncedField.extend({
             this.aceSession.setValue(newValue);
         }
     },
+
     /**
      * Starts the ace library on the given DOM element. This initializes the
      * ace editor option according to the edit/readonly mode and binds ace
@@ -2532,6 +2730,7 @@ return {
     DebouncedField: DebouncedField,
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
+    FieldPdfViewer: FieldPdfViewer,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
     FieldBooleanButton: FieldBooleanButton,
@@ -2543,6 +2742,7 @@ return {
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
+    FieldPercentage : FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,
@@ -2560,6 +2760,8 @@ return {
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
     UrlWidget: UrlWidget,
+    TextCopyClipboard: TextCopyClipboard,
+    CharCopyClipboard: CharCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
 };

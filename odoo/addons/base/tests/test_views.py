@@ -385,6 +385,187 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
             ))
         )
 
+
+class TestApplyInheritanceMoveSpecs(ViewCase):
+    def setUp(self):
+        super(TestApplyInheritanceMoveSpecs, self).setUp()
+        self.base_arch = E.template(
+            E.div(E.p("Content", {'class': 'some'})),
+            E.div({'class': 'target'})
+        )
+        self.wrapped_arch = E.template(
+            E.div("aaaa", E.p("Content", {'class': 'some'}), "bbbb"),
+            E.div({'class': 'target'})
+        )
+
+    def apply_spec(self, arch, spec):
+        self.View.apply_inheritance_specs(arch, spec, None)
+
+    def test_move_replace(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="replace")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.p("Content", {'class': 'some'})
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.p("Content", {'class': 'some'})
+            )
+        )
+
+    def test_move_inside(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="inside")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div(E.p("Content", {'class': 'some'}), {'class': 'target'})
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div(E.p("Content", {'class': 'some'}), {'class': 'target'})
+            )
+        )
+
+    def test_move_before(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="before")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(""),
+                E.p("Content", {'class': 'some'}),
+                E.div({'class': 'target'}),
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.p("Content", {'class': 'some'}),
+                E.div({'class': 'target'}),
+            )
+        )
+
+    def test_move_after(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+
+    def test_move_with_other_1(self):
+        # multiple elements with move in first position
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            E.p("Content2", {'class': 'new_p'}),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+                E.p("Content2", {'class': 'new_p'}),
+            )
+        )
+
+    def test_move_with_other_2(self):
+        # multiple elements with move in last position
+        spec = E.xpath(
+            E.p("Content2", {'class': 'new_p'}),
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content2", {'class': 'new_p'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_incorrect_move_1(self):
+        # cannot move an inexisting element
+        spec = E.xpath(
+            E.xpath(expr="//p[@name='none']", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        with self.assertRaises(ValueError):
+            self.apply_spec(self.base_arch, spec)
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_incorrect_move_2(self):
+        # move xpath cannot contain any children
+        spec = E.xpath(
+            E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        with self.assertRaises(ValueError):
+            self.apply_spec(self.base_arch, spec)
+
+    def test_incorrect_move_3(self):
+        # move won't be correctly applied if not a direct child of an xpath
+        spec = E.xpath(
+            E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(E.p("Content", {'class': 'some'})),
+                E.div({'class': 'target'}),
+                E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
+            )
+        )
+
+
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
     """
@@ -865,6 +1046,508 @@ class TestViews(ViewCase):
     def test_modifiers(self):
         # implemeted elsewhere...
         modifiers_tests()
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_invalid_field(self):
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid field',
+                'model': 'ir.ui.view',
+                'arch': """
+                    <form string="View">
+                        <field name="name"/>
+                        <field name="not_a_field"/>
+                    </form>
+                """,
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_invalid_subfield(self):
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid subfield',
+                'model': 'ir.ui.view',
+                'arch': """
+                    <form string="View">
+                        <field name="name"/>
+                        <field name="inherit_children_ids">
+                            <tree name="Children">
+                                <field name="name"/>
+                                <field name="not_a_field"/>
+                            </tree>
+                        </field>
+                    </form>
+                """,
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_context_in_view(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_id" context="{'stuff': model}"/>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid context',
+            'model': 'ir.ui.view',
+            'arch': arch % '<field name="model"/>',
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % '',
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_context_in_subview(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id" context="{'stuff': model}"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid context',
+            'model': 'ir.ui.view',
+            'arch': arch % ('', '<field name="model"/>'),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            # field is in view but not in subview
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('<field name="model"/>', ''),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_context_in_subview_with_parent(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id" context="{'stuff': parent.model}"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid context',
+            'model': 'ir.ui.view',
+            'arch': arch % ('<field name="model"/>', ''),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '<field name="model"/>'),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_context_in_subsubview_with_parent(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_children_ids">
+                            <form string="Children">
+                                <field name="name"/>%s
+                                <field name="inherit_id" context="{'stuff': parent.parent.model}"/>
+                            </form>
+                        </field>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid context',
+            'model': 'ir.ui.view',
+            'arch': arch % ('<field name="model"/>', '', ''),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '<field name="model"/>', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid context',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '', '<field name="model"/>'),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_domain_in_view(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_id" domain="[('model', '=', model)]"/>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % '<field name="model"/>',
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % '',
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_domain_in_subview(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id" domain="[('model', '=', model)]"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % ('', '<field name="model"/>'),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('<field name="model"/>', ''),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_domain_in_subview_with_parent(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id" domain="[('model', '=', parent.model)]"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % ('<field name="model"/>', ''),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '<field name="model"/>'),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_domain_on_field_in_view(self):
+        field = self.env['ir.ui.view']._fields['inherit_id']
+        self.patch(field, 'domain', "[('model', '=', model)]")
+
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_id"/>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % '<field name="model"/>',
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % '',
+            })
+
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_domain_on_field_in_subview(self):
+        field = self.env['ir.ui.view']._fields['inherit_id']
+        self.patch(field, 'domain', "[('model', '=', model)]")
+
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % ('', '<field name="model"/>'),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('<field name="model"/>', ''),
+            })
+
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_domain_on_field_in_subview_with_parent(self):
+        field = self.env['ir.ui.view']._fields['inherit_id']
+        self.patch(field, 'domain', "[('model', '=', parent.model)]")
+
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % ('<field name="model"/>', ''),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '<field name="model"/>'),
+            })
+
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_domain_on_field_in_noneditable_subview(self):
+        field = self.env['ir.ui.view']._fields['inherit_id']
+        self.patch(field, 'domain', "[('model', '=', model)]")
+
+        arch = """
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_children_ids">
+                    <tree string="Children"%s>
+                        <field name="name"/>
+                        <field name="inherit_id"/>
+                    </tree>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % '',
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % ' editable="bottom"',
+            })
+
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_domain_on_readonly_field_in_view(self):
+        field = self.env['ir.ui.view']._fields['inherit_id']
+        self.patch(field, 'domain', "[('model', '=', model)]")
+
+        arch = """
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_id" readonly="1"/>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch,
+        })
+
+        self.patch(field, 'readonly', True)
+        arch = """
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_id"/>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch,
+        })
+
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_domain_on_readonly_field_in_subview(self):
+        field = self.env['ir.ui.view']._fields['inherit_id']
+        self.patch(field, 'domain', "[('model', '=', model)]")
+
+        arch = """
+            <form string="View">
+                <field name="name"/>
+                <field name="inherit_children_ids"%s>
+                    <form string="Children">
+                        <field name="name"/>
+                        <field name="inherit_id"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid domain',
+            'model': 'ir.ui.view',
+            'arch': arch % ' readonly="1"',
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid domain',
+                'model': 'ir.ui.view',
+                'arch': arch % '',
+            })
+
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    def test_attrs_field(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_id"
+                       attrs="{'readonly': [('model', '=', 'ir.ui.view')]}"/>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid attrs',
+            'model': 'ir.ui.view',
+            'arch': arch % '<field name="model"/>',
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid attrs',
+                'model': 'ir.ui.view',
+                'arch': arch % '',
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_attrs_subfield(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id"
+                               attrs="{'readonly': [('model', '=', 'ir.ui.view')]}"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid attrs',
+            'model': 'ir.ui.view',
+            'arch': arch % ('', '<field name="model"/>'),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid attrs',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid attrs',
+                'model': 'ir.ui.view',
+                'arch': arch % ('<field name="model"/>', ''),
+            })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_attrs_subfield_with_parent(self):
+        arch = """
+            <form string="View">
+                <field name="name"/>%s
+                <field name="inherit_children_ids">
+                    <form string="Children">
+                        <field name="name"/>%s
+                        <field name="inherit_id"
+                               attrs="{'readonly': [('parent.model', '=', 'ir.ui.view')]}"/>
+                    </form>
+                </field>
+            </form>
+        """
+        self.View.create({
+            'name': 'valid attrs',
+            'model': 'ir.ui.view',
+            'arch': arch % ('<field name="model"/>', ''),
+        })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid attrs',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', ''),
+            })
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'valid attrs',
+                'model': 'ir.ui.view',
+                'arch': arch % ('', '<field name="model"/>'),
+            })
 
 
 class ViewModeField(ViewCase):

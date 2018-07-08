@@ -4,28 +4,18 @@
     <!--
         CoA Base
     -->
-    <record id='cuenta102_01' model='account.account.template'>
-        <field name='name'>Transferencias bancarias moneda nacional</field>
-        <field name='code'>102.01.01</field>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        <field name="reconcile" eval="True"/>
-        <field name="tag_ids" eval="[(6,0,[ref('account_tag_102_01')])]"/>
-    </record>
     <record id="mx_coa" model="account.chart.template">
         <field name="name">Plan de Cuentas para Mexico</field>
         <field name="bank_account_code_prefix">102.01.0</field>
         <field name="cash_account_code_prefix">101.01.0</field>
+        <field name="transfer_account_code_prefix">102.01.01</field>
         <field name="code_digits">3</field>
         <field name="currency_id" ref="base.MXN"/>
-        <field name="transfer_account_id" ref="cuenta102_01"/>
         <field name="use_anglo_saxon" eval="True"/>
     </record>
     <!--
         Accounts
     -->
-    <record id='cuenta102_01' model='account.account.template'>
-        <field name="chart_template_id" ref="mx_coa"/>
-    </record>
     <record id='cuenta102_02' model='account.account.template'>
         <field name='name'>Transferencias bancarias moneda extranjera</field>
         <field name='code'>102.02.01</field>

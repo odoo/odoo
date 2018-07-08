@@ -8,12 +8,14 @@
         <record id="kitchen_printer" model="restaurant.printer">
             <field name="name">Kitchen Printer</field>
             <field name="proxy_ip">localhost</field>
-            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.fruits_vegetables')])]" />
+            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.storage_organizer')])]" />
         </record>
 
         <!-- Pos Config -->
 
         <record id="point_of_sale.pos_config_main" model="pos.config">
+            <field name="module_pos_restaurant">True</field>
+            <field name="is_table_management">True</field>
             <field name="iface_splitbill">True</field>
             <field name="iface_printbill">True</field>
             <field name="iface_orderline_notes">True</field>

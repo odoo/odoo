@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
@@ -13,14 +15,13 @@ class StockQuantPackage(models.Model):
     @api.one
     @api.depends('quant_ids')
     def _compute_weight(self):
-        smls = self.env['stock.move.line'].search([('product_id', '!=', False), ('result_package_id', '=', self.id)])
         weight = 0.0
-        for sml in smls:
-            weight += sml.product_uom_id._compute_quantity(sml.qty_done, sml.product_id.uom_id) * sml.product_id.weight
+        for quant in self.quant_ids:
+            weight += quant.quantity * quant.product_id.weight
         self.weight = weight
 
-    weight = fields.Float(compute='_compute_weight')
-    shipping_weight = fields.Float(string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight of the shipping.")
+    weight = fields.Float(compute='_compute_weight', help="Weight computed based on the sum of the weights of the products.")
+    shipping_weight = fields.Float(string='Shipping Weight', help="Weight used to compute the price of the delivery (if applicable).")
 
 
 class StockMoveLine(models.Model):
@@ -48,12 +49,6 @@ class StockMoveLine(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _default_uom(self):
-        weight_uom_id = self.env.ref('product.product_uom_kgm', raise_if_not_found=False)
-        if not weight_uom_id:
-            uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
-            weight_uom_id = self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
-        return weight_uom_id
 
     @api.one
     @api.depends('move_line_ids')
@@ -86,8 +81,7 @@ class StockPicking(models.Model):
     weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
-    number_of_packages = fields.Integer(string='Number of Packages', copy=False)
-    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
+    weight_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_weight_uom_id', help="Unit of measurement for Weight")
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
@@ -97,23 +91,24 @@ class StockPicking(models.Model):
         for picking in self:
             picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
 
-    @api.depends('product_id', 'move_lines')
+    def _compute_weight_uom_id(self):
+        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        for picking in self:
+            picking.weight_uom_id = weight_uom_id
+
+    @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
 
     @api.multi
-    def do_transfer(self):
-        # TDE FIXME: should work in batch
-        self.ensure_one()
-        res = super(StockPicking, self).do_transfer()
-
-        if self.carrier_id and self.carrier_id.integration_level == 'rate_and_ship':
-            self.send_to_shipper()
-
-        if self.carrier_id:
-            self._add_delivery_cost_to_so()
-
+    def action_done(self):
+        res = super(StockPicking, self).action_done()
+        for pick in self:
+            if pick.carrier_id:
+                if pick.carrier_id.integration_level == 'rate_and_ship':
+                    pick.send_to_shipper()
+                pick._add_delivery_cost_to_so()
         return res
 
     @api.multi
@@ -146,7 +141,7 @@ class StockPicking(models.Model):
             default_model='stock.picking',
             default_use_template=bool(delivery_template_id),
             default_template_id=delivery_template_id,
-            custom_layout='delivery.mail_template_data_delivery_notification'
+            custom_layout='mail.mail_notification_borders'
         )
         return {
             'type': 'ir.actions.act_window',
@@ -162,8 +157,11 @@ class StockPicking(models.Model):
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
+        if self.carrier_id.free_over and self.sale_id and self.sale_id._compute_amount_total_without_delivery() >= self.carrier_id.amount:
+            res['exact_price'] = 0.0
         self.carrier_price = res['exact_price']
-        self.carrier_tracking_ref = res['tracking_number']
+        if res['tracking_number']:
+            self.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
@@ -181,11 +179,24 @@ class StockPicking(models.Model):
         if not self.carrier_tracking_url:
             raise UserError(_("Your delivery method has no redirect on courier provider's website to track this order."))
 
-        client_action = {'type': 'ir.actions.act_url',
-                         'name': "Shipment Tracking Page",
-                         'target': 'new',
-                         'url': self.carrier_tracking_url,
-                         }
+        carrier_trackers = []
+        try:
+            carrier_trackers = json.loads(self.carrier_tracking_url)
+        except ValueError:
+            carrier_trackers = self.carrier_tracking_url
+        else:
+            msg = "Tracking links for shipment: <br/>"
+            for tracker in carrier_trackers:
+                msg += '<a href=' + tracker[1] + '>' + tracker[0] + '</a><br/>'
+            self.message_post(body=msg)
+            return self.env.ref('delivery.act_delivery_trackers_url').read()[0]
+
+        client_action = {
+            'type': 'ir.actions.act_url',
+            'name': "Shipment Tracking Page",
+            'target': 'new',
+            'url': self.carrier_tracking_url,
+        }
         return client_action
 
     @api.one

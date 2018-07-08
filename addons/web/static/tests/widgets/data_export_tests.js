@@ -53,7 +53,7 @@ QUnit.module('widgets', {
             data: this.data,
             arch: '<tree><field name="foo"/></tree>',
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
             mockRPC: function (route) {
                 if (route === '/web/export/formats') {
@@ -94,7 +94,7 @@ QUnit.module('widgets', {
             },
         });
 
-        list.getParent().searchview = {
+        list.searchView = {
             build_search_data: function () {
                 assert.step('build_search_data');
                 return {
@@ -107,15 +107,15 @@ QUnit.module('widgets', {
         list.$('thead th.o_list_record_selector input').click();
         list.sidebar.$('a:contains(Export)').click();
 
-        assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
+        assert.strictEqual($('[role="dialog"]').length, 1, "a modal dialog should be open");
         assert.strictEqual($('span.o_tree_column:contains(Activities)').length, 1,
             "the Activities field should be in the list of exportable fields");
 
         // select the field Description, click on add, then export and close
-        $('.modal span:contains(Description)').click();
-        $('.modal .o_add_field').click();
-        $('.modal span:contains(Export To File)').click();
-        $('.modal span:contains(Close)').click();
+        $('[role="dialog"] span:contains(Description)').click();
+        $('[role="dialog"] .o_add_field').click();
+        $('[role="dialog"] span:contains(Export To File)').click();
+        $('[role="dialog"] span:contains(Close)').click();
 
         list.destroy();
         framework.blockUI = blockUI;
@@ -144,7 +144,7 @@ QUnit.module('widgets', {
             data: this.data,
             arch: '<tree><field name="foo"/></tree>',
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
             mockRPC: function (route) {
                 if (route === '/web/export/formats') {
@@ -171,7 +171,7 @@ QUnit.module('widgets', {
             },
         });
 
-        list.getParent().searchview = {
+        list.searchView = {
             build_search_data: function () {
                 assert.step('build_search_data');
                 return {
@@ -185,26 +185,26 @@ QUnit.module('widgets', {
         // Open the export modal
         list.$('thead th.o_list_record_selector input').click();
         list.sidebar.$('a:contains(Export)').click();
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "a modal dialog should be open");
 
         // Select 'Activities' in fields to export
-        assert.strictEqual($('.modal select.o_fields_list option').length, 0,
+        assert.strictEqual($('[role="dialog"] select.o_fields_list option').length, 0,
             "the fields list should be empty");
-        $('.modal .o_export_tree_item:contains(Activities)').click();
-        $('.modal button:contains(Add)').click();
-        assert.strictEqual($('.modal select.o_fields_list option').length, 1,
+        $('[role="dialog"] .o_export_tree_item:contains(Activities)').click();
+        $('[role="dialog"] button:contains(Add)').click();
+        assert.strictEqual($('[role="dialog"] select.o_fields_list option').length, 1,
             "there should be one item in the fields list");
 
         // Save fields list
-        $('.modal a:contains(Save fields list)').click();
-        $('.modal .o_save_list > input').val('fields list').trigger('input');
-        $('.modal .o_save_list > button').click();
+        $('[role="dialog"] a:contains(Save fields list)').click();
+        $('[role="dialog"] .o_save_list > input').val('fields list').trigger('input');
+        $('[role="dialog"] .o_save_list > button').click();
         assert.verifySteps(['build_search_data', 'create'],
             "create should have been called");
 
         // Close the modal and destroy list
-        $('.modal button span:contains(Close)').click();
+        $('[role="dialog"] button span:contains(Close)').click();
         list.destroy();
 
         // restore create function

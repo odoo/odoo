@@ -9,7 +9,6 @@ QUnit.module('RainbowMan', {
     beforeEach: function () {
         this.data = {
             message: 'Congrats!',
-            click_close: false
         };
     },
 }, function () {

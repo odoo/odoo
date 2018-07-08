@@ -7,7 +7,7 @@ from email.utils import formataddr
 
 from odoo.addons.test_mail.data.test_mail_data import \
     MAIL_TEMPLATE, MAIL_TEMPLATE_PLAINTEXT, MAIL_MULTIPART_MIXED, MAIL_MULTIPART_MIXED_TWO, \
-    MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY
+    MAIL_MULTIPART_IMAGE, MAIL_SINGLE_BINARY, MAIL_EML_ATTACHMENT, MAIL_XHTML
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.tools import mute_logger
 
@@ -77,6 +77,18 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
             'author_id': cls.partner_1.id,
             'message_id': '<123456-openerp-%s-mail.test.simple@%s>' % (cls.test_record.id, socket.gethostname()),
         })
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_parse_eml(self):
+        """ Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
+        """
+        self.env['mail.thread'].message_process('mail.channel', MAIL_EML_ATTACHMENT)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_parse_xhtml(self):
+        """ Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
+        """
+        self.env['mail.thread'].message_process('mail.channel', MAIL_XHTML)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_cid(self):
@@ -248,6 +260,26 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
                          'message_process: one email should have been generated')
         self.assertEqual(formataddr((self.partner_1.name, self.partner_1.email)), self._mails[0].get('email_to')[0],
                          'message_process: email should be sent to Sylvie')
+
+    # --------------------------------------------------
+    # Email Management
+    # --------------------------------------------------
+
+    def test_message_process_write_to_catchall(self):
+        """ Writing directly to catchall should bounce """
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias', 'bounce.test')
+        self.env['ir.config_parameter'].set_param('mail.catchall.alias', 'catchall.test')
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', 'test.com')
+
+        # Test: no group created, email bounced
+        record = self.format_and_process(MAIL_TEMPLATE, to='catchall.test@test.com', subject='Should Bounce')
+        self.assertTrue(len(record) == 0)
+        self.assertEqual(len(self._mails), 1,
+                         'message_process: writing directly to catchall should bounce')
+        # Test bounce email
+        self.assertEqual(self._mails[0].get('subject'), 'Re: Should Bounce')
+        self.assertEqual(self._mails[0].get('email_to')[0], 'whatever-2a840@postmaster.twitter.com')
+        self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
 
     # --------------------------------------------------
     # Thread formation
@@ -455,17 +487,15 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         """ Testing private discussion between partners. """
         msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
 
-        # Do: Raoul writes to Bert and Administrator, with a thread_model in context that should not be taken into account
-        msg1 = self.env['mail.thread'].with_context({
-            'thread_model': 'mail.test'
-        }).sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment')
+        # Do: Raoul writes to Bert and Administrator, with a model specific by parameter that should not be taken into account
+        msg1 = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment', model='mail.test')
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg1.id)
         self.assertEqual(msg.partner_ids, self.env.user.partner_id | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
         self.assertEqual(msg.model, False,
-                         'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
+                         'message_post: private discussion: parameter model not correctly ignored when having no res_id')
         # Test: message-id
         self.assertIn('openerp-private', msg.message_id, 'message_post: private discussion: message-id should contain the private keyword')
 

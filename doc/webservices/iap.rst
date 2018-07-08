@@ -41,9 +41,9 @@
 In-App Purchases
 ================
 
-IAP allow providers of ongoing services through Odoo apps to be compensated
-for ongoing service use rather than — and possibly instead of — a sole initial
-purchase.
+In-App Purchase (IAP) allow providers of ongoing services through Odoo apps to
+be compensated for ongoing service use rather than — and possibly instead of
+— a sole initial purchase.
 
 In that context, Odoo acts mostly as a *broker* between a client and an Odoo
 App Developer:
@@ -74,6 +74,28 @@ Overview
     * The External Service is an optional player: *you* can either provide a
       service directly, or you can delegate the actual service acting as a
       bridge/translator between an Odoo system and the actual service
+
+    
+.. figure:: images/credits.jpg
+    :align: center
+
+    The Credits
+
+    Every service provided through the In-App platform can be used by the
+    clients with tokens or *credits*. The credits are an integer unit and
+    their monetary value depends on the service and is decided by the
+    provider. This could be:
+
+    * for an sms service: 1 credit = 1 sms,
+    * for an add service: 1 credit = 1 add,
+    * for a postage service: 1 credit = 1 post stamp.
+
+    A credit can also simply be associated with a fixed amount of money
+    to palliate the variations of price (e.g. the prices of sms and stamps 
+    may vary following the countries).
+
+    The value of the credits is fixed with the help of prepaid credit packs
+    that the clients can buy on https://iap.odoo.com (see :ref:`Packages <iap-packages>`).
 
 .. note:: in the following explanations we will ignore the External Service,
           they're just a detail of the service you provide
@@ -134,10 +156,16 @@ Register the service on Odoo
 The first step is to register your service on the IAP endpoint (production 
 and/or test) before you can actually query user accounts. To create a service,
 go to your *Portal Account* on the IAP endpoint (https://iap.odoo.com for
-production, http://iap-sandbox.odoo.com for testing, the endpoints are
+production, https://iap-sandbox.odoo.com for testing, the endpoints are
 *independent* and *not synchronized*). 
 
-Log in then go to :menuselection:`My Account --> Your InApp Services`, click 
+.. note:: 
+    
+    On production, there is a manual validation step before the service
+    can be used to manage real transactions. This step is automatically passed when
+    on sandbox to ease the tests.
+
+Log in then go to :menuselection:`My Account --> Your In-App Services`, click
 Create and provide the name of your service. 
 
 
@@ -146,7 +174,8 @@ The now created service has *two* important fields:
 * :samp:`name` - :class:`ServiceName`: this will identify your service in the
   client's :ref:`app <iap-odoo-app>` communicates directly with IAP.
 * :samp:`key` - :class:`ServiceKey`: the developer key that identifies you in 
-  IAP (see :ref:`your service <iap-service>`) and allows to draw credits from the client's account.
+  IAP (see :ref:`your service <iap-service>`) and allows to draw credits from
+  the client's account.
 
 .. warning::
     The :class:`ServiceName` is unique and should usually match the name of your 
@@ -168,6 +197,33 @@ The now created service has *two* important fields:
 
 You can then create *credit packs* which clients can purchase in order to
 use your service.
+
+.. _iap-packages:
+
+Packages
+--------
+
+The credit packages are essentially a product with 4 characteristics.
+
+* Name: the name of the package,
+* Description: details on the package that will appear on the shop page as
+  well as the invoice,
+* Credits: the amount of credits the client is entitled to when buying the package,
+* Price: the price in *EUROS* for the time being (USD support is planned).
+
+.. note:: 
+    
+    Odoo takes a 25% commission on all package sales. Adjust your selling price accordingly.
+
+
+.. note::
+
+    Depending on the strategy, the price per credit can vary from one
+    package to another.
+
+
+.. image:: images/package.png
+    :align: center
 
 .. _iap-odoo-app:
 
@@ -260,15 +316,22 @@ perform the service within:
 
 .. todo:: "My Account" > "Your InApp Services"?
 
+
 The :class:`~odoo.addons.iap.models.iap.charge` helper will:
+
+.. note::
+
+    Since the 15th of January 2018, a new functionality that allows one to capture a different amount than autorized has been added.
+    See :ref:`Charging <iap-charging>`
 
 1. authorize (create) a transaction with the specified number of credits,
    if the account does not have enough credits it will raise the relevant
    error
 2. execute the body of the ``with`` statement
-3. if the body of the ``with`` executes succesfully, capture (confirm) the
-   transaction
-4. otherwise if an error is raised from the body of the ``with`` cancel the
+3. (NEW) if the body of the ``with`` executes succesfully, update the price 
+   of the transaction if needed
+4. capture (confirm) the transaction
+5. otherwise if an error is raised from the body of the ``with`` cancel the
    transaction (and release the hold on the credits)
 
 .. danger::
@@ -371,10 +434,12 @@ Capture
 
     :param TransactionToken token:
     :param ServiceKey key:
+    :param int credit_to_capture: (new - 15 Jan 2018) optional parameter to capture a smaller amount of credits than authorized
     :raises: :class:`~odoo.exceptions.AccessError`
 
 .. code-block:: python
-
+  :emphasize-lines: 8
+   
     r2 = requests.post(ODOO + '/iap/1/capture', json={
         'jsonrpc': '2.0',
         'id': None,
@@ -382,6 +447,7 @@ Capture
         'params': {
             'token': tx,
             'key': SERVICE_KEY,
+            'credit_to_capture': credit or False,
         }
     }).json()
     if 'error' in r:
@@ -474,8 +540,16 @@ Odoo Helpers
 For convenience, if you are implementing your service using Odoo the ``iap``
 module provides a few helpers to make IAP flow even simpler:
 
+.. _iap-charging:
+
 Charging
 --------
+
+.. note::
+
+    A new functionality was introduced to capture a different amount of credits than reserved.
+    As this patch was added on the 15th of January 2018, you will need to upgrade your ``iap`` module in order to use it.
+    The specifics of the new functionality are highlighted in the code. 
 
 .. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, description, credit_template])
 
@@ -495,8 +569,10 @@ Charging
     :param UserToken token:
     :param int credit:
     :param str description:
+    :param Qweb template credit_template:
 
 .. code-block:: python
+  :emphasize-lines: 10,13,14,15
 
     @route('/deathstar/superlaser', type='json')
     def superlaser(self, user_account,
@@ -507,8 +583,11 @@ Charging
                        0.0 is none, 1.0 is full power
         """
         credits = int(MAXIMUM_POWER * factor)
-        with charge(request.env, SERVICE_KEY, user_account, credits):
+        with charge(request.env, SERVICE_KEY, user_account, credits) as transaction:
             # TODO: allow other targets
+            transaction.credit = max(credits, 2)
+            # Sales ongoing one the energy price,
+            # a maximum of 2 credits will be charged/captured.
             self.env['systems.planets'].search([
                 ('grid', '=', 'M-10'),
                 ('name', '=', 'Alderaan'),

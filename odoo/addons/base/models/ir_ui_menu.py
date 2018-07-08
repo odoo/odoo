@@ -29,8 +29,7 @@ class IrUiMenu(models.Model):
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
-    parent_left = fields.Integer(index=True)
-    parent_right = fields.Integer(index=True)
+    parent_path = fields.Char(index=True)
     groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
@@ -126,8 +125,9 @@ class IrUiMenu(models.Model):
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        menus = super(IrUiMenu, self).search(args, offset=0, limit=None, order=order, count=False)
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        menu_ids = super(IrUiMenu, self)._search(args, offset=0, limit=None, order=order, count=False, access_rights_uid=access_rights_uid)
+        menus = self.browse(menu_ids)
         if menus:
             # menu filtering is done only on main menu tree, not other menu lists
             if not self._context.get('ir.ui.menu.full_list'):
@@ -136,7 +136,7 @@ class IrUiMenu(models.Model):
                 menus = menus[offset:]
             if limit:
                 menus = menus[:limit]
-        return len(menus) if count else menus
+        return len(menus) if count else menus.ids
 
     @api.multi
     def name_get(self):

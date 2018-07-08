@@ -10,13 +10,13 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="mail.res_partner_view_form_inherit_mail"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='container_row_2']" position="after">
-                <group name="container_row_stock" groups="base.group_no_one">
-                    <group string="Warehouse" name="warehouse">
-                        <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
-                        <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+            <xpath expr="//page[@name='sales_purchases']/group" position="inside">
+                    <group name="container_row_stock" groups="base.group_no_one" priority="6">
+                        <group string="Warehouse" name="warehouse">
+                            <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
+                            <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+                        </group>
                     </group>
-                </group>
             </xpath>
         </field>
     </record>
@@ -31,7 +31,7 @@
                     <separator string="Warning on the Picking" colspan="4"/>
                     <field name="picking_warn" nolabel="1" />
                     <field name="picking_warn_msg" colspan="3" nolabel="1" 
-                            attrs="{'required':[('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
+                            attrs="{'required':[('picking_warn', '!=', False), ('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
                 </group>
             </page>
         </field>

@@ -15,13 +15,13 @@ var _lt = core._lt;
 // are only used if user entered them manually or if got from demo data
 var operator_mapping = {
     "=": "=",
-    "!=": _lt("not"),
+    "!=": _lt("is not ="),
     ">": ">",
     "<": "<",
     ">=": ">=",
     "<=": "<=",
     "ilike": _lt("contains"),
-    "not ilike": _lt("not contains"),
+    "not ilike": _lt("does not contain"),
     "in": _lt("in"),
     "not in": _lt("not in"),
 

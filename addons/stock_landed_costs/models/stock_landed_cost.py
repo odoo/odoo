@@ -21,7 +21,7 @@ class LandedCost(models.Model):
     _inherit = 'mail.thread'
 
     name = fields.Char(
-        'Name', default=lambda self: self.env['ir.sequence'].next_by_code('stock.landed.cost'),
+        'Name', default=lambda self: _('New'),
         copy=False, readonly=True, track_visibility='always')
     date = fields.Date(
         'Date', default=fields.Date.context_today,
@@ -57,6 +57,12 @@ class LandedCost(models.Model):
     def _compute_total_amount(self):
         self.amount_total = sum(line.price_unit for line in self.cost_lines)
 
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
+        return super(LandedCost, self).create(vals)
+
     @api.multi
     def unlink(self):
         self.button_cancel()
@@ -85,11 +91,13 @@ class LandedCost(models.Model):
             raise UserError(_('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
 
         for cost in self:
-            move = self.env['account.move'].create({
+            move = self.env['account.move']
+            move_vals = {
                 'journal_id': cost.account_journal_id.id,
                 'date': cost.date,
-                'ref': cost.name
-            })
+                'ref': cost.name,
+                'line_ids': [],
+            }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 # Prorate the value at what's still in stock
                 cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
@@ -97,6 +105,7 @@ class LandedCost(models.Model):
                 new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
                 line.move_id.write({
                     'landed_cost_value': new_landed_cost_value,
+                    'value': line.move_id.value + cost_to_add,
                     'remaining_value': line.move_id.remaining_value + cost_to_add,
                     'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
                 })
@@ -107,9 +116,9 @@ class LandedCost(models.Model):
                     qty_out = line.move_id.product_qty - line.move_id.remaining_qty
                 elif line.move_id._is_out():
                     qty_out = line.move_id.product_qty
-                line._create_accounting_entries(move, qty_out)
-                
-            move.assert_balanced()
+                move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
+
+            move = move.create(move_vals)
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
         return True
@@ -117,7 +126,7 @@ class LandedCost(models.Model):
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
-        prec_digits = self.env['decimal.precision'].precision_get('Account')
+        prec_digits = self.env.user.company_id.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
             if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:
@@ -171,9 +180,13 @@ class LandedCost(models.Model):
                     val_line_values.update({'cost_id': cost.id, 'cost_line_id': cost_line.id})
                     self.env['stock.valuation.adjustment.lines'].create(val_line_values)
                 total_qty += val_line_values.get('quantity', 0.0)
-                total_cost += val_line_values.get('former_cost', 0.0)
                 total_weight += val_line_values.get('weight', 0.0)
                 total_volume += val_line_values.get('volume', 0.0)
+
+                former_cost = val_line_values.get('former_cost', 0.0)
+                # round this because former_cost on the valuation lines is also rounded
+                total_cost += tools.float_round(former_cost, precision_digits=digits[1]) if digits else former_cost
+
                 total_line += 1
 
             for line in cost.cost_lines:
@@ -251,13 +264,12 @@ class AdjustmentLines(models.Model):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     quantity = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=0, required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Stock Weight'))
     volume = fields.Float(
-        'Volume', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        'Volume', default=1.0)
     former_cost = fields.Float(
         'Former Cost', digits=dp.get_precision('Product Price'))
     former_cost_per_unit = fields.Float(
@@ -306,13 +318,12 @@ class AdjustmentLines(models.Model):
         Generate the account.move.line values to track the landed cost.
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
-        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False, recompute=False)
+        AccountMoveLine = []
 
         base_line = {
             'name': self.name,
-            'move_id': move.id,
             'product_id': self.product_id.id,
-            'quantity': self.quantity,
+            'quantity': 0,
         }
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
@@ -324,18 +335,18 @@ class AdjustmentLines(models.Model):
             # negative cost, reverse the entry
             debit_line['credit'] = -diff
             credit_line['debit'] = -diff
-        AccountMoveLine.create(debit_line)
-        AccountMoveLine.create(credit_line)
+        AccountMoveLine.append([0, 0, debit_line])
+        AccountMoveLine.append([0, 0, credit_line])
 
         # Create account move lines for quants already out of stock
         if qty_out > 0:
             debit_line = dict(base_line,
                               name=(self.name + ": " + str(qty_out) + _(' already out')),
-                              quantity=qty_out,
+                              quantity=0,
                               account_id=already_out_account_id)
             credit_line = dict(base_line,
                                name=(self.name + ": " + str(qty_out) + _(' already out')),
-                               quantity=qty_out,
+                               quantity=0,
                                account_id=debit_account_id)
             diff = diff * qty_out / self.quantity
             if diff > 0:
@@ -345,18 +356,18 @@ class AdjustmentLines(models.Model):
                 # negative cost, reverse the entry
                 debit_line['credit'] = -diff
                 credit_line['debit'] = -diff
-            AccountMoveLine.create(debit_line)
-            AccountMoveLine.create(credit_line)
+            AccountMoveLine.append([0, 0, debit_line])
+            AccountMoveLine.append([0, 0, credit_line])
 
             # TDE FIXME: oh dear
             if self.env.user.company_id.anglo_saxon_accounting:
                 debit_line = dict(base_line,
                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                  quantity=qty_out,
+                                  quantity=0,
                                   account_id=credit_account_id)
                 credit_line = dict(base_line,
                                    name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                   quantity=qty_out,
+                                   quantity=0,
                                    account_id=already_out_account_id)
 
                 if diff > 0:
@@ -366,7 +377,7 @@ class AdjustmentLines(models.Model):
                     # negative cost, reverse the entry
                     debit_line['credit'] = -diff
                     credit_line['debit'] = -diff
-                AccountMoveLine.create(debit_line)
-                AccountMoveLine.create(credit_line)
+                AccountMoveLine.append([0, 0, debit_line])
+                AccountMoveLine.append([0, 0, credit_line])
 
-        return True
+        return AccountMoveLine

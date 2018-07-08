@@ -28,7 +28,7 @@ SAFE_EVAL_BASE = {
 def make_compute(text, deps):
     """ Return a compute function from its code body and dependencies. """
     func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
-    deps = [arg.strip() for arg in (deps or "").split(",")]
+    deps = [arg.strip() for arg in deps.split(",")] if deps else []
     return api.depends(*deps)(func)
 
 
@@ -177,7 +177,7 @@ class IrModel(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             for model in self:
                 if model.state != 'manual':
-                    raise UserError(_("Model '%s' contains module data and cannot be removed!") % model.name)
+                    raise UserError(_("Model '%s' contains module data and cannot be removed.") % model.name)
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
@@ -308,6 +308,8 @@ class IrModelFields(models.Model):
     relation = fields.Char(string='Object Relation',
                            help="For relationship fields, the technical name of the target model")
     relation_field = fields.Char(help="For one2many fields, the field on the target model that implement the opposite many2one relationship")
+    relation_field_id = fields.Many2one('ir.model.fields', compute='_compute_relation_field_id',
+                                        store=True, ondelete='cascade', string='Relation field')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade',
                                help="The model this field belongs to")
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
@@ -319,6 +321,8 @@ class IrModelFields(models.Model):
                                  "For example: [('blue','Blue'),('yellow','Yellow')]")
     copy = fields.Boolean(string='Copied', help="Whether the value is copied when duplicating a record.")
     related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
+    related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
+                                       store=True, string="Related field", ondelete='cascade')
     required = fields.Boolean()
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
@@ -346,6 +350,19 @@ class IrModelFields(models.Model):
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
 
+    @api.depends('relation', 'relation_field')
+    def _compute_relation_field_id(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.relation_field:
+                rec.relation_field_id = self._get(rec.relation, rec.relation_field)
+
+    @api.depends('related')
+    def _compute_related_field_id(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.related:
+                field = rec._related_field()
+                rec.related_field_id = self._get(field.model_name, field.name)
+
     @api.depends()
     def _in_modules(self):
         installed_modules = self.env['ir.module.module'].search([('state', '=', 'installed')])
@@ -364,7 +381,7 @@ class IrModelFields(models.Model):
                 raise ValueError(selection)
         except Exception:
             _logger.info('Invalid selection list definition for fields.selection', exc_info=True)
-            raise UserError(_("The Selection Options expression is not a valid Pythonic expression."
+            raise UserError(_("The Selection Options expression is not a valid Pythonic expression. "
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
     @api.constrains('name', 'state')
@@ -466,6 +483,13 @@ class IrModelFields(models.Model):
     def _onchange_ttype(self):
         self.copy = (self.ttype != 'one2many')
         if self.ttype == 'many2many' and self.model_id and self.relation:
+            if self.relation not in self.env:
+                return {
+                    'warning': {
+                        'title': _('Model %s does not exist') % self.relation,
+                        'message': _('Please specify a valid model for the object relation'),
+                    }
+                }
             names = self._custom_many2many_names(self.model_id.model, self.relation)
             self.relation_table, self.column1, self.column2 = names
         else:
@@ -746,47 +770,55 @@ class IrModelFields(models.Model):
         fields_data = self._existing_field_data(field.model_name)
         field_data = fields_data.get(field.name)
         params = self._reflect_field_params(field)
+        cr = self.env.cr
+        created = False
 
         if field_data is None:
-            cr = self.env.cr
-            # create an entry in this table
+            # does not exist, create an entry in this table
             query_insert(cr, self._table, params)
             record = self.browse(cr.fetchone())
             self.pool.post_init(record.modified, list(params))
-            # create a corresponding xml id
-            module = field._module or self._context.get('module')
-            if module:
-                model = self.env[field.model_name]
-                xmlid = 'field_%s_%s' % (model._table, field.name)
-                cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
-                if cr.fetchone():
-                    xmlid = xmlid + "_" + str(record.id)
-                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
-                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
-                           (module, xmlid, record._name, record.id))
             # update fields_data (for recursive calls)
             fields_data[field.name] = dict(params, id=record.id)
-            return record
+            created = True
 
-        diff = {key for key, val in params.items() if field_data[key] != val}
-        if diff:
-            cr = self.env.cr
-            # update the entry in this table
+        elif any(field_data[key] != val for key, val in params.items()):
+            # exists, update the entry in this table
             query_update(cr, self._table, params, ['model', 'name'])
             record = self.browse(cr.fetchone())
-            self.pool.post_init(record.modified, diff)
+            names = [key for key, val in params.items() if field_data[key] != val]
+            self.pool.post_init(record.modified, names)
             # update fields_data (for recursive calls)
             field_data.update(params)
-            return record
 
         else:
-            # nothing to update, simply return the corresponding record
-            return self.browse(field_data['id'])
+            # exists, but nothing to update
+            record = self.browse(field_data['id'])
+
+        # generate xmlids if necessary, one per module defining the same field
+        module = self._context.get('module')
+        if module and (created or module in field._modules):
+            model_name = field.model_name.replace('.', '_')
+            xmlid = 'field_%s__%s' % (model_name, field.name)
+            cr.execute(
+                """
+                INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                SELECT %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')
+                WHERE NOT EXISTS (SELECT id FROM ir_model_data WHERE module=%s AND name=%s)
+                """, (module, xmlid, record._name, record.id, module, xmlid)
+            )
+
+        return record
 
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
+        duplicate_fields_label = {}
         for field in model._fields.values():
+            if field.string in duplicate_fields_label:
+                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.', field.name, duplicate_fields_label[field.string], model, field.string)
+            else:
+                duplicate_fields_label[field.string] = field.name
             self._reflect_field(field)
 
         if not self.pool._init:
@@ -855,6 +887,8 @@ class IrModelFields(models.Model):
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+        elif field_data['ttype'] == 'monetary' and not self.pool.loaded:
+            return
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])

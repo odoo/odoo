@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="repair_r1" model="repair.order">
+        <field name="address_id" ref="base.res_partner_address_1"/>
+        <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
+        <field name="invoice_method">none</field>
+        <field name="product_id" ref="product.product_product_3"/>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
+            'location_dest_id': obj().env.ref('stock.location_production').id,
+            'location_id': obj().env.ref('stock.stock_location_stock').id,
+            'name': '[M-Las] Mouse, Laser',
+            'product_id': obj().env.ref('product.product_product_11').id,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': '1.0',
+            'price_unit': 50.0,
+            'state': 'draft',
+            'type': 'add',
+        })]"/>
+        <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
+            'name': 'Laptop formatting fees',
+            'product_id': obj().env.ref('product.product_product_6').id,
+            'product_uom_qty': 1.0,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'price_unit': 50.0,
+        })]"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+
+    <record id="repair_r0" model="repair.order">
+        <field name="product_id" ref="product.product_product_5"/>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="address_id" ref="base.res_partner_address_1"/>
+        <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
+        <field name="invoice_method">after_repair</field>
+        <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
+            'location_dest_id': obj().env.ref('stock.location_production').id,
+            'location_id': obj().env.ref('stock.stock_location_stock').id,
+            'name': '[M-Wir] Mouse, Wireless',
+            'price_unit': 50.0,
+            'product_id': obj().env.ref('product.product_product_12').id,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 1.0,
+            'state': 'draft',
+            'type': 'add',
+        })]"/>
+        <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
+            'name': 'Monitor screen repair',
+            'product_id': obj().env.ref('product.product_product_6').id,
+            'product_uom_qty': 1.0,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'price_unit': 50.0,
+        })]"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+
+    <record id="repair_r2" model="repair.order">
+        <field name="product_id" ref="product.product_product_6"/>
+        <field name="product_uom" ref="uom.product_uom_unit"/>
+        <field name="address_id" ref="base.res_partner_address_1"/>
+        <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
+        <field name="invoice_method">b4repair</field>
+        <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+        <field name="location_id" ref="stock.stock_location_14"/>
+        <field name="operations" model="repair.line" eval="[(5, 0, 0), (0, 0, {
+            'location_dest_id': obj().env.ref('stock.location_production').id,
+            'location_id': obj().env.ref('stock.stock_location_stock').id,
+            'name': '[RAM-SR5] RAM DDR SR5',
+            'price_unit': 50.0,
+            'product_id': obj().env.ref('product.product_product_13').id,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 1.0,
+            'state': 'draft',
+            'type': 'add',
+        })]"/>
+        <field name="fees_lines" model="repair.fee" eval="[(5, 0, 0), (0, 0, {
+            'name': 'SIM card holder repair',
+            'product_id': obj().env.ref('product.product_product_6').id,
+            'product_uom_qty': 1.0,
+            'product_uom': obj().env.ref('uom.product_uom_unit').id,
+            'price_unit': 50.0,
+        })]"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+</odoo>

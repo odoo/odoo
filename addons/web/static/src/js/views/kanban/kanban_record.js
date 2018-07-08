@@ -17,7 +17,21 @@ var widgetRegistry = require('web.widget_registry');
 var _t = core._t;
 var QWeb = core.qweb;
 
-var NB_KANBAN_RECORD_COLORS = 12;
+var KANBAN_RECORD_COLORS = [
+    _t('No color'),
+    _t('Red'),
+    _t('Orange'),
+    _t('Yellow'),
+    _t('Light blue'),
+    _t('Dark purple'),
+    _t('Salmon pink'),
+    _t('Medium blue'),
+    _t('Dark blue'),
+    _t('Fushia'),
+    _t('Green'),
+    _t('Purple'),
+];
+var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
 var KanbanRecord = Widget.extend({
     events: {
@@ -45,8 +59,11 @@ var KanbanRecord = Widget.extend({
         // avoid quick multiple clicks
         this._onKanbanActionClicked = _.debounce(this._onKanbanActionClicked, 300, true);
     },
+    /**
+     * @override
+     */
     start: function () {
-        return this._super.apply(this, arguments).then(this._render.bind(this));
+        return $.when(this._super.apply(this, arguments), this._render());
     },
 
     //--------------------------------------------------------------------------
@@ -57,6 +74,7 @@ var KanbanRecord = Widget.extend({
      * Re-renders the record with a new state
      *
      * @param {Object} state
+     * @returns {Deferred}
      */
     update: function (state) {
         // detach the widgets because the record will empty its $el, which will
@@ -64,7 +82,7 @@ var KanbanRecord = Widget.extend({
         // those handlers alive as we will re-use these widgets
         _.invoke(_.pluck(this.subWidgets, '$el'), 'detach');
         this._setState(state);
-        this._render();
+        return this._render();
     },
 
     //--------------------------------------------------------------------------
@@ -125,6 +143,17 @@ var KanbanRecord = Widget.extend({
             return index % NB_KANBAN_RECORD_COLORS;
         }
         return 0;
+    },
+    /**
+     * Computes a color name from value
+     *
+     * @private
+     * @param {number | string} variable
+     * @returns {integer} the color name
+     */
+    _getColorname: function (variable) {
+        var colorID = this._getColorID(variable);
+        return KANBAN_RECORD_COLORS[colorID];
     },
     /**
      * @private
@@ -259,7 +288,10 @@ var KanbanRecord = Widget.extend({
         });
         var options = _.extend({}, this.options, {attrs: attrs});
         var widget = new Widget(this, field_name, this.state, options);
-        widget.replace($field);
+        var def = widget.replace($field);
+        if (def.state() === 'pending') {
+            this.defs.push(def);
+        }
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
     },
@@ -270,7 +302,7 @@ var KanbanRecord = Widget.extend({
             var Widget = widgetRegistry.get($field.attr('name'));
             var widget = new Widget(self, self.state);
 
-            var def = widget.__widgetRenderAndInsert(function () {});
+            var def = widget._widgetRenderAndInsert(function () {});
             if (def.state() === 'pending') {
                 self.defs.push(def);
             }
@@ -280,14 +312,21 @@ var KanbanRecord = Widget.extend({
     },
     /**
      * Renders the record
+     *
+     * @returns {Deferred}
      */
     _render: function () {
-        this.replaceElement(this.qweb.render('kanban-box', this.qweb_context));
-        this.$el.addClass('o_kanban_record');
+        this.defs = [];
+        this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
+        this.$el.addClass('o_kanban_record').attr("tabindex",0);
+        this.$el.attr('role', 'article');
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
             this.$el.on('click', this._onGlobalClick.bind(this));
+            this.$el.on('keydown', this._onKeyDownCard.bind(this));
+        } else {
+            this.$el.on('keydown', this._onKeyDownOpenFirstLink.bind(this));
         }
         this._processFields();
         this._processWidgets();
@@ -297,6 +336,8 @@ var KanbanRecord = Widget.extend({
 
         // We use boostrap tooltips for better and faster display
         this.$('span.o_tag').tooltip({delay: {'show': 50}});
+
+        return $.when.apply(this, this.defs);
     },
     /**
      * Sets particular classnames on a field $el according to the
@@ -335,6 +376,7 @@ var KanbanRecord = Widget.extend({
             kanban_image: this._getImageURL.bind(this),
             kanban_color: this._getColorClassname.bind(this),
             kanban_getcolor: this._getColorID.bind(this),
+            kanban_getcolorname: this._getColorname.bind(this),
             kanban_compute_domain: this._computeDomain.bind(this),
             read_only_mode: this.read_only_mode,
             record: this.record,
@@ -351,8 +393,10 @@ var KanbanRecord = Widget.extend({
     _setupColor: function () {
         var color_field = this.$el.attr('color');
         if (color_field && color_field in this.fields) {
+            var colorHelp = _.str.sprintf(_t("Card color: %s"), this._getColorname(this.recordData[color_field]));
             var colorClass = this._getColorClassname(this.recordData[color_field]);
             this.$el.addClass(colorClass);
+            this.$el.prepend('<span title="' + colorHelp + '" aria-label="' + colorHelp +'" role="img" class="oe_kanban_color_help"/>');
         }
     },
     /**
@@ -502,6 +546,36 @@ var KanbanRecord = Widget.extend({
                 break;
             default:
                 this.do_warn("Kanban: no action for type : " + type);
+        }
+    },
+    /**
+     * This event is linked to the kanban card when there is a global_click
+     * class on this card
+     *
+     * @private
+     * @param {KeyDownEvent} event
+     */
+    _onKeyDownCard: function (event) {
+        switch (event.keyCode) {
+            case $.ui.keyCode.ENTER:
+                event.preventDefault();
+                this._onGlobalClick(event);
+                break;
+        }
+    },
+    /**
+     * This event is linked ot the kanban card when there is no global_click
+     * class on the card
+     *
+     * @private
+     * @param {KeyDownEvent} event
+     */
+    _onKeyDownOpenFirstLink: function (event) {
+        switch (event.keyCode) {
+            case $.ui.keyCode.ENTER:
+                event.preventDefault();
+                $(event.target).find('a, button').first().click();
+                break;
         }
     },
     /**

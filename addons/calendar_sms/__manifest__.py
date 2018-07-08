@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "Calendar SMS",
+    'name': "Calendar - SMS",
     'summary': 'Send text messages as event reminders',
     'description': "Send text messages as event reminders",
     'category': 'Hidden',

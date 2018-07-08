@@ -24,11 +24,11 @@ class HolidaysSummaryDept(models.TransientModel):
         self.ensure_one()
         [data] = self.read()
         if not data.get('depts'):
-            raise UserError(_('You have to select at least one Department. And try again.'))
+            raise UserError(_('You have to select at least one department.'))
         departments = self.env['hr.department'].browse(data['depts'])
         datas = {
             'ids': [],
             'model': 'hr.department',
             'form': data
         }
-        return self.env.ref('hr_holidays.action_report_holidayssummary').report_action(departments, data=datas)
+        return self.env.ref('hr_holidays.action_report_holidayssummary').with_context(from_transient_model=True).report_action(departments, data=datas)

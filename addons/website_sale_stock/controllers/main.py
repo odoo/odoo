@@ -3,6 +3,7 @@
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
+from odoo.tools import ustr
 from odoo.tools.pycompat import izip
 
 class WebsiteSale(WebsiteSale):
@@ -14,13 +15,13 @@ class WebsiteSale(WebsiteSale):
         for r, variant in izip(res, request.env['product.product'].sudo().browse(variant_ids)):
             r.extend([{
                 'virtual_available': variant.virtual_available,
-                'product_type': str(variant.type),
-                'inventory_availability': str(variant.inventory_availability),
+                'product_type': variant.type,
+                'inventory_availability': variant.inventory_availability,
                 'available_threshold': variant.available_threshold,
-                'custom_message': str(variant.custom_message),
+                'custom_message': variant.custom_message,
                 'product_template': variant.product_tmpl_id.id,
                 'cart_qty': variant.cart_qty,
-                'uom_name': str(variant.uom_id.name),
+                'uom_name': variant.uom_id.name,
             }])
 
         return res

@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 
 
 class ProductAttribute(models.Model):
@@ -98,16 +99,16 @@ class ProductAttributeLine(models.Model):
     @api.constrains('value_ids', 'attribute_id')
     def _check_valid_attribute(self):
         if any(line.value_ids > line.attribute_id.value_ids for line in self):
-            raise ValidationError(_('Error ! You cannot use this attribute with the following value.'))
+            raise ValidationError(_('You cannot use this attribute with the following value.'))
         return True
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         # TDE FIXME: currently overriding the domain; however as it includes a
         # search on a m2o and one on a m2m, probably this will quickly become
         # difficult to compute - check if performance optimization is required
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-        else:
-            new_args = args
-        return super(ProductAttributeLine, self).name_search(name=name, args=new_args, operator=operator, limit=limit)
+            args = expression.AND([['|', ('attribute_id', operator, name), ('value_ids', operator, name)], args])
+            attribute_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            return self.browse(attribute_ids).name_get()
+        return super(ProductAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)

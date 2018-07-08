@@ -68,7 +68,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *          rejected otherwise
      */
     canBeDiscarded: function (recordID) {
-        if (!this.model.isDirty(recordID || this.handle)) {
+        if (!this.isDirty(recordID)) {
             return $.when(false);
         }
 
@@ -121,6 +121,21 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return [];
     },
     /**
+     * Gives the focus to the renderer
+     */
+    giveFocus:function() {
+        this.renderer.giveFocus();
+    },
+    /**
+     * Returns true iff the given recordID (or the main recordID) is dirty.
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @returns {boolean}
+     */
+    isDirty: function (recordID) {
+        return this.model.isDirty(recordID || this.handle);
+    },
+    /**
      * @override
      */
     renderPager: function ($node, options) {
@@ -130,12 +145,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.pager.on('pager_changed', this, function (newState) {
             var self = this;
             this.pager.disable();
+            data = this.model.get(this.handle, {raw: true});
             var limitChanged = (data.limit !== newState.limit);
             this.reload({limit: newState.limit, offset: newState.current_min - 1})
                 .then(function () {
                     // Reset the scroll position to the top on page changed only
                     if (!limitChanged) {
-                        self.trigger_up('scrollTo', {offset: 0});
+                        self.trigger_up('scrollTo', {top: 0});
                     }
                 })
                 .then(this.pager.enable.bind(this.pager));
@@ -200,7 +216,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     _abandonRecord: function (recordID) {
         recordID = recordID || this.handle;
         if (recordID === this.handle) {
-            this.trigger_up('switch_to_previous_view');
+            this.trigger_up('history_back');
         } else {
             this.model.removeLine(recordID);
         }
@@ -244,17 +260,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 model: record.model,
                 resIDs: record.res_ids,
             },
-            on_closed: function (reason) {
-                if (!_.isObject(reason)) {
-                    reload(reason);
-                }
-            },
-            on_fail: function (reason) {
-                reload().always(function() {
-                    def.reject(reason);
-                });
-            },
             on_success: def.resolve.bind(def),
+            on_fail: def.reject.bind(def),
+            on_closed: reload,
         });
         return this.alive(def);
     },
@@ -271,6 +279,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Deferred}
      */
     _confirmChange: function (id, fields, e) {
+        if (e.name === 'discard_changes' && e.target.reset) {
+            // the target of the discard event is a field widget.  In that
+            // case, we simply want to reset the specific field widget,
+            // not the full view
+            return  e.target.reset(this.model.get(e.target.dataPointID), e, true);
+        }
+
         var state = this.model.get(this.handle);
         return this.renderer.confirmChange(state, id, fields, e);
     },
@@ -299,7 +314,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _disableButtons: function () {
+    _disableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').attr('disabled', true);
         }
@@ -313,13 +328,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {Object} [options]
      * @param {boolean} [options.readonlyIfRealDiscard=false]
      *        After discarding record changes, the usual option is to make the
-     *        record readonly. However, the view manager calls this function
+     *        record readonly. However, the action manager calls this function
      *        at inappropriate times in the current code and in that case, we
      *        don't want to go back to readonly if there is nothing to discard
      *        (e.g. when switching record in edit mode in form view, we expect
      *        the new record to be in edit mode too, but the view manager calls
      *        this function as the URL changes...) @todo get rid of this when
-     *        the view manager is improved.
+     *        the webclient/action_manager's hashchange mechanism is improved.
      * @returns {Deferred}
      */
     _discardChanges: function (recordID, options) {
@@ -331,7 +346,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                     return;
                 }
                 self.model.discardChanges(recordID);
-                if (self.model.isNew(recordID)) {
+                if (self.model.canBeAbandoned(recordID)) {
                     self._abandonRecord(recordID);
                     return;
                 }
@@ -343,7 +358,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _enableButtons: function () {
+    _enableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').removeAttr('disabled');
         }
@@ -467,7 +482,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             var sidebarEnv = this._getSidebarEnv();
             this.sidebar.updateEnv(sidebarEnv);
         }
-        this.trigger_up('env_updated', env);
+        this.trigger_up('env_updated', {controllerID: this.controllerID, env: env});
     },
     /**
      * Helper method, to make sure the information displayed by the pager is up
@@ -511,7 +526,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any
-                self._confirmChange(self.handle, [ev.data.fieldName], ev)
+                self._confirmChange(recordID, [ev.data.fieldName], ev)
                     .always(ev.data.onSuccess);
             })
             .fail(ev.data.onFailure);

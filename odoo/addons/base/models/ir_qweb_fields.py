@@ -6,6 +6,8 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
+from lxml import etree
+
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
 
 import logging
@@ -252,7 +254,17 @@ class HTMLConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return pycompat.to_text(value)
+        irQweb = self.env['ir.qweb']
+        # wrap value inside a body and parse it as HTML
+        body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
+        # use pos processing for all nodes with attributes
+        for element in body.iter():
+            if element.attrib:
+                attrib = OrderedDict(element.attrib)
+                attrib = irQweb._post_processing_att(element.tag, attrib, options.get('template_options'))
+                element.attrib.clear()
+                element.attrib.update(attrib)
+        return etree.tostring(body, encoding='unicode', method='html')[6:-7]
 
 
 class ImageConverter(models.AbstractModel):
@@ -309,7 +321,9 @@ class MonetaryConverter(models.AbstractModel):
         fmt = "%.{0}f".format(display_currency.decimal_places)
 
         if options.get('from_currency'):
-            value = options['from_currency'].compute(value, display_currency)
+            date = options.get('date') or fields.Date.today()
+            company = options.get('company_id') or self.env.user.company_id
+            value = options['from_currency']._convert(value, display_currency, company, date)
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value),
@@ -330,6 +344,10 @@ class MonetaryConverter(models.AbstractModel):
         field = record._fields[field_name]
         if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
             options['display_currency'] = record[field.currency_field]
+        if 'date' not in options:
+            options['date'] = record._context.get('date')
+        if 'company_id' not in options:
+            options['company_id'] = record._context.get('company_id')
 
         return super(MonetaryConverter, self).record_to_html(record, field_name, options)
 
@@ -355,8 +373,9 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        hours, minutes = divmod(value * 60, 60)
-        return '%02d:%02d' % (hours, minutes)
+        factor = -1 if value < 0 else 1
+        hours, minutes = divmod(abs(value) * 60, 60)
+        return '%02d:%02d' % (hours * factor, minutes)
 
 
 class DurationConverter(models.AbstractModel):
@@ -460,12 +479,13 @@ class Contact(models.AbstractModel):
             return False
 
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
+        opsep = options and options.get('separator') or "\n"
         value = value.sudo().with_context(show_address=True)
         name_get = value.name_get()[0][1]
 
         val = {
             'name': name_get.split("\n")[0],
-            'address': escape("\n".join(name_get.split("\n")[1:])).strip(),
+            'address': escape(opsep.join(name_get.split("\n")[1:])).strip(),
             'phone': value.phone,
             'mobile': value.mobile,
             'city': value.city,
@@ -476,7 +496,7 @@ class Contact(models.AbstractModel):
             'object': value,
             'options': options
         }
-        return self.env['ir.qweb'].render('base.contact', val)
+        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options'))
 
 
 class QwebView(models.AbstractModel):

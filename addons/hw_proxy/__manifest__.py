@@ -17,4 +17,5 @@ This modules only contains the enabling framework. The actual devices drivers
 are found in other modules that must be installed separately. 
 
 """,
+    'installable': False,
 }

@@ -26,7 +26,7 @@
                         <page string="Architecture">
                             <button type="object" name="open_translations"
                                 string="Edit Translations" class="oe_link oe_right"/>
-                            <field name="arch_base" widget="ace" options="{'mode': 'xml'}"/>
+                            <field name="arch_base" string="View Architecture" widget="ace" options="{'mode': 'xml'}"/>
                         </page>
                         <page string="Access Rights">
                             <field name="groups_id"/>
@@ -132,7 +132,7 @@
             <field name="name">Customized Views</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view.custom</field>
-            <field name="help" type="html"><p class="oe_view_nocontent_create">Click here to create a customized view</p><p>Customized views are used when users reorganize the content of their dashboard views (via web client)</p></field>
+            <field name="help" type="html"><p class="o_view_nocontent_smiling_face">Create a customized view</p><p>Customized views are used when users reorganize the content of their dashboard views (via web client)</p></field>
         </record>
         <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2" sequence="3"/>
 

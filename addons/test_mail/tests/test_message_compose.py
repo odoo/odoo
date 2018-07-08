@@ -3,6 +3,7 @@
 
 import base64
 
+from email.utils import formataddr
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
@@ -31,7 +32,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         _body, _body_alt, _subject = '<p>Test Body</p>', 'Test Body', 'Test Subject'
 
         # subscribe second employee to the group to test notifications
-        self.test_record.message_subscribe_users(user_ids=[self.user_admin.id])
+        self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
         msg = self.test_record.sudo(self.user_employee).message_post(
             body=_body, subject=_subject,
@@ -60,12 +61,13 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications_keep_emails(self):
-        self.test_record.message_subscribe_users(user_ids=[self.user_admin.id])
+        self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
-        msg = self.test_record.sudo(self.user_employee).with_context(mail_auto_delete=False).message_post(
+        msg = self.test_record.sudo(self.user_employee).message_post(
             body='Test', subject='Test',
             message_type='comment', subtype='mt_comment',
-            partner_ids=[self.partner_1.id, self.partner_2.id]
+            partner_ids=[self.partner_1.id, self.partner_2.id],
+            notif_values={'mail_auto_delete': False}
         )
 
         # notifications emails should not have been deleted: one for customers, one for user
@@ -199,6 +201,31 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
         self.assertEqual(reply.needaction_partner_ids, self.user_employee.partner_id)
         self.assertEqual(reply.parent_id, msg)
+
+    def test_post_log(self):
+        new_note = self.test_record.sudo(self.user_employee)._message_log(
+            body='<p>Labrador</p>',
+        )
+
+        self.assertEqual(new_note.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(new_note.body, '<p>Labrador</p>')
+        self.assertEqual(new_note.author_id, self.user_employee.partner_id)
+        self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(new_note.needaction_partner_ids, self.env['res.partner'])
+
+    def test_post_notify(self):
+        self.user_employee.write({'notification_type': 'inbox'})
+        new_notification = self.env['mail.thread'].message_notify(
+            subject='This should be a subject',
+            body='<p>You have received a notification</p>',
+            partner_ids=[(4, self.partner_1.id), (4, self.user_employee.partner_id.id)],
+        )
+
+        self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(new_notification.body, '<p>You have received a notification</p>')
+        self.assertEqual(new_notification.author_id, self.env.user.partner_id)
+        self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
+        self.assertEqual(new_notification.needaction_partner_ids, self.partner_1 | self.user_employee.partner_id)
 
 
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):

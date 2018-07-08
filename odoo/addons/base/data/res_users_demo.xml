@@ -72,6 +72,9 @@
             <field name="groups_id" eval="[(5,)]"/><!-- Avoid auto-including this user in any default group -->
         </record>
 
+        <record id="base.group_user" model="res.groups"><!-- Remove the demo user for the internal_user group -->
+            <field name="users" eval="[(3,ref('demo_user0'))]"/>
+        </record>
         <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>

@@ -158,9 +158,10 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_expected': True}</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click to add a new attendee.
-</p></field>
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new attendee
+                </p>
+            </field>
         </record>
 
         <!-- EVENT.EVENT VIEWS -->
@@ -304,14 +305,14 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <ul class="dropdown-menu" role="menu">
                                         <t t-if="widget.deletable">
-                                            <li><a type="delete">Delete</a></li>
+                                            <li><a role="menuitem" type="delete">Delete</a></li>
                                         </t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
                                     </ul>
                                 </div>
                                 <div class="o_event_left">
@@ -326,8 +327,8 @@
                                     <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <i class="fa fa-clock-o"/>
-                                        <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
+                                        <b><i class="fa fa-clock-o"/>
+                                        To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">
@@ -382,7 +383,7 @@
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Category" name="event_type_id" context="{'group_by':'event_type_id'}"/>
                         <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                        <filter string="Start Month" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
+                        <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
             </field>
@@ -407,23 +408,15 @@
            <field name="view_mode">kanban,calendar,tree,form,pivot</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
-           <field name="help" type="html"><p class="oe_view_nocontent_create">
-    Click to add a new event.
-</p><p>
-    Odoo helps you schedule and efficiently organize your events:
-    track registrations and participations, automate the confirmation emails,
-    sell tickets, etc.
-</p></field>
+           <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new event
+              </p><p>
+                Schedule and organize your events efficiently:
+                track registrations and participations, automate the confirmation emails, sell tickets, etc.
+              </p>
+            </field>
         </record>
-
-        <act_window
-            id="act_register_event_partner"
-            name="Subscribe"
-            res_model="event.registration"
-            src_model="res.partner"
-            view_mode="tree,form,calendar,graph"
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
-            view_type="form"/>
 
         <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
         <menuitem name="Events"
@@ -537,8 +530,7 @@
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Day" name="createday" domain="[]" context="{'group_by': 'create_date:day'}"/>
-                        <filter string="Registration Month" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
                 </search>
             </field>

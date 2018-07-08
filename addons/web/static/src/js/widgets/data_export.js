@@ -6,7 +6,7 @@ var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -217,7 +217,7 @@ var DataExport = Dialog.extend({
 
         // The default for the ".modal_content" element is "max-height: 100%;"
         // but we want it to always expand to "height: 100%;" for this modal.
-        // This can be achieved thanks to LESS modification without touching
+        // This can be achieved thanks to CSS modification without touching
         // the ".modal-content" rules... but not with Internet explorer (11).
         this.$modal.find(".modal-content").css("height", "100%");
 
@@ -455,7 +455,7 @@ var DataExport = Dialog.extend({
             Dialog.alert(this, _t("Please select fields to export..."));
             return;
         }
-        exported_fields.unshift({name: 'id', label: 'External ID'});
+        exported_fields.unshift({name: 'id', label: _t('External ID')});
 
         var export_format = this.$export_format_inputs.filter(':checked').val();
 
@@ -467,7 +467,7 @@ var DataExport = Dialog.extend({
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: pyeval.eval('contexts', [this.record.getContext()]),
+                context: pyUtils.eval('contexts', [this.record.getContext()]),
                 import_compat: !!this.$import_compat_radios.filter(':checked').val(),
             })},
             complete: framework.unblockUI,

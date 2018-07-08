@@ -120,7 +120,6 @@
         
 
         <record id="warehouse0" model="stock.warehouse">
-            <field model="res.company" name="name" search="[]" use="name"/>
             <field name="partner_id" ref="base.main_partner"/>
             <field name="code">WH</field>
         </record>
@@ -141,11 +140,6 @@
             <field name="padding">5</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-        </record>
-
-        <record id="base.main_partner" model="res.partner">
-            <field name="property_stock_customer" model="stock.warehouse" 
-                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
         <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->

@@ -19,8 +19,12 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='active_group']" position="before">
-                <!-- Empty invisible group to be filled by timesheet_grid and sale_timesheet -->
-                <group string="Timesheets" name="timesheet" invisible="1" groups="hr_timesheet.group_timesheet_manager">
+                <group string="Timesheets" name="timesheet" groups="hr_timesheet.group_timesheet_manager">
+                    <label for="timesheet_cost"/>
+                    <div>
+                        <field name="timesheet_cost" class="oe_inline"/> per hour
+                        <field name="currency_id" invisible="1"/>
+                    </div>
                 </group>
             </xpath>
             <xpath expr="//button[@name='toggle_active']" position="before">

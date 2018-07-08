@@ -13,8 +13,6 @@
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <group expand='0' string='Filters'>
-                    <filter name="stockable" string="Stockable" domain="[('product_id.type', '=', 'product')]"/>
-                    <separator/>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
@@ -56,12 +54,12 @@
                             <label for="quantity" string="Quantity On Hand"/>
                             <div class="o_row">
                                 <field name="quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <label for="reserved_quantity" string="Quantity Reserved"/>
                             <div class="o_row">
                                 <field name="reserved_quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
                         </group>
@@ -84,7 +82,7 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="reserved_quantity" string="Reserved"/>
                 <field name="quantity" string="On Hand"/>
-                <field name="product_uom_id" groups="product.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -119,8 +117,14 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1, 'group_by': ['product_id', 'location_id']}</field>
-        <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
+        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No inventory found
+            </p><p>
+                This analysis gives you a fast overview on the current stock level of your products and their current inventory value.    
+            </p>
+        </field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
         <field name="name">Stock On Hand</field>
@@ -172,7 +176,7 @@
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="action_view_picking"
                         string="Package Transfers" type="object"
-                        widget="statinfo" icon="fa-dropbox"/>
+                        widget="statinfo" icon="fa-arrows-v"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Package Reference" class="oe_edit_only"/>
@@ -186,21 +190,12 @@
                         </group>
                     </group>
                     <separator string="Content" />
-                    <field name="current_picking_id" invisible="1"/>
-                    <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
-                        <tree>
-                            <field name="product_id"/>
-                            <field name="lot_id" groups="stock.group_production_lot"/>
-                            <field name="qty_done" string="Quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
-                        </tree>
-                    </field>
-                    <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
+                    <field name="quant_ids">
                         <tree>
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </tree>
                     </field>
                 </sheet>
@@ -215,7 +210,6 @@
         <field name="arch" type="xml">
             <tree string="Package">
                 <field name="display_name"/>
-                <field name="packaging_id"/>
                 <field name="location_id"/>
                 <field name="company_id"/>
             </tree>
@@ -247,7 +241,10 @@
         <field name="res_model">stock.quant.package</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
-            <p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new package
+            </p><p>
+                Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
             </p>
         </field>
     </record>

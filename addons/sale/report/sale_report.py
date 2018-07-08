@@ -16,7 +16,7 @@ class SaleReport(models.Model):
     date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
+    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
@@ -26,15 +26,15 @@ class SaleReport(models.Model):
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     price_total = fields.Float('Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
-    amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
-    amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
+    amount_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    amount_invoiced = fields.Float('Amount Invoiced', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True, oldname='section_id')
-    country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
+    country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
@@ -58,8 +58,8 @@ class SaleReport(models.Model):
                     sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
-                    sum(l.amt_to_invoice / COALESCE(cr.rate, 1.0)) as amt_to_invoice,
-                    sum(l.amt_invoiced / COALESCE(cr.rate, 1.0)) as amt_invoiced,
+                    sum(l.price_reduce * l.qty_to_invoice / COALESCE(cr.rate, 1.0)) as amount_to_invoice,
+                    sum(l.price_reduce * l.qty_invoiced / COALESCE(cr.rate, 1.0)) as amount_invoiced,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
@@ -88,8 +88,8 @@ class SaleReport(models.Model):
                       join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
-                    left join product_uom u on (u.id=l.product_uom)
-                    left join product_uom u2 on (u2.id=t.uom_id)
+                    left join uom_uom u on (u.id=l.product_uom)
+                    left join uom_uom u2 on (u2.id=t.uom_id)
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
                     left join currency_rate cr on (cr.currency_id = pp.currency_id and
                         cr.company_id = s.company_id and

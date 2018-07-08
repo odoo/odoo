@@ -18,6 +18,8 @@ from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.http import request
 from odoo.tools import config, ustr, pycompat
 
+from ..geoipresolver import GeoIPResolver
+
 _logger = logging.getLogger(__name__)
 
 # global resolver (GeoIP API is thread-safe, for multithreaded workers)
@@ -33,6 +35,7 @@ def _guess_mimetype(ext=False, default='text/html'):
     exts = {
         '.css': 'text/css',
         '.less': 'text/less',
+        '.scss': 'text/scss',
         '.js': 'text/javascript',
         '.xml': 'text/xml',
         '.csv': 'text/csv',
@@ -229,6 +232,13 @@ class IrHttp(models.AbstractModel):
             return request.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return request.env['res.lang'].search([], limit=1)
 
+    @classmethod
+    def _get_translation_frontend_modules_domain(cls):
+        """ Return a domain to list the domain adding web-translations and
+            dynamic resources that may be used frontend views
+        """
+        return []
+
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
     @classmethod
@@ -258,47 +268,35 @@ class IrHttp(models.AbstractModel):
         # Lazy init of GeoIP resolver
         if odoo._geoip_resolver is not None:
             return
+        geofile = config.get('geoip_database')
         try:
-            import GeoIP
-            # updated database can be downloaded on MaxMind website
-            # http://dev.maxmind.com/geoip/legacy/install/city/
-            geofile = config.get('geoip_database')
-            if os.path.exists(geofile):
-                odoo._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-            else:
-                odoo._geoip_resolver = False
-                _logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
-        except ImportError:
-            odoo._geoip_resolver = False
+            odoo._geoip_resolver = GeoIPResolver.open(geofile) or False
+        except Exception as e:
+            _logger.warning('Cannot load GeoIP: %s', ustr(e))
 
     @classmethod
     def _geoip_resolve(cls):
         if 'geoip' not in request.session:
             record = {}
             if odoo._geoip_resolver and request.httprequest.remote_addr:
-                record = odoo._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+                record = odoo._geoip_resolver.resolve(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
     @classmethod
     def _add_dispatch_parameters(cls, func):
-        if request.is_frontend:
-            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
+        # only called for is_frontend request
+        if request.routing_iteration == 1:
             context = dict(request.context)
-
-            if not context.get('tz'):
-                context['tz'] = request.session.get('geoip', {}).get('time_zone')
-
             path = request.httprequest.path.split('/')
-            if request.routing_iteration == 1:
-                langs = [lg.code for lg in cls._get_languages()]
-                is_a_bot = cls.is_a_bot()
-                cook_lang = request.httprequest.cookies.get('frontend_lang')
-                nearest_lang = not func and cls.get_nearest_lang(path[1])
-                preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or (not is_a_bot and cls.get_nearest_lang(request.lang))
-                                  or cls._get_default_lang().code)
+            langs = [lg.code for lg in cls._get_languages()]
+            is_a_bot = cls.is_a_bot()
+            cook_lang = request.httprequest.cookies.get('frontend_lang')
+            nearest_lang = not func and cls.get_nearest_lang(path[1])
+            preferred_lang = ((cook_lang if cook_lang in langs else False)
+                              or (not is_a_bot and cls.get_nearest_lang(request.lang))
+                              or cls._get_default_lang().code)
 
-                request.lang = context['lang'] = nearest_lang or preferred_lang
+            request.lang = context['lang'] = nearest_lang or preferred_lang
 
             # bind modified context
             request.context = context
@@ -384,16 +382,15 @@ class IrHttp(models.AbstractModel):
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
 
-            context = dict(request.context)
             if request.lang == cls._get_default_lang().code:
+                context = dict(request.context)
                 context['edit_translations'] = False
-            request.context = context
+                request.context = context
 
         if routing_error:
             return cls._handle_exception(routing_error)
 
         # removed cache for auth public
-        request.cache_save = False
         result = super(IrHttp, cls)._dispatch()
 
         if request.is_frontend and cook_lang != request.lang and hasattr(result, 'set_cookie'):
@@ -424,6 +421,8 @@ class IrHttp(models.AbstractModel):
         try:
             _, path = rule.build(arguments)
             assert path is not None
+        except odoo.exceptions.MissingError:
+            return cls._handle_exception(werkzeug.exceptions.NotFound())
         except Exception as e:
             return cls._handle_exception(e)
 

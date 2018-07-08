@@ -16,7 +16,7 @@ class LivechatController(http.Controller):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
         xmlid = 'im_livechat.external_lib'
         files, remains = request.env["ir.qweb"]._get_asset_content(xmlid, options=request.context)
-        asset = AssetsBundle(xmlid, files, remains)
+        asset = AssetsBundle(xmlid, files)
 
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
@@ -110,7 +110,8 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/history', type="json", auth="public")
     def history_pages(self, pid, channel_uuid, page_history=None):
-        channel = request.env['mail.channel'].search([('uuid', '=', channel_uuid)])
+        partner_ids = (pid, request.env.user.partner_id.id)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', channel_uuid), ('channel_partner_ids', 'in', partner_ids)])
         if channel:
             channel._send_history_message(pid, page_history)
         return True

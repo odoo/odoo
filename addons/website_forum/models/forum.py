@@ -48,9 +48,9 @@ class Forum(models.Model):
     description = fields.Text(
         'Description',
         translate=True,
-        default='This community is for professionals and enthusiasts of our products and services. '
-                'Share and discuss the best content and new marketing ideas, '
-                'build your professional profile and become a better marketer together.')
+        default=lambda s: _('This community is for professionals and enthusiasts of our products and services. '
+                            'Share and discuss the best content and new marketing ideas, '
+                            'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
@@ -422,6 +422,11 @@ class Post(models.Model):
                 raise KarmaError('User karma not sufficient to post an image or link.')
         return content
 
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('You cannot create recursive forum posts.'))
+
     @api.model
     def create(self, vals):
         if 'content' in vals and vals.get('forum_id'):
@@ -430,14 +435,14 @@ class Post(models.Model):
         post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
         if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
-            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
+            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
-            raise KarmaError('Not enough karma to create a new question')
+            raise KarmaError('You don\'t have enough karma to create a new question.')
         elif post.parent_id and not post.can_answer:
-            raise KarmaError('Not enough karma to answer to a question')
+            raise KarmaError('You don\'t have enough karma to answer a question.')
         if not post.parent_id and not post.can_post:
-            post.state = 'pending'
+            post.sudo().state = 'pending'
 
         # add karma for posting new questions
         if not post.parent_id and post.state == 'active':
@@ -466,11 +471,18 @@ class Post(models.Model):
 
     @api.multi
     def write(self, vals):
+        trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
         if 'state' in vals:
-            if vals['state'] in ['active', 'close'] and any(not post.can_close for post in self):
-                raise KarmaError('Not enough karma to close or reopen a post.')
+            if vals['state'] in ['active', 'close']:
+                if any(not post.can_close for post in self):
+                    raise KarmaError('Not enough karma to close or reopen a post.')
+                trusted_keys += ['state', 'closed_uid', 'closed_date', 'closed_reason_id']
+            elif vals['state'] == 'flagged':
+                if any(not post.can_flag for post in self):
+                    raise KarmaError('Not enough karma to flag a post.')
+                trusted_keys += ['state', 'flag_user_id']
         if 'active' in vals:
             if any(not post.can_unlink for post in self):
                 raise KarmaError('Not enough karma to delete or reactivate a post')
@@ -487,7 +499,7 @@ class Post(models.Model):
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
             if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals) and any(not post.can_edit for post in self):
+        if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)
@@ -786,17 +798,19 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Post, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is active. """
+        groups = super(Post, self)._notify_get_groups(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
+        if self.state == 'active':
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
 
         return groups
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, message_type='notification', subtype=None, **kwargs):
+    def message_post(self, message_type='notification', **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
@@ -816,7 +830,7 @@ class Post(models.Model):
                 raise KarmaError('Not enough karma to comment')
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
-        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
+        return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
     def message_get_message_notify_values(self, message, message_values):
@@ -865,12 +879,12 @@ class Vote(models.Model):
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
-            raise UserError(_('Not allowed to vote for its own post'))
+            raise UserError(_('It is not allowed to vote for its own post.'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
-            raise KarmaError('Not enough karma to upvote.')
+            raise KarmaError('You don\'t have enough karma toupvote.')
         elif vote.vote == '-1' and not vote.post_id.can_downvote:
-            raise KarmaError('Not enough karma to downvote.')
+            raise KarmaError('You don\'t have enough karma to downvote.')
 
         if vote.post_id.parent_id:
             karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
@@ -885,12 +899,12 @@ class Vote(models.Model):
             for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise UserError(_('Not allowed to vote for its own post'))
+                    raise UserError(_('It is not allowed to vote for its own post.'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
-                    raise KarmaError('Not enough karma to upvote.')
+                    raise KarmaError('You don\'t have enough karma to upvote.')
                 elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0') and not vote.post_id.can_downvote:
-                    raise KarmaError('Not enough karma to downvote.')
+                    raise KarmaError('You don\'t have enough karma to downvote.')
 
                 # karma update
                 if vote.post_id.parent_id:
@@ -929,5 +943,5 @@ class Tags(models.Model):
     def create(self, vals):
         forum = self.env['forum.forum'].browse(vals.get('forum_id'))
         if self.env.user.karma < forum.karma_tag_create:
-            raise KarmaError(_('Not enough karma to create a new Tag'))
+            raise KarmaError(_('You don\'t have enough karma to create a new Tag.'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)

@@ -8,6 +8,7 @@ from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools import pycompat
 from odoo.http import request
 
+import base64
 from collections import defaultdict
 import datetime
 import dateutil
@@ -33,6 +34,7 @@ class IrActions(models.Model):
     binding_model_id = fields.Many2one('ir.model', ondelete='cascade',
                                        help="Setting a value makes this action available in the sidebar for the given model.")
     binding_type = fields.Selection([('action', 'Action'),
+                                     ('action_form_only', "Form-only"),
                                      ('report', 'Report')],
                                     required=True, default='action')
 
@@ -76,6 +78,8 @@ class IrActions(models.Model):
             'datetime': datetime,
             'dateutil': dateutil,
             'timezone': timezone,
+            'b64encode': base64.b64encode,
+            'b64decode': base64.b64decode,
         }
 
     @api.model
@@ -173,7 +177,7 @@ class IrActionsActWindow(models.Model):
                                  help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view")
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
-    view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='Views')
+    view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='No of Views')
     views = fields.Binary(compute='_compute_views',
                           help="This function field computes the ordered list of views that should be enabled " \
                                "when displaying the result of an action, federating view mode, views and " \
@@ -196,7 +200,12 @@ class IrActionsActWindow(models.Model):
             for values in result:
                 model = values.get('res_model')
                 if model in self.env:
-                    values['help'] = self.env[model].get_empty_list_help(values.get('help', ""))
+                    eval_ctx = dict(self.env.context)
+                    try:
+                        ctx = safe_eval(values.get('context', '{}'), eval_ctx)
+                    except:
+                        ctx = {}
+                    values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result
 
     @api.model
@@ -253,7 +262,7 @@ class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')
@@ -358,7 +367,7 @@ class IrActionsServer(models.Model):
                                    "based on the sequence. Low number means high priority.")
     model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade',
                                help="Model on which the server action runs.")
-    model_name = fields.Char(related='model_id.model', readonly=True, store=True)
+    model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True, store=True)
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
@@ -372,7 +381,7 @@ class IrActionsServer(models.Model):
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.name', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
-                                    help="Provide the field used to link the newly created record"
+                                    help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
 
@@ -442,7 +451,12 @@ class IrActionsServer(models.Model):
         for exp in action.fields_lines:
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
-        self.env[action.model_id.model].browse(self._context.get('active_id')).write(res)
+        if self._context.get('onchange_self'):
+            record_cached = self._context['onchange_self']
+            for field, new_value in res.items():
+                record_cached[field] = new_value
+        else:
+            self.env[action.model_id.model].browse(self._context.get('active_id')).write(res)
 
     @api.model
     def run_action_object_create(self, action, eval_context=None):
@@ -537,6 +551,8 @@ class IrActionsServer(models.Model):
 
             elif hasattr(self, 'run_action_%s' % action.state):
                 active_id = self._context.get('active_id')
+                if not active_id and self._context.get('onchange_self'):
+                    active_id = self._context['onchange_self']._origin.id
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
@@ -636,13 +652,13 @@ class IrActionsTodo(models.Model):
         return super(IrActionsTodo, self).unlink()
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if args is None:
             args = []
         if name:
-            actions = self.search([('action_id', operator, name)] + args, limit=limit)
-            return actions.name_get()
-        return super(IrActionsTodo, self).name_search(name, args=args, operator=operator, limit=limit)
+            action_ids = self._search([('action_id', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            return self.browse(action_ids).name_get()
+        return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
     def action_launch(self, context=None):
@@ -695,7 +711,7 @@ class IrActionsActClient(models.Model):
     res_model = fields.Char(string='Destination Model', help="Optional model, mostly used for needactions.")
     context = fields.Char(string='Context Value', default="{}", required=True, help="Context dictionary as Python expression, empty by default (Default: {})")
     params = fields.Binary(compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
-                           help="Arguments sent to the client along with"
+                           help="Arguments sent to the client along with "
                                 "the view tag")
     params_store = fields.Binary(string='Params storage', readonly=True)
 

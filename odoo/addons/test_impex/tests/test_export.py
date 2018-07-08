@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
+import pstats
+from cProfile import Profile
 
 from odoo.tests import common
 from odoo.tools import pycompat
@@ -26,6 +28,23 @@ class CreatorCase(common.TransactionCase):
         record.invalidate_cache()
         return record._export_rows([f.split('/') for f in fields])
 
+class test_xids(CreatorCase):
+    model_name = 'export.boolean'
+
+    def test_no_module(self):
+        record = self.make(True)
+        # add existing xid without module
+        self.env['ir.model.data'].create({
+            'module': '',
+            'name': 'x',
+            'model': self.model_name,
+            'res_id': record.id,
+        })
+        record.invalidate_cache()
+        self.assertEqual(
+            record._export_rows([['id'], ['value']]),
+            [[u'x', u'True']]
+        )
 
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'
@@ -325,11 +344,26 @@ class test_m2o(CreatorCase):
         record = self.env['export.integer'].create({'value': 42})
         # Expecting the m2o target model name in the external id,
         # not this model's name
-        external_id = u'__export__.export_integer_%d' % record.id
-        self.assertEqual(
-            self.export(record.id, fields=['value/id']),
-            [[external_id]])
+        self.assertRegex(
+            self.export(record.id, fields=['value/id'])[0][0],
+            u'__export__.export_integer_%d_[0-9a-f]{8}' % record.id)
 
+    def test_identical(self):
+        m2o = self.env['export.integer'].create({'value': 42}).id
+        records = \
+          ( self.make(m2o)
+          | self.make(m2o)
+          | self.make(m2o)
+          | self.make(m2o)
+        )
+        records.invalidate_cache()
+        xp = [r[0] for r in records._export_rows([['value', 'id']])]
+        self.assertEqual(len(xp), 4)
+        self.assertRegex(
+            xp[0],
+            u'__export__.export_integer_%d_[0-9a-f]{8}' % m2o
+        )
+        self.assertEqual(set(xp), {xp[0]})
 
 class test_o2m(CreatorCase):
     model_name = 'export.one2many'
@@ -601,7 +635,54 @@ class test_m2m(CreatorCase):
                 ['', u'export.many2many.other:13'],
             ])
 
-    # essentially same as o2m, so boring
+    def test_multiple_records_subfield(self):
+        r = self.make(self.commands)
+        xid = self.env['ir.model.data'].create({
+            'name': 'whopwhopwhop',
+            'module': '__t__',
+            'model': r._name,
+            'res_id': r.id,
+        }).complete_name
+        sids = [
+            self.env['ir.model.data'].create({
+                'name': sub.str,
+                'module': '__t__',
+                'model': sub._name,
+                'res_id': sub.id,
+            }).complete_name
+            for sub in r.value
+        ]
+        r.invalidate_cache()
+
+        self.assertEqual(
+            r._export_rows([['value', 'id']]),
+            [['__t__.record000,__t__.record001,__t__.record010,__t__.record011,__t__.record100']]
+        )
+        self.assertEqual(
+            r.with_context(import_compat=True)._export_rows([['value', 'id']]),
+            [['__t__.record000,__t__.record001,__t__.record010,__t__.record011,__t__.record100']]
+        )
+
+        self.assertEqual(
+            r.with_context(import_compat=False)._export_rows([['id'], ['value', 'id'], ['value', 'value']]),
+            [
+                [xid, u'__t__.record000', u'4'],
+                [u'', u'__t__.record001', u'42'],
+                [u'', u'__t__.record010', u'36'],
+                [u'', u'__t__.record011', u'4'],
+                [u'', u'__t__.record100', u'13']
+            ]
+        )
+        self.assertEqual(
+            r.with_context(import_compat=False)._export_rows([['id'], ['value', 'value'], ['value', 'id']]),
+            [
+                [xid, u'4', u'__t__.record000'],
+                [u'', u'42', u'__t__.record001'],
+                [u'', u'36', u'__t__.record010'],
+                [u'', u'4', u'__t__.record011'],
+                [u'', u'13', u'__t__.record100']
+            ]
+        )
 
 
 class test_function(CreatorCase):
@@ -613,3 +694,49 @@ class test_function(CreatorCase):
         self.assertEqual(
             self.export(42),
             [[u'3']])
+
+
+@common.tagged('-standard', 'bench')
+class test_xid_perfs(common.TransactionCase):
+    def setUp(self):
+        super(test_xid_perfs, self).setUp()
+
+        self.profile = Profile()
+        @self.addCleanup
+        def _dump():
+            stats = pstats.Stats(self.profile)
+            stats.strip_dirs()
+            stats.sort_stats('cumtime')
+            stats.print_stats(20)
+            self.profile = None
+
+    def test_basic(self):
+        Model = self.env['export.integer']
+        for i in range(10000):
+            Model.create({'value': i})
+        Model.invalidate_cache()
+        records = Model.search([])
+
+        self.profile.runcall(records._export_rows, [['id'], ['value']])
+
+    def test_m2o_single(self):
+        rid = self.env['export.integer'].create({'value': 42}).id
+        Model = self.env['export.many2one']
+        for _ in range(10000):
+            Model.create({'value': rid})
+        Model.invalidate_cache()
+        records = Model.search([])
+
+        self.profile.runcall(records._export_rows, [['id'], ['value','id']])
+
+    def test_m2o_each(self):
+        Model = self.env['export.many2one']
+        Integer = self.env['export.integer']
+        for i in range(10000):
+            Model.create({
+                'value': Integer.create({'value': i}).id
+            })
+        Model.invalidate_cache()
+        records = Model.search([])
+
+        self.profile.runcall(records._export_rows, [['id'], ['value', 'id']])

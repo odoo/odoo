@@ -1,7 +1,8 @@
 from docutils import nodes, utils
 from docutils.parsers.rst import Directive
 
-from pygments.lexers import get_lexer_by_name
+from pygments.lexers import get_lexer_by_name, PythonLexer
+PythonLexer.name = 'Python 2'
 
 def setup(app):
     app.add_directive('switcher', SwitcherDirective)

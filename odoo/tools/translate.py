@@ -143,8 +143,11 @@ TRANSLATED_ELEMENTS = {
 
 # which attributes must be translated
 TRANSLATED_ATTRS = {
-    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
+    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
+    'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
 }
+
+TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)
@@ -460,7 +463,7 @@ def quote(s):
                      .replace('\n', '\\n"\n"')
 
 re_escaped_char = re.compile(r"(\\.)")
-re_escaped_replacements = {'n': '\n', }
+re_escaped_replacements = {'n': '\n', 't': '\t',}
 
 def _sub_replacement(match_obj):
     return re_escaped_replacements.get(match_obj.group(1)[1], match_obj.group(1)[1])
@@ -687,23 +690,27 @@ def trans_export(lang, modules, buffer, format, cr):
                 writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
-            rows_by_module = {}
+            rows_by_module = defaultdict(list)
             for row in rows:
                 module = row[0]
-                rows_by_module.setdefault(module, []).append(row)
-            tmpdir = tempfile.mkdtemp()
-            for mod, modrows in rows_by_module.items():
-                tmpmoddir = join(tmpdir, mod, 'i18n')
-                os.makedirs(tmpmoddir)
-                pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
-                buf = open(join(tmpmoddir, pofilename), 'w')
-                _process('po', [mod], modrows, buf, lang)
-                buf.close()
+                rows_by_module[module].append(row)
 
-            tar = tarfile.open(fileobj=buffer, mode='w|gz')
-            tar.add(tmpdir, '')
-            tar.close()
+            with tarfile.open(fileobj=buffer, mode='w|gz') as tar:
+                for mod, modrows in rows_by_module.items():
+                    with io.BytesIO() as buf:
+                        _process('po', [mod], modrows, buf, lang)
+                        buf.seek(0)
 
+                        info = tarfile.TarInfo(
+                            join(mod, 'i18n', '{basename}.{ext}'.format(
+                                basename=lang or mod,
+                                ext='po' if lang else 'pot',
+                            )))
+                        # addfile will read <size> bytes from the buffer so
+                        # size *must* be set first
+                        info.size = len(buf.getvalue())
+
+                        tar.addfile(info, fileobj=buf)
         else:
             raise Exception(_('Unrecognized extension: must be one of '
                 '.csv, .po, or .tgz (received .%s).') % format)

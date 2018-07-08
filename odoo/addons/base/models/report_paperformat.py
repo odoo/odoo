@@ -65,4 +65,4 @@ class report_paperformat(models.Model):
     @api.constrains('format')
     def _check_format_or_page(self):
         if self.filtered(lambda x: x.format != 'custom' and (x.page_width or x.page_height)):
-            raise ValidationError(_('Error ! You cannot select a format AND specific page width/height.'))
+            raise ValidationError(_('You can select either a format or a specific page width/height, but not both.'))

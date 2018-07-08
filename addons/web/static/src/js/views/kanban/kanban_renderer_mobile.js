@@ -12,6 +12,7 @@ var config = require('web.config');
 var core = require('web.core');
 var KanbanRenderer = require('web.KanbanRenderer');
 
+var _t = core._t;
 var qweb = core.qweb;
 
 if (!config.device.isMobile) {
@@ -29,6 +30,41 @@ KanbanRenderer.include({
     init: function () {
         this._super.apply(this, arguments);
         this.activeColumnIndex = 0; // index of the currently displayed column
+        this._scrollPosition = null;
+    },
+    /**
+     * As this renderer defines its own scrolling area (the column in grouped
+     * mode), we override this hook to restore the scroll position like it was
+     * when the renderer has been last detached.
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        if (this._scrollPosition && this.state.groupedBy.length && this.widgets.length) {
+            var $column = this.widgets[this.activeColumnIndex].$el;
+            $column.scrollLeft(this._scrollPosition.left);
+            $column.scrollTop(this._scrollPosition.top);
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
+     * As this renderer defines its own scrolling area (the column in grouped
+     * mode), we override this hook to store the scroll position, so that we can
+     * restore it if the renderer is re-attached to the DOM later.
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        if (this.state.groupedBy.length && this.widgets.length) {
+            var $column = this.widgets[this.activeColumnIndex].$el;
+            this._scrollPosition = {
+                left: $column.scrollLeft(),
+                top: $column.scrollTop(),
+            };
+        } else {
+            this._scrollPosition = null;
+        }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -37,9 +73,11 @@ KanbanRenderer.include({
 
     /**
      * Displays the quick create record in the active column
+     *
+     * @returns {Deferred}
      */
     addQuickCreate: function () {
-        this.widgets[this.activeColumnIndex].addQuickCreate();
+        return this.widgets[this.activeColumnIndex].addQuickCreate();
     },
     /**
      * Overrides to restore the left property and the scrollTop on the updated
@@ -107,8 +145,9 @@ KanbanRenderer.include({
                 var updateFunc = animate ? 'animate' : 'css';
                 self.$('.o_kanban_mobile_tab').removeClass('o_current');
                 _.each(self.widgets, function (column, index) {
-                    var $column = self.$('.o_kanban_group[data-id=' + column.id + ']');
-                    var $tab = self.$('.o_kanban_mobile_tab[data-id=' + column.id + ']');
+                    var columnID = column.id || column.db_id;
+                    var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
+                    var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
                     if (index === moveToIndex - 1) {
                         $column[updateFunc]({left: '-100%'});
                         $tab[updateFunc]({left: '0%'});
@@ -137,8 +176,19 @@ KanbanRenderer.include({
      * @private
      */
     _renderGrouped: function (fragment) {
+        var data = [];
+        _.each(this.state.data, function (group) {
+            if (!group.value) {
+                group = _.extend({}, group, {value: _t('Undefined')});
+                data.unshift(group);
+            }
+            else {
+                data.push(group);
+            }
+        });
+
         var $tabs = $(qweb.render('KanbanView.MobileTabs', {
-            data: this.state.data,
+            data: data,
         }));
         $tabs.appendTo(fragment);
         return this._super.apply(this, arguments);

@@ -6,25 +6,14 @@
 
 	<menuitem id="account_reports_no_statements_menu" name="Norwegian Statements" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
-    <record id="chart1940" model="account.account.template">
-        <field name="code">1940</field>
-        <field name="reconcile" eval="True"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets" />
-        <field name="name">Bank i transfer</field>
-    </record>
-
     <!-- Account Templates -->
         <record id="no_chart_template" model="account.chart.template">
             <field name="name">Norway's Chart of Accounts</field>
             <field name="cash_account_code_prefix">1900</field>
             <field name="bank_account_code_prefix">1920</field>
+            <field name="transfer_account_code_prefix">1940</field>
             <field name="code_digits">4</field>
             <field name="currency_id" ref="base.NOK"/>
-            <field name="transfer_account_id" ref="chart1940"/>
-        </record>
-
-        <record id="chart1940" model="account.account.template">
-           <field name="chart_template_id" ref="no_chart_template"/>
         </record>
 
     <!-- Account Templates -->

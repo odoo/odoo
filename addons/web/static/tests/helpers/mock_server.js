@@ -2,16 +2,15 @@ odoo.define('web.MockServer', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var data_manager = require('web.data_manager');
 var Domain = require('web.Domain');
-var pyeval = require('web.pyeval');
-var utils = require('web.utils');
+var pyUtils = require('web.py_utils');
 
 var MockServer = Class.extend({
     /**
      * @constructor
      * @param {Object} data
      * @param {Object} options
+     * @param {Object[]} [options.actions=[]]
      * @param {Object} [options.archs={}] dict of archs with keys being strings like
      *    'model,id,viewType'
      * @param {boolean} [options.debug=false] logs RPCs if set to true
@@ -47,6 +46,7 @@ var MockServer = Class.extend({
 
         this.currentDate = options.currentDate || moment().format("YYYY-MM-DD");
 
+        this.actions = options.actions || [];
         this.archs = options.archs || {};
     },
 
@@ -54,6 +54,15 @@ var MockServer = Class.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Mocks a fields_get RPC for a given model.
+     *
+     * @param {string} model
+     * @returns {Object}
+     */
+    fieldsGet: function (model) {
+        return this.data[model].fields;
+    },
     /**
      * helper: read a string describing an arch, and returns a simulated
      * 'field_view_get' call to the server. Calls processViews() of data_manager
@@ -75,13 +84,10 @@ var MockServer = Class.extend({
         }
         var fields = $.extend(true, {}, this.data[model].fields);
         var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
-        var fields_views = {};
-        fields_views[fvg.type] = fvg;
-        data_manager.processViews(fields_views, fields);
         if (toolbar) {
             fvg.toolbar = toolbar;
         }
-        return fields_views[fvg.type];
+        return fvg;
     },
     /**
      * Simulate a complete RPC call. This is the main method for this class.
@@ -110,12 +116,12 @@ var MockServer = Class.extend({
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
-        }).fail(function (result) {
+        }, function (result, event) {
             var errorString = JSON.stringify(result || false);
             if (debug) {
                 console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             }
-            return JSON.parse(errorString);
+            return $.Deferred().reject(errorString, event || $.Event());
         });
     },
 
@@ -164,7 +170,7 @@ var MockServer = Class.extend({
      * 'fields_view_get' call to the server.
      *
      * @private
-     * @param {string|Object} arch a string OR a parsed xml document
+     * @param {string} arch a string OR a parsed xml document
      * @param {string} model a model name (that should be in this.data)
      * @param {Object} fields
      * @param {Object} context
@@ -177,29 +183,32 @@ var MockServer = Class.extend({
         var onchanges = this.data[model].onchanges || {};
         var fieldNodes = {};
 
+        var doc;
         if (typeof arch === 'string') {
-            var doc = $.parseXML(arch).documentElement;
-            arch = utils.xml_to_json(doc, true);
+            doc = $.parseXML(arch).documentElement;
+        } else {
+            doc = arch;
         }
 
-        var inTreeView = (arch.tag === 'tree');
+        var inTreeView = (doc.tagName === 'tree');
 
-        this._traverse(arch, function (node) {
-            if (typeof node === "string") {
+        this._traverse(doc, function (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 return false;
             }
             var modifiers = {};
 
-            var isField = (node.tag === 'field');
+            var isField = (node.tagName === 'field');
 
             if (isField) {
-                fieldNodes[node.attrs.name] = node;
+                var fieldName = node.getAttribute('name');
+                fieldNodes[fieldName] = node;
 
                 // 'transfer_field_to_modifiers' simulation
-                var field = fields[node.attrs.name];
+                var field = fields[fieldName];
 
                 if (!field) {
-                    throw new Error("Field " + node.attrs.name + " does not exist");
+                    throw new Error("Field " + fieldName + " does not exist");
                 }
                 var defaultValues = {};
                 var stateExceptions = {};
@@ -207,7 +216,7 @@ var MockServer = Class.extend({
                     stateExceptions[attr] = [];
                     defaultValues[attr] = !!field[attr];
                 });
-                _.each(field['states'] || {}, function (modifs, state) {
+                _.each(field.states || {}, function (modifs, state) {
                     _.each(modifs, function (modif) {
                         if (defaultValues[modif[0]] !== modif[1]) {
                             stateExceptions[modif[0]].append(state);
@@ -224,36 +233,41 @@ var MockServer = Class.extend({
             }
 
             // 'transfer_node_to_modifiers' simulation
-            if (node.attrs.attrs) {
-                var attrs = pyeval.py_eval(node.attrs.attrs);
+            var attrs = node.getAttribute('attrs');
+            if (attrs) {
+                attrs = pyUtils.py_eval(attrs);
                 _.extend(modifiers, attrs);
-                delete node.attrs.attrs;
             }
-            if (node.attrs.states) {
+
+            var states = node.getAttribute('states');
+            if (states) {
                 if (!modifiers.invisible) {
                     modifiers.invisible = [];
                 }
-                modifiers.invisible.push(["state", "not in", node.attrs.states.split(",")]);
+                modifiers.invisible.push(["state", "not in", states.split(",")]);
             }
             _.each(modifiersNames, function (a) {
-                if (node.attrs[a]) {
+                var mod = node.getAttribute(a);
+                if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
-                    var v = pyeval.py_eval(node.attrs[a], {context: pyevalContext}) ? true: false;
+                    var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
                     if (inTreeView && a === 'invisible') {
-                        modifiers['column_invisible'] = v;
+                        modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }
                 }
             });
 
-            // 'transfer_modifiers_to_node' simulation
             _.each(modifiersNames, function (a) {
                 if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
                     delete modifiers[a];
                 }
             });
-            node.attrs.modifiers = JSON.stringify(modifiers);
+
+            if (Object.keys(modifiers).length) {
+                node.setAttribute('modifiers', JSON.stringify(modifiers));
+            }
 
             return !isField;
         });
@@ -262,29 +276,34 @@ var MockServer = Class.extend({
         _.each(fieldNodes, function (node, name) {
             var field = fields[name];
             if (field.type === "many2one" || field.type === "many2many") {
-                node.attrs.can_create = node.attrs.can_create || "true";
-                node.attrs.can_write = node.attrs.can_write || "true";
+                var canCreate = node.getAttribute('can_create');
+                node.setAttribute('can_create', canCreate || "true");
+                var canWrite = node.getAttribute('can_write');
+                node.setAttribute('can_write', canWrite || "true");
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
-                _.each(node.children, function (children) {
+                _.each(node.childNodes, function (children) {
                     relModel = field.relation;
                     relFields = $.extend(true, {}, self.data[relModel].fields);
-                    field.views[children.tag] = self._fieldsViewGet(children, relModel,
+                    field.views[children.tagName] = self._fieldsViewGet(children, relModel,
                         relFields, context);
                 });
             }
 
             // add onchanges
             if (name in onchanges) {
-                node.attrs.on_change="1";
+                node.setAttribute('on_change', "1");
             }
         });
+
+        var xmlSerializer = new XMLSerializer();
+        var processedArch = xmlSerializer.serializeToString(doc);
         return {
-            arch: arch,
+            arch: processedArch,
             fields: _.pick(fields, _.keys(fieldNodes)),
             model: model,
-            type: arch.tag === 'tree' ? 'list' : arch.tag,
+            type: doc.tagName === 'tree' ? 'list' : doc.tagName,
         };
     },
     /**
@@ -410,7 +429,7 @@ var MockServer = Class.extend({
         return result;
     },
     /**
-     * Simulate a 'field_get' operation
+     * Simulate a 'fields_get' operation
      *
      * @private
      * @param {string} modelName
@@ -432,6 +451,23 @@ var MockServer = Class.extend({
         return modelFields;
     },
     /**
+     * Simulate a call to the '/web/action/load' route
+     *
+     * @private
+     * @param {Object} kwargs
+     * @param {integer} kwargs.action_id
+     * @returns {Object}
+     */
+    _mockLoadAction: function (kwargs) {
+        var action = _.findWhere(this.actions, {id: parseInt(kwargs.action_id)});
+        if (!action) {
+            // when the action doesn't exist, the real server doesn't crash, it
+            // simply returns false
+            console.warn("No action found for ID " + kwargs.action_id);
+        }
+        return action || false;
+    },
+    /**
      * Simulate a 'load_views' operation
      *
      * @param {string} model
@@ -448,6 +484,12 @@ var MockServer = Class.extend({
         _.each(kwargs.views, function (view_descr) {
             var viewID = view_descr[0] || false;
             var viewType = view_descr[1];
+            if (!viewID) {
+                var contextKey = viewType + '_view_ref';
+                if (contextKey in kwargs.context) {
+                    viewID = kwargs.context[contextKey];
+                }
+            }
             var key = [model, viewID, viewType].join(',');
             var arch = self.archs[key];
             if (!arch) {
@@ -522,9 +564,13 @@ var MockServer = Class.extend({
                 return record.display_name.indexOf(str) !== -1;
             });
         }
-        return _.map(records, function (record) {
+        var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
+        if (args.limit) {
+            return result.slice(0, args.limit);
+        }
+        return result;
     },
     /**
      * Simulate an 'onchange' rpc
@@ -632,7 +678,19 @@ var MockServer = Class.extend({
         }
         var self = this;
         var fields = this.data[model].fields;
-        var aggregatedFields = _.clone(kwargs.fields);
+        var aggregatedFields = [];
+        _.each(kwargs.fields, function (field) {
+            var split = field.split(":");
+            var fieldName = split[0];
+            if (kwargs.groupby.indexOf(fieldName) > 0) {
+                // grouped fields are not aggregated
+                return;
+            }
+            if (fields[fieldName] && (fields[fieldName].type === 'many2one') && split[1] !== 'count_distinct') {
+                return;
+            }
+            aggregatedFields.push(fieldName);
+        });
         var groupBy = [];
         if (kwargs.groupby.length) {
             groupBy = kwargs.lazy ? [kwargs.groupby[0]] : kwargs.groupby;
@@ -640,13 +698,17 @@ var MockServer = Class.extend({
         var records = this._getRecords(model, kwargs.domain);
 
         // if no fields have been given, the server picks all stored fields
-        if (aggregatedFields.length === 0) {
+        if (kwargs.fields.length === 0) {
             aggregatedFields = _.keys(this.data[model].fields);
         }
 
+        var groupByFieldNames = _.map(groupBy, function (groupByField) {
+            return groupByField.split(":")[0];
+        });
+
         // filter out non existing fields
         aggregatedFields = _.filter(aggregatedFields, function (name) {
-            return name in self.data[model].fields;
+            return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
         });
 
         function aggregateFields(group, records) {
@@ -654,10 +716,15 @@ var MockServer = Class.extend({
             for (var i = 0; i < aggregatedFields.length; i++) {
                 type = fields[aggregatedFields[i]].type;
                 if (type === 'float' || type === 'integer') {
-                    group[aggregatedFields[i]] = 0;
+                    group[aggregatedFields[i]] = null;
                     for (var j = 0; j < records.length; j++) {
-                        group[aggregatedFields[i]] += records[j][aggregatedFields[i]];
+                        var value = group[aggregatedFields[i]] || 0;
+                        group[aggregatedFields[i]] = value + records[j][aggregatedFields[i]];
                     }
+                }
+                if (type === 'many2one') {
+                    var ids = _.pluck(records, aggregatedFields[i]); 
+                    group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }
         }
@@ -669,6 +736,10 @@ var MockServer = Class.extend({
                     return false;
                 } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
+                } else if (aggregateFunction === 'week') {
+                    return moment(val).format('ww YYYY');
+                } else if (aggregateFunction === 'year') {
+                    return moment(val).format('Y');
                 } else {
                     return moment(val).format('MMMM YYYY');
                 }
@@ -682,12 +753,7 @@ var MockServer = Class.extend({
                 value = (value ? value + ',' : value) + groupByField + '#';
                 var fieldName = groupByField.split(':')[0];
                 if (fields[fieldName].type === 'date') {
-                    var aggregateFunction = groupByField.split(':')[1] || 'month';
-                    if (aggregateFunction === 'day') {
-                        value += moment(record[fieldName]).format('YYYY-MM-DD');
-                    } else {
-                        value += moment(record[fieldName]).format('MMMM YYYY');
-                    }
+                    value += formatValue(groupByField, record[fieldName]);
                 } else {
                     value += record[groupByField];
                 }
@@ -722,7 +788,28 @@ var MockServer = Class.extend({
                 } else {
                     res[groupByField] = val;
                 }
-                res.__domain = [[fieldName, "=", val]].concat(res.__domain);
+
+                if (field.type === 'date') {
+                    var aggregateFunction = groupByField.split(':')[1];
+                    var startDate, endDate;
+                    if (aggregateFunction === 'day') {
+                        startDate = moment(val, 'YYYY-MM-DD');
+                        endDate = startDate.clone().add(1, 'days');
+                    } else if (aggregateFunction === 'week') {
+                        startDate = moment(val, 'ww YYYY');
+                        endDate = startDate.clone().add(1, 'weeks');
+                    } else if (aggregateFunction === 'year') {
+                        startDate = moment(val, 'Y');
+                        endDate = startDate.clone().add(1, 'years');
+                    } else {
+                        startDate = moment(val, 'MMMM YYYY');
+                        endDate = startDate.clone().add(1, 'months');
+                    }
+                    res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
+                } else {
+                    res.__domain = [[fieldName, '=', val]].concat(res.__domain);
+                }
+
             });
 
             // compute count key to match dumb server logic...
@@ -766,7 +853,7 @@ var MockServer = Class.extend({
      */
     _mockReadProgressBar: function (model, kwargs) {
         var domain = kwargs.domain;
-        var groupBy = kwargs.groupBy;
+        var groupBy = kwargs.group_by;
         var progress_bar = kwargs.progress_bar;
 
         var records = this._getRecords(model, domain || []);
@@ -943,10 +1030,13 @@ var MockServer = Class.extend({
     _performRpc: function (route, args) {
         switch (route) {
             case '/web/action/load':
-                return $.when(this._mockLoadAction(args));
+                return $.when(this._mockLoadAction(args.kwargs));
 
             case '/web/dataset/search_read':
                 return $.when(this._mockSearchReadController(args));
+
+            case '/web/dataset/resequence':
+                return $.when();
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
             return $.when();
@@ -1021,7 +1111,7 @@ var MockServer = Class.extend({
     _traverse: function (tree, f) {
         var self = this;
         if (f(tree)) {
-            _.each(tree.children, function (c) { self._traverse(c, f); });
+            _.each(tree.childNodes, function (c) { self._traverse(c, f); });
         }
     },
     /**

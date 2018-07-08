@@ -79,7 +79,7 @@
                         <filter name="owner" string="Owner" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Month" name="creation_month" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Creation Date" name="creation_month" domain="[]" context="{'group_by':'create_date'}"/>
                         <filter string="Attached Document Name" name="attached_document_name" domain="[]" context="{'group_by': 'res_name'}"/>
                     </group>
                 </search>
@@ -93,8 +93,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_attachment_search"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to create new documents.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new document
                 </p>
                 <p>
                     Also you will find here all the related documents and download it by clicking on any individual document.
