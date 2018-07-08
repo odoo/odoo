@@ -7,6 +7,8 @@ from openerp.osv import osv, fields
 class MailThread(osv.AbstractModel):
     _inherit = 'mail.thread'
 
+    _mail_post_token_field = 'access_token' # token field for external posts, to be overridden
+
     _columns = {
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
