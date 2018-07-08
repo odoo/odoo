@@ -468,16 +468,14 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action')
 
             # determine the type of action
-            action_type, action_id = self.model_id_get(a_action)
-            action_type = action_type.split('.')[-1] # keep only type part
+            action_model, action_id = self.model_id_get(a_action)
+            action_type = action_model.split('.')[-1] # keep only type part
             values['action'] = "ir.actions.%s,%d" % (action_type, action_id)
 
             if not values.get('name') and action_type in ('act_window', 'wizard', 'url', 'client', 'server'):
-                a_table = 'ir_act_%s' % action_type.replace('act_', '')
-                self.cr.execute('select name from "%s" where id=%%s' % a_table, (int(action_id),))
-                resw = self.cr.fetchone()
+                resw = self.env[action_model].sudo().browse(action_id).name
                 if resw:
-                    values['name'] = resw[0]
+                    values['name'] = resw
 
         if not values.get('name'):
             # ensure menu has a name
