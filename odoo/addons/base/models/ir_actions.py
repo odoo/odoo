@@ -372,7 +372,7 @@ class IrActionsServer(models.Model):
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
-                            "available for use; help about pyhon expression is given in the help tab.")
+                            "available for use; help about python expression is given in the help tab.")
     # Multi
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
