@@ -30,22 +30,22 @@ msgstr "(Безкоштовно)"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>End of Registration</b>"
-msgstr ""
+msgstr "<b>Кінець реєстрації</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Price</b>"
-msgstr ""
+msgstr "<b>Ціна</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Quantity</b>"
-msgstr ""
+msgstr "<b>Кількість</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Ticket Type</b>"
-msgstr ""
+msgstr "<b>Тип квитка</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -72,6 +72,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "                    <em>Configure and Launch Event Registration</em>"
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"                    <em>Налаштування та запуск реєстрації подій</em>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -96,11 +98,14 @@ msgid ""
 "                        Sold Out\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Продано\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span itemprop=\"name\">Event Registration</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Реєстрація події</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -109,6 +114,9 @@ msgid ""
 "                        Free\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Вільно\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -149,7 +157,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
 msgid "<strong>Ticket Type:</strong>"
-msgstr ""
+msgstr "<strong>Тип квитка:</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -176,7 +184,7 @@ msgstr "Всі події"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr ""
+msgstr "Поставте запитання учасникам при реєстрації в Інтернеті"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -194,6 +202,8 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
+"Позначте цей параметр, щоб мати меню для вашої події на\n"
+"                                 сайті: реєстрації, розклад, карта, ..."
 
 #. module: website_event
 #. openerp-web
@@ -256,7 +266,7 @@ msgstr "Спеціальне меню"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "Відображати спеціальне меню на веб-сайті"
 
 #. module: website_event
 #. openerp-web
