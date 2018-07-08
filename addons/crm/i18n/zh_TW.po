@@ -124,6 +124,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo CRM application is up and running.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Try creating a lead by sending an email to </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM planner</span></a></span>\n"
+"                                <span> to activate extra features</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Automatically assign your leads to your salesmen with the lead scoring, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Keep in touch with your potential client with efficient email campaigns,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Gain high quality insight from surveys,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>And much more...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -169,7 +268,7 @@ msgstr "(您可以在這裡修改)"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", 如果會計或採購模組已安裝"
+msgstr ", 如果已安裝會計或採購模組"
 
 #. module: crm
 #. openerp-web
@@ -356,7 +455,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "<span class=\"fa fa-pencil-square-o\"/>\n"
-"<strong> 創建自訂報表</strong>\n"
+"<strong> 創建客戶報表</strong>\n"
 "</span>"
 
 #. module: crm
@@ -606,7 +705,7 @@ msgid ""
 msgstr ""
 "<strong>預測未來收入</strong> <br/>\n"
 " 您可以通過預測未來幾個月或幾個季度未來收入的能力\n"
-" 來評估銷售渠道的成熟度。通過掌握最新的機會漏斗管理，\n"
+" 來評估銷售團隊的成熟度。通過掌握最新的機會漏斗管理，\n"
 " 培訓團隊進行有效預測。幾個月後，根據階段確定真實的成功率，以便在截止日期前獲得\n"
 " 準確的預期收入。"
 
@@ -637,7 +736,7 @@ msgid ""
 "                                    It's a great way to see where you can improve and keep track of the progress of your sales channel. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople."
 msgstr ""
 "<strong>組織每週銷售會議</strong><br/>\n"
-"                                    這是一個很好的方式，可以查看您可以改進的地方並追蹤銷售渠道的進度。從全局著眼開始審查漏斗管理；按階段、預計截止日期和銷售人員劃分的收入和機會數。"
+"                                    這是一個很好的方式，可以查看您可以改進的地方並追蹤銷售團隊的進度。從全局著眼開始審查漏斗管理；按階段、預計截止日期和銷售人員劃分的收入和機會數。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -659,7 +758,7 @@ msgstr "<strong>報價模板</strong> <span class=\"small\">（打包服務）</
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr "<strong>推薦的動作：</strong>"
+msgstr "<strong>推薦的行動：</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -688,7 +787,7 @@ msgid ""
 "                                Efficiently following up the pipeline will lead to great improvements. But to achieve excellence in your sales organization, you need  to provide your team with sales tools. For every stage of the opportunities pipeline, identify the blocking points and create  documents to train the team."
 msgstr ""
 "<strong>銷售工具</strong><br/>\n"
-"有效的跟進銷售管道將導致巨大的改善。但要在您的銷售部門取得卓越的成就, 您需要給您的團隊提供銷售工具。每個商機銷售管道的階段，確定截至時間點並創建文檔來培訓團隊。"
+"有效的跟進銷售商機漏斗將導致巨大的改善。但要在您的銷售部門取得卓越的成就, 您需要給您的團隊提供銷售工具。每個商機銷售管道的階段，確定截至時間點並創建文檔來培訓團隊。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -779,7 +878,7 @@ msgstr "當創建別名的新記錄時，一個Python字典將被評估以提供
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "A good pipeline should have between 5 and 7 stages"
-msgstr "優秀的管道應該包括有5至7個階段"
+msgstr "優秀的商機漏斗應該包括有5至7個階段"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -941,7 +1040,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_amount
 msgid "Amount of quotations to invoice"
-msgstr "要開立發票的報價金額"
+msgstr "待開立發票的報價金額"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -954,7 +1053,7 @@ msgid ""
 "Analyzing the pipeline by expected closing date will help your team "
 "efficiently forecast its future revenues. The pipeline review will allow you"
 " to identify sales inefficiencies or pick up on the best practices."
-msgstr "按預期的截止日期的分析管道將會幫您的團隊有效的預測未來收入。管道審查允許您識別低效率銷售或選取最佳實踐。"
+msgstr "按預期的截止日期的分析商機漏斗將會幫您的團隊有效的預測未來收入。銷售漏斗審查允許您識別低效率銷售或選取最佳實踐。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
@@ -975,7 +1074,7 @@ msgstr "歸檔"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Archived"
-msgstr "已歸檔"
+msgstr "歸檔"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1177,7 +1276,7 @@ msgstr "歸類和分析您的線索/商機類別， 例如：培訓、服務"
 msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
-msgstr "點選這裡以<b>創建您的第一條商機</b>， 並且加入到您的管道。"
+msgstr "點選這裡以<b>創建您的第一條商機</b>， 並且加入到您的商機漏斗。"
 
 #. module: crm
 #. openerp-web
@@ -1210,7 +1309,7 @@ msgstr "點選以定義一個新的銷售標籤。"
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr "點選以為您的商機管道設定一個新的階段。"
+msgstr "點選以為您的商機漏斗設定一個新的階段。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1288,7 +1387,7 @@ msgstr "配置選項在模組的設定裡可用。"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Configure the stages of your sales pipeline"
-msgstr "配置您的銷售管道的階段"
+msgstr "配置您的銷售商機漏斗的階段"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1298,7 +1397,7 @@ msgstr "配置您的價格表"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Congratulations, you're done!"
-msgstr "恭喜您，成功了！"
+msgstr "恭喜你，成功了！"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
@@ -1313,7 +1412,7 @@ msgstr "消費者，零售商"
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1410,7 +1509,7 @@ msgstr "創建"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create & Edit"
-msgstr "創建並編輯"
+msgstr "創建和編輯"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1541,7 +1640,7 @@ msgstr "創建月份"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr "Crm：我的管道"
+msgstr "Crm：我的商機漏斗"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
@@ -1609,7 +1708,7 @@ msgstr "定制"
 msgid ""
 "Dashboard graph content cannot be Pipeline if the sales channel doesn't use "
 "it. (Pipeline is unchecked.)"
-msgstr "如果銷售渠道不進行使用，儀表板圖形內容不能為漏斗管理。（未選中漏斗管理。）"
+msgstr "如果銷售團隊不進行使用，儀表板圖形內容不能為漏斗管理。（未選中漏斗管理。）"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1674,7 +1773,7 @@ msgid ""
 "Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
 "                                    sales channel to efficiently forecasts future revenues."
 msgstr ""
-"根據業務的複雜程度，新的銷售渠道可能需要 6 至 18 個月\n"
+"根據業務的複雜程度，新的銷售團隊可能需要 6 至 18 個月\n"
 "                                    才能有效預測未來的收入。"
 
 #. module: crm
@@ -1745,7 +1844,7 @@ msgstr "不要忘記更改此地址："
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't hesitate to"
-msgstr "不要猶豫做去"
+msgstr "不要猶豫做"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1782,7 +1881,7 @@ msgstr "電子郵箱"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "電郵別名"
+msgstr "Email別名"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_email_from
@@ -1797,7 +1896,7 @@ msgid ""
 "Incoming emails can be automatically assigned to specific sales channels. To"
 " do so, set an email alias on the sales channel."
 msgstr ""
-"收到發送至該地址的電子信件會生成尚未分配給任何銷售渠道的新銷售線索。將其轉化為機會時可以做到這一點。收到的電子信件可以自動分配到特定的銷售渠道。為此，請在銷售渠道上設定電子信件別名。"
+"收到發送至該地址的電子信件會生成尚未分配給任何銷售團隊的新銷售線索。將其轉化為機會時可以做到這一點。收到的電子信件可以自動分配到特定的銷售團隊。為此，請在銷售團隊上設定電子信件別名。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1831,7 +1930,7 @@ msgstr "活動"
 msgid ""
 "Every salesperson can analyze their own pipe by clicking on the 'switch view"
 " to graph' icon."
-msgstr "通過點選『轉換視圖為圖表』的圖標，每個銷售員都可以分析其管道。"
+msgstr "通過點選『轉換視圖為圖表』的圖標，每個銷售員都可以分析其商機漏斗。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1954,7 +2053,7 @@ msgstr "已完工"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr "管道中折疊"
+msgstr "商機漏斗中折疊"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
@@ -1993,7 +2092,7 @@ msgstr "強制分配"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Format phone numbers based on national conventions"
-msgstr ""
+msgstr "Format phone numbers based on national conventions"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:588
@@ -2073,7 +2172,7 @@ msgstr "幹得好！您完成了CRM的設定流程，您可以通過 <b>實施�
 msgid ""
 "Great pipelines have stages <strong>aligned with the buyer's buying "
 "process</strong>, not your selling process:"
-msgstr "偉大的管道的階段<strong>與買方流程一致</strong>，不是您的銷售過程："
+msgstr "偉大的商機漏斗的階段<strong>與買方流程一致</strong>，不是您的銷售過程："
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2081,12 +2180,12 @@ msgstr "偉大的管道的階段<strong>與買方流程一致</strong>，不是�
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_dashboard_graph_group_pipeline
 msgid "Group by"
-msgstr "分組按"
+msgstr "分組"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_number_group
@@ -2128,7 +2227,7 @@ msgstr "享受部署您的銷售策略的樂趣，"
 msgid ""
 "Here are a few examples of documents you should provide to your sales "
 "channel based on the sales stage:"
-msgstr "以下是您應根據銷售階段向銷售渠道提供的一些文檔示例："
+msgstr "以下是您應根據銷售階段向銷售團隊提供的一些文檔示例："
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2152,7 +2251,7 @@ msgstr "高"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_dashboard_graph_group_pipeline
 msgid "How this channel's dashboard graph will group the results."
-msgstr "渠道的儀表盤圖將會如何組織的結果。"
+msgstr "這就是銷售團隊的儀表盤圖將會組織的結果"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_id
@@ -2189,7 +2288,7 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails for mass "
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
-msgstr "如果勾選了」退出「，則此聯繫人將不會接收到群發信件和市場行銷廣告。當進行信件群發時，可根據此字段允許使用者以『允許接受群發信件『進行篩選。"
+msgstr "如果勾選了「退出」，此聯繫人拒絕接收群發信件和市場行銷的電子信件。篩選『可用於群發信件』允許使用者在進行群發信件時篩選出合作夥伴。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_force_assignation
@@ -2205,7 +2304,7 @@ msgid ""
 msgstr ""
 "如果您遵循前面的步驟，則已經\n"
 "                        形成了強有力的流程基礎，可以\n"
-"                        不斷改進您的銷售渠道。"
+"                        不斷改進您的銷售團隊。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2585,12 +2684,12 @@ msgstr "手動分配收到的電子信件"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
 msgid "Mark All Activities as Done"
-msgstr ""
+msgstr "Mark All Activities as Done"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_late_activities_done
 msgid "Mark Late Activities as Done"
-msgstr ""
+msgstr "Mark Late Activities as Done"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2787,7 +2886,7 @@ msgstr "我的商機"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr "我的管道"
+msgstr "我的商機漏斗"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2920,14 +3019,14 @@ msgid ""
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
 "Odoo幫助您追蹤\n"
-"您的銷售管道以跟進潛在銷售並更好的預測您的未來收入。"
+"您的銷售商機漏斗以跟進潛在銷售並更好的預測您的未來收入。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Odoo is the world's only software to have a full integration of Marketing "
 "Apps for your sales channel: insight sales, point of sale, ecommerce."
-msgstr "Odoo是世界上唯一一個全面整合行銷的應用程序為您的銷售渠道的軟體：具洞察力的銷售、POS、電子商務。"
+msgstr "Odoo是世界上唯一一個全面整合行銷的應用程序為您的銷售團隊的軟體：具洞察力的銷售、POS、電子商務。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2958,6 +3057,10 @@ msgid ""
 "weekly sales meeting with the team during which you will do a pipeline "
 "review."
 msgstr ""
+"Once you’ve deployed your CRM, it’s time to grow your revenues. Start by "
+"setting up a continuous improvement approach.We recommend you to organize "
+"weekly sales meeting with the team during which you will do a pipeline "
+"review."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3018,7 +3121,7 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
-"機會分析讓您立即有機會獲取預計收入、計劃成本、錯過的期限或每次機會的交流次數等信息。此報告主要由銷售經理使用，以便對銷售漏斗管理的渠道進行週期性評估。"
+"機會分析讓您立即有機會獲取預計收入、計劃成本、錯過的期限或每次機會的交流次數等信息。此報告主要由銷售經理使用，以便對銷售漏斗管理的銷售團隊進行週期性評估。"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
@@ -3033,7 +3136,7 @@ msgstr "每組的商機獲勝"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities pipeline"
-msgstr "商機管道"
+msgstr "商機漏斗"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3105,7 +3208,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有收件都將附上一條線程（記錄）選配的ID，即使它們不曾回覆過它。如果設定了，這將完全阻止新記錄的創建。"
+msgstr "所有收件都將附上一條線程（記錄）選配的ID，即使它們不曾回覆過它。如果設定了，這個將完全阻止新記錄的創建。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3204,7 +3307,7 @@ msgstr "電話"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
 msgid "Phone Formatting"
-msgstr ""
+msgstr "Phone Formatting"
 
 #. module: crm
 #. openerp-web
@@ -3228,7 +3331,7 @@ msgstr "電話腳本"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Pipeline"
-msgstr "管道"
+msgstr "商機漏斗"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -3237,7 +3340,7 @@ msgstr "管道"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "管道分析"
+msgstr "商機漏斗分析"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3248,9 +3351,9 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the\n"
 "teams of the sales pipeline."
 msgstr ""
-"管道分析讓您以信息，例如：預期收入、計劃成本、\n"
+"商機漏斗分析讓您以信息，例如：預期收入、計劃成本、\n"
 "錯過最後日期或每個相互影響商機的數量來立刻訪問您的商機。這個報告\n"
-"主要給銷售經理使用以定期審查團隊的銷售管道。"
+"主要給銷售經理使用以定期審查團隊的銷售商機漏斗。"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
@@ -3264,14 +3367,14 @@ msgstr ""
 "漏斗管理分析讓您立即有機會 \n"
 " 獲取預計收入、計劃成本、\n"
 " 錯過的期限或每次機會的交流次數等信息。此報告 \n"
-" 主要由銷售經理使用，以便對具有銷售渠道的漏斗管理 \n"
+" 主要由銷售經理使用，以便對具有銷售團隊的漏斗管理 \n"
 " 進行週期性評估。"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:231
 #, python-format
 msgid "Pipeline: Expected Revenue"
-msgstr "管道：預計收入"
+msgstr "商機漏斗：預計收入"
 
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
@@ -3501,13 +3604,13 @@ msgstr "銷售流程"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Sales Channel"
-msgstr "銷售渠道"
+msgstr "銷售團隊"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
 #: model:ir.ui.menu,name:crm.sales_team_menu_report_crm
 msgid "Sales Channels"
-msgstr "銷售渠道"
+msgstr "銷售團隊"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3662,7 +3765,7 @@ msgid ""
 "                      Odoo CRM to transform how your salespeople work.\n"
 "                      That's the purpose of this guide."
 msgstr ""
-"設定銷售管道只是第一步。要實現\n"
+"設定銷售商機漏斗只是第一步。要實現\n"
 "顯著地提升，我們將幫助您盡量利用\n"
 "Odoo CRM來改造您銷售人員的工作。\n"
 "這是本指南的目的。"
@@ -3815,7 +3918,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "State"
-msgstr "狀態"
+msgstr "州/省"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street
@@ -3865,7 +3968,7 @@ msgid ""
 "Systematic organization is what makes the difference\n"
 "                        between good and great salespeople! Setup a pipeline\n"
 "                        that is in line with your sales cycle."
-msgstr "系統化組織造成了優秀銷售員與偉大銷售員之間的差異！設定一個符合您的銷售週期的管道。"
+msgstr "系統化組織造成了優秀銷售員與偉大銷售員之間的差異！設定一個符合您的銷售週期的商機漏斗。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3881,7 +3984,7 @@ msgstr "標籤名已存在!"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
 msgid "Tags"
-msgstr "標籤"
+msgstr "摘要"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
@@ -3959,7 +4062,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"在收到此別名的電子信件時創建記錄的所有者。如果此字段未設定，系統將嘗試根據發件人(發件人)地址查找正確的所有者，或者如果沒有找到該地址的系統使用者將使用管理員帳戶。"
+"在收到此別名的電子信件時創建記錄的所有者。如果此字段未設定，系統將嘗試根據發件人(發件人)地址查找正確的所有者，或者如果沒有找到該地址的系統使用者，將使用管理員帳戶。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3984,7 +4087,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "The time period this channel's dashboard graph will consider."
-msgstr "此通道的儀表板圖將考慮的時間段。"
+msgstr "此銷售團隊的儀表板圖將考慮的時間段。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4008,11 +4111,11 @@ msgid ""
 msgstr ""
 "您的公司有多種方式可以通過 Odoo CRM 生成線索。\n"
 "                        其中之一是使用貴公司的通用電子信件地址作為觸發器，\n"
-"                        以在系統中創建新線索。在 Odoo 中，您的每個銷售渠道\n"
+"                        以在系統中創建新線索。在 Odoo 中，您的每個銷售團隊\n"
 "                       都與自己的電子信件地址相關聯，潛在客戶可以通過該電子信件地址與其聯繫。\n"
 "                        例如，如果您的管理團隊的個人電子信件地址為\n"
 "                        direct@mycompany.example.com，在新的潛在客戶與您聯繫時\n"
-"                        發送的每一封電子信件都會自動向銷售渠道創建一個新機會。\n"
+"                        發送的每一封電子信件都會自動向銷售團隊創建一個新機會。\n"
 "\n"
 "                        這是將 Odoo 與第三方應用集成的最簡單方法。"
 
@@ -4074,7 +4177,7 @@ msgstr "本報告分析您的線索來源。"
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "當此階段沒有任何記錄要呈現的時候，此階段在看板視圖中被折疊起來"
+msgstr "當此階段沒有任何記錄要呈現的時候，此階段在看板視圖中被折疊起來。"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1052
@@ -4239,7 +4342,7 @@ msgstr "用丟失原因去解釋為什麼一個機會會失去."
 msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
-msgstr "用商機來追蹤您的銷售管道，跟進潛在的銷售並且更好的預測未來收入。"
+msgstr "用商機來追蹤您的銷售商機漏斗，跟進潛在的銷售並且更好的預測未來收入。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4271,7 +4374,7 @@ msgstr "使用<b>實施指南</b>以在您的公司中設定CRM。"
 #: code:addons/crm/static/src/js/tour.js:65
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
-msgstr "使用麵包屑 <b>回到您的銷售管道</b>。"
+msgstr "使用麵包屑 <b>回到您的銷售商機漏斗</b>。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_user_login
@@ -4422,13 +4525,16 @@ msgid ""
 "you with a list of matching contacts or companies.When selecting one item, "
 "the partner name, logo and website get automatically set."
 msgstr ""
+"When populating your address book, Odoo relies on Clearbit’s API to provide "
+"you with a list of matching contacts or companies.When selecting one item, "
+"the partner name, logo and website get automatically set."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_team_id
 msgid ""
 "When sending mails, the default email address is taken from the sales "
 "channel."
-msgstr "發送信件時，會從銷售渠道中獲取預設電子信件地址。"
+msgstr "發送信件時，會從銷售團隊中獲取預設電子信件地址。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4682,7 +4788,7 @@ msgstr "res.config.settings"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "send us an email"
-msgstr "給我們發信件"
+msgstr "給我們發郵件"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4712,7 +4818,7 @@ msgstr "創建測試和證書。"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "to describe<br/> your experience or to suggest improvements!"
-msgstr "描述<br/>您的經歷或者給出建議!！"
+msgstr "描述<br/>你的經歷或者給出建議!"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

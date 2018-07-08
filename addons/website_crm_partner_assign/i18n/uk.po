@@ -57,6 +57,36 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<p>Вітаємо,</p>\n"
+"\n"
+"\n"
+"<p>З нами зв'язалися ті, хто перебуває у вашому регіоні. Тож ми призначили наступні ліди ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Будь ласка, підключіться до вашого <a href=\"${object.get_portal_url()}\">Партнерського порталу</a> щоб отримати деталі. На кожному ліді є дві кнопки у верхньому лівому куті, які слід натиснути, після того, як ви звернулися до ліда: \"Я зацікавлений\" і \"Я не зацікавлений\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    Ви ще не маєте портального доступу до нашої бази даних. Будь ласка зв'яжіться з \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>Лід буде відправлений іншому партнеру, якщо ви не зв'яжетеся з ним протягом 20 днів.</p>\n"
+"\n"
+"<p>Дякуємо,</p>\n"
+"\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: Схоже, у вас немає призначеного менеджера вашого облікового запису, будь ласка, зв'яжіться з нами.\n"
+"% endif\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -185,7 +215,7 @@ msgstr "Всі країни"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:262
 #, python-format
 msgid "All fields are required !"
-msgstr ""
+msgstr "Усі поля є обов'язковими!"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
@@ -307,7 +337,7 @@ msgstr "Зв'затися з дилером"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Contact name"
-msgstr ""
+msgstr "Контактне ім'я"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -342,7 +372,7 @@ msgstr "Створив"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
 msgid "Created by Partner"
-msgstr ""
+msgstr "Створено партнером"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_date
@@ -583,7 +613,7 @@ msgstr "Посилання на впроавдження"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_count
 msgid "Implemented Count"
-msgstr ""
+msgstr "Реалізований підрахунок"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
@@ -817,7 +847,7 @@ msgstr "Дата відкриття"
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment"
-msgstr ""
+msgstr "Opp. призначено"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_opportunity_assign
