@@ -6,7 +6,7 @@
     -->
     <t t-name="mail.systray.MessagingMenu">
         <li class="o_mail_systray_item">
-            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
+            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#" role="button">
                 <i class="fa fa-comments" role="img" aria-label="Messages"/> <span class="o_notification_counter badge badge-pill"/>
             </a>
             <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
@@ -17,24 +17,24 @@
                 </t>
                 <div t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
                     <div>
-                        <button type="button" class="btn btn-link o_filter_button active"> All </button>
-                        <button type="button" class="btn btn-link o_filter_button" data-filter='chat'> Chat </button>
-                        <button type="button" class="btn btn-link o_filter_button" data-filter='channels'> Channels </button>
+                        <button type="button" class="btn btn-link o_filter_button active" role="tab"> All </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='chat' role="tab"> Chat </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='channels' role="tab"> Channels </button>
                     </div>
                     <button type="button" class="btn btn-link o_new_message"> New message </button>
                 </div>
                 <div class="o_mail_systray_dropdown_items"/>
                 <t t-if="widget.isMobile()">
                     <div class="o_mail_mobile_tabs">
-                        <div class="o_mail_mobile_tab o_filter_button active">
+                        <div class="o_mail_mobile_tab o_filter_button active" role="tab">
                             <span class="fa fa-envelope"/>
                             <span class="o_tab_title">All</span>
                         </div>
-                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat'>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat' role="tab">
                             <span class="fa fa-user"/>
                             <span class="o_tab_title">Chat</span>
                         </div>
-                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels'>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels' role="tab">
                             <span class="fa fa-users"/>
                             <span class="o_tab_title">Channels</span>
                         </div>
@@ -94,7 +94,7 @@
 
     <t t-name="mail.systray.ActivityMenu">
         <li class="o_mail_systray_item">
-            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
+            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#" role="button">
                 <i class="fa fa-clock-o" role="img" aria-label="Activities"/> <span class="o_notification_counter badge badge-pill"/>
             </a>
             <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
