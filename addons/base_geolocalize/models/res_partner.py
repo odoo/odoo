@@ -32,6 +32,8 @@ def geo_query_address(street=None, zip=None, city=None, state=None, country=None
         # put country qualifier in front, otherwise GMap gives wrong results,
         # e.g. 'Congo, Democratic Republic of the' => 'Democratic Republic of the Congo'
         country = '{1} {0}'.format(*country.split(',', 1))
+    if country == "Georgia":
+        country = "Georgia, country"
     return tools.ustr(', '.join(
         field for field in [street, ("%s %s" % (zip or '', city or '')).strip(), state, country]
         if field
