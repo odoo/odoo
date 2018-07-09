@@ -58,6 +58,7 @@ from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
+from .tools import date_utils
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -1699,6 +1700,110 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return list(result.values())
 
     @api.model
+    def _read_group_fill_temporal(self, data, groupby, aggregated_fields,
+                                  interval=dateutil.relativedelta.relativedelta(months=1)):
+        """Helper method for filling date/datetime 'holes' in a result set.
+
+        We are in a use case where data are grouped by a date field (typically
+        months but it could be any other interval) and displayed in a chart.
+
+        Assume we group records by month, and we only have data for August,
+        September and December. By default, plotting the result gives something
+        like:
+                                                ___
+                                      ___      |   |
+                                     |   |     |   |
+                                     |   | ___ |   |
+                                     |   ||   ||   |
+                                     |___||___||___|
+                                      Aug  Sep  Dec
+
+        The problem is that December data follows immediately September data,
+        which is misleading for the user. Adding explicit zeroes for missing data
+        gives something like:
+                                                     ___
+                                 ___                |   |
+                                |   |               |   |
+                                |   | ___           |   |
+                                |   ||   |          |   |
+                                |___||___| ___  ___ |___|
+                                 Aug  Sep  Oct  Nov  Dec
+
+        :param list data: the data containing groups
+        :param list groupby: name of the first group by
+        :param aggregated_fields list: list of aggregated fields in the query
+        :param relativedelta interval: interval between to temporal groups
+        expressed as a relativedelta month by default
+        :rtype: list
+        :return: list
+        """
+        groupby_name = groupby[0]
+
+        # existing non null datetimes
+        existing = [d[groupby_name] for d in data if d[groupby_name]]
+
+        if len(existing) < 2:
+            return data
+
+        # assumption: existing data is sorted by field 'groupby_name'
+        first, last = existing[0], existing[-1]
+
+        # When the date_trunc function is used on a DATE (not a TIMESTAMP),
+        # PostGreSQL implicitly cast it as a TIMESTAMP WITH TIMEZONE. That time-
+        # zone is based on the local machine executing Postgres. We don't want
+        # this because it could cause various problems. That's why we detect
+        # those TZs by assuming they are always an instance of
+        # psycopg2.tz.FixedOffsetTimezone and remove them. Other possible
+        # timezone should come from the user context.
+
+        if isinstance(first.tzinfo, psycopg2.tz.FixedOffsetTimezone):
+            first = first.replace(tzinfo=None)
+        if isinstance(last.tzinfo, psycopg2.tz.FixedOffsetTimezone):
+            last = last.replace(tzinfo=None)
+
+        expected = list(date_utils.date_range(first, last, interval))
+
+        if len(existing) < len(expected):
+            tz = data[0][groupby_name].tzinfo
+            empty_data = dict.fromkeys(aggregated_fields, False)
+            empty_data['id'] = False
+            empty_data[groupby_name.split(':')[0] + '_count'] = 0
+            if not data[-1][groupby_name]:
+                nulls = [data[-1]]
+                data = collections.deque(data[:-1])
+            else:
+                nulls = []
+                data = collections.deque(data)
+
+            new_data = []
+
+            # Important Note: Here we have 'expected' which contains the list of
+            # the dates that should be represented inside data when it is returned.
+            # Note that 'expected' is sorted as well as data so what we do is empty
+            # data progressivly by popping its elements. To do this properly, we
+            # need to compare dates together but here comes a little problem :
+            # In some circumstances, dates can have a different timezone resulting
+            # in a false negative. To avoid that, we remove that timezone but it
+            # could be an error.
+
+            for dt in expected:
+                if isinstance(data[0][groupby_name].tzinfo, psycopg2.tz.FixedOffsetTimezone):
+                    # Here we assume that tz comes from PG after it date_trunced
+                    # a DATE (not a TIMESTAMP without TZ).
+                    data[0][groupby_name] = data[0][groupby_name].replace(tzinfo=None)
+
+                if data[0][groupby_name] == dt:
+                    new_data.append(data.popleft())
+                else:
+                    new_data.append(dict(empty_data, **{groupby_name: dt}))
+            assert not data
+            new_data.extend(nulls)
+            return new_data
+
+        return data
+
+
+    @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
@@ -1798,7 +1903,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
             'interval': time_intervals[gb_function or 'month'] if temporal else None,                
             'tz_convert': tz_convert,
-            'qualified_field': qualified_field
+            'qualified_field': qualified_field,
+            'temporal': temporal,
         }
 
     @api.model
@@ -1822,7 +1928,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _read_group_format_result(self, data, annotated_groupbys, groupby, domain):
         """
             Helper method to format the data contained in the dictionary data by 
-            adding the domain corresponding to its values, the groupbys in the 
+            adding the domain corresponding to its values, the groupbys in the
             context and by properly formatting the date/datetime values.
 
         :param data: a single group
@@ -1927,7 +2033,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         groupby = [groupby] if isinstance(groupby, pycompat.string_types) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
-            if self._fields[f.split(':')[0]].type in ('date', 'datetime')
+            if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
         ]
 
         # iterate on all results and replace the "full" date/datetime value
@@ -2043,8 +2149,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
 
-        data = ({k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.items()} for r in fetched_data)
+        data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
+
+        fill_temporal = self.env.context.get('fill_temporal', False)
+        if fill_temporal and data:
+            first_a_gby = annotated_groupbys[0]
+            if first_a_gby['temporal']:
+                data = self._read_group_fill_temporal(
+                    data, groupby, aggregated_fields, interval=first_a_gby['interval'],
+                )
+
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
+
         if lazy:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the

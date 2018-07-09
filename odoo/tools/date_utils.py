@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 import math
 import calendar
-
+import psycopg2
 from dateutil.relativedelta import relativedelta
 
 
@@ -62,3 +61,33 @@ def get_fiscal_year(date, day=31, month=12):
         max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
         date_to = type(date)(date.year + 1, month, min(day, max_day))
     return date_from, date_to
+
+
+def date_range(start_date, end_date, step_dt=relativedelta(months=1)):
+    """Date range generator with a step interval.
+
+    :param start_date: A datetime. begining date of the range.
+    :param end_date: A datetime. ending date of the range.
+    :param step_dt: A relativedelta. interval of the range.
+    :return: A Generator[datetime, None, None].
+    """
+    assert start_date.tzinfo == end_date.tzinfo
+
+    if start_date == end_date:
+        raise ValueError("start_date and end_date can't be equal")
+
+    if start_date > end_date:
+        start_date, end_date = end_date, start_date
+
+    if start_date == start_date + step_dt:
+        raise ValueError("Looks like step_dt is null")
+
+    if start_date.tzinfo:
+        localize = start_date.tzinfo.localize
+    else:
+        localize = lambda dt: dt
+    dt = start_date.replace(tzinfo=None)
+    end_dt = end_date.replace(tzinfo=None)
+    while dt <= end_dt:
+        yield localize(dt)
+        dt = dt + step_dt
