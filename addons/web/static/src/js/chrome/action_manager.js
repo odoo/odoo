@@ -925,9 +925,9 @@ var ActionManager = Widget.extend({
             type:'ir.actions.act_window',
             view_type: 'form',
             view_mode: 'form',
-            res_model: ev.data.res_model,
+            res_model: ev.data.resModel,
             views: [[false, 'form']],
-            res_id: ev.data.res_id,
+            res_id: ev.data.resID,
         });
     },
 });
