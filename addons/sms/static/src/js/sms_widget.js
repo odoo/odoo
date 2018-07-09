@@ -90,7 +90,7 @@ var SmsWidget = FieldText.extend({
      * @private
      */
     _renderSMS: function () {
-        this.$('.o_sms_count').text(this.nbrChar + _t(' chars, fits in ') + this.nbrSMS + ' SMS (' + this.encoding + ') ');
+        this.$('.o_sms_count').text(_.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding));
     },
 
     //--------------------------------------------------------------------------
