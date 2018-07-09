@@ -596,7 +596,7 @@ var ThreadWidget = Widget.extend({
         this.$('.o_thread_message').removeClass('o_thread_selected_message');
         this.$('.o_thread_message[data-message-id="' + this._selectedMessageID + '"]')
             .addClass('o_thread_selected_message');
-        this.trigger('select_message', this._selectedMessageID);
+        this.trigger('select_message', {messageID: this._selectedMessageID});
         ev.stopPropagation();
     },
     /**
