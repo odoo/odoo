@@ -143,7 +143,7 @@ var MessagingMenu = Widget.extend({
         this.do_action('mail.action_discuss', discussOptions)
             .then(function () {
                 // we cannot 'go back to previous page' otherwise
-                self.trigger_up('hide_home_menu');
+                self.trigger('hide_home_menu');
                 core.bus.trigger('change_menu_section',
                     self.call('mail_service', 'getDiscussMenuID'));
             });

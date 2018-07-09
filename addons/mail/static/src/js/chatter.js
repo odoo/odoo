@@ -197,7 +197,7 @@ var Chatter = Widget.extend({
      */
     _discardChanges: function () {
         var def = $.Deferred();
-        this.trigger_up('discard_changes', {
+        this.trigger('discard_changes', {
             recordID: this.record.id,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),

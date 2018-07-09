@@ -143,7 +143,7 @@ var SnippetEditor = Widget.extend({
     removeSnippet: function () {
         this.toggleFocus(false);
 
-        this.trigger_up('call_for_each_child_snippet', {
+        this.trigger('call_for_each_child_snippet', {
             $snippet: this.$target,
             callback: function (editor, $snippet) {
                 for (var i in editor.styles) {
@@ -184,7 +184,7 @@ var SnippetEditor = Widget.extend({
         $('.note-control-selection').hide();
         $('.o_table_handler').remove();
 
-        this.trigger_up('snippet_removed');
+        this.trigger('snippet_removed');
         this.destroy();
     },
     /**

@@ -503,7 +503,7 @@ options.registry.layout_column = options.Class.extend({
         } else {
             var self = this;
             _.each(this.$target.children().slice(count), function (el) {
-                self.trigger_up('remove_snippet', {$snippet: $(el)});
+                self.trigger('remove_snippet', {$snippet: $(el)});
             });
         }
 

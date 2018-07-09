@@ -247,7 +247,7 @@ var ChatterComposer = BasicComposer.extend({
 
         // any operation on the full-composer will reload the record, so
         // warn the user that any unsaved changes on the record will be lost.
-        this.trigger_up('discard_record_changes', {
+        this.trigger('discard_record_changes', {
             proceed: function () {
                 if (self.options.isLog) {
                     recipientDoneDef.resolve([]);
