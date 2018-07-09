@@ -598,7 +598,7 @@ class ProductUoM(models.Model):
                 stock_move_lines = self.env['stock.move.line'].search_count([
                     ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
                     ('state', '!=', 'cancel'),
-                ])
+                ], limit=1)
 
                 if stock_move_lines:
                     raise UserError(_(
