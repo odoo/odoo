@@ -46,18 +46,17 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def _timesheet_postprocess_values(self, values):
-        sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
         result = super(AccountAnalyticLine, self)._timesheet_postprocess_values(values)
         # (re)compute the UoM from the employee company
         if any([field_name in values for field_name in ['employee_id']]):
-            for timesheet in sudo_self:
+            for timesheet in self:
                 uom = timesheet.employee_id.company_id.project_time_mode_id
                 result[timesheet.id].update({
                     'product_uom_id': uom.id,
                 })
         # (re)compute the theorical revenue
         if any([field_name in values for field_name in ['so_line', 'unit_amount', 'account_id']]):
-            for timesheet in sudo_self:
+            for timesheet in self:
                 values_to_write = timesheet._timesheet_compute_theorical_revenue_values()
                 if values_to_write:
                     result[timesheet.id].update(values_to_write)
