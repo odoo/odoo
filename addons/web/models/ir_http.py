@@ -26,7 +26,7 @@ class Http(models.AbstractModel):
             "session_id": request.session.sid,
             "uid": request.session.uid,
             "is_admin": request.env.user.has_group('base.group_system'),
-            "is_superuser": request.env.user._is_superuser(),
+            "is_superuser": request.env.user._is_superuser() if request.session.uid else False,
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
             "server_version": version_info.get('server_version'),
@@ -36,7 +36,7 @@ class Http(models.AbstractModel):
             "company_id": request.env.user.company_id.id if request.session.uid else None,
             "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
             "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
-            "currencies": self.get_currencies(),
+            "currencies": self.get_currencies() if request.session.uid else {},
         }
 
     def get_currencies(self):
