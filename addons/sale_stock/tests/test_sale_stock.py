@@ -421,3 +421,76 @@ class TestSaleStock(TestSale):
         # check the delivered quantity
         self.assertEqual(so1.order_line.qty_delivered, 3.0)
 
+    def test_07_forced_qties(self):
+        """ Make multiple sale order lines of the same product which isn't available in stock. On
+        the picking, create new move lines (through the detailed operations view). See that the move
+        lines are correctly dispatched through the moves.
+        """
+        uom_unit = self.env.ref('product.product_uom_unit')
+        uom_dozen = self.env.ref('product.product_uom_dozen')
+        item1 = self.products['prod_order']
+
+        self.assertEqual(item1.uom_id.id, uom_unit.id)
+
+        # sell a dozen
+        so1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': uom_dozen.id,
+                    'price_unit': item1.list_price,
+                }),
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': uom_dozen.id,
+                    'price_unit': item1.list_price,
+                }),
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': uom_dozen.id,
+                    'price_unit': item1.list_price,
+                }),
+            ],
+        })
+        so1.action_confirm()
+
+        self.assertEqual(len(so1.picking_ids.move_lines), 3)
+        so1.picking_ids.write({
+            'move_line_ids': [
+                (0, 0, {
+                    'product_id': item1.id,
+                    'product_uom_qty': 0,
+                    'qty_done': 1,
+                    'product_uom_id': uom_dozen.id,
+                    'location_id': so1.picking_ids.location_id.id,
+                    'location_dest_id': so1.picking_ids.location_dest_id.id,
+                }),
+                (0, 0, {
+                    'product_id': item1.id,
+                    'product_uom_qty': 0,
+                    'qty_done': 1,
+                    'product_uom_id': uom_dozen.id,
+                    'location_id': so1.picking_ids.location_id.id,
+                    'location_dest_id': so1.picking_ids.location_dest_id.id,
+                }),
+                (0, 0, {
+                    'product_id': item1.id,
+                    'product_uom_qty': 0,
+                    'qty_done': 1,
+                    'product_uom_id': uom_dozen.id,
+                    'location_id': so1.picking_ids.location_id.id,
+                    'location_dest_id': so1.picking_ids.location_dest_id.id,
+                }),
+            ],
+        })
+        so1.picking_ids.button_validate()
+        self.assertEqual(so1.picking_ids.state, 'done')
+        self.assertEqual(so1.order_line.mapped('qty_delivered'), [1, 1, 1])
+
