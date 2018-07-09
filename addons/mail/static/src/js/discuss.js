@@ -1417,8 +1417,8 @@ var Discuss = AbstractAction.extend({
      */
     _onNewChannel: function (ev) {
         this._updateThreads();
-        if (ev.data.channel.isAutoswitch()) {
-            this._setThread(ev.data.channel.getID());
+        if (ev.data.isAutoswitch()) {
+            this._setThread(ev.data.getID());
         }
     },
     /**
@@ -1426,7 +1426,7 @@ var Discuss = AbstractAction.extend({
      * @param {mail.model.Message} message
      */
     _onNewMessage: function (ev) {
-        var message = ev.data.message;
+        var message = ev.data;
         var self = this;
         if (_.contains(message.getThreadIDs(), this._thread.getID())) {
             if (this._thread.getType() !== 'mailbox' && this._threadWidget.isAtBottom()) {
@@ -1451,7 +1451,8 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {mail.model.Thread}
      */
-    _onOpenThreadInDiscuss: function (thread) {
+    _onOpenThreadInDiscuss: function (event) {
+        var thread = event.data;
         if (thread.getType() !== 'document_thread') {
             this._setThread(thread.getID());
         }
@@ -1461,7 +1462,7 @@ var Discuss = AbstractAction.extend({
      * @param {Object} messageData
      */
     _onPostMessage: function (ev) {
-        var messageData = ev.data.message;
+        var messageData = ev.data;
         var self = this;
         var options = {};
         if (this._selectedMessage) {
