@@ -67,6 +67,7 @@ return {
             var orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
             params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : orderBy;
             params.kwargs.lazy = 'lazy' in options ? options.lazy : params.lazy;
+            params.kwargs.fill_temporal = options.fill_temporal;
         }
 
         if (options.method === 'search_read') {

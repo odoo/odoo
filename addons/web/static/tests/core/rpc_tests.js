@@ -182,6 +182,7 @@ QUnit.module('core', {}, function () {
             groupBy: ['product_id'],
             context: {abc: 'def'},
             lazy: true,
+            fill_temporal: true, 
         });
 
         assert.deepEqual(query.params, {
@@ -192,6 +193,7 @@ QUnit.module('core', {}, function () {
                 fields: ['name'],
                 groupby: ['product_id'],
                 lazy: true,
+                fill_temporal: true,
             },
             method: 'read_group',
             model: 'partner',

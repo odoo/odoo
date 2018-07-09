@@ -3963,6 +3963,7 @@ var BasicModel = AbstractModel.extend({
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
+
         return this._rpc({
                 model: list.model,
                 method: 'read_group',

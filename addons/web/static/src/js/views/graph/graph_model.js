@@ -135,6 +135,7 @@ return AbstractModel.extend({
         var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
+
         if (this.chart.measure !== '__count__') {
             if (this.fields[this.chart.measure].type === 'many2one') {
                 fields = fields.concat(this.chart.measure + ":count_distinct");
@@ -143,10 +144,12 @@ return AbstractModel.extend({
                 fields = fields.concat(this.chart.measure);
             }
         }
+
+        var context = _.extend({fill_temporal: true}, this.chart.context);
         return this._rpc({
                 model: this.modelName,
                 method: 'read_group',
-                context: this.chart.context,
+                context: context,
                 domain: this.chart.domain,
                 fields: fields,
                 groupBy: groupedBy,
@@ -176,7 +179,8 @@ return AbstractModel.extend({
             labels = _.map(this.chart.groupedBy, function (field) {
                 return self._sanitizeValue(data_pt[field], field);
             });
-            var value = is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure];
+            var count = data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] || 0;
+            var value = is_count ? count : data_pt[this.chart.measure];
             if (value instanceof Array) {
                 // when a many2one field is used as a measure AND as a grouped
                 // field, bad things happen.  The server will only return the
@@ -188,6 +192,7 @@ return AbstractModel.extend({
                 value = 1;
             }
             this.chart.data.push({
+                count: count,
                 value: value,
                 labels: labels
             });

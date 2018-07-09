@@ -171,6 +171,13 @@ return AbstractRenderer.extend({
                 data.push(current_serie);
             }
         }
+        
+        // For Bar chart View, we keep only groups where count > 0
+        data[0].values  = _.filter(data[0].values, function (elem, index) {
+            return self.state.data[index].count > 0;
+        });
+
+        // SVG
         var svg = d3.select(this.$el[0]).append('svg');
         svg.datum(data);
 
@@ -178,17 +185,17 @@ return AbstractRenderer.extend({
 
         var chart = nv.models.multiBarChart();
         chart.options({
-          margin: {left: 80, bottom: 100, top: 80, right: 0},
-          delay: 100,
-          transition: 10,
-          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
-          showXAxis: true,
-          showYAxis: true,
-          rightAlignYAxis: false,
-          stacked: this.stacked,
-          reduceXTicks: false,
-          rotateLabels: -20,
-          showControls: (this.state.groupedBy.length > 1)
+            margin: {left: 80, bottom: 100, top: 80, right: 0},
+            delay: 100,
+            transition: 10,
+            showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
+            showXAxis: true,
+            showYAxis: true,
+            rightAlignYAxis: false,
+            stacked: this.stacked,
+            reduceXTicks: false,
+            rotateLabels: -20,
+            showControls: (this.state.groupedBy.length > 1)
         });
         chart.yAxis.tickFormat(function (d) {
             var measure_field = self.state.fields[self.measure];
@@ -207,6 +214,7 @@ return AbstractRenderer.extend({
      * @returns {nvd3 chart}
      */
     _renderPieChart: function () {
+        var self = this;
         var data = [];
         var all_negative = true;
         var some_negative = false;
@@ -238,6 +246,12 @@ return AbstractRenderer.extend({
                 return {x:datapt.labels.join("/"), y: datapt.value};
             });
         }
+
+        // We only keep groups where count > 0
+        data  = _.filter(data, function (elem, index) {
+            return self.state.data[index].count > 0;
+        });
+
         var svg = d3.select(this.$el[0]).append('svg');
         svg.datum(data);
 
@@ -264,21 +278,29 @@ return AbstractRenderer.extend({
      * @returns {nvd3 chart}
      */
     _renderLineChart: function () {
-        if (this.state.data.length < 2) {
+        var self = this;
+
+        // Remove Undefined
+        var graphData = _.filter(this.state.data, function(elem){
+            return elem.labels[0] !== _t("Undefined");
+        });
+
+        if (graphData.length < 2) {
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("Not enough data points"),
-                description: "You need at least two data points to display a line chart."
+                description: _t("You need at least two data points to display a line chart.")
             }));
-            return;
+
+            return; 
         }
-        var self = this;
+
         var data = [];
         var tickValues;
         var tickFormat;
         var measure = this.state.fields[this.state.measure].string;
 
         if (this.state.groupedBy.length === 1) {
-            var values = this.state.data.map(function (datapt, index) {
+            var values = graphData.map(function (datapt, index) {
                 return {x: index, y: datapt.value};
             });
             data = [
@@ -288,8 +310,10 @@ return AbstractRenderer.extend({
                     area: true
                 }
             ];
-            tickValues = this.state.data.map(function (d, i) { return i;});
-            tickFormat = function (d) {return self.state.data[d].labels;};
+            tickValues = graphData.map(function (d, i) { return i;});
+            tickFormat = function (d) {
+                return self.state.data[d].labels;
+            };
         }
         if (this.state.groupedBy.length > 1) {
             data = [];
@@ -300,13 +324,13 @@ return AbstractRenderer.extend({
             var identity = function (p) {return p;};
             tickValues = [];
             for (var i = 0; i < this.state.data.length; i++) {
-                if (this.state.data[i].labels[0] !== tickLabel) {
+                if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = this.state.data[i].labels[0];
                     tickValues.push(tick);
                     tickLabels.push(tickLabel);
                     tick++;
                 }
-                serie = this.state.data[i].labels[1];
+                serie = graphData[i].labels[1];
                 if (!data_dict[serie]) {
                     data_dict[serie] = {
                         values: [],
@@ -314,11 +338,13 @@ return AbstractRenderer.extend({
                     };
                 }
                 data_dict[serie].values.push({
-                    x: tick, y: this.state.data[i].value,
+                    x: tick, y: graphData[i].value,
                 });
                 data = _.map(data_dict, identity);
             }
-            tickFormat = function (d) {return tickLabels[d];};
+            tickFormat = function (d) {
+                return tickLabels[d];
+            };
         }
 
         var svg = d3.select(this.$el[0]).append('svg');
@@ -335,7 +361,6 @@ return AbstractRenderer.extend({
           showYAxis: true,
           
         });
-        
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
         chart.yAxis.tickFormat(function (d) {
@@ -343,7 +368,6 @@ return AbstractRenderer.extend({
                 digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
             });
         });
-        
         chart(svg);
         return chart;
     },
