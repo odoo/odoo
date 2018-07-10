@@ -160,11 +160,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # make task non billable
         task_serv2.write({'sale_line_id': False})
-        self.assertTrue(all([billing_type == 'non_billable' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "Timesheet to a non billable task should be non billable too")
-
-        # make task billable again
-        task_serv2.write({'sale_line_id': so_line_deliver_global_project.id})
-        self.assertTrue(all([billing_type == 'billable_time' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "Timesheet to a billable time task should be billable")
+        self.assertTrue(all([billing_type == 'billable_time' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "billable type of timesheet should not change when tranfering task into another project")
+        self.assertEqual(task_serv2.timesheet_ids.mapped('so_line'), so_line_deliver_global_project, "Old timesheet are not modified when changing the task SO line")
 
         # invoice SO, and validate invoice
         invoice_id = self.sale_order.action_invoice_create()[0]
@@ -173,7 +170,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # try to update timesheets, catch error 'You cannot modify invoiced timesheet'
         with self.assertRaises(UserError):
-            task_serv2.write({'sale_line_id': False})
+            timesheets.write({'so_line': False})
 
     def test_delivered_quantity(self):
         # create SO line and confirm it
