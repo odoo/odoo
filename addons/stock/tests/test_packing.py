@@ -63,7 +63,11 @@ class TestPacking(TransactionCase):
         packing_picking = pack_move_a.picking_id
         shipping_picking = ship_move_a.picking_id
 
+        pick_picking.picking_type_entire_packs = True
+        packing_picking.picking_type_entire_packs = True
+        shipping_picking.picking_type_entire_packs = True
         pick_picking.action_assign()
+        self.assertEqual(len(pick_picking.move_ids_without_package), 2)
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 1.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).qty_done = 2.0
 
@@ -73,7 +77,10 @@ class TestPacking(TransactionCase):
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA and ml.qty_done == 0.0).qty_done = 4.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 3.0
         second_pack = pick_picking.put_in_pack()
+        self.assertEqual(len(pick_picking.move_ids_without_package), 0)
+        self.assertEqual(len(packing_picking.move_ids_without_package), 2)
         pick_picking.button_validate()
+        self.assertEqual(len(packing_picking.move_ids_without_package), 0)
         self.assertEqual(len(first_pack.quant_ids), 2)
         self.assertEqual(len(second_pack.quant_ids), 2)
         packing_picking.action_assign()
@@ -91,6 +98,7 @@ class TestPacking(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
+        picking.picking_type_entire_packs = True
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
@@ -99,6 +107,7 @@ class TestPacking(TransactionCase):
         self.assertEquals(package_level.state, 'draft',
                           'The package_level should be in draft as it has no moves, move lines and is not confirmed')
         picking.action_confirm()
+        self.assertEqual(len(picking.move_ids_without_package), 0)
         self.assertEqual(len(picking.move_lines), 1,
                          'One move should be created when the package_level has been confirmed')
         self.assertEquals(len(package_level.move_ids), 1,
