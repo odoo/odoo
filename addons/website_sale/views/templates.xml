@@ -1614,11 +1614,11 @@
 
     <template id="portal_order_page_products_links" name="Orders Followup Products Links" inherit_id="sale.portal_order_page">
         <xpath expr="//div[@id='product_name']/*" position="replace">
-            <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
-                <span t-esc="ol.name" />
+            <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">
+                <span t-field="line.name" />
             </a>
-            <t t-if="not ol.product_id.website_published">
-                <span t-esc="ol.name" />
+            <t t-if="not line.product_id.website_published">
+                <span t-field="line.name" />
             </t>
         </xpath>
     </template>

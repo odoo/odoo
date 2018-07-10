@@ -38,12 +38,22 @@
                         </group>
                         <notebook>
                             <page string="Lines">
-                            <field name="quote_line">
+                            <field name="quote_line" widget="section_and_note_one2many">
                                 <form string="Sales Quotation Template Lines">
-                                    <group>
+                                    <!--
+                                        We need the sequence field to be here for new lines to be added at the correct position.
+                                        TODO: at some point we want to fix this in the framework so that an invisible field is not required.
+                                    -->
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="display_type" invisible="1"/>
+                                    <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                         <group>
-                                            <field name="product_id"/>
-                                            <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                            <field
+                                                name="product_id"
+                                                attrs="{
+                                                    'required': [('display_type', '=', False)]
+                                                }"
+                                            />
                                             <label for="product_uom_qty"/>
                                             <div>
                                                 <field
@@ -57,7 +67,13 @@
                                         </group>
                                     </group>
                                     <notebook colspan="4">
-                                        <page string="Description">
+                                        <page string="Description" attrs="{'invisible': [('display_type', '!=', False)]}">
+                                            <field name="name" />
+                                        </page>
+                                        <page string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}">
+                                            <field name="name" />
+                                        </page>
+                                        <page string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}">
                                             <field name="name" />
                                         </page>
                                         <page string="Website Description">
@@ -66,12 +82,24 @@
                                     </notebook>
                                 </form>
                                 <tree string="Sales Quotation Template Lines" editable="bottom">
+                                    <control>
+                                        <create string="Add a product"/>
+                                        <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
+                                    <field name="display_type" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
-                                    <field name="layout_category_id" groups="sale.group_sale_layout"/>
-                                    <field name="name"/>
+                                    <field name="name" widget="section_and_note_text"/>
                                     <field name="product_uom_qty"/>
-                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field
+                                        name="product_uom_id"
+                                        groups="uom.group_uom"
+                                        attrs="{
+                                            'required': [('display_type', '=', False)]
+                                        }"
+                                    />
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit" invisible="1"/>
                                     <field name="website_description" invisible="1"/>
@@ -82,7 +110,6 @@
                             <field name="options">
                               <tree string="Sales Quotation Template Lines" editable="bottom">
                                 <field name="product_id"/>
-                                <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
                                 <field name="uom_id" groups="uom.group_uom"/>

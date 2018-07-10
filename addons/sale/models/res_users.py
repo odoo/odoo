@@ -12,11 +12,6 @@ class ResUsers(models.Model):
         compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='sale.group_warning_sale')
 
-    has_group_sale_layout = fields.Boolean(
-        "Personalize sales order and invoice report",
-        compute='_compute_groups_id', inverse='_inverse_groups_id',
-        group_xml_id='sale.group_sale_layout')
-
     has_group_delivery_invoice_address = fields.Boolean(
         "Addresses in Sales Orders",
         compute='_compute_groups_id', inverse='_inverse_groups_id',
