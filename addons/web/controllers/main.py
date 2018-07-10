@@ -1496,6 +1496,8 @@ class ExcelExport(ExportFormat, http.Controller):
 
                 if isinstance(cell_value, pycompat.string_types):
                     cell_value = re.sub("\r", " ", pycompat.to_text(cell_value))
+                    # Excel supports a maximum of 32767 characters in each cell:
+                    cell_value = cell_value[:32767]
                 elif isinstance(cell_value, datetime.datetime):
                     cell_style = datetime_style
                 elif isinstance(cell_value, datetime.date):
