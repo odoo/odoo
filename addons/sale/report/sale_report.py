@@ -127,6 +127,7 @@ class SaleReport(models.Model):
         self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
             %s
             FROM ( %s )
+            WHERE l.product_id IS NOT NULL
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
 

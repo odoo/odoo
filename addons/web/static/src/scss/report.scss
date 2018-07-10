@@ -33,3 +33,21 @@ body {
 .hidden-print{
     display: none;
 }
+
+
+/*
+    The goal of the following lines is to contain CSS hacks related to allowing
+    section and note on sale order and invoice.
+*/
+.row.o_is_line_section,
+.table > tbody > tr.o_is_line_section td {
+    font-weight: bold;
+    background-color: #EEE;
+    padding: 8px;
+    border: 1px solid #BBB;
+}
+
+.row.o_is_line_note,
+tr.o_is_line_note {
+    color: #999;
+}

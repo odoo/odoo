@@ -47,18 +47,35 @@
                     <field name="uom_id" groups="uom.group_uom"/>
                     <field name="price_unit"/>
                     <field name="discount" groups="base.group_no_one"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                    <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
         </record>
 
+        <!--
+            TODO: This view uses "parent" and will not work standalone.
+            But for now we don't need it standalone.
+
+            The view will only work if it's called as the default view to display a one2many
+            (showing invoice lines from inside the invoice form, where the invoice is the "parent").
+
+            If there is an action using this view directly (eg. showing all the invoice lines independently of their invoices) it will not work,
+            because there is the use of parent. inside the view, which will not exist in that case.
+        -->
         <record id="view_invoice_line_form" model="ir.ui.view">
             <field name="name">account.invoice.line.form</field>
             <field name="model">account.invoice.line</field>
             <field name="arch" type="xml">
-                <form string="Invoice Line">
-                    <group>
+                <form>
+                    <field name="display_type" invisible="1"/>
+                    <!--
+                        We need the sequence field to be here for new lines to be added at the correct position.
+                        TODO: at some point we want to fix this in the framework so that an invisible field is not required.
+                    -->
+                    <field name="sequence" invisible="1"/>
+                    <group attrs="{'invisible': [('display_type', '!=', False)]}">
                         <group>
                             <field name="product_id"
                                  context="parent and {'partner_id': parent.partner_id}"/>
@@ -70,13 +87,6 @@
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
-                            <!--
-                                We need the sequence field to be here
-                                because we want to be able to overwrite the default sequence value in the JS
-                                in order for new lines to be added at the correct position.
-                                NOTE: at some point we want to fix this in the framework so that an invisible field is not required.
-                            -->
-                            <field name="sequence" invisible="1"/>
                         </group>
                         <group>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
@@ -86,7 +96,9 @@
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
-                    <label for="name"/>
+                    <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
+                    <label for="name" string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
+                    <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                     <field name="name"/>
                 </form>
             </field>
@@ -432,16 +444,33 @@
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line_ids" nolabel="1" widget="one2many_list" mode="tree,kanban" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
+                            <field
+                                name="invoice_line_ids"
+                                nolabel="1"
+                                widget="section_and_note_one2many"
+                                mode="tree,kanban"
+                                context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}"
+                            >
                                 <tree string="Invoice Lines" editable="bottom">
+                                    <control>
+                                        <create string="Add a line"/>
+                                        <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" domain="[('sale_ok','=',True)]"/>
                                     <field name="origin" invisible="1"/>
                                     <field name="is_rounding_line" invisible="1"/>
-                                    <field name="name"/>
+                                    <field name="name" widget="section_and_note_text"/>
+                                    <field name="display_type" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
-                                    <field name="account_id" groups="account.group_account_user"
-                                        domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
+                                    <field
+                                        name="account_id"
+                                        groups="account.group_account_user"
+                                        domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"
+                                        attrs="{'required': [('display_type', '=', False)]}"
+                                    />
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
                                         context="{'default_partner_id': parent.partner_id}"/>
@@ -452,30 +481,67 @@
                                     <field name="discount" groups="base.group_no_one"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal" string="Subtotal"/>
+                                    <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                    <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
+                                    <field name="name"/>
                                     <field name="product_id"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                    <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="uom.group_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="display_type"/>
                                     <templates>
                                         <t t-name="kanban-box">
-                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                                <div class="row">
-                                                    <div class="col-xs-12">
-                                                        <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                <t t-if="!record.display_type.raw_value">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <strong>
+                                                                <span>
+                                                                    <t t-esc="record.product_id.value"/>
+                                                                </span>
+                                                            </strong>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <strong>
+                                                                <span class="pull-right text-right">
+                                                                    <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                                    <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                </span>
+                                                            </strong>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-8 text-muted">
-                                                        <span><t t-esc="record.quantity.value"/> <t t-esc="record.uom_id.value"/></span>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span>
+                                                                Quantity:
+                                                                <t t-esc="record.quantity.value"/>
+                                                                <t t-esc="record.uom_id.value"/>
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-xs-4 text-muted">
-                                                        <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span>
+                                                                Unit Price:
+                                                                <t t-esc="record.price_unit.value"/>
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </t>
+                                                <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <span>
+                                                                <t t-esc="record.name.value"/>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </t>
                                             </div>
                                         </t>
                                     </templates>

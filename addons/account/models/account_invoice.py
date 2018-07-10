@@ -1007,6 +1007,8 @@ class AccountInvoice(models.Model):
     def get_taxes_values(self):
         tax_grouped = {}
         for line in self.invoice_line_ids:
+            if not line.account_id:
+                continue
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
             for tax in taxes:
@@ -1089,6 +1091,8 @@ class AccountInvoice(models.Model):
     def invoice_line_move_line_get(self):
         res = []
         for line in self.invoice_line_ids:
+            if not line.account_id:
+                continue
             if line.quantity==0:
                 continue
             tax_ids = []
@@ -1193,8 +1197,8 @@ class AccountInvoice(models.Model):
         for inv in self:
             if not inv.journal_id.sequence_id:
                 raise UserError(_('Please define sequence on the journal related to this invoice.'))
-            if not inv.invoice_line_ids:
-                raise UserError(_('Please create some invoice lines.'))
+            if not inv.invoice_line_ids.filtered(lambda line: line.account_id):
+                raise UserError(_('Please add at least one invoice line.'))
             if inv.move_id:
                 continue
 
@@ -1575,8 +1579,7 @@ class AccountInvoiceLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
-    account_id = fields.Many2one('account.account', string='Account',
-        required=True, domain=[('deprecated', '=', False)],
+    account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
@@ -1604,6 +1607,10 @@ class AccountInvoiceLine(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False)
     company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True, related_sudo=False)
     is_rounding_line = fields.Boolean(string='Rounding Line', help='Is a rounding line in case of cash rounding.')
+
+    display_type = fields.Selection([
+        ('line_section', "Section"),
+        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -1777,6 +1784,29 @@ class AccountInvoiceLine(models.Model):
             'invoice_line_tax_ids': self.invoice_line_tax_ids.ids
         }
         return data
+
+    @api.model
+    def create(self, vals):
+        if vals.get('display_type', self.default_get(['display_type'])['display_type']):
+            vals.update(price_unit=0, account_id=False, quantity=0)
+
+        return super(AccountInvoiceLine, self).create(vals)
+
+    @api.multi
+    def write(self, values):
+        if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
+            raise UserError("You cannot change the type of an invoice line. Instead you should delete the current line and create a new line of the proper type.")
+        return super(AccountInvoiceLine, self).write(values)
+
+    _sql_constraints = [
+        ('accountable_required_fields',
+            "CHECK(display_type IS NOT NULL OR account_id IS NOT NULL)",
+            "Missing required account on accountable invoice line."),
+
+        ('non_accountable_fields_null',
+            "CHECK(display_type IS NULL OR (price_unit = 0 AND account_id IS NULL and quantity = 0))",
+            "Forbidden unit price, account and quantity on non-accountable invoice line"),
+    ]
 
 
 class AccountInvoiceTax(models.Model):

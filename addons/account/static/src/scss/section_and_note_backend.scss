@@ -1,0 +1,17 @@
+
+// The goal of this file is to contain CSS hacks related to allowing
+// section and note on sale order and invoice.
+
+table.o_section_and_note_list_view tr.o_data_row.o_is_line_note,
+div.oe_kanban_card.o_is_line_note {
+    color: #999;
+}
+table.o_section_and_note_list_view tr.o_data_row.o_is_line_section,
+div.oe_kanban_card.o_is_line_section {
+    font-weight: bold;
+    background-color: #EEE;
+}
+table.o_section_and_note_list_view tr.o_data_row.o_is_line_section {
+    border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+}
