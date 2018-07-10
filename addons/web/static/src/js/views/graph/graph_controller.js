@@ -88,7 +88,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
     renderButtons: function ($node) {
         if ($node) {
             var context = {
-                measures: _.pairs(_.omit(this.measures, '__count__')),
+                measures: _.sortBy(_.pairs(_.omit(this.measures, '__count__')), function (x) { return x[0]; }),
             };
             this.$buttons = $(qweb.render('GraphView.buttons', context));
             this.$measureList = this.$buttons.find('.o_graph_measures_list');
