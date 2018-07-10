@@ -95,6 +95,7 @@ var PivotView = AbstractView.extend({
         this.loadParams.colGroupBys = colGroupBys;
         this.loadParams.rowGroupBys = rowGroupBys;
         this.loadParams.fields = this.fields;
+        this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
 
         this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
         this.controllerParams.enableLinking = !this.arch.attrs.disable_linking;

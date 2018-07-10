@@ -826,6 +826,15 @@ element is ``<pivot>`` which can take the following attributes:
   Set to ``True`` to remove table cell's links to list view.
 ``display_quantity``
   Set to ``true`` to display the Quantity column by default.
+``default_order``
+  The name of the measure and the order (asc or desc) to use as default order
+  in the view.
+
+  .. code-block:: xml 
+
+     <pivot default_order="foo asc">
+        <field name="foo" type="measure"/>
+     </pivot>
 
 The only allowed element within a pivot view is ``field`` which can have the
 following attributes:
