@@ -9797,6 +9797,112 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('add a line custom control editable', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<control>' +
+                                '<create string="Add food" context="" />' +
+                                '<create string="Add pizza" context="{\'default_display_name\': \'pizza\'}"/>' +
+                            '</control>' +
+
+                            '<control>' +
+                                '<create string="Add pasta" context="{\'default_display_name\': \'pasta\'}"/>' +
+                            '</control>' +
+
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        // new controls correctly added
+        assert.strictEqual($('.o_field_x2many_list_row_add').length, 1);
+        assert.strictEqual($('.o_field_x2many_list_row_add').text(), "Add foodAdd pizzaAdd pasta");
+
+        // click add food
+        // check it's empty
+        form.$('.o_field_x2many_list_row_add a:eq(0)').click();
+        assert.strictEqual($('.o_data_cell').text(), "");
+
+        // click add pizza
+        // save the modal
+        // check it's pizza
+        form.$('.o_field_x2many_list_row_add a:eq(1)').click();
+        // click add pasta
+        form.$('.o_field_x2many_list_row_add a:eq(2)').click();
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual($('.o_data_cell').text(), "pizzapasta");
+
+        form.destroy();
+    });
+
+    QUnit.test('add a line custom control non-editable', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<control>' +
+                                '<create string="Add food" context="" />' +
+                                '<create string="Add pizza" context="{\'default_display_name\': \'pizza\'}" />' +
+                            '</control>' +
+
+                            '<control>' +
+                                '<create string="Add pasta" context="{\'default_display_name\': \'pasta\'}" />' +
+                            '</control>' +
+
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        // new controls correctly added
+        assert.strictEqual($('.o_field_x2many_list_row_add').length, 1);
+        assert.strictEqual($('.o_field_x2many_list_row_add').text(), "Add foodAdd pizzaAdd pasta");
+
+        // click add food
+        // check it's empty
+        form.$('.o_field_x2many_list_row_add a:eq(0)').click();
+        $('.modal .modal-footer .btn-primary:first').click();
+        assert.strictEqual($('.o_data_cell').text(), "");
+
+        // click add pizza
+        // save the modal
+        // check it's pizza
+        form.$('.o_field_x2many_list_row_add a:eq(1)').click();
+        $('.modal .modal-footer .btn-primary:first').click();
+        assert.strictEqual($('.o_data_cell').text(), "pizza");
+
+        // click add pasta
+        // save the whole record
+        // check it's pizzapasta
+        form.$('.o_field_x2many_list_row_add a:eq(2)').click();
+        $('.modal .modal-footer .btn-primary:first').click();
+        assert.strictEqual($('.o_data_cell').text(), "pizzapasta");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many form view with action button', function (assert) {
         // once the action button is clicked, the record is reloaded (via the
         // on_close handler, executed because the python method does not return

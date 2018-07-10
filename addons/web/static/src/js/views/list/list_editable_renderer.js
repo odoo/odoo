@@ -15,6 +15,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
+var Context = require('web.Context');
 
 var _t = core._t;
 
@@ -37,11 +38,48 @@ ListRenderer.include({
      * @param {boolean} params.addTrashIcon
      */
     init: function (parent, state, params) {
+        var self = this
         this._super.apply(this, arguments);
 
         // if addCreateLine is true, the renderer will add a 'Add a line' link
         // at the bottom of the list view
         this.addCreateLine = params.addCreateLine;
+
+        // Controls allow overriding "add a line" by custom controls.
+
+        // Each <control> (only one is actually needed) is a container for (multiple) <create>.
+        // Each <create> will be a "add a line" button with custom text and context.
+
+        // The following code will browse the arch to find
+        // all the <create> that are inside <control>
+
+        if (this.addCreateLine) {
+            this.creates = [];
+
+            _.each(this.arch.children, function (child) {
+                if (child.tag !== 'control') {
+                    return;
+                }
+
+                _.each(child.children, function (child) {
+                    if (child.tag !== 'create') {
+                        return;
+                    }
+
+                    self.creates.push({
+                        'context': child.attrs.context,
+                        'string': child.attrs.string,
+                    });
+                });
+            });
+
+            // Add the default button if we didn't find any custom button.
+            if (this.creates.length === 0) {
+                this.creates.push({
+                    string: _t("Add a line"),
+                });
+            }
+        }
 
         // if addTrashIcon is true, there will be a small trash icon at the end
         // of each line, so the user can delete a record.
@@ -525,15 +563,23 @@ ListRenderer.include({
      * @returns {jQueryElement}
      */
     _renderRows: function () {
+        var self = this;
         var $rows = this._super();
+
         if (this.addCreateLine) {
-            var $a = $('<a href="#" role="button">').text(_t("Add a line"));
             var $td = $('<td>')
-                        .attr('colspan', this._getNumberOfCols())
-                        .addClass('o_field_x2many_list_row_add')
-                        .append($a);
+                .attr('colspan', self._getNumberOfCols())
+                .addClass('o_field_x2many_list_row_add');
             var $tr = $('<tr>').append($td);
             $rows.push($tr);
+
+            _.each(self.creates, function (create) {
+                var $a = $('<a href="#" role="button">')
+                    .attr('data-context', create.context)
+                    .addClass('ml16')
+                    .text(create.string);
+                $td.append($a);
+            });
         }
         return $rows;
     },
@@ -701,20 +747,20 @@ ListRenderer.include({
      * This method is called when we click on the 'Add a line' button in a sub
      * list such as a one2many in a form view.
      *
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onAddRecord: function (event) {
+    _onAddRecord: function (ev) {
         // we don't want the browser to navigate to a the # url
-        event.preventDefault();
+        ev.preventDefault();
 
         // we don't want the click to cause other effects, such as unselecting
         // the row that we are creating, because it counts as a click on a tr
-        event.stopPropagation();
+        ev.stopPropagation();
 
         // but we do want to unselect current row
         var self = this;
         this.unselectRow().then(function () {
-            self.trigger_up('add_record'); // TODO write a test, the deferred was not considered
+            self.trigger_up('add_record', {context: ev.currentTarget.dataset.context}); // TODO write a test, the deferred was not considered
         });
     },
     /**

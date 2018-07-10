@@ -308,6 +308,56 @@ Possible children elements of the list view are:
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
 
+``control``
+  defines custom controls for the current view.
+  
+  This makes sense if the parent ``tree`` view is inside a One2many field.
+
+  Does not support any attribute, but can have children:
+
+  ``create``
+    adds a button to create a new element on the current list.
+
+    .. note:: If any ``create`` is defined, it will overwrite the default
+              "add a line" button.
+
+    The following attributes are supported:
+
+    ``string`` (required)
+      The text displayed on the button.
+
+    ``context``
+      This context will be merged into the existing context
+      when retrieving the default value of the new record.
+
+      For example it can be used to override default values.
+
+
+  The following example will override the default "add a line" button
+  by replacing it with 3 new buttons:
+  "Add a product", "Add a section" and "Add a note".
+
+  "Add a product" will set the field 'display_type' to its default value.
+
+  The two other buttons will set the field 'display_type'
+  to be respectively 'line_section' and 'line_note'.
+
+  .. code-block:: xml
+
+    <control>
+      <create
+        string="Add a product"
+      />
+      <create
+        string="Add a section"
+        context="{'default_display_type': 'line_section'}"
+      />
+      <create
+        string="Add a note"
+        context="{'default_display_type': 'line_note'}"
+      />
+    </control>
+
 .. _reference/views/form:
 
 Forms

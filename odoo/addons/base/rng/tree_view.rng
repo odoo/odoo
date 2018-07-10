@@ -54,6 +54,7 @@
             </rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="control"/>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
