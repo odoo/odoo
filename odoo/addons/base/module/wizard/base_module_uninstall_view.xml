@@ -7,7 +7,7 @@
             <field name="model">base.module.uninstall</field>
             <field name="arch" type="xml">
                 <form string="Uninstall module">
-                    <field name="module_id" groups="base.group_no_one"/>
+                    <field name="module_id" groups="base.group_no_one" options="{'no_create': True}"/>
                     <h3>The following apps will be uninstalled</h3>
                     <field name="show_all"/> Show technical modules
                     <field name="module_ids" mode="kanban">
