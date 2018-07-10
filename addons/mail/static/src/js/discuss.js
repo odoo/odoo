@@ -1258,7 +1258,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             messageData.subtype = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
             messageData.subtype_id = false;
             messageData.message_type = 'comment';
-            messageData.content_subtype = 'html';
         }
         this._thread.postMessage(messageData)
             .then(function () {
