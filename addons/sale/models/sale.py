@@ -865,9 +865,9 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
-        final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
-        base_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+        context_product = dict(product.env.context)
+        final_price, rule_id = self.order_id.pricelist_id.with_context(context_product).get_product_price_rule(product, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        base_price, currency_id = self.with_context(context_product)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency_id != self.order_id.pricelist_id.currency_id.id:
             base_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(base_price, self.order_id.pricelist_id.currency_id)
         # negative discounts (= surcharge) are included in the display price
@@ -1014,11 +1014,19 @@ class SaleOrderLine(models.Model):
                 self.env.user.has_group('sale.group_discount_per_so_line')):
             return
 
-        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
-        pricelist_context = dict(context_partner, uom=self.product_uom.id)
+        product = self.product_id.with_context(
+            lang=self.order_id.partner_id.lang,
+            partner=self.order_id.partner_id.id,
+            quantity=self.product_uom_qty,
+            date=self.order_id.date_order,
+            pricelist=self.order_id.pricelist_id.id,
+            uom=self.product_uom.id,
+            fiscal_position=self.env.context.get('fiscal_position')
+        )
 
-        price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
+        context_product = dict(product.env.context)
+        price, rule_id = self.order_id.pricelist_id.with_context(context_product).get_product_price_rule(product, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        new_list_price, currency_id = self.with_context(context_product)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
 
         if new_list_price != 0:
             if self.order_id.pricelist_id.currency_id.id != currency_id:
