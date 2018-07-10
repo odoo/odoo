@@ -2,10 +2,10 @@ odoo.define('web_settings_dashboard', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var Widget = require('web.Widget');
-var config = require('web.config');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -323,6 +323,10 @@ var DashboardShare = Widget.extend({
             'Share Dialog',
             'width=600,height=400'); // We have to add a size otherwise the window pops in a new tab
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
     /**
      * Forces demo data to be installed in a database without demo data installed.
