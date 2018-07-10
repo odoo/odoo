@@ -332,8 +332,8 @@
                                     <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
-                                    <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
+                                    <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                    <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="customer_lead" invisible="1"/>

@@ -32,6 +32,22 @@ class ResConfigSettings(models.TransientModel):
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     group_fiscal_year = fields.Boolean(string='Fiscal Years', implied_group='account.group_fiscal_year')
+    # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,
+    # so we can assume exactly one of them will be set, and not the other.
+    # We need both of them to coexist so we can take advantage of automatic group assignation.
+    group_show_line_subtotals_tax_excluded = fields.Boolean(
+        "Show line subtotals without taxes (B2B)",
+        implied_group='account.group_show_line_subtotals_tax_excluded',
+        group='base.group_portal,base.group_user,base.group_public')
+    group_show_line_subtotals_tax_included = fields.Boolean(
+        "Show line subtotals with taxes (B2C)",
+        implied_group='account.group_show_line_subtotals_tax_included',
+        group='base.group_portal,base.group_user,base.group_public')
+    show_line_subtotals_tax_selection = fields.Selection([
+        ('tax_excluded', 'Tax-Excluded'),
+        ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
+        required=True, default='tax_excluded',
+        config_parameter='account.show_line_subtotals_tax_selection')
     module_account_asset = fields.Boolean(string='Assets Management')
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
@@ -87,6 +103,19 @@ class ResConfigSettings(models.TransientModel):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
         self.chart_template_id = self.company_id.chart_template_id or False
         self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self.company_id)
+
+    @api.onchange('show_line_subtotals_tax_selection')
+    def _onchange_sale_tax(self):
+        if self.show_line_subtotals_tax_selection == "tax_excluded":
+            self.update({
+                'group_show_line_subtotals_tax_included': False,
+                'group_show_line_subtotals_tax_excluded': True,
+            })
+        else:
+            self.update({
+                'group_show_line_subtotals_tax_included': True,
+                'group_show_line_subtotals_tax_excluded': False,
+            })
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

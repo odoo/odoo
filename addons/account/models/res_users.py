@@ -7,6 +7,16 @@ from odoo import fields, models
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    has_group_show_line_subtotals_tax_excluded = fields.Boolean(
+        "Show line subtotals without taxes (B2B)",
+        compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='account.group_show_line_subtotals_tax_excluded')
+
+    has_group_show_line_subtotals_tax_included = fields.Boolean(
+        "Show line subtotals with taxes included (B2C)",
+        compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='account.group_show_line_subtotals_tax_included')
+
     has_group_warning_account = fields.Boolean(
         'A warning can be set on a partner (Account)', compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='account.group_warning_account')
