@@ -871,6 +871,14 @@ class Meeting(models.Model):
             self.start = self.start_datetime
             self.stop = fields.Datetime.to_string(start + timedelta(hours=self.duration))
 
+    @api.onchange('start_date')
+    def _onchange_start_date(self):
+        self.start = self.start_date
+
+    @api.onchange('stop_date')
+    def _onchange_stop_date(self):
+        self.stop = self.stop_date
+
     ####################################################
     # Calendar Business, Reccurency, ...
     ####################################################
