@@ -842,7 +842,7 @@ class Picking(models.Model):
             if pack_operations_delete:
                 pack_operations_delete.unlink()
         self.do_transfer()
-        return True
+        return
 
     def check_backorder(self):
         need_rereserve, all_op_processed = self.picking_recompute_remaining_quantities(done_qtys=True)
