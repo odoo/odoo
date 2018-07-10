@@ -77,11 +77,11 @@
                         <td groups="uom.group_uom"><span t-field="l.uom_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
-                        <td class="text-right" groups="sale.group_show_price_subtotal">
+                        <td class="text-right" groups="account.group_show_line_subtotals_tax_excluded">
                             <span t-field="l.price_subtotal"
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
-                        <td class="text-right" groups="sale.group_show_price_total">
+                        <td class="text-right" groups="account.group_show_line_subtotals_tax_included">
                             <span t-field="l.price_total"
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>

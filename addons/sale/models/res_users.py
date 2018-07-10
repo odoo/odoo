@@ -22,16 +22,6 @@ class ResUsers(models.Model):
         compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='sale.group_delivery_invoice_address')
 
-    has_group_show_price_subtotal = fields.Boolean(
-        "Show line subtotals without taxes (B2B)",
-        compute='_compute_groups_id', inverse='_inverse_groups_id',
-        group_xml_id='sale.group_show_price_subtotal')
-
-    has_group_show_price_total = fields.Boolean(
-        "Show line subtotals with taxes included (B2C)",
-        compute='_compute_groups_id', inverse='_inverse_groups_id',
-        group_xml_id='sale.group_show_price_total')
-
     has_group_discount_per_so_line = fields.Boolean(
         "Discount on lines",
         compute='_compute_groups_id', inverse='_inverse_groups_id',

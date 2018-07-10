@@ -33,21 +33,8 @@ class ResConfigSettings(models.TransientModel):
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
         ], string="Pricelists", config_parameter='sale.sale_pricelist_setting')
-    group_show_price_subtotal = fields.Boolean(
-        "Show subtotal",
-        implied_group='sale.group_show_price_subtotal',
-        group='base.group_portal,base.group_user,base.group_public')
-    group_show_price_total = fields.Boolean(
-        "Show total",
-        implied_group='sale.group_show_price_total',
-        group='base.group_portal,base.group_user,base.group_public')
     group_proforma_sales = fields.Boolean(string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
-    sale_show_tax = fields.Selection([
-        ('subtotal', 'Tax-Excluded Prices'),
-        ('total', 'Tax-Included Prices')], string="Tax Display",
-        required=True, default='subtotal',
-        config_parameter='sale.sale_show_tax')
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')
@@ -93,19 +80,6 @@ class ResConfigSettings(models.TransientModel):
                 'multi_sales_price_method': 'percentage',
             })
         self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
-
-    @api.onchange('sale_show_tax')
-    def _onchange_sale_tax(self):
-        if self.sale_show_tax == "subtotal":
-            self.update({
-                'group_show_price_total': False,
-                'group_show_price_subtotal': True,
-            })
-        else:
-            self.update({
-                'group_show_price_total': True,
-                'group_show_price_subtotal': False,
-            })
 
     @api.onchange('sale_pricelist_setting')
     def _onchange_sale_pricelist_setting(self):
