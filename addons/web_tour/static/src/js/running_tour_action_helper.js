@@ -1,4 +1,4 @@
-odoo.define('web_tour.RunningTourActionHelper', function(require) {
+odoo.define('web_tour.RunningTourActionHelper', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -13,6 +13,12 @@ var RunningTourActionHelper = core.Class.extend({
     },
     click: function (element) {
         this._click(this._get_action_values(element));
+    },
+    dblclick: function (element) {
+        this._click(this._get_action_values(element), 2);
+    },
+    tripleclick: function (element) {
+        this._click(this._get_action_values(element), 3);
     },
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
@@ -43,18 +49,23 @@ var RunningTourActionHelper = core.Class.extend({
             consume_event: consume_event,
         };
     },
-    _click: function (values) {
+    _click: function (values, nb) {
         trigger_mouse_event(values.$element, "mouseover");
         values.$element.trigger("mouseenter");
-        trigger_mouse_event(values.$element, "mousedown");
-        trigger_mouse_event(values.$element, "mouseup");
-        trigger_mouse_event(values.$element, "click");
+        for (var i = 1 ; i <= (nb || 1) ; i++) {
+            trigger_mouse_event(values.$element, "mousedown");
+            trigger_mouse_event(values.$element, "mouseup");
+            trigger_mouse_event(values.$element, "click", i);
+            if (i % 2 === 0) {
+                trigger_mouse_event(values.$element, "dblclick");
+            }
+        }
         trigger_mouse_event(values.$element, "mouseout");
         values.$element.trigger("mouseleave");
 
-        function trigger_mouse_event($element, type) {
+        function trigger_mouse_event($element, type, count) {
             var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+            e.initMouseEvent(type, true, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
             $element[0].dispatchEvent(e);
         }
     },
@@ -112,4 +123,3 @@ var RunningTourActionHelper = core.Class.extend({
 
 return RunningTourActionHelper;
 });
-
