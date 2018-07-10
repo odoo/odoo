@@ -1336,6 +1336,11 @@ attributes:
     A valid date or datetime field. This field is understood by the view as the
     end date of a record.  This is the field that will determine the churn.
 
+- ``mode`` (optional)
+    A string to describe the mode. It should be either 'churn' or
+    'retention' (default). Churn mode will start at 0% and accumulate over time
+    whereas retention will start at 100% and decrease over time.
+
 - ``interval`` (optional)
     A string to describe a time interval. It should be 'day', 'week', 'month''
     (default) or 'year'.
