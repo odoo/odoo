@@ -93,16 +93,6 @@ class ProjectTask(models.Model):
                     raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name)))
 
     @api.multi
-    def write(self, values):
-        result = super(ProjectTask, self).write(values)
-        # reassign SO line on related timesheet lines
-        if 'sale_line_id' in values:
-            self.sudo().mapped('timesheet_ids').write({
-                'so_line': values['sale_line_id']
-            })
-        return result
-
-    @api.multi
     def unlink(self):
         if any(task.sale_line_id for task in self):
             raise ValidationError(_('You have to unlink the task from the sale order item in order to delete it.'))
