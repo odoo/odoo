@@ -238,9 +238,12 @@ var PivotModel = AbstractModel.extend({
      * @param {string[]} params.colGroupBys
      * @param {string[]} params.measures
      * @param {Object} params.fields
+     * @param {string} params.default_order
      * @returns {Deferred}
      */
     load: function (params) {
+        var self = this;
+
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
         this.fields = params.fields;
@@ -254,7 +257,13 @@ var PivotModel = AbstractModel.extend({
             sorted_column: {},
         };
         this.defaultGroupedBy = params.groupedBy;
-        return this._loadData();
+
+        return this._loadData().then(function () {
+            if (params.default_order) {
+                var info = params.default_order.split(' ');
+                self.sortRows(self.data.main_col.root.id, info[0], info[1] === 'desc');
+            }
+        });
     },
     /**
      * @override
