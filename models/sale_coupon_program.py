@@ -214,7 +214,7 @@ class SaleCouponProgram(models.Model):
         i.e Buy 1 imac + get 1 ipad mini free then check 1 imac is on cart or not
         or  Buy 1 coke + get 1 coke free then check 2 cokes are on cart or not
         """
-        order_lines = order.order_line - order._get_reward_lines()
+        order_lines = order.order_line.filtered(lambda line: line.product_id) - order._get_reward_lines()
         products_qties = dict.fromkeys([product for product in order_lines.mapped('product_id')], 0)
         for line in order_lines:
             products_qties[line.product_id] += line.product_uom_qty
