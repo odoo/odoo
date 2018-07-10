@@ -843,6 +843,22 @@ var FieldX2Many = AbstractField.extend({
         });
     },
     /**
+     * Computes the default renderer to use depending on the view type.
+     * We create this as a method so we can override it if we want to use
+     * another renderer instead (eg. section_and_note_one2many).
+     *
+     * @private
+     * @returns {Object} The renderer to use
+     */
+    _getRenderer: function () {
+        if (this.view.arch.tag === 'tree') {
+            return ListRenderer;
+        }
+        if (this.view.arch.tag === 'kanban') {
+            return KanbanRenderer;
+        }
+    },
+    /**
      * Instanciates or updates the adequate renderer.
      *
      * @override
@@ -861,19 +877,22 @@ var FieldX2Many = AbstractField.extend({
         }
         var arch = this.view.arch;
         var viewType;
+        var rendererParams = {
+            arch: arch,
+        };
+
         if (arch.tag === 'tree') {
             viewType = 'list';
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
-            this.renderer = new ListRenderer(this, this.value, {
-                arch: arch,
+            _.extend(rendererParams, {
                 editable: this.mode === 'edit' && arch.attrs.editable,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 isMany2Many: this.isMany2Many,
-                viewType: viewType,
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
+
         if (arch.tag === 'kanban') {
             viewType = 'kanban';
             var record_options = {
@@ -881,12 +900,17 @@ var FieldX2Many = AbstractField.extend({
                 deletable: false,
                 read_only_mode: this.isReadonly,
             };
-            this.renderer = new KanbanRenderer(this, this.value, {
-                arch: arch,
+            _.extend(rendererParams, {
                 record_options: record_options,
-                viewType: viewType,
             });
         }
+
+        _.extend(rendererParams, {
+            viewType: viewType,
+        });
+        var Renderer = this._getRenderer();
+        this.renderer = new Renderer(this, this.value, rendererParams);
+
         this.$el.addClass('o_field_x2many o_field_x2many_' + viewType);
         return this.renderer ? this.renderer.appendTo(this.$el) : this._super();
     },
