@@ -768,10 +768,13 @@ ListRenderer.include({
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
         var firstWidget = _.find(recordWidgets, function (widget) {
-            var isFirst = widget.$el.is(':visible') &&
-                                (widget.$el.has('input').length > 0 ||
-                                widget.tagName== 'input') &&
-                            !widget.$el.hasClass('o_readonly_modifier');
+            var isFirst =
+                widget.$el.is(':visible') &&
+                (
+                    widget.$('input').length > 0 || widget.tagName === 'input' ||
+                    widget.$('textarea').length > 0 || widget.tagName === 'textarea'
+                ) &&
+                !widget.$el.hasClass('o_readonly_modifier');
             return isFirst;
         });
         return firstWidget;
