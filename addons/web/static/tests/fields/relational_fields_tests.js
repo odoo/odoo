@@ -9953,6 +9953,80 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many add a line should not crash if orderedResIDs is not set', function (assert) {
+        // There is no assertion, the code will just crash before the bugfix.
+        assert.expect(0);
+
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<header>' +
+                        '<button name="action_invoice_open" type="object" string="Validate" class="oe_highlight"/>' +
+                    '</header>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    event.data.on_fail();
+                },
+            },
+        });
+
+        $('button[name="action_invoice_open"]').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.destroy();
+    });
+
+    QUnit.test('one2many shortcut tab should not crash when there is no input widget', function (assert) {
+        assert.expect(2);
+
+        // create a one2many view which has no input (only 1 textarea in this case)
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo" widget="text"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // add a row, fill it, then trigger the tab shortcut
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input[name="turtle_foo"]')
+            .val('ninja')
+            .trigger('input')
+            .trigger($.Event('keydown', {
+                which: $.ui.keyCode.TAB,
+                keyCode: $.ui.keyCode.TAB,
+            }));
+
+        assert.strictEqual(form.$('.o_field_text').text(), 'blipninja',
+            'current line should be saved');
+        assert.strictEqual(form.$('textarea.o_field_text').length, 1,
+            'new line should be created');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
@@ -13014,41 +13088,6 @@ QUnit.module('relational_fields', {
             document.activeElement,
             "after escape, the focus should be back on the add new line link");
 
-        form.destroy();
-    });
-
-    QUnit.test('add a line should not crash if orderedResIDs is not set', function (assert) {
-        // There is no assertion, the code will just crash before the bugfix.
-        assert.expect(0);
-
-        this.data.partner.records[0].turtles = [];
-
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:'<form string="Partners">' +
-                    '<header>' +
-                        '<button name="action_invoice_open" type="object" string="Validate" class="oe_highlight"/>' +
-                    '</header>' +
-                    '<field name="turtles">' +
-                        '<tree editable="bottom">' +
-                            '<field name="turtle_foo"/>' +
-                        '</tree>' +
-                    '</field>' +
-                '</form>',
-            viewOptions: {
-                mode: 'edit',
-            },
-            intercepts: {
-                execute_action: function (event) {
-                    event.data.on_fail();
-                },
-            },
-        });
-
-        $('button[name="action_invoice_open"]').click();
-        form.$('.o_field_x2many_list_row_add a').click();
         form.destroy();
     });
 
