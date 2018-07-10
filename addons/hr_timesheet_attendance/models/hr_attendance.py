@@ -43,8 +43,10 @@ class HrAttendance(models.Model):
                 ts.date_from, DEFAULT_SERVER_DATE_FORMAT))
             local_date_to_dt = local_tz.localize(datetime.strptime(
                 ts.date_to, DEFAULT_SERVER_DATE_FORMAT))
-            utc_date_from_dt = local_date_from_dt.astimezone(pytz.utc)
-            utc_date_to_dt = local_date_to_dt.astimezone(pytz.utc)
+            utc_date_from_dt = local_date_from_dt.astimezone(
+                pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+            utc_date_to_dt = local_date_to_dt.astimezone(pytz.utc).strftime(
+                '%Y-%m-%d %H:%M:%S')
             self._cr.execute("""
                     SELECT a.id
                         FROM hr_attendance a
