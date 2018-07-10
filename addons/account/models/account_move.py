@@ -244,6 +244,9 @@ class AccountMove(models.Model):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
+            #unreconcile all lines reversed
+            aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
+            aml.remove_move_reconcile()
             reversed_move = ac_move._reverse_move(date=date,
                                                   journal_id=journal_id)
             reversed_moves |= reversed_move
@@ -1743,7 +1746,6 @@ class AccountPartialReconcile(models.Model):
         """ When removing a partial reconciliation, also unlink its full reconciliation if it exists """
         full_to_unlink = self.env['account.full.reconcile']
         for rec in self:
-            #without the deleted partial reconciliations, the full reconciliation won't be full anymore
             if rec.full_reconcile_id:
                 full_to_unlink |= rec.full_reconcile_id
         #reverse the tax basis move created at the reconciliation time
