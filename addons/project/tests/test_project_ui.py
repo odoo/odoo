@@ -8,3 +8,8 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_project_tour(self):
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('project_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.project_tour.ready", login="admin")
+    
+    def test_02_project_portal_tour(self):
+        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('portal_project_tour')",
+                        "odoo.__DEBUG__.services['web_tour.tour'].tours.portal_project_tour.ready",
+                        login="admin", timeout=180)

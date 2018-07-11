@@ -167,8 +167,9 @@ class MailController(MailController):
                 record_sudo.sudo(uid).check_access_rights('read')
                 record_sudo.sudo(uid).check_access_rule('read')
             except AccessError:
-                if record_sudo.access_token and access_token and consteq(record_sudo.access_token, access_token):
-                    record_action = record_sudo.with_context(force_website=True).get_access_action()
+                portal_access, portal_edit = record_sudo._check_token(access_token)
+                if portal_access:
+                    record_action = record_sudo.with_context(force_website=True).get_access_action(portaledit=portal_edit)
                     if record_action['type'] == 'ir.actions.act_url':
                         pid = kwargs.get('pid')
                         hash = kwargs.get('hash')

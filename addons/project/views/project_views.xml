@@ -135,6 +135,7 @@
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
                                 <field name="privacy_visibility" widget="radio"/>
+                                <field name="public_link" string="Public Link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}"/>
                                 <field name="partner_id" string="Customer"/>
                                 <label for="rating_status" groups="project.group_project_rating"/>
                                 <div groups="project.group_project_rating">
@@ -550,7 +551,8 @@
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
+                            <div class="oe_kanban_content"
+                             t-att-data-id="id">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><field name="name"/></strong><br/>

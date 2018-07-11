@@ -1,0 +1,62 @@
+/* The iframe is automatically resized depending on its
+   contents' height. This is done in portal_project.js */
+.o_project_portal_iframe {
+    border: 0;
+    width: 100%;
+    margin-top: 10px;
+}
+.o_project_portal_iframe, .o_project_portal_iframe_content {
+    background-color: transparent;
+    overflow-y: hidden;
+}
+.container.mb64 {
+    margin: auto;
+    padding: 0;
+}
+portal-project > .o_view_controller {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    direction: ltr;
+}
+/* The position of these elements is made relative when shown (when the group's id is the
+   id of the current tab) and absolute when hidden. This is to make the height of the body
+   reflect the real height of the document, for use with resizing of the iframe. This is
+   done in portal_project.js */
+@media (max-width: 767.98px) {
+    .o_kanban_view.o_kanban_grouped[class] .o_kanban_group:not(.o_column_folded) {
+        top: 0;
+    }
+}
+.o_searchview {
+    margin-left: auto;
+    width: 50%;
+    margin-bottom: 20px;
+    padding-right: 0;
+}
+@media (max-width: 768px) {
+    .o_searchview {
+        width: 100%;
+        text-align: right;
+    }
+}
+.o_searchview_input {
+    background-color: transparent;
+}
+.o_searchview_more {
+    display: none;
+}
+.o_kanban_view.o_kanban_grouped {
+    background-color: transparent;
+}
+.o_form_view .o_form_sheet_bg {
+    background-color: transparent;
+    color: #666666;
+}
+.o_form_view .o_form_sheet_bg > .o_form_sheet {
+    border: 0;
+    box-shadow: none;
+}

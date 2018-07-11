@@ -26,6 +26,7 @@
         'views/digest_views.xml',
         'views/rating_views.xml',
         'views/project_views.xml',
+        'views/project_portal_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_activity_views.xml',
@@ -36,7 +37,10 @@
         'data/project_mail_template_data.xml',
         'data/project_data.xml',
     ],
-    'qweb': ['static/src/xml/project.xml'],
+    'qweb': [
+        'static/src/xml/project.xml',
+        'static/src/xml/project_portal.xml',
+    ],
     'demo': ['data/project_demo.xml'],
     'test': [
     ],

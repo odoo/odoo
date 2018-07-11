@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="portal_task_view_kanban" model="ir.ui.view">
+        <field name="name">Project Portal: Project Kanban View (readonly)</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="quick_create">false</attribute>
+                <attribute name="group_create">false</attribute>
+                <attribute name="group_delete">false</attribute>
+                <attribute name="group_edit">false</attribute>
+
+                <attribute name="edit">false</attribute>
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="duplicate">false</attribute>
+            </xpath>
+            <xpath expr="//templates//field[@name='activity_ids']" position="replace"/>
+            <xpath expr="//div[hasclass('o_dropdown_kanban')]" position="replace"/>
+            <xpath expr="//img[hasclass('oe_kanban_avatar')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="portal_task_view_form" model="ir.ui.view">
+        <field name="name">Project Portal: Task Form View (readonly)</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_assign_to_me']" position="replace"/>
+            <xpath expr="//button[@name='toggle_active']" position="replace"/>
+            <xpath expr="//button[@name='%(portal.portal_share_action)d']" position="replace"/>
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                    <attribute name="options">{'fold_field': 'fold'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='message_follower_ids']" position="replace"/>
+            <xpath expr="//field[@name='activity_ids']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="portaledit_view_task_kanban" model="ir.ui.view">
+        <field name="name">Project Portal: Project Kanban View (edit)</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="quick_create">true</attribute>
+                <attribute name="group_create">false</attribute>
+                <attribute name="group_delete">false</attribute>
+
+                <attribute name="create">true</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="duplicate">false</attribute>
+            </xpath>
+            <xpath expr="//templates//field[@name='activity_ids']" position="replace"/>
+            <xpath expr="//div[hasclass('o_dropdown_kanban')]" position="replace"/>
+            <xpath expr="//img[hasclass('oe_kanban_avatar')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="portaledit_view_task_form" model="ir.ui.view">
+        <field name="name">Project Portal: Task Form View (edit)</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_assign_to_me']" position="replace"/>
+            <xpath expr="//button[@name='toggle_active']" position="replace"/>
+            <xpath expr="//button[@name='%(portal.portal_share_action)d']" position="replace"/>
+            <xpath expr="//field[@name='message_follower_ids']" position="replace"/>
+            <xpath expr="//field[@name='activity_ids']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="portal_view_task_search_form" model="ir.ui.view">
+        <field name="name">portal.project.task.search.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Tasks"/>
+                <field name="tag_ids"/>
+                <field name="user_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_portal_project_all_tasks" model="ir.actions.act_window">
+        <field name="name">Project</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban</field>
+        <field name="search_view_id" ref="project.portal_view_task_search_form"/>
+    </record>
+</odoo>

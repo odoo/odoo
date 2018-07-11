@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
 from werkzeug.urls import url_encode
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, tools, _
+from odoo.tools import consteq
 
 
 class PortalMixin(models.AbstractModel):
@@ -12,7 +13,8 @@ class PortalMixin(models.AbstractModel):
     access_url = fields.Char(
         'Portal Access URL', compute='_compute_access_url',
         help='Customer Portal URL')
-    access_token = fields.Char('Security Token', copy=False)
+    access_token = fields.Char('Security Token (readonly)', copy=False)
+    edit_token = fields.Char('Security Token (edit)', copy=False)
 
     # to display the warning from specific model
     access_warning = fields.Text("Access warning", compute="_compute_access_warning")
@@ -33,7 +35,13 @@ class PortalMixin(models.AbstractModel):
             self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
 
-    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
+    def _portal_ensure_token_edit(self):
+        """ Get the current record edit & readonly access tokens """
+        self._portal_ensure_token()
+        self.edit_token = self.edit_token if self.edit_token else str(uuid.uuid4())
+        return self.edit_token
+
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None, portaledit=False):
         """
         Build the url of the record  that will be sent by mail and adds additional parameters such as
         access_token to bypass the recipient's rights,
@@ -44,6 +52,7 @@ class PortalMixin(models.AbstractModel):
         :param pid: = partner_id - when given, a hash is generated to allow the user to be authenticated
             in the portal chatter, if any in the target page,
             if the user is redirected to the portal instead of the backend.
+        :param portaledit : If true, use the edit access token instead of the readonly access token
         :return: the url of the record with access parameters, if any.
         """
         self.ensure_one()
@@ -51,8 +60,8 @@ class PortalMixin(models.AbstractModel):
             'model': self._name,
             'res_id': self.id,
         }
-        if hasattr(self, 'access_token'):
-            params['access_token'] = self._portal_ensure_token()
+        if hasattr(self, 'access_token') or hasattr(self, 'edit_token'):
+            params['access_token'] = self._portal_ensure_token_edit() if portaledit else self._portal_ensure_token()
         if pid:
             params['pid'] = pid
             params['hash'] = self._sign_token(pid)
@@ -87,7 +96,7 @@ class PortalMixin(models.AbstractModel):
         return super(PortalMixin, self)._notify_get_groups(message, new_group + groups)
 
     @api.multi
-    def get_access_action(self, access_uid=None):
+    def get_access_action(self, access_uid=None, portaledit=False):
         """ Instead of the classic form view, redirect to the online document for
         portal users or if force_website=True in the context. """
         self.ensure_one()
@@ -118,7 +127,7 @@ class PortalMixin(models.AbstractModel):
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': record._get_share_url(),
+                    'url': record._get_share_url(portaledit=portaledit),
                     'target': 'self',
                     'res_id': record.id,
                 }
@@ -152,3 +161,16 @@ class PortalMixin(models.AbstractModel):
             '#%s' % anchor if anchor else ''
         )
         return url
+
+    def _check_token(self, token):
+        """Checks the access token on a given record and returns the portal access and edit rights.
+
+        :param token: (str) The token to check
+        :return: (bool, bool) True if portal access rights granted, True if edit rights granted
+        """
+        self.ensure_one()
+        record_sudo = self.sudo()
+        portal_access = portal_edit = token and record_sudo.edit_token and consteq(record_sudo.edit_token, token)
+        if not portal_access:
+            portal_access = token and record_sudo.access_token and consteq(record_sudo.access_token, token)
+        return portal_access, portal_edit

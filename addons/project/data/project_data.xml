@@ -50,6 +50,12 @@
             <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
         </record>
+        <record id="mt_task_priority" model="mail.message.subtype">
+            <field name="name">Priority Changed</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Priority changed</field>
+        </record>
         <record id="mt_task_rating" model="mail.message.subtype">
             <field name="name">Task Rating</field>
             <field name="res_model">project.task</field>

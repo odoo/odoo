@@ -12,7 +12,10 @@ class PortalShare(models.TransientModel):
         result = super(PortalShare, self).default_get(fields)
         result['res_model'] = self._context.get('active_model')
         result['res_id'] = self._context.get('active_id')
-        result['share_link'] = self.env[result['res_model']].browse(result['res_id'])._get_share_url(redirect=True)
+        rec = self.env[result['res_model']].browse(result['res_id'])
+        privacy_visibility = rec.privacy_visibility if hasattr(rec, 'privacy_visibility') else rec.project_id.privacy_visibility
+        result['share_link'] = rec._get_share_url(redirect=True,
+                                                  portaledit=privacy_visibility == 'portaledit')
         return result
 
     res_model = fields.Char('Related Document Model', required=True)
@@ -29,7 +32,9 @@ class PortalShare(models.TransientModel):
             res_model = self.env[rec.res_model]
             if isinstance(res_model, self.pool['portal.mixin']):
                 record = res_model.browse(rec.res_id)
-                rec.share_link = base_url + record._get_share_url(redirect=True)
+                privacy_visibility = record.privacy_visibility if hasattr(record, 'privacy_visibility') else record.project_id.privacy_visibility
+                rec.share_link = base_url + record._get_share_url(redirect=True,
+                                                                  portaledit=privacy_visibility == 'portaledit')
 
     @api.depends('res_model', 'res_id')
     def _compute_access_warning(self):

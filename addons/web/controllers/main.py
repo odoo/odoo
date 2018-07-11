@@ -966,6 +966,7 @@ class DataSet(http.Controller):
         The re-sequencing starts at the first model of ``ids``, the sequence
         number is incremented by one after each record and starts at ``offset``
 
+        :param model: (str or Object) name or instance of the model
         :param ids: identifiers of the records to resequence, in the new sequence order
         :type ids: list(id)
         :param str field: field used for sequence specification, defaults to
@@ -974,7 +975,7 @@ class DataSet(http.Controller):
                            starting the resequencing from an arbitrary number,
                            defaults to ``0``
         """
-        m = request.env[model]
+        m = request.env[model] if isinstance(model, str) else model
         if not m.fields_get([field]):
             return False
         # python 2.6 has no start parameter
