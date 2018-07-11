@@ -168,6 +168,7 @@
         <record id="coffee_machine_line" model="account.invoice.line">
             <field name="invoice_id" ref="demo_invoice_equipment_purchase"/>
             <field name="name">Coffee Machine with huge 'employee\'s performances boosting perk'</field>
+            <field name="product_id" ref="product.product_product_6"/>
             <field name="price_unit">4999.99</field>
             <field name="account_id" model="account.account"
                 search="['|', ('tag_ids', '=', ref('account.demo_coffee_machine_account')),
