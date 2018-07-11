@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 15:45+0000\n"
-"PO-Revision-Date: 2018-03-16 15:45+0000\n"
+"POT-Creation-Date: 2018-06-27 15:42+0000\n"
+"PO-Revision-Date: 2018-06-27 15:42+0000\n"
 "Last-Translator: Zoriana Zaiats, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -308,7 +308,7 @@ msgstr "Натисніть, щоб додати новий реєстр нако
 #: selection:hr.payslip.run,state:0
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Close"
-msgstr "Зупинено"
+msgstr "Закрити"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_code
@@ -636,6 +636,21 @@ msgstr "Співробітники"
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Помилка! Ви не можете створювати рекурсивні структури зарплати."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:91
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr ""
+"Помилка! Ви не можете створити рекурсивну ієрархію категорії заробітної "
+"плати."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:176
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr ""
+"Помилка! Ви не можете створити рекурсивну ієрархію правил заробітної плати."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id

@@ -988,7 +988,7 @@ msgstr "<strong>Zkontroluje účty</strong><br/> po zadání produktů a daní."
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Vendor: </strong>"
-msgstr "<strong>Prodejce:</strong>"
+msgstr "<strong>Dodavatel:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
@@ -1822,7 +1822,7 @@ msgstr "Povolit zrušení položek"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
-msgstr ""
+msgstr "Povolit spárování faktur a plateb"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_product_margin
@@ -1896,27 +1896,27 @@ msgstr "Měna množství"
 #: model:ir.ui.view,arch_db:account.invoice_tree
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Amount Due"
-msgstr ""
+msgstr "Částka splatná"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "Částka splatná v měně společnosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Částka splatná v měně faktury"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "Amount Paid"
-msgstr ""
+msgstr "Částka zaplacená"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_rounding
 msgid "Amount Rounding"
-msgstr ""
+msgstr "Zaokrouhlení částky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1937,7 +1937,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
 msgid "Amount in Currency"
-msgstr ""
+msgstr "Částka v měně"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -2086,12 +2086,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_group_id
 msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
+msgstr "Použijte se, pouze pokud se daná země shoduje s danou skupinou."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
 msgstr ""
+"Použijte pouze v případě, že daná skupina odpovídá dodávce nebo fakturaci."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
@@ -2143,12 +2144,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Nejméně jedna  příchozí platba"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Nejméně jedna odchozí platba"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2311,7 +2312,7 @@ msgstr "Bankovní účet"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
 msgid "Bank Accounts Prefix"
-msgstr ""
+msgstr "Předpona bankovních účtů"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -2321,7 +2322,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_yodlee
 msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr ""
+msgstr "Bankovní rozhraní - synchronizujte bankovní kanály automaticky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
@@ -2331,7 +2332,7 @@ msgstr "Bankovní deník"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Bank Operations"
-msgstr ""
+msgstr "Bankovní Operace"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
@@ -2346,7 +2347,7 @@ msgstr "Předvolba bankovního vyúčtování"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
 msgid "Bank Setup Marked As Done"
-msgstr ""
+msgstr "Nastavení banky označeno jako hotovo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2398,7 +2399,7 @@ msgstr "bankovní vyúčtování"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "Nastavení banky je označeno jako hotovo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
@@ -2459,6 +2460,8 @@ msgid ""
 "Before continuing, you must install the Chart of Account related to your "
 "country (or the generic one if your country is not listed)."
 msgstr ""
+"Než budete pokračovat, musíte nainstalovat účetní kartu vztahující se k vaší"
+" zemi (nebo obecný, pokud není vaše země uvedena)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
@@ -2616,7 +2619,7 @@ msgstr "Zrušit"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr ""
+msgstr "Zrušit: vytvořit dobropis a spárovat"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -3406,7 +3409,7 @@ msgstr "Vytvořte zákazníky"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Vendors"
-msgstr "Vytvořte prodejce"
+msgstr "Vytvořte dodavatele"
 
 #. module: account
 #. openerp-web
@@ -3642,7 +3645,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Credit Note Date"
-msgstr ""
+msgstr "Datum dobropisu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -6684,7 +6687,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "Upravit: vytvořit dobropis, spárovat a vytvořit nový návrh faktury"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10798,7 +10801,7 @@ msgstr "Faktura dodavatele"
 #: code:addons/account/models/account_invoice.py:442
 #, python-format
 msgid "Vendor Bill - %s"
-msgstr ""
+msgstr "Faktura dodavatele - %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:189
@@ -10817,25 +10820,25 @@ msgstr "Faktury dodavatele"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Credit Note"
-msgstr ""
+msgstr "Dobropis dodavatele"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:444
 #, python-format
 msgid "Vendor Credit Note - %s"
-msgstr ""
+msgstr "Dobropis dodavatele - %s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Vendor Credit Notes"
-msgstr ""
+msgstr "Dobropisy dodavatele"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1229
 #, python-format
 msgid "Vendor Credit note"
-msgstr ""
+msgstr "Dobropis dodavatele"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10858,7 +10861,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Vendor Reference"
-msgstr ""
+msgstr "Reference dodavatele"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product_supplier_taxes_id

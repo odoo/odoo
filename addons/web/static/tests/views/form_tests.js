@@ -3067,6 +3067,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('delete a line in a one2many while editing another line triggers a warning', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [1, 2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name" required="True"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_cell').first().click(); // edit first row
+        form.$('input').val('').trigger('input');
+        form.$('.fa-trash-o').eq(1).click(); // delete second row
+
+        assert.strictEqual($('.modal').find('.modal-title').first().text(), "Warning",
+            "Clicking out of a dirty line while editing should trigger a warning modal.");
+
+        $('.modal').find('.btn-primary').click(); // discard changes
+
+        assert.strictEqual(form.$('.o_data_cell').first().text(), "first record",
+            "Value should have been reset to what it was before editing began.");
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "The other line should have been deleted.");
+        form.destroy();
+    });
+
     QUnit.test('properly apply onchange on many2many fields', function (assert) {
         assert.expect(14);
 
