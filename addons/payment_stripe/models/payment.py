@@ -54,7 +54,6 @@ class PaymentAcquirerStripe(models.Model):
             'phone': tx_values.get('partner_phone'),
         }
 
-        temp_stripe_tx_values['returndata'] = stripe_tx_values.pop('return_url', '')
         stripe_tx_values.update(temp_stripe_tx_values)
         return stripe_tx_values
 

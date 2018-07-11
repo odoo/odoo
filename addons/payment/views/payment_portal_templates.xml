@@ -19,7 +19,7 @@
                             <div class="col-md-8">
                                 <h3>Manage your Payment Methods</h3>
                                 <t t-call="payment.payment_tokens_list">
-                                    <t t-set="s2s_acquirers" t-value="acquirers"/>
+                                    <t t-set="acquirers" t-value="acquirers"/>
                                     <t t-set="mode" t-value="'manage'"/>
                                     <t t-set="verify_validity" t-value="True"/>
                                 </t>
@@ -58,7 +58,7 @@
                                 <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
                                 <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
                             </t>
-                            <div t-if="not (s2s_acquirers or form_acquirers)" class="alert alert-danger" role="alert">
+                            <div t-if="not acquirers" class="alert alert-danger" role="alert">
                                 <p>No payment acquirer found.</p>
                                 <p>Please configure a payment acquirer.</p>
                             </div>
@@ -165,7 +165,7 @@
             <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
         </div>
-        <div t-if="payment_tx_id.state_message">
+        <div t-if="payment_tx_id and payment_tx_id.state_message">
             <span t-esc="payment_tx_id.state_message"/>
         </div>
     </template>

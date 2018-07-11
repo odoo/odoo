@@ -86,8 +86,13 @@ tour.register('event_buy_tickets', {
             trigger: 'button[id="o_payment_form_pay"]:visible',
         },
         {
+            content: "Payment processing",
+            trigger: 'a[class="list-group-item"]',
+            timeout: 5000,
+        },
+        {
             content: "Last step",
-            trigger: '.oe_website_sale:contains("Thank you for your order")',
+            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
             timeout: 30000,
         }
     ]

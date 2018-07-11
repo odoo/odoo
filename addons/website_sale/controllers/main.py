@@ -8,6 +8,7 @@ from odoo import fields, http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
 from odoo.addons.website.controllers.main import Website
@@ -798,8 +799,8 @@ class WebsiteSale(http.Controller):
         acquirers = request.env['payment.acquirer'].search(domain)
 
         values['access_token'] = order.access_token
-        values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
-        values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
+        values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
+                                    (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
         values['tokens'] = request.env['payment.token'].search(
             [('partner_id', '=', order.partner_id.id),
             ('acquirer_id', 'in', acquirers.ids)])
@@ -870,7 +871,8 @@ class WebsiteSale(http.Controller):
         assert order.partner_id.id != request.website.partner_id.id
 
         # Create transaction
-        vals = {'acquirer_id': acquirer_id}
+        vals = {'acquirer_id': acquirer_id,
+                'return_url': '/shop/payment/validate'}
 
         if save_token:
             vals['type'] = 'form_save'
@@ -879,7 +881,15 @@ class WebsiteSale(http.Controller):
 
         transaction = order._create_payment_transaction(vals)
 
-        return transaction.render_sale_button(order, '/shop/payment/validate')
+        # store the new transaction into the transaction list and if there's an old one, we remove it
+        # until the day the ecommerce supports multiple orders at the same time
+        last_tx_id = request.session.get('__website_sale_last_tx_id')
+        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
+        if last_tx:
+            PaymentProcessing.remove_payment_transaction(last_tx)
+        PaymentProcessing.add_payment_transaction(transaction)
+        request.session['__website_sale_last_tx_id'] = transaction.id
+        return transaction.render_sale_button(order)
 
     @http.route('/shop/payment/token', type='http', auth='public', website=True)
     def payment_token(self, pm_id=None, **kwargs):
@@ -904,10 +914,11 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop/?error=token_not_found')
 
         # Create transaction
-        vals = {'payment_token_id': pm_id}
+        vals = {'payment_token_id': pm_id, 'return_url': '/shop/payment/validate'}
 
-        order._create_payment_transaction(vals)
-        return request.redirect('/shop/payment/validate')
+        tx = order._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(tx)
+        return request.redirect('/payment/process')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
@@ -950,6 +961,7 @@ class WebsiteSale(http.Controller):
         if tx and tx.state == 'draft':
             return request.redirect('/shop')
 
+        PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
 
 
