@@ -3,12 +3,9 @@
 
 from __future__ import print_function
 import logging
-import subprocess
 import time
 import subprocess
 from threading import Lock
-
-
 from odoo import http
 from odoo.http import request
 
@@ -20,6 +17,7 @@ _logger = logging.getLogger(__name__)
 BANNED_DEVICES = {
     "0424:9514",    # Standard Microsystem Corp. Builtin Ethernet module
     "1d6b:0002",    # Linux Foundation 2.0 root hub
+    "1d6b:0003",    # Linux Foundation 3.0 root hub
     "0424:ec00",    # Standard Microsystem Corp. Other Builtin Ethernet module
 }
 
@@ -100,12 +98,12 @@ class Proxy(http.Controller):
         """
         if debug is None:
             resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
-        devices = subprocess.check_output("lsusb").split('\n')
-        count   = 0
+        devices = subprocess.check_output("lsusb").decode('utf-8').split('\n')
+        count = 0
         resp += "<div class='devices'>\n"
-        for device in devices:
+        for device in devices[:-1]:
             device_name = device[device.find('ID')+2:]
-            device_id   = device_name.split()[0]
+            device_id = device_name.split()[0]
             if not (device_id in BANNED_DEVICES):
                 resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
                 count += 1
@@ -124,7 +122,7 @@ class Proxy(http.Controller):
                 %s
                 </pre>
 
-            """ % subprocess.check_output('lsusb -v', shell=True)
+            """ % subprocess.check_output('lsusb -v', shell=True).decode('utf-8')
 
         return request.make_response(resp,{
             'Cache-Control': 'no-cache',
@@ -224,3 +222,4 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/print_pdf_invoice', type='json', auth='none', cors='*')
     def print_pdf_invoice(self, pdfinvoice):
         print('print_pdf_invoice %s' % pdfinvoice)
+
