@@ -806,7 +806,7 @@ class PaymentTransaction(models.Model):
         invoice_ids = self.invoice_ids.ids
         if len(invoice_ids) == 1:
             invoice = invoice_ids[0]
-            action['res_id'] = invoice.id
+            action['res_id'] = invoice
             action['view_mode'] = 'form'
             action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
         else:
