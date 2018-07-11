@@ -349,7 +349,7 @@ Possible children elements of the list view are:
 
 ``control``
   defines custom controls for the current view.
-  
+
   This makes sense if the parent ``tree`` view is inside a One2many field.
 
   Does not support any attribute, but can have children:
@@ -1467,17 +1467,24 @@ The cohort view is used to display and understand the way some data changes over
 a period of time.  For example, imagine that for a given business, clients can
 subscribe to some service.  The cohort view can then display the total number
 of subscriptions each month, and study the rate at which client leave the service
-(churn).
+(churn). When clicking on a cell, the cohort view will redirect you to a new action
+in which you will only see the records contained in the cell's time interval;
+this action contains a list view and a form view.
 
 .. warning::
 
    The Cohort view is only available in Odoo Enterprise.
 
+.. note:: By default the cohort view will use the same list and form views as those
+   defined on the action. You can pass a list view and a form view
+   to the context of the action in order to set/override the views that will be
+   used (the context keys to use being `form_view_id` and `list_view_id`)
+
 For example, here is a very simple cohort view:
 
 .. code-block:: xml
 
-    <cohort string="Subscripdtion" date_start="date_start" date_stop="date" interval="month"/>
+    <cohort string="Subscription" date_start="date_start" date_stop="date" interval="month"/>
 
 The root element of the Cohort view is <cohort>, it accepts the following
 attributes:
