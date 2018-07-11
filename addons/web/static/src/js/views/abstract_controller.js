@@ -91,7 +91,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             this._super.apply(this, arguments),
             this.renderer.appendTo(this.$el)
         ).then(function () {
-            self._update(self.initialState);
+            return self._update(self.initialState);
         });
     },
     /**
@@ -257,7 +257,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
                     return;
                 }
                 self.renderer.setLocalState(localState);
-                self._update(state);
+                return self._update(state);
             });
         });
     },
