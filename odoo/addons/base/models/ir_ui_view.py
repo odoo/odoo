@@ -228,11 +228,12 @@ actual arch.
 * if True, the view always extends its parent
 * if False, the view currently does not extend its parent but can be enabled
          """)
-    is_modified = fields.Boolean(
+    view_modified = fields.Boolean(
         string="Modified", default=False, help="Whether the view has been modified or not."
     )
 
 
+    @api.model
     def _get_arch_fs(self, view):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -260,7 +261,7 @@ actual arch.
     @api.depends('arch_db', 'arch_fs')
     def _compute_arch(self):
         for view in self:
-            if 'xml' in config['dev_mode'] and not self.is_modified:
+            if 'xml' in config['dev_mode']:
                 view.arch = pycompat.to_text(self._get_arch_fs(view) or view.arch_db)
             else:
                 view.arch = pycompat.to_text(view.arch_db)
@@ -278,11 +279,11 @@ actual arch.
 
     def restore_views(self):
         """
-        Restore views to default.
+        Restore views to their original definition.
 
         This method will restore the arch to the contents of the .xml file found in the
-        file-system, if there's no corresponding file for a specific view, we assume that it's a
-        code-generated view and thus we resort to upgrading the module.
+        file-system, if there's no corresponding file for a specific view, we simply try upgrading
+        the module that introduced such view.
         """
         to_upgrade = []
 
@@ -292,7 +293,7 @@ actual arch.
                 view.arch = pycompat.to_text(arch_fs)
             else:
                 to_upgrade.append(view.model_data_id.module)
-            view.update({'is_modified': False})
+            view.update({'view_modified': False})
 
         self.env['ir.module.module'].search([
             ('name', 'in', to_upgrade)
@@ -437,11 +438,13 @@ actual arch.
 
     @api.multi
     def write(self, vals):
-        # If the view is user-modified we set is_modified to true, for two reasons:
-        #   1. To know if the view has been modified by the user
-        #   2. So that in dev mode we change from loading the arch_fs to loading the arch_db
+        # If view is modified we remove the arch_fs information thus activating the arch_db
+        # version. An `init` of the view will restore the arch_fs for the --dev mode.
+        # Furthermore, we set the `view_modified` flag to True in order to narrow down the amount
+        # of views that could appear during an Error 500 debug view.
         if ('arch' in vals or 'arch_base' in vals) and 'install_mode_data' not in self._context:
-            vals['is_modified'] = True
+            vals['arch_fs'] = False
+            vals['view_modified'] = True
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
         custom_view = self.env['ir.ui.view.custom'].search([('ref_id', 'in', self.ids)])

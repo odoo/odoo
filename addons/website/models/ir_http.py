@@ -206,16 +206,13 @@ class Http(models.AbstractModel):
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
                     IrUiView = request.env["ir.ui.view"]
-
-                    # This is too annoying to type each time...
-                    def dt(datetime):
-                        return fields.Datetime.from_string(datetime)
-
                     views = IrUiView._views_get(exception.qweb['template'])
                     # Only show user-modified views...
-                    m_views = [view for view in views if view.is_modified]
+                    m_views = [view for view in views if view.view_modified]
                     # Show latest modified views first
-                    values['views'] = reversed(sorted(m_views, key=lambda v: dt(v.write_date)))
+                    values['views'] = reversed(
+                        sorted(m_views, key=lambda v: fields.Datetime.from_string(v.write_date))
+                    )
             elif code == 403:
                 logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 
