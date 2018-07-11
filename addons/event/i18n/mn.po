@@ -4,13 +4,18 @@
 # 
 # Translators:
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Martin Trigaux, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-25 08:14+0000\n"
 "PO-Revision-Date: 2018-06-25 08:14+0000\n"
-"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018\n"
+"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -358,6 +363,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Хүндэт ${object.name},</p>\n"
+"<p>Лавласанд тань баярлалаа.</p>\n"
+"<p>Энэ бол ${object.event_id.name} -н таны медаль.</p>\n"
+"<p>Хэрэв танд ямар нэгэн асуулт байгаа бол бидэнд хандана уу.</p>\n"
+"<p>Хүндэтгэсэн,</p>"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
@@ -368,7 +379,7 @@ msgstr ""
 #: code:addons/event/models/event.py:303
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (хуулбар)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -376,12 +387,14 @@ msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
 msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>Дуусах</b>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>-</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -395,12 +408,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Үйлдэл Шаардлагатай"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
 msgid "Active"
-msgstr ""
+msgstr "Идэвхитэй"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -423,18 +436,18 @@ msgstr ""
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After each registration"
-msgstr ""
+msgstr "Бүртгэл бүрийн дараа"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "Арга хэмжээний дараа"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -446,36 +459,36 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr ""
+msgstr "Ирц"
 
 #. module: event
 #: selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attended"
-msgstr ""
+msgstr "Оролцсон"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
 msgid "Attended Date"
-msgstr ""
+msgstr "Оролцсон огноо"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr ""
+msgstr "Арга хэмжээнд оролцсон"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr ""
+msgstr "Оролцогч"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "Оролцогчийн нэр"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -485,7 +498,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr ""
+msgstr "Оролцогчид"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
@@ -505,139 +518,139 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
 msgid "Available Seats"
-msgstr ""
+msgstr "Байгаа суудлууд"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_back
 msgid "Badge Back"
-msgstr ""
+msgstr "Буцааж Медаль өгөх"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "Медалийн урд тал"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Медалийн дотоод зүүн"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerright
 msgid "Badge Inner Right"
-msgstr ""
+msgstr "Медаль Дотоод Баруун"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Зураасан код"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "Арга хэмжээний өмнө"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцлах"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr ""
+msgstr "Арга хэмжээг цуцлах"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
-msgstr ""
+msgstr "Бүртгэлийг цуцлах"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Цуцлагдсан"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_type_id
 msgid "Category"
-msgstr ""
+msgstr "Ангилал"
 
 #. module: event
 #: code:addons/event/models/event.py:269
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Хаах өдөр эхлэх өдөрөөс өмнө байж болохгүй."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
-msgstr ""
+msgstr "Харилцаа"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
 #: model:ir.model.fields,field_description:event.field_event_registration__company_id
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: event
 #: code:addons/event/models/event.py:492
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Имэйл Үүсгэх"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Тохиргоо"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr ""
+msgstr "Батлах"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
-msgstr ""
+msgstr "Ямартай ч батлах"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
-msgstr ""
+msgstr "Арга хэмжээг батлах"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr ""
+msgstr "Бүртгэлийг батлах"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed"
-msgstr ""
+msgstr "Баталсан"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr ""
+msgstr "Батлагдсан оролцогчид"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr ""
+msgstr "Батлагдсан арга хэмжээнүүд"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 msgid "Contact"
-msgstr ""
+msgstr "Холбох хаяг"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
 msgid "Country"
-msgstr ""
+msgstr "Улс"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__create_uid
@@ -648,7 +661,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__create_uid
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__create_date
@@ -659,35 +672,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__create_date
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн"
 
 #. module: event
 #: code:addons/event/models/event.py:455
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Захиалагч"
 
 #. module: event
 #: code:addons/event/models/event.py:457
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Захиалагчийн Эмэйл"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Өдөр(үүд)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
-msgstr ""
+msgstr "Устгах"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
 msgid "Description"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
@@ -698,44 +711,44 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__display_name
 #: model:ir.model.fields,field_description:event.field_event_type_mail__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
-msgstr ""
+msgstr "Харуулах дараалал"
 
 #. module: event
 #: selection:event.event,state:0
 msgid "Done"
-msgstr ""
+msgstr "Дууссан"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
 msgid "Email"
-msgstr ""
+msgstr "Имэйл"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "Имэйл тов"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_id
 msgid "Email Template"
-msgstr ""
+msgstr "Э-мэйл үлгэр"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
 msgid "End Date"
-msgstr ""
+msgstr "Дуусах Огноо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "Дуусах огноо байршсан"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -745,7 +758,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr ""
+msgstr "Арга хэмжээ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
@@ -755,13 +768,13 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr ""
+msgstr "Арга хэмжээний медаль"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr ""
+msgstr "Арга хэмжээний ангилалууд"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -770,55 +783,55 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
-msgstr ""
+msgstr "Арга хэмжээний ангилал"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
-msgstr ""
+msgstr "Арга хэмжээний баталгаажуулалт"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr ""
+msgstr "Арга хэмжээ дуусах огноо"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "Арга хэмжээний мэдээлэл"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "Арга хэмжээний лого"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "Арга хэмжээний мэйл төлөвлөгч"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Арга хэмжээний мэйл төлөвлөгчүүд"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr ""
+msgstr "Арга хэмжээний нэр"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr ""
+msgstr "Арга хэмжээний зохион байгуулалт"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_calendar
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr ""
+msgstr "Арга хэмжээний бүртгэл"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:143
@@ -841,12 +854,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 msgid "Event Start Date"
-msgstr ""
+msgstr "Арга хэмжээний эхлэх огноо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "Арга хэмжээний төрөл"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -868,17 +881,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr ""
+msgstr "Арга хэмжээ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_event_action_pivot
 msgid "Events Analysis"
-msgstr ""
+msgstr "Арга хэмжээний шинжилгээ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Арга хэмжээний мэйл төлөвлөгчүүд"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -897,40 +910,40 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
-msgstr ""
+msgstr "Шинэ төлөвтэй арга хэмжээнүүд"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr ""
+msgstr "Тооцоолсон"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr ""
+msgstr "Тооцоолсон оролцогчид"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr ""
+msgstr "Арга хэмжээг дуусгах"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Дагагчид"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_channel_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Дагагчид (Сувагууд)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Дагагчид (Харилцагчид)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -938,6 +951,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
+"Арга хэмжээ бүрт суудлын бүртгэлийн(оролцогчийн тоо) дээд хязгаарыг "
+"тодорхойлох боломжтой. Энэ тооноос олон бүртгэлийг зөвшөөрөхгүй."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_min
@@ -946,18 +961,21 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"Арга хэмжээ бүрт суудлын бүртгэлийн(оролцогчийн тоо) доод хязгаарыг "
+"тодорхойлох боломжтой. Хэрэв бүртгэлийн тоо энэ хязгаарт хүрэхгүй бол арга "
+"хэмжээг батлахгүй (энэ дүрмийг дагахгүй гэвэл 0 хэвээр үлдээнэ үү)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "Цаг(ууд)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__id
@@ -968,19 +986,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_unread
 #: model:ir.model.fields,help:event.field_event_registration__message_unread
 msgid "If checked new messages require your attention."
 msgstr ""
+"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
+"шаардана."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__state
@@ -990,39 +1010,47 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Хэрэв арга хэмжээ үүсгэгдэн бол төлөв нь 'Ноорог' байна. Хэрэв арга хэмжээг "
+"тодорхой өдөр батласан бол төлөв нь 'Батласан' болно. Хэрэв арга хэмжээ "
+"дууссан бол төлөв нь 'Хийгдсэн' болно. Хэрэв арга хэмжээг цуцласан бол төлөв"
+" нь 'Цуцлагдсан' болно."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Шууд"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
-msgstr ""
+msgstr "Завсар"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
 #: model:ir.model.fields,field_description:event.field_event_registration__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
+"Арга хэмжээг сонгоход энэ нь энэхүү хамгийн их утгыг анхныхаараа сонгох "
+"болно."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
+"Энэ арга хэмжээг сонгоход энэ нь энэхүү хамгийн бага утгыг анхныхаараа "
+"сонгох болно"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "Канбан Өнгөний Индекс"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm____last_update
@@ -1033,7 +1061,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type____last_update
 #: model:ir.model.fields,field_description:event.field_event_type_mail____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__write_uid
@@ -1044,7 +1072,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__write_date
@@ -1055,12 +1083,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type__write_date
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Хязгаартай"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -1071,7 +1099,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr ""
+msgstr "Байршил"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
@@ -1082,17 +1110,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "Мэйл тов"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "Мэйл товлогч"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "Мэйл товлогчууд"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
@@ -1102,12 +1130,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "Мэйл илгээгдсэн"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "Арга хэмжээ дээр мэйл илгээгдсэн"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1117,17 +1145,17 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менежер"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_availability
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "Оролцогчийн дээд хязгаар"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "Оролцогчийн тооны дээд хязгаар"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_max
@@ -1145,12 +1173,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Зурвасууд"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_min
 msgid "Minimum Attendees"
-msgstr ""
+msgstr "Оролцогчийн доод хязгаар"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_min
@@ -1161,40 +1189,40 @@ msgstr ""
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Сар(ууд)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr ""
+msgstr "Миний арга хэмжээнүүд"
 
 #. module: event
 #: code:addons/event/models/event.py:263
 #, python-format
 msgid "No more available seats."
-msgstr ""
+msgstr "Өөр суудал алга."
 
 #. module: event
 #: code:addons/event/models/event.py:369
 #, python-format
 msgid "No more seats available for this event."
-msgstr ""
+msgstr "Энэ арга хэмжээний суудал дууссан."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Үйлдлийн тоо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
 msgid "Number of Expected Attendees"
-msgstr ""
+msgstr "Тооцоолсон оролцогчдын тоо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Participants"
-msgstr ""
+msgstr "Оролцогчийн тоо"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
@@ -1206,19 +1234,19 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_unread_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоо"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_online
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Online"
-msgstr ""
+msgstr "Онлайн"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_online
@@ -1248,22 +1276,22 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
 msgid "Organizer"
-msgstr ""
+msgstr "Зохион байгуулагч"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
-msgstr ""
+msgstr "Оролцогч"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
-msgstr ""
+msgstr "Харилцагч"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__phone
 msgid "Phone"
-msgstr ""
+msgstr "Утас"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
@@ -1280,7 +1308,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
-msgstr ""
+msgstr "Энэ арга хэмжээтэй бүртгэх"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1289,62 +1317,62 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr ""
+msgstr "Бүртгэл"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr ""
+msgstr "Бүртгэлийн Медаль"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_open
 msgid "Registration Date"
-msgstr ""
+msgstr "Бүртгүүлсэн огноо"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Day"
-msgstr ""
+msgstr "Бүртгэлийн өдөр"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr ""
+msgstr "Бүртгэлийн ID"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "Бүртгэлийн мэйл товлогч"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "Бүртгэлийн мэйлүүд"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Month"
-msgstr ""
+msgstr "Бүртгэлийн сар"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "Бүртгэлийн санал асуулга"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "Бүртгэлийн мэйл"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
-msgstr ""
+msgstr "Тайлан"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Захиалагдсан суудлууд"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
@@ -1355,7 +1383,7 @@ msgstr "Хариуцагч"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
-msgstr ""
+msgstr "Ирцийг батлахын тулд медалиудыг уншуулна уу"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1372,12 +1400,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "Товлосон илгээгдсэн мэйл"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
-msgstr ""
+msgstr "Товлосон хугацаа"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1392,48 +1420,48 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Имэйлээр илгээх"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__done
 msgid "Sent"
-msgstr ""
+msgstr "Илгээгдсэн"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
-msgstr ""
+msgstr "Ноороглох"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr ""
+msgstr "Батаглгаажаагүй болгох"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "Тохиргоо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__origin
 msgid "Source Document"
-msgstr ""
+msgstr "Эх Баримт"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
 msgid "Start Date"
-msgstr ""
+msgstr "Эхлэх Огноо"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin_located
 msgid "Start Date Located"
-msgstr ""
+msgstr "Эхлэх огноо байршсан"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Month"
-msgstr ""
+msgstr "Эхлэх Сар"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__state
@@ -1441,12 +1469,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "Бүртгүүлэх"
 
 #. module: event
 #: code:addons/event/models/event.py:313
@@ -1461,28 +1489,28 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_mail__template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "Энэ талбарт автоматаар илгээгдэх мэйлийн үлгэрийг агуулна"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "Тасалбарууд"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
-msgstr ""
+msgstr "Цагийн бүс"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "Зам ба хэлэлцэх асуудал"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
-msgstr ""
+msgstr "Гол"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
@@ -1493,29 +1521,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__twitter_hashtag
 #: model:ir.model.fields,field_description:event.field_event_type__default_hashtag
 msgid "Twitter Hashtag"
-msgstr ""
+msgstr "Твиттер Хаштаг"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Батлагаажаагүй"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Батлагдаагүй урьдчилж захиалсан суудал"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_unit
 msgid "Unit"
-msgstr ""
+msgstr "Ширхэг"
 
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Unlimited"
-msgstr ""
+msgstr "Хязгааргүй"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_unread
@@ -1523,18 +1551,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_unread_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Өнөөдрөөс хойших арга хэмжээнүүд"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1554,12 +1582,12 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr ""
+msgstr "Хэрэглэгч"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Visibility"
-msgstr ""
+msgstr "Харагдац"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:130
@@ -1573,12 +1601,14 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr ""
+"Анхааруулга: Энэ арга хэмжээ нь хамгийн бага хязгаартаа хүрээгүй байна. "
+"Батлахдаа та итгэлтэй байна уу?"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Долоо хоног(ууд)"
 
 #. module: event
 #: code:addons/event/models/event.py:426
@@ -1595,22 +1625,22 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name} -н таны медаль"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "${object.event_id.name} дахь таны бүртгэл"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: code:addons/event/models/event.py:514
@@ -1639,7 +1669,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: event
 #: code:addons/event/models/event.py:510

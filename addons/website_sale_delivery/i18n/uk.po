@@ -5,13 +5,16 @@
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2018
 # Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-25 08:14+0000\n"
 "PO-Revision-Date: 2018-06-25 08:14+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
+"Last-Translator: Bohdan Lisnenko, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +28,8 @@ msgid ""
 "<span class=\"badge pull-right o_delivery_compute\">Select to compute "
 "delivery rate</span>"
 msgstr ""
+"<span class=\"badge pull-right o_delivery_compute\">Виберіть, щоб обчислити "
+"швидкість доставки</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
@@ -33,37 +38,40 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Опис товару, який ви хочете повідомити своїм клієнтам. Цей опис буде "
+"скопійовано до кожного замовлення клієнта, замовлення на поставку та "
+"рахунки-фактури клієнта/сторно"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr ""
+msgstr "Перевізник"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
-msgstr ""
+msgstr "Виберіть спосіб доставки"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Країна"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "DHL Delivery Methods"
-msgstr ""
+msgstr "Методи доставки DHL "
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Вартість доставки"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Способи доставки"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -78,37 +86,39 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
 msgstr ""
+"Опис відображається на електронній комерції та комерційних пропозиціях "
+"онлайн."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Опис для онлайн пропозиції"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "FedEx Delivery Methods"
-msgstr ""
+msgstr "Методи доставки FedEx"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Free"
-msgstr ""
+msgstr "Вільно"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "У замовленні є рядок з доставкою"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Має доставку"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:42
@@ -117,6 +127,8 @@ msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
+"Немає жодного способу доставки для вашого замовлення та адреси доставки. "
+"Будь ласка, зв’яжіться з нами для отримання детальної інформації."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
@@ -135,23 +147,23 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
-msgstr ""
+msgstr "Опубліковано"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Quotation"
-msgstr ""
+msgstr "Комерційна пропозиція"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:41
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Вибачте, ми не можемо доставити ваше замовлення"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
 msgid "The amount without tax."
-msgstr ""
+msgstr "Сума без податків"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
@@ -161,17 +173,17 @@ msgstr "URL-адреса повністю, для доступу до докум
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
 msgid "Tracking:"
-msgstr ""
+msgstr "Відстеження:"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Delivery Methods"
-msgstr ""
+msgstr "Методи доставки USPS "
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Видимий на сайті"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
@@ -181,4 +193,4 @@ msgstr "URL сайту"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Delivery Methods"
-msgstr ""
+msgstr "Методи доставки bpost "

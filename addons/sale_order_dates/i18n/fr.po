@@ -3,16 +3,16 @@
 # * sale_order_dates
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Lionel Sausin <ls@numerigraphe.com>, 2017
-# Simon CARRIER <carrier.sim@gmail.com>, 2017
+# Martin Trigaux, 2016
+# Lionel Sausin <ls@numerigraphe.com>, 2016
+# Simon CARRIER <carrier.sim@gmail.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_order_dates
-#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order__commitment_date
 msgid "Commitment Date"
 msgstr "Date d'engagement"
 
 #. module: sale_order_dates
-#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order__requested_date
 msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Laissez ce champ vide si vous voulez que le bon de livraison soit effectué au plus tôt. Dans ce cas, la date souhaitée sera calculée d'après la méthode par défaut : sur la base du délai de livraison de l'article et du délai de sécurité de la société."
 
 #. module: sale_order_dates
-#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order__commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
@@ -48,12 +48,12 @@ msgstr ""
 "des articles."
 
 #. module: sale_order_dates
-#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order__effective_date
 msgid "Date on which the first Delivery Order was created."
 msgstr "Date à laquelle le premier bon de livraison a été créé."
 
 #. module: sale_order_dates
-#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order__effective_date
 msgid "Effective Date"
 msgstr "Date effective"
 
@@ -63,7 +63,7 @@ msgid "Quotation"
 msgstr "Devis"
 
 #. module: sale_order_dates
-#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order__requested_date
 msgid "Requested Date"
 msgstr "Date demandée"
 

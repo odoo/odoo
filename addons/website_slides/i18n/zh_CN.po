@@ -6,7 +6,7 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # fausthuang, 2016
 # Siyuan Gu <siyuancn@hotmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# 杜哥 <liangjia@qq.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
 # Martin Trigaux, 2016
 # Talway <9010446@qq.com>, 2016
@@ -53,6 +53,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>您好：</p>\n"
+"<p>\n"
+"    ${user.name} 与您分享 ${object.slide_type} <strong>${object.name}</strong>！\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"       查看 <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -697,7 +712,7 @@ msgstr "谷歌文档密钥"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Google Drive API 密钥"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -1185,7 +1200,7 @@ msgstr "这"
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
-msgstr ""
+msgstr "文档类型将根据文档 URL 和属性（例如，演示和文档的高度和宽度）自动设置。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url

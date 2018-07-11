@@ -427,6 +427,8 @@ msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"Eğer ayarlanmamışsa, tüm ödeme yöntemleri Satış Yevmiyesindeki ya da şirket "
+"para birimi ile aynı olmalı."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -449,6 +451,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Her müşteri kategorisinin kuralına göre farklı fiyatlar belirlemenize izin verir.\n"
+"Örnek: perakendeciler için %10, bu ürün için 5 EUR promosyon gibi)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -469,13 +473,13 @@ msgstr "Toplam Tutar"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
 msgid "An internal identification of the point of sale."
-msgstr ""
+msgstr "Satış noktası için bir iç kimlik"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:160
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr ""
+msgstr "Bu satış noktası için başka bir oturum zaten açıldı."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -613,7 +617,7 @@ msgstr "Düğme"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
-msgstr ""
+msgstr "Tarayıcıyı iptal edin ve donanım proxy'si ile yazdırın."
 
 #. module: point_of_sale
 #. openerp-web
@@ -820,7 +824,7 @@ msgstr "Alt Kategoriler"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose a pricelist for the Point Of Sale"
-msgstr ""
+msgstr "Satış Noktası için bir fiyat listesi seçin."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -856,7 +860,7 @@ msgstr "Müşteri"
 #: code:addons/point_of_sale/static/src/js/chrome.js:463
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
-msgstr ""
+msgstr "Desteklenmeyen Müşteri Ekranı. Lütfen PosBox'ı yükseltin"
 
 #. module: point_of_sale
 #. openerp-web
@@ -930,7 +934,7 @@ msgstr "Onayla"
 #: code:addons/point_of_sale/static/src/js/chrome.js:456
 #, python-format
 msgid "Connected, Not Owned"
-msgstr ""
+msgstr "Bağlı, sahipsiz"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1291,6 +1295,8 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
 msgstr ""
+"Akıllı telefonlarda veya tabletlerde sipariş alırsanız bu seçeneği açmayın.\n"
+" Bu tür cihazlar zaten bir yerel klavyeden faydalanır."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1474,7 +1480,7 @@ msgstr "Genel Bilgisi"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Generation of your order references"
-msgstr ""
+msgstr "Sipariş referanslarınızın oluşumu"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1802,7 +1808,7 @@ msgstr "Satır No"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale Orders"
-msgstr ""
+msgstr "Satış Noktası Sipariş Kalemleri"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:33
@@ -2180,7 +2186,7 @@ msgstr "Transferleri kaydetmek için kullanılan operasyon türü"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Operasyon tipleri Stok panelinden görülür."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3227,7 +3233,7 @@ msgstr "Ayarlar"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Uzaktan bağlı bir ekran ile müşterilere ödeme göster."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pricelist_item
@@ -3244,7 +3250,7 @@ msgstr "Atlama"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
+msgstr "Önizleme Ekranını Atla"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_small
@@ -3547,6 +3553,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"Fatura yevmiyesi, eğer para birimi ayarlanmamışsa, Satış Yevmiyesi ya da "
+"şirket para birimi ile aynı olmak zorundadır."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3766,6 +3774,8 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"Bu alan pos kullanıcı grubunun kimliğini satış noktası alanına iletmek için "
+"vardır."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:594
@@ -3795,6 +3805,9 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"Bu operasyon tarayıcıdaki tüm ödenmemiş siparişleri iptal eder. Tüm "
+"kaydedilmemiş bilgileri kaybeder ve satış noktasından çıkarsınız. Bu işlem "
+"geri alınamaz."
 
 #. module: point_of_sale
 #. openerp-web
