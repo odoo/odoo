@@ -136,7 +136,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
-                ['insert', ['link', 'picture']],
+                ['insert', this.nodeOptions['no-attachment'] ? ['link'] : ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
             prettifyHtml: false,
@@ -144,6 +144,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             inlinemedia: ['p'],
             lang: "odoo",
             onChange: this._doDebouncedAction.bind(this),
+            disableDragAndDrop: !!this.nodeOptions['no-attachment'],
         };
 
         var fieldNameAttachment =_.chain(this.recordData)
