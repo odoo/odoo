@@ -261,14 +261,15 @@ var QueryGroup = Class.extend({
 
         var count_key = (grouping_fields[0] && grouping_fields[0].split(':')[0]) + '_count';
         var aggregates = {};
-        _(fixed_group).each(function (value, key) {
-            if (key.indexOf('__') === 0
+        for (var key in fixed_group) {
+            if (fixed_group.hasOwnProperty(key)) {
+                if (!(key.indexOf('__') === 0
                     || _.contains(grouping_fields, key)
-                    || (key === count_key)) {
-                return;
+                    || (key === count_key))) {
+                    aggregates[key] = fixed_group[key] || 0;
+                }
             }
-            aggregates[key] = value || 0;
-        });
+        }
 
         this.model = new Model(
             model, fixed_group.__context, fixed_group.__domain);
