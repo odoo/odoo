@@ -3690,6 +3690,9 @@ QUnit.module('basic_fields', {
                     '</sheet>' +
                 '</form>',
             res_id: 1,
+            viewOptions: {
+                disable_autofocus: true,
+            },
         });
 
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_red').length, 1,
