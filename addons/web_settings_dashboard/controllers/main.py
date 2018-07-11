@@ -53,6 +53,12 @@ class WebSettingsDashboard(http.Controller):
         enterprise_users = request.env['res.users'].search_count([("login_date", ">=", fields.Datetime.to_string(limit_date)), ('share', '=', False)])
 
         expiration_date = request.env['ir.config_parameter'].sudo().get_param('database.expiration_date')
+
+        # We assume that if there's at least one module with demo data active, then the db was
+        # initialized with demo=True or it has been force-activated by the `Load demo data` button
+        # in the settings dashboard.
+        demo_active = bool(request.env['ir.module.module'].search_count([('demo', '=', True)]))
+
         return {
             'apps': {
                 'installed_apps': installed_apps,
@@ -68,6 +74,7 @@ class WebSettingsDashboard(http.Controller):
                 'server_version': release.version,
                 'expiration_date': expiration_date,
                 'debug': request.debug,
+                'demo_active': demo_active,
             },
             'company': {
                 'company_id': request.env.user.company_id.id,
