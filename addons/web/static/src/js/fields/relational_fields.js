@@ -108,7 +108,12 @@ var FieldMany2One = AbstractField.extend({
     }),
     AUTOCOMPLETE_DELAY: 200,
 
-    init: function () {
+    /**
+     * @override
+     * @param {boolean} [options.noOpen=false] if true, there is no external
+     *   button to open the related record in a dialog
+     */
+    init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
         this.limit = 7;
         this.orderer = new concurrency.DropMisordered();
@@ -121,6 +126,7 @@ var FieldMany2One = AbstractField.extend({
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
+        this.noOpen = ('noOpen' in options || {}) ? options.noOpen : this.nodeOptions.no_open;
         this.m2o_value = this._formatValue(this.value);
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
@@ -340,7 +346,7 @@ var FieldMany2One = AbstractField.extend({
     _renderReadonly: function () {
         var value = _.escape((this.m2o_value || "").trim()).split("\n").join("<br/>");
         this.$el.html(value);
-        if (!this.nodeOptions.no_open && this.value) {
+        if (!this.noOpen && this.value) {
             this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
             this.$el.addClass('o_form_uri');
         }
@@ -481,7 +487,7 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _updateExternalButton: function () {
-        var has_external_button = !this.nodeOptions.no_open && !this.floating && this.isSet();
+        var has_external_button = !this.noOpen && !this.floating && this.isSet();
         this.$external_button.toggle(has_external_button);
         this.$el.toggleClass('o_with_button', has_external_button); // Should not be required anymore but kept for compatibility
     },
@@ -497,7 +503,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _onClick: function (event) {
         var self = this;
-        if (this.mode === 'readonly' && !this.nodeOptions.no_open) {
+        if (this.mode === 'readonly' && !this.noOpen) {
             event.preventDefault();
             event.stopPropagation();
             this._rpc({
@@ -1777,6 +1783,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
         this.many2one = new FieldMany2One(this, this.name, this.record, {
             mode: 'edit',
+            noOpen: true,
             viewType: this.viewType,
         });
         // to prevent the M2O to take the value of the M2M
@@ -1784,7 +1791,6 @@ var FieldMany2ManyTags = AbstractField.extend({
         // to prevent the M2O to take the relational values of the M2M
         this.many2one.m2o_value = '';
 
-        this.many2one.nodeOptions.no_open = true;
         this.many2one._getSearchBlacklist = function () {
             return self.value.res_ids;
         };
