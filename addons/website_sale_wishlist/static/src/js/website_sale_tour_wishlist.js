@@ -89,7 +89,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add item to cart",
-            trigger: 'a.o_wish_add:first',
+            trigger: 'a.o_wish_add:eq(1)',
         },
         {
             content: "check that cart contains 1 item",
@@ -107,7 +107,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add last item to cart",
-            trigger: 'a.o_wish_add:first',
+            trigger: 'a.o_wish_add:eq(1)',
         },
         {
             content: "check that user is redirect - wishlist is empty",

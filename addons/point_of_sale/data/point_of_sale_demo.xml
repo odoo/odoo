@@ -23,18 +23,19 @@
         </record>
 
         <!-- Resource: pos.category -->
-        <record id="storage_organizer" model="pos.category">
-          <field name="name">Storage and Organizers</field>
-          <field name="image" type="base64" file="point_of_sale/static/img/storage.png"/>
+        <record id="pos_category_miscellaneous" model="pos.category">
+          <field name="name">Miscellaneous</field>
         </record>
-        <record id="partner_services" model="pos.category">
-          <field name="name">Partner Services</field>
-          <field name="image" type="base64" file="point_of_sale/static/img/partners/services.jpg"/>
+        <record id="pos_category_desks" model="pos.category">
+          <field name="name">Desks</field>
+        </record>
+        <record id="pos_category_chairs" model="pos.category">
+          <field name="name">Chairs</field>
         </record>
 
         <!-- Resource: product.product -->
         <record id="stock.product_cable_management_box" model="product.product">
-          <field name="pos_categ_id" ref="point_of_sale.storage_organizer"/>
+          <field name="pos_categ_id" ref="point_of_sale.pos_category_miscellaneous"/>
         </record>
         <record id="wall_shelf" model="product.product">
           <field name="available_in_pos">True</field>
@@ -46,7 +47,7 @@
           <field name="barcode">2100002000003</field>
           <field name="taxes_id">False</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/wall_shelf_unit.png"/>
@@ -59,7 +60,7 @@
           <field name="type">product</field>
           <field name="taxes_id">False</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="to_weight">True</field>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
@@ -74,7 +75,7 @@
           <field name="type">product</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/letter_tray.png"/>
@@ -88,7 +89,7 @@
           <field name="barcode">2300001000008</field>
           <field name="type">product</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/desk_organizer.png"/>
@@ -104,7 +105,7 @@
           <field name="barcode">2301000000006</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/magnetic_board.png"/>
@@ -117,7 +118,7 @@
           <field name="type">product</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/monitor_stand.png"/>
@@ -130,7 +131,7 @@
           <field name="type">product</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/desk_pad.png"/>
@@ -156,7 +157,7 @@
           <field name="type">product</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/led_lamp.png"/>
@@ -171,7 +172,7 @@
           <field name="to_weight">True</field>
           <field name="barcode">2100001000004</field>
           <field name="categ_id" ref="product.product_category_5"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/newspaper_stand.png"/>
@@ -184,16 +185,114 @@
           <field name="default_code">CONS_0001</field>
           <field name="to_weight">True</field>
           <field name="categ_id" ref="product.product_category_consumable"/>
-          <field name="pos_categ_id" ref="storage_organizer"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
           <field name="uom_id" ref="uom.product_uom_kgm" />
           <field name="uom_po_id" ref="uom.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/whiteboard_pen.png"/>
         </record>
 
-
-        <!-- The electronic products shouldn't be present in the point of sale for the demo -->
-
-        <record id="product.product_delivery_02" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
-        <record id="product.product_delivery_01" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
-        <record id="product.product_order_01" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_1" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_2" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_delivery_01" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_chairs"/>
+        </record>
+        <record id="product.product_delivery_02" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_order_01" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_3" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_desks"/>
+        </record>
+        <record id="product.product_product_4_product_template" model="product.template">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_desks"/>
+        </record>
+        <record id="product.product_product_5" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_desks"/>
+        </record>
+        <record id="product.product_product_6" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_7" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_8" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_desks"/>
+        </record>
+        <record id="product.product_product_9" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_10" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_11" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_chairs"/>
+        </record>
+        <record id="product.product_product_11b" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_chairs"/>
+        </record>
+        <record id="product.product_product_12" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_chairs"/>
+        </record>
+        <record id="product.product_product_13" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_desks"/>
+        </record>
+        <record id="product.product_product_16" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_20" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_22" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_24" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_25" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.product_product_27" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.consu_delivery_03" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_desks"/>
+        </record>
+        <record id="product.consu_delivery_02" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
+        <record id="product.consu_delivery_01" model="product.product">
+          <field name="available_in_pos" eval="True"/>
+          <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
+        </record>
 </odoo>

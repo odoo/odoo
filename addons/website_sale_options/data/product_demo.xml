@@ -3,10 +3,15 @@
     <data noupdate="1">
 
         <!-- add Warranty to ipad -->
+        <record id="product_attribute_category_duration" model="product.attribute.category">
+            <field name="name">Duration</field>
+            <field name="sequence">20</field>
+        </record>
 
         <record id="product_attribute_1" model="product.attribute">
             <field name="name">Duration</field>
             <field name="type">select</field>
+            <field name="category_id" ref="product_attribute_category_duration"/>
         </record>
         <record id="product_attribute_value_1" model="product.attribute.value">
             <field name="name">1 year</field>
