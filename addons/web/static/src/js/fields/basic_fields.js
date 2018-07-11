@@ -1759,7 +1759,7 @@ var StatInfo = AbstractField.extend({
      */
     _render: function () {
         var options = {
-            value: this.value || 0,
+            value: this._formatValue(this.value || 0),
         };
         if (! this.attrs.nolabel) {
             if (this.nodeOptions.label_field && this.recordData[this.nodeOptions.label_field]) {
