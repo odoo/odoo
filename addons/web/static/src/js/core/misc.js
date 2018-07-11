@@ -135,7 +135,11 @@ core.action_registry.add("reload", Reload);
  * Client action to go back home.
  */
 function Home (parent, action) {
-    var url = '/' + (window.location.search || '');
+    var url = '/';
+    if (window.location.pathname === '/web') { // redirect to backend
+        url += 'web'
+    }
+    url += (window.location.search || '');
     redirect(url, action && action.params && action.params.wait);
 }
 core.action_registry.add("home", Home);
