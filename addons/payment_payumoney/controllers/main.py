@@ -17,8 +17,6 @@ class PayuMoneyController(http.Controller):
         """ PayUmoney."""
         _logger.info(
             'PayUmoney: entering form_feedback with post data %s', pprint.pformat(post))
-        return_url = '/'
         if post:
             request.env['payment.transaction'].sudo().form_feedback(post, 'payumoney')
-            return_url = post.get('udf1')
-        return werkzeug.utils.redirect(return_url)
+        return werkzeug.utils.redirect('/payment/process')

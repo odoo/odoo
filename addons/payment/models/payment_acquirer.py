@@ -308,10 +308,7 @@ class PaymentAcquirer(models.Model):
 
         It contains
 
-         * form_acquirers: record set of acquirers based on a local form that
-                           sends customer to the acquirer website;
-         * s2s_acquirers: reset set of acquirers that send customer data to
-                          acquirer without redirecting to any other website;
+         * acquirers: record set of both form and s2s acquirers;
          * pms: record set of stored credit card data (aka payment.token)
                 connected to a given partner to allow customers to reuse them """
         if not company:
@@ -319,14 +316,13 @@ class PaymentAcquirer(models.Model):
         if not partner:
             partner = self.env.user.partner_id
         active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
-        form_acquirers = active_acquirers.filtered(lambda acq: acq.payment_flow == 'form' and acq.view_template_id)
-        s2s_acquirers = active_acquirers.filtered(lambda acq: acq.payment_flow == 's2s' and acq.registration_view_template_id)
+        acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
+                                                               (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
-            'form_acquirers': form_acquirers,
-            's2s_acquirers': s2s_acquirers,
+            'acquirers': acquirers,
             'pms': self.env['payment.token'].search([
                 ('partner_id', '=', partner.id),
-                ('acquirer_id', 'in', s2s_acquirers.ids)]),
+                ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)]),
         }
 
     @api.multi
@@ -571,7 +567,8 @@ class PaymentTransaction(models.Model):
         ('pending', 'Pending'),
         ('authorized', 'Authorized'),
         ('done', 'Done'),
-        ('cancel', 'Canceled')],
+        ('cancel', 'Canceled'),
+        ('error', 'Error'),],
         string='Status', copy=False, default='draft', required=True, readonly=True)
     state_message = fields.Text(string='Message', readonly=True,
                                 help='Field used to store error and/or validation messages for information')
@@ -598,6 +595,10 @@ class PaymentTransaction(models.Model):
     callback_res_id = fields.Integer('Callback Document ID', groups="base.group_system")
     callback_method = fields.Char('Callback Method', groups="base.group_system")
     callback_hash = fields.Char('Callback Hash', groups="base.group_system")
+
+    # Fields used for user redirection & payment post processing
+    return_url = fields.Char('Return URL after payment')
+    is_processed = fields.Boolean('Has the payment been post processed', default=False)
 
     # Fields used for payment.transaction traceability.
 
@@ -730,8 +731,6 @@ class PaymentTransaction(models.Model):
             raise ValidationError(_('Only draft/authorized transaction can be posted.'))
 
         self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._reconcile_after_transaction_done()
-        self._log_payment_transaction_received()
 
     @api.multi
     def _reconcile_after_transaction_done(self):
@@ -767,6 +766,39 @@ class PaymentTransaction(models.Model):
 
         self.write({'state': 'cancel', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
         self._log_payment_transaction_received()
+
+    @api.multi
+    def _set_transaction_error(self, msg):
+        '''Move the transaction to the error state (Third party returning error e.g. Paypal).'''
+        if any(trans.state != 'draft' for trans in self):
+            raise ValidationError(_('Only draft transaction can be processed.'))
+
+        self.write({
+            'state': 'error',
+            'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'state_message': msg,
+        })
+
+    @api.multi
+    def _post_process_after_done(self):
+        self._reconcile_after_transaction_done()
+        self._log_payment_transaction_received()
+        self.write({'is_processed': True})
+        return True
+
+    @api.multi
+    def _cron_post_process_after_done(self):
+        if not self:
+            # we retrieve all the payment tx that need to be post processed
+            self = self.search([('state', '=', 'done'),
+                                ('is_processed', '=', False)
+                            ])
+        for tx in self:
+            try:
+                tx._post_process_after_done()
+                self.env.cr.commit()
+            except Exception as e:
+                _logger.error("Transaction post processing failed, reason \"%s\"", e)
 
     @api.model
     def _compute_reference_prefix(self, values):
@@ -917,10 +949,6 @@ class PaymentTransaction(models.Model):
         if hasattr(self, feedback_method_name):
             return getattr(tx, feedback_method_name)(data)
 
-        return True
-
-    @api.multi
-    def _post_process_after_done(self, **kwargs):
         return True
 
     # --------------------------------------------------
