@@ -69,7 +69,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "check reward product",
-            trigger: '.reward_product:contains("10.0 % discount on total amount")',
+            trigger: '.reward_product:contains("10.0% discount on total amount")',
             run: function () {}, // it's a check
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
