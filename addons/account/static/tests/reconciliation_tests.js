@@ -1,6 +1,14 @@
 odoo.define('account.reconciliation_tests.data', function () {
 "use strict";
 
+/*
+ * Debug tip:
+ * To be able to "see" the test in the browser:
+ *       var $body = $('body');
+ *       $body.addClass('debug');
+ *       clientAction.appendTo($body);
+ */
+
 var Datas = {};
 
 var db = {
@@ -1487,6 +1495,195 @@ QUnit.module('account', {
         clientAction.$('.js_load_more').click();
         assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 11, "should load the last record");
         assert.strictEqual(clientAction.$('.js_load_more:visible').length, 0, "should hide the load more button");
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation: Payment < inv1 + inv2(partial)', function (assert) {
+        assert.expect(4);
+
+        /*
+         * One payment: $1175
+         * Two Invoices
+         * The first invoice will be fully reconciled $650
+         * The second invoice will be partially paid with the rest of the payment $999
+         */
+
+        // modify the second line that is already in db to put it at $999
+        var indexModif = _.findIndex(this.params.mv_lines['[5,"",0,6]'], function (line) {return line.id === 112});
+        this.params.mv_lines['[5,"",0,6]'][indexModif] =
+            {account_type: "receivable", amount_currency_str: "", currency_id: false, date_maturity: "2017-02-07", date: "2017-01-08",
+             total_amount_str: "$ 999.00", partner_id: 8, account_name: "101200 Account Receivable", name: "INV/2017/0003",
+             partner_name: "Agrolait", total_amount_currency_str: "", id: 112, credit: 0.0, journal_id: [1, "Customer Invoices"],
+             amount_str: "$ 999.00", debit: 999.0, account_code: "101200", ref: "", already_paid: false};
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'process_reconciliations') {
+                    assert.deepEqual(args.args,
+                        [
+                            [5], // Id of the bank statement line
+
+                            [{counterpart_aml_dicts:
+                                [{name:"INV/2017/0002",
+                                  debit: 0,
+                                  credit: 650,
+                                  counterpart_aml_id: 109},
+
+                                 {name: "INV/2017/0003",
+                                  debit: 0,
+                                  credit: 525,
+                                  counterpart_aml_id: 112}],
+
+                              payment_aml_ids: [],
+                              partner_id: 8,
+                              new_aml_dicts: []}]
+                        ], "should call process_reconciliations with partial reconcile values");
+                }
+                return this._super(route, args);
+            },
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+        clientAction.appendTo($('#qunit-fixture'));
+
+        // The first reconciliation "line" is where it happens
+        var widget = clientAction.widgets[0];
+
+        // Add first invoice to reconcile fully
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.notOk( widget.$('.cell_right .line_info_button').length,
+            "should not display the partial reconciliation alert");
+
+        // Add second invoice to reconcile partially
+        widget.$('.match .cell_account_code:first').trigger('click');
+        var $reconciliationAlert = widget.$('.cell_right .line_info_button');
+
+        assert.ok($reconciliationAlert.length,
+            "should display the partial reconciliation alert");
+
+        $reconciliationAlert.click();
+
+        var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
+
+        assert.equal($buttonReconcile.length, 1,
+            'The reconcile button must be visible');
+
+        $buttonReconcile.click();
+
+        clientAction.destroy();
+    });
+
+    QUnit.test('Reconciliation: payment and 2 partials', function (assert) {
+        assert.expect(6);
+
+        /*
+         * One payment: $1175
+         * Two Invoices as Inv1 = 1200; Inv2 = 1200:
+         * Payment < Inv1 AND Payment < Inv2
+         * No partial reconcile is possible, as a write-off of 1225 is necessary
+         */
+
+        // modify the invoice line to have their amount > payment
+        var indexInv1 = _.findIndex(this.params.mv_lines['[5,"",0,6]'], function (line) {return line.id === 109});
+        this.params.mv_lines['[5,"",0,6]'][indexInv1] =
+            {account_type: "receivable", amount_currency_str: "", currency_id: false, date_maturity: "2017-02-07", date: "2017-01-08",
+             total_amount_str: "$ 1200.00", partner_id: 8, account_name: "101200 Account Receivable", name: "INV/2017/0002", partner_name: "Agrolait",
+             total_amount_currency_str: "", id: 109, credit: 0.0, journal_id: [1, "Customer Invoices"], amount_str: "$ 1200.00", debit: 1200.0,
+             account_code: "101200", ref: "", already_paid: false};
+
+        var indexInv2 = _.findIndex(this.params.mv_lines['[5,"",0,6]'], function (line) {return line.id === 112});
+        this.params.mv_lines['[5,"",0,6]'][indexInv2] =
+            {account_type: "receivable", amount_currency_str: "", currency_id: false, date_maturity: "2017-02-07", date: "2017-01-08",
+             total_amount_str: "$ 1200.00", partner_id: 8, account_name: "101200 Account Receivable", name: "INV/2017/0003",
+             partner_name: "Agrolait", total_amount_currency_str: "", id: 112, credit: 0.0, journal_id: [1, "Customer Invoices"],
+             amount_str: "$ 1200.00", debit: 1200.0, account_code: "101200", ref: "", already_paid: false};
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'process_reconciliations') {
+                    assert.deepEqual(args.args,
+                        [
+                            [5], // Id of the bank statement line
+
+                            [{counterpart_aml_dicts:
+                                [{name:"INV/2017/0002",
+                                  debit: 0,
+                                  credit: 1200,
+                                  counterpart_aml_id: 109},
+
+                                 {name: "INV/2017/0003",
+                                  debit: 0,
+                                  credit: 1200,
+                                  counterpart_aml_id: 112}],
+
+                              payment_aml_ids: [],
+                              partner_id: 8,
+                              new_aml_dicts: [
+                                {account_id: 282,
+                                 credit: 0,
+                                 debit: 1225,
+                                 name: 'SAJ/2014/002 and SAJ/2014/003',
+                                }
+                              ]}]
+                        ], "should call process_reconciliations with new aml dict reconcile values");
+                }
+                return this._super(route, args);
+            },
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+        clientAction.appendTo($('#qunit-fixture'));
+
+        // The first reconciliation "line" is where it happens
+        var widget = clientAction.widgets[0];
+
+        // Add first invoice
+        // There should be the opportunity to reconcile partially
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.ok(widget.$('.cell_right .line_info_button').length,
+            "should display the partial reconciliation alert");
+
+        // Add second invoice
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.notOk(widget.$('.cell_right .line_info_button').length,
+            "should not display the partial reconciliation alert");
+
+        var writeOffCreate = widget.$('div.create');
+
+        assert.equal(writeOffCreate.length, 1,
+            'A write-off creation should be present');
+
+        assert.equal(writeOffCreate.find('input[name=amount]').val(), -1225,
+            'The right amount should be proposed for the write-off');
+
+        writeOffCreate.find('.create_account_id input.ui-autocomplete-input').click();
+        $('ul.ui-autocomplete li a:first').click(); // select first account to do the write off in
+
+        var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
+
+        assert.equal($buttonReconcile.length, 1,
+            'The reconcile button must be visible');
+
+        $buttonReconcile.click();
 
         clientAction.destroy();
     });
