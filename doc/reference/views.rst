@@ -1363,13 +1363,18 @@ There are 5 possible type of tags in a dashboard view:
         A help message to dipslay in a tooltip (equivalent of help for a field in python)
 
     - ``measure`` (optional)
-        This attribute is the name of a field describing the measure that has to be used 
+        This attribute is the name of a field describing the measure that has to be used
         in the graph and pivot views when clicking on the aggregate.
         The special value __count__ can be used to use the count measure.
 
         .. code-block:: xml
 
           <aggregate name="total_ojects" string="Total Objects" field="id" group_operator="count" measure="__count__"/>
+
+    - ``clickable`` (optional)
+        A boolean indicating if this aggregate should be clickable or not (default to true).
+        Clicking on a clickable aggregate will change the measures used by the subviews
+        and add the value of the domain attribute (if any) to the search view.
 
 ``formula``
     declares a derived value.  Formulas are values computed from aggregates.
