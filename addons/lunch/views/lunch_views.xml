@@ -477,7 +477,7 @@
                         <separator string='Select your order'/>
                         <field name='order_line_ids'>
                             <tree string='List' editable='bottom'>
-                                <field name='product_id'/>
+                                <field name='product_id' context="{'lunch_date': parent.date}"/>
                                 <field name='note' />
                                 <field name='price'/>
                                 <field name='supplier' invisible="1"/>
@@ -485,7 +485,7 @@
                             </tree>
                             <form string='Lunch Order Form'>
                                 <group>
-                                    <field name='product_id'/>
+                                    <field name='product_id' context="{'lunch_date': parent.date}"/>
                                     <field name='note' />
                                     <field name='price'/>
                                 </group>
@@ -687,6 +687,18 @@
                                 <field name="sunday"/>
                             </group>
                         </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="display" invisible="True"/>
+                        </group>
+                        <div class="oe_grey" attrs="{'invisible': ['|', ('partner_id', '=', False), ('display', '=', True)]}">
+                            Products from this vendor can not be order at the moment.
+                        </div>
+                        <div class="oe_grey" attrs="{'invisible': ['|', ('partner_id', '=', False), ('display', '=', False)]}">
+                            Products from this vendor can be order at the moment.
+                        </div>
                     </group>
                     <group string='Message'>
                         <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>

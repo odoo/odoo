@@ -9,6 +9,7 @@ import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons import decimal_precision as dp
+from odoo.osv import expression
 
 
 class LunchOrder(models.Model):
@@ -164,7 +165,8 @@ class LunchOrderLine(models.Model):
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
-    product_id = fields.Many2one('lunch.product', 'Product', required=True)
+    product_id = fields.Many2one('lunch.product', 'Product', required=True,
+                                 domain=[('available', '=', True)])
     category_id = fields.Many2one('lunch.product.category', string='Product Category',
                                   related='product_id.category_id', readonly=True, store=True)
     date = fields.Date(string='Date', related='order_id.date', readonly=True, store=True)
@@ -182,6 +184,28 @@ class LunchOrderLine(models.Model):
                              'Status', readonly=True, index=True, default='new')
     cashmove = fields.One2many('lunch.cashmove', 'order_id', 'Cash Move')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+
+    def _check_supplier_availibility(self):
+        products = self.mapped('product_id')
+        if not all(product.available for product in products):
+            supplier_name = ", ".join(product.supplier.display_name for product in products if not product.available)
+            raise ValidationError(_("Vendor(s) '%s' is not available today") % supplier_name)
+
+    @api.model
+    def create(self, vals):
+        """ Override as an onchange would not apply if using the history buttons """
+        res = super(LunchOrderLine, self).create(vals)
+        res.with_context(lunch_date=res.order_id.date)._check_supplier_availibility()
+        return res
+
+    @api.model
+    def write(self, vals):
+        """ Override as an onchange would not apply if using the history buttons """
+        res = super(LunchOrderLine, self).write(vals)
+        if vals.get('product_id'):
+            for line in self:
+                line.with_context(lunch_date=line.order_id.date)._check_supplier_availibility()
+        return res
 
     @api.one
     def order(self):
@@ -236,6 +260,41 @@ class LunchProduct(models.Model):
     price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
     active = fields.Boolean(default=True)
+    available = fields.Boolean(compute='_get_available_product', search='_search_available_products')
+
+    @api.depends('supplier')
+    def _get_available_product(self):
+        for product in self:
+            if not product.supplier:
+                product.available = True
+            else:
+                alerts = self.env['lunch.alert'].search([
+                    ('partner_id', '=', self.supplier.id)
+                ])
+                if alerts and not any(alert.display for alert in alerts):
+                    # every alert is not available
+                    product.available = False
+                else:
+                    # no alert for the supplier or at least one is not available
+                    product.available = True
+
+    def _search_available_products(self, operator, value):
+        alerts = self.env['lunch.alert'].search([])
+        supplier_w_alerts = alerts.mapped('partner_id')
+        available_suppliers = alerts.filtered(lambda a: a.display).mapped('partner_id')
+        available_products = self.search([
+            '|',
+                ('supplier', 'not in', supplier_w_alerts.ids),
+                ('supplier', 'in', available_suppliers.ids)
+        ])
+
+        if (operator in expression.NEGATIVE_TERM_OPERATORS and value) or \
+           (operator not in expression.NEGATIVE_TERM_OPERATORS and not value):
+            # e.g. (available = False) or (available != True)
+            return [('id', 'not in', available_products.ids)]
+        else:
+            # e.g. (available = True) or (available != False)
+            return [('id', 'in', available_products.ids)]
 
 
 class LunchProductCategory(models.Model):
@@ -270,6 +329,7 @@ class LunchAlert(models.Model):
     given day, weekly or daily. The alert is displayed from start to end hour. """
     _name = 'lunch.alert'
     _description = 'Lunch Alert'
+    _rec_name = 'message'
 
     display = fields.Boolean(compute='_compute_display_get')
     message = fields.Text('Message', required=True)
@@ -277,6 +337,8 @@ class LunchAlert(models.Model):
                                    ('week', 'Every Week'),
                                    ('days', 'Every Day')],
                                   string='Recurrence', required=True, index=True, default='specific')
+    partner_id = fields.Many2one('res.partner', string="Vendor",
+                                 help="If specified, the selected vendor can be ordered only on selected days")
     specific_day = fields.Date('Day', default=fields.Date.context_today)
     monday = fields.Boolean('Monday')
     tuesday = fields.Boolean('Tuesday')
@@ -293,7 +355,8 @@ class LunchAlert(models.Model):
     def name_get(self):
         return [(alert.id, '%s %s' % (_('Alert'), '#%d' % alert.id)) for alert in self]
 
-    @api.one
+    @api.depends('alert_type', 'specific_day', 'monday', 'tuesday', 'thursday',
+                 'friday', 'saturday', 'sunday', 'start_hour', 'end_hour')
     def _compute_display_get(self):
         """
         This method check if the alert can be displayed today
@@ -302,7 +365,6 @@ class LunchAlert(models.Model):
         if alert type is day : True
         return : Message if can_display_alert is True else False
         """
-
         days_codes = {'0': 'sunday',
                       '1': 'monday',
                       '2': 'tuesday',
@@ -310,22 +372,32 @@ class LunchAlert(models.Model):
                       '4': 'thursday',
                       '5': 'friday',
                       '6': 'saturday'}
-        can_display_alert = {
-            'specific': (str(self.specific_day) == fields.Date.context_today(self)),
-            'week': self[days_codes[datetime.datetime.now().strftime('%w')]],
-            'days': True
-        }
+        fullday = False
+        now = datetime.datetime.now()
+        if self.env.context.get('lunch_date'):
+            # lunch_date is a fields.Date -> 00:00:00
+            lunch_date = fields.Datetime.from_string(self.env.context['lunch_date'])
+            # if lunch_date is in the future, planned lunch, ignore hours
+            fullday = lunch_date > now
+            now = max(lunch_date, now)
+        mynow = fields.Datetime.context_timestamp(self, now)
 
-        if can_display_alert[self.alert_type]:
-            mynow = fields.Datetime.context_timestamp(self, datetime.datetime.now())
-            hour_to = int(self.end_hour)
-            min_to = int((self.end_hour - hour_to) * 60)
-            to_alert = datetime.time(hour_to, min_to)
-            hour_from = int(self.start_hour)
-            min_from = int((self.start_hour - hour_from) * 60)
-            from_alert = datetime.time(hour_from, min_from)
+        for alert in self:
+            can_display_alert = {
+                'specific': (str(alert.specific_day) == fields.Date.to_string(mynow)),
+                'week': alert[days_codes[mynow.strftime('%w')]],
+                'days': True
+            }
 
-            if from_alert <= mynow.time() <= to_alert:
-                self.display = True
-            else:
-                self.display = False
+            if can_display_alert[alert.alert_type]:
+                hour_to = int(alert.end_hour)
+                min_to = int((alert.end_hour - hour_to) * 60)
+                to_alert = datetime.time(hour_to, min_to)
+                hour_from = int(alert.start_hour)
+                min_from = int((alert.start_hour - hour_from) * 60)
+                from_alert = datetime.time(hour_from, min_from)
+
+                if fullday or (from_alert <= mynow.time() <= to_alert):
+                    alert.display = True
+                else:
+                    alert.display = False
