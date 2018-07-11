@@ -830,7 +830,7 @@ element is ``<pivot>`` which can take the following attributes:
   The name of the measure and the order (asc or desc) to use as default order
   in the view.
 
-  .. code-block:: xml 
+  .. code-block:: xml
 
      <pivot default_order="foo asc">
         <field name="foo" type="measure"/>
@@ -1311,6 +1311,15 @@ There are 5 possible type of tags in a dashboard view:
 
     - ``help`` (optional)
         A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+    - ``measure`` (optional)
+        This attribute is the name of a field describing the measure that has to be used 
+        in the graph and pivot views when clicking on the aggregate.
+        The special value __count__ can be used to use the count measure.
+
+        .. code-block:: xml
+
+          <aggregate name="total_ojects" string="Total Objects" field="id" group_operator="count" measure="__count__"/>
 
 ``formula``
     declares a derived value.  Formulas are values computed from aggregates.
