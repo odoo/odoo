@@ -49,7 +49,7 @@ class StockPackageLevel(models.Model):
                         if corresponding_ml:
                             corresponding_ml[0].qty_done = corresponding_ml[0].qty_done + quant.quantity
                         else:
-                            corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)
+                            corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)[:1]
                             self.env['stock.move.line'].create({
                                 'location_id': package_level.picking_id.location_id.id,
                                 'location_dest_id': package_level.picking_id.location_dest_id.id,
