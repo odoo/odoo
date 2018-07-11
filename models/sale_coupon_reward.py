@@ -65,11 +65,11 @@ class SaleCouponReward(models.Model):
                 if reward.discount_type == 'percentage':
                     reward_percentage = str(reward.discount_percentage)
                     if reward.discount_apply_on == 'on_order':
-                        reward_string = _("%s %% discount on total amount" % (reward_percentage))
+                        reward_string = _("%s%% discount on total amount" % (reward_percentage))
                     elif reward.discount_apply_on == 'specific_product':
-                        reward_string = _("%s %% discount on %s" % (reward_percentage, reward.discount_specific_product_id.name))
+                        reward_string = _("%s%% discount on %s" % (reward_percentage, reward.discount_specific_product_id.name))
                     elif reward.discount_apply_on == 'cheapest_product':
-                        reward_string = _("%s %% discount on cheapest product" % (reward_percentage))
+                        reward_string = _("%s%% discount on cheapest product" % (reward_percentage))
                 elif reward.discount_type == 'fixed_amount':
                     program = self.env['sale.coupon.program'].search([('reward_id', '=', reward.id)])
                     reward_string = _("%s %s discount on total amount" % (str(reward.discount_fixed_amount), program.currency_id.name))
