@@ -666,10 +666,10 @@ registry.colorpicker = SnippetOption.extend({
                     var $palette_def = $tabs.find('div[data-name="' + self.data.paletteDefault + '"]');
                     var pos = $tabs.find('> div').index($palette_def);
 
-                    $toggles.children('li').eq(pos).addClass('active');
+                    $toggles.children('li').eq(pos).find('a').addClass('active');
                     $palette_def.addClass('active');
                 } else {
-                    $toggles.find('li').first().addClass('active');
+                    $toggles.find('li').first().find('a').addClass('active');
                     $tabs.find('div').first().addClass('active');
                 }
 
