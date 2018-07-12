@@ -116,3 +116,158 @@ class TestOnchangeProductId(TransactionCase):
         so.date_order = '2017-12-30'
         order_line.product_id_change()
         self.assertEqual(order_line.price_unit, 50, "Second date pricelist rule not applied")
+
+    def test_pricelist_uom_discount(self):
+        """ Test prices and discounts are correctly applied based on date and uom"""
+        computer_case = self.env.ref('product.product_product_16')
+        computer_case.list_price = 100
+        partner = self.res_partner_model.create(dict(name="George"))
+        categ_unit_id = self.ref('product.product_uom_unit')
+        goup_discount_id = self.ref('sale.group_discount_per_so_line')
+        self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
+        new_uom = self.env['product.uom'].create({
+            'name': '10 units',
+            'factor_inv': 10,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+            'category_id': categ_unit_id
+        })
+        christmas_pricelist = self.env['product.pricelist'].create({
+            'name': 'Christmas pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'date_start': "2017-12-01",
+                'date_end': "2017-12-30",
+                'compute_price': 'percentage',
+                'base': 'list_price',
+                'percent_price': 10,
+                'applied_on': '3_global',
+                'name': 'Christmas discount'
+            })]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'date_order': '2017-12-20',
+            'pricelist_id': christmas_pricelist.id,
+        })
+
+        order_line = self.env['sale.order.line'].new({
+            'order_id': so.id,
+            'product_id': computer_case.id,
+        })
+
+        # force compute uom and prices
+        order_line.product_id_change()
+        order_line.product_uom_change()
+        order_line._onchange_discount()
+        self.assertEqual(order_line.price_subtotal, 90, "Christmas discount pricelist rule not applied")
+        self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
+        order_line.product_uom = new_uom
+        order_line.product_uom_change()
+        order_line._onchange_discount()
+        self.assertEqual(order_line.price_subtotal, 900, "Christmas discount pricelist rule not applied")
+        self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
+
+    def test_pricelist_based_on_other(self):
+        """ Test price and discount are correctly applied with a pricelist based on an other one"""
+        computer_case = self.env.ref('product.product_product_16')
+        computer_case.list_price = 100
+        partner = self.res_partner_model.create(dict(name="George"))
+        categ_unit_id = self.ref('product.product_uom_unit')
+        goup_discount_id = self.ref('sale.group_discount_per_so_line')
+        self.env.user.write({'groups_id': [(4, goup_discount_id, 0)]})
+
+        first_pricelist = self.env['product.pricelist'].create({
+            'name': 'First pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'percentage',
+                'base': 'list_price',
+                'percent_price': 10,
+                'applied_on': '3_global',
+                'name': 'First discount'
+            })]
+        })
+
+        second_pricelist = self.env['product.pricelist'].create({
+            'name': 'Second pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'formula',
+                'base': 'pricelist',
+                'base_pricelist_id': first_pricelist.id,
+                'price_discount': 10,
+                'applied_on': '3_global',
+                'name': 'Second discount'
+            })]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'date_order': '2018-07-11',
+            'pricelist_id': second_pricelist.id,
+        })
+
+        order_line = self.env['sale.order.line'].new({
+            'order_id': so.id,
+            'product_id': computer_case.id,
+        })
+
+        # force compute uom and prices
+        order_line.product_id_change()
+        order_line._onchange_discount()
+        self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
+        self.assertEqual(order_line.discount, 19, "Second discount not applied")
+
+    def test_pricelist_with_other_currency(self):
+        """ Test prices are correctly applied with a pricelist with an other currency"""
+        computer_case = self.env.ref('product.product_product_16')
+        computer_case.list_price = 100
+        partner = self.res_partner_model.create(dict(name="George"))
+        categ_unit_id = self.ref('product.product_uom_unit')
+        other_currency = self.env['res.currency'].create({'name': 'other currency',
+            'symbol': 'other'})
+        self.env['res.currency.rate'].create({'name': '2018-07-11',
+            'rate': 2.0,
+            'currency_id': other_currency.id,
+            'company_id': self.env.user.company_id.id})
+        new_uom = self.env['product.uom'].create({
+            'name': '10 units',
+            'factor_inv': 10,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+            'category_id': categ_unit_id
+        })
+
+        # This pricelist doesn't show the discount
+        first_pricelist = self.env['product.pricelist'].create({
+            'name': 'First pricelist',
+            'currency_id': other_currency.id,
+            'discount_policy': 'with_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'percentage',
+                'base': 'list_price',
+                'percent_price': 10,
+                'applied_on': '3_global',
+                'name': 'First discount'
+            })]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'date_order': '2018-07-12',
+            'pricelist_id': first_pricelist.id,
+        })
+
+        order_line = self.env['sale.order.line'].new({
+            'order_id': so.id,
+            'product_id': computer_case.id,
+        })
+
+        # force compute uom and prices
+        order_line.product_id_change()
+        self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
+        order_line.product_uom = new_uom
+        order_line.product_uom_change()
+        self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
