@@ -119,11 +119,10 @@ var MrpBomReport = stock_report_generic.extend({
             return $(el).data('id');
         });
         framework.blockUI();
-        var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id;
+        var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id + '&report_type=' + this.given_context.report_type;
         if (! $(ev.currentTarget).hasClass('o_mrp_bom_print_unfolded')) {
             reportname += '&quantity=' + (this.given_context.searchQty || 1) +
-                          '&childs=' + JSON.stringify(childBomIDs) +
-                          '&report_type=' + this.given_context.report_type;
+                          '&childs=' + JSON.stringify(childBomIDs);
         }
         if (this.given_context.searchVariant) {
             reportname += '&variant=' + this.given_context.searchVariant;
