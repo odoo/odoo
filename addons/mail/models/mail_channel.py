@@ -20,9 +20,11 @@ _logger = logging.getLogger(__name__)
 
 class ChannelPartner(models.Model):
     _name = 'mail.channel.partner'
+    _inherit = ['mail.blacklist.mixin']
     _description = 'Listeners of a Channel'
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
+    _primary_email = ['partner_email']
 
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
     partner_email = fields.Char('Email', related='partner_id.email')
@@ -337,13 +339,15 @@ class Channel(models.Model):
 
     @api.multi
     def _notify_email_recipients(self, message, recipient_ids):
+        # Excluded Blacklisted
+        whitelist = self.env['res.partner'].sudo().search([('id', 'in', recipient_ids), ('is_blacklisted', '=', False)])
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
+                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in whitelist),
                 'recipient_ids': [],
             }
-        return super(Channel, self)._notify_email_recipients(message, recipient_ids)
+        return super(Channel, self)._notify_email_recipients(message, whitelist.ids)
 
     def _extract_moderation_values(self, message_type, **kwargs):
         """ This method is used to compute moderation status before the creation

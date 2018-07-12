@@ -50,7 +50,8 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
+    _primary_email = ['email_from']
 
     def _default_probability(self):
         stage_id = self._default_stage_id()
@@ -80,9 +81,6 @@ class Lead(models.Model):
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
     partner_name = fields.Char("Customer Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
-    opt_out = fields.Boolean(string='Opt-Out', oldname='optout',
-        help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
-             "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing.")
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")

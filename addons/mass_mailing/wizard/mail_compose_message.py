@@ -77,9 +77,9 @@ class MailComposeMessage(models.TransientModel):
                 }
                 if mail_values.get('body_html') and mass_mail_layout:
                     mail_values['body_html'] = mass_mail_layout.render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
-                # propagate exception state to stat when still-born
+                # propagate ignored state to stat when still-born
                 if mail_values.get('state') == 'cancel':
-                    stat_vals['exception'] = fields.Datetime.now()
+                    stat_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
                     'statistics_ids': [(0, 0, stat_vals)],

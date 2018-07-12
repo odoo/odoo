@@ -12,20 +12,68 @@
             parent="mass_mailing_menu_root" sequence="100"/>
 
         <!--  MAILING CONTACT -->
-
-        <!-- Custom reports (aka filters) -->
-        <record id="filter_contact_subscription" model="ir.filters">
-            <field name="name">List Subscription</field>
-            <field name="model_id">mail.mass_mailing.contact</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['create_date:month']}</field>
+        <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_view_form">
+            <field name="name">mail.mass_mailing.list_contact_rel.view.form</field>
+            <field name="model">mail.mass_mailing.list_contact_rel</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form string="Mailing List contacts">
+                    <sheet>
+                        <group>
+                            <field name="list_id"/>
+                            <field name="is_blacklisted" invisible="1"/>
+                            <label for="contact_id" class="oe_inline"/>
+                            <div class="o_row o_row_readonly">
+                                <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                                    aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}"></i>
+                                <field name="contact_id"/>
+                            </div>
+                            <field name="unsubscription_date" readonly="1"/>
+                            <field name="opt_out"/>
+                            <field name="message_bounce" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
         </record>
-        <record id="filter_contact_unsubscription" model="ir.filters">
-            <field name="name">List Unsubscription</field>
-            <field name="model_id">mail.mass_mailing.contact</field>
-            <field name="user_id" eval="False"/>
-            <field name="domain">[('opt_out','=',True)]</field>
-            <field name="context">{'group_by': ['unsubscription_date:month']}</field>
+
+        <record model="ir.ui.view" id="mail_mass_mailing_list_contact_rel_list_contact_view_tree">
+            <field name="name">mail.mass_mailing.list_contact_rel.list_contact.view.tree</field>
+            <field name="model">mail.mass_mailing.list_contact_rel</field>
+            <field name="arch" type="xml">
+                <tree string="Mailing Lists">
+                    <field name="contact_id"/>
+                    <field name="unsubscription_date"/>
+                    <field name="opt_out"/>
+                    <field name="message_bounce"/>
+                    <field name="is_blacklisted"/>
+                    <button name="action_open_mailing_list_contact" string="Open Contact" type="object" icon="fa-user"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mail_mass_mailing_list_contact_view_search">
+            <field name="name">mail.mass_mailing.list_contact_rel.view.search</field>
+            <field name="model">mail.mass_mailing.list_contact_rel</field>
+            <field name="arch" type="xml">
+               <search string="Mailing List Contacts">
+                    <field name="contact_id"/>
+                    <field name="opt_out"/>
+                    <field name="list_id"/>
+                    <separator/>
+                    <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
+                    <separator/>
+                    <filter string="Exclude Blacklisted" name="not_blacklisted" domain="[('contact_id.is_blacklisted', '=', False)]"/>
+                    <separator/>
+                    <filter string="Valid Recipents" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False)]"/>
+                    <separator/>
+                    <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Creation Date" name="group_create_date"
+                            context="{'group_by': 'create_date'}"/>
+                    </group>
+                </search>
+            </field>
         </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
@@ -38,7 +86,8 @@
                     <field name="tag_ids"/>
                     <field name="list_ids"/>
                     <separator/>
-                    <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
+                    <filter string="Exclude Blacklisted" name="not_blacklisted" domain="[('is_blacklisted', '=', False)]"/>
+                    <separator/>
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
                     <group expand="0" string="Group By">
@@ -60,7 +109,7 @@
                     <field name="company_name"/>
                     <field name="email"/>
                     <field name="message_bounce"/>
-                    <field name="opt_out"/>
+                    <field name="is_blacklisted"/>
                 </tree>
             </field>
         </record>
@@ -126,24 +175,38 @@
                         </div>
                         <group>
                             <group>
-                                <field name="email"/>
+                                <field name="is_blacklisted" invisible="1"/>
+                                <label for="email" class="oe_inline"/>
+                                <div class="o_row o_row_readonly">
+                                    <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                                        aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}"></i>
+                                    <field name="email" widget="email"/>
+                                </div>
                                 <field name="title_id"/>
                                 <field name="company_name"/>
                                 <field name="country_id"/>
                             </group>
                             <group>
                                 <field name="create_date" readonly="1"/>
-                                <field name="unsubscription_date"/>
                                 <label for="message_bounce"/>
                                 <div class="o_row">
                                     <field name="message_bounce"/>
                                     <span> times</span>
                                 </div>
-                                <field name="opt_out"/>
                             </group>
                         </group>
-                        <field name="list_ids"/>
+                        <field name="subscription_list_ids">
+                            <tree editable="bottom">
+                               <field name="list_id"/>
+                               <field name="unsubscription_date"/>
+                               <field name="opt_out"/>
+                            </tree>
+                        </field>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -175,7 +238,7 @@
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
-            <field name="context">{'search_default_not_opt_out': 1}</field>
+            <field name="context">{'search_default_not_blacklisted': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a contact in your address book
@@ -187,11 +250,11 @@
 
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
             <field name="name">Recipients</field>
-            <field name="res_model">mail.mass_mailing.contact</field>
+            <field name="res_model">mail.mass_mailing.list_contact_rel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="domain">[('list_ids', 'in', [active_id])]</field>
-            <field name="context">{'search_default_not_opt_out': 1, 'default_list_ids': [(4,active_id)]}</field>
+            <field name="domain">[('list_id', 'in', [active_id])]</field>
+            <field name="context">{'search_default_valid_recipients': 1, 'default_list_id': active_id}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new recipient
@@ -211,6 +274,7 @@
                 <search string="Mailing Lists">
                     <field name="name"/>
                     <field name="create_date"/>
+                    <field name="is_public"/>
                     <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Creation Month" name="group_create_date"
@@ -228,6 +292,7 @@
                 <tree string="Mailing Lists">
                     <field name="name"/>
                     <field name="create_date"/>
+                    <field name="is_public"/>
                     <field name="contact_nbr"/>
                 </tree>
             </field>
@@ -256,6 +321,9 @@
                                 <field name="name" placeholder="e.g. Consumer Newsletter"/>
                             </h1>
                         </div>
+                        <group>
+                            <field name="is_public"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -275,6 +343,9 @@
                                 </h1>
                             </div>
                         </group>
+                    </group>
+                    <group>
+                        <field name="is_public"/>
                     </group>
                     <footer>
                         <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
@@ -416,7 +487,20 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">
+                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': [('ignored', '=', 0)]}">
+                        <p>
+                            <button class="btn-link"
+                                    name="%(action_view_mail_mail_statistics_mailing_list)d"
+                                    type="action"
+                                    context="{'search_default_filter_ignored': True}">
+                                <strong>
+                                    <field name="ignored" class="oe_inline"/>
+                                    email(s) have been ignored and will not be sent.
+                                </strong>
+                            </button>
+                        </p>
+                    </div>
+                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': ['|', ('scheduled', '=', 0), ('ignored','!=',0)]}">
                         <p>
                             <button class="btn-link"
                                     name="%(action_view_mail_mail_statistics_mailing_list)d"
@@ -505,8 +589,7 @@
                                 <field name="mailing_model_real" invisible="1"/>
                                 <field name="mailing_domain" widget="domain"
                                     attrs="{'invisible': [('mailing_model_name', '=', 'mail.mass_mailing.list')]}"
-                                    options="{'model': 'mailing_model_real'}"
-                                    context="{'search_default_not_opt_out':1}">
+                                    options="{'model': 'mailing_model_real'}">
                                 </field>
                                 <div attrs="{'invisible': [('mailing_model_name', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
