@@ -107,7 +107,6 @@ var KanbanColumn = Widget.extend({
                 revert: 0,
                 delay: 0,
                 items: '> .o_kanban_record:not(.o_updating)',
-                helper: 'clone',
                 cursor: 'move',
                 over: function () {
                     self.$el.addClass('o_kanban_hover');
