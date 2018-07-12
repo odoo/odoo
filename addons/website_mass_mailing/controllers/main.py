@@ -7,31 +7,10 @@ from odoo.addons.mass_mailing.controllers.main import MassMailController
 
 class MassMailController(MassMailController):
 
-    @route('/mail/mailing/<int:mailing_id>/unsubscribe', type='http', website=True, auth='public')
-    def mailing(self, mailing_id, email=None, res_id=None, **post):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
-        if mailing.exists():
-            if mailing.mailing_model_real == 'mail.mass_mailing.contact':
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
-                return request.render('website_mass_mailing.page_unsubscribe', {
-                    'contacts': contacts,
-                    'email': email,
-                    'mailing_id': mailing_id})
-            else:
-                super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
-                return request.render('website_mass_mailing.page_unsubscribed')
-
-    @route('/mail/mailing/unsubscribe', type='json', auth='none')
-    def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
-        if mailing.exists():
-            mailing.update_opt_out(email, opt_in_ids, False)
-            mailing.update_opt_out(email, opt_out_ids, True)
-
     @route('/website_mass_mailing/is_subscriber', type='json', website=True, auth="public")
     def is_subscriber(self, list_id, **post):
         email = None
-        if request.uid != request.website.user_id.id:
+        if not request.env.user._is_public():
             email = request.env.user.email
         elif request.session.get('mass_mailing_email'):
             email = request.session['mass_mailing_email']

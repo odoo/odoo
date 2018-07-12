@@ -72,10 +72,11 @@
             display: none!important;
         }
 
-        .o_row, .o_row > div {
-            display: inline-block;
+        .o_row:not(.o_row_readonly) {
+            &, & > div {
+                display: inline-block;
+            }
         }
-
     }
 
     .o_form_uri {

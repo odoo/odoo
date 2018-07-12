@@ -80,7 +80,13 @@
                                 <field name="contact_name"/>
                                 <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                             </div>
-                            <field name="email_from" widget="email"/>
+                            <field name="is_blacklisted" invisible="1"/>
+                            <label for="email_from" class="oe_inline"/>
+                            <div class="o_row o_row_readonly">
+                                <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                                    aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}"></i>
+                                <field name="email_from" widget="email"/>
+                            </div>
                             <field name="function"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile"/>
@@ -103,7 +109,6 @@
                         <page name="extra" string="Extra Info">
                             <group>
                                 <group string="Email">
-                                    <field name="opt_out"/>
                                     <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
                                 </group>
                                 <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
@@ -395,9 +400,10 @@
                     <separator />
                     <filter string="Current" name="current" domain="[('active', '=', True)]"/>
                     <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
-                    <filter string="Exclude Opt Out"
-                        name='not_opt_out' domain="[('opt_out', '=', False)]"
-                        help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                    <separator />
+                    <filter string="Exclude blacklisted"
+                        name='not_blacklisted' domain="[('is_blacklisted', '=', False)]"
+                        help="Leads that did ask to not receive mass mailing anymore"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                             domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -562,7 +568,6 @@
                                     </div>
                                     <field name="function"/>
                                     <field name="mobile"/>
-                                    <field name="opt_out"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
