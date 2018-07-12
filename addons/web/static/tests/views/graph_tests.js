@@ -132,11 +132,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('displaying line chart with only 1 data point', function (assert) {
-        assert.expect(2);
-
-        // this test makes sure the line chart does not crash when only one data
-        // point is displayed.  This was the case since a line cannot be drawn with
-        // only one point of reference.
+        assert.expect(1);
+         // this test makes sure the line chart does not crash when only one data
+        // point is displayed.
         var done = assert.async();
         this.data.foo.records = this.data.foo.records.slice(0,1);
         var graph = createView({
@@ -148,8 +146,7 @@ QUnit.module('Views', {
                 '</graph>',
         });
         return concurrency.delay(0).then(function () {
-            assert.ok(!graph.$('svg').length, "should not have a svg");
-            assert.ok(graph.$('.o_view_nocontent').length, "should have an error message");
+            assert.ok(graph.$('svg').length, "should have a svg");
             graph.destroy();
             done();
         });

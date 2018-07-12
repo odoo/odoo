@@ -1,10 +1,14 @@
 .o_graph {
-    .o_graph_svg_container {
-        direction: ltr#{"/*rtl:ignore*/"};
+    .o_graph_container {
         height: 100%;
         overflow: auto;
-        svg {
-            background-color: $o-view-background-color;
+        .o_graph_svg_container {
+            direction: ltr#{"/*rtl:ignore*/"};
+            height: 100%;
+            overflow: auto;
+            svg {
+                background-color: $o-view-background-color;
+            }
         }
     }
 }
