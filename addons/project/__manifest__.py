@@ -36,7 +36,6 @@
         'data/project_mail_template_data.xml',
         'data/project_data.xml',
     ],
-    'qweb': ['static/src/xml/project.xml'],
     'demo': ['data/project_demo.xml'],
     'test': [
     ],

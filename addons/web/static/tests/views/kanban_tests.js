@@ -37,6 +37,7 @@ QUnit.module('Views', {
                     date: {string: "Date Field", type: 'date'},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     image: {string: "Image", type: "binary"},
+                    displayed_image_id: {string: "cover", type: "many2one", relation: "ir.attachment"},
                 },
                 records: [
                     {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=='},
@@ -63,6 +64,18 @@ QUnit.module('Views', {
                 records: [
                     {id: 6, name: "gold", color: 2},
                     {id: 7, name: "silver", color: 5},
+                ]
+            },
+            'ir.attachment': {
+                fields: {
+                    mimetype: {type: "char"},
+                    name: {type: "char"},
+                    res_model: {type: "char"},
+                    res_id: {type: "integer"},
+                },
+                records: [
+                    {id: 1, name: "1.png", mimetype: 'image/png', res_model: 'partner', res_id: 1},
+                    {id: 2, name: "2.png", mimetype: 'image/png', res_model: 'partner', res_id: 2},
                 ]
             },
         };
@@ -5501,6 +5514,63 @@ QUnit.module('Views', {
         kanban.destroy();
         delete widgetRegistry.map.asyncWidget;
     });
+
+    QUnit.test('set cover image', async function (assert) {
+        assert.expect(6);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="name"/>' +
+                                '<div class="o_dropdown_kanban dropdown">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
+                                        '<span class="fa fa-bars fa-lg"/>' +
+                                    '</a>' +
+                                    '<div class="dropdown-menu" role="menu">' +
+                                        '<a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>'+
+                                    '</div>' +
+                                '</div>' +
+                                '<div>'+
+                                    '<field name="displayed_image_id" widget="attachment_image"/>'+
+                                '</div>'+
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                if (args.model === 'partner' && args.method === 'write') {
+                    assert.step(String(args.args[0][0]));
+                    return this._super(route, args);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var $firstRecord = kanban.$('.o_kanban_record:first');
+        testUtils.kanban.toggleRecordDropdown($firstRecord);
+        await testUtils.dom.click($firstRecord.find('[data-type=set_cover]'));
+        assert.containsNone($firstRecord, 'img', "Initially there is no image.");
+
+        await testUtils.dom.click($('.modal').find("img[data-id='1']"));
+        await testUtils.modal.clickButton('Select');
+        assert.containsOnce(kanban, 'img[data-src*="/web/image/1"]');
+
+        var $secondRecord = kanban.$('.o_kanban_record:nth(1)');
+        testUtils.kanban.toggleRecordDropdown($secondRecord);
+        await testUtils.dom.click($secondRecord.find('[data-type=set_cover]'));
+        $('.modal').find("img[data-id='2']").dblclick();
+        await testUtils.nextTick();
+        assert.containsOnce(kanban, 'img[data-src*="/web/image/2"]');
+        assert.verifySteps(["1", "2"], "should writes on both kanban records");
+
+        kanban.destroy();
+    });
+
 });
 
 });
