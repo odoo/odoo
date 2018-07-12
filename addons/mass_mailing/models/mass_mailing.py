@@ -624,12 +624,10 @@ class MassMailing(models.Model):
     # Email Sending
     #------------------------------------------------------
 
-    def _get_blacklist(self):
+    def _get_opt_out_list(self):
         """Returns a set of emails opted-out in target model"""
-        # TODO: implement a global blacklist table, to easily share
-        # it and update it.
         self.ensure_one()
-        blacklist = {}
+        opt_out = {}
         target = self.env[self.mailing_model_real]
         mail_field = 'email' if 'email' in target._fields else 'email_from'
         if 'opt_out' in target._fields:
@@ -643,13 +641,13 @@ class MassMailing(models.Model):
             """
             query = query % {'target': target._table, 'mail_field': mail_field}
             self._cr.execute(query)
-            blacklist = set(m[0] for m in self._cr.fetchall())
+            opt_out = set(m[0] for m in self._cr.fetchall())
             _logger.info(
                 "Mass-mailing %s targets %s, blacklist: %s emails",
-                self, target._name, len(blacklist))
+                self, target._name, len(opt_out))
         else:
-            _logger.info("Mass-mailing %s targets %s, no blacklist available", self, target._name)
-        return blacklist
+            _logger.info("Mass-mailing %s targets %s, no opt out list available", self, target._name)
+        return opt_out
 
     def _get_seen_list(self):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
@@ -683,7 +681,7 @@ class MassMailing(models.Model):
     def _get_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
         return {
-            'mass_mailing_blacklist': self._get_blacklist(),
+            'mass_mailing_opt_out_list': self._get_opt_out_list(),
             'mass_mailing_seen_list': self._get_seen_list(),
         }
 

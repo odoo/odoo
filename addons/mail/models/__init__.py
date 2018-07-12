@@ -10,6 +10,7 @@ from . import mail_message
 from . import mail_activity
 from . import mail_mail
 from . import mail_thread
+from . import mail_blacklist
 from . import mail_channel
 from . import mail_template
 from . import mail_shortcode
