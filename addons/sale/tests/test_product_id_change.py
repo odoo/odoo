@@ -232,6 +232,9 @@ class TestOnchangeProductId(TransactionCase):
             'rate': 2.0,
             'currency_id': other_currency.id,
             'company_id': self.env.user.company_id.id})
+        self.env['res.currency.rate'].search(
+            [('currency_id', '=', self.env.user.company_id.currency_id.id)]
+        ).unlink()
         new_uom = self.env['product.uom'].create({
             'name': '10 units',
             'factor_inv': 10,
