@@ -81,7 +81,7 @@ class TableExporter(http.Controller):
 
         response = request.make_response(None,
             headers=[('Content-Type', 'application/vnd.ms-excel'),
-                    ('Content-Disposition', 'attachment; filename=table.xls;')],
+                    ('Content-Disposition', 'attachment; filename=table.xls')],
             cookies={'fileToken': token})
         workbook.save(response.stream)
 
