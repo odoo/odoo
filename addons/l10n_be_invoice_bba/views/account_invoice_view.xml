@@ -12,4 +12,14 @@
         </field>
       </field>
     </record>
+    <record model="ir.ui.view" id="account_invoice_form_view">
+        <field name="name">account.invoice.supplier.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <field name="reference" position="before">
+                <field name="reference_type" attrs="{'readonly':[('state','!=','draft')]}"/>
+            </field>
+        </field>
+    </record>
 </odoo>
