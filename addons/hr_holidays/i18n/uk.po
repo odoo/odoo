@@ -57,7 +57,7 @@ msgstr "%g залишився поза %g"
 #: code:addons/hr_holidays/models/hr_holidays.py:333
 #, python-format
 msgid "%s : %.2f day(s)"
-msgstr ""
+msgstr "%s : %.2f день(і)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:335
@@ -97,12 +97,12 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">from</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">від</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">to</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">до</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -220,7 +220,7 @@ msgstr "Бронювання для %s"
 #: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "Allocation of %s : %.2f day(s) To %s"
-msgstr ""
+msgstr "Розподіл %s : %.2f день(і) До %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
@@ -530,6 +530,8 @@ msgid ""
 "Filters only on allocations and requests that belong to an leave type that "
 "is 'active' (active field is True)"
 msgstr ""
+"Фільтри лише для асигнувань та запитів, які належать до типу відпустки, який"
+" є \"активним\" (активне поле Правильно)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_first_approver_id
@@ -808,7 +810,7 @@ msgstr "Підсумок відпусток"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Leaves Taken:"
-msgstr ""
+msgstr "Взяті відпустки:"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
@@ -866,7 +868,7 @@ msgstr "Відпустка/Бронювання перше затверджен�
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2018"
-msgstr ""
+msgstr "Законні відпустки 2018"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -923,7 +925,7 @@ msgstr "Керівник"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Leaves:"
-msgstr ""
+msgstr "Максимальні відпустки:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_max_leaves
@@ -1007,6 +1009,7 @@ msgstr "Кількість відпусток"
 msgid ""
 "Number of days of the leave request according to your working schedule."
 msgstr ""
+"Кількість днів запиту на відпустку відповідно до вашого робочого графіка."
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -1028,6 +1031,10 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"Після того, як ви записали запит на відпустку, він буде відправлений\n"
+"                 для менеджера для перевірки. Обов'язково встановіть правильний тип відпустки\n"
+"                 (рекуперація, законна відпустка, хвороба) і точну\n"
+"                 кількість відкритих днів, пов'язаних з вашою відпусткою."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:477
@@ -1197,13 +1204,13 @@ msgstr "Друге підтвердження"
 #: code:addons/hr_holidays/models/hr_holidays.py:596
 #, python-format
 msgid "See Allocation"
-msgstr ""
+msgstr "Дивитися розподіл"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:596
 #, python-format
 msgid "See Leave"
-msgstr ""
+msgstr "Дивитися відпустку"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_holiday_type
@@ -1282,6 +1289,10 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"Статус встановлено на \"Надіслати\", коли запит на відпустку створений.\n"
+"Статус \"Затвердити\", коли запит на відпустку підтверджується користувачем.\n"
+"Статус \"Відмовлено\", коли менеджер відхиляє запит на відпустку.\n"
+"Статус \"Затверджено\", коли запит на відпустку затверджується менеджером."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_first_approver_id
@@ -1312,12 +1323,15 @@ msgstr ""
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
 msgstr ""
+"Ця величина визначається сумою всіх запитів на відпустку з від'ємним "
+"значенням."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
+"Ця величина задана сумою всіх запитів на відпустку з позитивним значенням."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1395,7 +1409,7 @@ msgstr "Підтвердити"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Validator"
-msgstr ""
+msgstr "Перевіряючий "
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0

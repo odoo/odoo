@@ -442,7 +442,8 @@ class Lead(models.Model):
             'res_id': self.id,
             'views': [(form_view.id, 'form'),],
             'type': 'ir.actions.act_window',
-            'target': 'inline'
+            'target': 'inline',
+            'context': {'default_type': 'opportunity'}
         }
 
     # ----------------------------------------

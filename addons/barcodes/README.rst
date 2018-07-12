@@ -11,10 +11,10 @@ Barcodes encoding
 The Barcodes module defines barcode nomenclatures whose rules identify specific type 
 of items e.g. products, locations. It contains the following features:
 
-- Barcode patterns to identify barcodes containing a numerical value (e.g. weight, price)
+- Patterns to identify barcodes containing a numerical value (e.g. weight, price)
 - Definitin of barcode aliases that allow to identify the same product with different barcodes
 - Unlimited barcode patterns and definitions,
-- Barcode EAN13 encoding supported.
+- Support for encodings EAN-13, EAN-8 and UPC-A
 
 Barcode encodings
 -----------------
@@ -65,7 +65,7 @@ We now want to write a barcode for 2.75kg of oranges. This barcode should be '21
 numerical content of this barcode is '02750', and the correct checksum is '6'). When scanned, this 
 barcode matches the Weighted Product rule (since is starts with '21'). The numerical content is extracted, 
 and replaced by a sequence of '0's. The correct checksum is then computed for the obtained barcode 
-('2100001000004') and the corresponding product (oranges) qgit is retrieved from product table.
+('2100001000004') and the corresponding product (oranges) is retrieved from product table.
 
 Note: the special characters '{' and '}' in patterns are used to identify numerical content. To 
 explicitely specify '{' or '}' in a pattern, they must be escaped.
@@ -85,6 +85,17 @@ matching the original, 12-digit long, barcode.
 
 Barcodes scanning
 ==============================
+
+Scanning
+--------
+
+Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.
+The scanner must be configured to use no prefix and a carriage return or tab as suffix.
+The delay between each character input must be less than or equal to 50 milliseconds.
+Most barcode scanners will work out of the box.
+However, make sure the scanner uses the same keyboard layout as the device it's plugged in.
+Either by setting the device's keyboard layout to US QWERTY (default value for most readers)
+or by changing the scanner's keyboard layout (check the manual).
 
 
 Barcode events

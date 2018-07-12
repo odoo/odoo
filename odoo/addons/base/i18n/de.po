@@ -4856,6 +4856,23 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
+"\n"
+"Lokalisierung für die Schweiz\n"
+"==================\n"
+"Dieses Modul definiert einen Kontenplan für die Schweiz (Schweizer PME/KMU 2015), berechnet Steuern und aktiviert die Generierung von ESR, wenn Sie eine Rechnung ausdrucken oder diese per E-Mail senden.\n"
+"\n"
+"ESR wird generiert, wenn Sie eine Angabe zu den benötigten Informationen machen: \n"
+" - Das Bankkonto, über das Sie bezahlt werden wollen, muss eingestellt sein, und eine gültige postalische Referenz haben.\n"
+" - Ihre Rechnung muss einem Bankkonto zum Erhalt der Zahlung zugewiesen worden sein\n"
+" (das kann manuell erfolgen, aber ein Standardwert wird automatisch gesetzt, wenn Sie ein Bankkonto definiert haben).\n"
+" - Sie müssen die postalischen Referenzen Ihrer Bank festgelegt haben.\n"
+" - Ihre Rechnung muss in EUR oder CHF gestellt sein (da ESRs keine anderen Währungen akzeptieren).\n"
+"\n"
+"Die Generierung der ESR ist automatisch, wenn Sie die vorherigen Kriterien erfüllen.\n"
+"\n"
+"Und so funktioniert es:\n"
+" - Das Audrucken der Rechnung löst den Download von zwei Dateien aus: der Rechnung und der zugehörigen ESR\n"
+" - Wenn Sie auf die Schaltfläche „Send by mail“ (per E-Mail senden) klicken, werden zwei Dateien an Ihren E-Mail-Entwurf angehängt: die Rechnung und die entsprechende ESR."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -8253,6 +8270,8 @@ msgstr "Argentinien - Buchhaltungsauswertungen"
 #: model:ir.model.fields,help:base.field_ir_act_client_params
 msgid "Arguments sent to the client along with the view tag"
 msgstr ""
+"Argumente, die zusammen mit der Sicht-Kennung an die Anwendung (client) "
+"gesendet werden"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -11899,6 +11918,8 @@ msgstr "Das Feld \"Typ\" kann auf Modellen nicht bearbeitet werden."
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
+"Feld %r wird bei Attributen verwendet und muss daher in Sicht vorhanden "
+"sein, fehlt hier aber:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
@@ -12225,19 +12246,23 @@ msgstr "France - FEC"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
 msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
-msgstr ""
+msgstr "Frankreich - Anti-Steuerbetrugs-Bescheinigung (CGI 286 I-3 bis)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
 msgid ""
 "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
 msgstr ""
+"Frankreich - Anti-Steuerbetrugs-Bescheinigung (CGI 286 I-3 bis) - "
+"Verkaufsabschluss"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
 msgid ""
 "France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
 msgstr ""
+"Frankreich - Anti-Steuerbetrugs-Bescheinigung für Kassensysteme (CGI 286 I-3"
+" bis)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -13291,6 +13316,9 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
+"Wenn eingeschaltet, wird der vollständige Datenaustausch der SMTP-Sitzungen "
+"in das Server-Log im DEBUG-Modus geschrieben (Das ist sehr ausführlich und "
+"kann sensible Daten enthalten!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -14071,7 +14099,7 @@ msgstr "Stellenbeschreibungen und Bewerbungsformulare"
 #: model:ir.model.fields,field_description:base.field_res_partner_function
 #: model:ir.model.fields,field_description:base.field_res_users_function
 msgid "Job Position"
-msgstr "Beruf"
+msgstr "Position"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr
@@ -19493,6 +19521,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Geben Sie das Feld an, das verwendet wird, um den neu erstellten Datensatz "
+"mit dem Datensatz zu verknüpfen, der von der Serveraktion verwendet wird."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -21575,6 +21605,7 @@ msgstr "Thailändische Buchhaltungsauswertungen"
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
+"Die \"App Umschalter\"-Aktion darf nicht als Heim-Aktion verwendet werden."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
@@ -21592,6 +21623,8 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"Die Ausdruck für die Auswahl ist kein gültiger Python-Ausruck. Bitte "
+"hinterlegen Sie einen gültigen Ausdruck im Format [('key','Label'),...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -23943,6 +23976,9 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"Ihr Oddo-Server unterstützt SMTP-über-SSL. Sie können stattdessen STARTTLS "
+"verwenden. Sollte SSL benötigt werden, könnte eine Aktualisierung auf Python"
+" 2.6 auf Serverseite den Fall lösen."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477

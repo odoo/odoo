@@ -143,10 +143,12 @@ QUnit.module('relational_fields', {
             user: {
                 fields: {
                     name: {string: "Name", type: "char"},
+                    partner_ids: {string: "one2many partners field", type: "one2many", relation: 'partner', relation_field: 'user_id'},
                 },
                 records: [{
                     id: 17,
                     name: "Aline",
+                    partner_ids: [1, 2],
                 }, {
                     id: 19,
                     name: "Christine",
@@ -3200,6 +3202,136 @@ QUnit.module('relational_fields', {
             "should still have the 3 rows in the new order");
 
         testUtils.unpatch(ListRenderer);
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange for embedded one2many in a one2many with a second page', function (assert) {
+        assert.expect(1);
+
+        this.data.turtle.fields.partner_ids.type = 'one2many';
+        this.data.turtle.records[0].partner_ids = [1];
+        // we need a second page, so we set two records and only display one per page
+        this.data.partner.records[0].turtles = [1, 2];
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [
+                    [5],
+                    [1, 1, {
+                        turtle_foo: "hop",
+                        partner_ids: [[5], [4, 1]],
+                    }],
+                    [1, 2, {
+                        turtle_foo: "blip",
+                        partner_ids: [[5], [4, 2], [4, 4]],
+                    }],
+                ];
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom" limit="1">' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="partner_ids" widget="many2many_tags"/>' +
+                        '</tree>' +
+                    '</field>' +
+                 '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    var expectedResultTurtles = [
+                        [1, 1, {
+                            turtle_foo: "hop",
+                        }],
+                        [1, 2, {
+                            partner_ids: [[4, 2, false], [4, 4, false]],
+                            turtle_foo: "blip",
+                        }],
+                    ];
+                    assert.deepEqual(args.args[1].turtles, expectedResultTurtles,
+                        "the right values should be written");
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_cell').eq(1).click();
+        var $cell = form.$('.o_selected_row .o_input[name=turtle_foo]');
+        $cell.val("hop").trigger('change');
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange for embedded one2many in a one2many updated by server', function (assert) {
+        // here we test that after an onchange, the embedded one2many field has
+        // been updated by a new list of ids by the server response, to this new
+        // list should be correctly sent back at save time
+        assert.expect(3);
+
+        this.data.turtle.fields.partner_ids.type = 'one2many';
+        this.data.partner.records[0].turtles = [2];
+        this.data.turtle.records[1].partner_ids = [2];
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [
+                    [5],
+                    [1, 2, {
+                        turtle_foo: "hop",
+                        partner_ids: [[5], [4, 2], [4, 4]],
+                    }],
+                ];
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="partner_ids" widget="many2many_tags"/>' +
+                        '</tree>' +
+                    '</field>' +
+                 '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    var expectedResultTurtles = [
+                        [1, 2, {
+                            partner_ids: [[4, 2, false], [4, 4, false]],
+                            turtle_foo: "hop",
+                        }],
+                    ];
+                    assert.deepEqual(args.args[1].turtles, expectedResultTurtles,
+                                     'The right values should be written');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+         assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim(), "second record",
+              "the partner_ids should be as specified at initialization");
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_cell').eq(1).click();
+        var $cell = form.$('.o_selected_row .o_input[name=turtle_foo]');
+        $cell.val("hop").trigger("change");
+        form.$buttons.find('.o_form_button_save').click();
+
+         assert.deepEqual(form.$('.o_many2many_tags_cell').text().trim().split(/\s+/),
+              [ "second", "record", "aaa" ],
+              'The partner_ids should have been updated');
 
         form.destroy();
     });
@@ -9379,6 +9511,94 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_cell').text(), 'new name',
             "fields in the o2m list view should have been read as well");
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange affecting inline unopened list view', function (assert) {
+        // when we got onchange result for fields of record that were not
+        // already available because they were in a inline view not already
+        // opened, in a given configuration the change were applied ignoring
+        // existing data, thus a line of a one2many field inside a one2many
+        // field could be duplicated unexplectedly
+        assert.expect(5);
+
+        var numUserOnchange = 0;
+
+        this.data.user.onchanges = {
+            partner_ids: function (obj) {
+                if (numUserOnchange === 0) {
+                    // simulate proper server onchange after save of modal with new record
+                    obj.partner_ids = [
+                        [5],
+                        [1, 1, {
+                            display_name: 'first record',
+                            turtles: [
+                                [5],
+                                [1, 2, {'display_name': 'donatello'}],
+                            ],
+                        }],
+                        [1, 2, {
+                            display_name: 'second record',
+                            turtles: [
+                                [5],
+                                obj.partner_ids[1][2].turtles[0],
+                            ],
+                        }],
+                    ];
+                }
+                numUserOnchange++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: '<form><sheet><group>' +
+                      '<field name="partner_ids">' +
+                          '<form>'+
+                              '<field name="turtles">' +
+                                  '<tree editable="bottom">' +
+                                      '<field name="display_name"/>' +
+                                  '</tree>' +
+                              '</field>' +
+                          '</form>' +
+                          '<tree>' +
+                              '<field name="display_name"/>' +
+                          '</tree>' +
+                      '</field>' +
+                  '</group></sheet></form>',
+            res_id: 17,
+        });
+
+        // add a turtle on second partner
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_row:eq(1)').click();
+        $('.modal .o_field_x2many_list_row_add a').click();
+        $('.modal input[name="display_name"]').val('michelangelo').change();
+        $('.modal .btn-primary').click();
+        // open first partner so changes from previous action are applied
+        form.$('.o_data_row:eq(0)').click();
+        $('.modal .btn-primary').click();
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(numUserOnchange, 2,
+            'there should 2 and only 2 onchange from closing the partner modal');
+
+        form.$('.o_data_row:eq(0)').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            'only 1 turtle for first partner');
+        assert.strictEqual($('.modal .o_data_row').text(), 'donatello',
+            'first partner turtle is donatello');
+        $('.modal .o_form_button_cancel').click();
+
+        form.$('.o_data_row:eq(1)').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            'only 1 turtle for second partner');
+        assert.strictEqual($('.modal .o_data_row').text(), 'michelangelo',
+            'second partner turtle is michelangelo');
+        $('.modal .o_form_button_cancel').click();
 
         form.destroy();
     });

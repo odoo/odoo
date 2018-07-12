@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons import decimal_precision as dp
@@ -85,6 +85,11 @@ class HrSalaryRuleCategory(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env['res.company']._company_default_get())
 
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of Salary Rule Category.'))
+
 
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
@@ -164,6 +169,11 @@ class HrSalaryRule(models.Model):
         help="Eventual third party involved in the salary payment of the employees.")
     input_ids = fields.One2many('hr.rule.input', 'input_id', string='Inputs', copy=True)
     note = fields.Text(string='Description')
+
+    @api.constrains('parent_rule_id')
+    def _check_parent_rule_id(self):
+        if not self._check_recursion(parent='parent_rule_id'):
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of Salary Rules.'))
 
     @api.multi
     def _recursive_search_of_rules(self):

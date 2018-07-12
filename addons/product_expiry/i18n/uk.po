@@ -26,6 +26,9 @@ msgid ""
 "<span class=\"label label-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Сповіщення про закінчення терміну "
+"дії</span>"
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
@@ -35,7 +38,7 @@ msgstr "<span class=\"pull-right\">Термін придатності</span>"
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>дні</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -65,6 +68,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Дата визначення партій, що закінчилися, та серійних номерів за допомогою "
+"фільтру \"Попередження про закінчення терміну дії\"."
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -80,7 +85,7 @@ msgstr "Дата кінця життя"
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration alerts"
-msgstr ""
+msgstr "Сповіщення про закінчення терміну дії"
 
 #. module: product_expiry
 #: model:product.product,name:product_expiry.product_product_jambon
@@ -105,6 +110,8 @@ msgstr "Партія/Серійний номер"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
+"Кількість днів до сповіщення про потребу збільшення на партії/серійному "
+"номері."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_life_time
@@ -113,6 +120,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Кількість днів до того, як товари можуть стати небезпечними і не повинні "
+"споживатися. Він буде вираховуватись на партію/серійний номер."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_removal_time
@@ -121,6 +130,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
+"Кількість днів до того, як товари повинні бути вилучені зі складу. Він буде "
+"розраховуватись на партію/серійний номер."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_use_time
@@ -129,6 +140,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed on the lot/serial number."
 msgstr ""
+"Кількість днів до того, як товар починає погіршуватися, але ще не є "
+"небезпечним. Він буде розраховуватись на партію/серійний номер."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_alert_time
@@ -139,7 +152,7 @@ msgstr "Термін попередження товару"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Попередження про закінчення терміну дії товару"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_life_time
@@ -178,7 +191,7 @@ msgstr "Дата вилучення"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "Дата сповіщення була досягнута."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date

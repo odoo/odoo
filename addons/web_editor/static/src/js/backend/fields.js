@@ -105,9 +105,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             attachedDocumentDomain.unshift('&');
             attachedDocumentDomain.push(['create_uid', '=', session.uid]);
         }
-        if (this.recordData.model) {
+        if (this.recordData.res_model || this.recordData.model) {
             var relatedDomain = ['&',
-                ['res_model', '=', this.recordData.model],
+                ['res_model', '=', this.recordData.res_model || this.recordData.model],
                 ['res_id', '=', this.recordData.res_id|0]];
             if (!this.recordData.res_id) {
                 relatedDomain.unshift('&');
@@ -136,7 +136,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
-                ['insert', ['link', 'picture']],
+                ['insert', this.nodeOptions['no-attachment'] ? ['link'] : ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
             prettifyHtml: false,
@@ -144,6 +144,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             inlinemedia: ['p'],
             lang: "odoo",
             onChange: this._doDebouncedAction.bind(this),
+            disableDragAndDrop: !!this.nodeOptions['no-attachment'],
         };
 
         var fieldNameAttachment =_.chain(this.recordData)
@@ -158,8 +159,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             this.fieldNameAttachment = fieldNameAttachment;
             this.attachments = [];
             summernoteConfig.onUpload = this._onUpload.bind(this);
-            summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
         }
+        summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
+
 
         if (config.debug) {
             summernoteConfig.toolbar.splice(7, 0, ['view', ['codeview']]);
@@ -172,9 +174,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      */
     _getValue: function () {
         if (this.nodeOptions['style-inline']) {
-            transcoder.linkImgToAttachmentThumbnail(this.$content);
-            transcoder.classToStyle(this.$content);
+            transcoder.attachmentThumbnailToLinkImg(this.$content);
             transcoder.fontToImg(this.$content);
+            transcoder.classToStyle(this.$content);
         }
         return this.$content.html();
     },
@@ -220,6 +222,8 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
             transcoder.styleToClass(this.$content);
+            transcoder.imgToFont(this.$content);
+            transcoder.linkImgToAttachmentThumbnail(this.$content);
         }
         // reset the history (otherwise clicking on undo before editing the
         // value will empty the editor)
