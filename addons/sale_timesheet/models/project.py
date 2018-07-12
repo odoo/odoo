@@ -85,9 +85,11 @@ class ProjectTask(models.Model):
         # reassign SO line on related timesheet lines
         if 'sale_line_id' in values:
             # subtasks should have the same SO line than their mother
-            self.sudo().mapped('child_ids').write({
-                'so_line': values['sale_line_id']
-            })
+            for child in self.sudo().child_ids:
+                if child.sale_line_id.id != values['sale_line_id']:
+                    child.sudo().write({
+                        'sale_line_id': values['sale_line_id']
+                    })
             self.sudo().mapped('timesheet_ids').write({
                 'so_line': values['sale_line_id']
             })
