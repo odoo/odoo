@@ -62,6 +62,8 @@ return AbstractModel.extend({
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.chart = {
+            compare: params.compare,
+            comparisonTimeRange: params.comparisonTimeRange,
             data: [],
             groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
             // this parameter is not used anywhere for now.
@@ -72,6 +74,7 @@ return AbstractModel.extend({
             intervalMapping: params.intervalMapping,
             measure: params.context.graph_measure || params.measure,
             mode: params.context.graph_mode || params.mode,
+            timeRange: params.timeRange,
             domain: params.domain,
             context: params.context,
         };
@@ -146,16 +149,30 @@ return AbstractModel.extend({
         }
 
         var context = _.extend({fill_temporal: true}, this.chart.context);
-        return this._rpc({
+        var defs = [];
+        defs.push(this._rpc({
+            model: this.modelName,
+            method: 'read_group',
+            context: context,
+            domain: this.chart.domain.concat(this.chart.timeRange),
+            fields: fields,
+            groupBy: groupedBy,
+            lazy: false,
+        }).then(this._processData.bind(this, 'data')));
+
+        if (this.chart.compare) {
+            defs.push(this._rpc({
                 model: this.modelName,
                 method: 'read_group',
                 context: context,
-                domain: this.chart.domain,
+                domain: this.chart.domain.concat(this.chart.comparisonTimeRange),
                 fields: fields,
                 groupBy: groupedBy,
                 lazy: false,
-            })
-            .then(this._processData.bind(this));
+            }).then(this._processData.bind(this, 'comparisonData')));
+        }
+
+        return $.when.apply($, defs);
     },
     /**
      * Since read_group is insane and returns its result on different keys
@@ -166,14 +183,15 @@ return AbstractModel.extend({
      *  the object this.chart in argument, or an array or something. We want to
      *  avoid writing on a this.chart object modified by a subsequent read_group
      *
+     * @param {String} dataKey
      * @param {any} raw_data result from the read_group
      */
-    _processData: function (raw_data) {
+    _processData: function (dataKey, raw_data) {
         var self = this;
         var is_count = this.chart.measure === '__count__';
         var data_pt, labels;
 
-        this.chart.data = [];
+        this.chart[dataKey] = [];
         for (var i = 0; i < raw_data.length; i++) {
             data_pt = raw_data[i];
             labels = _.map(this.chart.groupedBy, function (field) {
@@ -191,7 +209,7 @@ return AbstractModel.extend({
                 // value for that field.
                 value = 1;
             }
-            this.chart.data.push({
+            this.chart[dataKey].push({
                 count: count,
                 value: value,
                 labels: labels,

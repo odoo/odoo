@@ -36,6 +36,7 @@ var GraphView = AbstractView.extend({
         Renderer: GraphRenderer,
     },
     viewType: 'graph',
+    enableTimeRangeMenu: 'true',
     /**
      * @override
      */
@@ -86,6 +87,7 @@ var GraphView = AbstractView.extend({
         this.loadParams.groupBys = groupBys || [];
         this.loadParams.intervalMapping = intervalMapping;
         this.loadParams.fields = this.fields;
+        this.loadParams.comparisonDomain = params.comparisonDomain;
     },
 });
 
