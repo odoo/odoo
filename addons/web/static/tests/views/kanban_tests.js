@@ -2379,6 +2379,7 @@ QUnit.module('Views', {
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
         assert.expect(9);
 
+        var def = $.Deferred();
         var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         this.data.partner.fields.sequence = {type: 'number', string: "Sequence"};
         var kanban = createView({
@@ -2388,7 +2389,7 @@ QUnit.module('Views', {
             arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
                         '<field name="product_id"/>' +
                         '<templates><t t-name="kanban-box">' +
-                            '<div><field name="foo"/>' +
+                            '<div class="oe_kanban_global_click"><field name="foo"/>' +
                                 '<t t-if="widget.editable"><span class="thisiseditable">edit</span></t>' +
                             '</div>' +
                         '</t></templates>' +
@@ -2397,9 +2398,14 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
                     assert.ok(true, "should call resequence");
-                    return $.when(true);
+                    return def.then(_.constant(true));
                 }
                 return this._super(route, args);
+            },
+            intercepts: {
+                switch_view: function () {
+                    throw new Error('should not switch to another view');
+                },
             },
         });
         assert.containsN(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record', 2);
@@ -2410,8 +2416,9 @@ QUnit.module('Views', {
         var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
         var $group = kanban.$('.o_kanban_group:nth-child(2)');
         envIDs = [3, 2, 4, 1]; // first record of first column moved to the bottom of second column
-        testUtils.dom.dragAndDrop($record, $group);
+        testUtils.dom.dragAndDrop($record, $group, {withTrailingClick: true});
 
+        def.resolve();
         assert.containsOnce(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record');
         assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 3);
         assert.containsN(kanban, '.thisiseditable', 4);
