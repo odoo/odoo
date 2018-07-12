@@ -89,23 +89,19 @@
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="is_menu">Show in Top Menu</label>
                     <div class="col-sm-2">
-                        <a>
-                            <label class="o_switch" for="is_menu" >
-                                <input type="checkbox" t-att-checked="widget.page.menu_ids.length > 0 ? true : undefined" id="is_menu"/>
-                                <span/>
-                            </label>
-                        </a>
+                        <label class="o_switch" for="is_menu" >
+                            <input type="checkbox" t-att-checked="widget.page.menu_ids.length > 0 ? true : undefined" id="is_menu"/>
+                            <span/>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="is_homepage">Use as Homepage</label>
                     <div class="col-sm-2">
-                        <a>
-                            <label class="o_switch" for="is_homepage" >
-                                <input type="checkbox" t-att-checked="widget.page.is_homepage ? true : undefined" id="is_homepage"/>
-                                <span/>
-                            </label>
-                        </a>
+                        <label class="o_switch" for="is_homepage" >
+                            <input type="checkbox" t-att-checked="widget.page.is_homepage ? true : undefined" id="is_homepage"/>
+                            <span/>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -114,23 +110,19 @@
                         <i class="fa fa-question-circle-o" title="Hide this page from search results" role="img" aria-label="Info"></i>
                     </label>
                     <div class="col-sm-2">
-                        <a>
-                            <label class="o_switch" for="is_indexed" >
-                                <input type="checkbox" t-att-checked="widget.page.website_indexed ? true : undefined" id="is_indexed"/>
-                                <span/>
-                            </label>
-                        </a>
+                        <label class="o_switch" for="is_indexed" >
+                            <input type="checkbox" t-att-checked="widget.page.website_indexed ? true : undefined" id="is_indexed"/>
+                            <span/>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="is_published">Publish</label>
                     <div class="col-sm-2">
-                        <a>
-                            <button class="o_switch js_publish_btn bg-transparent">
-                                <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
-                                <span/>
-                            </button>
-                        </a>
+                        <label class="o_switch js_publish_btn" for="is_published">
+                            <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
+                            <span/>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">

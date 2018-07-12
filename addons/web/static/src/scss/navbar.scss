@@ -64,6 +64,13 @@
 
             > a {
                 display: block;
+
+                &:focus, &:active, &:focus:active {
+                    outline: none;
+                }
+            }
+
+            > a, > label {
                 height: $o-navbar-height;
                 padding: 0 10px;
                 color: white;
@@ -71,10 +78,6 @@
 
                 &:hover {
                     background-color: $o-navbar-inverse-link-hover-bg;
-                }
-
-                &:focus, &:active, &:focus:active {
-                    outline: none;
                 }
             }
 
