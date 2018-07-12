@@ -59,10 +59,10 @@
             }
 
             &.btn-primary {
-                @include button-variant(white, $o-brand-odoo, $o-brand-odoo);
+                @include button-variant($o-brand-odoo, $o-brand-odoo);
             }
             &.btn-secondary {
-                @include button-variant(white, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+                @include button-variant(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
 
                 &:hover {
                     background: rgba(black, 0.5);
@@ -910,14 +910,13 @@ table.colorpicker {
                     &:focus, &:active, &:focus:active {
                         outline: none;
                     }
-                }
-                &:hover, &.active {
-                    > a {
+                    &.active {
+                        background-color: $o-we-tab-active-bg!important;
                         color: white;
                     }
                 }
-                &.active > a {
-                    background-color: $o-we-tab-active-bg!important;
+                &:hover > a {
+                    color: white;
                 }
             }
         }
