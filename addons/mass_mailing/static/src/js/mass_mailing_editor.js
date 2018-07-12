@@ -366,6 +366,14 @@ snippets_editor.Class.include({
             self._disableUndroppableSnippets();
         }
     },
+    cleanForSave: function () {
+        this._super.apply(this, arguments);
+        // remove font-family from all elements for plain text theme (just like gmail)
+        var $basicTheme = this.$editable.find('.o_basic_theme');
+        if($basicTheme.length && this.$editable.data('oe-model') === 'mail.mass_mailing') {
+            this.$editable.find('*').css('font-family', '');
+        }
+    }
 });
 
 var callback = window ? window["callback"] : undefined;
