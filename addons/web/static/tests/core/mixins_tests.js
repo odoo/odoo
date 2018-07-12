@@ -27,6 +27,27 @@ QUnit.module('core', {}, function () {
         widget.destroy();
     });
 
+    QUnit.test('test case to perform trigger properly', function (assert) {
+        assert.expect(1);
+
+        var W = Widget.extend({
+            trigger_event: function () {
+                this.trigger('custom_event', { some_data: "suh" });
+            },
+        });
+
+        var widget = new W();
+
+        testUtils.intercept(widget, 'custom_event', function (event) {
+            assert.strictEqual(event.data.some_data, 'suh',
+                "should have sent proper data");
+        });
+        widget.trigger_event();
+
+        widget.destroy();
+
+    });
+
 
 });
 
