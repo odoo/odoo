@@ -1785,6 +1785,7 @@ var FieldMany2ManyTags = AbstractField.extend({
             mode: 'edit',
             noOpen: true,
             viewType: this.viewType,
+            attrs: this.attrs,
         });
         // to prevent the M2O to take the value of the M2M
         this.many2one.value = false;
