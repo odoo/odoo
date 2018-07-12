@@ -95,8 +95,10 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_errors(self, order):
+        # Do not Forward port in v11.0 as the API was refactored by f9a8c53e485445bc8e3474eb3978b0f83d5645c7
+        has_stockable_products = any(order.order_line.filtered(lambda line: line.product_id.type in ['consu', 'product']))
         errors = super(SaleOrder, self)._get_errors(order)
-        if not order._get_delivery_methods():
+        if not order._get_delivery_methods() and has_stockable_products:
             errors.append(
                 (_('Sorry, we are unable to ship your order'),
                  _('No shipping method is available for your current order and shipping address. '
