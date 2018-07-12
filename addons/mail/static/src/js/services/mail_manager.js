@@ -112,14 +112,15 @@ var MailManager =  AbstractService.extend({
             if (!options.silent) {
                 this._mailBus.trigger('new_message', message);
             }
-        }
-        if (data.moderation_status === 'accepted') {
-            message.setModerationStatus('accepted', {
-                additionalThreadIDs: data.channel_ids
-            });
-        }
-        if (options.domain && options.domain !== []) {
-            this._addMessageToThreads(message, options.domain);
+        } else {
+            if (data.moderation_status === 'accepted') {
+                message.setModerationStatus('accepted', {
+                    additionalThreadIDs: data.channel_ids
+                });
+            }
+            if (options.domain && options.domain !== []) {
+                this._addMessageToThreads(message, options.domain);
+            }
         }
         return message;
     },
