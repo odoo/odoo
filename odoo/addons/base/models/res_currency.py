@@ -7,6 +7,8 @@ import re
 import time
 import traceback
 
+from collections import defaultdict
+
 from odoo import api, fields, models, tools, _
 
 _logger = logging.getLogger(__name__)
@@ -46,15 +48,14 @@ class Currency(models.Model):
     ]
 
     def _get_rates(self, company, date):
-        query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
-                                  WHERE r.currency_id = c.id AND r.name <= %s
-                                    AND (r.company_id IS NULL OR r.company_id = %s)
-                               ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1) AS rate
-                   FROM res_currency c
-                   WHERE c.id IN %s"""
+        query = """SELECT c.id, rate FROM res_currency c
+                    LEFT JOIN LATERAL (SELECT r.rate as rate FROM res_currency_rate r
+                    WHERE r.currency_id = c.id AND r.name <= %s
+                    AND (r.company_id IS NULL OR r.company_id = %s)
+                    ORDER BY r.company_id, r.name DESC
+                    LIMIT 1) rate ON TRUE WHERE c.id IN %s and rate IS NOT NULL"""
         self._cr.execute(query, (date, company.id, tuple(self.ids)))
-        currency_rates = dict(self._cr.fetchall())
+        currency_rates = defaultdict(lambda: 1.0, self._cr.fetchall())
         return currency_rates
 
     @api.multi
@@ -65,7 +66,7 @@ class Currency(models.Model):
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = self._get_rates(company, date)
         for currency in self:
-            currency.rate = currency_rates.get(currency.id) or 1.0
+            currency.rate = currency_rates[currency.id]
 
     @api.multi
     @api.depends('rounding')
@@ -181,7 +182,7 @@ class Currency(models.Model):
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
         currency_rates = (from_currency + to_currency)._get_rates(company, date)
-        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
+        res = currency_rates[to_currency.id] / currency_rates[from_currency.id]
         return res
 
     def _convert(self, from_amount, to_currency, company, date, round=True):
