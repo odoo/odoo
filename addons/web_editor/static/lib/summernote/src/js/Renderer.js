@@ -162,7 +162,7 @@ define([
       style: function (lang, options) {
         var items = options.styleTags.reduce(function (memo, v) {
           var label = lang.style[v === 'p' ? 'normal' : v];
-          return memo + '<li><a data-event="formatBlock" href="#" data-value="' + v + '">' +
+          return memo + '<li><a class="dropdown-item" data-event="formatBlock" href="#" data-value="' + v + '">' +
                    (
                      (v === 'p' || v === 'pre') ? label :
                      '<' + v + '>' + label + '</' + v + '>'
@@ -225,12 +225,12 @@ define([
         });
 
         var items = [
-          '<li><div class="btn-group">',
+          '<li class="flex"><div class="btn-group flex-column">',
           '<div class="note-palette-title">' + lang.color.background + '</div>',
           '<div class="note-color-reset" data-event="backColor"',
           ' data-value="inherit" title="' + lang.color.transparent + '">' + lang.color.setTransparent + '</div>',
           '<div class="note-color-palette" data-target-event="backColor"></div>',
-          '</div><div class="btn-group">',
+          '</div><div class="btn-group flex-column">',
           '<div class="note-palette-title">' + lang.color.foreground + '</div>',
           '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
           lang.color.resetToDefault,

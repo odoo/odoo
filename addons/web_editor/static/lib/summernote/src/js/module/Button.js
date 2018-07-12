@@ -21,10 +21,10 @@ define([
        * @param {Number} value
        */
       var checkDropdownMenu = function ($btn, value) {
-        $btn.find('.dropdown-menu li a').each(function () {
+        $btn.find('.dropdown-menu .dropdown-item').each(function () {
           // always compare string to avoid creating another func.
           var isChecked = ($(this).data('value') + '') === (value + '');
-          this.className = isChecked ? 'checked' : '';
+          this.className = 'dropdown-item' + (isChecked ? ' checked' : '');
         });
       };
 

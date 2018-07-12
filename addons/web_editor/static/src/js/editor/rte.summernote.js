@@ -85,10 +85,6 @@ renderer.tplPopovers = function (lang, options) {
     var $linkPopover = $popover.find('.note-link-popover');
     var $airPopover = $popover.find('.note-air-popover');
 
-    if (window === window.top) {
-        $popover.children().addClass("d-none d-md-block");
-    }
-
     //////////////// image popover
 
     // add center button for images
@@ -104,11 +100,11 @@ renderer.tplPopovers = function (lang, options) {
     var $padding = $('<div class="btn-group"/>');
     $padding.insertBefore($imagePopover.find('.btn-group:first'));
     var dropdown_content = [
-        '<li><a data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
     $(tplIconButton('fa fa-plus-square-o', {
         title: _t('Padding'),
@@ -187,9 +183,9 @@ renderer.tplPopovers = function (lang, options) {
         while (node && (!node.tagName || (!node.tagName || formats.indexOf(node.tagName.toLowerCase()) === -1))) {
             node = node.parentNode;
         }
-        $format.parent().removeClass('active');
+        $format.removeClass('active');
         $format.filter('[data-value="'+(node ? node.tagName.toLowerCase() : "p")+'"]')
-            .parent().addClass("active");
+            .addClass("active");
     });
 
     //////////////// tooltip
@@ -223,13 +219,13 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     $container.find('.note-color').removeClass('d-none');
 
     if (oStyle.image) {
-        $container.find('[data-event]').parent().removeClass("active");
+        $container.find('[data-event]').removeClass("active");
 
-        $container.find('a[data-event="padding"][data-value="small"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-small"));
-        $container.find('a[data-event="padding"][data-value="medium"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
-        $container.find('a[data-event="padding"][data-value="large"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-large"));
-        $container.find('a[data-event="padding"][data-value="xl"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
-        $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
+        $container.find('a[data-event="padding"][data-value="small"]').toggleClass("active", $(oStyle.image).hasClass("padding-small"));
+        $container.find('a[data-event="padding"][data-value="medium"]').toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
+        $container.find('a[data-event="padding"][data-value="large"]').toggleClass("active", $(oStyle.image).hasClass("padding-large"));
+        $container.find('a[data-event="padding"][data-value="xl"]').toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
+        $container.find('a[data-event="padding"][data-value=""]').toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
 
         $(oStyle.image).addClass('o_we_selected_image');
 
