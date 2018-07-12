@@ -135,9 +135,7 @@ class StockWarehouse(models.Model):
     def create_routes(self):
         res = super(StockWarehouse, self).create_routes() # super applies ensure_one()
         if self.buy_to_resupply:
-            buy_pull_vals = self._get_buy_pull_rule()
-            buy_pull = self.env['stock.rule'].create(buy_pull_vals)
-            res['buy_pull_id'] = buy_pull.id
+            res['buy_pull_id'] = self._create_buy_rule()
         return res
 
     @api.multi
@@ -146,9 +144,7 @@ class StockWarehouse(models.Model):
             if vals.get("buy_to_resupply"):
                 for warehouse in self:
                     if not warehouse.buy_pull_id:
-                        buy_pull_vals = self._get_buy_pull_rule()
-                        buy_pull = self.env['stock.rule'].create(buy_pull_vals)
-                        vals['buy_pull_id'] = buy_pull.id
+                        vals['buy_pull_id'] = self._create_buy_rule()
             else:
                 for warehouse in self:
                     if warehouse.buy_pull_id:
@@ -177,6 +173,11 @@ class StockWarehouse(models.Model):
             if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
                 warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})
         return res
+
+    def _create_buy_rule(self):
+        buy_pull_vals = self._get_buy_pull_rule()
+        buy_pull = self.env['stock.rule'].create(buy_pull_vals)
+        return buy_pull.id
 
 class ReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
