@@ -1,4 +1,4 @@
-México, 9-2-2015
+México, 2015-02-09
 
 Vauxoo agrees to the terms of the Odoo Corporate Contributor License Agreement v1.0.
 

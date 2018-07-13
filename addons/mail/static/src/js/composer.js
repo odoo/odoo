@@ -666,6 +666,7 @@ var BasicComposer = Widget.extend({
                 }
             });
             this.set('attachment_ids', attachments);
+            this.$('input.o_input_file').val('');
         }
     },
     do_check_attachment_upload: function () {
