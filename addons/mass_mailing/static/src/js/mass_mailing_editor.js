@@ -362,6 +362,9 @@ snippets_editor.Class.include({
 
             if (first_choice) {
                 self._registerDefaultTexts($new_wrapper_content);
+                if(theme_params.name == 'basic') {
+                    $editable_area.focusIn();
+                }
             }
             self._disableUndroppableSnippets();
         }
