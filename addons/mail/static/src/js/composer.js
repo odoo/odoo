@@ -655,7 +655,7 @@ var BasicComposer = Widget.extend({
     on_attachment_delete: function(event){
         event.stopPropagation();
         var self = this;
-        var attachment_id = $(event.target).data("id");
+        var attachment_id = $(event.currentTarget).data("id");
         if (attachment_id) {
             var attachments = [];
             _.each(this.get('attachment_ids'), function(attachment){
@@ -666,6 +666,7 @@ var BasicComposer = Widget.extend({
                 }
             });
             this.set('attachment_ids', attachments);
+            this.$('input.o_input_file').val('');
         }
     },
     do_check_attachment_upload: function () {
