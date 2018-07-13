@@ -16,7 +16,6 @@ class HrPayrollStructure(models.Model):
     """
     _name = 'hr.payroll.structure'
     _description = 'Salary Structure'
-    _order = 'sequence'
 
     @api.model
     def _get_parent(self):
@@ -94,6 +93,7 @@ class HrSalaryRuleCategory(models.Model):
 
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
+    _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True,
