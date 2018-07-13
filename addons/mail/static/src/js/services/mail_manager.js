@@ -549,7 +549,11 @@ var MailManager =  AbstractService.extend({
                         thread.incrementUnreadCounter();
                     }
                     if (thread.isChat() && options.showNotification) {
-                        if (!self._isDiscussOpen() && !config.device.isMobile) {
+                        if (
+                            !self._isDiscussOpen() &&
+                            !config.device.isMobile &&
+                            !thread.isDetached()
+                        ) {
                             // automatically open thread window
                             // while keeping it unread
                             thread.detach({ passively: true });
