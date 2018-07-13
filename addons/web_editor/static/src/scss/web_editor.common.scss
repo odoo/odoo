@@ -39,6 +39,19 @@ html, body {
     }
 }
 
+// TODO oe_form_field_html_text should not be here but used in html field so we put here for now
+// Align bullets and numbers with content
+#wrapwrap, .oe_form_field_html_text {
+    ol, ul {
+        list-style-position: inside;
+        li > {
+            h1, h2, h3, h4, h5, h6, p {
+                display: inline-block;
+            }
+        }
+    }
+}
+
 // Medias
 img.shadow {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
