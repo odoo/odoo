@@ -88,12 +88,12 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return preview;
     },
     /**
-     * Tell whether the mail failure comes from a message in a document thread.
+     * Tell whether the mail failure comes from a message in a document.
      *
      * @returns {boolean}
      */
-    isLinkedToDocumentThread: function () {
-        return !!(this._documentModel !== 'mail.channel' && this._documentID);
+    isLinkedToDocument: function () {
+        return !!(this._documentModel && this._documentID);
     },
 });
 

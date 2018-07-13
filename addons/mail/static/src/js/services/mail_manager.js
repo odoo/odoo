@@ -686,7 +686,7 @@ var MailManager =  AbstractService.extend({
             var isSameDocument = true;
             var sameModelItem = _.find(items, function (item) {
                 if (
-                    item.failure.isLinkedToDocumentThread() &&
+                    item.failure.isLinkedToDocument() &&
                     (item.failure.getDocumentModel() === failure.getDocumentModel())
                 ) {
                     isSameDocument = item.failure.getDocumentID() === failure.getDocumentID();
@@ -695,7 +695,7 @@ var MailManager =  AbstractService.extend({
                 return false;
             });
 
-            if (failure.isLinkedToDocumentThread() && sameModelItem) {
+            if (failure.isLinkedToDocument() && sameModelItem) {
                 unreadCounter = sameModelItem.unreadCounter + 1;
                 isSameDocument = sameModelItem.isSameDocument && isSameDocument;
                 var index = _.findIndex(items, sameModelItem);
@@ -720,7 +720,7 @@ var MailManager =  AbstractService.extend({
             _.extend(preview, item.failure.getPreview(), {
                 unreadCounter: item.unreadCounter,
             });
-            if (!item.failure.isSameDocument) {
+            if (!item.isSameDocument) {
                 preview.documentID = undefined;
             }
             return preview;
