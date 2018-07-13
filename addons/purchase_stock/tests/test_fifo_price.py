@@ -23,13 +23,13 @@ class TestFifoPrice(TestPurchase):
             'standard_price': 70.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
-            'cost_method': 'fifo',
-            'valuation': 'real_time',
-            'property_stock_account_input': self.ref('purchase.o_expense'),
-            'property_stock_account_output': self.ref('purchase.o_income'),
             'supplier_taxes_id': '[]',
             'description': 'FIFO Ice Cream',
         })
+        product_cable_management_box.categ_id.property_cost_method = 'fifo'
+        product_cable_management_box.categ_id.property_valuation = 'real_time'
+        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.ref('purchase.o_expense')
+        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.ref('purchase.o_income')
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
@@ -217,13 +217,13 @@ class TestFifoPrice(TestPurchase):
             'standard_price': 70.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
-            'cost_method': 'fifo',
-            'valuation': 'real_time',
-            'property_stock_account_input': self.ref('purchase.o_expense'),
-            'property_stock_account_output': self.ref('purchase.o_income'),
             'supplier_taxes_id': '[]',
             'description': 'FIFO Ice Cream',
         })
+        product_fifo_negative.categ_id.property_cost_method = 'fifo'
+        product_fifo_negative.categ_id.property_valuation = 'real_time'
+        product_fifo_negative.categ_id.property_stock_account_input_categ_id = self.ref('purchase.o_expense')
+        product_fifo_negative.categ_id.property_stock_account_output_categ_id = self.ref('purchase.o_income')
 
         # Create outpicking.create delivery order of 100 kg.
         outgoing_shipment_neg = self.env['stock.picking'].create({

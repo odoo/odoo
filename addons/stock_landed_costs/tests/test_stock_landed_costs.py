@@ -20,23 +20,21 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         # them for real_time valuation and fifo costing method
         product_landed_cost_1 = self.env['product.product'].create({
             'name': "LC product 1",
-            'cost_method': 'fifo',
-            'valuation': 'real_time',
             'weight': 10,
             'volume': 1,
-            'property_stock_account_input': self.ref('stock_landed_costs.o_expense'),
-            'property_stock_account_output': self.ref('stock_landed_costs.o_income'),
         })
+        product_landed_cost_1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
+        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.ref('stock_landed_costs.o_income')
 
         product_landed_cost_2 = self.env['product.product'].create({
             'name': "LC product 2",
-            'cost_method': 'fifo',
-            'valuation': 'real_time',
             'weight': 20,
             'volume': 1.5,
-            'property_stock_account_input': self.ref('stock_landed_costs.o_expense'),
-            'property_stock_account_output': self.ref('stock_landed_costs.o_income'),
         })
+        product_landed_cost_2.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.ref('stock_landed_costs.o_expense')
+        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.ref('stock_landed_costs.o_income')
 
         picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
 
