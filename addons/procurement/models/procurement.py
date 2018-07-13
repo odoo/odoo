@@ -90,7 +90,7 @@ class ProcurementOrder(models.Model):
     origin = fields.Char('Source Document', help="Reference of the document that created this Procurement. This is automatically completed by Odoo.")
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('procurement.orer'),
+        default=lambda self: self.env['res.company']._company_default_get('procurement.order'),
         required=True)
     # These two fields are used for scheduling
     priority = fields.Selection(
