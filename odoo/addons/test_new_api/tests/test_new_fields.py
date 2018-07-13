@@ -291,9 +291,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
-        # write on non-stored inverse field on severals records
-        foo1 = Category.create({'name': 'Foo'})
-        foo2 = Category.create({'name': 'Foo'})
+        # check create/write with several records
+        vals = {'name': 'None', 'display_name': 'Foo'}
+        foo1, foo2 = Category.create([vals, vals])
+        self.assertEqual(foo1.name, 'Foo')
+        self.assertEqual(foo2.name, 'Foo')
+
         (foo1 + foo2).write({'display_name': 'Bar'})
         self.assertEqual(foo1.name, 'Bar')
         self.assertEqual(foo2.name, 'Bar')
