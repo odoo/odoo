@@ -368,13 +368,26 @@ DebugManager.include({
             metadata.create_date = field_utils.format.datetime(createDate);
             var modificationDate = field_utils.parse.datetime(metadata.write_date);
             metadata.write_date = field_utils.format.datetime(modificationDate);
-            new Dialog(this, {
+            var dialog = new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), self._action.res_model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : metadata,
                 })
-            }).open();
+            });
+            dialog.open().opened(function () {
+                dialog.$el.on('click', 'a[data-action="toggle_noupdate"]', function (ev) {
+                    ev.preventDefault();
+                    self._rpc({
+                        model: 'ir.model.data',
+                        method: 'toggle_noupdate',
+                        args: [self._action.res_model, metadata.id]
+                    }).then(function (res) {
+                        dialog.close();
+                        self.get_metadata();
+                    })
+                });
+            })
         });
     },
     set_defaults: function() {

@@ -1611,6 +1611,14 @@ class IrModelData(models.Model):
             self.browse(bad_imd_ids).unlink()
         self.loads.clear()
 
+    @api.model
+    def toggle_noupdate(self, model, res_id):
+        """ Toggle the noupdate flag on the external id of the record """
+        record = self.env[model].browse(res_id)
+        if record.check_access_rights('write'):
+            for xid in  self.search([('model', '=', model), ('res_id', '=', res_id)]):
+                xid.noupdate = not xid.noupdate
+
 
 class WizardModelMenu(models.TransientModel):
     _name = 'wizard.ir.model.menu.create'

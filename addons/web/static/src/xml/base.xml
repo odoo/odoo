@@ -287,7 +287,12 @@
         </tr>
         <tr>
             <th>No Update:</th>
-            <td><t t-esc="perm.noupdate"/></td>
+            <td>
+                <t t-esc="perm.noupdate"/>
+                <t t-if="perm.xmlid">
+                    <a data-action="toggle_noupdate">(change)</a>
+                </t>
+            </td>
         </tr>
         <tr>
             <th>Creation User:</th>
