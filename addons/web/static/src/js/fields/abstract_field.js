@@ -311,7 +311,7 @@ var AbstractField = Widget.extend({
      * @returns {string}
      */
     _formatValue: function (value) {
-        var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
+        var options = _.extend({}, { data: this.recordData }, this.formatOptions, this.nodeOptions);
         return field_utils.format[this.formatType](value, this.field, options);
     },
     /**
