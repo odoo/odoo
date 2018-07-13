@@ -282,25 +282,6 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
 
-    <record id="email_template_data_applicant_employee" model="mail.template">
-        <field name="name">Applicant: Welcome new employee</field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="subject">Welcome ${object.name} </field>
-        <field name="body_html" type="html">
-<div>
-    Hello all,<br/><br/>
-    I’m very pleased to announce that <strong> ${object.name} </strong> will be
-    joining us as a ${object.job_id.name}
-    %if object.department_id:
-        in ${object.department_id.name}.
-    %endif
-    <br/><br/>
-    Please welcome him/her and help him/her finding his/her marks.
-</div></field>
-    </record>
-
-        <!--    Resource(type_id)        -->
-
     <record model="hr.recruitment.degree" id="degree_graduate">
         <field name="name">Graduate</field>
         <field name="sequence">1</field>
