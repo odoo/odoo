@@ -824,8 +824,16 @@ ListRenderer.include({
      */
     _onRemoveIconClick: function (event) {
         event.stopPropagation();
-        var id = $(event.target).closest('tr').data('id');
-        this.trigger_up('list_record_remove', {id: id});
+        var $row = $(event.target).closest('tr');
+        var id = $row.data('id');
+        if ($row.hasClass('o_selected_row')) {
+            this.trigger_up('list_record_remove', {id: id});
+        } else {
+            var self = this;
+            this.unselectRow().then(function () {
+                self.trigger_up('list_record_remove', {id: id});
+            });
+        }
     },
     /**
      * If the list view editable, just let the event bubble. We don't want to
