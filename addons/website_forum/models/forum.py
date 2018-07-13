@@ -355,7 +355,7 @@ class Post(models.Model):
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
-        is_admin = user.id == SUPERUSER_ID
+        is_admin = user._is_admin()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in zip(self, self.sudo()):
@@ -850,6 +850,10 @@ class Vote(models.Model):
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False)
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
 
+    _sql_constraints = [
+        ('vote_uniq', 'unique (post_id, user_id)', "Vote already exists !"),
+    ]
+
     def _get_karma_value(self, old_vote, new_vote, up_karma, down_karma):
         _karma_upd = {
             '-1': {'-1': 0, '0': -1 * down_karma, '1': -1 * down_karma + up_karma},
@@ -860,45 +864,65 @@ class Vote(models.Model):
 
     @api.model
     def create(self, vals):
+        # can't modify owner of a vote
+        if not self.env.user._is_admin():
+            vals.pop('user_id', None)
+
         vote = super(Vote, self).create(vals)
 
-        # own post check
-        if vote.user_id.id == vote.post_id.create_uid.id:
-            raise UserError(_('It is not allowed to vote for its own post.'))
-        # karma check
-        if vote.vote == '1' and not vote.post_id.can_upvote:
-            raise KarmaError('You don\'t have enough karma toupvote.')
-        elif vote.vote == '-1' and not vote.post_id.can_downvote:
-            raise KarmaError('You don\'t have enough karma to downvote.')
+        vote._check_general_rights()
+        vote._check_karma_rights(vote.vote == '1')
 
-        if vote.post_id.parent_id:
-            karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
-        else:
-            karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
-        vote.recipient_id.sudo().add_karma(karma_value)
+        # karma update
+        vote._vote_update_karma('0', vote.vote)
         return vote
 
     @api.multi
     def write(self, values):
-        if 'vote' in values:
-            for vote in self:
-                # own post check
-                if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise UserError(_('It is not allowed to vote for its own post.'))
-                # karma check
-                if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
-                    raise KarmaError('You don\'t have enough karma to upvote.')
-                elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0') and not vote.post_id.can_downvote:
-                    raise KarmaError('You don\'t have enough karma to downvote.')
+        # can't modify owner of a vote
+        if not self.env.user._is_admin():
+            values.pop('user_id', None)
+
+        for vote in self:
+            self._check_general_rights(values)
+            if 'vote' in values:
+                if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0'):
+                    upvote = True
+                elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0'):
+                    upvote = False
+                self._check_karma_rights(upvote)
 
                 # karma update
-                if vote.post_id.parent_id:
-                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
-                else:
-                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
-                vote.recipient_id.sudo().add_karma(karma_value)
+                self._vote_update_karma(vote.vote, values['vote'])
+
         res = super(Vote, self).write(values)
         return res
+
+    def _check_general_rights(self, vals={}):
+        post = self.post_id
+        if vals.get('post_id'):
+            post = self.env['forum.post'].browse(vals.get('post_id'))
+        if not self.env.user._is_admin():
+            # own post check
+            if self._uid == post.create_uid.id:
+                raise UserError(_('It is not allowed to vote for its own post.'))
+            # own vote check
+            if self._uid != self.user_id.id:
+                raise UserError(_('It is not allowed to modify someone else\'s vote.'))
+
+    def _check_karma_rights(self, upvote=None):
+        # karma check
+        if upvote and not self.post_id.can_upvote:
+            raise KarmaError('You don\'t have enough karma to upvote.')
+        elif not upvote and not self.post_id.can_downvote:
+            raise KarmaError('You don\'t have enough karma to downvote.')
+
+    def _vote_update_karma(self, old_vote, new_vote):
+        if self.post_id.parent_id:
+            karma_value = self._get_karma_value(old_vote, new_vote, self.forum_id.karma_gen_answer_upvote, self.forum_id.karma_gen_answer_downvote)
+        else:
+            karma_value = self._get_karma_value(old_vote, new_vote, self.forum_id.karma_gen_question_upvote, self.forum_id.karma_gen_question_downvote)
+        self.recipient_id.sudo().add_karma(karma_value)
 
 
 class Tags(models.Model):
