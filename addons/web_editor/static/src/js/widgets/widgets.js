@@ -8,6 +8,8 @@ var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weContext = require("web_editor.context");
 
+var CustomColorPicker = require("web.CustomColorPicker");
+
 var QWeb = core.qweb;
 var range = $.summernote.core.range;
 var dom = $.summernote.core.dom;
@@ -1562,6 +1564,23 @@ var LinkDialog = Dialog.extend({
     },
 });
 
+var ColorPickerDialog = Dialog.extend({
+    init: function (parent, options, $editable) {
+        this._super(parent, _.extend({
+            title: _t("Color Picker"),
+        }, options || {}));
+        this.customColor = new CustomColorPicker();
+    },
+    start: function () {
+        this.customColor.appendTo(this.$el);
+        return this._super.apply(this, arguments);
+    },
+    // save: function () {
+    //     console.log(this.customColor)
+    //     return this.customColor.hex;
+    // }
+});
+
 /**
  * CropImageDialog widget. Let users crop an image.
  */
@@ -1769,5 +1788,6 @@ return {
     LinkDialog: LinkDialog,
     CropImageDialog: CropImageDialog,
     ImageWidget: ImageWidget,
+    ColorPickerDialog: ColorPickerDialog,
 };
 });

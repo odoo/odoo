@@ -989,10 +989,16 @@ renderer.tplButtonInfo.color = function (lang, options) {
         '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
         lang.color.setTransparent + '</div>',
         '<div class="note-color-palette" data-target-event="backColor"></div>',
+        '<div class="note-custom-color" data-event="customColor" data-value="backColor" title="' + lang.color.custom + '">',
+        lang.color.custom + '</div>',
+        '<div class="note-custom-color-palette" data-target-event="backColor"></div>',
         '</div><div class="btn-group flex-column">',
         '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
         lang.color.resetToDefault + '</div>',
         '<div class="note-color-palette" data-target-event="foreColor"></div>',
+        '<div class="note-custom-color" data-event="customColor" data-value="foreColor" title="' + lang.color.custom + '">',
+        lang.color.custom + '</div>',
+        '<div class="note-custom-color-palette" data-target-event="foreColor"></div>',
         '</div></li>'
     ];
     var colorButton = renderer.getTemplate().button(colorButtonLabel, {

@@ -57,22 +57,6 @@ tour.register('rte', {
     content: "change text color",
     trigger: ".btn-group.show button[data-event=foreColor]:first",
 }, {
-    content: "change selection to change text custom-color again",
-    trigger: '#editable_area > section .row > div:first h1 font',
-    run: function () {
-        $.summernote.core.range.create(this.$anchor.parent()[0].lastChild, 0, this.$anchor.parent()[0].lastChild, 10).select();
-        simulateClickEvent(this.$anchor[0], 'mouseup');
-    }
-}, {
-    content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
-}, {
-    content: "apply custom color to text",
-    trigger: ".btn-group.open .note-custom-color:last",
-    run: function () {
-        this.$anchor.find('input').val('#e66465').change();
-    }
-}, {
     content: "change selection to change text bg-color again",
     trigger: '#editable_area > section .row > div:first h1 font',
     run: function () {

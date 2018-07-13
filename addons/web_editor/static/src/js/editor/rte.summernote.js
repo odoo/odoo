@@ -441,6 +441,17 @@ $.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorte
         media: $selection.data('target'),
     });
 };
+$.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, customColor) {
+    core.bus.trigger('color_picker_dialog_demand', {
+        onSave: function (color) {
+            if (customColor === 'foreColor') {
+                $.summernote.pluginEvents.foreColor(event, editor, layoutInfo, color);
+            } else {
+                $.summernote.pluginEvents.backColor(event, editor, layoutInfo, color);
+            }
+        }
+    });
+};
 
 // Utils
 var fn_is_void = dom.isVoid || function () {};
@@ -1052,6 +1063,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
 
         core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
         core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
+        core.bus.on('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
         core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1063,6 +1075,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
 
         core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
         core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
+        core.bus.off('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1129,6 +1142,22 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @private
      * @param {Object} data
      */
+     _onColorPickerDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var colorPickerDialog = new weWidgets.ColorPickerDialog(this);
+        if (data.onSave) {
+            colorPickerDialog.on('save', this, function () {
+                data.onSave(colorPickerDialog.customColor.hex);
+            });
+        }
+        if (data.onCancel) {
+            colorPickerDialog.on('cancel', this, data.onCancel);
+        }
+        colorPickerDialog.open();
+     },
     _onLinkDialogDemand: function (data) {
         if (data.__alreadyDone) {
             return;

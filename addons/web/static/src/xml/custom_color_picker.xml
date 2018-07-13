@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="customColorPicker">
+        <div class="container colpick">
+            <div class="row hsl">
+                <div class="form-group col-md-4 preview">
+                    <div class="previewColor"/>
+                    <div class="hexInput">
+                        <span>HEX: </span><input class="form-control" type="text" size="7" />
+                    </div>
+                    <div class="hslInput">
+                        <div class="hslText">
+                            <span>H: </span><span>S: </span> <span>L:</span>
+                        </div>
+                        <div class="hslVal">
+                            <input class="h form-control" type="text" max="360" />
+                            <input class="s form-control" type="text" max="100" size="8" />
+                            <input class="l form-control" type="text" max="100" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="hue colorContainer"></div>
+                    <div class="saturation colorContainer"></div>
+                    <div class="lightness colorContainer"></div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
