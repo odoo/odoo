@@ -53,6 +53,12 @@ class StockQuant(models.Model):
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
 
+    @api.model_cr
+    def init(self):
+        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_quant_product_location_index',))
+        if not self._cr.fetchone():
+            self._cr.execute('CREATE INDEX stock_quant_product_location_index ON stock_quant (product_id, location_id)')
+
     def action_view_stock_moves(self):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
