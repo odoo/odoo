@@ -305,6 +305,9 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def record_production(self):
+        if not self:
+            return True
+
         self.ensure_one()
         if self.qty_producing <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))

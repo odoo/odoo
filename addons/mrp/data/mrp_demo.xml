@@ -169,6 +169,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Solid wood table.</field>
             <field name="default_code">FURN_9666</field>
+            <field name="tracking">serial</field>
             <field name="image" type="base64" file="mrp/static/img/table.png"/>
         </record>
         <record id="product_product_computer_desk_head" model="product.product">
@@ -470,18 +471,6 @@
             <field name="name">0000000000030</field>
             <field name="product_id" ref="product.product_product_27"/>
         </record>
-        <record id="lot_product_27_1" model="stock.production.lot">
-            <field name="name">0000000000031</field>
-            <field name="product_id" ref="product.product_product_27"/>
-        </record>
-        <record id="lot_product_drawer_drawer" model="stock.production.lot">
-            <field name="name">0000000000032</field>
-            <field name="product_id" ref="product_product_drawer_drawer"/>
-        </record>
-        <record id="lot_product_drawer_case" model="stock.production.lot">
-            <field name="name">0000000000033</field>
-            <field name="product_id" ref="product_product_drawer_case"/>
-        </record>
 
         <!-- Initital Inventory -->
 
@@ -503,7 +492,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">40</field>
-            <field name="prod_lot_id" ref="lot_product_27_1"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
         <record id="stock_inventory_line_product_drawer_drawer" model="stock.inventory.line">
@@ -511,7 +499,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
-            <field name="prod_lot_id" ref="lot_product_drawer_drawer"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
         <record id="stock_inventory_line_product_drawer_case" model="stock.inventory.line">
@@ -519,7 +506,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
-            <field name="prod_lot_id" ref="lot_product_drawer_case"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
         <record id="stock_inventory_line_product_wood_panel" model="stock.inventory.line">

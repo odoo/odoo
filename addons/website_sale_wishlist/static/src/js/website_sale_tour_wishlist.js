@@ -47,18 +47,18 @@ tour.register('shop_wishlist', {
             },
         },
         {
-            content: "check that logged in and search for desk customizable",
+            content: "check that logged in and search for Customizable Desk",
             extra_trigger: 'li span:contains(Administrator)',
             trigger: 'form input[name="search"]',
-            run: "text Desk Customizable",
+            run: "text Customizable Desk",
         },
         {
             content: "submit search",
             trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            content: "click on desk customizable",
-            trigger: '.oe_product_cart a:contains("Desk Customizable")',
+            content: "click on Customizable Desk",
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
             content: "select desk cutomizable",
@@ -75,8 +75,8 @@ tour.register('shop_wishlist', {
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
-            content: "remove desk customizable",
-            trigger: 'tr:contains("Desk Customizable") a.o_wish_rm:first',
+            content: "remove Customizable Desk",
+            trigger: 'tr:contains("Customizable Desk") a.o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",

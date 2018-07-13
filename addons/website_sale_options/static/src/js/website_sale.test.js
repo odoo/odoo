@@ -43,7 +43,7 @@ tour.register('shop_customize', {
         {
             content: "select product",
             extra_trigger: 'body:not(:has(.oe_website_sale .oe_product_cart:eq(2)))',
-            trigger: '.oe_product_cart a:contains("Desk Customizable")',
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
             content: "open customize menu",
