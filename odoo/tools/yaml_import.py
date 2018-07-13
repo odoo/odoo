@@ -608,7 +608,7 @@ class YamlInterpreter(object):
             unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
         except AssertionError, e:
             self._log_assert_failure('AssertionError in Python code %s (line %d): %s',
-                python.name, python.first_line, e)
+                python.name if python.name else self.filename, python.first_line, e)
             return
         except Exception, e:
             _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
