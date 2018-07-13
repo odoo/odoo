@@ -16,7 +16,7 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
         ]
         self.update({'sales_count': 0})
-        uom = self.env['product.uom']
+        uom = self.env['uom.uom']
         for group in self.env['sale.order.line'].read_group(domain, ['product_id', 'product_uom', 'product_uom_qty'], ['product_id', 'product_uom'], lazy=False):
             product = self.browse(group['product_id'][0])
             uom = uom.browse(group['product_uom'][0])
