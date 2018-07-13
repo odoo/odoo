@@ -15,8 +15,6 @@ from purchase order.
     """,
     'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['mrp', 'purchase'],
-    'data': [],
-    'demo': [],
     'installable': True,
     'auto_install': True,
 }

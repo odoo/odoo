@@ -39,7 +39,7 @@ class ProductionLot(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'product_id' in vals:
+        if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
             if move_lines:
                 raise UserError(_(

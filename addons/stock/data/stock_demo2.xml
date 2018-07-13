@@ -52,18 +52,13 @@
             <field name="image" type="base64" file="stock/static/img/cable_management.png"/>
         </record>
 
-        <record id="lot_icecream_0" model="stock.production.lot">
+        <record id="lot_product_cable_management" model="stock.production.lot">
             <field name="name">0000000000017</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
         </record>
 
-        <record id="lot_icecream_1" model="stock.production.lot">
-            <field name="name">0000000000024</field>
-            <field name="product_id" ref="stock.product_cable_management_box"/>
-        </record>
-
         <record id="stock_inventory_icecream" model="stock.inventory">
-            <field name="name">Inventory for icecream</field>
+            <field name="name">Inventory for Cable Management Box</field>
             <field name="filter">product</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
         </record>
@@ -73,7 +68,6 @@
             <field name="product_uom_id" ref="uom.product_uom_kgm"/>
             <field name="inventory_id" ref="stock.stock_inventory_icecream"/>
             <field name="product_qty">50.0</field>
-            <field name="prod_lot_id" ref="stock.lot_icecream_0"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
 
@@ -82,7 +76,6 @@
             <field name="product_uom_id" ref="uom.product_uom_kgm"/>
             <field name="inventory_id" ref="stock.stock_inventory_icecream"/>
             <field name="product_qty">40.0</field>
-            <field name="prod_lot_id" ref="stock.lot_icecream_1"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
 
