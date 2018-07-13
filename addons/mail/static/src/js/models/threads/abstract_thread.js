@@ -53,7 +53,7 @@ var AbstractThread = Class.extend({
     /**
      * Get the name of this thread
      *
-     * @returns {string|Object} object for lazy translated names with _lt
+     * @returns {string}
      */
     getName: function () {
         return this._name;
@@ -69,7 +69,7 @@ var AbstractThread = Class.extend({
     /**
      * Returns the title to display in thread window's headers.
      *
-     * @returns {string|Object} the name of the thread by default (see @getName)
+     * @returns {string} the name of the thread by default (see @getName)
      */
     getTitle: function () {
         return this.getName();

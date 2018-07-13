@@ -884,19 +884,19 @@ var MailManager =  AbstractService.extend({
     _initializeMailboxes: function (data) {
         this._addMailbox({
             id: 'inbox',
-            name: _lt("Inbox"),
+            name: _t("Inbox"),
             mailboxCounter: data.needaction_inbox_counter || 0,
         });
         this._addMailbox({
             id: 'starred',
-            name: _lt("Starred"),
+            name: _t("Starred"),
             mailboxCounter: data.starred_counter || 0,
         });
 
         if (data.is_moderator) {
             this._addMailbox({
                 id: 'moderation',
-                name: _lt("Moderate Messages"),
+                name: _t("Moderate Messages"),
                 mailboxCounter: data.moderation_counter || 0,
             });
         }
