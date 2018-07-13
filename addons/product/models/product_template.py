@@ -250,7 +250,7 @@ class ProductTemplate(models.Model):
     @api.one
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
-        self.product_variant_count = len(self.product_variant_ids)
+        self.product_variant_count = self.env['product.product'].search_count([('product_tmpl_id','=',self.id)])
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
