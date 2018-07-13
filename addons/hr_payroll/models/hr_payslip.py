@@ -506,4 +506,5 @@ class HrPayslipRun(models.Model):
 
     @api.multi
     def close_payslip_run(self):
+        self.mapped('slip_ids').filtered(lambda payslip: payslip.state != 'done').action_payslip_done()
         return self.write({'state': 'close'})
