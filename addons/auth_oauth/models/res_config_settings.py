@@ -18,22 +18,35 @@ class ResConfigSettings(models.TransientModel):
     auth_oauth_google_enabled = fields.Boolean(string='Allow users to sign in with Google')
     auth_oauth_google_client_id = fields.Char(string='Client ID')
     server_uri_google = fields.Char(string='Server uri')
+    auth_oauth_microsoft_enabled = fields.Boolean(string='Allow users to sign in with Microsoft')
+    auth_oauth_microsoft_client_id = fields.Char(string='Microsoft Client ID')
+    auth_oauth_microsoft_client_secret = fields.Char(string='Microsoft Client Secret')
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         google_provider = self.env.ref('auth_oauth.provider_google', False)
+        microsoft_provider = self.env.ref('auth_oauth.provider_microsoft', False)
         res.update(
             auth_oauth_google_enabled=google_provider.enabled,
             auth_oauth_google_client_id=google_provider.client_id,
             server_uri_google=self.get_uri(),
+            auth_oauth_microsoft_enabled=microsoft_provider.enabled,
+            auth_oauth_microsoft_client_id=microsoft_provider.client_id,
+            auth_oauth_microsoft_client_secret=microsoft_provider.client_secret,
         )
         return res
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         google_provider = self.env.ref('auth_oauth.provider_google', False)
+        microsoft_provider = self.env.ref('auth_oauth.provider_microsoft', False)
         google_provider.write({
             'enabled': self.auth_oauth_google_enabled,
             'client_id': self.auth_oauth_google_client_id,
+        })
+        microsoft_provider.write({
+            'enabled': self.auth_oauth_microsoft_enabled,
+            'client_id': self.auth_oauth_microsoft_client_id,
+            'client_secret': self.auth_oauth_microsoft_client_secret,
         })

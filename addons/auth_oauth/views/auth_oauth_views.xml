@@ -16,6 +16,8 @@
                             <field name="auth_endpoint" />
                             <field name="scope" />
                             <field name="validation_endpoint" />
+                            <field name="response_type" />
+                            <field name="client_secret" password="True" attrs="{'invisible': [('response_type', '!=', 'code')], 'required': [('response_type', '=', 'code')]}"/>
                             <field name="data_endpoint" />
                         </group>
                     </sheet>

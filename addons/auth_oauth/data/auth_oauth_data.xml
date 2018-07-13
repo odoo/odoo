@@ -29,6 +29,15 @@
             <field name="css_class">fa fa-fw fa-google-plus-square</field>
             <field name="body">Log in with Google</field>
         </record>
+        <record id="provider_microsoft" model="auth.oauth.provider">
+            <field name="name">Microsoft OAuth2</field>
+            <field name="auth_endpoint">https://login.microsoftonline.com/common/oauth2/v2.0/authorize</field>
+            <field name="scope">openid profile email</field>
+            <field name="validation_endpoint">https://login.microsoftonline.com/common/oauth2/v2.0/token</field>
+            <field name="css_class">fa fa-fw fa-windows</field>
+            <field name="body">Log in with Microsoft</field>
+            <field name="response_type">code</field>
+        </record>
 
         <!-- Use database uuid as client_id for OpenERP oauth provider -->
         <function model="auth.oauth.provider" name="write">

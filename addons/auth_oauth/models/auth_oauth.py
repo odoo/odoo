@@ -13,6 +13,7 @@ class AuthOAuthProvider(models.Model):
 
     name = fields.Char(string='Provider name', required=True)  # Name of the OAuth2 entity, Google, etc
     client_id = fields.Char(string='Client ID')  # Our identifier
+    client_secret = fields.Char(string='Client Secret')
     auth_endpoint = fields.Char(string='Authentication URL', required=True)  # OAuth provider URL to authenticate users
     scope = fields.Char()  # OAUth user data desired to access
     validation_endpoint = fields.Char(string='Validation URL', required=True)  # OAuth provider URL to validate tokens
@@ -20,4 +21,5 @@ class AuthOAuthProvider(models.Model):
     enabled = fields.Boolean(string='Allowed')
     css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
     body = fields.Char(required=True)
+    response_type = fields.Selection([('token', 'Token'), ('code', 'Code')], default='token', required=True)
     sequence = fields.Integer()
