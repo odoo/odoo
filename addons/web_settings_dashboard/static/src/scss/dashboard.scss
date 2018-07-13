@@ -8,20 +8,10 @@
         border-radius: 2px;
     }
 
-    .o_web_settings_dashboard_container {
-        padding: 5px 0px;
-    }
-
     background: #F7F7F7;
     height: 100%;
 
     .o_web_settings_dashboard_col {
-        padding: 10px 8px;
-
-        @include media-breakpoint-down(md) {
-            padding: 5px 8px;
-        }
-
         > div > hr {
             margin: 12px -18px 15px -18px;
             border-color: #CBCBCB;
@@ -30,27 +20,10 @@
         > div {
             @include o-web-settings-dashboard-card;
             padding: 25px 18px 18px 18px;
-                .o_web_settings_dashboard_header {
-                    font-size: 22px;
-                    margin-bottom: 8px;
-                }
-        }
-        .o_web_settings_dashboard_pills {
-            margin-top: 10px;
 
-            > a {
-                padding: 10px;
-
-                > i.fa {
-                    vertical-align: middle;
-                    font-size: 1.5em;
-                }
-            }
-            @include media-breakpoint-down(lg) {
-                > li {
-                    width: 100%;
-                    margin-bottom: 5px;
-                }
+            .o_web_settings_dashboard_header {
+                font-size: 22px;
+                margin-bottom: 8px;
             }
         }
         .btn.o_browse_apps, .btn.o_web_settings_dashboard_invitations {
