@@ -148,15 +148,25 @@ var ControlPanel = Widget.extend({
             }
 
             // Detach control_panel old content and attach new elements
+            var toDetach = this.nodes;
+            if (status.searchview && this.searchview === status.searchview) {
+                // If the searchview is the same as before, don't detach it s.t.
+                // we don't loose any floating content, nor the focus
+                toDetach = _.omit(toDetach, '$searchview');
+                new_cp_content = _.omit(new_cp_content, '$searchview');
+            }
             if (options.clear) {
-                this._detach_content(this.nodes);
+                this._detach_content(toDetach);
                 // Show the searchview buttons area, which might have been hidden by
                 // the searchview, as client actions may insert elements into it
                 this.nodes.$searchview_buttons.show();
             } else {
-                this._detach_content(_.pick(this.nodes, _.keys(new_cp_content)));
+                this._detach_content(_.pick(toDetach, _.keys(new_cp_content)));
             }
             this._attach_content(new_cp_content);
+            if (options.clear || status.searchview) {
+                this.searchview = status.searchview;
+            }
 
             // Update the searchview and switch buttons
             if (status.searchview || options.clear) {
