@@ -72,7 +72,7 @@ class StockMoveLine(models.Model):
     def _compute_product_qty(self):
         self.product_qty = self.product_uom_id._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method='HALF-UP')
 
-    @api.constrains('lot_id','product_id'):
+    @api.constrains('lot_id','product_id')
     def _check_lot_product(self):
         for line in self:
             if line.lot_id and line.product_id != line.lot_id.product_id:
