@@ -16,6 +16,7 @@ class HrPayrollStructure(models.Model):
     """
     _name = 'hr.payroll.structure'
     _description = 'Salary Structure'
+    _order = 'sequence'
 
     @api.model
     def _get_parent(self):
