@@ -492,7 +492,7 @@ class ProductProduct(models.Model):
                 continue
             if seller.date_end and seller.date_end < date:
                 continue
-            if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
+            if partner_id and seller.name not in [partner_id]:
                 continue
             if float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
                 continue
