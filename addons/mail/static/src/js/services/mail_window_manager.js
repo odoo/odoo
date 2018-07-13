@@ -638,8 +638,7 @@ MailManager.include({
      * @private
      * @param {mail.model.Channel} channel
      */
-    _onNewChannel: function (event) {
-        var channel = event.data;
+    _onNewChannel: function (channel) {
         if (channel.isDetached()) {
             this.openThreadWindow(channel.getID(), { keepFoldState: true, passively: true });
         } else {

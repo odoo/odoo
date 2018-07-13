@@ -1376,9 +1376,8 @@ var Discuss = AbstractAction.extend({
      * @param {mail.model.Message} message
      * @param {string} [type] the channel
      */
-    _onMessageUpdated: function (ev) {
-        var message = ev.data;
-        var type = ev.data.type;
+    _onMessageUpdated: function (message) {
+        var type = message.type;
         var self = this;
         var currentThreadID = this._thread.getID();
         if (
@@ -1425,8 +1424,7 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {mail.model.Message} message
      */
-    _onNewMessage: function (ev) {
-        var message = ev.data;
+    _onNewMessage: function (message) {
         var self = this;
         if (_.contains(message.getThreadIDs(), this._thread.getID())) {
             if (this._thread.getType() !== 'mailbox' && this._threadWidget.isAtBottom()) {

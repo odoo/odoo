@@ -18,6 +18,13 @@ return Class.extend(mixins.EventDispatcherMixin, {
         this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
         return this;
     },
+    // SUH TODO: Remove this method from bus.
+    trigger_up: function (name, info) {
+        var event = new OdooEvent(this, name, info);
+        this._trigger_up(event);
+        return event;
+        //console.info('event: ', name, info);
+    },
 });
 
 });
