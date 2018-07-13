@@ -899,9 +899,8 @@ class ProcurementRule(models.Model):
             raise UserError(msg)
 
         supplier = self._make_po_select_supplier(values, suppliers)
-        partner = supplier.name
 
-        domain = self._make_po_get_domain(values, partner)
+        domain = self._make_po_get_domain(values, supplier)
 
         if domain in cache:
             po = cache[domain]
@@ -910,7 +909,7 @@ class ProcurementRule(models.Model):
             po = po[0] if po else False
             cache[domain] = po
         if not po:
-            vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+            vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, supplier)
             company_id = values.get('company_id') and values['company_id'].id or self.env.user.company_id.id
             po = self.env['purchase.order'].with_context(force_company=company_id).sudo().create(vals)
             cache[domain] = po
@@ -928,7 +927,7 @@ class ProcurementRule(models.Model):
         for line in po.order_line:
             if line.product_id == product_id and line.product_uom == product_id.uom_po_id:
                 if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values):
-                    vals = self._update_purchase_order_line(product_id, product_qty, product_uom, values, line, partner)
+                    vals = self._update_purchase_order_line(product_id, product_qty, product_uom, values, line, supplier)
                     po_line = line.write(vals)
                     break
         if not po_line:
@@ -991,8 +990,8 @@ class ProcurementRule(models.Model):
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
         product_lang = product_id.with_context({
-            'lang': supplier.name.lang,
-            'partner_id': supplier.name.id,
+            'lang': supplier.lang,
+            'partner_id': supplier.id,
         })
         name = product_lang.display_name
         if product_lang.description_purchase:

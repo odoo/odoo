@@ -24,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
         ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
-    module_account_accountant = fields.Boolean(string='Accounting')
+    module_account_invoicing = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
     group_warning_account = fields.Boolean(string="Warnings", implied_group='account.group_warning_account')
@@ -108,7 +108,7 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
-            self.module_account_accountant = True
+            self.module_account_invoicing = True
 
     @api.onchange('module_account_budget')
     def onchange_module_account_budget(self):
