@@ -51,7 +51,8 @@ var AbstractThread = Class.extend({
      */
     getMessages: function () {},
     /**
-     * Get the name of this thread
+     * Get the name of this thread. If the name of the thread has been created
+     * by the user from an input, it may be escaped.
      *
      * @returns {string}
      */
