@@ -2,21 +2,18 @@
 
 <templates xml:space="preserve">
     <t t-name="DashboardMain">
-        <div class="container-fluid o_web_settings_dashboard">
-            <div class="row">
-                <div class="o_web_settings_dashboard_enterprise"/>
-                <div class="col-md-12 o_web_settings_dashboard_container" >
-                   <div class="col-xl-4 col-lg-4 col-md-12 col-12 o_web_settings_dashboard_col">
-                        <div class="text-center o_web_settings_dashboard_apps"></div>
-                        <div class="text-center o_web_settings_dashboard_translations"></div>
-                    </div>
-                   <div class="col-xl-4 col-lg-4 col-md-12 col-12 o_web_settings_dashboard_col">
-                        <div class="text-center o_web_settings_dashboard_invitations"></div>
-                        <div class="text-center o_web_settings_dashboard_company"></div>
-                    </div>
-                   <div class="col-xl-4 col-lg-4 col-md-12 col-12 o_web_settings_dashboard_col">
-                        <div class="text-center o_web_settings_dashboard_share"></div>
-                    </div>
+        <div class="container-fluid py-2 o_web_settings_dashboard">
+            <div class="form-row">
+               <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                    <div class="o_web_settings_dashboard_apps"></div>
+                    <div class="o_web_settings_dashboard_translations"></div>
+                </div>
+               <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                    <div class="o_web_settings_dashboard_invitations"></div>
+                    <div class="o_web_settings_dashboard_company"></div>
+                </div>
+               <div class="col-12 col-lg-4 o_web_settings_dashboard_col">
+                    <div class="o_web_settings_dashboard_share"></div>
                 </div>
             </div>
         </div>
@@ -37,11 +34,11 @@
                 </t>
             </div>
             <div>
-                <a class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
+                <a href="#" class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
             </div>
-            <div class="o_web_settings_dashboard_pills">
-                <a href="https://www.odoo.com/apps/modules" target="_blank" class="float-left"><i class="fa fa-rocket fa-2x text-muted"/> App store</a>
-                <a href="https://www.odoo.com/apps/themes" target="_blank" class="float-right"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a>
+            <div class="d-flex mt-2 o_web_settings_dashboard_pills">
+                <a href="https://www.odoo.com/apps/modules" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-rocket text-muted"/> App store</a>
+                <a href="https://www.odoo.com/apps/themes" target="_blank" class="flex-grow-1 w-25"><i class="fa fa-lg fa-picture-o text-muted"/> Theme store</a>
             </div>
             <div class="clearfix"/>
         </div>
@@ -110,48 +107,40 @@
             <t t-set="server_version" t-value="widget.data.server_version"/>
             <t t-set="debug" t-value="widget.data.debug"/>
             <t t-set="demo_active" t-value="widget.data.demo_active"/>
-            <div class="row">
-                <div class="text-center">
-                    <div class="user-heading">
-                        <h3>
-                            Odoo <t t-esc="server_version"/>
-                            (Community Edition)
-                        </h3>
-                    </div>
-                    <div>
-                        <div class="tab-content">
-                            <div role="tabpanel" id="settings" class="tab-pane active text-muted text-center o_web_settings_dashboard_compact_subtitle">
-                                <small>Copyright © 2004-2016 <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a> <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU LGPL Licensed</a></small>
-                            </div>
+            <div class="text-center">
+                <div class="user-heading">
+                    <h3>
+                        Odoo <t t-esc="server_version"/>
+                        (Community Edition)
+                    </h3>
+                </div>
+                <div>
+                    <div class="tab-content">
+                        <div role="tabpanel" id="settings" class="tab-pane active text-muted text-center o_web_settings_dashboard_compact_subtitle">
+                            <small>Copyright © 2004-2016 <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a> <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU LGPL Licensed</a></small>
                         </div>
                     </div>
                 </div>
             </div>
             <hr/>
-            <div class="row">
-                <div class="col-lg-12">
-                    <a t-if="debug != true" class="oe_activate_debug_mode float-right" href="?debug" >Activate the developer mode</a>
-                    <br t-if="debug != true"/>
-                    <a t-if="debug != 'assets'" class="oe_activate_debug_mode float-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
-                    <br t-if="debug != 'assets'"/>
-                    <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
-                    <br t-if="debug != false"/>
-                    <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
-                </div>
-            </div>
+            <a t-if="debug != true" class="oe_activate_debug_mode float-right" href="?debug" >Activate the developer mode</a>
+            <br t-if="debug != true"/>
+            <a t-if="debug != 'assets'" class="oe_activate_debug_mode float-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
+            <br t-if="debug != 'assets'"/>
+            <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
+            <br t-if="debug != false"/>
+            <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
         </div>
     </t>
 
     <t t-name="DashboardEnterprise">
         <hr class="mt16"/>
         <div class="text-center o_web_settings_dashboard_enterprise">
-            <div class="text-center o_web_settings_dashboard_enterprise">
-                <div class="text-center o_web_settings_dashboard_header">Odoo Enterprise</div>
-                <div class="mb16"><a href="http://www.odoo.com/editions" target="_blank">Get more features with the Enterprise Edition!</a></div>
-                <div><img class="img img-fluid" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' alt="Upgrade to enterprise"/></div>
-                <div>
-                    <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
-                </div>
+            <div class="o_web_settings_dashboard_header">Odoo Enterprise</div>
+            <div class="mb16"><a href="http://www.odoo.com/editions" target="_blank">Get more features with the Enterprise Edition!</a></div>
+            <div><img class="img img-fluid" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' alt="Upgrade to enterprise"/></div>
+            <div>
+                <a href="#" class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
             </div>
         </div>
     </t>
@@ -168,7 +157,7 @@
                 </small>
             </div>
             <div class="mt16">
-                <a role="button" class="btn btn-primary btn-block o_load_translations"><strong>Load a Translation</strong></a>
+                <a href="#" role="button" class="btn btn-primary btn-block o_load_translations"><strong>Load a Translation</strong></a>
             </div>
         </div>
     </t>
@@ -185,7 +174,7 @@
                 </small>
             </div>
             <div class="mt16">
-                <a role="button" class="btn btn-primary btn-block o_setup_company"><strong>Set Up</strong></a>
+                <a href="#" role="button" class="btn btn-primary btn-block o_setup_company"><strong>Set Up</strong></a>
             </div>
         </div>
     </t>
