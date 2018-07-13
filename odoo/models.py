@@ -3268,59 +3268,75 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return True
 
-    @api.model
+    @api.model_create_multi
     @api.returns('self', lambda value: value.id)
-    def create(self, vals):
-        """ create(vals) -> record
+    def create(self, vals_list):
+        """ create(vals_list) -> records
 
-        Creates a new record for the model.
+        Creates new records for the model.
 
-        The new record is initialized using the values from ``vals`` and
-        if necessary those from :meth:`~.default_get`.
+        The new records are initialized using the values from the list of dicts
+        ``vals_list``, and if necessary those from :meth:`~.default_get`.
 
-        :param dict vals:
-            values for the model's fields, as a dictionary::
+        :param list vals_list:
+            values for the model's fields, as a list of dictionaries::
 
-                {'field_name': field_value, ...}
+                [{'field_name': field_value, ...}, ...]
+
+            For backward compatibility, ``vals_list`` may be a dictionary.
+            It is treated as a singleton list ``[vals]``, and a single record
+            is returned.
 
             see :meth:`~.write` for details
-        :return: new record created
+
+        :return: the created records
         :raise AccessError: * if user has no create rights on the requested object
                             * if user tries to bypass access rules for create on the requested object
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
-        self.check_access_rights('create')
+        if not vals_list:
+            return self.browse()
 
-        # add missing defaults
-        vals = self._add_missing_default_values(vals)
+        self = self.browse()
+        self.check_access_rights('create')
 
         bad_names = {'id', 'parent_path'}
         if self._log_access:
             bad_names.update(LOG_ACCESS_COLUMNS)
+        unknown_names = set()
 
-        # distribute fields into sets for various purposes
-        store_vals = {}
-        inverse_vals = {}
-        inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
-        unknown_names = []
-        inverse_fields = []
-        protected_fields = []
-        for key, val in vals.items():
-            if key in bad_names:
-                continue
-            field = self._fields.get(key)
-            if not field:
-                unknown_names.append(key)
-                continue
-            if field.store:
-                store_vals[key] = val
-            if field.inherited:
-                inherited_vals[field.related_field.model_name][key] = val
-            elif field.inverse:
-                inverse_vals[key] = val
-                inverse_fields.append(field)
-                protected_fields.extend(self._field_computed.get(field, [field]))
+        # classify fields for each record
+        data_list = []
+        inversed_fields = set()
+
+        for vals in vals_list:
+            # add missing defaults
+            vals = self._add_missing_default_values(vals)
+
+            # distribute fields into sets for various purposes
+            data = {}
+            data['stored'] = stored = {}
+            data['inversed'] = inversed = {}
+            data['inherited'] = inherited = defaultdict(dict)
+            data['protected'] = protected = set()
+            for key, val in vals.items():
+                if key in bad_names:
+                    continue
+                field = self._fields.get(key)
+                if not field:
+                    unknown_names.add(key)
+                    continue
+                if field.store:
+                    stored[key] = val
+                if field.inherited:
+                    inherited[field.related_field.model_name][key] = val
+                elif field.inverse:
+                    inversed[key] = val
+                    inversed_fields.add(field)
+                    protected.update(self._field_computed.get(field, [field]))
+
+            data_list.append(data)
 
         if unknown_names:
             _logger.warning("%s.create() with unknown fields: %s",
@@ -3328,123 +3344,163 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # create or update parent records
         for model_name, parent_name in self._inherits.items():
-            parent_record = self.env[model_name].browse(store_vals.get(parent_name))
-            parent_vals = inherited_vals[model_name]
-            if not parent_record:
-                store_vals[parent_name] = parent_record.create(parent_vals).id
-            elif parent_vals:
-                parent_record.write(parent_vals)
+            parent_data_list = []
+            for data in data_list:
+                if not data['stored'].get(parent_name):
+                    parent_data_list.append(data)
+                elif data['inherited'][model_name]:
+                    parent = self.env[model_name].browse(data['stored'][parent_name])
+                    parent.write(data['inherited'][model_name])
 
-        # create record with stored fields
-        record = self._create(store_vals)
+            if parent_data_list:
+                parents = self.env[model_name].create([
+                    data['inherited'][model_name]
+                    for data in parent_data_list
+                ])
+                for parent, data in pycompat.izip(parents, parent_data_list):
+                    data['stored'][parent_name] = parent.id
 
-        with self.env.protecting(protected_fields, record):
-            # put the values of inverse fields in cache, and inverse them
-            record._cache.update(record._convert_to_cache(inverse_vals))
+        # create records with stored fields
+        records = self._create(data_list)
 
+        # determine which fields to protect on which records
+        protected = [(data['protected'], data['record']) for data in data_list]
+        with self.env.protecting(protected):
             # in case several fields use the same inverse method, call it once
-            for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
-                fields[0].determine_inverse(record)
+            for _inv, fields in groupby(inversed_fields, attrgetter('inverse')):
+                # determine which records to inverse for those fields
+                inv_names = {field.name for field in fields}
+                rec_vals = [
+                    (data['record'], data['inversed'])
+                    for data in data_list
+                    if not inv_names.isdisjoint(data['inversed'])
+                ]
 
-            # trick: no need to mark non-stored fields as modified, thanks to
-            # the transitive closure made over non-stored dependencies
+                # If a field is not stored, its inverse method will probably
+                # write on its dependencies, which will invalidate the field on
+                # all records. We therefore inverse the field record by record.
+                if all(field.store for field in fields):
+                    batches = [rec_vals]
+                else:
+                    batches = [[rec_data] for rec_data in rec_vals]
 
-            # check Python constraints for inversed fields
-            record._validate_fields(set(inverse_vals) - set(store_vals))
+                for batch in batches:
+                    for record, vals in batch:
+                        record._cache.update(record._convert_to_cache(vals))
+                    batch_recs = self.concat(*(record for record, vals in batch))
+                    fields[0].determine_inverse(batch_recs)
 
-            # recompute fields
-            if self.env.recompute and self._context.get('recompute', True):
-                self.recompute()
+                # trick: no need to mark non-stored fields as modified, thanks
+                # to the transitive closure made over non-stored dependencies
 
-        return record
+        # check Python constraints for non-stored inversed fields
+        for data in data_list:
+            data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
+
+        # recompute fields
+        if self.env.recompute and self._context.get('recompute', True):
+            self.recompute()
+
+        return records
 
     @api.model
-    def _create(self, vals):
-        self = self.browse()
+    def _create(self, data_list):
+        """ Create records from the stored field values in ``data_list``. """
+        assert data_list
         cr = self.env.cr
+        quote = '"{}"'.format
 
-        # set boolean fields to False by default (to make search more powerful)
+        # set boolean fields to False by default (avoid NULL in database)
         for name, field in self._fields.items():
             if field.type == 'boolean' and field.store:
-                vals.setdefault(name, False)
+                for data in data_list:
+                    data['stored'].setdefault(name, False)
 
-        # determine SQL values
-        columns = []                    # list of (column_name, format, value)
-        other_fields = []               # list of non-column fields
-        protected_fields = []           # list of fields to not recompute on self
-        translated_names = []           # list of translated field names
+        # insert rows
+        ids = []                        # ids of created records
+        other_fields = set()            # non-column fields
+        translated_fields = set()       # translated fields
 
-        columns.append(('id', "nextval(%s)", self._sequence))
-
-        for name, val in vals.items():
-            field = self._fields[name]
-            assert field.store
-
-            if field.column_type:
-                column_val = field.convert_to_column(val, self, vals)
-                columns.append((name, field.column_format, column_val))
-                if field.translate is True:
-                    translated_names.append(name)
-            else:
-                other_fields.append(field)
-
-            if field.inverse:
-                protected_fields.append(field)
-
+        # column names, formats and values (for common fields)
+        columns0 = [('id', "nextval(%s)", self._sequence)]
         if self._log_access:
-            columns.append(('create_uid', '%s', self._uid))
-            columns.append(('write_uid', '%s', self._uid))
-            columns.append(('create_date', '%s', AsIs("(now() at time zone 'UTC')")))
-            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
+            columns0.append(('create_uid', "%s", self._uid))
+            columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
+            columns0.append(('write_uid', "%s", self._uid))
+            columns0.append(('write_date', "%s", AsIs("(now() at time zone 'UTC')")))
 
-        # insert a row for this record
-        query = """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
-                self._table,
-                ', '.join('"%s"' % column[0] for column in columns),
-                ', '.join(column[1] for column in columns),
+        for data in data_list:
+            # determine column values
+            columns = list(columns0)
+            for name, val in sorted(data['stored'].items()):
+                field = self._fields[name]
+                assert field.store
+
+                if field.column_type:
+                    col_val = field.convert_to_column(val, self, data['stored'])
+                    columns.append((name, field.column_format, col_val))
+                    if field.translate is True:
+                        translated_fields.add(field)
+                else:
+                    other_fields.add(field)
+
+            # insert a row with the given columns
+            query = "INSERT INTO {} ({}) VALUES ({}) RETURNING id".format(
+                quote(self._table),
+                ", ".join(quote(name) for name, fmt, val in columns),
+                ", ".join(fmt for name, fmt, val in columns),
             )
-        cr.execute(query, [column[2] for column in columns])
+            params = [val for name, fmt, val in columns]
+            cr.execute(query, params)
+            ids.append(cr.fetchone()[0])
 
-        # from now on, self is the new record
-        self = self.browse(cr.fetchone()[0])
+        # the new records
+        records = self.browse(ids)
+        for data, record in pycompat.izip(data_list, records):
+            data['record'] = record
 
         # update parent_path
-        self._parent_store_create()
+        records._parent_store_create()
 
-        with self.env.protecting(protected_fields, self):
+        protected = [(data['protected'], data['record']) for data in data_list]
+        with self.env.protecting(protected):
             # mark fields to recompute; do this before setting other fields,
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
-            self.modified(self._fields)
+            records.modified(self._fields)
 
-            # set the value of non-column fields
             if other_fields:
-                # discard default values from context
-                other = self.with_context({
+                # discard default values from context for other fields
+                others = records.with_context({
                     key: val
                     for key, val in self._context.items()
                     if not key.startswith('default_')
                 })
-
                 for field in sorted(other_fields, key=attrgetter('_sequence')):
-                    field.write(other, vals[field.name], create=True)
+                    for other, data in pycompat.izip(others, data_list):
+                        if field.name in data['stored']:
+                            field.write(other, data['stored'][field.name], create=True)
 
                 # mark fields to recompute
-                self.modified(field.name for field in other_fields)
+                records.modified([field.name for field in other_fields])
 
-            # check Python constraints
-            self._validate_fields(vals)
+            # check Python constraints for stored fields
+            records._validate_fields(name for data in data_list for name in data['stored'])
 
-        self.check_access_rule('create')
+        records.check_access_rule('create')
 
         # add translations
         if self.env.lang and self.env.lang != 'en_US':
-            for name in translated_names:
-                tname = "%s,%s" % (self._name, name)
-                val = vals[name]
-                self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
+            Translations = self.env['ir.translation']
+            for field in translated_fields:
+                tname = "%s,%s" % (field.model_name, field.name)
+                for data in data_list:
+                    if field.name in data['stored']:
+                        record = data['record']
+                        val = data['stored'][field.name]
+                        Translations._set_ids(tname, 'model', self.env.lang, record.ids, val, val)
 
-        return self
+        return records
 
     def _parent_store_create(self):
         """ Set the parent_path field on ``self`` after its creation. """
@@ -3881,6 +3937,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if old.env.lang and callable(field.translate):
                     # the new value *without lang* must be the old value without lang
                     new_wo_lang[name] = old_wo_lang[name]
+                vals_list = []
                 for vals in Translation.search_read(domain):
                     del vals['id']
                     del vals['source']      # remove source to avoid triggering _set_src
@@ -3892,7 +3949,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             vals['source'] = old_wo_lang[name]
                         # the value should be the new value (given by copy())
                         vals['value'] = new_val
-                    Translation.create(vals)
+                    vals_list.append(vals)
+                Translation.create(vals_list)
 
     @api.multi
     @api.returns('self', lambda value: value.id)

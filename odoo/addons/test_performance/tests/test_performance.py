@@ -59,7 +59,7 @@ class TestPerformance(TransactionCase):
     @warmup
     def test_create_base_with_lines(self):
         """ Create records with one2many lines. """
-        with self.assertQueryCount(admin=38, demo=38):
+        with self.assertQueryCount(admin=20, demo=20):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'line_ids': [(0, 0, {'value': val}) for val in range(10)],

@@ -1725,16 +1725,19 @@ class Binary(Field):
             if value:
                 # update the existing attachments
                 atts.write({'datas': value})
+                atts_records = records.browse(atts.mapped('res_id'))
                 # create the missing attachments
-                for record in (records - records.browse(atts.mapped('res_id'))):
-                    atts.create({
-                        'name': self.name,
-                        'res_model': record._name,
-                        'res_field': self.name,
-                        'res_id': record.id,
-                        'type': 'binary',
-                        'datas': value,
-                    })
+                if len(atts_records) < len(records):
+                    atts.create([{
+                            'name': self.name,
+                            'res_model': record._name,
+                            'res_field': self.name,
+                            'res_id': record.id,
+                            'type': 'binary',
+                            'datas': value,
+                        }
+                        for record in (records - atts_records)
+                    ])
             else:
                 atts.unlink()
 
@@ -2283,13 +2286,13 @@ class One2many(_RelationalMulti):
     def write(self, records, value, create=False):
         comodel = records.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
+        vals_list = []                  # vals for lines to create in batch
 
         with records.env.norecompute():
             for act in (value or []):
                 if act[0] == 0:
                     for record in records:
-                        act[2][inverse] = record.id
-                        comodel.create(act[2])
+                        vals_list.append(dict(act[2], **{inverse: record.id}))
                 elif act[0] == 1:
                     comodel.browse(act[1]).write(act[2])
                 elif act[0] == 2:
@@ -2324,6 +2327,10 @@ class One2many(_RelationalMulti):
                         comodel.search(domain).unlink()
                     else:
                         comodel.search(domain).write({inverse: False})
+
+            # create lines in batch
+            if vals_list:
+                comodel.create(vals_list)
 
 
 class Many2many(_RelationalMulti):
@@ -2484,13 +2491,13 @@ class Many2many(_RelationalMulti):
 
         clear = False           # whether the relation should be cleared
         links = {}              # {id: True (link it) or False (unlink it)}
+        vals_list = []          # vals for lines to create in batch
 
         for act in (value or []):
             if not isinstance(act, (list, tuple)) or not act:
                 continue
             if act[0] == 0:
-                for record in records:
-                    links[comodel.create(act[2]).id] = True
+                vals_list.append(act[2])
             elif act[0] == 1:
                 comodel.browse(act[1]).write(act[2])
             elif act[0] == 2:
@@ -2505,6 +2512,11 @@ class Many2many(_RelationalMulti):
             elif act[0] == 6:
                 clear = True
                 links = dict.fromkeys(act[2], True)
+
+        # create lines in batch
+        if vals_list:
+            for line in comodel.create(vals_list):
+                links[line.id] = True
 
         if clear and not create:
             # remove all records for which user has access rights
