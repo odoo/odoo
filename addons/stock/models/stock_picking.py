@@ -432,7 +432,7 @@ class Picking(models.Model):
     @api.multi
     @api.depends('state', 'move_lines')
     def _compute_show_mark_as_todo(self):
-        for picking in self:
+        for picking in self.with_context(prefetch_fields=False):
             if not picking.move_lines:
                 picking.show_mark_as_todo = False
             elif self._context.get('planned_picking') and picking.state == 'draft':
