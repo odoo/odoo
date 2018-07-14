@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2016\n"
+"Last-Translator: Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +53,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Drogi ${object.name},</p>\n"
+"    <p>Ktoś poprosił o zmianę hasła do konta Odoo połączonego z tym kontem ameil. </p>\n"
+"    <p>Możesz zmienić swoje hasło otwieracjąc ponizsze hiperłącze w ciągu 24 godzin:</p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Zmiana hasła</a>\n"
+"    </div>\n"
+"    <p>Jeśli nie chcesz zmienic hasła zignoruj ten email.</p>\n"
+"    <p>Z poważaniem,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Wysłane przez ${user.company_id.name} przy użyciu <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -86,6 +113,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<p>Drogi ${object.name},</p>\n"
+"    <p>\n"
+"        Zostałeś zaproszony do połączenia z \"${object.company_id.name}\" w celu uzyskania dostępu do swoich dokumentów poprzez Odoo.\n"
+"    </p>\n"
+"    <p>\n"
+"        Aby zaakceptować zaproszenie kliknij w link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Zaakceptuj zaproszenie do \"${object.company_id.name}\"</a>\n"
+"    </div>\n"
+"    <p>Z poważaniem,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Wysłane przez ${user.company_id.name} przy użyciu <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -126,7 +182,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Ktoś już jest zarejestrowany z tym adresem email."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
@@ -144,7 +200,7 @@ msgstr "Wróć do logowania"
 #: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Nie udało sie wysłać emaila: %snie posiada konta email."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -218,7 +274,7 @@ msgstr "Zresetuj hasło"
 #: code:addons/auth_signup/models/res_users.py:108
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Resetowanie hasła: nieprawidłowa nazwa użytkownika bądź email."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
