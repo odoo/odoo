@@ -3,16 +3,17 @@
 # * account_budget
 # 
 # Translators:
-# kalatchev <kalatchev@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# kalatchev, 2016
+# Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>, 2016\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,10 @@ msgid ""
 "                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)"
 msgstr ""
+"Даден бюджет представлява прогноза за приходите и/или разходите на Вашата компания,\n"
+"                очаквани да определен период в бъдеще. Въпросният бюджет се определя от някои\n"
+"                финансови сметки и/или аналитични сметки (които могат да представляват\n"
+"                проекти, отдели/браншове, категории продукти и т.н.)"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -38,7 +43,7 @@ msgstr "Сметки"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_percentage
 msgid "Achievement"
-msgstr ""
+msgstr "Постижение"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
@@ -64,7 +69,7 @@ msgstr "Бюджет"
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Budget Items"
-msgstr ""
+msgstr "Бюджетни пунктове"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
@@ -86,7 +91,7 @@ msgstr "Редове на бюджет"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
-msgstr ""
+msgstr "Име на бюджет"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
@@ -120,11 +125,16 @@ msgid ""
 "                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period."
 msgstr ""
+"Като проследявате къде отиват парите Ви, ще влизате\n"
+"                в по-малък преразход и ще преследвате по-успешно финансовите си\n"
+"                цели. Предвиждайте даден бюджет, като уточнявате прецизно очакваните приходи по\n"
+"                аналитична сметка и следите развитието му въз основа на същинските разходи,\n"
+"                реализирани по време на този период."
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Cancel Budget"
-msgstr ""
+msgstr "Анулирайте/отменете бюджета"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -134,7 +144,7 @@ msgstr "Отменено"
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Click to create a new budget."
-msgstr ""
+msgstr "Натиснете бутона, за да създадете нов бюджет."
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_company_id
@@ -189,7 +199,7 @@ msgstr "Проект"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Draft Budgets"
-msgstr ""
+msgstr "Проектобюджети"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_to
@@ -278,7 +288,7 @@ msgstr "Състояние"
 #: code:addons/account_budget/models/account_budget.py:89
 #, python-format
 msgid "The Budget '%s' has no accounts!"
-msgstr ""
+msgstr "Бюджетът '%s' не разполага със сметки!"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
@@ -299,7 +309,7 @@ msgstr "За одобрение"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve Budgets"
-msgstr ""
+msgstr "Бюджет за одобрение/ратифициране"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
