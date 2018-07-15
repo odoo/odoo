@@ -790,12 +790,19 @@ class TestReconciliation(AccountingTestCase):
 
         statement = self.make_payment(invoice, journal, 50)
 
+        # The report searches on the create_date to dispatch reconciled lines to report periods
+        # Also, in this case, there can be only 1 partial_reconcile
+        statement_partial_id = statement.move_line_ids.mapped(lambda l: l.matched_credit_ids + l.matched_debit_ids)
+        self.env.cr.execute('UPDATE account_partial_reconcile SET create_date = %(date)s WHERE id = %(partial_id)s',
+            {'date': report_date_to + ' 00:00:00',
+             'partial_id': statement_partial_id.id})
+
         # Case 1: The invoice and payment are reconciled: Nothing should appear
         report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
 
         partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
         self.assertEqual(partner_lines, [], 'The aged receivable shouldn\'t have lines at this point')
-        self.assertFalse(partner.id in amls, 'The aged receivable should not have amls either')
+        self.assertFalse(amls.get(partner.id, False), 'The aged receivable should not have amls either')
 
         # Case 2: The invoice and payment are not reconciled: we should have one line on the report
         # and 2 amls
