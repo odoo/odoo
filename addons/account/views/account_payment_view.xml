@@ -58,11 +58,11 @@
                     <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
                     <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
                     <filter string="Reconciled" domain="[('state','=','reconciled')]"/>
-                    <separator/>
+                    <separator name="state"/>
                     <filter string="Partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                     <filter string="Payment Method" domain="[]" context="{'group_by': 'payment_method_id'}"/>
-                    <filter string="State" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
                     <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </search>
