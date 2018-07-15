@@ -18,13 +18,14 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Pierantonio Fanelli <pfa@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 14:48+0000\n"
 "PO-Revision-Date: 2018-04-27 14:48+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"Last-Translator: Pierantonio Fanelli <pfa@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -588,9 +589,9 @@ msgid ""
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
 "Stimola le tue vendite con due tipi di programmi di sconto: le promozioni e "
-"i codici coupon. Condizioni specifiche possono essere impostate (prodotti, "
-"clienti, importo di acquisto minimo, periodo). La ricompensa può essere "
-"sconti (% o importo) o prodotti gratuiti. "
+"i codici coupon. Condizioni specifiche possono essere impostate su prodotti,"
+" clienti, importo di acquisto minimo, periodo. La ricompensa può essere uno "
+"sconto (%) o prodotti gratuiti. "
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -734,7 +735,7 @@ msgstr "Contatto"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_coupon
 msgid "Coupons & Promotions"
-msgstr "Cedole & Promozioni"
+msgstr "Coupons & Promozioni"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1061,7 +1062,8 @@ msgstr "Attività future"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr "Ricevi avvisi sugli ordini per prodotti o clienti "
+msgstr ""
+"Mostra un avvertimento su prodotti o clienti alla creazione di un ordine. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -1120,7 +1122,7 @@ msgstr "Conto di ricavo"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr "Inserisci i tuoi termini e le tue condizioni qui..."
+msgstr "Scrivi termini e condizioni qui..."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:216
@@ -1192,10 +1194,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Reddito fatturato per il mese corrente. Si tratta dell'importo che il canale"
-" di vendite ha fatturato questo mese. Consente di calcolare il rapporto tra "
-"le previsioni e quello che è stato realizzato, che si può visualizzare sul "
-"view kanban. "
+"Ricavo fatturato dal canale di vendite per il mese corrente. Consente di "
+"calcolare il rapporto tra le previsioni e quello che è stato realizzato "
+"nella modalità di visualizzazione Kanban. "
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1405,9 +1406,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Definizione manuale delle quantità sull'ordine: fattura basata sulle quantità inserite manualmente, senza creazione di un conto analitico.\n"
-"Timesheets sul contratto: fattura basata sulle ore lavorative in base al timesheet relativo. \n"
-"Creare un task e tracciare le ore: crea un task per la validazione degli ordini di vendita e traccia le ore lavorative. "
+"Definisci manualmente le quantità sull'ordine: fattura basata sulle quantità inserite manualmente, senza la creazione di un conto analitico.\n"
+"Timesheets sul contratto: fattura in base alle ore lavorative registrate sul timesheet relativo al contratto. \n"
+"Crea una task e tracciane le ore: crea una task per la validazione degli ordini di vendita e traccia le ore lavorative. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1417,8 +1418,8 @@ msgid ""
 "installed."
 msgstr ""
 "Definizione manuale della data di scadenza del tuo preventivo (offerta), o "
-"definizione automatica in base al modello se il preventivo online è "
-"installato."
+"definizione automatica in base al modello (se il \"preventivo online\" è "
+"installato)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_margin
@@ -1451,7 +1452,9 @@ msgstr "Prezzi di Vendita multipli per Prodotto"
 #: selection:res.config.settings,multi_sales_price_method:0
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Multiple prices per product (e.g. customer segments, currencies)"
-msgstr "Più prezzi per un prodotto (ad esempio: categoria di cliente, moneta)"
+msgstr ""
+"Discriminazione prezzo per un prodotto (ad esempio: in base alla categoria "
+"cliente, valuta)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1500,7 +1503,8 @@ msgstr "Nessun messaggio"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr "Una volta gli ordini confirmati, non possono più essere modificati"
+msgstr ""
+"Una volta gli ordini sono confermati, non possono più essere modificati"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
