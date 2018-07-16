@@ -259,7 +259,7 @@ class StockMove(models.Model):
         an extra move.
         """
         for rec in self:
-            rec.quantity_done = rec.product_id.product_tmpl_id.uom_id._compute_quantity(rec._get_move_lines().mapped('qty_done_real'), rec.product_uom, round=False)
+            rec.quantity_done = rec.product_id.product_tmpl_id.uom_id._compute_quantity(sum(rec._get_move_lines().mapped('qty_done_real')), rec.product_uom, round=False)
 
 
     def _quantity_done_set(self):
