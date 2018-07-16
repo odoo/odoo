@@ -882,21 +882,36 @@ def load_test_file_yml(registry, test_file):
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
+    test_mod_name = os.path.basename(test_path)
+    test_mod = None
     for mod_name, mod_mod in sys.modules.items():
         if mod_mod:
             mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
             if test_path == mod_path:
-                suite = unittest.TestSuite()
-                for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
-                    suite.addTest(t)
-                _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                stream = odoo.modules.module.TestStream()
-                result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
-                success = result.wasSuccessful()
-                if hasattr(registry._assertion_report,'report_result'):
-                    registry._assertion_report.report_result(success)
-                if not success:
-                    _logger.error('%s: at least one error occurred in a test', test_file)
+                # we found the tests themself as a module
+                test_mod = mod_mod
+                break
+            elif mod_path.endswith('/__init__') and mod_path.replace('__init__', 'tests/' + test_mod_name) == test_path:
+                # we found a module that is likely to contain the test in the tests directory
+                test_mod = __import__(mod_name + '.tests.' + test_mod_name, fromlist=[test_mod_name])
+                break
+    if test_mod:
+        suite = unittest.TestSuite()
+        for t in unittest.TestLoader().loadTestsFromModule(test_mod):
+            suite.addTest(t)
+        if suite.countTestCases() > 0:
+            _logger.log(logging.INFO, 'running tests %s', test_mod.__name__)
+            stream = odoo.modules.module.TestStream()
+            result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
+            success = result.wasSuccessful()
+            if hasattr(registry._assertion_report,'report_result'):
+                registry._assertion_report.report_result(success)
+            if not success:
+                _logger.error('%s: at least one error occurred in a test', test_file)
+        else:
+            _logger.warning('%s: no tests found in test_file', test_file)
+    else:
+        _logger.warning('did not find module for %s', test_file)
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
@@ -913,10 +928,12 @@ def preload_registries(dbnames):
             if test_file:
                 _logger.info('loading test file %s', test_file)
                 with odoo.api.Environment.manage():
-                    if test_file.endswith('yml'):
+                    if test_file.endswith('.yml'):
                         load_test_file_yml(registry, test_file)
-                    elif test_file.endswith('py'):
+                    elif test_file.endswith('.py'):
                         load_test_file_py(registry, test_file)
+                    else:
+                        _logger.warning('unsupported test file suffix %s', test_file)
 
             if registry._assertion_report.failures:
                 rc += 1
