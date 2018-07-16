@@ -275,6 +275,37 @@ class TestTranslation(TransactionCase):
         self.assertEqual(categories.ids, [padawans.id, self.customers.id],
             "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")
 
+    def test_105_duplicated_translation(self):
+        """ Test synchronizing translations with duplicated source """
+        # create a category with a French translation
+        padawans = self.env['res.partner.category'].create({'name': 'Padawan'})
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'res.partner.category,name',
+            'module':'base',
+            'lang': 'fr_FR',
+            'res_id': padawans.id,
+            'value': 'Apprenti',
+            'state': 'translated',
+        })
+        # change name and insert a duplicate manually
+        padawans.write({'name': 'Padawans'})
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'res.partner.category,name',
+            'module':'base',
+            'lang': 'fr_FR',
+            'res_id': padawans.id,
+            'value': 'Apprentis',
+            'state': 'translated',
+        })
+        self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
+        translations = self.env['ir.translation'].search([
+            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+        ])
+        self.assertEqual(len(translations), 1, "Translations were not merged after `translate_fields` call")
+        self.assertEqual(translations.value, "Apprentis", "The most recent translation must stay")
+
 
 class TestXMLTranslation(TransactionCase):
     def setUp(self):
