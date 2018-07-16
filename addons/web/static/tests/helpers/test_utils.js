@@ -98,7 +98,7 @@ var createActionManager = function (params) {
         },
     });
     addMockEnvironment(widget, _.defaults(params, {debounce: false}));
-    widget.appendTo($target);
+    widget.prependTo($target);
     widget.$el.addClass('o_web_client');
     if (config.device.isMobile) {
         widget.$el.addClass('o_touch_device');
