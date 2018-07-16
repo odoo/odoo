@@ -630,7 +630,7 @@ var Chrome = PosBaseWidget.extend({
         if(err.message === 'XmlHttpRequestError '){
             title = 'Network Failure (XmlHttpRequestError)';
             body  = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
-        }else if(err.message === 'OpenERP Server Error'){
+        }else if(err.code === 200){
             title = err.data.message;
             body  = err.data.debug;
         }
