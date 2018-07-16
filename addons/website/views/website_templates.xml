@@ -67,23 +67,27 @@
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="
-        'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
-        ">
-        <a role="menuitem" t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+    <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" class="nav-item">
+        <a t-att-href="submenu.clean_url()"
+            t-attf-class="nav-link#{' active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
+            role="menuitem"
+            t-ignore="true"
+            t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
+    <li t-if="submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="#{('%s-item ' % submenu_type) if submenu_type else ''}dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <a t-attf-class="#{('%s-link ' % submenu_type) if submenu_type else ''}dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
         <div class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
-                <t t-call="website.submenu"/>
+                <t t-call="website.submenu">
+                    <t t-set="submenu_type" t-value="'dropdown'"/>
+                </t>
             </t>
         </div>
     </li>
@@ -184,7 +188,9 @@
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="before">
         <t t-foreach="website.menu_id.child_id" t-as="submenu">
-            <t t-call="website.submenu"/>
+            <t t-call="website.submenu">
+                <t t-set="submenu_type" t-value="'nav'"/>
+            </t>
         </t>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="after">
@@ -758,12 +764,12 @@
 
             <div id="wrapwrap">
                 <header>
-                    <div class="navbar navbar-default navbar-static-top">
+                    <div class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav pull-right" id="top_menu">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="javascript: window.history.back()">Back</a></li>
+                                <ul class="navbar-nav ml-auto" id="top_menu">
+                                    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                                    <li class="nav-item"><a href="javascript: window.history.back()" class="nav-link">Back</a></li>
                                 </ul>
                             </div>
                         </div>

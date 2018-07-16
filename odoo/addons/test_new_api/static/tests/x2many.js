@@ -179,7 +179,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message d
         content: "create new message d",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: 'li.active a[data-toggle="tab"]:contains(Messages)',
+        extra_trigger: 'a[data-toggle="tab"].active:contains(Messages)',
     }, {
         content: "insert body",
         trigger: 'textarea[name="body"]:first',
@@ -432,7 +432,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message eee
         content: "create new message eee",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: 'li.active a[data-toggle="tab"]:contains(Messages)',
+        extra_trigger: 'a[data-toggle="tab"].active:contains(Messages)',
     }, {
         content: "change text value",
         trigger: 'textarea[name="body"]:first',

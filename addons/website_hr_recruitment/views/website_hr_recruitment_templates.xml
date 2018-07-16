@@ -444,11 +444,12 @@
 
 <template id="job_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
-        <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if country_id else 'active' "><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_countries=1">All Countries</a></li>
+        <ul class="nav nav-pills flex-column mb32">
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_countries=1" t-attf-class="nav-link#{'' if country_id else ' active'}">All Countries</a></li>
             <t t-foreach="countries" t-as="country">
-                <li t-att-class="'active' if country_id and country_id.id == country.id else None">
-                    <a t-attf-href="/jobs/country/#{ slug(country) }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }" ><span t-field="country.name"/></a>
+                <li class="nav-item">
+                    <a t-attf-href="/jobs/country/#{ slug(country) }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }"
+                        t-attf-class="nav-link#{' active' if country_id and country_id.id == country.id else ''}"><span t-field="country.name"/></a>
                 </li>
             </t>
         </ul>
@@ -463,11 +464,11 @@
 
 <template id="job_departments" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
-        <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if department_id else 'active' "><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else '' }">All Departments</a></li>
+        <ul class="nav nav-pills flex-column mb32">
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/office/%s' % office_id if office_id else ''}" t-attf-class="nav-link#{'' if department_id else ' active'}">All Departments</a></li>
             <t t-foreach="departments" t-as="department">
-                <li t-att-class="'active' if department_id and department_id.id == department.id else None">
-                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }/department/#{ slug(department) }#{ '/office/%s' % office_id if office_id else '' }" ><span t-field="department.name"/></a>
+                <li class="nav-item">
+                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }/department/#{ slug(department) }#{ '/office/%s' % office_id if office_id else '' }" t-attf-class="nav-link#{' active' if department_id and department_id.id == department.id else ''}"><span t-field="department.name"/></a>
                 </li>
             </t>
         </ul>
@@ -482,11 +483,12 @@
 
 <template id="job_offices" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
-        <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if office_id else 'active' "><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }">All Offices</a></li>
+        <ul class="nav nav-pills flex-column mb32">
+            <li class="nav-item"><a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }" t-attf-class="nav-link#{'' if office_id else ' active'}">All Offices</a></li>
             <t t-foreach="offices" t-as="thisoffice">
-                <li t-att-class=" 'active' if office_id == thisoffice.id else None ">
-                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }/office/#{ thisoffice.id }" >
+                <li class="nav-item">
+                    <a t-attf-href="/jobs#{ '/country/%s' % slug(country_id) if country_id else '' }#{ '/department/%s' % slug(department_id) if department_id else '' }/office/#{ thisoffice.id }"
+                        t-attf-class="nav-link#{' active' if office_id == thisoffice.id else ''}">
                         <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
                             <span t-field="thisoffice.country_id.name"/>
                         </t>

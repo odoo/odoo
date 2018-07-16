@@ -124,10 +124,10 @@
 <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
 <div t-name="KanbanView.ExamplesDialog" class="o_kanban_examples_dialog">
     <div class="o_kanban_examples_dialog_nav">
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills flex-column">
             <t t-foreach="examples" t-as="example">
-                <li t-att-class="example_index == 0 and 'active' or None">
-                    <a t-attf-aria-controls="example_#{example_index}" data-toggle="tab" role="tab" t-attf-href="#example_#{example_index}"> <t t-esc="example.name"/> </a>
+                <li class="nav-item">
+                    <a t-attf-aria-controls="example_#{example_index}" data-toggle="tab" role="tab" t-attf-href="#example_#{example_index}" t-attf-class="nav-link#{example_index == 0 and ' active' or ''}"> <t t-esc="example.name"/> </a>
                 </li>
             </t>
         </ul>

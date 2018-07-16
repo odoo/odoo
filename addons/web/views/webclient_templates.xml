@@ -394,17 +394,17 @@
 
     <template id="web.menu">
         <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;" role="menu">
-            <li t-foreach="menu_data['children']" t-as="menu">
+            <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
                 <t t-call="web.menu_link"/>
             </li>
-            <li id="menu_more_container" class="dropdown" style="display: none;">
-                <a role="menuitem" aria-haspopup="true" href="#" class="dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More</a>
-                <div id="menu_more" class="dropdown-menu" role="menu"/>
+            <li id="menu_more_container" class="nav-item dropdown" style="display: none;">
+                <a role="menuitem" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More</a>
+                <div id="menu_more" class="dropdown-menu" role="menu"></div>
             </li>
         </ul>
 
-        <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
-        <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
+        <ul class="nav navbar-nav ml-auto oe_systray" style="display: none;"/>
+        <ul class="nav navbar-nav oe_user_menu_placeholder" style="display: none;"/>
     </template>
     <template id="web.menu_secondary">
         <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
@@ -429,8 +429,8 @@
         </div>
     </template>
     <template id="web.menu_secondary_submenu">
-        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills nav-stacked">
-            <li t-foreach="menu['children']" t-as="menu">
+        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills flex-column">
+            <li t-foreach="menu['children']" t-as="menu" class="nav-item">
                 <t t-call="web.menu_link"/>
                 <t t-call="web.menu_secondary_submenu"/>
             </li>
@@ -440,7 +440,7 @@
         <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
         <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
             role="menuitem"
-            t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'"
+            t-attf-class="nav-link #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
             t-att-data-menu="menu['id']"
             t-att-data-menu-xmlid="menu.get('xmlid')"
             t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
@@ -701,14 +701,10 @@
             <t t-set="body_classname" t-value="'o_web_client'"/>
 
             <header id="oe_main_menu_navbar">
-                <nav class="navbar navbar-inverse" groups="base.group_user,base.group_portal">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
+                <nav class="navbar navbar-expand-md navbar-dark bg-dark" groups="base.group_user,base.group_portal">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="navbar-toggler-icon"/>
+                    </button>
                     <div class="navbar-collapse collapse">
                         <t t-call="web.menu"/>
                     </div>
