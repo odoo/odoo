@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="product_attribute_category_duration" model="product.attribute.category">
+        <field name="name">Duration</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="product.product_attribute_3" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_duration"/>
+    </record>
+
+
     <record id="product_attribute_category_2" model="product.attribute.category">
         <field name="name">Dimensions</field>
         <field name="sequence">7</field>
