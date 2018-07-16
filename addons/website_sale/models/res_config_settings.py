@@ -41,8 +41,6 @@ class ResConfigSettings(models.TransientModel):
                                        "defined in the configuration of the payment acquirer.\n"
                                        "This mode is advised if you issue the final invoice at the order and not after the delivery.")
 
-    module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
-
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email',
         default=_default_recovery_mail_template, config_parameter='website_sale.cart_recovery_mail_template_id', domain="[('model', '=', 'sale.order')]")
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="number of hours after which the cart is considered abandoned",

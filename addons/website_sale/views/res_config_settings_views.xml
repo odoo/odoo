@@ -103,25 +103,8 @@
                     </div>
                 </div>
 
-                <h2>Taxes</h2>
-                <field name="company_id" invisible="1"/>
-                <div class="row mt16 o_settings_container" id="website_taxes_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" title="This tax is applied to any new product created in the catalog.">
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Default Sales Tax</span>
-                            <div class="text-muted">
-                                Default sales tax applied to local transactions
-                            </div>
-                            <div class="content-group">
-                                <div class="mt16">
-                                    <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
-                                </div>
-                                <div>
-                                    <button type="action" name="%(account.action_tax_form)d" string="Taxes" class="btn-link" icon="fa-arrow-right"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h2>Pricing</h2>
+                <div class="row mt16 o_settings_container" id="sale_pricing_settings">
                     <div class="col-12 col-lg-6 o_setting_box" id="website_tax_inclusion_setting">
                         <div class="o_setting_right_pane">
                             <label string="Product Prices" for="show_line_subtotals_tax_selection"/>
@@ -137,32 +120,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="website_rounding_method" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Rounding Method</span>
-                            <div class="text-muted">
-                                How total tax amount is computed in orders and invoices
-                            </div>
-                             <div class="content-group">
-                                <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box" id="website_eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
-                        <div class="o_setting_left_pane">
-                            <field name="module_l10n_eu_service"/>
-                        </div>
-                        <div class="o_setting_right_pane" name="l10n_eu_service_right_pane">
-                            <label for="module_l10n_eu_service"/>
-                            <div class="text-muted">
-                                Apply right VAT rates for digital products sold in EU
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h2>Pricing</h2>
-                <div class="row mt16 o_settings_container" id="sale_pricing_settings">
                     <div class="col-12 col-lg-6 o_setting_box" id="pricelists_setting"  title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists.">
                         <div class="o_setting_left_pane">
                             <field name="multi_sales_price"/>
