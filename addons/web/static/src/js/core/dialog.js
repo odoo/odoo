@@ -183,12 +183,22 @@ var Dialog = Widget.extend({
         this.destroy();
     },
 
-    destroy: function (arg) {
+    /**
+     * Close and destroy the dialog.
+     *
+     * @param {Object} [options]
+     * @param {Object} [options.infos] if provided and `silent` is unset, the
+     *   `on_close` handler will pass this information related to closing this
+     *   information.
+     * @param {boolean} [options.silent=false] if set, do not call the
+     *   `on_close` handler.
+     */
+    destroy: function (options) {
         // Need to trigger before real destroy but if 'closed' handler destroys
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {
             this.__closed = true;
-            this.trigger("closed", arg);
+            this.trigger('closed', options);
         }
 
         if (this.isDestroyed()) {
