@@ -1449,8 +1449,7 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {mail.model.Thread}
      */
-    _onOpenThreadInDiscuss: function (event) {
-        var thread = event.data;
+    _onOpenThreadInDiscuss: function (thread) {
         if (thread.getType() !== 'document_thread') {
             this._setThread(thread.getID());
         }

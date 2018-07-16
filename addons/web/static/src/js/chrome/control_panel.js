@@ -51,7 +51,7 @@ var ControlPanelMixin = {
      */
     update_control_panel: function(cp_status, options) {
         if (this.cp_bus) {
-            this.cp_bus.trigger("update", {cp_status: cp_status || {},
+            this.cp_bus.trigger_up("update", {cp_status: cp_status || {},
                 options: options || {}});
         }
     },

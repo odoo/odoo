@@ -9,6 +9,21 @@ var mixins = require('web.mixins');
  *
  * @class Bus
  */
+ function OdooEvent(target, name, data) {
+    this.target = target;
+    this.name = name;
+    this.data = Object.create(null);
+    _.extend(this.data, data);
+    this.stopped = false;
+}
+
+OdooEvent.prototype.stopPropagation = function () {
+    this.stopped = true;
+};
+
+OdooEvent.prototype.is_stopped = function () {
+    return this.stopped;
+};
 return Class.extend(mixins.EventDispatcherMixin, {
     init: function (parent) {
         mixins.EventDispatcherMixin.init.call(this);
