@@ -347,7 +347,8 @@ class ProductProduct(models.Model):
             qty_delivered += qty_to_consider
             # `move.price_unit` is negative if the move is out and positive if the move is
             # dropshipped. Use its absolute value to compute the average price unit.
-            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + abs(move.price_unit) * qty_to_consider) / qty_delivered
+            if qty_delivered:
+                average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + abs(move.price_unit) * qty_to_consider) / qty_delivered
             if qty_delivered == quantity:
                 break
         return average_price_unit
