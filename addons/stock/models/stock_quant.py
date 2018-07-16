@@ -221,7 +221,8 @@ class StockQuant(models.Model):
                     })
                     # cleanup empty quants
                     if float_is_zero(quant.quantity, precision_rounding=rounding) and float_is_zero(quant.reserved_quantity, precision_rounding=rounding):
-                        quant.unlink()
+                        # quant.unlink()
+                        self._cr.execute("DELETE from stock_quant WHERE id = %s", [quant.id])
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
