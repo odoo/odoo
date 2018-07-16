@@ -256,11 +256,13 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
-                    return record_value.ids == candidate_value
+                    if not record_value.ids == candidate_value:
+                        return False
                 elif field_type == 'many2one':
                     # Compare many2one relational fields.
                     # Every falsy value is allowed to compare with an empty record.
-                    return record_value.id == candidate_value if (record_value or candidate_value) else True
+                    if (record_value or candidate_value) and record_value.id != candidate_value:
+                        return False
                 elif (candidate_value or record_value) and record_value != candidate_value:
                     # Compare others fields if not both interpreted as falsy values.
                     return False
@@ -280,7 +282,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
 
         for index, record in enumerate(records):
             if not _compare_candidate(record, expected_values[index]):
-                msg = 'Unexpected record found at index %d.\n\n' % index
+                msg = 'Record doesn\'t match expected values at index %d.\n\n' % index
                 self.fail(msg + _format_message(records, expected_values))
 
     def shortDescription(self):
