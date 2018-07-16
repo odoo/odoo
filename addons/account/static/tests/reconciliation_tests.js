@@ -831,14 +831,14 @@ QUnit.module('account', {
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
         assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
-        assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
-        assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
+        assert.strictEqual(widget.$('button.btn-primary:visible').length, 0, "should not display the reconcile button");
+        assert.strictEqual(widget.$('.text-danger:visible').length, 1, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
         assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
         assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_true'), "should display the partial reconciliation information");
-        assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
+        assert.strictEqual(widget.$('button.btn-primary:visible').length, 1, "should display the reconcile button");
         assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
-        widget.$('button.btn-default:not(hidden)').trigger('click');
+        widget.$('button.btn-primary:visible').trigger('click');
 
         clientAction.destroy();
     });
