@@ -225,7 +225,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         else:
             yield
 
-    def assertRecordsEqual(self, records, expected_values):
+    def assertRecordValues(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.
         This method performs a comparison element by element based on their index.
         Then, the order of the expected values is extremely important.
@@ -256,7 +256,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
-                    if not record_value.ids == candidate_value:
+                    if set(record_value.ids) != set(candidate_value):
                         return False
                 elif field_type == 'many2one':
                     # Compare many2one relational fields.
@@ -270,7 +270,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
 
         def _format_message(records, expected_values):
             ''' Return a formatted representation of records/expected_values. '''
-            all_records_values = records.read(expected_values[0].keys(), load=False)
+            all_records_values = records.read(list(expected_values[0].keys()), load=False)
             msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
             msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
             return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
