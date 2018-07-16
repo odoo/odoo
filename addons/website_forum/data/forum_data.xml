@@ -174,19 +174,15 @@
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr>
                     <td valign="top" style="font-size: 14px;">
-                        <div>
-                            Hello ${object.name},<br/><br/>
-                            You have been invited to validate your email in order to get access to
-                            "${object.company_id.name}" Q/A Forums.<br/>
-                            <div style="margin-top:5px;">To validate your email, please click on the following link:</div><br/>
-                            <center>
-                                <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-decoration: none; color:#F7FBFD;" href="${ctx.get('token_url')}">
-                                    Validate my account
-                                </a>
-                            </center>
-                            <br/>
-                            Thanks for your participation!
-                        </div>
+                        <p>Hello ${object.name},</p>
+                        <p>You have been invited to validate your email in order to get access to "${object.company_id.name}" Q/A Forums.</p>
+                        <p>To validate your email, please click on the following link:</p>
+                        <center>
+                            <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-decoration: none; color:#F7FBFD;" href="${ctx.get('token_url')}">
+                                Validate my account
+                            </a>
+                        </center>
+                        <p>Thanks for your participation!</p>
                     </td>
                 </tr>
                 <tr>
