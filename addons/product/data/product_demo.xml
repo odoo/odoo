@@ -146,6 +146,18 @@
             <field name="attribute_id" ref="product_attribute_2"/>
         </record>
 
+        <record id="product_attribute_3" model="product.attribute">
+            <field name="name">Duration</field>
+        </record>
+        <record id="product_attribute_value_5" model="product.attribute.value">
+            <field name="name">1 year</field>
+            <field name="attribute_id" ref="product_attribute_3"/>
+        </record>
+        <record id="product_attribute_value_6" model="product.attribute.value">
+            <field name="name">2 year</field>
+            <field name="attribute_id" ref="product_attribute_3"/>
+        </record>
+
         <record id="product_product_4_product_template" model="product.template">
             <field name="name">Desk Customizable</field>
             <field name="categ_id" ref="product_category_5"/>
