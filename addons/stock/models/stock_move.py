@@ -258,11 +258,11 @@ class StockMove(models.Model):
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
-        for move in self:
-            quantity_done = 0
-            for move_line in move._get_move_lines():
-                quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
-            move.quantity_done = quantity_done
+        result = {data['move_id'][0]: data['qty_done_real'] for data in
+            self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','qty_done_real'], ['move_id'])}
+        for rec in self:
+            rec.quantity_done = rec.product_id.product_tmpl_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, round=False)
+
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`

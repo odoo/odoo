@@ -30,6 +30,7 @@ class StockMoveLine(models.Model):
     product_uom_qty = fields.Float('Reserved', default=0.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
     ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'), copy=False)
+    qty_done_real = fields.Float('Qty Done in product UoM', default=0.0, compute='_get_qty_done_real', copy=False, store=True)
     package_id = fields.Many2one('stock.quant.package', 'Source Package', ondelete='restrict')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
@@ -52,6 +53,11 @@ class StockMoveLine(models.Model):
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
     reference = fields.Char(related='move_id.reference', store=True, related_sudo=False)
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
+
+    @api.depends('qty_done')
+    def _get_qty_done_real(self):
+        for line in self:
+            line.qty_done_real = line.product_uom_id._compute_quantity(line.qty_done, line.product_id.product_tmpl_id.uom_id, round=False)
 
     def _compute_location_description(self):
         for operation, operation_sudo in izip(self, self.sudo()):
