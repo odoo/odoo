@@ -592,9 +592,6 @@ StateMachine.create({
         { name: 'import_succeeded', from: 'importing', to: 'imported'},
         { name: 'import_failed', from: 'importing', to: 'results' }
     ],
-    error: function(eventName, from, to, args, errorCode, errorMessage, originalException) {
-        console.error('event occur from ' + eventName + ': ' + errorMessage);
-    },
 });
 
 return {
