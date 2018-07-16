@@ -160,11 +160,11 @@
 
 <template id="tracks_filter" inherit_id="website_event_track.tracks" customize_show="True" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
-        <ul class="nav nav-pills nav-stacked">
-            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item"><a t-attf-href="/event/#{ slug(event) }/track" t-attf-class="nav-link#{'' if searches.get('tag') else ' active'}">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
-                <li t-att-class="searches.get('tag') == tag.id and 'active' or None">
-                    <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
+                <li class="nav-item">
+                    <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }" t-attf-class="nav-link#{searches.get('tag') == tag.id and ' active' or ''}">
                         <t t-esc="tag.name"/>
                     </a>
                 </li>

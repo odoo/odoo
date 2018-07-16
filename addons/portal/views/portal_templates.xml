@@ -24,27 +24,20 @@
 
             <div id="wrapwrap" t-att-class="pageName or ''">
                 <header>
-                    <div class="navbar navbar-default navbar-static-top">
+                    <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a href="/" class="navbar-brand logo">
-                                    <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
-                                </a>
-                            </div>
-                            <div class="collapse navbar-collapse navbar-top-collapse">
-                                <!-- Note: pull-right instead of navbar-right for two reasons: -->
-                                <!-- 1) We want menu to open to the right by default (except cases handled in JS) -->
-                                <!-- 2) navbar-right combined will navbar-static-top misaligns contained elements -->
-                                <ul class="nav navbar-nav pull-right" id="top_menu">
-                                    <li class="divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                                    <li class="dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="/" class="navbar-brand logo">
+                                <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                            </a>
+                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
+                                <span class="navbar-toggler-icon"/>
+                            </button>
+                            <div class="collapse navbar-collapse" id="top_menu_collapse">
+                                <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
+                                <ul class="nav navbar-nav ml-auto" id="top_menu">
+                                    <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
+                                    <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
+                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                             <b>
                                                 <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
                                             </b>
@@ -56,7 +49,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </nav>
                 </header>
                 <main>
                     <t t-raw="0"/>
@@ -118,9 +111,9 @@
 
     <template id="portal_show_sign_in" inherit_id="portal.frontend_layout" name="Show Sign In">
         <xpath expr="//ul[@id='top_menu']" position="inside">
-            <li class="divider" groups="base.group_public"/>
-            <li groups="base.group_public">
-                <a t-attf-href="/web/login">
+            <li class="nav-item divider" groups="base.group_public"/>
+            <li groups="base.group_public" class="nav-item">
+                <a t-attf-href="/web/login" class="nav-link">
                     <b>Sign in</b>
                 </a>
             </li>
@@ -258,16 +251,16 @@
 
     <template id="portal_archive_groups" name="Portal Archive Groups">
         <h3 class="page-header">Archives</h3>
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills flex-column">
             <t t-foreach="archive_groups" t-as="group">
                 <t t-if="group['date_begin'] == date">
-                    <li class="active">
-                        <a t-att-href="default_url" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    <li class="nav-item">
+                        <a t-att-href="default_url" class="nav-link active" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
                 <t t-if="group['date_begin'] != date">
-                    <li>
-                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    <li class="nav-item">
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}" class="nav-link"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
             </t>

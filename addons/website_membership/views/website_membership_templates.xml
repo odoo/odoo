@@ -21,12 +21,13 @@
                 <div class="row">
 
             <div class="col-md-3 mb32" id="left_column">
-                <ul class="nav nav-pills nav-stacked mt16">
-                    <li class="nav-header"><h3>Associations</h3></li>
-                    <li t-att-class="'' if membership_id else 'active'"><a href="/members">All</a></li>
+                <ul class="nav nav-pills flex-column mt16">
+                    <li class="nav-header nav-item"><h3>Associations</h3></li>
+                    <li class="nav-item"><a href="/members" class="nav-link#{'' if membership_id else ' active'}">All</a></li>
                     <t t-foreach="memberships_data" t-as="membership_data">
-                        <li t-att-class="membership_id and membership_data['id'] == membership_id and 'active' or None">
-                            <a t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"><t t-esc="membership_data['name']"/></a>
+                        <li class="nav-item">
+                            <a t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"
+                                t-attf-class="nav-link#{membership_id and membership_data['id'] == membership_id and ' active' or ''}"><t t-esc="membership_data['name']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -79,11 +80,12 @@
 <template id="opt_index_country" name="Location"
         customize_show="True" inherit_id="website_membership.index">
     <xpath expr="//div[@id='left_column']/ul[1]" position="after">
-        <ul class="nav nav-pills nav-stacked mt16">
-            <li class="nav-header"><h3>Location</h3></li>
+        <ul class="nav nav-pills flex-column mt16">
+            <li class="nav-header nav-item"><h3>Location</h3></li>
             <t t-foreach="countries" t-as="country">
-                <li t-if="country['country_id']" t-att-class="country['country_id'] and country['country_id'][0] == current_country_id and 'active' or None">
-                    <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"><t t-esc="country['country_id'][1]"/>
+                <li t-if="country['country_id']" class="nav-item">
+                    <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
+                        t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="country['country_id_count'] or '0'"/></span>
                     </a>
                 </li>

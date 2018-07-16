@@ -24,12 +24,12 @@
         <ul class="nav o_activity_log" role="menu">
             <t t-foreach="_.keys(records)" t-as="key">
                 <t t-set="logs" t-value="records[key]" />
-                <li role="menuitem" class="o_activity_label">
+                <li role="menuitem" class="nav-item o_activity_label">
                     <strong t-attf-class="o_activity_color_#{key}">
                         <t t-esc="selection[key]" /> (<t t-esc="logs.length"/>)
                     </strong>
                 </li>
-                <li role="menuitem" t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="o_schedule_activity">
+                <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="nav-item o_schedule_activity" role="menuitem">
                     <div class="o_activity_title pull-left">
                         <span t-attf-class="fa #{log.icon} fa-fw" role="img" aria-label="Log" title="Log"/>
                         <strong>

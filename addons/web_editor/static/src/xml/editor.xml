@@ -47,11 +47,11 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="active"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'd-none' : ''">Image</a></li>
-            <li><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'd-none' : ''">Document</a></li>
-            <li><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'd-none' : ''">Pictogram</a></li>
-            <li><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'd-none' : ''">Video</a></li>
-            <li class="search pull-right">
+            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link active#{widget.noImages ? ' d-none' : ''}">Image</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
+            <li class="nav-item search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
                         <a role="button" class="btn btn-secondary disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
@@ -61,7 +61,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="search pull-right">
+            <li class="nav-item search pull-right">
                 <div class="form-group">
                     <input class="form-control" id="icon-search" type="search"/>
                     <span class="fa fa-search" title="Search" role="img" aria-label="Search"/>

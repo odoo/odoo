@@ -48,56 +48,55 @@
         </div>
 
         <div class="container mt16 website_forum">
-            <div class="navbar navbar-default">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
-                        <span t-field="forum.name"/>
-                    </a>
-                </div>
+            <div class="navbar navbar-expand-md navbar-light bg-light">
+                <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
+                    <span t-field="forum.name"/>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
+                    <span class="navbar-toggler-icon"/>
+                </button>
                 <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy desc') }}">Trending</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy desc') }}"
+                                t-attf-class="nav-link#{sorting == 'relevancy desc' and ' active' or ''}">Trending</a>
                         </li>
-                        <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='create_date desc') }}">Newest</a>
+                        <li class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='create_date desc') }}"
+                                t-attf-class="nav-link#{sorting == 'create_date desc' and ' active' or ''}">Newest</a>
                         </li>
-                        <li t-att-class="searches.get('users') and 'active' or None ">
-                            <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
+                        <li class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }/users"
+                                t-attf-class="nav-link#{searches.get('users') and ' active' or ''}">People</a>
                         </li>
-                        <li t-att-class="searches.get('tags') and 'active' or None ">
-                            <a t-attf-href="/forum/#{ slug(forum) }/tag">Tags</a>
+                        <li class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }/tag"
+                                t-attf-class="nav-link#{searches.get('tags') and ' active' or ''}">Tags</a>
                         </li>
-                        <li t-att-class="searches.get('badges') and 'active' or None ">
-                            <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
+                        <li class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }/badge"
+                                t-attf-class="nav-link#{searches.get('badges') and ' active' or ''}">Badges</a>
                         </li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or None ">
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">
+                    <ul class="navbar-nav ml-auto">
+                        <li t-if="not is_public_user" class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}" t-attf-class="nav-link#{searches.get('my_profile') and ' active' or ''}">
                                 <span t-field="user_id.name"/> (k: <t t-esc="user_id.karma"/>)
                             </a>
                         </li>
-                        <li>
-                            <form class="navbar-form" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <t t-call="website.website_search_box"/>
-                                <span class="dropdown" groups="base.group_erp_manager">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <i class="fa fa-cog" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
-                                    </button>
-                                    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1" class="dropdown-item">Design Welcome Message</a>
-                                        <a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum" class="dropdown-item">Forum Settings</a>
-                                    </div>
-                                </span>
-                            </form>
-                        </li>
                     </ul>
+                    <form class="form-inline ml-1" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                        <t t-call="website.website_search_box"/>
+                        <div class="dropdown ml-1" groups="base.group_erp_manager">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                <i class="fa fa-cog" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+                            </button>
+                            <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1" class="dropdown-item">Design Welcome Message</a>
+                                <a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum" class="dropdown-item">Forum Settings</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1427,26 +1426,26 @@
         </div>
 
         <ul class="nav nav-tabs" role="tablist">
-            <li class="active">
-                <a role="tab" aria-controls="questions" href="#questions" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
+            <li class="nav-item">
+                <a role="tab" aria-controls="questions" href="#questions" class="nav-link active" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
             </li>
-            <li>
-                <a role="tab" aria-controls="answers" href="#answers" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
+            <li class="nav-item">
+                <a role="tab" aria-controls="answers" href="#answers" class="nav-link" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
             </li>
-            <li t-if="uid == user.id">
-                <a role="tab" aria-controls="favourite_question" href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
+            <li t-if="uid == user.id" class="nav-item">
+                <a role="tab" aria-controls="favourite_question" href="#favourite_question" class="nav-link" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
             </li>
-            <li t-if="uid == user.id">
-                <a role="tab" aria-controls="followed_question" href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Questions</a>
+            <li t-if="uid == user.id" class="nav-item">
+                <a role="tab" aria-controls="followed_question" href="#followed_question" class="nav-link" data-toggle="tab"><t t-esc="len(followed)"/> Followed Questions</a>
             </li>
-            <li t-if="uid == user.id">
-                <a role="tab" aria-controls="activity" href="#activity" data-toggle="tab">Activity</a>
+            <li t-if="uid == user.id" class="nav-item">
+                <a role="tab" aria-controls="activity" href="#activity" class="nav-link" data-toggle="tab">Activity</a>
             </li>
-            <li>
-                <a role="tab" aria-controls="badges" href="#badges" data-toggle="tab">Badges</a>
+            <li class="nav-item">
+                <a role="tab" aria-controls="badges" href="#badges" class="nav-link" data-toggle="tab">Badges</a>
             </li>
-            <li t-if="uid == user.id">
-                <a role="tab" aria-controls="votes" href="#votes" data-toggle="tab">Votes</a>
+            <li t-if="uid == user.id" class="nav-item">
+                <a role="tab" aria-controls="votes" href="#votes" class="nav-link" data-toggle="tab">Votes</a>
             </li>
         </ul>
         <div class="tab-content mt16">

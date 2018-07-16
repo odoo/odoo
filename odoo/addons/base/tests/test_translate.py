@@ -158,13 +158,13 @@ class TranslationToolsTestCase(unittest.TestCase):
         terms = []
         source = """<t t-name="stuff">
                         <ul class="nav navbar-nav">
-                            <li>
-                                <a class="oe_menu_leaf" href="/web#menu_id=42&amp;action=54">
+                            <li class="nav-item">
+                                <a class="nav-link oe_menu_leaf" href="/web#menu_id=42&amp;action=54">
                                     <span class="oe_menu_text">Blah</span>
                                 </a>
                             </li>
-                            <li class="dropdown" id="menu_more_container" style="display: none;">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">More <b class="caret"/></a>
+                            <li class="nav-item dropdown" id="menu_more_container" style="display: none;">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">More <b class="caret"/></a>
                                 <div class="dropdown-menu" id="menu_more"/>
                             </li>
                         </ul>
