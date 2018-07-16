@@ -578,7 +578,7 @@ class PurchaseOrderLine(models.Model):
                     if move.location_dest_id.usage == "supplier":
                         if move.to_refund:
                             total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                    else:
+                    elif move.location_id.usage == "supplier":
                         total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
             line.qty_received = total
 
@@ -765,7 +765,7 @@ class PurchaseOrderLine(models.Model):
 
            :param Model seller: used to fetch the delivery delay (if no seller
                                 is provided, the delay is 0)
-           :param Model po: purchase.order, necessary only if the PO line is 
+           :param Model po: purchase.order, necessary only if the PO line is
                             not yet attached to a PO.
            :rtype: datetime
            :return: desired Schedule Date for the PO line
