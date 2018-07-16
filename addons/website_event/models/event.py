@@ -74,7 +74,7 @@ class Event(models.Model):
                     event.menu_id = root_menu
 
                 existing_page_names = event.menu_id.child_id.mapped('name')
-                required_page_names = [entry[0] for entry in self._get_menu_entries()]
+                required_page_names = [entry[0] for entry in event._get_menu_entries()]
                 standard_page_names = self._get_standard_menu_entries_names()
 
                 # remove entries that should not exist anymore
@@ -82,11 +82,11 @@ class Event(models.Model):
                 submenu_to_delete.unlink()
 
                 # create missing entries
-                for sequence, (name, url, xml_id) in enumerate(self._get_menu_entries()):
+                for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                     if name not in existing_page_names:
                         if not url:
-                            newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
-                            url = "/event/" + slug(self) + "/page/" + newpath[1:]
+                            newpath = self.env['website'].new_page(name + ' ' + event.name, template=xml_id, ispage=False)['url']
+                            url = "/event/" + slug(event) + "/page/" + newpath[1:]
                         self.env['website.menu'].create({
                             'name': name,
                             'url': url,
