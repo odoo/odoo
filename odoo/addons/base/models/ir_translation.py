@@ -616,6 +616,14 @@ class IrTranslation(models.Model):
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
+
+                        DELETE FROM ir_translation dup
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            AND dup.id NOT IN (SELECT MAX(t.id)
+                                       FROM ir_translation t
+                                       WHERE t.lang=dup.lang AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            );
+
                         UPDATE ir_translation SET src=%(src)s
                         WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
                     """
