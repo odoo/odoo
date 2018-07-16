@@ -108,7 +108,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         # one email send due to template
         self.assertEqual(len(self._mails), 1)
         self.assertEqual(set(self._mails[0]['email_to']), set([formataddr((self.user_admin.name, self.user_admin.email))]))
-        self.assertHtmlEqual(self._mails[0]['body'], 'Hello Test2')
+        self.assertHtmlEqual(self._mails[0]['body'], '<p>Hello Test2</p>')
 
         # one new message containing tracking; without subtype linked to tracking
         self.assertEqual(self.record.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
