@@ -549,7 +549,7 @@ QUnit.module('Views', {
         // delete record
 
         $newevent.trigger('click');
-        $('.modal button.btn-default:contains(Delete)').trigger('click');
+        $('.modal button.btn-secondary:contains(Delete)').trigger('click');
         $('.modal button.btn-primary:contains(Ok)').trigger('click');
         assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
 
@@ -798,7 +798,7 @@ QUnit.module('Views', {
         // delete record
 
         $newevent.trigger('click');
-        $('.modal button.btn-default:contains(Delete)').trigger('click');
+        $('.modal button.btn-secondary:contains(Delete)').trigger('click');
         $('.modal button.btn-primary:contains(Ok)').trigger('click');
         assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
 

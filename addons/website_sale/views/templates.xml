@@ -111,7 +111,7 @@
                         <strong>
                             <a itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         </strong>
-                        <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-default btn-xs btn-danger" title="This product is unpublished.">Unpublished</a>
+                        <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-xs btn-danger" title="This product is unpublished.">Unpublished</a>
                     </h5>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
@@ -141,12 +141,12 @@
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
-                <a role="button" class="btn btn-default btn-xs a-submit" aria-label="Shopping cart" title="Shopping cart">
+                <a role="button" class="btn btn-secondary btn-xs a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
             <t t-if="len(product.product_variant_ids) &gt; 1">
-                <a role="button" class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
+                <a role="button" class="btn btn-secondary btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -157,7 +157,7 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)&gt;1 and 'dropdown' or 'd-none'} btn-group">
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
-            <a role="button" href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+            <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
                 <span class="caret"></span>
             </a>
@@ -247,7 +247,7 @@
             ]"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
             <div class="dropdown btn-group dropdown_sorty_by">
-                <a role="button" href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+                <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="dropdown">
                     <t t-if='len(website_sale_sortable_current)'>
                         <span>Sorting by : <t t-raw='website_sale_sortable_current[0][0]'/></span>
                     </t>
@@ -778,7 +778,7 @@
                                             <div class="col-md-3 col-sm-4">
                                             </div>
                                             <div class="col-md-9 col-sm-8">
-                                                <a role="button" href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" /> Previous</a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-secondary mb32 pull-left"><span class="fa fa-chevron-left" /> Previous</a>
                                                 <a role="button" class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
                                             </div>
                                         </div>
@@ -899,7 +899,7 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
-                                    <a role="button" href="/shop" class="btn btn-default mb32 d-none d-xl-inline-block">
+                                    <a role="button" href="/shop" class="btn btn-secondary mb32 d-none d-xl-inline-block">
                                         <span class="fa fa-chevron-left" />
                                         <span class="">Continue Shopping</span>
                                     </a>
@@ -914,7 +914,7 @@
                         <div class="col-lg-4 col-sm-12 col-xs-12">
                             <t t-call='website_sale.short_cart_summary'/>
                             <div class="d-xl-none">
-                                <a role="button" href="/shop" class="btn btn-default mb32">
+                                <a role="button" href="/shop" class="btn btn-secondary mb32">
                                     <span class="fa fa-chevron-left" />
                                     Continue<span class="d-none d-md-inline"> Shopping</span>
                                 </a>
@@ -1010,7 +1010,7 @@
             <div class="input-group" style='margin-left:auto; margin-right: auto'>
                 <input name="promo" style='min-width:180px' class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
                 <div class="input-group-btn">
-                    <a role="button" class="btn btn-default a-submit">Apply</a>
+                    <a role="button" class="btn btn-secondary a-submit">Apply</a>
                 </div>
             </div>
         </form>
@@ -1057,7 +1057,7 @@
                                             <div class="col-sm-12 col-md-12 one_kanban">
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                                    <a role="button" class='a-submit btn btn-default mb16 btn-block'>
+                                                    <a role="button" class='a-submit btn btn-secondary mb16 btn-block'>
                                                         <i class="fa fa-plus-square"></i> Add an address
                                                     </a>
                                                 </form>
@@ -1079,7 +1079,7 @@
                             </t>
                             <div class="clearfix" />
                             <div>
-                                <a role="button" href="/shop/cart" class="btn btn-default mb32">
+                                <a role="button" href="/shop/cart" class="btn btn-secondary mb32">
                                     <span class="fa fa-chevron-left" /> Return to Cart</a>
                                 <a role="button" class="btn btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-chevron-right" /></a>
                             </div>
@@ -1111,7 +1111,7 @@
                         </a>
                     </span>
                     <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
-                        <a role="button" class="btn btn-block btn-default">
+                        <a role="button" class="btn btn-block btn-secondary">
                             Select this address
                         </a>
                     </span>
@@ -1251,7 +1251,7 @@
 
                                     <div class="clearfix"/>
                                     <div style='padding: 0 15px'>
-                                        <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
+                                        <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
                                             <span class="fa fa-chevron-left" /> Back
                                         </a>
                                         <a role="button" class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
@@ -1325,7 +1325,7 @@
 
                                     <t t-set="back_button_icon_class" t-value="'fa-chevron-left'"/>
                                     <t t-set="back_button_txt" t-value="'Return to Cart'"/>
-                                    <t t-set="back_button_class" t-value="'btn btn-default'"/>
+                                    <t t-set="back_button_class" t-value="'btn btn-secondary'"/>
                                     <t t-set="back_button_link" t-value="'/shop/cart'"/>
                                 </t>
                             </div>
@@ -1367,7 +1367,7 @@
                     <t t-call="website_sale.total">
                         <t t-set='no_rowspan'>1</t>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary pull-right mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>

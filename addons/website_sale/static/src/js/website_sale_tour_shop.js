@@ -45,7 +45,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Upload an image from your local library."),
         position: "bottom",
         run: function (actions) {
-            actions.auto(".modal-footer .btn-default");
+            actions.auto(".modal-footer .btn-secondary");
         },
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",

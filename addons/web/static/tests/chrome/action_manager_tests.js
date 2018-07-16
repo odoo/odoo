@@ -2677,7 +2677,7 @@ QUnit.module('ActionManager', {
             "should display a modal dialog to confirm discard action");
 
         // cancel
-        $('.modal .modal-footer button.btn-default').click();
+        $('.modal .modal-footer button.btn-secondary').click();
 
         assert.strictEqual(actionManager.$('.o_form_view').length, 1,
             "should still be in form view");

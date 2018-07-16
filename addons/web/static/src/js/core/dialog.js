@@ -40,7 +40,7 @@ var Dialog = Widget.extend({
      *        button is added to allow closing the dialog
      * @param {string} [options.buttons[].text]
      * @param {string} [options.buttons[].classes]
-     *        Default to 'btn-primary' if only one button, 'btn-default'
+     *        Default to 'btn-primary' if only one button, 'btn-secondary'
      *        otherwise
      * @param {boolean} [options.buttons[].close=false]
      * @param {function} [options.buttons[].click]
@@ -123,7 +123,7 @@ var Dialog = Widget.extend({
         _.each(buttons, function (buttonData) {
             var $button = dom.renderButton({
                 attrs: {
-                    class: buttonData.classes || (buttons.length > 1 ? 'btn-default' : 'btn-primary'),
+                    class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),
                     disabled: buttonData.disabled,
                 },
                 icon: buttonData.icon,

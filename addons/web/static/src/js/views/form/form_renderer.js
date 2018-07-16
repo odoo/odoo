@@ -159,9 +159,9 @@ var FormRenderer = BasicRenderer.extend({
             .removeAttr('disabled');
     },
     /**
-     * Put the focus on the last activated widget. 
+     * Put the focus on the last activated widget.
      * This function is used when closing a dialog to give the focus back to the
-     * form that has opened it and ensures that the focus is in the correct 
+     * form that has opened it and ensures that the focus is in the correct
      * field.
      */
     focusLastActivatedWidget: function () {
@@ -396,12 +396,13 @@ var FormRenderer = BasicRenderer.extend({
 
         // Current API of odoo for rendering buttons is "if classes are given
         // use those on top of the 'btn' and 'btn-{size}' classes, otherwise act
-        // as if 'btn-default' class was given". The problem is that, for header
-        // buttons only, we allowed users to only indicate their custom classes
-        // without having to explicitely ask for the 'btn-default' class to be
-        // added. We force it so here when no bootstrap btn type class is found.
-        if ($button.not('.btn-primary, .btn-default, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
-            $button.addClass('btn-default');
+        // as if 'btn-secondary' class was given". The problem is that, for
+        // header buttons only, we allowed users to only indicate their custom
+        // classes without having to explicitely ask for the 'btn-secondary'
+        // class to be added. We force it so here when no bootstrap btn type
+        // class is found.
+        if ($button.not('.btn-primary, .btn-secondary, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
+            $button.addClass('btn-secondary');
         }
 
         this._addOnClickAction($button, node);
@@ -858,7 +859,7 @@ var FormRenderer = BasicRenderer.extend({
         this.defs = defs;
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
-        
+
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
         }, function () {
@@ -866,7 +867,7 @@ var FormRenderer = BasicRenderer.extend({
         }).then(function(){
             if (self.lastActivatedFieldIndex >= 0) {
                 self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
-            } 
+            }
         });
     },
     /**

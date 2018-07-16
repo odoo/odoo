@@ -9,7 +9,7 @@
         <div id="web_editor-top-edit">
             <div id="web_editor-toolbars"/>
             <form class="navbar-form text-muted">
-                <button type="button" class="btn btn-default" data-action="cancel"><i class="fa fa-times"/> Discard</button>
+                <button type="button" class="btn btn-secondary" data-action="cancel"><i class="fa fa-times"/> Discard</button>
                 <button type="button" class="btn btn-primary" data-action="save"><i class="fa fa-floppy-o"/> Save</button>
             </form>
         </div>
@@ -54,10 +54,10 @@
             <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
-                        <a role="button" class="btn btn-default disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
+                        <a role="button" class="btn btn-secondary disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
                     </li>
                     <li class="next">
-                        <a role="button" class="btn btn-default disabled" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
+                        <a role="button" class="btn btn-secondary disabled" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
                     </li>
                 </ul>
             </li>
@@ -110,7 +110,7 @@
                     <label for="imageurl">Add an image URL</label>
                     <div class="form-group btn-group">
                         <input type="text" class="form-control url pull-left" id="imageurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 250px;"/>
-                        <button type="button" class="btn btn-default o_upload_image_url_button" disabled="disabled">Add</button>
+                        <button type="button" class="btn btn-secondary o_upload_image_url_button" disabled="disabled">Add</button>
                     </div>
                 </div>
             </div>
@@ -271,7 +271,7 @@
                                 <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
                                 <i class="fa"/>
                             </label>
-                            <t t-foreach="['primary', 'default', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
+                            <t t-foreach="['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
                                 <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
                                     <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
                                     <i class="fa"/>
@@ -319,25 +319,25 @@
                <div class="btn-group" title="Aspect Ratio" data-toggle="buttons">
                    <t t-foreach="widget.aspectRatioList" t-as="ratio">
                        <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
-                       <a href="#" t-attf-class="btn btn-default#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
+                       <a href="#" t-attf-class="btn btn-secondary#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
                             <t t-esc="ratio[0]"/>
                        </a>
                    </t>
                </div>
                <div class="btn-group" role="group">
-                   <a href="#" class="btn btn-default" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></a>
-                   <a href="#" class="btn btn-default" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></a>
+                   <a href="#" class="btn btn-secondary" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></a>
+                   <a href="#" class="btn btn-secondary" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></a>
                </div>
                <div class="btn-group" role="group">
-                   <a href="#" class="btn btn-default" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></a>
-                   <a href="#" class="btn btn-default" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></a>
+                   <a href="#" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></a>
+                   <a href="#" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></a>
                </div>
                <div class="btn-group" role="group">
-                   <a href="#" class="btn btn-default" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></a>
-                   <a href="#" class="btn btn-default" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></a>
+                   <a href="#" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></a>
+                   <a href="#" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></a>
                </div>
                <div class="btn-group" role="group">
-                   <a href="#" class="btn btn-default" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</a>
+                   <a href="#" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</a>
                </div>
            </div>
        </t>

@@ -263,7 +263,7 @@
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">My Opportunities</t>
-                <li class="pull-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>
+                <li class="pull-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-secondary navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>
             </t>
             <div class="modal fade modal_new_opp" role="form">
                 <div class="modal-dialog">
@@ -447,7 +447,7 @@
                             </main>
                             <footer class="modal-footer">
                                 <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             </footer>
                         </form>
                     </div>
@@ -480,7 +480,7 @@
                             </main>
                             <footer class="modal-footer">
                                 <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             </footer>
                         </form>
                     </div>
@@ -510,7 +510,7 @@
                             </h4>
                             <span class="btn-group pull-right" role="group">
                                 <t t-foreach="stages" t-as="stage">
-                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="pull-right btn opp-stage-button #{'btn-default' if opportunity.stage_id.name != stage.name else 'disabled btn-primary'}">
+                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="pull-right btn opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'disabled btn-primary'}">
                                         <span t-field="stage.name"/>
                                     </button>
                                 </t>
@@ -611,7 +611,7 @@
                                         </main>
                                         <footer class="modal-footer">
                                             <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                         </footer>
                                     </form>
                                 </div>
@@ -731,7 +731,7 @@
                                         </main>
                                         <footer class="modal-footer">
                                             <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                         </footer>
                                     </form>
                                 </div>
