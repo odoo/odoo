@@ -151,7 +151,7 @@ class StockMove(models.Model):
 
     def _get_price_unit(self):
         """ Returns the unit price to store on the quant """
-        return self.price_unit or self.product_id.standard_price
+        return not self.company_id.currency_id.is_zero(self.price_unit) and self.price_unit or self.product_id.standard_price
 
     @api.model
     def _get_in_base_domain(self, company_id=False):
