@@ -288,7 +288,6 @@ var MessagingMenu = Widget.extend({
         var previewID = $preview.data('preview-id');
         var documentModel = $preview.data('document-model');
         if (previewID === 'mailbox_inbox') {
-            var documentModel = $preview.data('document-model');
             var documentID = $preview.data('document-id');
             var inbox = this.call('mail_service', 'getMailbox', 'inbox');
             var messages = inbox.getLocalMessages({
