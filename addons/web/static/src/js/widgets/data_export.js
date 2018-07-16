@@ -58,17 +58,17 @@ var DataExport = Dialog.extend({
         },
         'dblclick .o_export_tree_item:not(.haschild)': function(e) {
             var self = this;
-            var $elem = $(e.currentTarget);
-            $elem.removeClass('o_selected');
-            this.add_field($elem.data('id'), $elem.find('.o_tree_column').first().text());
-            // Add its parents to export
-            var $parents = $elem.parents('.o_export_tree_item');
-            if ($parents.length) {
-                _.each($parents, function (el) {
-                    var $el = $(el);
-                    self.add_field($el.data('id'), $el.find('.o_tree_column').first().text());
-                })
+            function addElement(el) {
+                self.add_field(el.getAttribute('data-id'), el.querySelector('.o_tree_column').textContent);
             }
+            var target = e.currentTarget;
+            target.classList.remove('o_selected');
+            // Add parent fields to export
+            [].reverse.call($(target).parents('.o_export_tree_item')).each(function () {
+                addElement(this);
+            });
+            // add field itself
+            addElement(target);
         },
         'keydown .o_export_tree_item': function(e) {
             e.stopPropagation();
