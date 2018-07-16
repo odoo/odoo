@@ -40,7 +40,7 @@ from operator import attrgetter, itemgetter
 
 import babel.dates
 import dateutil.relativedelta
-import psycopg2
+import psycopg2, psycopg2.extensions
 from lxml import etree
 from lxml.builder import E
 from psycopg2.extensions import AsIs
@@ -681,19 +681,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for r in missing
         )
         fields = ['module', 'model', 'name', 'res_id']
-        cr.copy_from(io.StringIO(
-            u'\n'.join(
-                u"%s\t%s\t%s\t%d" % (
-                    modname,
-                    record._name,
-                    xids[record.id][1],
-                    record.id,
-                )
-                for record in missing
-            )),
-            table='ir_model_data',
-            columns=fields,
-        )
+
+        # disable eventual async callback / support for the extent of
+        # the COPY FROM, as these are apparently incompatible
+        callback = psycopg2.extensions.get_wait_callback()
+        psycopg2.extensions.set_wait_callback(None)
+        try:
+            cr.copy_from(io.StringIO(
+                u'\n'.join(
+                    u"%s\t%s\t%s\t%d" % (
+                        modname,
+                        record._name,
+                        xids[record.id][1],
+                        record.id,
+                    )
+                    for record in missing
+                )),
+                table='ir_model_data',
+                columns=fields,
+            )
+        finally:
+            psycopg2.extensions.set_wait_callback(callback)
         self.env['ir.model.data'].invalidate_cache(fnames=fields)
 
         return (
