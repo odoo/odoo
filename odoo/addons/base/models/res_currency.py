@@ -46,11 +46,12 @@ class Currency(models.Model):
     ]
 
     def _get_rates(self, company, date):
-        query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
+        query = """SELECT c.id,
+                          COALESCE((SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
                                     AND (r.company_id IS NULL OR r.company_id = %s)
                                ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1) AS rate
+                                  LIMIT 1), 1.0) AS rate
                    FROM res_currency c
                    WHERE c.id IN %s"""
         self._cr.execute(query, (date, company.id, tuple(self.ids)))

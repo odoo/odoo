@@ -319,7 +319,7 @@ QUnit.module('Search View', {
         assert.strictEqual($('.o_content tr.o_group_header').length, 4);
         actionManager.destroy();
     });
-
+    
     QUnit.test('a separator in groupbys does not cause problems', function (assert) {
         assert.expect(6);
 

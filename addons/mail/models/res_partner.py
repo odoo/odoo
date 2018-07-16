@@ -37,9 +37,9 @@ class Partner(models.Model):
         return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
 
     @api.model
-    def _notify_prepare_template_context(self, message, notif_values):
+    def _notify_prepare_template_context(self, message, model_description=False, mail_auto_delete=True):
         # compute signature
-        if not notif_values.pop('add_sign', True):
+        if not message.add_sign:
             signature = False
         elif message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
             signature = message.author_id.user_ids[0].signature
@@ -58,9 +58,8 @@ class Partner(models.Model):
         else:
             website_url = False
 
-        model_name = False
-        if message.model:
-            model_name = self.env['ir.model']._get(message.model).display_name
+        if not model_description and message.model:
+            model_description = self.env['ir.model']._get(message.model).display_name
 
         record_name = message.record_name
 
@@ -85,7 +84,7 @@ class Partner(models.Model):
             'signature': signature,
             'website_url': website_url,
             'company': company,
-            'model_description': model_name,
+            'model_description': model_description,
             'record': record,
             'record_name': record_name,
             'tracking_values': tracking,
@@ -94,7 +93,7 @@ class Partner(models.Model):
         }
 
     @api.model
-    def _notify_prepare_email_values(self, message, notif_values):
+    def _notify_prepare_email_values(self, message, mail_auto_delete=True):
         # compute email references
         references = message.parent_id.message_id if message.parent_id else False
 
@@ -106,7 +105,7 @@ class Partner(models.Model):
         mail_values = {
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id,
-            'auto_delete': notif_values.pop('mail_auto_delete', True),
+            'auto_delete': mail_auto_delete,
             'references': references,
         }
         mail_values.update(custom_values)
@@ -147,7 +146,7 @@ class Partner(models.Model):
             })
 
     @api.multi
-    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, values=None):
+    def _notify(self, message, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 
@@ -163,17 +162,16 @@ class Partner(models.Model):
         """
         if not self.ids:
             return True
-        values = values if values is not None else {}
 
-        template_xmlid = layout if layout else 'mail.message_notification_email'
+        template_xmlid = message.layout if message.layout else 'mail.message_notification_email'
         try:
             base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
         except ValueError:
             _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
             return False
 
-        base_template_ctx = self._notify_prepare_template_context(message, values)
-        base_mail_values = self._notify_prepare_email_values(message, values)
+        base_template_ctx = self._notify_prepare_template_context(message, model_description=model_description)
+        base_mail_values = self._notify_prepare_email_values(message, mail_auto_delete=mail_auto_delete)
 
         # classify recipients: actions / no action
         tig = self.env[message.model].browse(message.res_id) if message.model and message.res_id else False
@@ -184,7 +182,7 @@ class Partner(models.Model):
         for email_type, recipient_template_values in recipients.items():
             if recipient_template_values['recipients']:
                 # generate notification email content
-                template_ctx = {**base_template_ctx, **recipient_template_values, **values}  # fixme: set button_unfollow to none
+                template_ctx = {**base_template_ctx, **recipient_template_values}  # fixme: set button_unfollow to none
                 fol_values = {
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
                     'body': base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True),

@@ -441,7 +441,7 @@ var BasicComposer = Widget.extend({
     _onAttachmentDelete: function (ev){
         ev.stopPropagation();
         var self = this;
-        var attachmentID = $(ev.target).data('id');
+        var attachmentID = $(ev.currentTarget).data('id');
         if (attachmentID) {
             var attachments = [];
             _.each(this.get('attachment_ids'), function (attachment){
@@ -452,6 +452,7 @@ var BasicComposer = Widget.extend({
                 }
             });
             this.set('attachment_ids', attachments);
+            this.$('input.o_input_file').val('');
         }
     },
     /**
