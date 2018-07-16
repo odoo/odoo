@@ -21,7 +21,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "remove first item in whishlist",
-            trigger: 'a.o_wish_rm:first',
+            trigger: '.o_wish_rm:first',
         },
         {
             content: "go back to the store",
@@ -76,7 +76,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "remove Customizable Desk",
-            trigger: 'tr:contains("Customizable Desk") a.o_wish_rm:first',
+            trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",
@@ -89,7 +89,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add item to cart",
-            trigger: 'a.o_wish_add:eq(1)',
+            trigger: '.o_wish_add:eq(1)',
         },
         {
             content: "check that cart contains 1 item",
@@ -107,7 +107,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add last item to cart",
-            trigger: 'a.o_wish_add:eq(1)',
+            trigger: '.o_wish_add:eq(1)',
         },
         {
             content: "check that user is redirect - wishlist is empty",

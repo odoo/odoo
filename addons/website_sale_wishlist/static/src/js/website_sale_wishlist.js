@@ -27,11 +27,11 @@ var ProductWishlist = Widget.extend({
         });
 
         if ($('.wishlist-section').length) {
-            $('.wishlist-section a.o_wish_rm').on('click', function (e){ self.wishlist_rm(e, false); });
-            $('.wishlist-section a.o_wish_add').on('click', function (e){
-                $('.wishlist-section a.o_wish_add').addClass('disabled');
+            $('.wishlist-section .o_wish_rm').on('click', function (e){ self.wishlist_rm(e, false); });
+            $('.wishlist-section .o_wish_add').on('click', function (e){
+                $('.wishlist-section .o_wish_add').addClass('disabled');
                 self.wishlist_add_or_mv(e).then(function(o) {
-                    $('.wishlist-section a.o_wish_add').removeClass('disabled');
+                    $('.wishlist-section .o_wish_add').removeClass('disabled');
                 });
             });
         }
