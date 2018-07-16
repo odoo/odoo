@@ -7,25 +7,25 @@
       <field name="subject">${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })</field>
       <field name="partner_to">${object.partner_id.id}</field>
       <field name="body_html" type="xml">
-<div>
-    Hello ${object.partner_id.name},<br/>
-    We are glad to inform you that your order has been shipped.<br/>
-    %if object.carrier_tracking_ref:
-        Your tracking reference:
-        %if object.carrier_tracking_url:
-            <a href="${object.carrier_tracking_url}" target="_blank">${object.carrier_tracking_ref}</a>.
-        %else:
-            ${object.carrier_tracking_ref}.
-        %endif
-        <br/>
-    %endif
-    Find your delivery order attached for more details.
-    <br/><br/>
-    Thank you,<br/>
-    % if user and user.signature:
-        ${user.signature | safe}
-    % endif
-</div></field>
+<p>Hello ${object.partner_id.name},</p>
+<p>We are glad to inform you that your order has been shipped.</p>
+<p>
+%if object.carrier_tracking_ref:
+  Your tracking reference:
+  %if object.carrier_tracking_url:
+    <a href="${object.carrier_tracking_url}" target="_blank">${object.carrier_tracking_ref}</a>.
+  %else:
+    ${object.carrier_tracking_ref}.
+  %endif
+%endif
+</p>
+<p>Find your delivery order attached for more details.</p>
+<p>Thank you,
+% if user and user.signature:
+  ${user.signature | safe}
+% endif
+</p>
+      </field>
       <field name="report_template" ref="stock.action_report_delivery"/>
       <field name="report_name">${(object.name or '').replace('/','_')}</field>
       <field name="lang">${object.partner_id.lang}</field>
