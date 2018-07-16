@@ -49,11 +49,9 @@
                         </div>
                     </div>
                     <footer>
-                        <field name="account_setup_fy_data_done" invisible="True"/>
-                        <button string="Mark as done" type="object" name="mark_as_done" class="oe_highlight" attrs="{'invisible': [('account_setup_fy_data_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_fy_data_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_fy_data_done','=',False)]}"/>
-                        <button string="Unmark as done" type="object" name="unmark_as_done" attrs="{'invisible': [('account_setup_fy_data_done','=',False)]}"/>
+                        <button name="action_save_onboarding_fiscal_year" string="OK"
+                               class="oe_highlight" type="object" />
+                        <button special="cancel" string="Cancel" />
                     </footer>
                 </form>
             </field>
