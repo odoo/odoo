@@ -917,7 +917,7 @@ QUnit.module('Views', {
         assert.verifySteps(['/web/dataset/search_read']);
         list.sidebar.$('a:contains(Archive)').click();
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // Click on 'Cancel'
+        $('.modal-footer .btn-secondary').click(); // Click on 'Cancel'
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 4, "still should have 4 records");
 
         list.sidebar.$('a:contains(Archive)').click();

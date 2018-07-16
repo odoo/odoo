@@ -298,7 +298,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         this.$buttons.filter('.oe_import_file')
             .text(_t('Load New File'))
-            .removeClass('btn-primary').addClass('btn-default')
+            .removeClass('btn-primary').addClass('btn-secondary')
             .blur();
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('d-none');
         this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');

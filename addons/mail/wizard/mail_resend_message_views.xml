@@ -23,8 +23,8 @@
                     <p attrs="{'invisible':[('has_cancel', '==', False)]}"> <span class="fa fa-info-circle"/> Caution: It won't be possible to send this mail again to the recipients you did not select.</p>
                     <footer>
                         <button string="Resend to selected" name="resend_mail_action" type="object" class="btn-primary o_mail_send"/>
-                        <button string="Ignore all failures" name="cancel_mail_action" type="object" class="btn-default" />
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Ignore all failures" name="cancel_mail_action" type="object" class="btn-secondary" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -41,7 +41,7 @@
                     <img src="/mail/static/img/red_envelope.png" alt="Envelope Example"/>
                     <footer>  
                         <button string="Discard delivery failures" name="cancel_resend_action" type="object" class="btn-primary" />
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>

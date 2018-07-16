@@ -4048,7 +4048,7 @@ QUnit.module('relational_fields', {
             "there should be two records in the one2many in the dialog");
 
         // click on 'Discard'
-        $('.modal-footer .btn-default').click();
+        $('.modal-footer .btn-secondary').click();
 
         assert.strictEqual($('.modal').length, 0, "dialog should be closed");
 
@@ -4800,8 +4800,8 @@ QUnit.module('relational_fields', {
             'delete icon should be visible in edit');
         assert.ok(form.$('.o_field_one2many .o-kanban-button-new').length,
             '"Create" button should be visible in edit');
-        assert.ok(form.$('.o_field_one2many .o-kanban-button-new').hasClass('btn-default'),
-            "'Create' button should have className 'btn-default'");
+        assert.ok(form.$('.o_field_one2many .o-kanban-button-new').hasClass('btn-secondary'),
+            "'Create' button should have className 'btn-secondary'");
         assert.strictEqual(form.$('.o_field_one2many .o-kanban-button-new').text().trim(), "Add",
             'Create button should have "Add" label');
 
@@ -5380,7 +5380,7 @@ QUnit.module('relational_fields', {
             "pager should still display the correct total");
 
         // click on cancel
-        $('.modal .modal-footer .btn-default').click(); // click on cancel
+        $('.modal .modal-footer .btn-secondary').click(); // click on cancel
 
         assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 4',
             "pager should again display the correct total");
@@ -5471,7 +5471,7 @@ QUnit.module('relational_fields', {
             'a confirmation model should be opened');
 
         // click on cancel, the line should still be selected
-        $('.modal .modal-footer button.btn-default').click();
+        $('.modal .modal-footer button.btn-secondary').click();
         assert.strictEqual(form.$('tr.o_data_row.o_selected_row').length, 1,
             "should still have 1 selected data row");
 
@@ -11139,9 +11139,9 @@ QUnit.module('relational_fields', {
         var $selectedStatus = form.$('.o_statusbar_status button[data-value="4"]');
         assert.ok($selectedStatus.hasClass('btn-primary') && $selectedStatus.hasClass('disabled'),
             "selected status should be btn-primary and disabled");
-        var $clickable = form.$('.o_statusbar_status button.btn-default:not(.dropdown-toggle):not(:disabled)');
+        var $clickable = form.$('.o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)');
         assert.strictEqual($clickable.length, 2,
-            "other status should be btn-default and not disabled");
+            "other status should be btn-secondary and not disabled");
         $clickable.last().click(); // (last is visually the first here (css))
         var $status = form.$('.o_statusbar_status button[data-value="1"]');
         assert.ok($status.hasClass("btn-primary") && $status.hasClass("disabled"),

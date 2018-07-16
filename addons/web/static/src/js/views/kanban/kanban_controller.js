@@ -119,7 +119,7 @@ var KanbanController = BasicController.extend({
         return this._super.apply(this, arguments);
     },
     /**
-     * In grouped mode, set 'Create' button as btn-default if there is no column
+     * In grouped mode, set 'Create' button as btn-secondary if there is no column
      * (except if we can't create new columns)
      *
      * @private

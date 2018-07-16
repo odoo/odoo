@@ -26,12 +26,12 @@
                 </div>
                 <div aria-valuemin="0" t-att-aria-valuenow="widget._initialState.valuenow" class="progress-bar" role="progressbar" style="width: 0%;" t-att-aria-valuemax="widget._initialState.valuemax"></div>
             </div>
-            <button class="btn btn-default o_automatic_reconciliation pull-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
+            <button class="btn btn-secondary o_automatic_reconciliation pull-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
             <div class="notification_area"/>
         </div>
         <div class="o_reconciliation_lines"/>
         <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
-            <button class="btn btn-default js_load_more">Load more</button>
+            <button class="btn btn-secondary js_load_more">Load more</button>
         </div>
         <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
@@ -59,7 +59,7 @@
     <t t-if="context &amp;&amp; context.active_model">
         <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
             <t t-if="context.journal_id">
-                <button class="button_back_to_statement btn btn-default" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
+                <button class="button_back_to_statement btn btn-secondary" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
             </t>
             <t t-if="context['active_model'] === 'account.bank.statement'">
                 <button class="button_close_statement btn btn-primary" style="display: inline-block;">Close statement</button>
@@ -74,7 +74,7 @@
         <table class="accounting_view">
             <caption>
                 <div class="pull-right o_buttons">
-                    <button t-attf-class="o_validate btn btn-default #{!state.balance.type ? '' : 'd-none'}">Validate</button>
+                    <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Validate</button>
                     <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
                     <span t-attf-class="o_no_valid text-danger #{state.balance.type &lt; 0 ? '' : 'd-none'}">Select a partner or choose a counterpart</span>
                 </div>
@@ -107,9 +107,9 @@
 <t t-name="reconciliation.manual.line" t-extend="reconciliation.line">
     <t t-jquery=".o_buttons" t-operation="replace">
         <div class="pull-right o_buttons">
-            <button t-attf-class="o_validate btn btn-default #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
+            <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
             <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
-            <button t-attf-class="o_no_valid btn btn-default #{state.balance.type &lt; 0 ? '' : 'd-none'}">Skip</button>
+            <button t-attf-class="o_no_valid btn btn-secondary #{state.balance.type &lt; 0 ? '' : 'd-none'}">Skip</button>
         </div>
     </t>
     <t t-jquery=".accounting_view tbody" t-operation="append">

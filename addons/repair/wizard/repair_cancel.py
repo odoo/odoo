@@ -33,7 +33,7 @@ class RepairCancel(models.TransientModel):
                 <form string="Cancel Repair">
                     <header>
                         <button name="cancel_repair" string="_Yes" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </header>
                     <label string="Do you want to continue?"/>
                 </form>

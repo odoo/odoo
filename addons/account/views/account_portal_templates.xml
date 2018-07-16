@@ -85,8 +85,8 @@
                         </div>
                         <div class="o_payment_button">
                             <div class="text-center mb8 ml16 mr16 o_download_pdf">
-                                <a class="btn btn-default btn-block o_download_btn" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" title="Download"><i class="fa fa-download"/> Download</a>
-                                <a class="btn btn-default btn-block d-none d-lg-inline-block o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
+                                <a class="btn btn-secondary btn-block o_download_btn" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" title="Download"><i class="fa fa-download"/> Download</a>
+                                <a class="btn btn-secondary btn-block d-none d-lg-inline-block o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
                             </div>
                         </div>
                         <hr t-if="invoice.user_id" class="mt0 mb0"/>

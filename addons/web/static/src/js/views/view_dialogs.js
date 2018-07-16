@@ -109,7 +109,7 @@ var FormViewDialog = ViewDialog.extend({
             options = options || {};
             options.buttons = [{
                 text: (readonly ? _t("Close") : _t("Discard")),
-                classes: "btn-default o_form_button_cancel",
+                classes: "btn-secondary o_form_button_cancel",
                 close: true,
                 click: function () {
                     if (!readonly) {
@@ -360,7 +360,7 @@ var SelectCreateDialog = ViewDialog.extend({
             // Set the dialog's buttons
             self.__buttons = [{
                 text: _t("Cancel"),
-                classes: "btn-default o_form_button_cancel",
+                classes: "btn-secondary o_form_button_cancel",
                 close: true,
             }];
             if (!self.options.no_create) {

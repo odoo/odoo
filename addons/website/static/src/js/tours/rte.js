@@ -72,7 +72,7 @@ tour.register('rte_translator', {
     trigger: 'html:not(:has(#wrap p span)) .o_menu_systray a[data-action="translate"]',
 }, {
     content: "close modal",
-    trigger: '.modal-footer .btn-default',
+    trigger: '.modal-footer .btn-secondary',
 }, {
     content: "check if translation is activate",
     trigger: '[data-oe-translation-id]',

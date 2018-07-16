@@ -208,7 +208,7 @@ return {
      * @param {Object} options
      * @param {Object} [options.attrs] - Attributes to put on the button element
      * @param {string} [options.attrs.type='button']
-     * @param {string} [options.attrs.class='btn-default']
+     * @param {string} [options.attrs.class='btn-secondary']
      *        Note: automatically completed with "btn btn-X"
      *        (@see options.size for the value of X)
      * @param {string} [options.size] - @see options.attrs.class
@@ -237,7 +237,7 @@ return {
         if (options.size) {
             jQueryParams.class += (' btn-' + options.size);
         }
-        jQueryParams.class += (' ' + (extraClasses || 'btn-default'));
+        jQueryParams.class += (' ' + (extraClasses || 'btn-secondary'));
 
         var $button = $('<button/>', jQueryParams);
 

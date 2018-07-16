@@ -43,7 +43,7 @@
                     <h1 class="mb8"><t t-esc="widget.employee.name"/></h1>
                     <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
                     <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-out btn-warning" t-if="checked_in" aria-label="Sign out" title="Sign out"/>
-                    <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-default" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
+                    <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-secondary" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
                     <h3 class="mt0 mb0 text-muted">Click to <b t-if="checked_in">check out</b><b t-if="!checked_in">check in</b></h3>
                 </t>
                 <t t-else="">
@@ -60,8 +60,8 @@
             <div class="o_hr_attendance_kiosk_mode">
                 <t t-set="checked_in" t-value="widget.employee_state=='checked_in'"/>
                 <div class="o_hr_attendance_back_button">
-                    <span class="btn btn-default btn-lg d-block d-md-none"><i class="fa fa-chevron-left mr8"/> Go back</span>
-                    <span class="btn btn-default d-none d-md-inline-block"><i class="fa fa-chevron-left" role="img" aria-label="Go back" title="Go back"/></span>
+                    <span class="btn btn-secondary btn-lg d-block d-md-none"><i class="fa fa-chevron-left mr8"/> Go back</span>
+                    <span class="btn btn-secondary d-none d-md-inline-block"><i class="fa fa-chevron-left" role="img" aria-label="Go back" title="Go back"/></span>
                 </div>
                 <t t-if="widget.employee_id">
                     <div class="o_hr_attendance_user_badge o_home_menu_background">
@@ -71,7 +71,7 @@
                     <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
                     <t t-if="!widget.use_pin">
                         <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-out btn-warning" t-if="checked_in" aria-label="Sign out" title="Sign out"/>
-                        <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-default" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
+                        <a class="fa fa-7x o_hr_attendance_sign_in_out_icon fa-sign-in btn-secondary" t-if="!checked_in" aria-label="Sign in" title="Sign in"/>
                         <h3 class="mt0 mb0 text-muted">Click to <b t-if="checked_in">check out</b><b t-else="">check in</b></h3>
                     </t>
                     <t t-else="">
@@ -84,7 +84,7 @@
                                 <div class="row">
                                     <t t-foreach="['1', '2', '3', '4', '5', '6', '7', '8', '9', ['C', 'btn-warning'], '0', ['ok', 'btn-primary']]" t-as="btn_name">
                                         <div class="col-xs-4 mb4">
-                                            <a t-attf-class="btn {{btn_name[1]? btn_name[1] : 'btn-default'}} btn-block btn-lg {{ 'o_hr_attendance_pin_pad_button_' + btn_name[0] }}"><t t-esc="btn_name[0]"/></a>
+                                            <a t-attf-class="btn {{btn_name[1]? btn_name[1] : 'btn-secondary'}} btn-block btn-lg {{ 'o_hr_attendance_pin_pad_button_' + btn_name[0] }}"><t t-esc="btn_name[0]"/></a>
                                         </div>
                                     </t>
                                 </div>
@@ -134,7 +134,7 @@
                 </t>
                 <t t-else="">
                     <div class="alert alert-warning" role="alert">Invalid request, please return to the main menu.</div>
-                    <button class="o_hr_attendance_button_dismiss btn btn-default btn-lg">Go back</button>
+                    <button class="o_hr_attendance_button_dismiss btn btn-secondary btn-lg">Go back</button>
                 </t>
             </div>
         </div>
