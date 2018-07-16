@@ -1122,7 +1122,7 @@ QUnit.module('Views', {
                         '<button name="0"/>' +
                         '<button name="1" class="btn-primary"/>' +
                         '<button name="2" class="oe_highlight"/>' +
-                        '<button name="3" class="btn-default"/>' +
+                        '<button name="3" class="btn-secondary"/>' +
                         '<button name="4" class="btn-link"/>' +
                         '<button name="5" class="oe_link"/>' +
                         '<button name="6" class="btn-success"/>' +
@@ -1132,7 +1132,7 @@ QUnit.module('Views', {
                         '<button name="8"/>' +
                         '<button name="9" class="btn-primary"/>' +
                         '<button name="10" class="oe_highlight"/>' +
-                        '<button name="11" class="btn-default"/>' +
+                        '<button name="11" class="btn-secondary"/>' +
                         '<button name="12" class="btn-link"/>' +
                         '<button name="13" class="oe_link"/>' +
                         '<button name="14" class="btn-success"/>' +
@@ -1142,13 +1142,13 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-default',
+        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-secondary',
             "header buttons without any class should receive the correct classes");
         assert.strictEqual(form.$('button[name="1"]').attr('class'), 'btn btn-primary',
             "header buttons with bootstrap primary class should receive the correct classes");
         assert.strictEqual(form.$('button[name="2"]').attr('class'), 'btn btn-primary',
             "header buttons with oe_highlight class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-default',
+        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-secondary',
             "header buttons with bootstrap default class should receive the correct classes");
         assert.strictEqual(form.$('button[name="4"]').attr('class'), 'btn btn-link',
             "header buttons with bootstrap link class should receive the correct classes");
@@ -1156,15 +1156,15 @@ QUnit.module('Views', {
             "header buttons with oe_link class should receive the correct classes");
         assert.strictEqual(form.$('button[name="6"]').attr('class'), 'btn btn-success',
             "header buttons with bootstrap state class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn o_this_is_a_button btn-default',
+        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn o_this_is_a_button btn-secondary',
             "header buttons with custom classes should receive the correct classes");
-        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-default',
+        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-secondary',
             "sheet header buttons without any class should receive the correct classes");
         assert.strictEqual(form.$('button[name="9"]').attr('class'), 'btn btn-primary',
             "sheet buttons with bootstrap primary class should receive the correct classes");
         assert.strictEqual(form.$('button[name="10"]').attr('class'), 'btn btn-primary',
             "sheet buttons with oe_highlight class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-default',
+        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-secondary',
             "sheet buttons with bootstrap default class should receive the correct classes");
         assert.strictEqual(form.$('button[name="12"]').attr('class'), 'btn btn-link',
             "sheet buttons with bootstrap link class should receive the correct classes");
@@ -1996,7 +1996,7 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                         '<field name="foo"/>' +
                         '<button string="Do something" class="btn-primary" name="abc" type="object"/>' +
-                        '<button string="Discard" class="btn-default" special="cancel"/>' +
+                        '<button string="Discard" class="btn-secondary" special="cancel"/>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
@@ -2246,7 +2246,7 @@ QUnit.module('Views', {
         // click on discard and cancel the confirm request
         form.$buttons.find('.o_form_button_cancel').click();
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // click on cancel
+        $('.modal-footer .btn-secondary').click(); // click on cancel
         assert.strictEqual(form.$('input').val(), 'new value', 'input should still contain new value');
 
         // click on discard and confirm
@@ -2482,7 +2482,7 @@ QUnit.module('Views', {
         // click on the pager to switch to the next record and cancel the confirm request
         form.pager.$('.o_pager_next').click(); // click on next
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // click on cancel
+        $('.modal-footer .btn-secondary').click(); // click on cancel
         assert.strictEqual(form.$('input').val(), 'new value', 'input should still contain new value');
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should still be 1');
 
@@ -5861,7 +5861,7 @@ QUnit.module('Views', {
         form.$('.o_statusbar_buttons button').click();
         assert.ok(form.$('.o_statusbar_buttons button').prop('disabled'),
             'button should be disabled');
-        $('.modal-footer button.btn-default').click();
+        $('.modal-footer button.btn-secondary').click();
         assert.ok(!form.$('.o_statusbar_buttons button').prop('disabled'),
             'button should no longer be disabled');
 
@@ -6519,7 +6519,7 @@ QUnit.module('Views', {
             }
         });
 
-        form.$('.o_form_statusbar .btn-default').click();
+        form.$('.o_form_statusbar .btn-secondary').click();
         form.destroy();
     });
 

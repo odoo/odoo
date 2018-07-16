@@ -613,7 +613,7 @@ var ImageWidget = MediaWidget.extend({
         var $input = $(ev.currentTarget);
         var $button = $input.next('button');
         var emptyValue = ($input.val() === '');
-        $button.toggleClass('btn-default', emptyValue).toggleClass('btn-primary', !emptyValue)
+        $button.toggleClass('btn-secondary', emptyValue).toggleClass('btn-primary', !emptyValue)
                .prop('disabled', emptyValue);
     },
     /**
@@ -1477,7 +1477,7 @@ var LinkDialog = Dialog.extend({
         this.data.text = data.label;
         this.data.url = data.url;
         this.data.className = data.classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-        if (data.classes.replace(/(^|[ ])(btn-default|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
+        if (data.classes.replace(/(^|[ ])(btn-secondary|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
             this.data.style = {'background-color': '', 'color': ''};
         }
         this.data.isNewWindow = data.isNewWindow;

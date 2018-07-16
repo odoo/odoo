@@ -968,7 +968,7 @@ var FieldX2Many = AbstractField.extend({
     _renderButtons: function () {
         if (!this.isReadonly && this.view.arch.tag === 'kanban') {
             this.$buttons = $(qweb.render('KanbanView.buttons', {
-                btnClass: 'btn-default',
+                btnClass: 'btn-secondary',
                 create_text: this.nodeOptions.create_text,
             }));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));

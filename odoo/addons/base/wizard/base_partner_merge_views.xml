@@ -92,8 +92,8 @@
                             type='object'
                             confirm="Are you sure to execute the list of automatic merges of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
-                        <button special="cancel" string="Cancel" type="object" class="btn btn-default oe_inline" attrs="{'invisible': [('state', '=', 'finished')]}"/>
-                        <button special="cancel" string="Close" type="object" class="btn btn-default oe_inline" attrs="{'invisible': [('state', '!=', 'finished')]}"/>
+                        <button special="cancel" string="Cancel" type="object" class="btn btn-secondary oe_inline" attrs="{'invisible': [('state', '=', 'finished')]}"/>
+                        <button special="cancel" string="Close" type="object" class="btn btn-secondary oe_inline" attrs="{'invisible': [('state', '!=', 'finished')]}"/>
                     </footer>
                 </form>
             </field>

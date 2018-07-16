@@ -278,7 +278,7 @@
                     </group>
                     <footer>
                         <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                        <button string="Discard" class="btn-default" special="cancel"/>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -413,9 +413,9 @@
                     <header style="min-height:31px;">
                         <button name="put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send Now"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
-                        <button name="action_schedule_date" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-default" string="Schedule"/>
-                        <button name="action_test_mailing" type="object" class="btn-default" string="Test"/>
-                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-default" string="Cancel"/>
+                        <button name="action_schedule_date" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-secondary" string="Schedule"/>
+                        <button name="action_test_mailing" type="object" class="btn-secondary" string="Test"/>
+                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 
                         <field name="state" readonly="1" widget="statusbar"/>

@@ -76,10 +76,10 @@
                     <footer>
                         <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="send_mail_action" type="object" class="btn-primary o_mail_send"/>
                         <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="send_mail_action" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
 
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
-                                class="pull-right btn-default" help="Save as a new template"/>
+                                class="pull-right btn-secondary" help="Save as a new template"/>
                     </footer>
                 </form>
             </field>

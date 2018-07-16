@@ -54,7 +54,7 @@ SearchView.include({
      * @private
      */
     _toggleMobileSearchView: function () {
-        this.$('.o_enable_searchview').toggleClass('btn-default', !!this.query.length);
+        this.$('.o_enable_searchview').toggleClass('btn-secondary', !!this.query.length);
         this.$('.o_mobile_search').toggleClass('o_hidden');
     },
 

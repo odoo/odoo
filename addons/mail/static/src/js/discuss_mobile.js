@@ -207,9 +207,9 @@ Discuss.include({
                     .removeClass('o_hidden');
                 self.$('.o_mailbox_inbox_item')
                     .removeClass('btn-primary')
-                    .addClass('btn-default');
+                    .addClass('btn-secondary');
                 self.$('.o_mailbox_inbox_item[data-type=' + type + ']')
-                    .removeClass('btn-default')
+                    .removeClass('btn-secondary')
                     .addClass('btn-primary');
             } else {
                 self.$('.o_mail_discuss_mobile_mailboxes_buttons')

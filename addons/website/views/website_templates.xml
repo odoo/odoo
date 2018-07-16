@@ -310,7 +310,7 @@
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li>
             <div class="dropup">
-                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
                     <span class="caret ml4"/>
                 </button>
@@ -341,7 +341,7 @@
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
-            <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
+            <button type="button" t-attf-class="btn btn-secondary dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
@@ -857,7 +857,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
         </div>
         <span class="input-group-btn">
-           <button type="submit" class="btn btn-default oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
+           <button type="submit" class="btn btn-secondary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
         </span>
     </div>
 </template>
@@ -879,7 +879,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
               <t t-call="website.website_search_box"/>
           </form>
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
-              <button class="btn btn-default" type="button" data-toggle="dropdown">
+              <button class="btn btn-secondary" type="button" data-toggle="dropdown">
                   <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
                   <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                   <span class="caret" role="img" aria-label="Dropdown menu" title="Dropdown menu"></span>
