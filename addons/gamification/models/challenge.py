@@ -553,9 +553,6 @@ class Challenge(models.Model):
                 partner_ids=challenge.mapped('user_ids.partner_id.id'),
                 subtype='mail.mt_comment',
                 notif_layout='mail.mail_notification_light',
-                notif_values={
-                        'model_description': challenge._description.lower(),
-                    }
                 )
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
@@ -580,18 +577,12 @@ class Challenge(models.Model):
                     partner_ids=[(4, user.partner_id.id)],
                     subtype='mail.mt_comment',
                     notif_layout='mail.mail_notification_light',
-                    notif_values={
-                        'model_description': self._description.lower(),
-                    }
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
                         body=body_html,
                         subtype='mail.mt_comment',
                         notif_layout='mail.mail_notification_light',
-                        notif_values={
-                            'model_description': self._description.lower(),
-                        }
                     )
         return challenge.write({'last_report_date': fields.Date.today()})
 

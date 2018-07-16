@@ -131,7 +131,9 @@ class Groups(models.Model):
     @api.multi
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        chosen_name = default.get('name') if default else ''
+        default_name = chosen_name or _('%s (copy)') % self.name
+        default = dict(default or {}, name=default_name)
         return super(Groups, self).copy(default)
 
     @api.multi

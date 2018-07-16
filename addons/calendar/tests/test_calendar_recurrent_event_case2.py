@@ -169,3 +169,30 @@ class TestRecurrentEvent(common.TransactionCase):
 
         # virtual_dates are used by the calendar view and I check if the stop date for the first virtual event is correct.
         self.assertEqual(virutal_dates[2], '2012-04-13 12:00:00', "The virtual event doesn't have the correct stop date !")
+
+    def test_recurrent_meeting6(self):
+        ev = self.CalendarEvent.create({
+            'name': 'Rec1',
+            'start': '2018-06-28 11:00:00',
+            'stop': '2018-06-28 12:00:00',
+            'day': 0.0,
+            'duration': 1.0,
+            'count': ' 2',
+            'end_type': 'count',
+            'fr': True,
+            'recurrency': True,
+            'allday': False,
+            'rrule_type': 'weekly'
+        })
+        #event 2018-07-06 and 2018-06-29
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([
+            '|', '&', ('start', '>=', '2018-06-30 00:00:00'), ('start', '<=', '2018-06-30 23:59:59'), ('allday', '=', True)
+        ])
+        base_ids = [calendar_id2real_id(meeting.id, with_date=False) for meeting in meetings]
+        self.assertNotIn(ev.id, base_ids, "Event does not match the domain")
+
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([
+            '|', '&', ('start', '>=', '2018-06-29 00:00:00'), ('start', '<=', '2018-06-29 23:59:59'), ('allday', '=', True)
+        ])
+        base_ids = [calendar_id2real_id(meeting.id, with_date=False) for meeting in meetings]
+        self.assertIn(ev.id, base_ids, "Event does match the domain")

@@ -162,6 +162,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                 horizontal: 'auto',
                 vertical: 'top',
             },
+             widgetParent: 'body',
         };
         if (this.page.date_publish) {
             datepickersOptions.defaultDate = time.str_to_datetime(this.page.date_publish);

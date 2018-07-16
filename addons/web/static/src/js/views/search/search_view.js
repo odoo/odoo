@@ -940,7 +940,6 @@ var SearchView = Widget.extend({
      * This function ask the groupby menu to deactive all groupbys if no
      * groupby is used.
      *
-     * @private
      * @param {string[]]} selectedGroupIds list of group ids to deactivate
      */
     _unsetUnusedGroupbys: function (selectedGroupIds) {
