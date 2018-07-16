@@ -526,12 +526,6 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
-    def action_view_routes(self):
-        routes = self.mapped('route_ids') | self.mapped('categ_id').mapped('total_route_ids') | self.env['stock.location.route'].search([('warehouse_selectable', '=', True)])
-        action = self.env.ref('stock.action_routes_form').read()[0]
-        action['domain'] = [('id', 'in', routes.ids)]
-        return action
-
     def action_update_quantity_on_hand(self):
         default_product_id = self.env.context.get('default_product_id', self.product_variant_id.id)
         if self.env.user.user_has_groups('stock.group_stock_multi_locations') or (self.env.user.user_has_groups('stock.group_production_lot') and self.tracking != 'none'):

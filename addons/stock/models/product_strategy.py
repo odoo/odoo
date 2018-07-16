@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class RemovalStrategy(models.Model):
@@ -26,16 +26,22 @@ class PutAwayStrategy(models.Model):
         'Fixed Locations Per Product', domain=[('product_id', '!=', False)], copy=True)
 
     def putaway_apply(self, product):
+        put_away = self._get_putaway_rule(product)
+        if put_away:
+            return put_away.fixed_location_id
+        return self.env['stock.location']
+
+    def _get_putaway_rule(self, product):
         if self.product_location_ids:
             put_away = self.product_location_ids.filtered(lambda x: x.product_id == product)
             if put_away:
-                return put_away[0].fixed_location_id
+                return put_away[0]
         if self.fixed_location_ids:
             categ = product.categ_id
             while categ:
                 put_away = self.fixed_location_ids.filtered(lambda x: x.category_id == categ)
                 if put_away:
-                    return put_away[0].fixed_location_id
+                    return put_away[0]
                 categ = categ.parent_id
         return self.env['stock.location']
 

@@ -34,6 +34,7 @@
         'report/report_stockpicking_operations.xml',
         'report/report_deliveryslip.xml',
         'report/report_stockinventory.xml',
+        'report/report_stock_rule.xml',
 
         'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
@@ -42,6 +43,7 @@
         'wizard/stock_backorder_confirmation_views.xml',
         'wizard/stock_overprocessed_transfer_views.xml',
         'wizard/stock_quantity_history.xml',
+        'wizard/stock_rules_report_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
         'wizard/stock_track_confirmation_views.xml',

@@ -60,5 +60,14 @@
             file="stock.report_lot_label"
             print_report_name="'Lot-Serial - %s' % object.name"
         />
+        <report
+            id="action_report_stock_rule"
+            model="product.template"
+            string="Product Routes Report"
+            report_type="qweb-html"
+            name="stock.report_stock_rule"
+            file="stock.report_stock_rule"
+            menu="False"
+        />
     </data>
 </odoo>

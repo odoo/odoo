@@ -8,6 +8,7 @@ from . import stock_immediate_transfer
 from . import stock_backorder_confirmation
 from . import stock_overprocessed_transfer
 from . import stock_quantity_history
+from . import stock_rules_report
 from . import stock_warn_insufficient_qty
 from . import product_replenish
 from . import stock_track_confirmation

@@ -243,10 +243,12 @@
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>
                         </button>
-                       <button string="Routes" type="object"
-                            name="action_view_routes"
+                       <button string="Routes" type="action"
+                            name="%(action_stock_rules_report)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
-                            class="oe_stat_button" icon="fa-cogs" groups="base.group_no_one"/>
+                            class="oe_stat_button" icon="fa-cogs"
+                            context="{'default_product_id': id}"
+                            groups="stock.group_stock_multi_locations"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
@@ -324,11 +326,12 @@
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>
                         </button>
-                        <button string="Routes" type="object"
-                            name="action_view_routes"
+                        <button string="Routes" type="action"
+                            name="%(action_stock_rules_report)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs"
-                            groups="base.group_no_one"/>
+                            context="{'default_product_tmpl_id': id}"
+                            groups="stock.group_stock_multi_locations"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
