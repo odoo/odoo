@@ -80,6 +80,14 @@ Best Regards,'''))
     account_onboarding_sample_invoice_sent = fields.Boolean(
         "Onboarding sample invoice step completed", default=False)
 
+    # account dashboard onboarding
+    account_dashboard_onboarding_closed = fields.Boolean(
+        string="Account dashboard onboarding panel closed",
+        help="Refers to the account dashboard onboarding panel closed state.")
+    account_dashboard_onboarding_folded = fields.Boolean(
+        string="Account dashboard onboarding panel folded",
+        help="Refers to the account dashboard onboarding panel folded state.")
+
     @api.multi
     def _check_lock_dates(self, vals):
         '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
@@ -431,6 +439,17 @@ Best Regards,'''))
     def action_close_account_invoice_onboarding(self):
         """ Mark the onboarding panel as closed. """
         self.env.user.company_id.account_invoice_onboarding_closed = True
+
+    @api.model
+    def action_toggle_fold_account_dashboard_onboarding(self):
+        """ Toggle the dashboard onboarding panel `folded` state. """
+        self.env.user.company_id.account_dashboard_onboarding_folded =\
+            not self.env.user.company_id.account_dashboard_onboarding_folded
+
+    @api.model
+    def action_close_account_dashboard_onboarding(self):
+        """ Mark the dashboard onboarding panel as closed. """
+        self.env.user.company_id.account_dashboard_onboarding_closed = True
 
     @api.model
     def action_open_account_onboarding_invoice_layout(self):
