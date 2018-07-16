@@ -490,9 +490,6 @@ class Slide(models.Model):
                 body=html_body,
                 subtype='website_slides.mt_channel_slide_published',
                 notif_layout='mail.mail_notification_light',
-                notif_values={
-                    'model_description': slide._description.lower(),
-                }
             )
         return True
 
