@@ -90,11 +90,12 @@
 <template id="opt_industry_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Industry" priority="20">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Sectors of Activity</h3>
-        <ul class="nav nav-pills nav-stacked mt16 mb32">
+        <ul class="nav nav-pills flex-column mt16 mb32">
             <t t-foreach="industries" t-as="industry_dict">
                 <t t-if="industry_dict['industry_id']">
-                    <li t-att-class="industry_dict['industry_id'][0] == current_industry_id and 'active' or None">
-                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }">
+                    <li class="nav-item">
+                        <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }"
+                           t-attf-class="nav-link#{industry_dict['industry_id'][0] == current_industry_id and ' active' or ''}">
                             <span class="badge pull-right" t-esc="industry_dict['industry_id_count'] or '0'"/>
                             <t t-esc="industry_dict['industry_id'][1]"/>
                         </a>
@@ -108,11 +109,12 @@
 <template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries" priority="30">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
-        <ul class="nav nav-pills nav-stacked mt16 mb32">
+        <ul class="nav nav-pills flex-column mt16 mb32">
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
-                    <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or None">
-                        <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                    <li class="nav-item">
+                        <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }"
+                           t-attf-class="nav-link#{country_dict['country_id'][0] == current_country_id and ' active' or ''}">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
@@ -128,13 +130,13 @@
     <xpath expr="//div[@id='ref_left_column']" position="inside">
 
         <h3 t-if="len(tags)">References by Tag</h3>
-        <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
-            <a class="mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
-                <span class="fa fa-1x fa-tags"/> All </a>
-            <t t-foreach="tags" t-as="o_tag">
-                <a t-attf-class="label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+        <ul class="nav nav-pills flex-column mt16 mb32" t-if="len(tags)">
+            <li class="nav-item"><a class="nav-link mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+                <span class="fa fa-1x fa-tags"/> All </a></li>
+            <li t-foreach="tags" t-as="o_tag" class="nav-item">
+                <a t-attf-class="nav-link label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                     t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
-            </t>
+            </li>
         </ul>
     </xpath>
 </template>

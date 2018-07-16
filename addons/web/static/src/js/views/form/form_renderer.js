@@ -181,7 +181,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             var index = -1;
-            $notebook.find('li').each(function (i) {
+            $notebook.find('.nav-link').each(function (i) {
                 if ($(this).hasClass('active')) {
                     index = i;
                 }
@@ -612,10 +612,11 @@ var FormRenderer = BasicRenderer.extend({
             'data-toggle': 'tab',
             disable_anchor: 'true',
             href: '#' + page_id,
+            class: 'nav-link',
             role: 'tab',
             text: page.attrs.string,
         });
-        return $('<li>').append($a);
+        return $('<li>', {class: 'nav-item'}).append($a);
     },
     /**
      * @private
@@ -761,7 +762,7 @@ var FormRenderer = BasicRenderer.extend({
     _renderTagNotebook: function (node) {
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
-        var $pages = $('<div class="tab-content nav nav-tabs">');
+        var $pages = $('<div class="tab-content">');
         var autofocusTab = -1;
         // renderedTabs is used to aggregate the generated $headers and $pages
         // alongside their node, so that their modifiers can be registered once
@@ -785,7 +786,7 @@ var FormRenderer = BasicRenderer.extend({
         });
         if (renderedTabs.length) {
             var tabToFocus = renderedTabs[Math.max(0, autofocusTab)];
-            tabToFocus.$header.addClass('active');
+            tabToFocus.$header.find('.nav-link').addClass('active');
             tabToFocus.$page.addClass('active');
         }
         // register the modifiers for each tab
@@ -793,12 +794,13 @@ var FormRenderer = BasicRenderer.extend({
             self._registerModifiers(tab.node, self.state, tab.$header, {
                 callback: function (element, modifiers) {
                     // if the active tab is invisible, activate the first visible tab instead
-                    if (modifiers.invisible && element.$el.hasClass('active')) {
-                        element.$el.removeClass('active');
+                    var $link = element.$el.find('.nav-link');
+                    if (modifiers.invisible && $link.hasClass('active')) {
+                        $link.removeClass('active');
                         tab.$page.removeClass('active');
-                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first()');
+                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first() > a');
                         $firstVisibleTab.addClass('active');
-                        $pages.find($firstVisibleTab.find('a').attr('href')).addClass('active');
+                        $pages.find($firstVisibleTab.attr('href')).addClass('active');
                     }
                 },
             });

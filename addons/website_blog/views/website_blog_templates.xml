@@ -393,8 +393,8 @@
             <div t-if='not hide_title' class='text-muted mt8'><i class='fa fa-tag' role="img" aria-label="Tag category" title="Tag category"/> <t t-esc='categ_title' /></div>
             <t t-foreach="tags" t-as="tag">
                 <t t-if="tag.post_ids">
-                    <li t-att-class="tag.id in active_tag_ids and 'active' or None">
-                        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}">
+                    <li class="nav-item">
+                        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="nav-link#{tag.id in active_tag_ids and ' active' or ''}">
                             <span t-field="tag.name"/>
                         </a>
                     </li>
@@ -436,18 +436,18 @@
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Archives</h4>
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills flex-column">
             <t t-foreach="nav_list" t-as="year">
-                <li data-toggle="collapse" t-att-data-target="'#' + year" aria-expanded="false" class="blog_post_year_collapse mt8">
+                <li data-toggle="collapse" t-att-data-target="'#' + year" aria-expanded="false" class="nav-item blog_post_year_collapse mt8">
                     <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4" role="img" aria-label="Next year" title="Next year"/><span t-esc="year"/>
                 </li>
-                <ul t-attf-class="blog_post_year collapse nav nav-pills nav-stacked #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
+                <ul t-attf-class="blog_post_year collapse nav nav-pills flex-column #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
-                        <li t-if="months['date_begin'] == date" class="active">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                        <li t-if="months['date_begin'] == date" class="nav-item">
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
-                        <li t-else="1">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                        <li t-else="1" class="nav-item">
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -514,13 +514,13 @@
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32" groups="website.group_website_designer">
         <h4>Status</h4>
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills flex-column">
             <t t-set="state" t-value="state_info['state']"/>
-            <li t-attf-class="#{state == 'published' and 'active' or ''}">
-                <a t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">Published <span class="pull-right badge" t-esc="state_info['published']" /></a>
+            <li class="nav-item">
+                <a t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}" t-attf-class="nav-link#{state == 'published' and ' active' or ''}">Published <span class="pull-right badge" t-esc="state_info['published']" /></a>
             </li>
-            <li t-attf-class="#{state == 'unpublished' and 'active' or ''}">
-                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">Unpublished <span class="pull-right badge" t-esc="state_info['unpublished']" /></a>
+            <li class="nav-item">
+                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}" t-attf-class="nav-link#{state == 'unpublished' and ' active' or ''}">Unpublished <span class="pull-right badge" t-esc="state_info['unpublished']" /></a>
             </li>
         </ul>
         </section>
@@ -536,10 +536,10 @@
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32">
         <h4>Our Blogs</h4>
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills flex-column">
             <t t-foreach="blogs" t-as="nav_blog">
-                <li t-att-class="nav_blog.id == blog.id and 'active' or None">
-                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}">
+                <li class="nav-item">
+                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" t-attf-class="nav-link#{nav_blog.id == blog.id and ' active' or ''}">
                         <span t-field="nav_blog.name"/>
                     </a>
                 </li>

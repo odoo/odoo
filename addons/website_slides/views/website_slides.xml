@@ -123,26 +123,31 @@
                 <!-- Navigation -->
                 <div class="col-md-8 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs nav-tabs-border" role="tablist">
-                        <li t-attf-class="#{not slide_type and 'active' ''}">
-                            <a  t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}"> <i class="fa fa-home"/> Home</a>
+                        <li class="nav-item">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}"
+                                t-attf-class="nav-link#{not slide_type and ' active' or ''}"> <i class="fa fa-home"/> Home</a>
                         </li>
-                        <li t-if="header_object.nbr_presentations" t-attf-class="#{slide_type == 'presentation' and 'active' ''}">
-                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/presentation">
+                        <li t-if="header_object.nbr_presentations" class="nav-item">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/presentation"
+                                t-attf-class="nav-link#{slide_type == 'presentation' and ' active' or ''}">
                                 <span class="badge" t-esc="header_object.nbr_presentations"/> Presentations
                             </a>
                         </li>
-                        <li t-if="header_object.nbr_videos" t-attf-class="#{slide_type == 'video' and 'active' ''}">
-                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/video">
+                        <li t-if="header_object.nbr_videos" class="nav-item">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/video"
+                                t-attf-class="nav-link#{slide_type == 'video' and ' active' or ''}">
                                 <span class="badge" t-esc="header_object.nbr_videos"/> Videos
                             </a>
                         </li>
-                        <li t-if="header_object.nbr_documents" t-attf-class="li #{slide_type == 'document' and 'active' ''}">
-                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/document">
+                        <li t-if="header_object.nbr_documents" class="li nav-item">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/document"
+                                t-attf-class="nav-link#{slide_type == 'document' and ' active' or ''}">
                                 <span class="badge" t-esc="header_object.nbr_documents"/> Documents
                             </a>
                         </li>
-                        <li t-if="header_object.nbr_infographics" t-attf-class="#{slide_type == 'infographic' and 'active' ''}">
-                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/infographic">
+                        <li t-if="header_object.nbr_infographics" class="nav-item">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/infographic"
+                                t-attf-class="nav-link#{slide_type == 'infographic' and ' active' or ''}">
                                 <span class="badge" t-esc="header_object.nbr_infographics"/> Infographics
                             </a>
                         </li>
@@ -477,28 +482,28 @@
                         </div>
                         <div class="mt8 mb32">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li t-att-class="not comments and 'active' or None">
-                                    <a aria-controls="about" href="#about" role="tab" data-toggle="tab">
+                                <li class="nav-item">
+                                    <a href="#about" aria-controls="about" t-attf-class="nav-link#{not comments and ' active' or ''}" role="tab" data-toggle="tab">
                                         <i class="fa fa-home"></i> About
                                     </a>
                                 </li>
-                                <li>
-                                    <a aria-controls="share" href="#share" role="tab" data-toggle="tab">
+                                <li class="nav-item">
+                                    <a href="#share" aria-controls="share" class="nav-link" role="tab" data-toggle="tab">
                                         <i class="fa fa-share-alt"></i> Share
                                     </a>
                                 </li>
-                                <li t-att-class="comments and 'active' or None">
-                                    <a aria-controls="discuss" href="#discuss" role="tab" data-toggle="tab">
+                                <li class="nav-item">
+                                    <a href="#discuss" aria-controls="discuss" t-attf-class="nav-link#{comments and ' active' or ''}" role="tab" data-toggle="tab">
                                         <i class="fa fa-comments-o"></i> Comments
                                     </a>
                                 </li>
-                                <li>
-                                    <a aria-controls="transcript" href="#transcript" role="tab" data-toggle="tab">
+                                <li class="nav-item">
+                                    <a href="#transcript" aria-controls="transcript" class="nav-link" role="tab" data-toggle="tab">
                                         <i class="fa fa-align-justify"></i> Transcript
                                     </a>
                                 </li>
-                                <li>
-                                    <a aria-controls="statistic" href="#statistic" role="tab" data-toggle="tab">
+                                <li class="nav-item">
+                                    <a href="#statistic" aria-controls="statistic" class="nav-link" role="tab" data-toggle="tab">
                                         <i class="fa fa-bar-chart"></i> Statistics
                                     </a>
                                 </li>
@@ -623,8 +628,8 @@
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="active"><a aria-controls="related" href="#related" data-toggle="tab" role="tab">Related</a></li>
-                        <li><a aria-controls="most_viewed" href="#most_viewed" data-toggle="tab" role="tab">Most Viewed</a></li>
+                        <li class="nav-item"><a aria-controls="related" href="#related" class="nav-link active" data-toggle="tab">Related</a></li>
+                        <li class="nav-item"><a aria-controls="most_viewed" href="#most_viewed" class="nav-link" data-toggle="tab">Most Viewed</a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="related" class="tab-pane active mt4">

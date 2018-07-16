@@ -136,18 +136,18 @@
         <div>
             <!-- Tabs -->
             <ul class="nav nav-tabs d-print-none" role="tablist">
-                <li class="active" t-if="question.type != 'simple_choice'">
-                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
+                <li class="nav-item" t-if="question.type != 'simple_choice'">
+                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Graph
                     </a>
                 </li>
-                <li class="active" t-if="question.type == 'simple_choice'">
-                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
+                <li class="nav-item" t-if="question.type == 'simple_choice'">
+                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Pie Chart
                     </a>
                 </li>
-                <li>
-                    <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
+                <li class="nav-item">
+                    <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
                         <i class="fa fa-list-alt"></i> Data
                     </a>
                 </li>
@@ -200,14 +200,14 @@
         <t t-set="matrix_result" t-value="prepare_result"/>
         <!-- Tabs -->
         <ul class="nav nav-tabs d-print-none" role="tablist">
-            <li class="active">
-                <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
+            <li class="nav-item">
+                <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                     <i class="fa fa-bar-chart"></i>
                     Graph
                 </a>
             </li>
-            <li>
-                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
+            <li class="nav-item">
+                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
                     <i class="fa fa-list-alt"></i>
                     Data
                 </a>
@@ -262,14 +262,14 @@
             <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
         </span>
         <ul class="nav nav-tabs d-print-none" role="tablist">
-            <li class="active">
-                <a t-att-href="'#most_common_%d' % question.id" t-att-aria-controls="'most_common_%d' % question.id" data-toggle="tab" role="tab">
+            <li class="nav-item">
+                <a t-att-href="'#most_common_%d' % question.id" t-att-aria-controls="'most_common_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                     <i class="fa fa-list-ol"></i>
                     Most Common <span t-esc="len(number_result['most_common'])"></span>
                 </a>
             </li>
-            <li>
-                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
+            <li class="nav-item">
+                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
                     <i class="fa fa-list-alt"></i>
                     All Data
                 </a>

@@ -103,16 +103,17 @@
                 </div>
                 <div class="col-md-3">
                     <h2>Archives</h2>
-                    <ul class="nav nav-pills nav-stacked" id="group_mode">
-                        <li t-attf-class="#{mode=='thread' and 'active' or ''}">
-                            <a t-attf-href="/groups/#{ slug(group) }?mode=thread">By thread</a>
+                    <ul class="nav nav-pills flex-column" id="group_mode">
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=thread" t-attf-class="nav-link#{mode=='thread' and ' active' or ''}">By thread</a>
                         </li>
-                        <li t-attf-class="#{mode=='date' and not date_begin and 'active' or ''}">
-                            <a t-attf-href="/groups/#{ slug(group) }?mode=date">By date</a>
-                            <ul class="nav nav-pills nav-stacked" style="margin-left: 8px;">
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=date" t-attf-class="nav-link#{mode=='date' and not date_begin and ' active' or ''}">By date</a>
+                            <ul class="nav nav-pills flex-column" style="margin-left: 8px;">
                                 <t t-foreach="archives" t-as="month_archive">
-                                <li t-att-class="month_archive['date_begin'] == date_begin and 'active' or None">
-                                    <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}">
+                                <li class="nav-item">
+                                    <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
+                                        t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
                                         <t t-esc="month_archive['date']"/>
                                         <span class="pull-right badge" t-esc="month_archive['date_count']"/>
                                     </a>
@@ -164,16 +165,17 @@
             <div class="row">
                 <div class="col-md-3">
                     <h4>Browse archives</h4>
-                    <ul class="nav nav-pills nav-stacked" id="group_mode">
-                        <li t-attf-class="#{mode=='thread' and 'active' or ''}">
-                            <a t-attf-href="/groups/#{ slug(group) }?mode=thread">By thread</a>
+                    <ul class="nav nav-pills flex-column" id="group_mode">
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=thread" t-attf-class="nav-link#{mode=='thread' and ' active' or ''}">By thread</a>
                         </li>
-                        <li t-attf-class="#{mode=='date' and not date_begin and 'active' or ''}">
-                            <a t-attf-href="/groups/#{ slug(group) }?mode=date">By date</a>
-                            <ul class="nav nav-pills nav-stacked" style="margin-left: 8px;">
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=date" t-attf-class="nav-link#{mode=='date' and not date_begin and ' active' or ''}">By date</a>
+                            <ul class="nav nav-pills flex-column" style="margin-left: 8px;">
                                 <t t-foreach="archives" t-as="month_archive">
-                                <li t-att-class="month_archive['date_begin'] == date_begin and 'active' or None">
-                                    <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}">
+                                <li class="nav-item">
+                                    <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
+                                        t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
                                         <t t-esc="month_archive['date']"/>
                                         <span class="pull-right badge" t-esc="month_archive['date_count']"/>
                                     </a>

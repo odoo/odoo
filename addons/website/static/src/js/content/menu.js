@@ -179,7 +179,7 @@ sAnimation.registry.menuDirection = sAnimation.Class.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.navbar-right') ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? 'right' : 'left';
         return this._super.apply(this, arguments);
     },
 
