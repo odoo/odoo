@@ -46,7 +46,7 @@ class Repair(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
         index=True, states={'confirmed': [('readonly', True)]},
-        help='Choose partner for whom the order will be invoiced and delivered.')
+        help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
         domain="[('parent_id','=',partner_id)]",
