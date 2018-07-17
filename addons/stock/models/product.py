@@ -593,7 +593,9 @@ class ProductUoM(models.Model):
         if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
             changed = self.filtered(
                 lambda u: any(u[f] != values[f] if f in values else False
-                              for f in {'factor', 'factor_inv', 'category_id'}))
+                              for f in {'factor', 'factor_inv'})) + self.filtered(
+                lambda u: any(u[f].id != int(values[f]) if f in values else False
+                              for f in {'category_id'}))
             if changed:
                 stock_move_lines = self.env['stock.move.line'].search_count([
                     ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
