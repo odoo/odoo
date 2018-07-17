@@ -232,7 +232,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Order Lines">
+                        <page string="Order Lines" name="order_lines">
                             <field name="order_line" mode="tree,kanban"
                                 attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                 <form string="Sales Order Lines">
@@ -384,7 +384,7 @@
                             <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Other Information">
+                        <page string="Other Information" name="other_information">
                             <group>
                                 <group string="Sales Information" name="sales_person">
                                     <field name="user_id"/>
