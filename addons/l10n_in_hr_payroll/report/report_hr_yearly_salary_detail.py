@@ -126,7 +126,7 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
         return self.total
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not self.env.context.get('active_model') or not self.env.context.get('active_id'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
