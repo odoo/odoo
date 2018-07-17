@@ -118,8 +118,7 @@ Best Regards,'''))
         days_previous_month = calendar.monthrange(previous_month.year, previous_month.month)
         previous_month = previous_month.replace(day=days_previous_month[1]).timetuple()
         for company in self:
-            old_fiscalyear_lock_date = company.fiscalyear_lock_date and\
-                company.fiscalyear_lock_date
+            old_fiscalyear_lock_date = company.fiscalyear_lock_date
 
             # The user attempts to remove the lock date for advisors
             if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:

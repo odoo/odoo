@@ -220,7 +220,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         docs = self.env[model].browse(self.env.context.get('active_id'))
 
         target_move = data['form'].get('target_move', 'all')
-        date_from = data['form'].get('date_from', fields.Date.today())
+        date_from = fields.Date.from_string(data['form'].get('date_from')) or fields.Date.today()
 
         if data['form']['result_selection'] == 'customer':
             account_type = ['receivable']
