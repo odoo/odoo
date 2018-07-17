@@ -251,7 +251,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.can_directly_mark_as_paid:
             self.action_confirm()
-            if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False):
+            if self.env['ir.config_parameter'].sudo().get_param('sale_payment.automatic_invoice', default=False):
                 self.payment_tx_id._generate_and_pay_invoice()
             self.payment_tx_id.state = 'done'
         else:

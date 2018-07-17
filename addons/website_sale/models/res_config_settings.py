@@ -34,13 +34,6 @@ class ResConfigSettings(models.TransientModel):
 
     module_account = fields.Boolean("Invoicing")
 
-    automatic_invoice = fields.Boolean("Automatic Invoice",
-                                       help="The invoice is generated automatically and available in the customer portal "
-                                       "when the transaction is confirmed by the payment acquirer.\n"
-                                       "The invoice is marked as paid and the payment is registered in the payment journal "
-                                       "defined in the configuration of the payment acquirer.\n"
-                                       "This mode is advised if you issue the final invoice at the order and not after the delivery.")
-
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email',
         default=_default_recovery_mail_template, config_parameter='website_sale.cart_recovery_mail_template_id', domain="[('model', '=', 'sale.order')]")
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
@@ -49,7 +42,6 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
 
         sale_delivery_settings = 'none'
         if self.env['ir.module.module'].search([('name', '=', 'delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
@@ -58,15 +50,9 @@ class ResConfigSettings(models.TransientModel):
                 sale_delivery_settings = 'website'
 
         res.update(
-            automatic_invoice=params.get_param('website_sale.automatic_invoice', default=False),
             sale_delivery_settings=sale_delivery_settings,
         )
         return res
-
-    def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        value = self.module_account and self.default_invoice_policy == 'order' and self.automatic_invoice
-        self.env['ir.config_parameter'].sudo().set_param('website_sale.automatic_invoice', value)
 
     @api.onchange('sale_delivery_settings')
     def _onchange_sale_delivery_settings(self):

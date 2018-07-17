@@ -66,13 +66,19 @@ class PaymentTransaction(models.Model):
         sales_orders.force_quotation_send()
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
         sales_orders.action_confirm()
-
-        if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice'):
+        automatic_invoice = self.env['ir.config_parameter'].sudo().get_param('sale_payment.automatic_invoice')
+        if automatic_invoice:
             for trans in self.filtered(lambda t: t.sale_order_ids):
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids.action_invoice_create()
                 trans.invoice_ids = [(6, 0, invoices)]
-        return super(PaymentTransaction, self)._set_transaction_done()
+        res = super(PaymentTransaction, self)._set_transaction_done()
+        if automatic_invoice:
+            default_template = self.env['ir.config_parameter'].sudo().get_param('sale_payment.default_email_template')
+            if default_template:
+                for invoice in trans.invoice_ids:
+                    invoice.with_context(mark_invoice_as_sent=True).message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
+        return res
 
     @api.model
     def _compute_reference_prefix(self, values):

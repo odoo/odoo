@@ -6,23 +6,6 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='sales_settings_invoicing_policy']" position="after">
-                <!--
-                Show the automatic invoices setting in sales settings.
-                -->
-                <div class="col-12 col-lg-6 o_setting_box"
-                     attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), '&amp;', ('portal_confirmation_pay', '=', False), ('module_website_quote', '=', False)]}">
-                    <div class="o_setting_left_pane">
-                        <field name="automatic_invoice" nolabel="1"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="automatic_invoice"/>
-                        <div class="text-muted">
-                            Generate the invoice automatically when the payment is received
-                        </div>
-                    </div>
-                </div>
-            </xpath>
             <div id="webmaster_settings" position="after">
                 <h2>Product Catalog</h2>
                 <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
@@ -296,7 +279,11 @@
                             <div class="o_setting_right_pane">
                                 <label for="automatic_invoice"/>
                                 <div class="text-muted">
-                                    Generate the invoice automatically when the order is confirmed
+                                    Generate the invoice automatically when the electronic payment is confirmed
+                                </div>
+                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
+                                    <label for="template_id" class="o_light_label"/>
+                                    <field name="template_id" class="oe_inline"/>
                                 </div>
                             </div>
                         </div>

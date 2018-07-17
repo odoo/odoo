@@ -19,7 +19,7 @@ class PaymentTransaction(models.Model):
         """Generate the invoice automatically when option is enabled from ecommerce setting"""
         result = super(PaymentTransaction, self)._confirm_so()
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        if self.state == 'done' and IrConfigParameter.get_param('website_sale.automatic_invoice', default=False):
+        if self.state == 'done' and IrConfigParameter.get_param('sale_payment.automatic_invoice', default=False):
             _logger.info('<%s> transaction completed, generating invoice for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
             self._generate_and_pay_invoice()
         return result
