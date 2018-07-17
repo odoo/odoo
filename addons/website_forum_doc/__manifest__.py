@@ -4,9 +4,9 @@
 {
     'name': 'Documentation',
     'category': 'Website',
-    'summary': 'Promote question(s)/answers to documentation',
+    'summary': 'Build a documentation/FAQ from forum questions',
     'description': """
-This module allows to push/promote functional documentation based on frequently asked question(s) and with their pertinent answer(s).
+Push the most relevant questions published on the forum to a documentation index/FAQ.
     """,
     'depends': [
         'website_forum'

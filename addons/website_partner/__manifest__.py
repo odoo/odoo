@@ -3,8 +3,8 @@
 
 {
     'name': 'Website Partner',
-    'category': 'website',
-    'summary': 'Partner module for Website',
+    'category': 'Technical Settings',
+    'summary': 'Partner module for website',
     'version': '0.1',
     'description': """
 This is a base module. It holds website-related stuff for Contact model (res.partner).

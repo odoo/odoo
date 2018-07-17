@@ -2,8 +2,8 @@
 
 {
     'name': 'Website Payment',
-    'category': 'website',
-    'summary': 'Payment integation with Website',
+    'category': 'Technical Settings',
+    'summary': 'Payment integration with website',
     'version': '1.0',
     'description': """
 This is a bridge module which integrates payment acquirers with Website app.
