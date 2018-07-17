@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
@@ -26,6 +26,16 @@ class ProductTemplate(models.Model):
         "On received quantities: control bills based on received quantity.", default="receive")
     purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
+
+    @api.model
+    def get_import_templates(self):
+        res = super(ProductTemplate, self).get_import_templates()
+        if self.env.context.get('purchase_product_template'):
+            return [{
+                'label': _('Import Template for Products'),
+                'template': '/purchase/static/xls/product_purchase.xls'
+            }]
+        return res
 
 
 class ProductProduct(models.Model):

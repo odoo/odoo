@@ -446,7 +446,10 @@ var ListController = BasicController.extend({
      */
     _onExportData: function () {
         var record = this.model.get(this.handle);
-        new DataExport(this, record).open();
+        var defaultExportFields = _.map(this.renderer.columns, function (field) {
+            return field.attrs.name;
+        });
+        new DataExport(this, record, defaultExportFields).open();
     },
     /**
      * Called when the renderer displays an editable row and the user tries to

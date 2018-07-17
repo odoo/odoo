@@ -333,6 +333,13 @@ class Pricelist(models.Model):
 
         return pl
 
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Pricelists'),
+            'template': '/product/static/xls/product_pricelist.xls'
+        }]
+
 
 class ResCountryGroup(models.Model):
     _inherit = 'res.country.group'
@@ -470,4 +477,3 @@ class PricelistItem(models.Model):
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
-

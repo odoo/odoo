@@ -1212,6 +1212,13 @@ class Lead(models.Model):
                     break
         return result
 
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Leads & Opportunities'),
+            'template': '/crm/static/xls/crm_lead.xls'
+        }]
+
 
 class Tag(models.Model):
 

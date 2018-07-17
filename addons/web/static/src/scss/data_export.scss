@@ -8,25 +8,6 @@
         @include o-flex(0, 0, auto);
     }
 
-    label {
-        vertical-align: top;
-        font-weight: normal;
-    }
-
-    .o_import_compat, .o_export_format {
-        display: inline-block;
-
-        > div {
-            margin-left: 5px;
-            @include o-inline-flex-display;
-            @include o-align-items(center);
-
-            > label, > input {
-                margin: 0 0 0 5px;
-            }
-        }
-    }
-
     .o_export_panel {
         @include o-flex(1, 1, auto);
         position: relative;
@@ -77,6 +58,7 @@
 
                 .o_expand_parent {
                     @include o-position-absolute($top: 4px, $left: 5px);
+                    font-size: 10px;
                 }
                 .o_tree_column {
                     display: block;
