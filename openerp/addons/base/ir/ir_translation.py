@@ -491,6 +491,7 @@ class ir_translation(osv.osv):
                             discarded += trans
                         else:
                             trans.write({'src': matches[0], 'state': trans.state})
+                            trans_src.append(matches[0])  # avoid reuse of term
                     else:
                         outdated += trans
 
