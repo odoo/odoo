@@ -92,6 +92,36 @@ class ResPartner(models.Model):
         partner_address['country_id'] = country and country.id or False
         return partner_name, partner_address
 
+    @api.model
+    def name_create(self, name):
+        """ Override of orm's name_create method for partners. The purpose is
+            to handle creating a new partner using data from VIES if the "name"
+            is actually a VAT number.
+            """
+
+        # TODO only do this depending on user vat setting: company vat_check_vies?
+        if len(name) > 5 and name[:2].lower() in stdnum_vat.country_codes:
+            result = self._get_partner_vals(name)
+            if result[0] and result[1]:
+                values = {
+                    'city': result[1].get('city'),
+                    'country_id': result[1].get('country_id'),
+                    'is_company': True,
+                    'name': result[0],
+                    'street': result[1].get('street'),
+                    'vat': name,
+                    'zip': result[1].get('zip'),
+                }
+                partner = self.create(values)
+                return partner.name_get()[0]
+        return super(ResPartner, self).name_create(name)
+
+    @api.model
+    def vat_search(self, search_val=""):
+        if len(search_val) > 5 and search_val[:2].lower() in stdnum_vat.country_codes:
+            return self._get_partner_vals(search_val)
+        return (False, {})
+
     @api.onchange('vat')
     def vies_vat_change(self):
         if stdnum_vat is None:
