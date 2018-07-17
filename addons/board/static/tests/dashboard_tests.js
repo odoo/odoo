@@ -272,6 +272,51 @@ QUnit.test('can open a record', function (assert) {
     form.destroy();
 });
 
+QUnit.test('can open record using action form view', function (assert) {
+    assert.expect(1);
+
+    var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'list'], [5, 'form']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<tree string="Partner"><field name="foo"/></tree>',
+            'partner,5,form':
+                '<form string="Partner"><field name="display_name"/></form>',
+        },
+        intercepts: {
+            do_action: function (event) {
+                assert.deepEqual(event.data.action, {
+                    res_id: 1,
+                    res_model: 'partner',
+                    type: 'ir.actions.act_window',
+                    views: [[5, 'form']],
+                }, "should do a do_action with correct parameters");
+            },
+        },
+    });
+
+    form.$('tr.o_data_row td:contains(yop)').click();
+    form.destroy();
+});
+
 QUnit.test('can drag and drop a view', function (assert) {
     assert.expect(4);
 

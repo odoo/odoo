@@ -48,14 +48,18 @@ function connect () {
 	if [ -z "${PASSWORD}" ] ; then
 		sudo iwconfig wlan0 essid "${ESSID}"
 	else
-		sudo wpa_passphrase "${ESSID}" "${PASSWORD}" > "${WPA_PASS_FILE}"
+		# Necessary in stretch: https://www.raspberrypi.org/forums/viewtopic.php?t=196927
+		sudo cp /etc/wpa_supplicant/wpa_supplicant.conf "${WPA_PASS_FILE}"
+		chmod 777 ${WPA_PASS_FILE}
+		sudo wpa_passphrase "${ESSID}" "${PASSWORD}" >> "${WPA_PASS_FILE}"
 		sudo wpa_supplicant -B -i wlan0 -c "${WPA_PASS_FILE}"
 	fi
 
+	sudo systemctl daemon-reload
 	sudo service dhcpcd restart
 
 	# give dhcp some time
-	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet addr:" ; do sleep 0.1 ; done'
+	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet " ; do sleep 0.1 ; done'
 	TIMEOUT_RETURN=$?
 
 	if [ ${TIMEOUT_RETURN} -eq 124 ] && [ -z "${NO_AP}" ] ; then

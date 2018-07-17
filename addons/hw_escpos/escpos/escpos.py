@@ -7,6 +7,7 @@ import io
 import math
 import re
 import traceback
+import codecs
 from hashlib import md5
 
 from PIL import Image
@@ -318,9 +319,9 @@ class Escpos:
         else:
             image_border = 32 - (size % 32)
             if (image_border % 2) == 0:
-                return (image_border / 2, image_border / 2)
+                return (int(image_border / 2), int(image_border / 2))
             else:
-                return (image_border / 2, (image_border / 2) + 1)
+                return (int(image_border / 2), int((image_border / 2) + 1))
 
     def _print_image(self, line, size):
         """ Print formatted image """
@@ -330,8 +331,8 @@ class Escpos:
 
        
         self._raw(S_RASTER_N)
-        buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
-        self._raw(buffer.decode('hex'))
+        buffer = b"%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
+        self._raw(codecs.decode(buffer, 'hex'))
         buffer = ""
 
         while i < len(line):
@@ -340,7 +341,7 @@ class Escpos:
             i += 8
             cont += 1
             if cont % 4 == 0:
-                self._raw(buffer.decode("hex"))
+                self._raw(codecs.decode(buffer, "hex"))
                 buffer = ""
                 cont = 0
 
@@ -349,7 +350,7 @@ class Escpos:
         i = 0
         cont = 0
         buffer = ""
-        raw = ""
+        raw = b""
 
         def __raw(string):
             if output:
@@ -358,8 +359,8 @@ class Escpos:
                 self._raw(string)
        
         raw += S_RASTER_N
-        buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
-        raw += buffer.decode('hex')
+        buffer = "%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
+        raw += codecs.decode(buffer, 'hex')
         buffer = ""
 
         while i < len(line):
@@ -368,7 +369,7 @@ class Escpos:
             i += 8
             cont += 1
             if cont % 4 == 0:
-                raw += buffer.decode("hex")
+                raw += codecs.decode(buffer, 'hex')
                 buffer = ""
                 cont = 0
 
@@ -433,14 +434,14 @@ class Escpos:
 
         print('print_b64_img')
 
-        id = md5(img.encode('utf-8')).digest()
+        id = md5(img).digest()
 
         if id not in self.img_cache:
             print('not in cache')
 
-            img = img[img.find(',')+1:]
-            f = io.BytesIO('img')
-            f.write(base64.decodestring(img))
+            img = img[img.find(b',')+1:]
+            f = io.BytesIO(b'img')
+            f.write(base64.decodebytes(img))
             f.seek(0)
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
@@ -527,7 +528,7 @@ class Escpos:
             # https://github.com/python-escpos/python-escpos/pull/98/files#diff-a0b1df12c7c67e38915adbe469051e2dR444
             self._raw('\x00')
         else:
-            raise exception.BarcodeCodeError()
+            raise BarcodeCodeError()
 
     def receipt(self,xml):
         """
@@ -677,7 +678,7 @@ class Escpos:
 
             elif elem.tag == 'img':
                 if 'src' in elem.attrib and 'data:' in elem.attrib['src']:
-                    self.print_base64_image(elem.attrib['src'])
+                    self.print_base64_image(bytes(elem.attrib['src'], 'utf-8'))
 
             elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
                 serializer.start_block(stylestack)
@@ -797,19 +798,19 @@ class Escpos:
                         (encoding, _) = remaining.popitem()
                     else:
                         encoding = 'cp437'
-                        encoded  = '\xb1'    # could not encode, output error character
+                        encoded  = b'\xb1'    # could not encode, output error character
                         break;
 
             if encoding != self.encoding:
                 # if the encoding changed, remember it and prefix the character with
                 # the esc-pos encoding change sequence
                 self.encoding = encoding
-                encoded = encodings[encoding] + encoded
+                encoded = bytes(encodings[encoding], 'utf-8') + encoded
 
             return encoded
         
         def encode_str(txt):
-            buffer = ''
+            buffer = b''
             for c in txt:
                 buffer += encode_char(c)
             return buffer
