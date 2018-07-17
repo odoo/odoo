@@ -19,6 +19,7 @@ Provide tools for sale-related payment
         'views/sale_portal_templates.xml',
         'views/settings.xml',
         'views/payment_views.xml',
+        'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
     ],
     'installable': True,
