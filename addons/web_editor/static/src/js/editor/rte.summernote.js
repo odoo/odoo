@@ -431,9 +431,9 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
         $editable: $editable,
         linkInfo: linkInfo,
         onSave: function (linkInfo) {
-            linkInfo.range.select();
-            $editable.data('range', linkInfo.range);
-            def.resolve(linkInfo);
+            linkInfo.data.range.select();
+            $editable.data('range', linkInfo.data.range);
+            def.resolve(linkInfo.data);
             $editable.trigger('keyup');
             $('.note-popover .note-link-popover').show();
         },
