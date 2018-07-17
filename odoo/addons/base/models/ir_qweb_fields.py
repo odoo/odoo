@@ -471,9 +471,13 @@ class DurationConverter(models.AbstractModel):
 
     Can be used on any numerical field.
 
-    Has a mandatory option ``unit`` which can be one of ``second``, ``minute``,
+    Has an option ``unit`` which can be one of ``second``, ``minute``,
     ``hour``, ``day``, ``week`` or ``year``, used to interpret the numerical
-    field value before converting it.
+    field value before converting it. By default use ``second``.
+
+    Has an option ``round``. By default use ``second``.
+
+    Has an option ``digital`` to display 01:00 instead of 1 hour
 
     Sub-second values will be ignored.
     """
@@ -485,8 +489,9 @@ class DurationConverter(models.AbstractModel):
         options = super(DurationConverter, self).get_available_options()
         unit = [[u[0], _(u[0])] for u in TIMEDELTA_UNITS]
         options.update(
-            unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='hour'),
-            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_('Date unit used for the rounding. If the value is given, this must be smaller than the unit'), default_value='Same unit than "unit" option'),
+            digital=dict(type="boolean", string=_('Digital formating')),
+            unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
+            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formating."), default_value='second'),
         )
         return options
 
@@ -494,22 +499,32 @@ class DurationConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         units = dict(TIMEDELTA_UNITS)
 
-        if value < 0:
-            raise ValueError(_("Durations can't be negative"))
-
-        if not options or options.get('unit', 'hour') not in units:
-            raise ValueError(_("A unit must be provided to duration widgets"))
-
         locale = babel.Locale.parse(self.user_lang().code)
-        factor = units[options.get('unit', 'hour')]
+        factor = units[options.get('unit', 'second')]
+        round_to = units[options.get('round', 'second')]
+
+        if options.get('digital') and round_to > 3600:
+            round_to = 3600
+
+        r = round((value * factor) / round_to) * round_to
 
         sections = []
 
-        r = value * factor
-        if options.get('round') in units:
-            round_to = units[options['round']]
-            r = round(r / round_to) * round_to
+        if options.get('digital'):
+            for unit, secs_per_unit in TIMEDELTA_UNITS:
+                if secs_per_unit > 3600:
+                    continue
+                v, r = divmod(r, secs_per_unit)
+                if not v and (secs_per_unit > factor or secs_per_unit < round_to):
+                    continue
+                if len(sections):
+                    sections.append(u':')
+                sections.append(u"%02.0f" % int(round(v)))
+            return u''.join(sections)
 
+        if value < 0:
+            r = -r
+            sections.append(u'-')
         for unit, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
