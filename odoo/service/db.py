@@ -10,6 +10,7 @@ import traceback
 from xml.etree import ElementTree as ET
 import zipfile
 
+from pytz import country_timezones
 from functools import wraps
 from contextlib import closing
 from decorator import decorator
@@ -72,6 +73,10 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 countries = env['res.country'].search([('code', 'ilike', country_code)])
                 if countries:
                     env['res.company'].browse(1).country_id = countries[0]
+                if len(country_timezones[country_code]) == 1:
+                    users = env['res.users'].search(['|', ('active','=', True), ('active','=', False)])
+                    users.write({'tz': country_timezones[country_code][0]})
+
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
