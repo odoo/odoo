@@ -1545,7 +1545,7 @@ class Date(Field):
             except Exception:
                 _logger.debug("failed to compute context/client-specific today date, using UTC value for `today`",
                               exc_info=True)
-        return context_today or today
+        return (context_today or today).date()
 
     @staticmethod
     def from_string(value):
@@ -1566,7 +1566,7 @@ class Date(Field):
         if not value:
             return False
         if isinstance(value, datetime):
-            raise TypeError("%s (record %s) must be string or date, not datetime." % (value, record))
+            raise TypeError("%s (field %s) must be string or date, not datetime." % (value, self))
         return self.from_string(value)
 
     def convert_to_export(self, value, record):
@@ -1585,7 +1585,7 @@ class Datetime(Field):
         """ Return the current day and time in the format expected by the ORM.
             This function may be used to compute default values.
         """
-        return datetime.now().strftime(DATETIME_FORMAT)
+        return datetime.now()
 
     @staticmethod
     def context_timestamp(record, timestamp):
@@ -1635,7 +1635,7 @@ class Datetime(Field):
         if not value:
             return False
         if isinstance(value, date) and not isinstance(value, datetime):
-            raise TypeError("%s (record %s) must be string or datetime, not date." % (value, record))
+            raise TypeError("%s (field %s) must be string or datetime, not date." % (value, self))
         return self.from_string(value)
 
     def convert_to_export(self, value, record):
