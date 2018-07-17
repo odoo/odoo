@@ -94,7 +94,7 @@ var _t = core._t;
  */
 var StatementModel = BasicModel.extend({
     avoidCreate: false,
-    quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'tax_include', 'analytic_tag_ids'],
+    quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'force_tax_included', 'analytic_tag_ids'],
 
     /**
      * @override
@@ -302,7 +302,6 @@ var StatementModel = BasicModel.extend({
         }
 
         prop = this._formatQuickCreate(line);
-
         line.reconciliation_proposition.push(prop);
         line.createForm = _.pick(prop, this.quickCreateFields);
         return this._computeLine(line);
@@ -474,12 +473,12 @@ var StatementModel = BasicModel.extend({
     quickCreateProposition: function (handle, reconcileModelId) {
         var line = this.getLine(handle);
         var reconcileModel = _.find(this.reconcileModels, function (r) {return r.id === reconcileModelId;});
-        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'tax_id', 'analytic_tag_ids'];
+        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_id', 'analytic_tag_ids'];
         this._blurProposition(handle);
 
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
-        focus.reconcile_tax_include = reconcileModel.tax_include;
+        focus.reconcile_tax_included = reconcileModel.force_tax_included;
         line.reconciliation_proposition.push(focus);
 
         if (reconcileModel.has_second_line) {
@@ -489,7 +488,7 @@ var StatementModel = BasicModel.extend({
             });
             focus = this._formatQuickCreate(line, second);
             focus.reconcileModelId = reconcileModelId;
-            focus.reconcile_tax_include = reconcileModel.second_tax_include;
+            focus.reconcile_tax_included = reconcileModel.force_second_tax_included;
             line.reconciliation_proposition.push(focus);
             this._computeReconcileModels(handle, reconcileModelId);
         }
@@ -639,17 +638,16 @@ var StatementModel = BasicModel.extend({
                 this._computeReconcileModels(handle, prop.reconcileModelId);
             }
         }
-        if ('account_id' in values || 'amount' in values || 'tax_id' in values  || 'tax_include' in values) {
+        if ('account_id' in values || 'amount' in values || 'tax_id' in values  || 'force_tax_included' in values) {
             prop.__tax_to_recompute = true;
 
-            // Set tax_include at the 'price_include' tax value.
-            if('tax_id' in values){
-                values.tax_id.price_include = prop.tax_include = this.taxes[values.tax_id.id];
-            }
+            // Set force_tax_included at the 'price_include' tax value.
+            if('tax_id' in values)
+                values.tax_id.price_include = prop.force_tax_included = this.taxes[values.tax_id.id];
         }
         line.createForm = _.pick(prop, this.quickCreateFields);
 
-        // Avoid getting tax included amount in the createForm.
+        // If you check/uncheck the force_tax_included box, reset the createForm amount.
         if(prop.base_amount)
             line.createForm.amount = prop.base_amount;
         return this._computeLine(line);
@@ -836,13 +834,15 @@ var StatementModel = BasicModel.extend({
                 });
 
                 var args = [[prop.tax_id.id], prop.base_amount, formatOptions.currency_id];
-                var force_price_include = prop.reconcileModelId ? prop.reconcile_tax_include : prop.tax_id.price_include;
-                var add_context = {'round': true, 'force_price_include': force_price_include};
+                var force_price_include = prop.reconcileModelId ? prop.reconcile_tax_included : line.createForm.force_tax_included;
+                var add_context = {'round': true};
+                if(force_price_include)
+                    add_context.force_price_include = true;
                 tax_defs.push(self._rpc({
                         model: 'account.tax',
                         method: 'json_friendly_compute_all',
                         args: args,
-                        context: $.extend(self.context || {}, add_context),
+                        context: $.extend({}, self.context || {}, add_context),
                     })
                     .then(function (result) {
                         _.each(result.taxes, function(tax){
@@ -859,7 +859,6 @@ var StatementModel = BasicModel.extend({
 
                             prop.amount = tax.base;
                             prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
-
                             prop.invalid = !self._isValid(prop);
 
                             tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, formatOptions);
@@ -880,6 +879,7 @@ var StatementModel = BasicModel.extend({
                 prop.__tax_to_recompute = false;
             });
             line.reconciliation_proposition = reconciliation_proposition;
+
             var amount_currency = 0;
             var total = line.st_line.amount || 0;
             var isOtherCurrencyId = _.uniq(_.pluck(_.reject(reconciliation_proposition, 'invalid'), 'currency_id'));
@@ -1055,8 +1055,10 @@ var StatementModel = BasicModel.extend({
             var amount = field_utils.format.monetary(Math.abs(prop.base_amount), {}, formatOptions);
             prop.base_amount = sign * field_utils.parse.monetary(amount, {}, formatOptions);
         }
-        if(prop.tax_id && this.taxes[prop.tax_id.id])
-            prop.tax_include = prop.tax_id.price_include = this.taxes[prop.tax_id.id];
+        if(prop.tax_id && values.force_tax_included !== undefined)
+            prop.force_tax_included = prop.tax_id.price_include = values.force_tax_included;
+        else if(prop.tax_id && this.taxes[prop.tax_id.id])
+            prop.force_tax_included = prop.tax_id.price_include = this.taxes[prop.tax_id.id];
         prop.amount = prop.base_amount;
         return prop;
     },
@@ -1168,7 +1170,7 @@ var StatementModel = BasicModel.extend({
  * datas allowing manual reconciliation
  */
 var ManualModel = StatementModel.extend({
-    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'tax_include', 'analytic_tag_ids'],
+    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'force_tax_included', 'analytic_tag_ids'],
 
     //--------------------------------------------------------------------------
     // Public

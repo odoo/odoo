@@ -858,8 +858,8 @@
                                        domain="[('company_id', '=', company_id)]"
                                        options="{'no_create': True}"
                                        context="{'append_type_to_tax_name': True}"/>
-                                <field name="tax_price_include" invisible="1"/>
-                                <field name="tax_include" attrs="{'readonly': [('tax_price_include', '=', True)]}" force_save="1"/>
+                                <field name="is_tax_price_included" invisible="1"/>
+                                <field name="force_tax_included" attrs="{'readonly': [('is_tax_price_included', '=', True)]}" force_save="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -887,8 +887,8 @@
                                        domain="[('company_id', '=', company_id)]"
                                        widget="selection"
                                        context="{'append_type_to_tax_name': True}"/>
-                                <field name="second_tax_price_include" invisible="1"/>
-                                <field name="second_tax_include" attrs="{'readonly': [('second_tax_price_include', '=', True)]}" force_save="1"/>
+                                <field name="is_second_tax_price_included" invisible="1"/>
+                                <field name="force_second_tax_included" attrs="{'readonly': [('is_second_tax_price_included', '=', True)]}" force_save="1"/>
                                 <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>
