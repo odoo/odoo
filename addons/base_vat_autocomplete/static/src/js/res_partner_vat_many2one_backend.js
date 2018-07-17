@@ -12,6 +12,9 @@ var core = require('web.core');
 var _t = core._t;
 
 var PartnerVatFieldMany2One = FieldMany2One.extend({
+
+    // TODO: maybe override _quickCreate
+
     /**
      * @private
      * @override
