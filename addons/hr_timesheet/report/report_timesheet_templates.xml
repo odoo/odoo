@@ -43,7 +43,7 @@
                                             <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
                                         </td>
                                         <td class="text-right">
-                                                <span t-field="l.unit_amount" t-options="{'widget': 'float_time'}"/>
+                                            <span t-field="l.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -51,9 +51,7 @@
                                         <td />
                                         <td t-if="show_task"/>
                                         <td class="text-right"><strong>Total</strong></td>
-                                        <t t-set="total_value" t-value="sum(docs.mapped('unit_amount'))" />
-                                        <t t-set="sign" t-value="'-' if total_value &lt; 0 else ''"/>
-                                        <td class="text-right"><strong t-esc="sign + '%s:%02.0f' % tuple(int(round(x)) for x in divmod(abs(total_value)*60,60))"/></td>
+                                        <td class="text-right"><strong t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/></td>
                                     </tr>
                                 </tbody>
                             </table>
