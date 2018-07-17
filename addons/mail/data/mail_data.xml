@@ -227,6 +227,99 @@
 </table>
         </template>
 
+        <!-- Information on model to use this notification template
+          * if the record has an online access defined in get_access_action, having
+            a get_mail_url methods is required (like sale order and invoice);
+          * this template works best with portal-enable models although it is not
+            a complete requirement currently;
+        -->
+        <template id="mail_notification_paynow" name="blableblu">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
+            <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
+            <t t-set="access_url" t-value="is_online and record.get_mail_url() or ''"/>
+            <t t-set="access_code" t-value="'view'"/>
+            <t t-set="access_name" t-value="'View %s' % (record._description.lower())"/>
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your <t t-esc="'%s' % model_description or 'document'"/></span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-esc="message.record_name"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    <t t-raw="message.body"/>
+                    <div t-if="is_online and not record._context.get('proforma')" style="margin: 16px 0px 16px 0px;">
+                        <a t-att-href="access_url"
+                            style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                            <t t-esc="access_name"/>
+                        </a>
+                    </div>
+                    <div style="margin: 0px; padding: 0px;">
+                        Best regards,
+                    </div>
+                    <div t-if="record.user_id and record.user_id.signature">
+                        <div t-raw="record.user_id.signature"/>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-esc="company.name"/>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-esc="company.phone"/>
+                    <t t-if="company.email"> |
+                        <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #454748;"><t t-esc="company.email"/></a>
+                    </t>
+                    <t t-if="company.website"> |
+                        <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #454748;">
+                            <t t-esc="company.website"/>
+                        </a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+        </template>
+
         <!-- Channel and moderation related data -->
         <template id="mail_channel_notify_moderation">
 <div>
