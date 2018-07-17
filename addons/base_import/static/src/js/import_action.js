@@ -47,7 +47,6 @@ function jsonp(form, attributes, callback) {
 var DataImport = AbstractAction.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
-        {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
         {name: 'separator', label: _lt("Separator:"), value: ','},
         {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
@@ -60,7 +59,6 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     events: {
         // 'change .oe_import_grid input': 'import_dryrun',
         'change .oe_import_file': 'loaded_file',
-        'click .oe_import_file_reload': 'loaded_file',
         'change input.oe_import_has_header, .js_import_options input': 'settings_changed',
         'change input.oe_import_advanced_mode': function (e) {
             this.do_not_change_match = true;
@@ -111,9 +109,21 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         action.display_name = _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
     },
+    /**
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        return this._rpc({
+            model: this.res_model,
+            method: 'get_import_templates',
+            context: this.parent_context,
+        }).then(function (result) {
+            self.importTemplates = result;
+        });
+    },
     start: function () {
         var self = this;
-        this.setup_encoding_picker();
         this.setup_separator_picker();
         this.setup_float_format_picker();
 
@@ -124,7 +134,6 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 self.$('input[name=import_id]').val(id);
 
                 self.renderButtons();
-                self.renderImportLink();
                 var status = {
                     cp_content: {$buttons: self.$buttons},
                 };
@@ -145,35 +154,14 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         this.$buttons = $(QWeb.render("ImportView.buttons", this));
         this.$buttons.filter('.o_import_validate').on('click', this.validate.bind(this));
         this.$buttons.filter('.o_import_import').on('click', this.import.bind(this));
+        this.$buttons.filter('.o_import_file_reload').on('click', this.loaded_file.bind(this));
+        this.$buttons.filter('.oe_import_file').on('click', function () {
+            self.$('.oe_import_file').click();
+        });
         this.$buttons.filter('.o_import_cancel').on('click', function(e) {
             e.preventDefault();
             self.exit();
         });
-    },
-    renderImportLink: function() {
-        if (this.res_model == 'res.partner') {
-            this.$(".import-link").prop({"text": _t(" Import Template for Customers"), "href": "/base_import/static/csv/res.partner.csv"});
-            this.$(".template-import").removeClass("hidden");
-        }
-    },
-    setup_encoding_picker: function () {
-        this.$('input.oe_import_encoding').select2({
-            width: '160px',
-            query: function (q) {
-                var make = function (term) { return {id: term, text: term}; };
-                var suggestions = _.map(
-                    ('utf-8 utf-16 windows-1252 latin1 latin2 big5 ' +
-                     'gb18030 shift_jis windows-1251 koir8_r').split(/\s+/),
-                    make);
-                if (q.term) {
-                    suggestions.unshift(make(q.term));
-                }
-                q.callback({results: suggestions});
-            },
-            initSelection: function (e, c) {
-                return c({id: 'utf-8', text: 'utf-8'});
-            }
-        }).select2('val', 'utf-8');
     },
     setup_separator_picker: function () {
         this.$('input.oe_import_separator').select2({
@@ -196,26 +184,33 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         });
     },
     setup_float_format_picker: function () {
-        var sug_query = function (q) {
-                    var suggestions = [
-                        {id: ',', text: _t("Comma")},
-                        {id: '.', text: _t("Dot")},
-                    ];
-                    if (q.term) {
-                        suggestions.unshift({id: q.term, text: q.term});
-                    }
-                    q.callback({results: suggestions});
-                };
+        var sub_query = function (q, options) {
+            var suggestions = [
+                {id: ',', text: _t("Comma")},
+                {id: '.', text: _t("Dot")},
+            ];
+            if (options && options.no_separator) {
+                suggestions.push({id: '', text: _t("No Separator")});
+            }
+            if (q.term) {
+                suggestions.unshift({id: q.term, text: q.term});
+            }
+            q.callback({results: suggestions});
+        };
         this.$('input.oe_import_float_thousand_separator').select2({
             width: '160px',
-            query: sug_query,
+            query: function (q) {
+                sub_query(q, {no_separator: true})
+            },
             initSelection: function (e, c) {
                 return c({id: ',', text: _t("Comma")});
             },
         });
         this.$('input.oe_import_float_decimal_separator').select2({
             width: '160px',
-            query: sug_query,
+            query: function (q) {
+                sub_query(q);
+            },
             initSelection: function (e, c) {
                 return c({id: ',', text: _t("Dot")});
             },
@@ -254,9 +249,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     //- File & settings change section
     onfile_loaded: function () {
         var file = this.$('.oe_import_file')[0].files[0];
-        this.$('.oe_import_file_show').val(file !== undefined && file.name || '');
-        this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
-                .prop('disabled', true);
+        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('hidden');
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
         this.$('.oe_import_date_format').val('');
         this.$('.oe_import_datetime_format').val('');
@@ -268,15 +261,14 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         if ((file.type && _.last(file.type.split('/')) === "csv") || ( _.last(file.name.split('.')) === "csv")) {
             import_toggle = true;
         }
-        this.$el.find('.oe_import_toggle').toggle(import_toggle);
+        this.$el.find('.oe_import_box').toggle(import_toggle);
         jsonp(this.$el, {
             url: '/base_import/set_file'
         }, this.proxy('settings_changed'));
     },
     onpreviewing: function () {
         var self = this;
-        this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
-                .prop('disabled', true);
+        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('hidden');
         this.$el.addClass('oe_import_with_file');
         // TODO: test that write // succeeded?
         this.$el.removeClass('oe_import_preview_error oe_import_error');
@@ -295,26 +287,32 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     onpreview_error: function (event, from, to, result) {
         this.$('.oe_import_options').show();
-        this.$('.oe_import_file_reload').prop('disabled', false);
+        this.$buttons.filter('.o_import_file_reload').removeClass('hidden');
         this.$el.addClass('oe_import_preview_error oe_import_error');
+        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('hidden');
+        this.$el.find('.o_view_nocontent').addClass('hidden');
         this.$('.oe_import_error_report').html(
                 QWeb.render('ImportView.preview.error', result));
     },
     onpreview_success: function (event, from, to, result) {
         var self = this;
-        this.$buttons.filter('.o_import_import').removeClass('btn-primary');
-        this.$buttons.filter('.o_import_validate').addClass('btn-primary');
-        this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
-                .prop('disabled', false);
+        this.$buttons.filter('.oe_import_file')
+            .text(_t('Load New File'))
+            .removeClass('btn-primary').addClass('btn-default')
+            .blur();
+        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('hidden');
+        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('hidden');
+        this.$el.find('.o_view_nocontent').addClass('hidden');
         this.$el.addClass('oe_import_preview');
+        this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
         if (result.headers.length === 1) {
             this.$('.oe_import_options').show();
-            this.onresults(null, null, null, [{
+            this.onresults(null, null, null, {'messages': [{
                 type: 'warning',
                 message: _t("A single column was found in the file, this often means the file separator is incorrect")
-            }]);
+            }]});
         }
 
         this.$('.oe_import_date_format').val(time.strftime_to_moment_format(result.options.date_format));
@@ -461,6 +459,9 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
             return $(el).select2('val') || false;
         }).get();
+        var columns = this.$('.oe_import_grid-header .oe_import_grid-cell .o_import_header_name').map(function () {
+            return $(this).text().trim().toLowerCase() || false;
+        }).get();
         var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
         var defer_parent_store = 'defer_parent_store' in kwargs ? kwargs.defer_parent_store : !!this.$('#oe_import_deferparentstore').prop('checked')
         delete kwargs.tracking_disable;
@@ -472,18 +473,18 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
                 model: 'base_import.import',
                 method: 'do',
-                args: [this.id, fields, this.import_options()],
+                args: [this.id, fields, columns, this.import_options()],
                 kwargs : kwargs,
             }).fail(function (error, event) {
                 // In case of unexpected exception, convert
                 // "JSON-RPC error" to an import failure, and
                 // prevent default handling (warning dialog)
                 if (event) { event.preventDefault(); }
-                return $.when([{
+                return $.when({'messages': [{
                     type: 'error',
                     record: false,
                     message: error.data.arguments && error.data.arguments[1] || error.message,
-                }]);
+                }]});
             }) ;
     },
     onvalidate: function () {
@@ -492,27 +493,26 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     onimport: function () {
         var self = this;
-        return this.call_import({ dryrun: false }).done(function (message) {
+        return this.call_import({ dryrun: false }).done(function (results) {
+            var message = results.messages;
             if (!_.any(message, function (message) {
                     return message.type === 'error'; })) {
-                self['import_succeeded']();
+                self['import_succeeded'](results);
                 return;
             }
-            self['import_failed'](message);
+            self['import_failed'](results);
         });
     },
-    onimported: function () {
+    onimported: function (event, from, to, results) {
+        this.do_notify(_t("Import completed"), _.str.sprintf(_t("%d records were successfully imported"), results.ids.length));
         this.exit();
     },
     exit: function () {
         this.trigger_up('history_back');
     },
-    onresults: function (event, from, to, message) {
+    onresults: function (event, from, to, results) {
+        var message = results.messages;
         var no_messages = _.isEmpty(message);
-        this.$buttons.filter('.o_import_import').toggleClass('btn-primary', no_messages);
-        this.$buttons.filter('.o_import_import').toggleClass('btn-default', !no_messages);
-        this.$buttons.filter('.o_import_validate').toggleClass('btn-primary', !no_messages);
-        this.$buttons.filter('.o_import_validate').toggleClass('btn-default', no_messages);
         if (no_messages) {
             message.push({
                 type: 'info',
@@ -591,7 +591,7 @@ StateMachine.create({
         { name: 'import', from: ['preview_success', 'results'], to: 'importing' },
         { name: 'import_succeeded', from: 'importing', to: 'imported'},
         { name: 'import_failed', from: 'importing', to: 'results' }
-    ]
+    ],
 });
 
 return {

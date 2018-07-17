@@ -483,3 +483,10 @@ class ProductTemplate(models.Model):
             empty_list_help_document_name=_("product"),
         )
         return super(ProductTemplate, self).get_empty_list_help(help)
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Products'),
+            'template': '/product/static/xls/product_template.xls'
+        }]

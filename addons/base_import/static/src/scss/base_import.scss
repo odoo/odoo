@@ -1,6 +1,5 @@
 .oe_import {
     @include o-webclient-padding($top: 8px);
-    background-color: white;
     overflow: auto;
     position: absolute; // Needed for chrome
     top: 0;
@@ -27,7 +26,7 @@
     }
 
     .oe_import_box {
-        padding: 16px;
+        padding: 8px;
         background: #F0EEEE;
         border-radius: $border-radius-base;
         border: solid 1px #dddddd;
@@ -39,9 +38,6 @@
         }
     }
 
-    .oe_import_toggle {
-        margin-top: 8px;
-    }
     a.oe_import_toggle {
         display: block;
         &:before {
@@ -94,6 +90,12 @@
             margin: 2px 0;
             list-style: none;
             border-radius: $border-radius-base;
+            &.bg-error {
+                @extend .bg-danger;
+            }
+            &.text-error {
+                @extend .text-danger;
+            }
         }
     }
 

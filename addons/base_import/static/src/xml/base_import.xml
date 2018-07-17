@@ -6,34 +6,12 @@
             <input type="hidden" name="session_id"
                t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
-            <div class="oe_import_box col-sm-9">
-                <div class="col-sm-12">
-                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/11.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
-                </div>
-                <div class="col-sm-10">
-                    <div class="input-group">
-                      <input type="text" class="oe_import_file_show form-control" placeholder="No file chosen..."/>
-                      <span class="input-group-btn">
-                        <button class="btn btn-primary">
-                        <input accept=".csv, .xls, .xlsx, .xlsm, .ods" id-attf-id="file_#{_id}"
-                       name="file" id="my-file-selector" class="oe_import_file" type="file" style="display:none;"/>
-                        Load File
-                        </button>
-                      </span>
-                      <span class="input-group-btn">
-                        <button type="button" class="btn btn-default oe_import_file_reload" disabled="disabled">Reload File</button>
-                      </span>
-                    </div>
-                    <div class="template-import mt24 hidden">
-                        <h5>
-                            <a href="#" class="import-link fa fa-download" aria-label="Download" title="Download"></a>
-                        </h5>
-                    </div>
-                </div>
-
-                <div class="oe_import_with_file col-sm-12">
+            <div class="oe_import_box col-md-12 hidden">
+                <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
+                      name="file" class="oe_import_file" type="file" style="display:none;"/>
+                <div class="oe_import_with_file">
                     <a href="#" class="oe_import_toggle">
-                        Options…</a>
+                        Formatting Options…</a>
                     <div class="oe_import_toggled oe_import_options js_import_options col-sm-5">
                         <p t-foreach="widget.opts" t-as="option">
                             <!-- no @name, avoid submission when file_update called -->
@@ -57,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="oe_import_with_file oe_padding col-sm-12">
+            <div class="oe_import_with_file oe_padding col-sm-12 hidden">
                 <h2>Map your columns to import</h2>
                 <div title="If the model uses openchatter, history tracking
                             will set up subscriptions and send notifications
@@ -90,16 +68,35 @@
                 simpler especially when the file has many columns.</p>
 
                 <div class="oe_import_error_report"></div>
-                <table class="table-striped table-bordered oe_import_grid" />
+                <div class="table-responsive">
+                    <table class="table-striped table-bordered oe_import_grid bg-white" />
+                </div>
+            </div>
+            <div class="o_view_nocontent">
+                <div class="o_nocontent_help">
+                    <p class="o_view_nocontent_smiling_face">
+                        Select a CSV or Excel file to import.
+                    </p>
+                    <p>
+                        Excel files are recommended as fields formatting is automatic.
+                    </p>
+                    <div class="mt16 mb4">Need Help?</div>
+                    <div t-foreach="widget.importTemplates" t-as="template">
+                        <a t-att-href="template.template" aria-label="Download" title="Download">
+                            <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                        </a>
+                    </div>
+                    <a href="https://www.odoo.com/documentation/user/11.0/general/base_import/import_faq.html" target="new">Import FAQ</a>
+                </div>
             </div>
         </form>
     </t>
 
     <t t-name="ImportView.buttons">
-        <button type="button" class="btn btn-sm btn-primary o_import_button o_import_validate"
-                disabled="disabled">Test Import</button>
-        <button type="button" class="btn btn-sm btn-default o_import_button o_import_import"
-                disabled="disabled">Import</button>
+        <button type="button" class="btn btn-sm btn-primary o_import_import hidden">Import</button>
+        <button type="button" class="btn btn-sm btn-default o_import_validate hidden">Test Import</button>
+        <button type="button" class="btn btn-sm btn-primary oe_import_file">Load File</button>
+        <button type="button" class="btn btn-sm btn-default o_import_file_reload hidden">Reload File</button>
         <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
     </t>
 
@@ -107,7 +104,7 @@
         <thead>
             <tr t-if="headers" class="oe_import_grid-header">
                 <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
-                    ><t t-esc="header"/></td>
+                    ><span class="o_import_header_name"><t t-esc="header"/></span></td>
             </tr>
             <tr class="oe_import_fields">
                 <!-- Iterate on first row to ensure we have all columns -->
@@ -126,7 +123,7 @@
     <t t-name="ImportView.preview.error">
         <div class="oe_import_report bg-danger text-danger">
             <p>Import preview failed due to: <t t-esc="error"/>.</p>
-            <p>For CSV files, the issue could be an incorrect encoding.</p>
+            <p>For CSV files, you may need to select the correct separator.</p>
             <p t-if="preview">Here is the start of the file we could not import:</p>
         </div>
         <pre t-if="preview"><t t-esc="preview"/></pre>
