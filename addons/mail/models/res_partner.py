@@ -161,8 +161,8 @@ class Partner(models.Model):
         try:
             base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
         except ValueError:
-            _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
-            return False
+            _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.' % (template_xmlid))
+            base_template = False
 
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:
@@ -183,7 +183,7 @@ class Partner(models.Model):
                 template_ctx = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
                 fol_values = {
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
-                    'body': base_template.render(template_ctx, engine='ir.qweb'),
+                    'body': base_template.render(template_ctx, engine='ir.qweb') if base_template else message.body,
                 }
                 fol_values['body'] = self.env['mail.thread']._replace_local_links(fol_values['body'])
                 # send email
