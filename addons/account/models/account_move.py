@@ -1271,6 +1271,8 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def _query_get(self, domain=None):
+        self.check_access_rights('read')
+
         context = dict(self._context or {})
         domain = domain or []
         if not isinstance(domain, (list, tuple)):
