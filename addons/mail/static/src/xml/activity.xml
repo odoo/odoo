@@ -42,6 +42,13 @@
                                     <dd class="mb8">
                                         <t t-esc="activity.create_date.format(datetimeFormat)"/>
                                     </dd>
+                                    <t t-if="activity.user_id[0] != activity.create_uid[0]">
+                                        <dt>Created by</dt>
+                                        <dd class="mb8">
+                                            <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]" t-att-alt="activity.create_uid[1]"/>
+                                            <b><t t-esc="activity.create_uid[1]"/></b>
+                                        </dd>
+                                    </t>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
                                         <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
