@@ -7,6 +7,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'hr.applicant')]</field>
+        <field name="context">{'default_res_model': 'hr.applicant'}</field>
     </record>
     <menuitem id="hr_recruitment_menu_config_activity_type"
         action="mail_activity_type_action_config_hr_applicant"
