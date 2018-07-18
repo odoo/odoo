@@ -126,14 +126,12 @@ FormController.include({
 FormRenderer.include({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
         env_updated: '_onEnvUpdated',
+        switch_view: '_onSwitchView',
     }),
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .oe_dashboard_column .oe_fold': '_onFoldClick',
         'click .oe_dashboard_link_change_layout': '_onChangeLayout',
         'click .oe_dashboard_column .oe_close': '_onCloseAction',
-    }),
-    custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
-        switch_view: '_onSwitchView',
     }),
 
     /**
