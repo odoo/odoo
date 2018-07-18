@@ -10,7 +10,7 @@ class Test_Lunch(common.TransactionCase):
         """*****setUp*****"""
         super(Test_Lunch, self).setUp()
 
-        self.demo_user = self.env['res.users'].search([('name', '=', 'Demo User')])
+        self.demo_user = self.env['res.users'].search([('name', '=', 'Marc Brown')])
         self.product_bolognese_ref = self.env['ir.model.data'].get_object_reference('lunch', 'product_Bolognese')
         self.product_Bolognese_id = self.product_bolognese_ref and self.product_bolognese_ref[1] or False
         self.new_id_order = self.env['lunch.order'].create({

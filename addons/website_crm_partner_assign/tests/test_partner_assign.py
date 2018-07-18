@@ -33,22 +33,39 @@ class TestPartnerAssign(TransactionCase):
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
-        partner2 = self.env.ref('base.res_partner_2')
+        partner_be = self.env['res.partner'].create({
+            "name": "Agrolait",
+            "is_company": True,
+            "city": "Wavre",
+            "zip": "1300",
+            "country_id": self.env.ref("base.be").id,
+            "street": "69 rue de Namur",
+            "partner_weight": 10,
+        })
+        partner_uk = self.env['res.partner'].create({
+            "name": "Think Big Systems",
+            "is_company": True,
+            "city": "London",
+            "country_id": self.env.ref("base.uk").id,
+            "street": "89 Lingfield Tower",
+            "partner_weight": 10,
+        })
+
         lead = self.env.ref('crm.crm_case_21')
 
         # In order to test find nearest Partner functionality and assign to opportunity,
         # I Set Geo Lattitude and Longitude according to partner address.
-        partner2.geo_localize()
+        partner_be.geo_localize()
 
         # I check Geo Latitude and Longitude of partner after set
-        self.assertTrue(50 < partner2.partner_latitude < 51, "Latitude is wrong: 50 < %s < 51" % partner2.partner_latitude)
-        self.assertTrue(3 < partner2.partner_longitude < 5, "Longitude is wrong: 3 < %s < 5" % partner2.partner_longitude)
+        self.assertTrue(50 < partner_be.partner_latitude < 51, "Latitude is wrong: 50 < %s < 51" % partner_be.partner_latitude)
+        self.assertTrue(3 < partner_be.partner_longitude < 5, "Longitude is wrong: 3 < %s < 5" % partner_be.partner_longitude)
 
         # I assign nearest partner to opportunity.
         lead.assign_partner()
 
         # I check assigned partner of opportunity who is nearest Geo Latitude and Longitude of opportunity.
-        self.assertEqual(lead.partner_assigned_id, self.env.ref('base.res_partner_18'), "Opportuniy is not assigned nearest partner")
+        self.assertEqual(lead.partner_assigned_id, partner_uk, "Opportuniy is not assigned nearest partner")
         self.assertTrue(50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % lead.partner_latitude)
         self.assertTrue(-4 < lead.partner_longitude < -1, "Longitude is wrong: -4 < %s < -1" % lead.partner_longitude)
 
