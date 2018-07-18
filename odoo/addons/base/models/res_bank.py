@@ -8,6 +8,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import pycompat
 
+import werkzeug.urls
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -78,6 +79,7 @@ class ResPartnerBank(models.Model):
     sequence = fields.Integer()
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
+    qr_code_valid = fields.Boolean(string="Has all required arguments", compute="_validate_qr_code_arguments")
 
     _sql_constraints = [
         ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
@@ -115,3 +117,22 @@ class ResPartnerBank(models.Model):
                 args[pos] = ('sanitized_acc_number', op, value)
             pos += 1
         return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
+
+    @api.model
+    def build_qr_code_url(self, amount, comment):
+        communication = (comment[:137] + '...') if len(comment) > 140 else comment
+        qr_code_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (self.bank_bic, self.company_id.name, self.acc_number, amount, communication)
+        qr_code_url = '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1' % ('QR', werkzeug.url_quote_plus(qr_code_string), 128, 128)
+        return qr_code_url
+
+    @api.multi
+    def _validate_qr_code_arguments(self):
+        for bank in self:            
+            if bank.currency_id.name == False:
+                currency = bank.company_id.currency_id
+            else:
+                currency = bank.currency_id            
+            bank.qr_code_valid = (bank.bank_bic
+                                            and bank.company_id.name
+                                            and bank.acc_number
+                                            and (currency.name == 'EUR'))

@@ -67,6 +67,10 @@ Best Regards,'''))
                                               default='none', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
     account_sanitize_invoice_ref = fields.Boolean(string="Sanitize Invoice References", default=True, help="Whether or not customer invoices and vendor bills should automatically correct their reference they are maximum 140 characters long, consist only of latin characters, contain no '//' sequence, and have no leading or trailing /. (these are the SEPA criteria for payment communications)")
 
+    qr_code = fields.Boolean(string='Display SEPA QR code')
+    qr_code_payment_journal_id = fields.Many2one('account.journal', string='SEPA QR Code Bank Journal account')
+    qr_code_valid = fields.Boolean(string='Has all required arguments', related="qr_code_payment_journal_id.bank_account_id.qr_code_valid")
+
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")
