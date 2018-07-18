@@ -1539,11 +1539,13 @@ QUnit.module('account', {
                                 [{name:"INV/2017/0002",
                                   debit: 0,
                                   credit: 650,
+                                  analytic_tag_ids: [[6, null, []]],
                                   counterpart_aml_id: 109},
 
                                  {name: "INV/2017/0003",
                                   debit: 0,
                                   credit: 525,
+                                  analytic_tag_ids: [[6, null, []]],
                                   counterpart_aml_id: 112}],
 
                               payment_aml_ids: [],
@@ -1630,11 +1632,13 @@ QUnit.module('account', {
                                 [{name:"INV/2017/0002",
                                   debit: 0,
                                   credit: 1200,
+                                  analytic_tag_ids: [[6, null, []]],
                                   counterpart_aml_id: 109},
 
                                  {name: "INV/2017/0003",
                                   debit: 0,
                                   credit: 1200,
+                                  analytic_tag_ids: [[6, null, []]],
                                   counterpart_aml_id: 112}],
 
                               payment_aml_ids: [],
@@ -1643,6 +1647,7 @@ QUnit.module('account', {
                                 {account_id: 282,
                                  credit: 0,
                                  debit: 1225,
+                                 analytic_tag_ids: [[6, null, []]],
                                  name: 'SAJ/2014/002 and SAJ/2014/003',
                                 }
                               ]}]
