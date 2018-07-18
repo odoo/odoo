@@ -67,8 +67,8 @@ class Event(models.Model):
                     if not event.menu_id:
                         root_menu = self.env['website.menu'].create({'name': event.name})
                         event.menu_id = root_menu
-                    for sequence, (name, url, xml_id) in enumerate(self._get_menu_entries()):
-                        self._create_menu(sequence, name, url, xml_id)
+                    for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
+                        event._create_menu(sequence, name, url, xml_id)
         return res
 
     def _create_menu(self, sequence, name, url, xml_id):

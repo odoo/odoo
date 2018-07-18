@@ -109,7 +109,7 @@ var BoardController = FormController.extend({
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: event.data.model,
-            views: [[false, 'form']],
+            views: [[event.data.formViewID || false, 'form']],
             res_id: event.data.res_id,
         });
     },
@@ -120,6 +120,7 @@ var BoardRenderer = FormRenderer.extend({
         do_action: '_onDoAction',
         env_updated: '_onEnvUpdated',
         update_filters: '_onUpdateFilters',
+        switch_view: '_onSwitchView',
     }),
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .oe_dashboard_column .oe_fold': '_onFoldClick',
@@ -135,6 +136,7 @@ var BoardRenderer = FormRenderer.extend({
         this.noContentHelp = params.noContentHelp;
         this.actionsDescr = {};
         this._boardSubcontrollers = []; // for board: controllers of subviews
+        this._boardFormViewIDs = {}; // for board: mapping subview controller to form view id
     },
     /**
      * Call `on_attach_callback` for each subview
@@ -260,6 +262,11 @@ var BoardRenderer = FormRenderer.extend({
                         hasSelectors: false,
                     });
                     return view.getController(self).then(function (controller) {
+                        self._boardFormViewIDs[controller.handle] = _.first(
+                            _.find(action.views, function (descr) {
+                                return descr[1] === 'form';
+                            })
+                        );
                         self._boardSubcontrollers.push(controller);
                         return controller.appendTo(params.$node);
                     });
@@ -400,6 +407,16 @@ var BoardRenderer = FormRenderer.extend({
         $e.toggleClass('oe_minimize oe_maximize');
         $action.find('.oe_content').toggle();
         this.trigger_up('save_dashboard');
+    },
+    /**
+     * Let FormController know which form view it should display based on the
+     * window action of the sub controller that is switching view
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onSwitchView: function (event) {
+        event.data.formViewID = this._boardFormViewIDs[event.target.handle];
     },
     /**
      * Stops the propagation of 'update_filters' events triggered by the

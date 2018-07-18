@@ -97,7 +97,7 @@
                                          <td><span t-esc="allow"/></td>
                                      </t>
                                  </t>
-                                 <td t-esc="format(allowance[13], 'monetary', employee.company_id.currency_id)"/>
+                                 <td t-esc="allowance[13]" t-options="{'widget': 'monetary', 'display_currency': employee.company_id.currency_id}"/>
                              </tr>
                              <td><strong> Deductions:</strong></td>
                                <tr t-foreach="get_deduct()" t-as="deduct">
@@ -110,7 +110,7 @@
                                    <t t-foreach="deduct[1:12]" t-as="d">
                                        <td><span t-esc="d"/></td>
                                    </t>
-                                   <td t-esc="format(deduct[13], 'monetary', employee.company_id.currency_id)"/>
+                                   <td t-esc="deduct[13]" t-options="{'widget': 'monetary', 'display_currency': employee.company_id.currency_id}"/>
                                </tr>
                         </tbody>
                     </table>
