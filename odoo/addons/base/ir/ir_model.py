@@ -546,22 +546,62 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        candidates = self.search([
+            '&',
+                ('state', '=', 'manual'),
+            '|',
+                ('related', '!=', False),
+            '|',
+                ('depends', '!=', False),
+                ('ttype', '=', 'one2many'),
+        ])
+
+        def resolve_deps(candidate):
+            fields = []
+            deps = candidate.depends or candidate.related
+            # We can assume deps is valid as it has already been stored in the DB
+            for dep in deps.split(","):
+                model = self.env[candidate.model]
+                names = dep.strip().split(".")
+                for name in names:
+                    field = model._fields[name]
+                    model = model[name]
+                fields.append(field)
+
+            return fields
+
+        for candidate in candidates:
+            for rec in self:
+                manual_unlink = False
+                model = self.env[rec.model]
+                field = model._fields[rec.name]
+                if candidate.ttype == 'one2many' and rec.ttype == 'many2one':
+                    if (candidate.relation == rec.model
+                            and candidate.relation_field == rec.name):
+                        if self._context.get(MODULE_UNINSTALL_FLAG):
+                            # candidate and rec are related, unlink candidate
+                            candidate.unlink()
+                            continue
+                        manual_unlink = True
+                if candidate.depends or candidate.related:
+                    # works for all computed fields, including relateds
+                    dep_fields = resolve_deps(candidate)
+                    if field in dep_fields:
+                        # candidate depends on field, unlink candidate
+                        if self._context.get(MODULE_UNINSTALL_FLAG):
+                            candidate.unlink()
+                            continue
+                        manual_unlink = True
+
+                if manual_unlink:
+                    # do not unlink candidate if not in uninstall mode
+                    msg = _("The field '%s' cannot be removed because "
+                            "the field '%s' depends on it.")
+                    raise UserError(msg % (rec.name, candidate.name))
+
         self = self.filtered(lambda record: record.state == 'manual')
         if not self:
             return
-
-        for record in self:
-            model = self.env[record.model]
-            field = model._fields[record.name]
-            if field.type == 'many2one' and model._field_inverses.get(field):
-                if self._context.get(MODULE_UNINSTALL_FLAG):
-                    # automatically unlink the corresponding one2many field(s)
-                    inverses = self.search([('relation', '=', field.model_name),
-                                            ('relation_field', '=', field.name)])
-                    inverses.unlink()
-                    continue
-                msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
-                raise UserError(msg % (field, model._field_inverses[field][0]))
 
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]
