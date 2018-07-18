@@ -56,7 +56,7 @@
                 <field name="location_id" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
                 <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
                 <field name="state"/>
-                <field name="is_done" attrs="{'readonly': [('parent.state', 'in', ('draft', 'new', 'done'))]}"/>
+                <field name="is_done" attrs="{'readonly': ['|', ('parent.state', 'in', ('draft', 'new', 'done')), ('is_fresh_package', '=', True)]}"/>
             </tree>
         </field>
     </record>
