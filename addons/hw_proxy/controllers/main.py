@@ -21,6 +21,8 @@ BANNED_DEVICES = {
     "0424:9514",    # Standard Microsystem Corp. Builtin Ethernet module
     "1d6b:0002",    # Linux Foundation 2.0 root hub
     "0424:ec00",    # Standard Microsystem Corp. Other Builtin Ethernet module
+    "0424:2514",    # Standard Microsystems Corp. USB 2.0 Hub (rpi3b+)
+    "0424:7800",    # Standard Microsystems Corp. (rpi3b+)
 }
 
 
@@ -100,15 +102,16 @@ class Proxy(http.Controller):
         """
         if debug is None:
             resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
-        devices = subprocess.check_output("lsusb").split('\n')
+        devices = subprocess.check_output("lsusb").decode('utf-8').split('\n')
         count   = 0
         resp += "<div class='devices'>\n"
         for device in devices:
             device_name = device[device.find('ID')+2:]
-            device_id   = device_name.split()[0]
-            if not (device_id in BANNED_DEVICES):
-                resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
-                count += 1
+            if device_name: # to avoid last empty line
+                device_id   = device_name.split()[0]
+                if not (device_id in BANNED_DEVICES):
+                    resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+                    count += 1
 
         if count == 0:
             resp += "<div class='device'>No USB Device Found</div>"
@@ -124,7 +127,7 @@ class Proxy(http.Controller):
                 %s
                 </pre>
 
-            """ % subprocess.check_output('lsusb -v', shell=True)
+            """ % subprocess.check_output('lsusb -v', shell=True).decode('utf-8')
 
         return request.make_response(resp,{
             'Cache-Control': 'no-cache',

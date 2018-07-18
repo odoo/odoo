@@ -517,7 +517,6 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * Force the partial reconciliation to display the reconciliate button.
-     * This method should only  be called when there is onely one proposition.
      *
      * @param {string} handle
      * @returns {Deferred}
@@ -527,14 +526,17 @@ var StatementModel = BasicModel.extend({
 
         // Retrieve the toggle proposition
         var selected;
-        _.each(line.reconciliation_proposition, function (prop) {
+        var targetLineAmount = line.st_line.amount;
+        line.reconciliation_proposition.every(function (prop) {
             if (!prop.invalid) {
-                if (((line.balance.amount < 0 || !line.partial_reconcile) && prop.amount > 0 && line.st_line.amount > 0 && line.st_line.amount < prop.amount) ||
-                    ((line.balance.amount > 0 || !line.partial_reconcile) && prop.amount < 0 && line.st_line.amount < 0 && line.st_line.amount > prop.amount)) {
+                if (((line.balance.amount < 0 || !line.partial_reconcile) && prop.amount > 0 && targetLineAmount > 0 && targetLineAmount < prop.amount) ||
+                    ((line.balance.amount > 0 || !line.partial_reconcile) && prop.amount < 0 && targetLineAmount < 0 && targetLineAmount > prop.amount)) {
                     selected = prop;
                     return false;
                 }
+            targetLineAmount -= prop.amount;
             }
+            return true;
         });
 
         // If no toggled proposition found, reject it
