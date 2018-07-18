@@ -28,7 +28,7 @@
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
                 <search string="Activities Analysis">
-                    <filter string="My Activities" name="activities_my" domain="[('user_id', '=', uid)]"/>
+                    <filter string="My Activities" name="activities_my" domain="[('create_uid', '=', uid)]"/>
                     <separator/>
                     <filter name="lead" string="Leads" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
                     <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
@@ -38,9 +38,9 @@
                     <separator/>
                     <filter string="Date" name="filter_date" date="date"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
-                    <field name="author_id" string="Created By"/>
+                    <field name="create_uid" string="Created By"/>
                     <group expand="1" string="Group By">
-                        <filter string="Created By" name="group_by_salesperson" context="{'group_by':'author_id'}"/>
+                        <filter string="Created By" name="group_by_salesperson" context="{'group_by':'create_uid'}"/>
                         <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
                         <filter string="Country" name="country" context="{'group_by':'country_id'}" />
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

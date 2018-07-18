@@ -4,3 +4,4 @@
 from . import sale_report
 from . import invoice_report
 from . import report_all_channels_sales
+from . import sale_activity_report
