@@ -572,4 +572,10 @@
         <!-- action_confirm for confirmation date -->
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
 
+        <function model="sale.order" name="_set_demo_create_date">
+            <value eval="[ref('website_sale_order_1'), ref('website_sale_order_2'), ref('website_sale_order_3'), ref('website_sale_order_4'),
+                ref('website_sale_order_5'), ref('website_sale_order_6'), ref('website_sale_order_7')]"/>
+            <value eval="(datetime.now()-timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
 </odoo>
