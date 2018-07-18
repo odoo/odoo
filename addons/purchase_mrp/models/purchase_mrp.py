@@ -8,7 +8,7 @@ from odoo.tools import float_compare
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True)
+    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True, compute_sudo=True)
 
     def _compute_qty_received(self):
         super(PurchaseOrderLine, self)._compute_qty_received()
