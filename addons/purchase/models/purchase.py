@@ -262,7 +262,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
+            'custom_layout': "mail.mail_notification_light",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
