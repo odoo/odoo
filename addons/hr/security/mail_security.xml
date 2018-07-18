@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value
+                        eval="[('module', '=', 'mail'), ('name', '=', 'mail_channel_rule')]"
+                />
+            </function>
+
+            <!--Set noupdate to False-->
+            <value eval="{'noupdate': False}" />
+        </function>
+
+        <!-- RULES -->
+        <record id="mail_channel_rule" model="ir.rule">
+            <field name="name">Mail.channel: access only public and joined groups</field>
+            <field name="model_id" ref="model_mail_channel"/>
+            <field name="domain_force">['|', '|', '|',
+                ('public', '=', 'public'),
+                '&amp;', ('public', '=', 'private'), ('channel_partner_ids', 'in', [user.partner_id.id]),
+                '&amp;', ('public', '=', 'department'), ('channel_partner_ids', 'in', [user.partner_id.id]),
+                '&amp;', ('public', '=', 'groups'), ('group_public_id', 'in', [g.id for g in user.groups_id])]</field>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <!--Optional, if you want to set noupdate to True again-->
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value
+                        eval="[('module', '=', 'mail'), ('name', '=', 'mail_channel_rule')]"
+                />
+            </function>
+            <!--Set noupdate to True-->
+            <value eval="{'noupdate': True}" />
+        </function>
+
+    </data>
+</odoo>
