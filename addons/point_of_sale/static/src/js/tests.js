@@ -109,8 +109,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "open customer list",
         trigger: "button.set-customer",
     }, {
-        content: "select agrolait",
-        trigger: ".client-line:contains('Agrolait')",
+        content: "select Deco Addict",
+        trigger: ".client-line:contains('Deco Addict')",
     }, {
         content: "confirm selection",
         trigger: ".clientlist-screen .next",
@@ -132,8 +132,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "open customer list",
         trigger: "button.set-customer",
     }, {
-        content: "select think big systems",
-        trigger: ".client-line:contains('Think Big Systems')",
+        content: "select Lumber Inc",
+        trigger: ".client-line:contains('Lumber Inc')",
     },  {
         content: "confirm selection",
         trigger: ".clientlist-screen .next",

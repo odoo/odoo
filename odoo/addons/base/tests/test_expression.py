@@ -215,15 +215,15 @@ class TestExpression(TransactionCase):
         Partner = self.env['res.partner']
 
         # testing equality with name
-        partners = Partner.search([('parent_id', '=', 'Agrolait')])
+        partners = Partner.search([('parent_id', '=', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with name
-        partners = Partner.search([('parent_id', 'in', 'Agrolait')])
+        partners = Partner.search([('parent_id', 'in', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with a list of names
-        partners = Partner.search([('parent_id', 'in', ['Agrolait', 'ASUStek'])])
+        partners = Partner.search([('parent_id', 'in', ['Deco Addict', 'Wood Corner'])])
         self.assertTrue(partners)
 
         # check if many2one works with empty search list
@@ -545,10 +545,10 @@ class TestExpression(TransactionCase):
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
-        partners = Partner.search([('name', '=like', 'A_U_TeK')])
-        self.assertTrue(len(partners) == 1, "Must match one partner (ASUSTeK)")
-        partners = Partner.search([('name', '=ilike', 'c%')])
-        self.assertTrue(len(partners) >= 1, "Must match one partner (China Export)")
+        partners = Partner.search([('name', '=like', 'W_od_C_rn_r')])
+        self.assertTrue(len(partners) == 1, "Must match one partner (Wood Corner)")
+        partners = Partner.search([('name', '=ilike', 'G%')])
+        self.assertTrue(len(partners) >= 1, "Must match one partner (Gemini Furniture)")
 
         # check that =like/=ilike expressions are working on translated field
         Country = self.env['res.country']
@@ -612,7 +612,7 @@ class TestExpression(TransactionCase):
         """ Check that we can exclude translated fields (bug lp:1071710) """
         # first install french language
         self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
-
+        self.env.ref('base.res_partner_2').country_id = self.env.ref('base.be')
         # actual test
         Country = self.env['res.country']
         be = self.env.ref('base.be')
@@ -621,13 +621,13 @@ class TestExpression(TransactionCase):
 
         # indirect search via m2o
         Partner = self.env['res.partner']
-        agrolait = Partner.search([('name', '=', 'Agrolait')])
+        deco_addict = Partner.search([('name', '=', 'Deco Addict')])
 
         not_be = Partner.search([('country_id', '!=', 'Belgium')])
-        self.assertNotIn(agrolait, not_be)
+        self.assertNotIn(deco_addict, not_be)
 
         not_be = Partner.with_context(lang='fr_FR').search([('country_id', '!=', 'Belgique')])
-        self.assertNotIn(agrolait, not_be)
+        self.assertNotIn(deco_addict, not_be)
 
     def test_or_with_implicit_and(self):
         # Check that when using expression.OR on a list of domains with at least one

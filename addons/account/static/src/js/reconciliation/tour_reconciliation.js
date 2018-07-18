@@ -82,12 +82,12 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "change the partner of the second line",
             trigger: '.o_reconciliation_line:nth-child(2) .o_field_many2one input',
-            run: 'text Agro'
+            run: 'text Deco'
         },
         {
-            content: "select Agrolait",
-            extra_trigger: '.ui-autocomplete:visible li:eq(1):contains(Create "Agro")',
-            trigger: '.ui-autocomplete:visible li:contains(Agrolait)',
+            content: "select Deco Addict ",
+            extra_trigger: '.ui-autocomplete:visible li:eq(1):contains(Create "Deco")',
+            trigger: '.ui-autocomplete:visible li:contains(Deco Addict)',
         },
         {
             content: "use filter",
@@ -96,9 +96,9 @@ Tour.register('bank_statement_reconciliation', {
             run: 'text 4610'
         },
         {
-            content: "select a line linked to Agrolait",
+            content: "select a line linked to Deco Addict ",
             extra_trigger: '.o_reconciliation_line:nth-child(2) .match:not(:has(tr:eq(1)))',
-            trigger: '.o_reconciliation_line:nth-child(2) .match .line_info_button[data-content*=Agrolait]'
+            trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button[data-content*='Deco Addict']"
         },
         {
             content: "deselect the line",

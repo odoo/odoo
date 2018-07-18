@@ -52,7 +52,6 @@ class ActivityReport(models.Model):
                 l.probability
         """
 
-
     def _from(self):
         return """
             FROM mail_message AS m
