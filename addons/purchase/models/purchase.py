@@ -1060,6 +1060,8 @@ class ProcurementOrder(models.Model):
                 po = po[0] if po else False
                 cache[domain] = po
             if not po:
+                supplier = procurement.product_id._select_seller(quantity=procurement.product_qty, uom_id=procurement.product_uom) or supplier
+                partner = supplier.name
                 vals = procurement._prepare_purchase_order(partner)
                 po = self.env['purchase.order'].create(vals)
                 name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or "")
