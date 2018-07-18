@@ -64,6 +64,7 @@ QUnit.module('Chatter', {
                 fields: {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
                     create_uid: { string: "Assigned to", type: "many2one", relation: 'partner' },
+                    create_user_id: { string: "Creator", type: "many2one", relation: 'partner' },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
                     user_id: { string: "Assigned to", type: "many2one", relation: 'partner' },
@@ -355,6 +356,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 1,
     }];
     var rpcCount = 0;
@@ -1025,6 +1027,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 2,
     }];
 
@@ -1109,6 +1112,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 2,
     }];
 
@@ -1142,6 +1146,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 2,
     }];
 
@@ -1264,6 +1269,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 1,
     }, {
         id: 2,
@@ -1271,6 +1277,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 1,
     }];
 
