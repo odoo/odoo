@@ -79,6 +79,9 @@
                         <div class="col-lg-6">
                             <div>
                                 <div t-attf-class="alert alert-#{status}" t-raw="message" role="status"/>
+                                <div class="panel-body" t-if="tx.acquirer_id.post_msg">
+                                    <t t-raw="tx.acquirer_id.post_msg"/>
+                                </div>
                                 <div class="form-group row">
                                     <label for="form_partner_name" class="col-md-3 col-form-label">From</label>
                                     <div class="col-md-9">
@@ -96,6 +99,13 @@
                                     <div class="col-md-9">
                                         <span name="form_amount" class="form-control" t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                     </div>
+                                </div>
+                                <div t-if="tx.acquirer_id.company_id.qr_code and tx.acquirer_id.company_id.qr_code_valid and (tx.currency_id.name == 'EUR')">
+                                    <h3>Or scan me with your banking app.</h3>
+                                    <img class="border border-dark rounded" t-att-src="tx.acquirer_id.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(tx.amount,tx.reference)"/>
+                                </div>
+                                <div t-if="tx.acquirer_id.company_id.qr_code and (tx.acquirer_id.company_id.qr_code_valid == False) and (tx.currency_id.name == 'EUR')">
+                                    <h3>The SEPA QR Code informations are not set correctly.</h3>
                                 </div>
                                 <div>
                                     <a role="button" t-attf-class="btn btn-#{status} float-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
@@ -124,6 +134,13 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
+            <div t-if="payment_tx_id.acquirer_id.company_id.qr_code and payment_tx_id.acquirer_id.company_id.qr_code_valid and (payment_tx_id.currency_id.name == 'EUR')">
+                <h3>Or scan me with your banking app.</h3>
+                <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(payment_tx_id.amount,payment_tx_id.reference)"/>
+            </div>
+            <div t-if="payment_tx_id.acquirer_id.company_id.qr_code and (payment_tx_id.acquirer_id.company_id.qr_code_valid == False) and (payment_tx_id.currency_id.name == 'EUR')">
+                <h3>The SEPA QR Code informations are not set correctly.</h3>
+            </div>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable" role="alert">
             <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>

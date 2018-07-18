@@ -1590,6 +1590,15 @@
                 <div class="card-body" t-if="payment_tx_id.acquirer_id.post_msg">
                     <t t-raw="payment_tx_id.acquirer_id.post_msg" />
                 </div>
+                <div t-if="payment_tx_id.acquirer_id.provider == 'transfer'">
+                    <div class="card-body" t-if="payment_tx_id.acquirer_id.company_id.qr_code and payment_tx_id.acquirer_id.company_id.qr_code_valid and (payment_tx_id.currency_id.name == 'EUR')">
+                        <h3>Or scan me with your banking app.</h3>
+                        <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
+                    </div>
+                    <div class="card-body"  t-if="payment_tx_id.acquirer_id.company_id.qr_code and (payment_tx_id.acquirer_id.company_id.qr_code_valid == False) and (payment_tx_id.currency_id.name == 'EUR')">
+                        <h3>The SEPA QR Code informations are not set correctly.</h3>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
