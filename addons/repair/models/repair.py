@@ -256,7 +256,8 @@ class Repair(models.Model):
             'default_res_id': self.id,
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
-            'default_composition_mode': 'comment'
+            'default_composition_mode': 'comment',
+            'custom_layout': 'mail.mail_notification_light',
         }
         return {
             'type': 'ir.actions.act_window',
