@@ -104,6 +104,10 @@ class MailActivity(models.Model):
         'res.users', 'Assigned to',
         default=lambda self: self.env.user,
         index=True, required=True)
+    create_user_id = fields.Many2one(
+        'res.users', 'Creator',
+        default=lambda self: self.env.user,
+        index=True)
     state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
