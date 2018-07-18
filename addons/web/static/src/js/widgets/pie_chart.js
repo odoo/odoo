@@ -34,25 +34,20 @@ var PieChart = Widget.extend({
      */
     init: function (parent, record, node) {
         this._super(parent);
-
         this.record = record;
         this.model = record.model;
-
+        this.domain = record.domain;
         if (node.attrs.modifiers) {
             this.measure = node.attrs.modifiers.measure || '';
-            this.measureField = this.record.fields[this.measure];
-            this.groupBy = node.attrs.modifiers.groupby.split(':')[0] || '';
+            this.title = node.attrs.modifiers.title || this.measure || '';
             this.interval = node.attrs.modifiers.groupby.split(':')[1];
-
+            this.groupBy = node.attrs.modifiers.groupby.split(':')[0] || '';
             if (!_.contains(Object.keys(this.record.fields), this.groupBy)) {
                 return;
             }
 
             this.groupByField = this.record.fields[this.groupBy];
             this.groupByType = this.groupByField.type;
-            this.title = node.attrs.modifiers.title || this.measure || '';
-            this.trueLabel = node.attrs.modifiers.trueLabel || 'True';
-            this.falseLabel = node.attrs.modifiers.falseLabel || 'False';
         }
     },
     /**
@@ -65,7 +60,7 @@ var PieChart = Widget.extend({
         var query = {
             model: this.model,
             method: 'read_group',
-            domain: [],
+            domain: this.domain,
             groupBy: [this.groupBy + (this.interval ? ':' + this.interval : '')],
             fields: [this.measure],
             lazy: false,
@@ -74,7 +69,7 @@ var PieChart = Widget.extend({
         // Handle case where measure attribute is missing.
         query.fields =  this.measure ? [this.measure] : [];
 
-        return $.when(this._rpc(query), ajax.loadLibs(this)).then(
+        return $.when(self._rpc(query), ajax.loadLibs(self)).then(
             function (result) {
                 if (result) {
                     if (_.contains(GROUPABLE_TYPES, self.groupByType)) {
@@ -106,6 +101,18 @@ var PieChart = Widget.extend({
     },
 
     /**
+     * override
+     *
+     */
+    /*
+    start: function () {
+        this._renderGraph();
+    },
+    */
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
      * This method ensure that Pie Chart is attached to DOM before being rendered.
      *
      * If we don't do that, Pie Chart can be rendered without being aware of the
@@ -113,7 +120,7 @@ var PieChart = Widget.extend({
      * invisible (even with a good lens).
      */
     on_attach_callback: function() {
-        this._render();
+        this._renderGraph();
     },
 
     //--------------------------------------------------------------------------
@@ -127,41 +134,39 @@ var PieChart = Widget.extend({
      */
     _render: function () {
         // Note: The rendering of this widget is aynchronous as NVD3 does a
-        // setTimeout(0) before executing the callback given to addGraph.
+        // setTimeout(0); before executing the callback given to addGraph.
         var self = this;
         if(!this.data || !_.isArray(this.data)) {
             return;
         }
-
+        this.chart = null;
+        this.$el.empty()
         var $label = this._renderLabel(this.title);
-        this.$el.empty();
         $label.appendTo(this.$el);
-        $('<svg width="100%" height="100%">').appendTo(this.$el);
+        var $svgContainer = $('<svg >', {class: 'o_graph_svg_container'}); //.appendTo(this.$el);
 
-        var legend_right = config.device.size_class > config.device.SIZES.XS;
-        var legendPosition = legend_right ? 'right' : 'top';
-        var color = d3.scale.category10().range();
+        this.$el.append($svgContainer);
+        var svg = d3.select($svgContainer[0]).append('svg');
+        svg.datum(this.data);
+        svg.transition().duration(1);
+        var legend_right = config.device.size_class > config.device.SIZES.VSM;
 
-        nv.addGraph(function () {
-            self.chart = nv.models.pieChart()
-                                  .x(function(d) { return d.label })
-                                  .y(function(d) { return d.value })
-                                  .legendPosition(legendPosition)
-                                  .labelType('percent')
-                                  .showLabels(true)
-                                  .showLegend(true)
-                                  .color(color);
-
-            self.chart.legend.rightAlign(false);
-            self.chart.legend.align(true);
-            self.chart.legend.expanded(true);
-
-            d3.select(self.$('svg')[0])
-                .datum(self.data)
-                .transition().duration(0)
-                .call(self.chart);
-            self.chart.update();
+        var chart = nv.models.pieChart().labelType('percent');
+        chart.options({
+            x: function(d) { return d.label },
+            y: function(d) { return d.value },
+            delay: 0,
+            showLegend: true,
+            legendPosition: legend_right ? 'right' : 'top',
+            transition: 1,
+            color: d3.scale.category10().range(),
         });
+        chart.legend.rightAlign(false);
+        chart.legend.align(true);
+        chart.legend.expanded(true);
+        chart(svg);
+
+        return chart;
     },
     /**
      * @private
@@ -188,6 +193,26 @@ var PieChart = Widget.extend({
     _renderLabel: function (title) {
         var $result = $('<label>', {text: title});
         return $result;
+    },
+        /**
+     * Renders the graph according to its type. This function must be called
+     * when the renderer is in the DOM (for nvd3 to render the graph correctly).
+     *
+     * @private
+     */
+    _renderGraph: function () {
+        var self = this;
+
+        this.$el.empty();
+
+        var chartResize = function (chart) {
+            if (chart) {
+                self.to_remove = chart.update;
+                nv.utils.onWindowResize(chart.update);
+            }
+        }
+        var chart = this._render();
+        chartResize(chart);
     },
 });
 
