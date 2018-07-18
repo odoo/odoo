@@ -130,7 +130,7 @@ class TestCalendar(TransactionCase):
             'stop': '2017-07-12 15:00:00',
         })
         self.assertEqual(
-            (m.start_datetime, m.stop_datetime),
+            (str(m.start_datetime), str(m.stop_datetime)),
             (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
             "Sanity check"
         )
@@ -255,7 +255,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
         self.assertEqual(test_record.activity_ids.note, test_description2)
         self.assertEqual(test_record.activity_ids.user_id, test_user)
-        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-2)).date()))
+        self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
 
         # deleting meeting should delete its activity
         test_record.activity_ids.unlink()
@@ -268,8 +268,8 @@ class TestCalendar(TransactionCase):
         ).create({
             'name': test_name,
             'description': test_description,
-            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
-            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'start': now + timedelta(days=-1),
+            'stop': now + timedelta(hours=2),
             'user_id': self.env.user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
