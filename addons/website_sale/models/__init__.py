@@ -12,3 +12,4 @@ from . import sale_order
 from . import website
 from . import res_config_settings
 from . import digest
+from . import res_company
