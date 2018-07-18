@@ -799,7 +799,7 @@ class TestReconciliation(AccountingTestCase):
 
         partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
         self.assertEqual(partner_lines, [], 'The aged receivable shouldn\'t have lines at this point')
-        self.assertFalse(partner.id in amls, 'The aged receivable should not have amls either')
+        self.assertFalse(amls.get(partner.id), 'The aged receivable should not have amls either')
 
         # Case 2: The invoice and payment are not reconciled: we should have one line on the report
         # and 2 amls
