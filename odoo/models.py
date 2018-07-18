@@ -629,9 +629,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls = type(self)
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
-            for name in func._onchange:
+            if callable(func._onchange):
+                func_onchange = list(func._onchange(self))
+            else:
+                func_onchange = func._onchange
+            for name in func_onchange:
                 if name not in cls._fields:
-                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
+                    _logger.warning("method %s.%s: @onchange parameter %r must be a field name", cls._name, attr, name)
                 methods[name].append(func)
 
         # add onchange methods to implement "change_default" on fields

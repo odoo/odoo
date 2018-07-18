@@ -187,7 +187,12 @@ def onchange(*args):
             ``@onchange`` only supports simple field names, dotted names
             (fields of relational fields e.g. ``partner_id.tz``) are not
             supported and will be ignored
+
+        One may also pass a single function as argument. In that case, the
+        changing fields are given by calling the function with the field's model.
     """
+    if args and callable(args[0]):
+        args = args[0]
     return attrsetter('_onchange', args)
 
 
