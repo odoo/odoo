@@ -313,7 +313,10 @@ var MentionManager = Widget.extend({
         }
         if (suggestions.length) {
             this.$el.html(QWeb.render(this._activeListener.suggestionTemplate, {
-                suggestions: suggestions,
+                suggestions: _.map(suggestions, function (suggestion) {
+                    // mention manager stores escaped suggestion names
+                    return _.extend({}, suggestion, { name: _.unescape(suggestion.name) });
+                })
             }));
             this.$el
                 .addClass('show')
@@ -382,8 +385,9 @@ var MentionManager = Widget.extend({
         if (!substitution) {
             // no substitution string given, so use the mention name instead
             // replace white spaces with non-breaking spaces to facilitate
-            // mentions detection in text
-            selectedSuggestion.name = selectedSuggestion.name.replace(/ /g, NON_BREAKING_SPACE);
+            // mentions detection in text.
+            // mention manager stores escaped suggestion names
+            selectedSuggestion.name = _.unescape(selectedSuggestion.name.replace(/ /g, NON_BREAKING_SPACE));
             substitution = this._activeListener.delimiter + selectedSuggestion.name;
         }
         var getMentionIndex = function (matches, cursorPosition) {
