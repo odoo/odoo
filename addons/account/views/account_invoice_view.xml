@@ -359,6 +359,7 @@
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_user"/>
                                     <field name="payment_term_id" options="{'no_create': True}"/>
+                                    <field name="incoterm_id" options="{'no_create': True}"/>
                                     <field name="name"/>
                                 </group>
                                 <group>
@@ -572,6 +573,7 @@
                                 <group>
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
+                                    <field name="incoterm_id" options="{'no_create': True}"/>
                                     <field name="name"/>
                                 </group>
                             </group>

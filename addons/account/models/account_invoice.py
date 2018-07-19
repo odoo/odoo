@@ -48,6 +48,9 @@ class AccountInvoice(models.Model):
     def _get_default_access_token(self):
         return str(uuid.uuid4())
 
+    def _get_default_incoterm(self):
+        return self.env.user.company_id.incoterm_id
+
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'tax_line_ids.amount_rounding',
                  'currency_id', 'company_id', 'date_invoice', 'type')
@@ -369,6 +372,9 @@ class AccountInvoice(models.Model):
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
+    incoterm_id = fields.Many2one('account.incoterms', string='Incoterm',
+        default=_get_default_incoterm,
+        help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     #fields related to vendor bills automated creation by email
     source_email = fields.Char(string='Source Email', track_visibility='onchange')
