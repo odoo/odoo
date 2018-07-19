@@ -16,11 +16,13 @@
         'utm',
         'document',
         'web_tour',
+        'digest',
     ],
     'data': [
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'data/hr_recruitment_data.xml',
+        'data/digest_data.xml',
         'views/hr_recruitment_views.xml',
         'views/res_config_settings_views.xml',
         'views/hr_recruitment_templates.xml',
@@ -28,6 +30,7 @@
         'views/hr_job_views.xml',
         'views/mail_activity_views.xml',
         'views/res_users_views.xml',
+        'views/digest_views.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
