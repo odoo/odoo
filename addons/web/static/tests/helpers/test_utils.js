@@ -553,27 +553,35 @@ function createParent(params) {
  * @param {jqueryElement} $el
  * @param {jqueryElement} $to
  * @param {Object} [options]
- * @param {string} [options.position=center] target position
- * @param {string} [options.disableDrop=false] whether to trigger the drop action
+ * @param {string|Object} [options.position='center'] target position:
+ *   can either be one of {'top', 'bottom', 'left', 'right'} or
+ *   an object with two attributes (top and left))
+ * @param {boolean} [options.disableDrop=false] whether to trigger the drop action
+ * @param {boolean} [options.continueMove=false] whether to trigger the
+ *   mousedown action (will only work after another call of this function with
+ *   without this option)
  */
 function dragAndDrop($el, $to, options) {
     var position = (options && options.position) || 'center';
     var elementCenter = $el.offset();
-    elementCenter.left += $el.outerWidth()/2;
-    elementCenter.top += $el.outerHeight()/2;
-
     var toOffset = $to.offset();
-    toOffset.top += $to.outerHeight()/2;
-    toOffset.left += $to.outerWidth()/2;
-    var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
-    if (position === 'top') {
-        toOffset.top -= $to.outerHeight()/2 + vertical_offset;
-    } else if (position === 'bottom') {
-        toOffset.top += $to.outerHeight()/2 - vertical_offset;
-    } else if (position === 'left') {
-        toOffset.left -= $to.outerWidth()/2;
-    } else if (position === 'right') {
+
+    if (_.isObject(position)) {
+        toOffset.top += position.top;
+        toOffset.left += position.left;
+    } else {
+        toOffset.top += $to.outerHeight()/2;
         toOffset.left += $to.outerWidth()/2;
+        var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
+        if (position === 'top') {
+            toOffset.top -= $to.outerHeight()/2 + vertical_offset;
+        } else if (position === 'bottom') {
+            toOffset.top += $to.outerHeight()/2 - vertical_offset;
+        } else if (position === 'left') {
+            toOffset.left -= $to.outerWidth()/2;
+        } else if (position === 'right') {
+            toOffset.left += $to.outerWidth()/2;
+        }
     }
 
     if ($to[0].ownerDocument !== document) {
@@ -583,11 +591,16 @@ function dragAndDrop($el, $to, options) {
         toOffset.top += bound.top;
     }
 
-    $el.trigger($.Event("mousedown", {
-        which: 1,
-        pageX: elementCenter.left,
-        pageY: elementCenter.top
-    }));
+    if (!(options && options.continueMove)) {
+        elementCenter.left += $el.outerWidth()/2;
+        elementCenter.top += $el.outerHeight()/2;
+
+        $el.trigger($.Event("mousedown", {
+            which: 1,
+            pageX: elementCenter.left,
+            pageY: elementCenter.top
+        }));
+    }
 
     $el.trigger($.Event("mousemove", {
         which: 1,
