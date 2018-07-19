@@ -547,9 +547,7 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
-        # Candidates are custom ir.model.fields that are either of type one2many or
-        # related or a compute field and will potentially be unlinked if they are a dependant
-        # of the current ir.model.fields being deleted (in uninstall mode only).
+        # candidates are custom fields that might depend on the fields corresponding to self
         candidates = self.search([
             '&',
                 ('state', '=', 'manual'),
@@ -565,24 +563,23 @@ class IrModelFields(models.Model):
             field = model._fields[candidate.name]
             return [dep[1] for dep in field.resolve_deps(model)]
 
-        relations_to_unlink = []
+        failed_dependencies = []
         for candidate in candidates:
             for rec in self:
                 model = self.env[rec.model]
                 field = model._fields[rec.name]
                 if (candidate.ttype == 'one2many'
-                        and rec.ttype == 'many2one'
                         and candidate.relation == rec.model
                         and candidate.relation_field == rec.name):
                     # candidate is rec's inverse, mark candidate as to unlink.
-                    relations_to_unlink.append((candidate, rec))
+                    failed_dependencies.append((candidate, rec))
                 elif candidate.depends or candidate.related:
                     # resolve candidate's dependencies and find out if any of them are the record
                     # currently being unlinked and if so, mark candidate as to unlink
                     # works for all computed fields, including relateds.
                     dep_fields = resolve_deps(candidate)
                     if field in dep_fields:
-                        relations_to_unlink.append((candidate, rec))
+                        failed_dependencies.append((candidate, rec))
 
         if not self._context.get(MODULE_UNINSTALL_FLAG) and relations_to_unlink:
             # do not unlink candidate if not in uninstall mode
