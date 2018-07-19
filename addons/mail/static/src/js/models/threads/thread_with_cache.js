@@ -14,11 +14,14 @@ var session = require('web.session');
  * in order to make searches on messages in a thread.
  */
 var ThreadWithCache = Thread.extend({
+
     /**
      * @override
-     * @param {integer} [data.seen_message_id=undefined]
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {integer} [params.data.seen_message_id=undefined]
      */
-    init: function (parent, data) {
+    init: function (params) {
         this._super.apply(this, arguments);
 
         this._cache = {
@@ -28,7 +31,7 @@ var ThreadWithCache = Thread.extend({
                 messages: [],
             }
         };
-        this._lastSeenMessageID = data.seen_message_id;
+        this._lastSeenMessageID = params.data.seen_message_id;
     },
 
     //--------------------------------------------------------------------------
@@ -53,19 +56,11 @@ var ThreadWithCache = Thread.extend({
         }
     },
     /**
-     * Get the last seen message for a given thread
-     *
-     * @return {integer|null} last seen message ID (if any)
-     */
-    getLastSeenMessageID: function () {
-        return this._lastSeenMessageID || null;
-    },
-    /**
      * @override
      * @param {Array} [domain]
      * @param {boolean} [loadMore=false]
      */
-    getMessages: function (domain, loadMore) {
+    fetchMessages: function (domain, loadMore) {
         if (loadMore) {
             return this._fetchMessages(domain, true);
         }
@@ -77,11 +72,19 @@ var ThreadWithCache = Thread.extend({
         }
     },
     /**
-     * @private
-     * @return {boolean} true if there is at least a message, false otherwise
+     * Get the last seen message for a given thread
+     *
+     * @return {integer|null} last seen message ID (if any)
      */
-    hasMessages: function () {
-        return !!(_.last(this._cache['[]'].messages));
+    getLastSeenMessageID: function () {
+        return this._lastSeenMessageID || null;
+    },
+    /**
+     * @override
+     * @return {mail.model.Message[]}
+     */
+    getMessages: function () {
+        return this._cache['[]'].messages;
     },
     /**
      * Invalidate the caches of the thread

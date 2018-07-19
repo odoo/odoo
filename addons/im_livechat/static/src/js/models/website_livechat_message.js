@@ -1,4 +1,4 @@
-odoo.define('im_livechat.model.LivechatMessage', function (require) {
+odoo.define('im_livechat.model.WebsiteLivechatMessage', function (require) {
 "use strict";
 
 var AbstractMessage = require('mail.model.AbstractMessage');
@@ -10,7 +10,7 @@ var AbstractMessage = require('mail.model.AbstractMessage');
  *
  * @see mail.model.AbstractMessage for more information.
  */
-var LivechatMessage =  AbstractMessage.extend({
+var WebsiteLivechatMessage =  AbstractMessage.extend({
 
     /**
      * @param {Widget} parent
@@ -60,6 +60,6 @@ var LivechatMessage =  AbstractMessage.extend({
 
 });
 
-return LivechatMessage;
+return WebsiteLivechatMessage;
 
 });

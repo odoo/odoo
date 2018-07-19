@@ -368,5 +368,6 @@ QUnit.test('preview of message on a document', function (assert) {
 
     messagingMenu.destroy();
 });
+
 });
 });

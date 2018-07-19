@@ -2,9 +2,9 @@ odoo.define('mail.model.Thread', function (require) {
 "use strict";
 
 var emojis = require('mail.emojis');
+var AbstractThread = require('mail.model.AbstractThread');
 var mailUtils = require('mail.utils');
 
-var Class = require('web.Class');
 var Mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 
@@ -15,36 +15,31 @@ var ServicesMixin = require('web.ServicesMixin');
  *
  * In particular, channels and mailboxes are two different kinds of threads.
  */
-var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
+var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
+
     /**
-     * @param {mail.Manager} parent
-     * @param {Object} data
-     * @param {string} [data.channel_type]
-     * @param {integer|string} data.id
-     * @param {string} data.name
-     * @param {string} [data.type]
+     * @override
+     * @param {mail.Manager} param.parent
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {string} [params.data.channel_type]
+     * @param {string} params.data.name
+     * @param {string} [params.data.type]
      */
-    init: function (parent, data) {
+    init: function (params) {
         Mixins.EventDispatcherMixin.init.call(this, arguments);
-        this.setParent(parent);
-
-        this._id = data.id;
-
+        this.setParent(params.parent);
+        this._super.apply(this, arguments);
         // threads are not detached by default
         this._detached = false;
-        // threads are unfolded by default
-        this._folded = false;
         // if this._massMailing is set, display subject on messages, use
         // extended composer and show "Send by messages by email" on discuss
         // sidebar
         this._massMailing = false;
-        this._name = data.name;
         // on 1st request to getPreview, fetch data if incomplete. Otherwise it
         // means that there is no message in this channel.
         this._previewed = false;
-        this._type = data.type || data.channel_type;
-        // any new message that has not been read yet
-        this._unreadCounter = 0;
+        this._type = params.data.type || params.data.channel_type;
         // max number of fetched messages from the server
         this._FETCH_LIMIT = 30;
     },
@@ -88,43 +83,7 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         });
     },
     /**
-     * Updates the _folded state of the thread. Must be overriden to reflect
-     * the new state in the interface.
-     */
-    fold: function (folded) {
-        this._detached = true;
-        this._folded = folded;
-        this._warnUpdatedWindowState();
-    },
-    /**
-     * Get the list of available commands for the thread.
-     * By default, threads do not have any available command.
-     *
-     * @returns {Array}
-     */
-    getCommands: function () {
-        return [];
-    },
-    /**
-     * Get the ID of the thread
-     *
-     * @returns {integer|string} string for mailboxes (e.g. 'mailbox_inbox')
-     */
-    getID: function () {
-        return this._id;
-    },
-    /**
-     * Get the listeners of the thread.
-     * By default, a thread has not listener.
-     *
-     * @abstract
-     * @returns {$.Promise<Object[]>}
-     */
-    getMentionPartnerSuggestions: function () {
-        return $.when([]);
-    },
-    /**
-     * Get the list of messages in this thread.
+     * Fetch the list of messages in this thread.
      * By default, a thread has no messages.
      *
      * Note that this method only returns some messages, as we do not want to
@@ -137,16 +96,39 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * @abstract
      * @returns {$.Promise<mail.model.Message[]>}
      */
-    getMessages: function () {
+    fetchMessages: function () {
         return $.when([]);
     },
     /**
-     * Get the name of this thread
+     * Updates the folded state of the thread. Must be overriden to reflect
+     * the new state in the interface.
      *
-     * @returns {string|Object} object for lazy translated names with _lt
+     * @override
+     * @param {boolean} boolean
      */
-    getName: function () {
-        return this._name;
+    fold: function (folded) {
+        this._super.apply(this, arguments);
+        this._detached = true; // auto-detach the thread
+        this._warnUpdatedWindowState();
+    },
+    /**
+     * Get the list of available commands for the thread.
+     * By default, threads do not have any available command.
+     *
+     * @returns {Array}
+     */
+    getCommands: function () {
+        return [];
+    },
+    /**
+     * Get the listeners of the thread.
+     * By default, a thread has not listener.
+     *
+     * @abstract
+     * @returns {$.Promise<Object[]>}
+     */
+    getMentionPartnerSuggestions: function () {
+        return $.when([]);
     },
     /**
      * Returns the information required to render the preview of this channel.
@@ -165,32 +147,10 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         };
     },
     /**
-     * Get the status of the thread (e.g. 'online', 'offline', etc.)
-     *
-     * @returns {string}
-     */
-    getStatus: function () {
-        return this._status;
-    },
-    /**
-     * Returns the title to display in thread window's headers.
-     *
-     * @returns {string|Object} the name of the thread by default (see @getName)
-     */
-    getTitle: function () {
-        return this.getName();
-    },
-    /**
      * @returns {string}
      */
     getType: function () {
         return this._type;
-    },
-    /**
-     * @returns {integer}
-     */
-    getUnreadCounter: function () {
-        return this._unreadCounter;
     },
     /**
      * State whether this channel has been previewed
@@ -229,11 +189,14 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     incrementNeedactionCounter: function () {},
     /**
-     * Increment the unread counter of this thread by 1 unit
+     * Increment the unread counter of this thread by 1 unit, and warn that the
+     * counter has been changed.
+     *
+     * @override
      */
     incrementUnreadCounter: function () {
-        this._unreadCounter++;
-        this._warnNewUnreadCounter();
+        this._super.apply(this, arguments);
+        this._warnUpdatedUnreadCounter();
     },
     /**
      * States whether the thread should be auto-selected on creation
@@ -278,14 +241,6 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     isDetached: function () {
         return this._detached;
-    },
-    /**
-     * States whether this thread is folded or not.
-     *
-     * @return {boolean}
-     */
-    isFolded: function () {
-        return this._folded;
     },
     /**
      * States whether the thread is linked to a document
@@ -346,8 +301,7 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      */
     markAsRead: function () {
         if (this._unreadCounter > 0) {
-            this._unreadCounter = 0;
-            this._warnNewUnreadCounter();
+            this.resetUnreadCounter();
         }
         return $.when();
     },
@@ -382,11 +336,15 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return $.when(messageData);
     },
     /**
+     * Overrides the method so that it also warns that the counter has been
+     * changed on this thread.
+     *
+     * @override
      * @private
      */
     resetUnreadCounter: function () {
-        this._unreadCounter = 0;
-        this._warnNewUnreadCounter();
+        this._super.apply(this, arguments);
+        this._warnUpdatedUnreadCounter();
     },
 
     //--------------------------------------------------------------------------
@@ -420,6 +378,15 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return htmlString;
     },
     /**
+     * Warn on the chat bus that the unread counter has been updated
+     *
+     * @private
+     */
+    _warnUpdatedUnreadCounter: function () {
+        this.call('mail_service', 'getMailBus')
+            .trigger('update_thread_unread_counter', this);
+    },
+    /**
      * Warn other mail components that the window state of this thread has
      * changed (it has become closed, folded, unfolded, detached, etc.)
      *
@@ -429,15 +396,6 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     _warnUpdatedWindowState: function (options) {
         options = options || {};
         this.call('mail_service', 'updateThreadWindow', this.getID(), options);
-    },
-    /**
-     * Warn on the chat bus that the unread counter has been updated
-     *
-     * @private
-     */
-    _warnNewUnreadCounter: function () {
-        this.call('mail_service', 'getMailBus')
-            .trigger('update_thread_unread_counter', this);
     },
 });
 

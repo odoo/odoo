@@ -24,13 +24,16 @@ var DocumentThread = Thread.extend({
 
     /**
      * @override
-     * @param {string} [data.messagesIDs] the list of message ids linked
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {string} [params.data.messagesIDs] the list of message ids linked
      *   to the document (if not given, they will be fetched before fetching the
      *   messages)
-     * @param {string} data.model
-     * @param {integer} data.resID
+     * @param {string} params.data.model
+     * @param {integer} params.data.resID
      */
-    init: function (parent, data) {
+    init: function (params) {
+        var data = params.data;
         data.id = data.resModel + '_' + data.resID;
         data.type = 'document_thread';
 
@@ -99,6 +102,23 @@ var DocumentThread = Thread.extend({
         });
     },
     /**
+     *
+     * Fetch messages of the document thread
+     *
+     * @override
+     * @param {Object} options
+     * @param {boolean} [options.forceFetch] if true, fetch anyway, as user
+     *   clicked on 'load more'.
+     * @returns {$.Promise<mail.model.Message[]>}
+     */
+    fetchMessages: function (options) {
+        var self = this;
+        return this._fetchMessages(options).then(function () {
+            self.call('mail_service', 'markMessagesAsRead', self._messageIDs);
+            return self._messages;
+        });
+    },
+    /**
      * Overrides to store the thread's state in the LocalStorage, so that it is
      * shared between tabs, and restored on F5.
      *
@@ -137,21 +157,11 @@ var DocumentThread = Thread.extend({
         return this._messageIDs;
     },
     /**
-     *
-     * Get messages of the document thread
-     *
      * @override
-     * @param {Object} options
-     * @param {boolean} [options.forceFetch] if true, fetch anyway, as user
-     *   clicked on 'load more'.
-     * @returns {$.Promise<mail.model.Message[]>}
+     * @returns {mail.model.Message[]}
      */
-    getMessages: function (options) {
-        var self = this;
-        return this._fetchMessages(options).then(function () {
-            self.call('mail_service', 'markMessagesAsRead', self._messageIDs);
-            return self._messages;
-        });
+    getMessages: function () {
+        return this._messages;
     },
     /**
      * States whether the thread is linked to a document
@@ -309,7 +319,6 @@ var DocumentThread = Thread.extend({
 
         });
     },
-
 });
 
 return DocumentThread;

@@ -11,14 +11,17 @@ var Channel = require('mail.model.Channel');
 var DM = Channel.extend({
     /**
      * @override
-     * @param {Object} data
-     * @param {Object} data.direct_partner
-     * @param {integer} data.direct_partner[0].id
-     * @param {string} data.direct_partner[0].im_status
-     * @param {string} data.direct_partner[0].name
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {Object} params.data.direct_partner
+     * @param {integer} params.data.direct_partner[0].id
+     * @param {string} params.data.direct_partner[0].im_status
+     * @param {string} params.data.direct_partner[0].name
      */
-    init: function (parent, data) {
+    init: function (params) {
         this._super.apply(this, arguments);
+
+        var data = params.data;
 
         this._type = 'dm';
         this._name = data.direct_partner[0].name;
@@ -49,12 +52,6 @@ var DM = Channel.extend({
         return result;
     },
     /**
-     * @returns {string}
-     */
-    getStatus: function () {
-        return this._status;
-    },
-    /**
      * DM are chat
      *
      * @override
@@ -82,11 +79,6 @@ var DM = Channel.extend({
             args: [this.getUUID(), false],
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
 });
 
 return DM;

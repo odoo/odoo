@@ -383,22 +383,21 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _fetchAndRenderThread: function () {
         var self = this;
-        return this._thread.getMessages(this.domain)
-            .then(function (messages) {
+        return this._thread.fetchMessages(this.domain)
+            .then(function () {
                 self._threadWidget.render(
-                    messages,
-                    self._getThreadRenderingOptions(messages)
+                    self._thread,
+                    self._getThreadRenderingOptions()
                 );
-                self._updateButtonStatus(messages.length === 0);
+                self._updateButtonStatus(!self._thread.hasMessages());
                 return self._loadEnoughMessages();
             });
     },
     /**
      * @private
-     * @param {mail.model.Message} messages
      * @returns {Object}
      */
-    _getThreadRenderingOptions: function (messages) {
+    _getThreadRenderingOptions: function () {
         // Compute position of the 'New messages' separator, only once when
         // joining a channel to keep it in the thread when new messages arrive
         if (_.isUndefined(this.messagesSeparatorPosition)) {
@@ -411,14 +410,13 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             }
         }
         return {
-            threadID: this._thread.getID(),
             displayLoadMore: !this._thread.isAllHistoryLoaded(this.domain),
             displayMarkAsRead: this._thread.getID() === 'mailbox_inbox',
             messagesSeparatorPosition: this.messagesSeparatorPosition,
             squashCloseMessages: this._thread.getType() !== 'mailbox' &&
                                     !this._thread.isMassMailing(),
-            displayEmptyChannel: !messages.length && !this.domain.length,
-            displayNoMatchFound: !messages.length && this.domain.length,
+            displayEmptyThread: !this._thread.hasMessages() && !this.domain.length,
+            displayNoMatchFound: !this._thread.hasMessages() && this.domain.length,
             displaySubjectOnMessages:
                 (
                     this._thread.getType() !== 'mailbox' &&
@@ -484,15 +482,15 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         var oldestMessageID = this.$('.o_thread_message').first().data('messageId');
         var oldestMessageSelector = '.o_thread_message[data-message-id="' + oldestMessageID + '"]';
         var offset = -dom.getPosition(document.querySelector(oldestMessageSelector)).top;
-        return this._thread.getMessages(this.domain, true)
-            .then(function (messages) {
+        return this._thread.fetchMessages(this.domain, true)
+            .then(function () {
                 if (self.messagesSeparatorPosition === 'top') {
                     // reset value to re-compute separator position
                     self.messagesSeparatorPosition = undefined;
                 }
                 self._threadWidget.render(
-                    messages,
-                    self._getThreadRenderingOptions(messages)
+                    self._thread,
+                    self._getThreadRenderingOptions()
                 );
                 offset += dom.getPosition(document.querySelector(oldestMessageSelector)
                 ).top;
@@ -696,7 +694,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
-            displayHelp: true,
             loadMoreOnScroll: true
         });
 
@@ -1161,7 +1158,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * @private
      * @param {mail.model.Message} message
-     * @param {string} type the channel type
+     * @param {string} [type] the channel
      */
     _onMessageUpdated: function (message, type) {
         var self = this;
@@ -1171,12 +1168,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             (currentThreadID === 'mailbox_inbox' && !message.isNeedaction()) ||
             (currentThreadID === 'mailbox_moderation' && !message.needsModeration())
         ) {
-            this._thread.getMessages(this.domain)
-                .then(function (messages) {
-                    var options = self._getThreadRenderingOptions(messages);
-                    self._threadWidget.removeMessageAndRender(message.getID(), messages, options)
+            this._thread.fetchMessages(this.domain)
+                .then(function () {
+                    var options = self._getThreadRenderingOptions();
+                    self._threadWidget.removeMessageAndRender(message.getID(), self._thread, options)
                         .then(function () {
-                            self._updateButtonStatus(messages.length === 0, type);
+                            self._updateButtonStatus(!self._thread.hasMessages(), type);
                         });
                 });
         } else if (_.contains(message.getThreadIDs(), currentThreadID)) {
@@ -1261,7 +1258,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             messageData.subtype = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
             messageData.subtype_id = false;
             messageData.message_type = 'comment';
-            messageData.content_subtype = 'html';
         }
         this._thread.postMessage(messageData)
             .then(function () {

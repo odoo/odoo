@@ -169,7 +169,12 @@ MailManager.include({
      */
     _makeChannel: function (data, options) {
         if (data.id === this.supportChannelUUID) {
-            return new SupportChannel(this, data, options, this._commands);
+            return new SupportChannel({
+                parent: this,
+                data: data,
+                options: options,
+                commands: this._commands
+            });
         }
         return this._super.apply(this, arguments);
     },
