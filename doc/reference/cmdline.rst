@@ -384,13 +384,6 @@ customize the amount of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
-translations
-------------
-
-.. option:: --i18n-import
-
-.. option:: --i18n-export
-
 emails
 ------
 

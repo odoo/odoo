@@ -86,8 +86,8 @@ class Event(models.Model):
                     if not event.menu_id:
                         root_menu = self.env['website.menu'].create({'name': event.name})
                         event.menu_id = root_menu
-                    for sequence, (name, url, xml_id) in enumerate(self._get_menu_entries()):
-                        self._create_menu(sequence, name, url, xml_id)
+                    for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
+                        event._create_menu(sequence, name, url, xml_id)
         return res
 
     def _create_menu(self, sequence, name, url, xml_id):
@@ -163,14 +163,15 @@ class Event(models.Model):
     def _get_event_resource_urls(self, attendees):
         url_date_start = datetime.strptime(self.date_begin, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
         url_date_stop = datetime.strptime(self.date_end, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
-        params = werkzeug.url_encode({
+        params = {
             'action': 'TEMPLATE',
             'text': self.name,
             'dates': url_date_start + '/' + url_date_stop,
             'details': self.name,
-        })
+        }
         if self.address_id:
-            params['location'] = self.sudo().address_id.contact_address.replace('\n', ' ')
-        google_url = GOOGLE_CALENDAR_URL + params
-        iCal_url = '/event/%s/ics?%s' % (slug(self), params)
+            params.update(location=self.sudo().address_id.contact_address.replace('\n', ' '))
+        encoded_params = werkzeug.url_encode(params)
+        google_url = GOOGLE_CALENDAR_URL + encoded_params
+        iCal_url = '/event/%s/ics?%s' % (slug(self), encoded_params)
         return {'google_url': google_url, 'iCal_url': iCal_url}
