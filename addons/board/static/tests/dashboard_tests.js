@@ -279,7 +279,7 @@ QUnit.test('can open record using action form view', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
