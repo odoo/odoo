@@ -112,14 +112,15 @@ var MailManager =  AbstractService.extend({
             if (!options.silent) {
                 this._mailBus.trigger('new_message', message);
             }
-        }
-        if (data.moderation_status === 'accepted') {
-            message.setModerationStatus('accepted', {
-                additionalThreadIDs: data.channel_ids
-            });
-        }
-        if (options.domain && options.domain !== []) {
-            this._addMessageToThreads(message, options.domain);
+        } else {
+            if (data.moderation_status === 'accepted') {
+                message.setModerationStatus('accepted', {
+                    additionalThreadIDs: data.channel_ids
+                });
+            }
+            if (options.domain && options.domain !== []) {
+                this._addMessageToThreads(message, options.domain);
+            }
         }
         return message;
     },
@@ -498,7 +499,12 @@ var MailManager =  AbstractService.extend({
      */
     _addMailbox: function (data, options) {
         options = typeof options === 'object' ? options : {};
-        var mailbox = new Mailbox(this, data, options, this._commands);
+        var mailbox = new Mailbox({
+            parent: this,
+            data: data,
+            options: options,
+            commands: this._commands
+        });
         this._threads.push(mailbox);
         this._sortThreads();
         return mailbox;
@@ -543,7 +549,11 @@ var MailManager =  AbstractService.extend({
                         thread.incrementUnreadCounter();
                     }
                     if (thread.isChat() && options.showNotification) {
-                        if (!self._isDiscussOpen() && !config.device.isMobile) {
+                        if (
+                            !self._isDiscussOpen() &&
+                            !config.device.isMobile &&
+                            !thread.isDetached()
+                        ) {
                             // automatically open thread window
                             // while keeping it unread
                             thread.detach({ passively: true });
@@ -676,7 +686,7 @@ var MailManager =  AbstractService.extend({
             var isSameDocument = true;
             var sameModelItem = _.find(items, function (item) {
                 if (
-                    item.failure.isLinkedToDocumentThread() &&
+                    item.failure.isLinkedToDocument() &&
                     (item.failure.getDocumentModel() === failure.getDocumentModel())
                 ) {
                     isSameDocument = item.failure.getDocumentID() === failure.getDocumentID();
@@ -685,7 +695,7 @@ var MailManager =  AbstractService.extend({
                 return false;
             });
 
-            if (failure.isLinkedToDocumentThread() && sameModelItem) {
+            if (failure.isLinkedToDocument() && sameModelItem) {
                 unreadCounter = sameModelItem.unreadCounter + 1;
                 isSameDocument = sameModelItem.isSameDocument && isSameDocument;
                 var index = _.findIndex(items, sameModelItem);
@@ -710,7 +720,7 @@ var MailManager =  AbstractService.extend({
             _.extend(preview, item.failure.getPreview(), {
                 unreadCounter: item.unreadCounter,
             });
-            if (!item.failure.isSameDocument) {
+            if (!item.isSameDocument) {
                 preview.documentID = undefined;
             }
             return preview;
@@ -874,19 +884,19 @@ var MailManager =  AbstractService.extend({
     _initializeMailboxes: function (data) {
         this._addMailbox({
             id: 'inbox',
-            name: _lt("Inbox"),
+            name: _t("Inbox"),
             mailboxCounter: data.needaction_inbox_counter || 0,
         });
         this._addMailbox({
             id: 'starred',
-            name: _lt("Starred"),
+            name: _t("Starred"),
             mailboxCounter: data.starred_counter || 0,
         });
 
         if (data.is_moderator) {
             this._addMailbox({
                 id: 'moderation',
-                name: _lt("Moderate Messages"),
+                name: _t("Moderate Messages"),
                 mailboxCounter: data.moderation_counter || 0,
             });
         }
@@ -957,9 +967,19 @@ var MailManager =  AbstractService.extend({
      */
     _makeChannel: function (data, options) {
         if (_.size(data.direct_partner) > 0) {
-            return new DM(this, data, options, this._commands);
+            return new DM({
+                parent: this,
+                data: data,
+                options: options,
+                commands: this._commands
+            });
         }
-        return new Channel(this, data, options, this._commands);
+        return new Channel({
+            parent: this,
+            data: data,
+            options: options,
+            commands: this._commands,
+        });
     },
     /**
      * Creates a new instance of Message with the given data.

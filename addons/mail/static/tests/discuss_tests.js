@@ -102,6 +102,46 @@ QUnit.test('basic rendering', function (assert) {
     });
 });
 
+QUnit.test('unescape channel name in the sidebar', function (assert) {
+    // When the user creates a channel, the channel's name is escaped, this in
+    // order to prevent XSS attacks. However, the user should see visually the
+    // unescaped name of the channel. For instance, when the user creates a
+    // channel named  "R&D", he should see "R&D" and not "R&amp;D".
+    assert.expect(2);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "R&amp;D",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $sidebar = discuss.$('.o_mail_discuss_sidebar');
+
+        var $channel = $sidebar.find('.o_mail_discuss_item[data-thread-id=1]');
+        assert.strictEqual($channel.length, 1,
+            "should have the channel item for channel 1 in the sidebar");
+        assert.strictEqual($channel.find('.o_thread_name').text().replace(/\s/g, ''),
+            "#R&D",
+            "should have unescaped channel name in the sidebar");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 QUnit.test('@ mention in channel', function (assert) {
     assert.expect(34);
     var done = assert.async();

@@ -125,9 +125,9 @@ MailManager.include({
             threadWindow.appendTo($(this.THREAD_WINDOW_APPENDTO))
                 .then(function () {
                     self._repositionThreadWindows();
-                    return thread.getMessages();
-                }).then(function (messages) {
-                    threadWindow.render(messages);
+                    return thread.fetchMessages();
+                }).then(function () {
+                    threadWindow.render();
                     threadWindow.threadWidget.scrollToBottom();
                     // setTimeout to prevent to execute handler on first
                     // scrollTo, which is asynchronous
@@ -544,9 +544,9 @@ MailManager.include({
                 if (messageVisible && !threadWindow.isPassive()) {
                     thread.markAsRead();
                 }
-                thread.getMessages()
-                    .then(function (messages) {
-                        threadWindow.render(messages);
+                thread.fetchMessages()
+                    .then(function () {
+                        threadWindow.render();
                         if (scrollBottom && messageVisible) {
                             threadWindow.threadWidget.scrollToBottom();
                         }
@@ -637,7 +637,7 @@ MailManager.include({
         this._hiddenThreadWindowsUnreadCounter = 0;
         _.each(this._threadWindows, function (threadWindow) {
             if (thread.getID() === threadWindow.getID()) {
-                threadWindow.updateHeader();
+                threadWindow.renderHeader();
                 if (thread.getUnreadCounter() === 0) {
                     threadWindow.removePassive();
                 }
@@ -663,7 +663,7 @@ MailManager.include({
     _onUpdateDmPresence: function (thread) {
         _.each(this._threadWindows, function (threadWindow) {
             if (thread.getID() === threadWindow.getID()) {
-                threadWindow.updateHeader();
+                threadWindow.renderHeader();
             }
         });
     },

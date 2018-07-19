@@ -30,13 +30,13 @@
         <div class="o_mail_discuss_sidebar">
             <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
                  data-thread-id="mailbox_inbox">
-                <span class="o_channel_name"><i class="fa fa-inbox mr8"/>Inbox</span>
+                <span class="o_thread_name"><i class="fa fa-inbox mr8"/>Inbox</span>
                 <t t-set="counter" t-value="needactionCounter"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
             </div>
             <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
                  data-thread-id="mailbox_starred">
-                <span class="o_channel_name"><i class="fa fa-star-o mr8"/>Starred</span>
+                <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
                 <t t-set="counter" t-value="starredCounter"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
             </div>
@@ -91,7 +91,7 @@
 
     <!--
         Don't display the thread type if there is no thread of such type
-        and the 'add a channel' option is disabled for this type
+        and the 'add a thread' option is disabled for this type
 
         @param {mail.model.Thread[]} threads
         @param {boolean} [disableAddThread] whether the 'Add thread' action should disabled or not for the considered discuss item category
@@ -143,7 +143,7 @@
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
-                    <t t-esc="thread.getName()"/>
+                    <t t-esc="_.unescape(thread.getName())"/>
                     <i t-if="thread.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <span t-attf-class="fa fa-cog o_mail_channel_settings"
@@ -278,7 +278,7 @@
         <div t-attf-class="o_mail_preview #{preview.unreadCounter &gt; 0 ? 'o_preview_unread' : ''}"
              t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel" t-att-data-unread-counter="preview.unreadCounter">
             <div t-attf-class="o_mail_preview_image #{preview.documentModel ? 'o_mail_preview_app' : ''}">
-                <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Channel"/>
+                <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Preview"/>
                 <i t-if="preview.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
                 <i t-if="preview.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
             </div>

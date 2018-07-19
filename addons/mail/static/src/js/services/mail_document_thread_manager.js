@@ -99,11 +99,14 @@ MailManager.include({
     getOrAddDocumentThread: function (params) {
         var thread = this.getDocumentThread(params.resModel, params.resID);
         if (!thread) {
-            thread = new DocumentThread(this, {
-                messageIDs: params.messageIDs,
-                name: params.name,
-                resID: params.resID,
-                resModel: params.resModel,
+            thread = new DocumentThread({
+                parent: this,
+                data: {
+                    messageIDs: params.messageIDs,
+                    name: params.name,
+                    resID: params.resID,
+                    resModel: params.resModel,
+                },
             });
             this._threads.push(thread);
         } else if (params.name) {
