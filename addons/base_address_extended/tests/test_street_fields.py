@@ -51,5 +51,5 @@ class TestStreetFields(TransactionCase):
         self.write_and_assert(p1, {'street': 'Chaussee de Namur'}, 'Chaussee de Namur', 'Chaussee de Namur', '', '')
         self.write_and_assert(p1, {'street_name': 'Chee de Namur', 'street_number': '40'}, 'Chee de Namur, 40', 'Chee de Namur', '40', '')
         self.write_and_assert(p1, {'street_number2': '4'}, 'Chee de Namur, 40/4', 'Chee de Namur', '40', '4')
-        #we don't recompute the street fields when we change the country
-        self.write_and_assert(p1, {'country_id': self.env.ref('base.us').id}, 'Chee de Namur, 40/4', 'Chee de Namur', '40', '4')
+        #we do recompute the street fields when we change the country
+        self.write_and_assert(p1, {'country_id': self.env.ref('base.us').id}, '40/4 Chee de Namur', 'Chee de Namur', '40', '4')
