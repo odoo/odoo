@@ -185,8 +185,13 @@
             <field name="name">3a. Leveringen naar landen buiten de EU (uitvoer) (omzet)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tag_nl_13" model="account.account.tag">
-            <field name="name">3b. Leveringen naar/diensten in landen binnen de EU (omzet)</field>
+        <!-- Keep tag_nl_40 & tag_nl_41 to avoid migration issue. -->
+        <record id="tag_nl_40" model="account.account.tag">
+            <field name="name">3b. Leveringen naar/diensten in landen binnen de EU (omzet) (producten)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_41" model="account.account.tag">
+            <field name="name">3b. Leveringen naar/diensten in landen binnen de EU (omzet) (diensten)</field>
             <field name="applicability">taxes</field>
         </record>
         <record id="tag_nl_14" model="account.account.tag">
@@ -269,10 +274,6 @@
             <field name="name">5b. Voorbelasting (BTW)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tag_nl_34" model="account.account.tag">
-            <field name="name">Voorbelasting (BTW) bis</field>
-            <field name="applicability">taxes</field>
-        </record>
         <record id="tag_nl_35" model="account.account.tag">
             <field name="name">5c. Subtotaal (rubriek 5a min 5b) (BTW)</field>
             <field name="applicability">taxes</field>
@@ -291,14 +292,6 @@
         </record>
         <record id="tag_nl_39" model="account.account.tag">
             <field name="name">5g. Totaal te betalen/terug te vragen (BTW)</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_40" model="account.account.tag">
-            <field name="name">ICP: Product</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_nl_41" model="account.account.tag">
-            <field name="name">ICP: Dienst</field>
             <field name="applicability">taxes</field>
         </record>
 
