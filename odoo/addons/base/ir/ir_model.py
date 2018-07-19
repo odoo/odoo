@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 import dateutil
+import functools
 import logging
 import time
 from collections import defaultdict
@@ -546,6 +547,9 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        # Candidates are custom ir.model.fields that are either of type one2many or
+        # related or a compute field and will potentially be unlinked if they are a dependant
+        # of the current ir.model.fields being deleted (in uninstall mode only).
         candidates = self.search([
             '&',
                 ('state', '=', 'manual'),
@@ -554,50 +558,38 @@ class IrModelFields(models.Model):
             '|',
                 ('depends', '!=', False),
                 ('ttype', '=', 'one2many'),
-        ])
+        ]) - self
 
         def resolve_deps(candidate):
-            fields = []
-            deps = candidate.depends or candidate.related
-            # We can assume deps is valid as it has already been stored in the DB
-            for dep in deps.split(","):
-                model = self.env[candidate.model]
-                names = dep.strip().split(".")
-                for name in names:
-                    field = model._fields[name]
-                    model = model[name]
-                fields.append(field)
+            model = self.env[candidate.model]
+            field = model._fields[candidate.name]
+            return [dep[1] for dep in field.resolve_deps(model)]
 
-            return fields
-
+        relations_to_unlink = []
         for candidate in candidates:
             for rec in self:
-                manual_unlink = False
                 model = self.env[rec.model]
                 field = model._fields[rec.name]
-                if candidate.ttype == 'one2many' and rec.ttype == 'many2one':
-                    if (candidate.relation == rec.model
-                            and candidate.relation_field == rec.name):
-                        if self._context.get(MODULE_UNINSTALL_FLAG):
-                            # candidate and rec are related, unlink candidate
-                            candidate.unlink()
-                            continue
-                        manual_unlink = True
-                if candidate.depends or candidate.related:
-                    # works for all computed fields, including relateds
+                if (candidate.ttype == 'one2many'
+                        and rec.ttype == 'many2one'
+                        and candidate.relation == rec.model
+                        and candidate.relation_field == rec.name):
+                    # candidate is rec's inverse, mark candidate as to unlink.
+                    relations_to_unlink.append((candidate, rec))
+                elif candidate.depends or candidate.related:
+                    # resolve candidate's dependencies and find out if any of them are the record
+                    # currently being unlinked and if so, mark candidate as to unlink
+                    # works for all computed fields, including relateds.
                     dep_fields = resolve_deps(candidate)
                     if field in dep_fields:
-                        # candidate depends on field, unlink candidate
-                        if self._context.get(MODULE_UNINSTALL_FLAG):
-                            candidate.unlink()
-                            continue
-                        manual_unlink = True
+                        relations_to_unlink.append((candidate, rec))
 
-                if manual_unlink:
-                    # do not unlink candidate if not in uninstall mode
-                    msg = _("The field '%s' cannot be removed because "
-                            "the field '%s' depends on it.")
-                    raise UserError(msg % (rec.name, candidate.name))
+        if not self._context.get(MODULE_UNINSTALL_FLAG) and relations_to_unlink:
+            # do not unlink candidate if not in uninstall mode
+            msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
+            raise UserError(msg % relations_to_unlink[0])
+        elif relations_to_unlink:
+            functools.reduce(lambda x, y: x | y, (rel[0] for rel in relations_to_unlink)).unlink()
 
         self = self.filtered(lambda record: record.state == 'manual')
         if not self:
