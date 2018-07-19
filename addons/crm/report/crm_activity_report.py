@@ -41,7 +41,6 @@ class ActivityReport(models.Model):
     expected_revenue = fields.Monetary('Prorated Revenue', currency_field="company_currency", readonly=True)
     day_close = fields.Float('Days to Close', readonly=True)
 
-
     def _select(self):
         return """
             SELECT
