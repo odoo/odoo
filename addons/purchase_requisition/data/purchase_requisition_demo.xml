@@ -23,6 +23,7 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">5</field>
         </record>
+        <function model="purchase.requisition" name="action_in_progress" eval="[[ref('requisition1')]]"/>
 
         <!--Resource: purchase.order-->
 
