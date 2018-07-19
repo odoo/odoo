@@ -601,7 +601,7 @@ class AccountInvoice(models.Model):
             default_template_id=template and template.id or False,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
-            custom_layout="mail.mail_notification_borders",
+            custom_layout="mail.mail_notification_paynow",
             force_email=True
         )
         return {
