@@ -4770,7 +4770,9 @@ class BaseModel(object):
             See :meth:`~._patch_method`.
         """
         method = getattr(cls, name)
-        setattr(cls, name, method.origin)
+        delattr(cls, name)
+        if method.origin is not getattr(cls, name, None):
+            setattr(cls, name, method.origin)
 
     #
     # Instance creation
