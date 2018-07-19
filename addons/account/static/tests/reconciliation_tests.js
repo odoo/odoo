@@ -1549,7 +1549,7 @@ QUnit.module('account', {
         testUtils.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
-                if (args.method === 'process_reconciliations') {
+                if (args.method === 'process_bank_statement_line') {
                     assert.deepEqual(args.args,
                         [
                             [5], // Id of the bank statement line
@@ -1570,7 +1570,7 @@ QUnit.module('account', {
                               payment_aml_ids: [],
                               partner_id: 8,
                               new_aml_dicts: []}]
-                        ], "should call process_reconciliations with partial reconcile values");
+                        ], "should call process_bank_statement_line with partial reconcile values");
                 }
                 return this._super(route, args);
             },
@@ -1642,7 +1642,7 @@ QUnit.module('account', {
         testUtils.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
-                if (args.method === 'process_reconciliations') {
+                if (args.method === 'process_bank_statement_line') {
                     assert.deepEqual(args.args,
                         [
                             [5], // Id of the bank statement line
@@ -1670,7 +1670,7 @@ QUnit.module('account', {
                                  name: 'SAJ/2014/002 and SAJ/2014/003',
                                 }
                               ]}]
-                        ], "should call process_reconciliations with new aml dict reconcile values");
+                        ], "should call process_bank_statement_line with new aml dict reconcile values");
                 }
                 return this._super(route, args);
             },
