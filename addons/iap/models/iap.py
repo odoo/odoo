@@ -157,7 +157,9 @@ class IapAccount(models.Model):
     def get_credits_url(self, service_name, base_url='', credit=0):
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         if not base_url:
-            base_url = get_endpoint(self.env)
+            endpoint = get_endpoint(self.env)
+            route = '/iap/1/credit'
+            base_url = endpoint + route
         account_token = self.get(service_name).account_token
         d = {
             'dbuuid': dbuuid,
