@@ -137,6 +137,12 @@ class Partner(models.Model):
             for k, v in vals.items():
                 partner[k] = v
 
+    def write(self, vals):
+        res = super(Partner, self).write(vals)
+        if 'country_id' in vals:
+            self._set_street()
+        return res
+
 
 class Company(models.Model):
     _inherit = 'res.company'
