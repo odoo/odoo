@@ -46,9 +46,11 @@ class MailActivityType(models.Model):
              ' and not available when managing activities for other models.')
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Recommended Next Activities')
     previous_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Preceding Activities')
     category = fields.Selection([
         ('default', 'Other')], default='default',
