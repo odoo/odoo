@@ -4,7 +4,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='google_analytics_dashboard_setting']" position="before">
+            <div id="google_analytics_dashboard_setting" position="after">
                 <div class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
                     <div class="o_setting_left_pane">
                         <field name="website_form_enable_metadata"/>
@@ -17,7 +17,24 @@
                         </div>
                     </div>
                 </div>
-            </xpath>
+            </div>
+            <div id="webmaster_settings" position="after">
+                <h2>Communication</h2>
+                <div class="row mt16 o_settings_container" id="communication_settings">
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="contact_form_install_setting">
+                        <div class="o_setting_right_pane">
+                            <label for="id" string="Default Contact Form"/>
+                            <div class="text-muted" id="msg_contact_form_install_setting">
+                                When user submit contact us form mail received on this email address
+                            </div>
+                            <div class="row mt16">
+                                <label class="col-md-3 o_light_label" string="Recipient Email" for="contact_form_recipient_email"/>
+                                <field name="contact_form_recipient_email"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 </odoo>

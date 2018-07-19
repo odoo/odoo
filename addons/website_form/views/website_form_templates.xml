@@ -4,9 +4,9 @@
     <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
         <xpath expr="//div[@name='mail_button']" position="replace">
             <div id="contactus_form">
-                <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email or ''}" />
+                <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': website.contact_form_recipient_email or ''}" />
                 <div>
-                    <form id="contactus_form" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data">
+                    <form id="contactus_form" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form o_website_form_default_contact_form form-horizontal container-fluid mt32" enctype="multipart/form-data">
                         <div class="form-group form-field o_website_form_custom o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="Name">Your Name</label>
                             <div class="col-md-7 col-sm-8">
@@ -100,6 +100,16 @@
                 </div>
             </div>
         </form>
+    </template>
+
+    <template id="snippet_options" inherit_id="website.snippet_options">
+        <xpath expr="//div" position="after">
+            <div data-js="default_contact_form_editor" data-selector=".o_website_form_default_contact_form">
+                <li data-change-recipient-email="" data-no-preview="true">
+                    <a>Change Recipient Email</a>
+                </li>
+            </div>
+        </xpath>
     </template>
 
 </odoo>
