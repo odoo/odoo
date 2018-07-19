@@ -39,6 +39,23 @@
     </xpath>
   </template>
 
+   <template id="products_item" inherit_id="website_sale.products_item">
+     <xpath expr="//a[@t-field='product.name']/../.." position="after">
+       <div class='availability_messages'/>
+      </xpath>
+   </template>
+
+    <template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
+        <xpath expr="//t[@t-if='len(product.product_variant_ids) == 1']/a/span" position="replace">
+            <t t-if="product.inventory_availability == 'never' or
+                     product.inventory_availability == 'custom' or
+                     product.inventory_availability == 'always' and product.product_variant_ids[0].virtual_available &gt; 0.0 or
+                     product.inventory_availability == 'threshold' and product.product_variant_ids[0].virtual_available &gt; 0.0">
+                <span class="fa fa-shopping-cart"/>
+            </t>
+        </xpath>
+    </template>
+
   <template id="website_sale_stock_payment" inherit_id="website_sale.cart_summary">
      <xpath expr="//table[@id='cart_products']//td[hasclass('td-qty')]" position="inside">
       <t t-if='line._get_stock_warning(clear=False)'>
