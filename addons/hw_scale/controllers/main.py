@@ -28,7 +28,7 @@ except ImportError:
 def _toledo8217StatusParse(status):
     """ Parse a scale's status, returning a `(weight, weight_info)` pair. """
     weight, weight_info = None, None
-    stat = ord(status[status.index('?') + 1])
+    stat = status[status.index(b'?') + 1]
     if stat == 0:
         weight_info = 'ok'
     else:
@@ -68,17 +68,17 @@ Toledo8217Protocol = ScaleProtocol(
     parity=serial.PARITY_EVEN,
     timeout=1,
     writeTimeout=1,
-    weightRegexp="\x02\\s*([0-9.]+)N?\\r",
-    statusRegexp="\x02\\s*(\\?.)\\r",
+    weightRegexp=b"\x02\\s*([0-9.]+)N?\\r",
+    statusRegexp=b"\x02\\s*(\\?.)\\r",
     statusParse=_toledo8217StatusParse,
     commandDelay=0.2,
     weightDelay=0.5,
     newWeightDelay=0.2,
-    commandTerminator='',
-    weightCommand='W',
-    zeroCommand='Z',
-    tareCommand='T',
-    clearCommand='C',
+    commandTerminator=b'',
+    weightCommand=b'W',
+    zeroCommand=b'Z',
+    tareCommand=b'T',
+    clearCommand=b'C',
     emptyAnswerValid=False,
     autoResetWeight=False,
 )
@@ -98,15 +98,15 @@ ADAMEquipmentProtocol = ScaleProtocol(
     weightRegexp=r"\s*([0-9.]+)kg", # LABEL format 3 + KG in the scale settings, but Label 1/2 should work
     statusRegexp=None,
     statusParse=None,
-    commandTerminator="\r\n",
+    commandTerminator=b"\r\n",
     commandDelay=0.2,
     weightDelay=0.5,
     newWeightDelay=5,  # AZExtra beeps every time you ask for a weight that was previously returned!
                        # Adding an extra delay gives the operator a chance to remove the products
                        # before the scale starts beeping. Could not find a way to disable the beeps.
-    weightCommand='P',
-    zeroCommand='Z',
-    tareCommand='T',
+    weightCommand=b'P',
+    zeroCommand=b'Z',
+    tareCommand=b'T',
     clearCommand=None, # No clear command -> Tare again
     emptyAnswerValid=True, # AZExtra does not answer unless a new non-zero weight has been detected
     autoResetWeight=True,  # AZExtra will not return 0 after removing products
@@ -165,8 +165,8 @@ class Scale(Thread):
             if not char:
                 break
             else:
-                answer.append(char)
-        return ''.join(answer)
+                answer.append(bytes(char))
+        return b''.join(answer)
 
     def _parse_weight_answer(self, protocol, answer):
         """ Parse a scale's answer to a weighing request, returning

@@ -6,7 +6,7 @@
 Installing Odoo
 ===============
 
-There are mutliple ways to install Odoo, or not install it at all, depending
+There are multiple ways to install Odoo, or not install it at all, depending
 on the intended use case.
 
 This documents attempts to describe most of the installation options.
@@ -588,7 +588,7 @@ Docker
 ======
 
 The full documentation on how to use Odoo with Docker can be found on the
-offcial Odoo `docker image <https://registry.hub.docker.com/_/odoo/>`_ page.
+official Odoo `docker image <https://registry.hub.docker.com/_/odoo/>`_ page.
 
 .. _demo: https://demo.odoo.com
 .. _docker: https://www.docker.com
