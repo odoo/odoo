@@ -1630,7 +1630,8 @@ class Datetime(Field):
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
 _BINARY = memoryview
 if pycompat.PY2:
-    _BINARY = buffer #pylint: disable=buffer-builtin
+    #pylint: disable=buffer-builtin,undefined-variable
+    _BINARY = buffer
 
 class Binary(Field):
     type = 'binary'
