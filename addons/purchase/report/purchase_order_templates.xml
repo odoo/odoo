@@ -52,7 +52,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr t-foreach="o.order_line" t-as="line">
+                    <t t-foreach="o.order_line" t-as="line">
+                        <tr>
                         <td>
                             <span t-field="line.name"/>
                         </td>
@@ -73,7 +74,8 @@
                             <span t-field="line.price_subtotal"
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
-                    </tr>
+                        </tr>
+                    </t>
                 </tbody>
             </table>
 
