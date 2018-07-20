@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import collections
+import unicodedata
+
 import chardet
 import datetime
 import io
@@ -633,7 +636,7 @@ class Import(models.TransientModel):
         if value.startswith('(') and value.endswith(')'):
             value = value[1:-1]
             negative = True
-        float_regex = re.compile(r'([-]?[0-9.,]+)')
+        float_regex = re.compile(r'([+-]?[0-9.,]+)')
         split_value = [g for g in float_regex.split(value) if g]
         if len(split_value) > 2:
             # This is probably not a float
@@ -656,17 +659,45 @@ class Import(models.TransientModel):
 
     @api.model
     def _parse_float_from_data(self, data, index, name, options):
-        thousand_separator = options.get('float_thousand_separator', ' ')
-        decimal_separator = options.get('float_decimal_separator', '.')
         for line in data:
             line[index] = line[index].strip()
             if not line[index]:
                 continue
+            thousand_separator, decimal_separator = self._infer_separators(line[index], options)
             line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
             if line[index] is False:
                 raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
+
+    def _infer_separators(self, value, options):
+        """ Try to infer the shape of the separators: if there are two
+        different "non-numberic" characters in the number, the
+        former/duplicated one would be grouping ("thousands" separator) and
+        the latter would be the decimal separator. The decimal separator
+        should furthermore be unique.
+        """
+        # can't use \p{Sc} using re so handroll it
+        non_number = [
+            # any character
+            c for c in value
+            # which is not a numeric decoration (() is used for negative
+            # by accountants)
+            if c not in '()-+'
+            # which is not a digit or a currency symbol
+            if unicodedata.category(c) not in ('Nd', 'Sc')
+        ]
+
+        counts = collections.Counter(non_number)
+        # if we have two non-numbers *and* the last one has a count of 1,
+        # we probably have grouping & decimal separators
+        if len(counts) == 2 and counts[non_number[-1]] == 1:
+            return [character for character, _count in counts.most_common()]
+
+        # otherwise get whatever's in the options, or fallback to a default
+        thousand_separator = options.get('float_thousand_separator', ' ')
+        decimal_separator = options.get('float_decimal_separator', '.')
+        return thousand_separator, decimal_separator
 
     @api.multi
     def _parse_import_data(self, data, import_fields, options):
