@@ -602,10 +602,14 @@ class MailActivityMixin(models.AbstractModel):
             activities |= self.env['mail.activity'].create(create_vals)
         return activities
 
-    def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None):
+    def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None, new_user_id=None):
         """ Reschedule some automated activities. Activities to reschedule are
         selected based on type xml ids and optionally by user. Purpose is to be
-        able to change the deadline, not anything else currently. """
+        able to
+
+         * update the deadline to date_deadline;
+         * update the responsible to new_user_id;
+        """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 
@@ -622,9 +626,12 @@ class MailActivityMixin(models.AbstractModel):
             domain = ['&'] + domain + [('user_id', '=', user_id)]
         activities = self.env['mail.activity'].search(domain)
         if activities:
-            activities.write({
-                'date_deadline': date_deadline,
-            })
+            write_vals = {}
+            if date_deadline:
+                write_vals['date_deadline'] = date_deadline
+            if new_user_id:
+                write_vals['user_id'] = new_user_id
+            activities.write(write_vals)
         return activities
 
     def activity_feedback(self, act_type_xmlids, user_id=None, feedback=None):
