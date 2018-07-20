@@ -187,44 +187,37 @@
             <field name="priority">2048</field>
             <field name="arch" type="xml">
                 <form class="o_company_document_layout">
-                    <group col="2">
-                        <group>
-                            <label for="external_report_layout" string="Template" colspan="2" />
-                            <field name="external_report_layout" colspan="2" nolabel="1"
-                                   class="image_selection_container"
-                                   widget="image_selection" options="{
-                                        'background': {
-                                            'image_link': '/base/static/img/preview_background.png',
-                                            'preview_link': '/base/static/pdf/preview_background.pdf'
-                                        },
-                                        'boxed': {
-                                            'image_link': '/base/static/img/preview_boxed.png',
-                                            'preview_link': '/base/static/pdf/preview_boxed.pdf'
-                                        },
-                                        'clean': {
-                                            'image_link': '/base/static/img/preview_clean.png',
-                                            'preview_link': '/base/static/pdf/preview_clean.pdf'
-                                        },
-                                        'standard': {
-                                            'image_link': '/base/static/img/preview_standard.png',
-                                            'preview_link': '/base/static/pdf/preview_standard.pdf'
-                                        }
-                                    }" />
-                        </group>
-                        <group>
-                            <label for="logo" colspan="2" string="Company logo" />
-                            <field name="logo" widget="image" nolabel="1" colspan="2" />
-                            <label for="report_header" colspan="2" string="Company Tagline" />
-                            <field name="report_header" nolabel="1" colspan="2"
-                                   placeholder="e.g. Global Business Solutions" />
-                            <label for="report_footer" colspan="2"
-                                   string="Extra information in the footer" />
-                            <field name="report_footer" nolabel="1" colspan="2"
-                                   placeholder="e.g. Opening hours, bank accounts (one per line)" />
-                        </group>
+                    <group>
+                        <field name="logo" widget="image" />
+                        <field name="external_report_layout" string="Layout"
+                               class="image_selection_container"
+                               widget="image_selection" options="{
+                                    'background': {
+                                        'image_link': '/base/static/img/preview_background.png',
+                                        'preview_link': '/base/static/pdf/preview_background.pdf'
+                                    },
+                                    'boxed': {
+                                        'image_link': '/base/static/img/preview_boxed.png',
+                                        'preview_link': '/base/static/pdf/preview_boxed.pdf'
+                                    },
+                                    'clean': {
+                                        'image_link': '/base/static/img/preview_clean.png',
+                                        'preview_link': '/base/static/pdf/preview_clean.pdf'
+                                    },
+                                    'standard': {
+                                        'image_link': '/base/static/img/preview_standard.png',
+                                        'preview_link': '/base/static/pdf/preview_standard.pdf'
+                                    }
+                                }" />
+                        <field name="report_header"  widget="char"
+                               placeholder="e.g. Global Business Solutions" />
+                        <field name="report_footer" string="Footer"
+                               placeholder="e.g. Opening hours, bank accounts (one per line)" />
+                        <field name="paperformat_id" widget="selection" />
                     </group>
                     <footer>
-                        <button special="save" string="Save" class="btn btn-primary" type="object" />
+                        <button special="save" string="Save"
+                                class="btn btn-primary" type="object" />
                         <button special="cancel" string="Cancel" />
                     </footer>
                 </form>

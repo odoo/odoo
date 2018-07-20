@@ -55,7 +55,7 @@ class Company(models.Model):
     website = fields.Char(related='partner_id.website')
     vat = fields.Char(related='partner_id.vat', string="Tax ID")
     company_registry = fields.Char()
-    paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
+    paperformat_id = fields.Many2one('report.paperformat', 'Paper Format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout = fields.Selection([
         ('background', 'Background'),
         ('boxed', 'Boxed'),
@@ -66,8 +66,9 @@ class Company(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
-    base_onboarding_company_done = fields.Boolean("Onboarding company step done",
-        compute="_compute_base_onboarding_company_done")
+
+    base_onboarding_company_state = fields.Selection([
+        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
 
     @api.model_cr
     def init(self):
@@ -239,6 +240,7 @@ class Company(models.Model):
             currency = self.env['res.currency'].browse(values['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
+
         return super(Company, self).write(values)
 
     @api.constrains('parent_id')
@@ -266,15 +268,37 @@ class Company(models.Model):
         else:
             return res
 
-    @api.depends('street')
-    def _compute_base_onboarding_company_done(self):
-        """ The company onboarding step is marked as done if street1 is filled. """
-        for record in self:
-            record.base_onboarding_company_done = bool(record.street)
-
     @api.model
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
         action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
         action['res_id'] = self.env.user.company_id.id
         return action
+
+    def set_onboarding_step_done(self, step_name):
+        if self[step_name] == 'not_done':
+            self[step_name] = 'just_done'
+
+    def get_and_update_onbarding_state(self, onboarding_state, steps_states):
+        """ Needed to display onboarding animations only one time. """
+        old_values = {}
+        all_done = True
+        for step_state in steps_states:
+            old_values[step_state] = self[step_state]
+            if self[step_state] == 'just_done':
+                self[step_state] = 'done'
+            all_done = all_done and self[step_state] == 'done'
+
+        if all_done:
+            if self[onboarding_state] == 'not_done':
+                # string `onboarding_state` instead of variable name is not an error
+                old_values['onboarding_state'] = 'just_done'
+            else:
+                old_values['onboarding_state'] = 'done'
+            self[onboarding_state] = 'done'
+        return old_values
+
+    @api.multi
+    def action_save_onboarding_company_step(self):
+        if bool(self.street):
+            self.set_onboarding_step_done('base_onboarding_company_state')

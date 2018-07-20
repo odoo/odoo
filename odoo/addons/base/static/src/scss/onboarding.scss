@@ -16,23 +16,31 @@ $o-onboarding-violet-bg-2: #475DA4;
 $o-onboarding-violet-ui-1: #F39D9B;
 $o-onboarding-violet-ui-2: #FBEEC8;
 
+@mixin o-onboarding-vertical-gradient($startColor: #555, $endColor: #333) {
+    background-color: mix($startColor, $endColor);
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor);
+    background-image: -moz-linear-gradient(top, $startColor, $endColor);
+    background-image: -ms-linear-gradient(top, $startColor, $endColor);
+    background-image: -o-linear-gradient(top, $startColor, $endColor);
+    background-image: linear-gradient(to bottom, $startColor, $endColor);
+}
+
 .o_onboarding {
     position: relative;
     overflow: hidden;
-    background: white center;
+    background: white center top;
     background-size: cover;
-    background-position: center top;
     border-bottom: 1px solid gray('300');
 
     .o_onboarding_wrap {
         padding: $o-horizontal-padding*2 $o-horizontal-padding;
     }
-
-    .o_onboarding_folded_title {
-        display: none;
+    .o_onboarding_step_title {
+        cursor: pointer;
     }
 
-    .o_onboarding_btn_fold, .o_onboarding_btn_close {
+    .o_onboarding_btn_close {
         @include o-position-absolute(auto, 0, 0);
         padding: 6px $o-horizontal-padding + 6px;
         cursor: pointer;
@@ -40,10 +48,25 @@ $o-onboarding-violet-ui-2: #FBEEC8;
 
     .o_onboarding_btn_close {
         top: 0;
+        bottom: auto;
     }
-
-    .modal-body, .modal-title {
-        color: black;
+    .o_onboarding_completed_message {
+        @include o-position-absolute(auto, 0,0,0);
+        //transform: translateY(115%);
+        //transition: transform $o-onboarding-dot-timing;
+        box-shadow: 0 2px 10px gray(600);
+        padding: $o-horizontal-padding;
+        background-color: white;
+        color: $o-main-text-color;
+        opacity: 0;
+        z-index: -1;
+        &.o_onboarding_steps_just_done {
+            animation: o_onb_fadeIn ($o-onboarding-dot-timing*3);
+        }
+        &.o_onboarding_steps_done {
+            opacity: 1;
+            z-index: auto;
+        }
     }
 
     .o_onboarding_steps, .o_onboarding_step {
@@ -56,10 +79,6 @@ $o-onboarding-violet-ui-2: #FBEEC8;
 
         @include media-breakpoint-down(sm) {
            flex-flow: column nowrap;
-
-            .o_onboarding_folded_title {
-                border-right: none;
-            }
         }
     }
 
@@ -83,7 +102,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
 
         &:first-of-type {
             .o_onboarding_progress {
-                display: none;
+                display: none !important;
             }
 
             .o_onboarding_dot {
@@ -92,6 +111,9 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         }
 
         .o_onboarding_step_content {
+            @include media-breakpoint-up(lg) {
+                min-width: 230px;
+            }
             max-width: 230px;
             padding: 0 10px;
 
@@ -166,12 +188,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
             }
 
             .o_onboarding_all_done {
-                animation: bounceIn ($o-onboarding-dot-timing*2);
                 display: block;
-            }
-
-            .o_onboarding_step_content_info {
-                animation: o_onb_fadeIn ($o-onboarding-dot-timing*3);
             }
 
             + .o_onboarding_done {
@@ -188,6 +205,18 @@ $o-onboarding-violet-ui-2: #FBEEC8;
                 }
             }
         }
+
+        &.o_onboarding_just_done {
+
+            .o_onboarding_all_done {
+                animation: bounceIn ($o-onboarding-dot-timing*2);
+                display: block;
+            }
+            .o_onboarding_step_content_info {
+                animation: o_onb_fadeIn ($o-onboarding-dot-timing*3);
+            }
+        }
+
     }
 
     @keyframes o_onb_fadeIn {
@@ -196,105 +225,17 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         100% {opacity: 1}
     }
 
-    // =========    Transition    =========
-    &.collapsing {
-        transition: all .25s;
-        min-height: 30px;
-    }
-
-    // =========   Folded Design    =========
-    // ======================================
-
-    &.collapse:not(.in) {
-        min-height: 30px;
-        background-image: none!important;
-        display: block;
-
-        .o_onboarding_hide_folded {
-            display: none!important;
-        }
-
-        .o_onboarding_btn_fold {
-            top: 0;
-            left: 0;
-            transform: scaleY(-1);
-        }
-
-        .o_onboarding_wrap {
-            padding: 0 $o-horizontal-padding;
-
-            .o_onboarding_steps {
-                padding: 0;
-                justify-content: baseline;
-            }
-
-            .o_onboarding_folded_title {
-                padding: 6px 10px 6px 0;
-
-                @include media-breakpoint-up(md) {
-                    border-right: 1px solid gray('300');
-                }
-            }
-
-            .o_onboarding_folded_title, .o_onboarding_step {
-                display: inline-flex;
-            }
-
-            .o_onboarding_step {
-                align-items: flex-start;
-                flex: 0 1 auto;
-                padding-right: 12px;
-
-                &:not(:last-of-type) {
-                    &:before, &:after {
-                        content: " ";
-                        @include o-position-absolute(0, 0);
-
-                        border-top: floor($o-statusbar-height/2) solid transparent;
-                        border-bottom: ceil($o-statusbar-height/2) solid transparent;
-                        border-right: none;
-                        border-left: $o-statusbar-arrow-width solid $o-view-background-color;
-                        -moz-transform: scale(0.9999); // Smooth the triangle on firefox
-                    }
-
-                    &:before {
-                        right: -1px;
-                        border-left-color: gray('300');
-                    }
-                }
-
-                .o_onboarding_step_content {
-                    padding: 0;
-                    display: flex;
-                }
-
-                .o_onboarding_step_content_info .o_onboarding_step_title {
-                    margin: 7px!important;
-                    font-size: $font-size-base;
-                }
-
-                .o_onboarding_all_done {
-                    margin: 6px 10px 0 -4px!important;
-
-                    > i:before {
-                        content: "\f00c";
-                    }
-                }
-            }
-        }
-    }
-
     // =========  Color Variations  =========
     // ======================================
 
     // =========  Variation Mixin  ==========
     @mixin o-onboarding-variation($bg1, $bg2, $ui1, $ui2) {
-        &, .o_onboarding_btn_fold, .o_onboarding_step_title, .o_onboarding_step_action, a.o_onboarding_all_done, .o_onboarding_all_done > .fa, .o_onboarding_btn_close {
-            color: white;
+        &, .o_onboarding_step_title, .o_onboarding_step_action, a.o_onboarding_all_done, .o_onboarding_all_done > .fa, .o_onboarding_btn_close {
+            color: white !important;
         }
 
         .o_onboarding_wrap {
-            background-image: linear-gradient(to bottom, fade-out($bg1, 0.5), $bg2);
+            @include o-onboarding-vertical-gradient(fade-out($bg1, 0.5), $bg2);
             box-shadow: inset 0 -7px 20px -5px fade-out(black, 0.7);
         }
 
@@ -324,15 +265,15 @@ $o-onboarding-violet-ui-2: #FBEEC8;
     }
 
     // =========  Variation Templates  ==========
-    &.o_onboarding_blue.collapse.in, &.o_onboarding_blue.collapsing {
+    &.o_onboarding_blue {
         @include o-onboarding-variation($o-onboarding-blue-bg-1, $o-onboarding-blue-bg-2, $o-onboarding-blue-ui-1, $o-onboarding-blue-ui-2);
     }
 
-    &.o_onboarding_orange.collapse.in, &.o_onboarding_orange.collapsing {
+    &.o_onboarding_orange {
         @include o-onboarding-variation($o-onboarding-orange-bg-1, $o-onboarding-orange-bg-2, $o-onboarding-orange-ui-1, $o-onboarding-orange-ui-2);
     }
 
-    &.o_onboarding_violet.collapse.in, &.o_onboarding_violet.collapsing {
+    &.o_onboarding_violet {
         @include o-onboarding-variation($o-onboarding-violet-bg-1, $o-onboarding-violet-bg-2, $o-onboarding-violet-ui-1, $o-onboarding-violet-ui-2);
     }
 
@@ -451,7 +392,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         }
     }
 
-    .o_onboarding_done {
+    .o_onboarding_just_done {
         // Activate confetti cannon when step is done
         .o_onboarding_confetti {
             display: block;
