@@ -74,6 +74,7 @@ QUnit.module('Chatter', {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
                     create_uid: { string: "Assigned to", type: "many2one", relation: 'partner' },
                     create_user_id: { string: "Creator", type: "many2one", relation: 'partner' },
+                    can_write: { string: "Can write", type: "boolean" },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
                     user_id: { string: "Assigned to", type: "many2one", relation: 'partner' },
@@ -228,7 +229,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
     var done = assert.async();
 
     this.data['mail.activity'].records = [
-        {activity_type_id: 1, id: 1, user_id: 2, state: 'today', note: 'But I\'m talkin\' about Shaft'},
+        {activity_type_id: 1, id: 1, can_write: true, user_id: 2, state: 'today', note: 'But I\'m talkin\' about Shaft'},
     ];
     this.data.partner.records[0].activity_ids = [1];
 
@@ -512,6 +513,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -586,6 +588,7 @@ QUnit.test('kanban activity widget popover test', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -1477,6 +1480,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -1562,6 +1566,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -1596,6 +1601,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -1652,6 +1658,7 @@ QUnit.test('form activity widget: edit next activity', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -1715,6 +1722,7 @@ QUnit.test('form activity widget: clic mail template', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         activity_type_id: 2,
@@ -1833,6 +1841,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         id: 1,
         display_name: "An activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,
@@ -1841,6 +1850,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         id: 2,
         display_name: "A second activity",
         date_deadline: moment().format("YYYY-MM-DD"), // now
+        can_write: true,
         state: "today",
         user_id: 2,
         create_user_id: 2,

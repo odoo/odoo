@@ -113,9 +113,9 @@ class MailActivity(models.Model):
         index=True, ondelete='cascade', required=True)
     res_model = fields.Char(
         'Related Document Model',
-        index=True, related='res_model_id.model', store=True, readonly=True)
+        index=True, related='res_model_id.model', compute_sudo=True, store=True, readonly=True)
     res_name = fields.Char(
-        'Document Name', compute='_compute_res_name', store=True,
+        'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
         help="Display name of the related document.", readonly=True)
     # activity
     activity_type_id = fields.Many2one(
@@ -153,6 +153,8 @@ class MailActivity(models.Model):
         help='Technical field for UX purpose')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=False)
     force_next = fields.Boolean(related='activity_type_id.force_next', readonly=False)
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
 
     @api.multi
     @api.onchange('previous_activity_type_id')
@@ -196,6 +198,12 @@ class MailActivity(models.Model):
         else:
             return 'planned'
 
+    @api.depends('res_model', 'res_id', 'user_id')
+    def _compute_can_write(self):
+        valid_records = self._filter_access_rules('write')
+        for record in self:
+            record.can_write = record in valid_records
+
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
@@ -213,34 +221,60 @@ class MailActivity(models.Model):
             self.activity_type_id = self.recommended_activity_type_id
 
     @api.multi
-    def _check_access(self, operation):
-        """ Rule to access activities
+    def _filter_access_rules(self, operation):
+        """ Return the subset of ``self`` for which ``operation`` is allowed.
+        A custom implementation is done on activities as this document has some
+        access rules and is based on related document for activities that are
+        not covered by those rules.
 
-         * create: check write rights on related document;
-         * write: rule OR write rights on document;
-         * unlink: rule OR write rights on document;
+        Access on activities are the following :
+
+          * create: (``mail_post_access`` or write) right on related documents;
+          * read: read rights on related documents;
+          * write: access rule OR
+                   (``mail_post_access`` or write) rights on related documents);
+          * unlink: access rule OR
+                    (``mail_post_access`` or write) rights on related documents);
         """
-        self.check_access_rights(operation, raise_exception=True)  # will raise an AccessError
+        if self.env.user._is_superuser():
+            return self
+        if not self.check_access_rights(operation, raise_exception=False):
+            return self.env[self._name]
 
+        # write / unlink: valid for creator / assigned
         if operation in ('write', 'unlink'):
-            try:
-                self.check_access_rule(operation)
-            except exceptions.AccessError:
-                pass
-            else:
-                return
-        doc_operation = 'read' if operation == 'read' else 'write'
+            valid = super(MailActivity, self)._filter_access_rules(operation)
+            if valid and valid == self:
+                return self
+        else:  # create / read: linked to document only, no access rules defined
+            valid = self.env[self._name]
+
+        # compute remaining for hand-tailored rules
+        remaining = self - valid
+        remaining_sudo = remaining.sudo()
+
+        # fall back on related document access right checks. Use the same as defined for mail.thread
+        # if available; otherwise fall back on read for read, write for other operations.
         activity_to_documents = dict()
-        for activity in self.sudo():
+        for activity in remaining_sudo:
+            # write / unlink: if not updating self or assigned, limit to automated activities to avoid
+            # updating other people's activities. As unlinking a document bypasses access rights checks
+            # on related activities this will not prevent people from deleting documents with activities
+            # create / read: just check rights on related document
             activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
-        for model, res_ids in activity_to_documents.items():
-            self.env[model].check_access_rights(doc_operation, raise_exception=True)
-            try:
-                self.env[model].browse(res_ids).check_access_rule(doc_operation)
-            except exceptions.AccessError:
-                raise exceptions.AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-                    (self._description, operation))
+        for doc_model, doc_ids in activity_to_documents.items():
+            if hasattr(self.env[doc_model], '_mail_post_access'):
+                doc_operation = self.env[doc_model]._mail_post_access
+            elif operation == 'read':
+                doc_operation = 'read'
+            else:
+                doc_operation = 'write'
+            right = self.env[doc_model].check_access_rights(doc_operation, raise_exception=False)
+            if right:
+                valid_doc_ids = self.env[doc_model].browse(doc_ids)._filter_access_rules(doc_operation)
+                valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in valid_doc_ids.ids)
+
+        return valid
 
     @api.multi
     def _check_access_assignation(self):
@@ -266,37 +300,29 @@ class MailActivity(models.Model):
 
     @api.model
     def create(self, values):
-        # already compute default values to be sure those are computed using the current user
-        values_w_defaults = self.default_get(self._fields.keys())
-        values_w_defaults.update(values)
-
-        # continue as sudo because activities are somewhat protected
-        activity = super(MailActivity, self.sudo()).create(values_w_defaults)
-        activity_user = activity.sudo(self.env.user)
-        activity_user._check_access('create')
+        activity = super(MailActivity, self).create(values)
 
         # send a notification to assigned user; in case of manually done activity also check
         # target has rights on document otherwise we prevent its creation. Automated activities
         # are checked since they are integrated into business flows that should not crash.
-        if activity_user.user_id != self.env.user:
-            if not activity_user.automated:
-                activity_user._check_access_assignation()
+        if activity.user_id != self.env.user:
+            if not activity.automated:
+                activity._check_access_assignation()
             if not self.env.context.get('mail_activity_quick_update', False):
-                activity_user.action_notify()
+                activity.action_notify()
 
-        self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
+        self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
         if activity.date_deadline <= fields.Date.today():
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                 {'type': 'activity_updated', 'activity_created': True})
-        return activity_user
+        return activity
 
     @api.multi
     def write(self, values):
-        self._check_access('write')
         if values.get('user_id'):
             pre_responsibles = self.mapped('user_id.partner_id')
-        res = super(MailActivity, self.sudo()).write(values)
+        res = super(MailActivity, self).write(values)
 
         if values.get('user_id'):
             if values['user_id'] != self.env.uid:
@@ -320,13 +346,12 @@ class MailActivity(models.Model):
 
     @api.multi
     def unlink(self):
-        self._check_access('unlink')
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
                 self.env['bus.bus'].sendone(
                     (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                     {'type': 'activity_updated', 'activity_deleted': True})
-        return super(MailActivity, self.sudo()).unlink()
+        return super(MailActivity, self).unlink()
 
     @api.multi
     def action_notify(self):
