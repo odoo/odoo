@@ -74,7 +74,6 @@ class ResConfigSettings(models.TransientModel):
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
-    account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
     invoice_reference_type = fields.Selection(string='Communication',
         related='company_id.invoice_reference_type', help='Default Reference Type on Invoices.')
     account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",

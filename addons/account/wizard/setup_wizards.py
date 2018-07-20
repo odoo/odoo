@@ -16,12 +16,6 @@ class FinancialYearOpeningWizard(models.TransientModel):
                                              related="company_id.fiscalyear_last_month",
                                              required=True,
                                              help="The last day of the month will be taken if the chosen day doesn't exist.")
-    account_setup_fy_data_done = fields.Boolean(string='Financial year setup marked as done', compute="_compute_setup_marked_done")
-
-    @api.depends('company_id.account_setup_fy_data_done')
-    def _compute_setup_marked_done(self):
-        for record in self:
-            record.account_setup_fy_data_done = record.company_id.account_setup_fy_data_done
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
@@ -41,7 +35,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
 
     @api.multi
     def action_save_onboarding_fiscal_year(self):
-        self.env.user.company_id.account_setup_fy_data_done = True
+        self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
 
 
 class SetupBarBankConfigWizard(models.TransientModel):

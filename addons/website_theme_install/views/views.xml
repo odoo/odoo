@@ -95,15 +95,4 @@ action = {
             <a href="/web#action=website_theme_install.theme_install_kanban_action">See themes here</a>
         </xpath>
     </template>
-    <!-- ONBOARDING -->
-    <template id="onboarding_website_theme_step">
-        <t t-call="base.onboarding_step">
-            <t t-set="title">Website Theme</t>
-            <t t-set="description">Select a theme for your wonderful website.</t>
-            <t t-set="btn_text">Let's start!</t>
-            <t t-set="method" t-value="'action_open_website_theme_selector'" />
-            <t t-set="model" t-value="'res.company'" />
-            <t t-set="done" t-value="company.website_theme_onboarding_done" />
-        </t>
-    </template>
 </odoo>

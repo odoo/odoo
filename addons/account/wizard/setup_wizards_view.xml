@@ -2,26 +2,6 @@
 
 <odoo>
     <data>
-
-        <record id="setup_view_company_form" model="ir.ui.view">
-            <field name="name">account.setup.company.form</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="mode">primary</field>
-            <field name="priority">42000</field>
-            <field name="arch" type="xml">
-                <xpath expr="//form/sheet" position="after">
-                    <footer>
-                        <field name="account_setup_company_data_done" invisible="True"/>
-                        <button string="Mark as done" type="object" name="mark_company_setup_as_done_action" class="oe_highlight" attrs="{'invisible': [('account_setup_company_data_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_company_data_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"/>
-                        <button string="Unmark as done" type="object" name="unmark_company_setup_as_done_action" attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"/>
-                    </footer>
-                </xpath>
-            </field>
-        </record>
-
         <record id="setup_financial_year_opening_form" model="ir.ui.view">
             <field name="name">account.financial.year.op.setup.wizard.form</field>
             <field name="model">account.financial.year.op</field>
@@ -49,7 +29,7 @@
                         </div>
                     </div>
                     <footer>
-                        <button name="action_save_onboarding_fiscal_year" string="OK"
+                        <button name="action_save_onboarding_fiscal_year" string="Apply"
                                class="oe_highlight" type="object" />
                         <button special="cancel" string="Cancel" />
                     </footer>
@@ -108,10 +88,6 @@
                     <field name="opening_credit"/>
                 </tree>
             </field>
-        </record>
-
-        <record id="setup_wizard_close" model="ir.actions.act_window_close">
-            <field name="name">Close setup wizards</field>
         </record>
 
     </data>
