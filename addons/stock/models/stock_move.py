@@ -376,15 +376,8 @@ class StockMove(models.Model):
 
     @api.model
     def create(self, vals):
-        # TDE CLEANME: why doing this tracking on picking here ? seems weird
-        perform_tracking = not self.env.context.get('mail_notrack') and vals.get('picking_id')
-        if perform_tracking:
-            picking = self.env['stock.picking'].browse(vals['picking_id'])
-            initial_values = {picking.id: {'state': picking.state}}
         vals['ordered_qty'] = vals.get('product_uom_qty')
         res = super(StockMove, self).create(vals)
-        if perform_tracking:
-            picking.message_track(picking.fields_get(['state']), initial_values)
         return res
 
     def write(self, vals):
@@ -433,17 +426,7 @@ class StockMove(models.Model):
                     #Note that, for pulled moves we intentionally don't propagate on the procurement.
                     if propagated_changes_dict:
                         move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write(propagated_changes_dict)
-        track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
-        if track_pickings:
-            to_track_picking_ids = set([move.picking_id.id for move in self if move.picking_id])
-            if vals.get('picking_id'):
-                to_track_picking_ids.add(vals['picking_id'])
-            to_track_picking_ids = list(to_track_picking_ids)
-            pickings = Picking.browse(to_track_picking_ids)
-            initial_values = dict((picking.id, {'state': picking.state}) for picking in pickings)
         res = super(StockMove, self).write(vals)
-        if track_pickings:
-            pickings.message_track(pickings.fields_get(['state']), initial_values)
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
         return res
