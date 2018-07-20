@@ -194,15 +194,34 @@ function realSetTimeout (fct, millis) {
     setTimeout(wait, millis);
 }
 
-function loadCSS(url) {
-    if (!$('link[href="' + url + '"]').length) {
-        $('head').append($('<link>', {
+/**
+ * Load css asynchronously: fetch it from the url parameter and add a link tag
+ * to <head>.
+ * If the url has already been requested and loaded, the promise will resolve immediately.
+ *
+ * @param {String} url of the css to be fetched
+ * @returns {Deferred} resolved when the css has been loaded.
+ */
+var loadCSS = (function () {
+    var urlDefs = Object.create(null);
+
+    return function loadCSS(url) {
+        if (url in urlDefs) {
+            return urlDefs[url];
+        }
+        var $link = $('<link>', {
             'href': url,
             'rel': 'stylesheet',
             'type': 'text/css'
-        }));
-    }
-}
+        });
+        urlDefs[url] = $.Deferred();
+        $link.on('load', function () {
+            urlDefs[url].resolve();
+        });
+        $('head').append($link);
+        return urlDefs[url];
+    };
+})();
 
 var loadJS = (function () {
     var urls = [];

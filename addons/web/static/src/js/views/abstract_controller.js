@@ -12,6 +12,7 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
+var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
@@ -54,7 +55,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.activeActions = params.activeActions;
         this.controllerID = params.controllerID;
         this.initialState = params.initialState;
-
+        this.bannerRoute = params.bannerRoute;
         // use a DropPrevious to correctly handle concurrent updates
         this.dp = new concurrency.DropPrevious();
         // those arguments are temporary, they won't be necessary as soon as the
@@ -90,7 +91,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             this._super.apply(this, arguments),
             this.renderer.appendTo(this.$el)
         ).then(function () {
-            self._update(self.initialState);
+            return self._update(self.initialState);
         });
     },
     /**
@@ -256,7 +257,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
                     return;
                 }
                 self.renderer.setLocalState(localState);
-                self._update(state);
+                return self._update(state);
             });
         });
     },
@@ -279,6 +280,54 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             controllerID: this.controllerID,
             state: state || {},
         });
+    },
+   /**
+     * Renders the html provided by the route specified by the
+     * bannerRoute attribute on the controller (banner_route in the template).
+     * Renders it before the view output and add a css class 'o_has_banner' to it.
+     * There can be only one banner displayed at a time.
+     *
+     * If the banner contains stylesheet links, they are moved to <head>
+     * (and will only be fetched once).
+     *
+     * Route example:
+     * @http.route('/module/hello', auth='user', type='json')
+     * def hello(self):
+     *     return {'html': '<h1>hello, world</h1>'}
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _renderBanner: function () {
+        if (this.bannerRoute !== undefined) {
+            var self = this;
+            return this.dp
+                .add(this._rpc({route: this.bannerRoute}))
+                .then(function (response) {
+                    if (!response.html) {
+                        self.$el.removeClass('o_has_banner');
+                        return $.when();
+                    }
+                    self.$el.addClass('o_has_banner');
+                    var $banner = $(response.html);
+                    // we should only display one banner at a time
+                    if (self._$banner && self._$banner.remove) {
+                        self._$banner.remove();
+                    }
+                    // Stylesheets are moved to <head> and we wait for them to be loaded
+                    // to prevent displaying unstyled content.
+                    var defs = [];
+                    $('link[rel="stylesheet"]', $banner).each(function (i, link) {
+                        defs.push(ajax.loadCSS(link.href));
+                        link.remove();
+                    });
+                    return $.when.apply($, defs).then(function () {
+                        $banner.prependTo(self.$el);
+                        self._$banner = $banner;
+                    });
+                });
+        }
+        return $.when();
     },
     /**
      * Renders the control elements (buttons, pager and sidebar) of the current
@@ -370,7 +419,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         });
 
         this._pushState();
-        return $.when();
+        return this._renderBanner();
     },
 
     //--------------------------------------------------------------------------
@@ -405,12 +454,39 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * When a user clicks on an <a> link with type="action", we need to actually
      * do the action. This kind of links is used a lot in no-content helpers.
      *
+     * The <a> may have
+     * - a data-method and data-model attribute, in that case the corresponding
+     *   rpc will be called. If that rpc returns an action it will be executed.
+     * - a data-reload-on-close attribute, in that case the view will be
+     *   reloaded after the dialog has been closed.
+     *
      * @private
      * @param {OdooEvent} event
      */
     _onActionClicked: function (event) {
-        event.preventDefault();
-        this.do_action(event.currentTarget.name);
+        var $target = $(event.currentTarget);
+        var self = this;
+        var model = $target.data('model');
+        var method = $target.data('method');
+
+        if (method !== undefined && model !== undefined) {
+            var options = {};
+            if ($target.data('reload-on-close')) {
+                options.on_close = function () {
+                    self.trigger_up('reload');
+                };
+            }
+            this.dp.add(this._rpc({
+                model: model,
+                method: method,
+            })).then(function (action) {
+                if (action !== undefined) {
+                    self.do_action(action, options);
+                }
+            });
+        } else {
+            this.do_action($target.attr('name'));
+        }
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,

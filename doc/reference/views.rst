@@ -44,6 +44,45 @@ otherwise.
 ``application``
     website feature defining togglable views. By default, views are always
     applied
+``banner_route``
+    a route address to be fetched and prepended to the view.
+
+    If this attribute is set, the
+    :ref:`controller route url<reference/http/controllers>` will be fetched and
+    displayed above the view. The json response from the controller should
+    contain an "html" key.
+
+    If the html contains a stylesheet <link> tag, it will be
+    removed and appended to <head>.
+
+    To interact with the backend you can use <a type="action"> tags. Please take
+    a look at the documentation of the _onActionClicked method of
+    AbstractController (*addons/web/static/src/js/views/abstract_controller.js*)
+    for more details.
+
+    Only views extending AbstractView and AbstractController can use this
+    attribute, like :ref:`reference/views/form`, :ref:`reference/views/kanban`,
+    :ref:`reference/views/list`, ...
+
+    Example:
+
+    .. code-block:: xml
+
+        <tree banner_route="/module_name/hello" />
+
+    .. code-block:: python
+
+        class MyController(odoo.http.Controller):
+            @http.route('/module_name/hello', auth='user', type='json')
+            def hello(self):
+                return {
+                    'html': """
+                        <div>
+                            <link href="/module_name/static/src/css/banner.css"
+                                rel="stylesheet">
+                            <h1>hello, world</h1>
+                        </div> """
+                }
 
 .. _reference/views/inheritance:
 
