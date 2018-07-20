@@ -121,6 +121,7 @@ var AbstractView = Class.extend({
             groupable: this.groupable,
             isEmbedded: this.isEmbedded,
             controllerID: params.controllerID,
+            bannerRoute: this.arch.attrs.banner_route,
         };
         // AAB: these params won't be necessary as soon as the ControlPanel will
         // be instantiated by the View

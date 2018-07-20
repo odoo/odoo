@@ -12,6 +12,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var createAsyncView = testUtils.createAsyncView;
 var DebouncedField = basicFields.DebouncedField;
 var _t = core._t;
 
@@ -1957,7 +1958,7 @@ QUnit.module('basic_fields', {
         assert.expect(4);
 
         var graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key;
-        var kanban = createView({
+        createAsyncView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1970,42 +1971,41 @@ QUnit.module('basic_fields', {
                     '</t>' +
                 '</templates></kanban>',
             domain: [['id', 'in', [1, 2]]],
+        }).then(function (kanban) {
+            // nvd3 seems to do a setTimeout(0) each time the addGraph function is
+            // called, which is done twice in this case as there are 2 records.
+            // for that reason, we need to do two setTimeout(0) as well here to ensure
+            // that both graphs are rendered before starting to check if the rendering
+            // is correct.
+            concurrency.delay(0).then(function () {
+                return concurrency.delay(0);
+            }).then(function () {
+                assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart').length, 1,
+                    "graph of first record should be a barchart");
+                assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length, 1,
+                    "graph of second record should be a linechart");
+
+                var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
+                evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
+                $('.discreteBar')[0].dispatchEvent(evt);
+                var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
+                assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
+                $('.nvtooltip').remove();
+
+                // force a re-rendering of the first record (to check if the
+                // previous rendered graph is correctly removed from the DOM)
+                var firstRecordState = kanban.model.get(kanban.handle).data[0];
+                return kanban.renderer.updateRecord(firstRecordState);
+            }).then(function () {
+                return concurrency.delay(0); // one graph is re-rendered
+            }).then(function () {
+                assert.strictEqual(kanban.$('.o_kanban_record:first() svg').length, 1,
+                    "there should be only one rendered graph by record");
+
+                kanban.destroy();
+                done();
+            });
         });
-
-        // nvd3 seems to do a setTimeout(0) each time the addGraph function is
-        // called, which is done twice in this case as there are 2 records.
-        // for that reason, we need to do two setTimeout(0) as well here to ensure
-        // that both graphs are rendered before starting to check if the rendering
-        // is correct.
-        concurrency.delay(0).then(function () {
-            return concurrency.delay(0);
-        }).then(function () {
-            assert.strictEqual(kanban.$('.o_kanban_record:first() .o_graph_barchart').length, 1,
-                "graph of first record should be a barchart");
-            assert.strictEqual(kanban.$('.o_kanban_record:nth(1) .o_graph_linechart').length, 1,
-                "graph of second record should be a linechart");
-
-            var evt = document.createEvent("MouseEvents"); //taken ref from https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
-            evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
-            $('.discreteBar')[0].dispatchEvent(evt);
-            var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
-            assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
-            $('.nvtooltip').remove();
-
-            // force a re-rendering of the first record (to check if the
-            // previous rendered graph is correctly removed from the DOM)
-            var firstRecordState = kanban.model.get(kanban.handle).data[0];
-            return kanban.renderer.updateRecord(firstRecordState);
-        }).then(function () {
-            return concurrency.delay(0); // one graph is re-rendered
-        }).then(function () {
-            assert.strictEqual(kanban.$('.o_kanban_record:first() svg').length, 1,
-                "there should be only one rendered graph by record");
-
-            kanban.destroy();
-            done();
-        });
-
     });
 
     QUnit.test('graph dashboard widget does not need nv to be destroyed', function (assert) {
@@ -3690,6 +3690,9 @@ QUnit.module('basic_fields', {
                     '</sheet>' +
                 '</form>',
             res_id: 1,
+            viewOptions: {
+                disable_autofocus: true,
+            },
         });
 
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_red').length, 1,

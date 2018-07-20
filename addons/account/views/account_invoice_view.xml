@@ -167,6 +167,18 @@
             </field>
         </record>
 
+        <record id="invoice_tree_with_onboarding" model="ir.ui.view">
+            <field name="name">account.invoice.tree.with.onboarding</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="banner_route">/account/account_invoice_onboarding</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="invoice_kanban">
             <field name="name">account.invoice.kanban</field>
             <field name="model">account.invoice</field>
@@ -727,11 +739,10 @@
             </field>
         </record>
 
-
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="invoice_tree"/>
+            <field name="view_id" ref="invoice_tree_with_onboarding"/>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
 

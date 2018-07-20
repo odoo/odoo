@@ -28,14 +28,6 @@ class FinancialYearOpeningWizard(models.TransientModel):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
-    def mark_as_done(self):
-        """ Forces fiscal year setup state to 'done'."""
-        self.company_id.account_setup_fy_data_done = True
-
-    def unmark_as_done(self):
-        """ Forces fiscal year setup state to 'undone'."""
-        self.company_id.account_setup_fy_data_done = False
-
     @api.multi
     def write(self, vals):
         if 'fiscalyear_last_day' in vals or 'fiscalyear_last_month' in vals:
@@ -46,6 +38,10 @@ class FinancialYearOpeningWizard(models.TransientModel):
                     vals.get('fiscalyear_last_day'),
                     vals.get('fiscalyear_last_month'))
         return super(FinancialYearOpeningWizard, self).write(vals)
+
+    @api.multi
+    def action_save_onboarding_fiscal_year(self):
+        self.env.user.company_id.account_setup_fy_data_done = True
 
 
 class SetupBarBankConfigWizard(models.TransientModel):

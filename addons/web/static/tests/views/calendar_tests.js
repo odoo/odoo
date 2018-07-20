@@ -23,6 +23,7 @@ CalendarRenderer.include({
 
 
 var createView = testUtils.createView;
+var createAsyncView = testUtils.createAsyncView;
 
 var initialDate = new Date(2016, 11, 12, 8, 0, 0);
 initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
@@ -125,6 +126,7 @@ QUnit.module('Views', {
 
     QUnit.test('simple calendar rendering', function (assert) {
         assert.expect(24);
+        var done = assert.async();
 
         this.data.event.records.push({
             id: 7,
@@ -138,7 +140,7 @@ QUnit.module('Views', {
             type: 1
         });
 
-        var calendar = createView({
+        createAsyncView({
             View: CalendarView,
             model: 'event',
             data: this.data,
@@ -156,67 +158,69 @@ QUnit.module('Views', {
                     '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
             '</calendar>',
             archs: archs,
+
             viewOptions: {
                 initialDate: initialDate,
             },
+        }).then(function (calendar) {
+
+            assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should instance of fullcalendar");
+
+            var $sidebar = calendar.$('.o_calendar_sidebar');
+
+            assert.strictEqual($sidebar.find('.ui-state-active').text(), "12", "should highlight the target day");
+
+            // test view scales
+
+            assert.strictEqual(calendar.$('.fc-event').length, 9, "should display 9 events on the week (4 event + 5 days event)");
+            assert.strictEqual($sidebar.find('.o_selected_range').length, 7, "week scale should highlight 7 days in mini calendar");
+
+            calendar.$buttons.find('.o_calendar_button_day').trigger('click'); // display only one day
+            assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the day");
+            assert.strictEqual($sidebar.find('.o_selected_range').length, 1, "should highlight the target day in mini calendar");
+
+            calendar.$buttons.find('.o_calendar_button_month').trigger('click'); // display all the month
+            assert.strictEqual(calendar.$('.fc-event').length, 7, "should display 7 events on the month (5 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')");
+            assert.strictEqual($sidebar.find('.o_selected_range').length, 31, "month scale should highlight all days in mini calendar");
+
+            // test filters
+
+            assert.strictEqual($sidebar.find('.o_calendar_filter').length, 2, "should display 3 filters");
+
+            var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(user))');
+            assert.ok($typeFilter.length, "should display 'user' filter");
+            assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'user'");
+
+            // filters which has no value should show with string "Undefined" and should show at the last
+            assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
+            assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last > span').text(), "Undefined", "filters having false value should display 'Undefined' string");
+
+            var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
+            assert.ok($attendeesFilter.length, "should display 'attendees' filter");
+            assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
+            assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
+
+            assert.strictEqual(calendar.$('.fc-event').length, 7,
+                "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
+            calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
+            assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
+            calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
+            assert.strictEqual(calendar.$('.fc-event').length, 0, "should not display any event anymore");
+
+            // test search bar in filter
+            $sidebar.find('input[type="text"]').trigger('click');
+            assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').length, 2, "should display 2 choices in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
+            $('ul.ui-autocomplete li:first').trigger('click');
+            assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 4, "should display 4 filter items for 'attendees'");
+            $sidebar.find('input[type="text"]').trigger('click');
+            assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
+            $sidebar.find('.o_calendar_filter_item .o_remove').first().trigger('click');
+            assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
+            $('.modal-footer button.btn:contains(Ok)').trigger('click');
+            assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
+            calendar.destroy();
+            done();
         });
-
-        assert.ok(calendar.$('.o_calendar_view').find('.fc-view-container').length, "should instance of fullcalendar");
-
-        var $sidebar = calendar.$('.o_calendar_sidebar');
-
-        assert.strictEqual($sidebar.find('.ui-state-active').text(), "12", "should highlight the target day");
-
-        // test view scales
-
-        assert.strictEqual(calendar.$('.fc-event').length, 9, "should display 9 events on the week (4 event + 5 days event)");
-        assert.strictEqual($sidebar.find('.o_selected_range').length, 7, "week scale should highlight 7 days in mini calendar");
-
-        calendar.$buttons.find('.o_calendar_button_day').trigger('click'); // display only one day
-        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the day");
-        assert.strictEqual($sidebar.find('.o_selected_range').length, 1, "should highlight the target day in mini calendar");
-
-        calendar.$buttons.find('.o_calendar_button_month').trigger('click'); // display all the month
-        assert.strictEqual(calendar.$('.fc-event').length, 7, "should display 7 events on the month (5 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')");
-        assert.strictEqual($sidebar.find('.o_selected_range').length, 31, "month scale should highlight all days in mini calendar");
-
-        // test filters
-
-        assert.strictEqual($sidebar.find('.o_calendar_filter').length, 2, "should display 3 filters");
-
-        var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(user))');
-        assert.ok($typeFilter.length, "should display 'user' filter");
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'user'");
-
-        // filters which has no value should show with string "Undefined" and should show at the last
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last > span').text(), "Undefined", "filters having false value should display 'Undefined' string");
-
-        var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
-        assert.ok($attendeesFilter.length, "should display 'attendees' filter");
-        assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
-        assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
-
-        assert.strictEqual(calendar.$('.fc-event').length, 7,
-            "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
-        calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
-        assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
-        calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
-        assert.strictEqual(calendar.$('.fc-event').length, 0, "should not display any event anymore");
-
-        // test search bar in filter
-
-        $sidebar.find('input[type="text"]').trigger('click');
-        assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').length, 2, "should display 2 choices in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
-        $('ul.ui-autocomplete li:first').trigger('click');
-        assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 4, "should display 4 filter items for 'attendees'");
-        $sidebar.find('input[type="text"]').trigger('click');
-        assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
-        $sidebar.find('.o_calendar_filter_item .o_remove').first().trigger('click');
-        assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
-        $('.modal-footer button.btn:contains(Ok)').trigger('click');
-        assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
-        calendar.destroy();
     });
 
     QUnit.test('breadcrumbs are updated with the displayed period', function (assert) {
