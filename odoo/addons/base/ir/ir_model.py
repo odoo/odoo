@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 import dateutil
-import functools
 import logging
 import time
 from collections import defaultdict
