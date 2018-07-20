@@ -99,6 +99,7 @@ QUnit.module('activity view', {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
+                    can_write: { string: "Can write", type: "boolean" },
                     state: {
                         string: 'State',
                         type: 'selection',
@@ -112,6 +113,8 @@ QUnit.module('activity view', {
                         id: 1,
                         display_name: "An activity",
                         date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                        can_write: true,
+
                         state: "planned",
                         activity_type_id: 1,
                         mail_template_ids: [8, 9],
@@ -120,6 +123,7 @@ QUnit.module('activity view', {
                         id: 2,
                         display_name: "An activity",
                         date_deadline: moment().format("YYYY-MM-DD"), // now
+                        can_write: true,
                         state: "today",
                         activity_type_id: 1,
                         mail_template_ids: [8, 9],
@@ -128,6 +132,7 @@ QUnit.module('activity view', {
                         id: 3,
                         display_name: "An activity",
                         date_deadline: moment().subtract(2, "days").format("YYYY-MM-DD"), // now
+                        can_write: true,
                         state: "overdue",
                         activity_type_id: 2,
                         mail_template_ids: [],

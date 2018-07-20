@@ -172,7 +172,7 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(__system__=10, emp=15):  # com runbot: 9 - 15 // test_mail only: 10 - 14
+        with self.assertQueryCount(__system__=10, emp=16):  # com runbot: 9 - 15 // test_mail only: 10 - 14
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -182,7 +182,7 @@ class TestAdvMailPerformance(TransactionCase):
             #voip module read activity_type during create leading to one less query in enterprise on action_feedback
             category = activity.activity_type_id.category
 
-        with self.assertQueryCount(__system__=26, emp=46):  # com runbot: 25 - 46 // test_mail only: 26 - 46
+        with self.assertQueryCount(__system__=26, emp=50):  # com runbot: 25 - 46 // test_mail only: 26 - 46
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'emp')
@@ -191,7 +191,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=10, emp=15):  # com runbot: 9 - 15 // test_mail only: 10 - 14
+        with self.assertQueryCount(__system__=10, emp=16):  # com runbot: 9 - 15 // test_mail only: 10 - 14
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -199,7 +199,7 @@ class TestAdvMailPerformance(TransactionCase):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=28, emp=48):  # com runbot: 27 - 86 // test_mail only: 28 - 48
+        with self.assertQueryCount(__system__=28, emp=52):  # com runbot: 27 - 86 // test_mail only: 28 - 48
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
