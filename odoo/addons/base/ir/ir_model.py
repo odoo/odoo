@@ -555,7 +555,7 @@ class IrModelFields(models.Model):
                     failed_dependencies.append((field, dependant))
             for inverse in model._field_inverses.get(field, ()):
                 if inverse.manual and inverse.type == 'one2many':
-                    failed_dependencies.append((field, dependant))
+                    failed_dependencies.append((field, inverse))
 
         if not self._context.get(MODULE_UNINSTALL_FLAG) and failed_dependencies:
             msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
