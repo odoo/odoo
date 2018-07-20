@@ -277,7 +277,7 @@ class IrActionsActWindowView(models.Model):
     view_id = fields.Many2one('ir.ui.view', string='View')
     view_mode = fields.Selection(VIEW_TYPES, string='View Type', required=True)
     act_window_id = fields.Many2one('ir.actions.act_window', string='Action', ondelete='cascade')
-    multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
+    multi = fields.Boolean(string='Restrict to lists', help="If checked and the action is bound to a model, it will only appear in the More menu on list views")
 
     @api.model_cr_context
     def _auto_init(self):

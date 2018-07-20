@@ -3486,8 +3486,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             data_list.append(data)
 
         if unknown_names:
-            _logger.warning("%s.create() with unknown fields: %s",
-                            self._name, ', '.join(sorted(unknown_names)))
+            _logger.warning("%s.create() with unknown fields: %s | vals: %s",
+                            self._name, ', '.join(sorted(unknown_names)), vals)
 
         # create or update parent records
         for model_name, parent_name in self._inherits.items():

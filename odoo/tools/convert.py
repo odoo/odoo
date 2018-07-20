@@ -300,8 +300,6 @@ form: module.record_id""" % (xml_id,)
         if rec.get('header'):
             res['header'] = safe_eval(rec.get('header','False'))
 
-        res['multi'] = rec.get('multi') and safe_eval(rec.get('multi','False'))
-
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
 
