@@ -62,7 +62,7 @@
                                 <span><t t-esc="log.user_id[1]" /></span>
                             </div>
                         </div>
-                        <div class="flex-grow-1 text-right">
+                        <div t-if="log.can_unlink" class="flex-grow-1 text-right">
                         <a  t-att-data-force-next-activity="log.force_next"
                             t-att-data-previous-activity-type-id="log.activity_type_id[0]"
                             t-att-data-activity-id="log.id"
