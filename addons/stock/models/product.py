@@ -75,6 +75,11 @@ class Product(models.Model):
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    trivial_valuation = fields.Float(string='Valuation (Trivial)', compute='_compute_trivial_valuation')
+
+    def _compute_trivial_valuation(self):
+        for product in self:
+            product.trivial_valuation = product.standard_price * product.qty_available
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_quantities(self):
