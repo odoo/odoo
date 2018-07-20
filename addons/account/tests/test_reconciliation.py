@@ -100,37 +100,6 @@ class TestReconciliation(AccountingTestCase):
             }])
         return bank_stmt
 
-    def check_results(self, move_line_recs, aml_dict):
-        #we check that the line is balanced (bank statement line)
-        self.assertEquals(len(move_line_recs), len(aml_dict))
-        for move_line in move_line_recs:
-            self.assertEquals(round(move_line.debit, 2), aml_dict[move_line.account_id.id]['debit'])
-            self.assertEquals(round(move_line.credit, 2), aml_dict[move_line.account_id.id]['credit'])
-            self.assertEquals(round(move_line.amount_currency, 2), aml_dict[move_line.account_id.id]['amount_currency'])
-            self.assertEquals(move_line.currency_id.id, aml_dict[move_line.account_id.id]['currency_id'])
-            if 'currency_diff' in aml_dict[move_line.account_id.id]:
-                currency_diff_move = move_line.full_reconcile_id.exchange_move_id
-                self.assertTrue(currency_diff_move, 'The full reconciliation should have created an exchange rate journal entry')
-                for currency_diff_line in currency_diff_move.line_ids:
-                    if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
-                        if currency_diff_line.account_id.id == move_line.account_id.id:
-                            self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))
-                    if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
-                        if currency_diff_line.account_id.id == move_line.account_id.id:
-                            self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))
-                    if aml_dict[move_line.account_id.id].get('currency_diff') > 0:
-                        if currency_diff_line.account_id.id == move_line.account_id.id:
-                            self.assertAlmostEquals(currency_diff_line.debit, aml_dict[move_line.account_id.id].get('currency_diff'))
-                        else:
-                            self.assertAlmostEquals(currency_diff_line.credit, aml_dict[move_line.account_id.id].get('currency_diff'))
-                            self.assertIn(currency_diff_line.account_id.id, [self.diff_expense_account.id, self.diff_income_account.id], 'The difference accounts should be used correctly. ')
-                    else:
-                        if currency_diff_line.account_id.id == move_line.account_id.id:
-                            self.assertAlmostEquals(currency_diff_line.credit, abs(aml_dict[move_line.account_id.id].get('currency_diff')))
-                        else:
-                            self.assertAlmostEquals(currency_diff_line.debit, abs(aml_dict[move_line.account_id.id].get('currency_diff')))
-                            self.assertIn(currency_diff_line.account_id.id, [self.diff_expense_account.id, self.diff_income_account.id], 'The difference accounts should be used correctly. ')
-
     def make_customer_and_supplier_flows(self, invoice_currency_id, invoice_amount, bank_journal, amount, amount_currency, transaction_currency_id):
         #we create an invoice in given invoice_currency
         invoice_record = self.create_invoice(type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
@@ -147,80 +116,113 @@ class TestReconciliation(AccountingTestCase):
 
     def test_statement_usd_invoice_eur_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, 30, self.bank_journal_usd, 42, 30, self.currency_euro_id)
-        self.check_results(customer_move_lines, {
-            self.account_usd.id: {'debit': 30.0, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 30.0, 'amount_currency': -42, 'currency_id': self.currency_usd_id},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_usd.id: {'debit': 0.0, 'credit': 30.0, 'amount_currency': -42, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 30.0, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 30.0,     'credit': 0.0,      'amount_currency': 42,  'currency_id': self.currency_usd_id},
+            {'debit': 0.0,      'credit': 30.0,     'amount_currency': -42, 'currency_id': self.currency_usd_id},
+        ])
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 30.0,     'amount_currency': -42, 'currency_id': self.currency_usd_id},
+            {'debit': 30.0,     'credit': 0.0,      'amount_currency': 42,  'currency_id': self.currency_usd_id},
+        ])
 
     def test_statement_usd_invoice_usd_transaction_usd(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_usd, 50, 0, False)
-        self.check_results(customer_move_lines, {
-            self.account_usd.id: {'debit': 32.70, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 32.70, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_usd.id: {'debit': 0.0, 'credit': 32.70, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 32.70, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 32.70,    'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
+            {'debit': 0.0,      'credit': 32.70,    'amount_currency': -50, 'currency_id': self.currency_usd_id},
+        ])
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 32.70,    'amount_currency': -50, 'currency_id': self.currency_usd_id},
+            {'debit': 32.70,    'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
+        ])
 
     def test_statement_usd_invoice_usd_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_usd, 50, 40, self.currency_euro_id)
-        self.check_results(customer_move_lines, {
-            self.account_usd.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id, 'currency_diff': 7.30},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_usd.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id, 'currency_diff': -7.30},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
+            {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
+        ])
+        exchange_lines = customer_move_lines.mapped('full_reconcile_id.exchange_move_id.line_ids')
+        self.assertRecordValues(exchange_lines, [
+             {'debit': 0.0,     'credit': 7.30,     'account_id': self.diff_income_account.id},
+             {'debit': 7.30,    'credit': 0.0,      'account_id': self.account_rcv.id},
+        ])
+
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
+        ])
+        exchange_lines = supplier_move_lines.mapped('full_reconcile_id.exchange_move_id.line_ids')
+        self.assertRecordValues(exchange_lines, [
+             {'debit': 7.30,    'credit': 0.0,      'account_id': self.diff_expense_account.id},
+             {'debit': 0.0,     'credit': 7.30,     'account_id': self.account_rcv.id},
+        ])
 
     def test_statement_usd_invoice_chf_transaction_chf(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_swiss_id, 50, self.bank_journal_usd, 42, 50, self.currency_swiss_id)
-        self.check_results(customer_move_lines, {
-            self.account_usd.id: {'debit': 27.47, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 27.47, 'amount_currency': -50, 'currency_id': self.currency_swiss_id, 'currency_diff': -10.74},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_usd.id: {'debit': 0.0, 'credit': 27.47, 'amount_currency': -42, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 27.47, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id, 'currency_diff': 10.74},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 27.47,    'credit': 0.0,      'amount_currency': 42,  'currency_id': self.currency_usd_id},
+            {'debit': 0.0,      'credit': 27.47,    'amount_currency': -50, 'currency_id': self.currency_swiss_id},
+        ])
+        exchange_lines = customer_move_lines.mapped('full_reconcile_id.exchange_move_id.line_ids')
+        self.assertRecordValues(exchange_lines, [
+            {'debit': 10.74,    'credit': 0.0,      'account_id': self.diff_expense_account.id},
+            {'debit': 0.0,      'credit': 10.74,    'account_id': self.account_rcv.id},
+        ])
+        
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 27.47,    'amount_currency': -42, 'currency_id': self.currency_usd_id},
+            {'debit': 27.47,    'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_swiss_id},
+        ])
+        exchange_lines = supplier_move_lines.mapped('full_reconcile_id.exchange_move_id.line_ids')
+        self.assertRecordValues(exchange_lines, [
+            {'debit': 0.0,      'credit': 10.74,    'account_id': self.diff_income_account.id},
+            {'debit': 10.74,    'credit': 0.0,      'account_id': self.account_rcv.id},
+        ])
 
     def test_statement_eur_invoice_usd_transaction_usd(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 50, self.currency_usd_id)
-        self.check_results(customer_move_lines, {
-            self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id, 'currency_diff': 7.30},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_euro.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -50, 'currency_id': self.currency_usd_id},
-            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_usd_id, 'currency_diff': -7.30},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
+            {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
+        ])
+        exchange_lines = customer_move_lines.mapped('full_reconcile_id.exchange_move_id.line_ids')
+        self.assertRecordValues(exchange_lines, [
+            {'debit': 0.0,      'credit': 7.30,     'account_id': self.diff_income_account.id},
+            {'debit': 7.30,     'credit': 0.0,      'account_id': self.account_rcv.id},
+        ])
+        
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 40.0,     'amount_currency': -50, 'currency_id': self.currency_usd_id},
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_usd_id},
+        ])
+        exchange_lines = supplier_move_lines.mapped('full_reconcile_id.exchange_move_id.line_ids')
+        self.assertRecordValues(exchange_lines, [
+            {'debit': 7.30,     'credit': 0.0,      'account_id': self.diff_expense_account.id},
+            {'debit': 0.0,      'credit': 7.30,     'account_id': self.account_rcv.id},
+        ])
 
     def test_statement_eur_invoice_usd_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 0.0, False)
-        self.check_results(customer_move_lines, {
-            self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_euro.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 0.0, 'currency_id': False},
+            {'debit': 0.0,      'credit': 40.0,     'amount_currency': 0.0, 'currency_id': False},
+        ])
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 40.0,     'amount_currency': 0.0, 'currency_id': False},
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 0.0, 'currency_id': False},
+        ])
 
     def test_statement_euro_invoice_usd_transaction_chf(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 42, 50, self.currency_swiss_id)
-        self.check_results(customer_move_lines, {
-            self.account_euro.id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
-        })
-        self.check_results(supplier_move_lines, {
-            self.account_euro.id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
-            self.account_rcv.id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
-        })
+        self.assertRecordValues(customer_move_lines, [
+            {'debit': 42.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_swiss_id},
+            {'debit': 0.0,      'credit': 42.0,     'amount_currency': -50, 'currency_id': self.currency_swiss_id},
+        ])
+        self.assertRecordValues(supplier_move_lines, [
+            {'debit': 0.0,      'credit': 42.0,     'amount_currency': -50, 'currency_id': self.currency_swiss_id},
+            {'debit': 42.0,     'credit': 0.0,      'amount_currency': 50,  'currency_id': self.currency_swiss_id},
+        ])
 
     def test_statement_euro_invoice_usd_transaction_euro_full(self):
         #we create an invoice in given invoice_currency
@@ -253,11 +255,12 @@ class TestReconciliation(AccountingTestCase):
               'name': 'exchange difference',
               'account_id': self.diff_income_account.id
             }])
-        self.check_results(bank_stmt.move_line_ids, {
-            self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': 0, 'currency_id': False},
-            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
-        })
+
+        self.assertRecordValues(bank_stmt.move_line_ids, [
+            {'debit': 40.0,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': False},
+            {'debit': 0.0,      'credit': 32.7,     'amount_currency': 0.0,     'currency_id': False},
+            {'debit': 0.0,      'credit': 7.3,      'amount_currency': 0.0,     'currency_id': False},
+        ])
 
         # The invoice should be paid, as the payments totally cover its total
         self.assertEquals(invoice_record.state, 'paid', 'The invoice should be paid by now')
