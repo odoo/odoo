@@ -1760,5 +1760,43 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
+
+    QUnit.test('Manual Reconciliation: No lines for account', function (assert) {
+        assert.expect(2);
+
+        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+
+        // The second reconciliation "line" is where it happens
+        var widget = clientAction.widgets[1];
+
+        var emptyLine = widget.$('tr.mv_line');
+
+        assert.notOk('data-line-id' in emptyLine.getAttributes(),
+            'Empty line should be empty');
+
+        emptyLine.find('td:first').click();
+
+        // Check that a create form is here
+        var writeOffCreate = widget.$('div.create .create_account_id');
+
+        assert.equal(writeOffCreate.length, 1,
+            'A write-off creation should be present');
+
+        clientAction.destroy();
+    });
 });
 });
