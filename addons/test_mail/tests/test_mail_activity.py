@@ -157,6 +157,26 @@ class TestMailActivity(BaseFunctionalTest):
         self.assertEqual(rec.active, True)
         self.assertEqual(rec.activity_ids, self.env['mail.activity'])
 
+    def test_activity_mixin_reschedule_user(self):
+        rec = self.test_record.sudo(self.user_employee)
+        rec.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_admin.id)
+        self.assertEqual(rec.activity_ids[0].user_id, self.user_admin)
+
+        # reschedule its own should not alter other's activities
+        rec.activity_reschedule(
+            ['test_mail.mail_act_test_todo'],
+            user_id=self.user_employee.id,
+            new_user_id=self.user_employee.id)
+        self.assertEqual(rec.activity_ids[0].user_id, self.user_admin)
+
+        rec.activity_reschedule(
+            ['test_mail.mail_act_test_todo'],
+            user_id=self.user_admin.id,
+            new_user_id=self.user_employee.id)
+        self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
+
     def test_activity_notify_other_user(self):
         self.user_admin.notification_type = 'email'
         rec = self.test_record.sudo(self.user_employee)
