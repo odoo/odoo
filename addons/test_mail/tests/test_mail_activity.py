@@ -58,6 +58,23 @@ class TestActivityRights(TestActivityCommon):
             with self.assertRaises(exceptions.UserError):
                 activity2.write({'user_id': self.user_employee.id})
 
+    def test_activity_security_update_only_own(self):
+        test_record = self.env['mail.test.activity'].browse(self.test_record.id)
+
+        activity = self.env['mail.activity'].create({
+            'summary': 'Test Activity 3',
+            'date_deadline': date.today() + relativedelta(days=1),
+            'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
+            'res_model_id': self.env['ir.model']._get(test_record._name).id,
+            'res_id': test_record.id,
+            'automated': False,
+        })
+
+        with self.assertRaises(exceptions.AccessError):
+            activity.sudo(self.user_employee).write({'summary': 'new name'})
+        with self.assertRaises(exceptions.AccessError):
+            activity.sudo(self.user_employee).unlink()
+
 
 @tests.tagged('mail_activity')
 class TestActivityFlow(TestActivityCommon):

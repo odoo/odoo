@@ -151,6 +151,9 @@ class MailActivity(models.Model):
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids')
+    # access
+    can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
+    can_unlink = fields.Boolean(compute='_compute_can_unlink', help='Technical field to hide buttons if the current user has no access.')
 
     @api.multi
     @api.onchange('previous_activity_type_id')
@@ -194,6 +197,26 @@ class MailActivity(models.Model):
         else:
             return 'planned'
 
+    @api.depends('res_model', 'res_id', 'user_id')
+    def _compute_can_write(self):
+        for record in self:
+            try:
+                record._check_access('write')
+            except exceptions.AccessError:
+                record.can_write = False
+            else:
+                record.can_write = True
+
+    @api.depends('res_model', 'res_id', 'user_id')
+    def _compute_can_unlink(self):
+        for record in self:
+            try:
+                record._check_access('unlink')
+            except exceptions.AccessError:
+                record.can_unlink = False
+            else:
+                record.can_unlink = True
+
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
@@ -212,13 +235,18 @@ class MailActivity(models.Model):
 
     @api.multi
     def _check_access(self, operation):
-        """ Rule to access activities
+        """ Access check on mail.activity model is customized :
 
-         * create: check write rights on related document;
-         * write: rule OR write rights on document;
-         * unlink: rule OR write rights on document;
+         * create: (mail_post_access or write) rights on related document;
+         * read: (mail_post_access or write) rights on related document;
+         * write: rule OR (automated AND (mail_post_access or write) rights on document));
+         * unlink: rule OR (automated AND (mail_post_access or write) rights rights on document));
         """
         self.check_access_rights(operation, raise_exception=True)  # will raise an AccessError
+
+        error_message = (
+            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)')
+            % (self._description, operation))
 
         if operation in ('write', 'unlink'):
             try:
@@ -227,18 +255,31 @@ class MailActivity(models.Model):
                 pass
             else:
                 return
-        doc_operation = 'read' if operation == 'read' else 'write'
+
+        # write / unlink: if not updating self or assigned, limit to automated activities to avoid
+        # updating other people's activities. As unlinking a document bypasses access rights checks
+        # on related activities this will not prevent people from deleting documents with activities
+        self_sudo = self.sudo()
+        if operation in ('write', 'unlink') and any(not activity.automated for activity in self_sudo):
+            raise exceptions.AccessError(error_message)
+
+        # fall back on related document access right checks. Use the same as defined for mail.thread
+        # if available;
         activity_to_documents = dict()
         for activity in self.sudo():
             activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
         for model, res_ids in activity_to_documents.items():
+            if getattr(self.env[model], '_mail_post_access', False):
+                doc_operation = self.env[model]._mail_post_access
+            elif operation == 'read':
+                doc_operation = 'read'
+            else:
+                doc_operation = 'write'
             self.env[model].check_access_rights(doc_operation, raise_exception=True)
             try:
                 self.env[model].browse(res_ids).check_access_rule(doc_operation)
             except exceptions.AccessError:
-                raise exceptions.AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
-                    (self._description, operation))
+                raise exceptions.AccessError(error_message)
 
     @api.multi
     def _check_access_assignation(self):
