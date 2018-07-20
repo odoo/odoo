@@ -187,43 +187,46 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], ['debit', 'credit', 'move_id'], ['move_id'])[0]
         self.assertEqual(account_entry['debit'], account_entry['credit'], 'Debit and credit are not equal')
         move_lines = [
-            ('split by volume - Microwave Oven', 3.75, 0.0),
-            ('split by volume - Microwave Oven', 0.0, 3.75),
-            ('split by weight - Microwave Oven', 40.0, 0.0),
-            ('split by weight - Microwave Oven', 0.0, 40.0),
-            ('split by quantity - Microwave Oven', 33.33, 0.0),
-            ('split by quantity - Microwave Oven', 0.0, 33.33),
-            ('equal split - Microwave Oven', 2.5, 0.0),
-            ('equal split - Microwave Oven', 0.0, 2.5),
-            ('split by volume - Refrigerator: 2.0 already out', 0.5, 0.0),
-            ('split by volume - Refrigerator: 2.0 already out', 0.0, 0.5),
-            ('split by volume - Refrigerator', 1.25, 0.0),
-            ('split by volume - Refrigerator', 0.0, 1.25),
-            ('split by weight - Refrigerator: 2.0 already out', 4.0, 0.0),
-            ('split by weight - Refrigerator: 2.0 already out', 0.0, 4.0),
-            ('split by weight - Refrigerator', 10.0, 0.0),
-            ('split by weight - Refrigerator', 0.0, 10.0),
-            ('split by quantity - Refrigerator: 2.0 already out', 6.67, 0.0),
-            ('split by quantity - Refrigerator: 2.0 already out', 0.0, 6.67),
-            ('split by quantity - Refrigerator', 16.67, 0.0),
-            ('split by quantity - Refrigerator', 0.0, 16.67),
-            ('equal split - Refrigerator: 2.0 already out', 1.0, 0.0),
-            ('equal split - Refrigerator: 2.0 already out', 0.0, 1.0),
-            ('equal split - Refrigerator', 2.5, 0.0),
-            ('equal split - Refrigerator', 0.0, 2.5)
+            {'name': 'split by volume - Microwave Oven',                    'debit': 3.75,  'credit': 0.0},
+            {'name': 'split by volume - Microwave Oven',                    'debit': 0.0,   'credit': 3.75},
+            {'name': 'split by weight - Microwave Oven',                    'debit': 40.0,  'credit': 0.0},
+            {'name': 'split by weight - Microwave Oven',                    'debit': 0.0,   'credit': 40.0},
+            {'name': 'split by quantity - Microwave Oven',                  'debit': 33.33, 'credit': 0.0},
+            {'name': 'split by quantity - Microwave Oven',                  'debit': 0.0,   'credit': 33.33},
+            {'name': 'equal split - Microwave Oven',                        'debit': 2.5,   'credit': 0.0},
+            {'name': 'equal split - Microwave Oven',                        'debit': 0.0,   'credit': 2.5},
+            {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.5,   'credit': 0.0},
+            {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 0.5},
+            {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 4.0,   'credit': 0.0},
+            {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 4.0},
+            {'name': 'split by weight - Refrigerator',                      'debit': 0.0,   'credit': 10.0},
+            {'name': 'split by weight - Refrigerator',                      'debit': 10.0,  'credit': 0.0},
+            {'name': 'split by volume - Refrigerator',                      'debit': 0.0,   'credit': 1.25},
+            {'name': 'split by volume - Refrigerator',                      'debit': 1.25,  'credit': 0.0},
+            {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 6.67,  'credit': 0.0},
+            {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 0.0,   'credit': 6.67},
+            {'name': 'split by quantity - Refrigerator',                    'debit': 16.67, 'credit': 0.0},
+            {'name': 'split by quantity - Refrigerator',                    'debit': 0.0,   'credit': 16.67},
+            {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 1.0,   'credit': 0.0},
+            {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 0.0,   'credit': 1.0},
+            {'name': 'equal split - Refrigerator',                          'debit': 2.5,   'credit': 0.0},
+            {'name': 'equal split - Refrigerator',                          'debit': 0.0,   'credit': 2.5}
         ]
         if stock_negative_landed_cost.account_move_id.company_id.anglo_saxon_accounting:
             move_lines += [
-                ('split by volume - Refrigerator: 2.0 already out', 0.5, 0.0),
-                ('split by volume - Refrigerator: 2.0 already out', 0.0, 0.5),
-                ('split by weight - Refrigerator: 2.0 already out', 4.0, 0.0),
-                ('split by weight - Refrigerator: 2.0 already out', 0.0, 4.0),
-                ('split by quantity - Refrigerator: 2.0 already out', 6.67, 0.0),
-                ('split by quantity - Refrigerator: 2.0 already out', 0.0, 6.67),
-                ('equal split - Refrigerator: 2.0 already out', 1.0, 0.0),
-                ('equal split - Refrigerator: 2.0 already out', 0.0, 1.0),
+                {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.5,   'credit': 0.0},
+                {'name': 'split by volume - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 0.5},
+                {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 4.0,   'credit': 0.0},
+                {'name': 'split by weight - Refrigerator: 2.0 already out',     'debit': 0.0,   'credit': 4.0},
+                {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 6.67,  'credit': 0.0},
+                {'name': 'split by quantity - Refrigerator: 2.0 already out',   'debit': 0.0,   'credit': 6.67},
+                {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 1.0,   'credit': 0.0},
+                {'name': 'equal split - Refrigerator: 2.0 already out',         'debit': 0.0,   'credit': 1.0},
             ]
-        self.check_complete_move(stock_negative_landed_cost.account_move_id, move_lines)
+        self.assertRecordValues(
+            sorted(stock_negative_landed_cost.account_move_id.line_ids, key=lambda d: (d['name'], d['debit'])),
+            sorted(move_lines, key=lambda d: (d['name'], d['debit'])),
+        )
 
     def _process_incoming_shipment(self):
         """ Two product incoming shipment. """
