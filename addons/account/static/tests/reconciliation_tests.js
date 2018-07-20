@@ -1687,5 +1687,78 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
+
+    QUnit.test('Manual Reconciliation: remove a prop to attain balance and reconcile', function (assert) {
+        assert.expect(5);
+
+        // tweak the data to fit our needs
+        this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'] = _.extend({}, this.params.data_for_manual_reconciliation_widget['[null,null]']);
+        this.params.data_for_manual_reconciliation_widget['[283, null, "", 0, 6]'].accounts[0].reconciliation_proposition = [
+            {account_id: 283, account_type: "other", amount_currency_str: "", currency_id: false, date_maturity: "2017-03-18", date: "2017-02-16",
+             total_amount_str: "$ 500.00", partner_id: 8, account_name: "101000 Current Assets", name: "INV/2017/0987", partner_name: "Agrolait",
+             total_amount_currency_str: "", id: 999, credit: 0.0, journal_id: [1, "Customer Invoices"], amount_str: "$ 500.00", debit: 500.0,
+             account_code: "101000", ref: "", already_paid: false}
+        ];
+
+        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'process_reconciliations') {
+                    assert.deepEqual(args.args,
+                        [
+                            [{id: null, type: null,
+                              mv_line_ids: [399, 402],
+                              new_mv_line_dicts: []}
+                            ]
+                        ], "should call process_reconciliations without the new mv line dict");
+                }
+
+                return this._super(route, args);
+            },
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+
+        // The first reconciliation "line" is where it happens
+        var widget = clientAction.widgets[0];
+
+        // Add first prop
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.notOk( widget.$('.cell_right .line_info_button').length,
+            "should not display the partial reconciliation alert");
+
+        // Add second prop
+        widget.$('.match .cell_account_code:first').trigger('click');
+
+        // Check that a create form is here
+        var writeOffCreate = widget.$('div.create');
+
+        assert.equal(writeOffCreate.length, 1,
+            'A write-off creation should be present');
+
+        assert.equal(writeOffCreate.find('input[name=amount]').val(), 500,
+            'The right amount should be proposed for the write-off');
+
+        // remove the first line, the other two will balance one another
+        widget.$('tr[data-line-id="999"] td:first').click()
+
+        var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
+        assert.equal($buttonReconcile.length, 1,
+            'The reconcile button must be visible');
+
+        $buttonReconcile.click();
+
+        clientAction.destroy();
+    });
 });
 });
