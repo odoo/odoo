@@ -74,7 +74,7 @@
                                 </t>
                             </div>
                         </t>
-                        <div class="o_thread_message_tools btn-group">
+                        <div t-if="activity.can_write" class="o_thread_message_tools btn-group">
                             <span class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
                                 <i class="fa fa-check"/> Mark Done </a>

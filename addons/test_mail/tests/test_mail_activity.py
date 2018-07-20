@@ -31,13 +31,18 @@ class TestActivityCommon(BaseFunctionalTest):
 @tests.tagged('mail_activity')
 class TestActivityRights(TestActivityCommon):
 
-    def test_activity_security_user_access(self):
-        activity = self.test_record.activity_schedule(
+    def test_activity_security_user_access_other(self):
+        activity = self.test_record.sudo(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo',
-            user_id=self.user_employee.id)
+            user_id=self.user_admin.id)
+        self.assertTrue(activity.can_write)
+        activity.write({'user_id': self.user_employee.id})
 
-        activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
-        activity2.write({'user_id': self.user_employee.id})
+    def test_activity_security_user_access_own(self):
+        activity = self.test_record.sudo(self.user_employee).activity_schedule(
+            'test_mail.mail_act_test_todo')
+        self.assertTrue(activity.can_write)
+        activity.write({'user_id': self.user_admin.id})
 
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(*args, **kwargs):
@@ -63,6 +68,7 @@ class TestActivityRights(TestActivityCommon):
                 raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
             return DEFAULT
 
+        # cannot create activities for people that cannot access record
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.UserError):
                 activity = self.env['mail.activity'].create({
@@ -72,13 +78,12 @@ class TestActivityRights(TestActivityCommon):
                     'user_id': self.user_employee.id,
                 })
 
-            activity2 = self.env['mail.activity'].create({
-                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
-                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
-                'res_id': self.test_record.id,
-            })
-            with self.assertRaises(exceptions.UserError):
-                activity2.write({'user_id': self.user_employee.id})
+        # cannot create activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                activity = self.test_record.sudo(self.user_employee).activity_schedule(
+                    'test_mail.mail_act_test_todo',
+                    user_id=self.user_admin.id)
 
 
 @tests.tagged('mail_activity')
