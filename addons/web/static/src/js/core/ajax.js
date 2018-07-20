@@ -320,7 +320,7 @@ function get_file(options) {
         if (xhr.status === 200 && mimetype !== 'text/html') {
             // replace because apparently we send some C-D headers with a trailing ";"
             // todo: maybe a lack of CD[attachment] should be interpreted as an error case?
-            var header = (xhr.getResponseHeader('Content-Disposition') || '').replace(/;$/, '');
+            var header = (xhr.getResponseHeader('Content-Disposition') || '').replace(/;$/, '').replace(/\//g, '_');
             var filename = header ? contentdisposition.parse(header).parameters.filename : null;
 
             download(xhr.response, filename, mimetype);
