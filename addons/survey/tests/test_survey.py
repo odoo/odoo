@@ -124,7 +124,9 @@ class TestSurvey(TransactionCase):
             default_survey_id=correct_survey.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            default_composition_mode='comment')
+            default_composition_mode='comment',
+            notif_layout='mail.mail_notification_light',
+        )
 
         self.assertDictEqual(action, {
             'type': 'ir.actions.act_window',

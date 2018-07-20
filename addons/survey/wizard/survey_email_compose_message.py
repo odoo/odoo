@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import re
 import uuid
 
@@ -10,8 +11,11 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
 
+_logger = logging.getLogger(__name__)
+
 emails_split = re.compile(r"[;,\n\r]+")
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
+
 
 class SurveyMailComposeMessage(models.TransientModel):
     _name = 'survey.mail.compose.message'
@@ -73,6 +77,11 @@ class SurveyMailComposeMessage(models.TransientModel):
     #------------------------------------------------------
     # Wizard validation and send
     #------------------------------------------------------
+
+    @api.multi
+    def send_mail_action(self):
+        return self.send_mail()
+
     @api.multi
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
@@ -81,6 +90,7 @@ class SurveyMailComposeMessage(models.TransientModel):
         SurveyUserInput = self.env['survey.user_input']
         Partner = self.env['res.partner']
         Mail = self.env['mail.mail']
+        notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
 
         def create_response_and_send_mail(wizard, token, partner_id, email):
             """ Create one mail by recipients and replace __URL__ by link with identification token """
@@ -106,6 +116,22 @@ class SurveyMailComposeMessage(models.TransientModel):
                 values['recipient_ids'] = [(4, partner_id)]
             else:
                 values['email_to'] = email
+
+            # optional support of notif_layout in context
+            if notif_layout:
+                try:
+                    template = self.env.ref(notif_layout, raise_if_not_found=True)
+                except ValueError:
+                    _logger.warning('QWeb template %s not found when sending survey mails. Sending without layouting.' % (notif_layout))
+                else:
+                    template_ctx = {
+                        'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=wizard.survey_id.title)),
+                        'model_description': self.env['ir.model']._get('survey.survey').display_name,
+                        'company': self.env.user.company_id,
+                    }
+                    body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                    values['body_html'] = self.env['mail.thread']._replace_local_links(body)
+
             Mail.create(values).send()
 
         def create_token(wizard, partner_id, email):
