@@ -405,7 +405,6 @@ class MailTemplate(models.Model):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
 
-        :param template_id: id of the template to render.
         :param res_id: id of the record to use for rendering the template (model
                        is taken from template definition)
         :returns: a dict containing all relevant fields for creating a new
@@ -487,19 +486,18 @@ class MailTemplate(models.Model):
         return multi_mode and results or results[res_ids[0]]
 
     @api.multi
-    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None):
-        """Generates a new mail message for the given template and record,
-           and schedules it for delivery through the ``mail`` module's scheduler.
+    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
+        """ Generates a new mail.mail. Template is rendered on record given by
+        res_id and model coming from template.
 
-           :param int res_id: id of the record to render the template with
-                              (model is taken from the template)
-           :param bool force_send: if True, the generated mail.message is
-                immediately sent after being created, as if the scheduler
-                was executed for this message only.
-           :param dict email_values: if set, the generated mail.message is
-                updated with given values dict
-           :returns: id of the mail.message that was created
-        """
+        :param int res_id: id of the record to render the template
+        :param bool force_send: send email immediately; otherwise use the mail
+            queue (recommended);
+        :param dict email_values: update generated mail with those values to further
+            customize the mail;
+        :param str notif_layout: optional notification layout to encapsulate the
+            generated email;
+        :returns: id of the mail.mail that was created """
         self.ensure_one()
         Mail = self.env['mail.mail']
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove dfeault_type from context
@@ -513,6 +511,21 @@ class MailTemplate(models.Model):
         # add a protection against void email_from
         if 'email_from' in values and not values.get('email_from'):
             values.pop('email_from')
+        # encapsulate body
+        if notif_layout and values['body_html']:
+            try:
+                template = self.env.ref(notif_layout, raise_if_not_found=True)
+            except ValueError:
+                _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
+            else:
+                record = self.env[self.model].browse(res_id)
+                template_ctx = {
+                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                    'model_description': self.env['ir.model']._get(record._name).display_name,
+                    'company': 'company_id' in record and record['company_id'] or self.env.user.company_id,
+                }
+                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                values['body_html'] = self.env['mail.thread']._replace_local_links(body)
         mail = Mail.create(values)
 
         # manage attachments
