@@ -1,7 +1,7 @@
 odoo.define('web.domain_selector_tests', function (require) {
 "use strict";
 
-var DomainSelector = require("web.DomainSelector");
+var DomainSelector = require("web.domain_selector").DomainSelector;
 var testUtils = require("web.test_utils");
 
 QUnit.module('widgets', {}, function () {

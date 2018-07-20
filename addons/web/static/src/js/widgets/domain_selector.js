@@ -1,4 +1,4 @@
-odoo.define("web.DomainSelector", function (require) {
+odoo.define("web.domain_selector", function (require) {
 "use strict";
 
 var core = require("web.core");
@@ -967,5 +967,11 @@ function instantiateNode(parent, model, domain, options) {
     return null;
 }
 
-return DomainSelector;
+return {
+    DomainLeaf: DomainLeaf,
+    DomainNode: DomainNode,
+    DomainSelector: DomainSelector,
+    DomainTree: DomainTree,
+    operator_mapping: operator_mapping,
+};
 });

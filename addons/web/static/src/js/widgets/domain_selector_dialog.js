@@ -3,7 +3,7 @@ odoo.define("web.DomainSelectorDialog", function (require) {
 
 var core = require("web.core");
 var Dialog = require("web.Dialog");
-var DomainSelector = require("web.DomainSelector");
+var DomainSelector = require("web.domain_selector").DomainSelector;
 
 var _t = core._t;
 

@@ -39,8 +39,9 @@ var ModelFieldSelector = Widget.extend({
         "click .o_field_selector_next_page": "_onNextPageClick",
         "click li.o_field_selector_select_button": "_onLastFieldClick",
 
-        // Handle a direct change in the debug input
-        "change input": "_onInputChange",
+        // Handle a direct change in the inputs
+        "keyup .o_filter_input": "_onFilterInputChange",
+        "change .o_debug_input": "_onDebugInputChange",
 
         // Handle keyboard and mouse navigation to build the field chain
         "mouseover li.o_field_selector_item": "_onItemHover",
@@ -85,6 +86,7 @@ var ModelFieldSelector = Widget.extend({
 
         this.pages = [];
         this.dirty = false;
+        this.filter_def = $.Deferred();
 
         if (!this.options.readonly) {
             _.extend(this.events, this.editionEvents);
@@ -107,7 +109,8 @@ var ModelFieldSelector = Widget.extend({
     start: function () {
         this.$value = this.$(".o_field_selector_value");
         this.$popover = this.$(".o_field_selector_popover");
-        this.$input = this.$popover.find("input");
+        this.$filter_input = this.$popover.find(".o_filter_input");
+        this.$debug_input = this.$popover.find(".o_debug_input");
         this.$valid = this.$(".o_field_selector_warning");
 
         this._render();
@@ -118,6 +121,23 @@ var ModelFieldSelector = Widget.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
+    /**
+     * Filter visible fields
+     *
+     * @param {String} filter Text to be matched against field names
+     */
+    filterFields: function (filter) {
+        var $all = this.$(".o_field_selector_item"),
+            $good = $all.filter(function () {
+                var $el = $(this);
+                return ~$el.data("name").toLowerCase().indexOf(filter) ||
+                    ~$el.text().toLowerCase().indexOf(filter);
+            }),
+            $bad = $all.not($good);
+        $good.removeClass("hidden");
+        $bad.addClass("hidden");
+    },
 
     /**
      * Returns the field information selected by the field chain.
@@ -243,6 +263,15 @@ var ModelFieldSelector = Widget.extend({
         }
         this._render();
     },
+
+    /**
+     * Resets the search field and results
+     */
+    _filterReset: function () {
+        this.$filter_input.val("");
+        this.filterFields("");
+    },
+
     /**
      * Closes the popover and marks the field as selected. If the field chain
      * changed, it notifies its parents. If not open, this does nothing.
@@ -254,6 +283,7 @@ var ModelFieldSelector = Widget.extend({
 
         this._isOpen = false;
         this.$popover.addClass('d-none');
+        this._filterReset();
 
         if (this.dirty) {
             this.dirty = false;
@@ -349,7 +379,8 @@ var ModelFieldSelector = Widget.extend({
             followRelations: this.options.followRelations,
             debug: this.options.debugMode,
         }));
-        this.$input.val(this.chain.join("."));
+        this._filterReset();
+        this.$debug_input.val(this.chain.join("."));
     },
     /**
      * Selects the given field and adapts the chain node according to it.
@@ -445,11 +476,26 @@ var ModelFieldSelector = Widget.extend({
     _onLastFieldClick: function (e) {
         this._selectField(this._getLastPageField($(e.currentTarget).data("name")));
     },
+
+    /**
+     * Called when user filters field list
+     *
+     * @param {OdooEvent} event Input event changed
+     */
+    _onFilterInputChange: function (event) {
+        event.stopPropagation();
+        // Allow fast writers
+        this.filter_def.reject();
+        this.filter_def = $.Deferred();
+        setTimeout(this.filter_def.resolve.bind(this.filter_def), 500);
+        this.filter_def.done(this.filterFields.bind(this, $(event.target).val()));
+    },
+
     /**
      * Called when the debug input value is changed -> adapts the chain
      */
-    _onInputChange: function () {
-        var userChainStr = this.$input.val();
+    _onDebugInputChange: function () {
+        var userChainStr = this.$debug_input.val();
         var userChain = userChainStr.split(".");
         if (!this.options.followRelations && userChain.length > 1) {
             this.do_warn(_t("Relation not allowed"), _t("You cannot follow relations for this field chain construction"));
@@ -477,7 +523,7 @@ var ModelFieldSelector = Widget.extend({
      */
     _onKeydown: function (e) {
         if (!this.$popover.is(":visible")) return;
-        var inputHasFocus = this.$input.is(":focus");
+        var inputHasFocus = this.$debug_input.is(":focus");
 
         switch (e.which) {
             case $.ui.keyCode.UP:

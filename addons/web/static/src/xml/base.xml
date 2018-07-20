@@ -751,10 +751,16 @@
             <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
         </div>
         <div class="o_field_selector_popover_body">
+            <div class="o_field_selector_popover_filter input-group">
+                <label class="input-group-addon" title="Search">
+                    <i class="fa fa-search"/>
+                </label>
+                <input type="text" class="form-control o_filter_input" placeholder="Field name..."/>
+            </div>
             <ul class="o_field_selector_page"/>
         </div>
         <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
-            <input type="text" class="o_input"/>
+            <input type="text" class="o_debug_input o_input"/>
         </div>
     </div>
 </div>
