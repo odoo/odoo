@@ -561,7 +561,8 @@ class IrModelFields(models.Model):
             msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
             raise UserError(msg % failed_dependencies[0])
         elif failed_dependencies:
-            to_unlink = [self._get(rel[1].model_name, rel[1].name) for rel in failed_dependencies]
+            dependants = {rel[1] for rel in failed_dependencies}
+            to_unlink = [self._get(field.model_name, field.name) for field in dependants]
             self.browse().union(*to_unlink).unlink()
 
         self = self.filtered(lambda record: record.state == 'manual')
