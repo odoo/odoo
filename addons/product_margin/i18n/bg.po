@@ -7,6 +7,7 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Martin Trigaux, 2016
 # preslav <hackerz99999@gmail.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Anton Vassilev, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Daria Stefanova <daria@clearlypro.eu>, 2018
@@ -47,12 +48,12 @@ msgstr "Критерии за анализ"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr "Ср. Цената в клиентските фактури."
+msgstr "Осреднена цена във фактури за продажба."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr "Ср. Цена в сметките на доставчиците"
+msgstr "Осреднена цена във фактурите за покупка"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
@@ -109,7 +110,7 @@ msgstr "Име за показване"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr "Чернова,Отворена и Платена"
+msgstr "Чернова - отворена и платена"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
@@ -305,16 +306,15 @@ msgstr "Стандартна цена"
 #: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
-"Сума от Произведението на Доставна цена и количеството във Фактурите от "
-"Доставчици"
+"Сума от произведението на доставна цена и количеството във фактурите за "
+"покупка"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
-"Сума на унмножението на цена от фактурите и количество на клиентските "
-"фактури"
+"Сума от унмножението на фактурната цена и количеството фактури за продажба"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_cost
@@ -329,18 +329,18 @@ msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
-"Сума от умножаването на продажната каталожна цена и количество от "
-"клиентските фактури"
+"Сума от умножението на продажната каталожна цена и количество фактури за "
+"продажба"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr "Сумата на количеството по клиентски фактури"
+msgstr "Сумата на количеството във фактурите за продажба"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr "Сума от количеството в сметките на доставчиците"
+msgstr "Сума от количеството във фактурите за покупка"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id

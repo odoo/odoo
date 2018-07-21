@@ -5,16 +5,17 @@
 # Translators:
 # Phạm Lân <phamquanglan@gmail.com>, 2016
 # fanha99 <fanha99@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # son dang <son.dang@doda100.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>, 2016\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,12 +119,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "Trong Portal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Thư mời"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
@@ -164,7 +165,7 @@ msgstr "Portal"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Quản lý Truy cập Portal"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
@@ -174,7 +175,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Cấu hình Người dùng Portal"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -183,39 +184,47 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Hãy chọn các liên hệ mà sẽ thuộc về nhóm Portal trong danh sách dưới đây.\n"
+"                        Địa chỉ email của từng liên hệ phải là địa chỉ email hợp lệ và duy nhất.\n"
+"                        Nếu cần thiết, bạn có thể sửa bất cứ địa chỉ email của liên hệ nào trực tiếp\n"
+"                        ngay trong danh sách."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Một số liên hệ có email bị trùng: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Một số liên hệ không có email hợp lệ: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Một số liên hệ có email trùng với email của một tài khoản người dùng portal "
+"trong hệ thống:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portal mà người dùng có thể được thêm vào hoặc gỡ ra"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Nội dung này sẽ được bao gồm trong email gửi cho người dùng portal mới."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Nội dung này sẽ được bao gồm trong email gửi cho người dùng portal mới."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -225,6 +234,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"Để xử lý lỗi này, bạn có thể: \n"
+"- Hiệu đính lại địa chỉ email của các liên hệ tương ứng\n"
+"- Cấp quyền truy cập chỉ đối với các liên hệ có email duy nhất"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -242,8 +254,10 @@ msgstr "Wizard"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Bạn phải có một địa chỉ email được thiết lập ở Tuỳ chọn để có thể gửi email "
+"đi."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr ""
+msgstr "Tài khoản của bạn tại ${user.company_id.name}"

@@ -40,7 +40,7 @@ msgstr "(групирани)"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
 msgid "# Asset Entries"
-msgstr "# Запис на активи"
+msgstr "# Запис на актив"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
@@ -60,7 +60,7 @@ msgstr "Дата на сметката"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
 msgid "Account Entry"
-msgstr "Счетоводен запис"
+msgstr "Запис на сметка"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
@@ -245,12 +245,12 @@ msgstr "Активи в затворено състояние"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Assets in draft and open states"
-msgstr "Активи в процес на създаване и отворено състояние"
+msgstr "Активи в етап 'Чернова' и 'Отворени'"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in draft state"
-msgstr "Активи в проекто-състояние"
+msgstr "Активи в етап 'Чернова'"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -494,17 +494,17 @@ msgstr "Дата на амортизация"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
-msgstr "Амортизационни вписвания: сметка/отчет активи"
+msgstr "Амортизационни записи: сметка активи"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr "Амортизационни вписвания: сметка/отчет разходи"
+msgstr "Амортизационни записи: сметка разходи"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
-msgstr "Въвеждане амортизация"
+msgstr "Запис амортизация"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -581,7 +581,7 @@ msgstr "Документ затворен."
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: account_asset
 #: selection:account.asset.asset,method_time:0
@@ -613,12 +613,12 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Generate Assets Entries"
-msgstr "Създайте регистрация/вписване на активи "
+msgstr "Създайте записи на активи "
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Generate Entries"
-msgstr "Създайте вписвания (точки в списък)"
+msgstr "Създайте записи"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_gross_value
@@ -649,7 +649,7 @@ msgstr "Групирайте по..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr "Групирайте вписвания в счетоводния регистър"
+msgstr "Групирайте записи в журнала"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -668,8 +668,8 @@ msgid ""
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
 msgstr ""
-"Посочва, че първото вписване на амортизация за този актив трябва да бъде "
-"извършено от датата на закупуване вместо от 1 януари / началната дата на "
+"Посочва, че първият запис на амортизация за този актив трябва да бъде "
+"извършен от датата на закупуване вместо от 1 януари / началната дата на "
 "фискалната година."
 
 #. module: account_asset
@@ -678,7 +678,7 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
 msgstr ""
-"Посочва, че първото вписване на амортизация за този актив трябва да бъде "
+"Посочва, че първият запис на амортизация за този актив трябва да бъде "
 "извършено от датата на закупуване вместо от 1 януари."
 
 #. module: account_asset
@@ -703,19 +703,19 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Items"
-msgstr "Точки / пунктове"
+msgstr "Редове/статии"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_journal_id
 msgid "Journal"
-msgstr "Счетоводен регистър"
+msgstr "Журнал"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:410
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
-msgstr "Вписвания в счетоводния регистър"
+msgstr "Записи в журнал"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -805,7 +805,7 @@ msgstr "Брой амортизации"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr "Брой вписвания "
+msgstr "Брой записи "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -815,7 +815,7 @@ msgstr "Брой месеци за даден период"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr "Едно вписване на всеки..."
+msgstr "Един запис на всеки..."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -966,7 +966,7 @@ msgstr "Последователност"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Set to Draft"
-msgstr "Поставете в проект"
+msgstr "Върнете в чернова"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_period
@@ -1003,8 +1003,8 @@ msgid ""
 "This depreciation is already linked to a journal entry! Please post or "
 "delete it."
 msgstr ""
-"Тази амортизация е вече свързана с вписване в счетоводен регистър. Моля "
-"въведете я или я изтрийте."
+"Тази амортизация е вече свързана с запис в журнала. Моля въведете я или я "
+"изтрийте."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -1013,7 +1013,7 @@ msgid ""
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
 "Тази wizard функция ще въведе редове частично плащане/амортизация за определения месец.\n"
-"Това ще създаде и вписвания в счетоводния регистър за всички съответни редове частично плащане за този период на признаване на актив/приход."
+"Това ще създаде и записи в журнала за всички съответни редове частично плащане за този период на признаване на активи/приходи."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1060,7 +1060,7 @@ msgid ""
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"При създаване на актив статусът/положението е 'Проект' (предварителен вариант).\n"
+"При създаване на актив етапът се явява 'Чернова'.\n"
 "В случай,че активът е потвърден, статусът преминава в 'Текущ' и амортизационните редове могат да бъдат въведени в счетоводството. \n"
 "Можете собственоръчно да закриете актива, когато амортизацията приключи. Ако последният ред на амортизацията е въведен, активът автоматично преминава в това състояние/статус."
 
