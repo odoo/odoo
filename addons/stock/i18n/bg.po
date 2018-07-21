@@ -10,6 +10,7 @@
 # Radina <radis.choice@gmail.com>, 2016
 # Anton Vassilev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2017
@@ -19,14 +20,13 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Boris Stefanov <borkata@gmail.com>, 2018
 # Весел Карастоянов <vesel@abv.bg>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
+"Last-Translator: Весел Карастоянов <vesel@abv.bg>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -219,8 +219,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Валидирай "
-"разписката на поръчката</span>"
+"<span class=\"label label-default text-center odoo_purple\">Валидирайте "
+"разписката на поръчка</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -754,8 +754,8 @@ msgid ""
 "All items couldn't be shipped, the remaining ones will be shipped as soon as"
 " they become available."
 msgstr ""
-"Всички елементи не можаха да бъдат изпратени, а останалите ще бъдат "
-"изпратени веднага щом станат достъпни."
+"Не всички артикули бяха изпратени, останалите ще бъдат изпратени веднага щом"
+" са налични."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:90
@@ -944,12 +944,12 @@ msgstr "Налични продукти"
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
 msgid "Back Order of"
-msgstr "Неизпълнени поръчки на"
+msgstr "Върнати поръчки на"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
-msgstr "Неизпълнени поръчки"
+msgstr "Върнати поръчки"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:31
@@ -961,29 +961,29 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:974
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "Неизпълнена поръчка <em>%s</em> <b>създадена</b>."
+msgstr "Върната поръчка <em>%s</em> <b>създадена</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Потрърждение на неизпълнена поръчка"
+msgstr "Потрърждение на върната поръчка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Създаване на неизпълнена поръчка"
+msgstr "Създаване на върната поръчка"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:66
 #, python-format
 msgid "Backorder exists"
-msgstr "Съществуване на неизпълнени поръчки"
+msgstr "Съществува върната поръчки"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Неизпълнени поръчки"
+msgstr "Върнати поръчки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_barcode
@@ -2129,12 +2129,12 @@ msgstr "Изтегли "
 #: selection:stock.inventory,state:0 selection:stock.picking,state:0
 #: selection:stock.scrap,state:0
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Draft Moves"
-msgstr "Проект на движения"
+msgstr "Чернова на движения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_dropshipping
@@ -5635,7 +5635,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Set to Draft"
-msgstr "Пращане в проект"
+msgstr "Върнете в чернова"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_location_id
@@ -7149,7 +7149,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:901
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "Може да изтривате само движения в проект"
+msgstr "Може да изтривате единствено движения в чернова"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

@@ -7,6 +7,7 @@
 # Martin Trigaux, 2016
 # kalatchev, 2016
 # Anton Vassilev, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Todor Mladenov <tmladenov@dir.bg>, 2016
@@ -51,7 +52,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr "# Нареждания за производство"
+msgstr "# Поръчки за производство"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_ready_count
@@ -63,7 +64,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_count
 msgid "# Work Orders"
-msgstr "Работни поръчки"
+msgstr "# Работни поръчки"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
@@ -145,7 +146,7 @@ msgstr "<span>Нов</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Plan Orders</span>"
-msgstr ""
+msgstr "<span>Планирайте поръчки</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -240,7 +241,7 @@ msgstr "<strong>Местоположение</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Work Orders</strong>"
-msgstr "<strong>Поръчки за работа</strong>"
+msgstr "<strong>Работни поръчки</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -261,6 +262,8 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
+"Поръчка за производство на базата на списък с материали ще\n"
+"                консумира суровини и ще произведе завършени продукти."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -418,7 +421,7 @@ msgstr "Списък с материали"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr ""
+msgstr "Ред на списък с материали"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -437,7 +440,7 @@ msgstr "Списък с материали"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_from_bom
 msgid "Bill of Materials Structure"
-msgstr "Списък на суровините структура"
+msgstr "Списък с материали - структура"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
@@ -445,6 +448,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
+"Списъкът с материали Ви позволява да определите списъка на нужните суровини,"
+" за да създадете завършен продукт."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -453,11 +458,16 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"Списъците с материали Ви позволяват да определите списъка на нужните\n"
+"                суровини, използвани, за да създадете завършен продукт; чрез поръчка за производство\n"
+"                или пакет продукти."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "Bills of materials may produce residual products (A + B --> C + D)"
 msgstr ""
+"Списъците с материали могат да произведат остатъчни продукти (A + B --> C + "
+"D)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -602,12 +612,12 @@ msgstr "Добавяне на работен център."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
-msgstr "Нов Списък от материали."
+msgstr "Натиснете бутона, за да създадете нов списък с материали."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click to create a manufacturing order."
-msgstr "Създай нареждане за производство"
+msgstr "Натиснете бутона, за да създадете поръчка за производство"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
@@ -636,7 +646,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Click to start a new work order."
-msgstr "Нова работна поръчка."
+msgstr "Натиснете бутона, за да стартирате нова работна поръчка."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_code
@@ -922,13 +932,13 @@ msgstr "Готов"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_done_wo
 msgid "Done for Work Order"
-msgstr ""
+msgstr "Извършено за работна поръчка"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: selection:mrp.unbuild,state:0
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle
@@ -2475,7 +2485,7 @@ msgstr "Търсене"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr "Търсене на рецепта за суровини"
+msgstr "Потърсете списък с продукти"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
@@ -2905,7 +2915,7 @@ msgstr "Крайна цена"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Total Cost of Raw Materials"
-msgstr "Обща цена на суровините"
+msgstr "Обща стойност на суровините"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_late_count

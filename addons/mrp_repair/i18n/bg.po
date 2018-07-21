@@ -8,6 +8,7 @@
 # Anton Vassilev, 2016
 # kalatchev, 2016
 # Radina <radis.choice@gmail.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -123,7 +124,7 @@ msgstr "Преди ремонт"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Можете да потвърдите единствено поправките в черновата."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -274,7 +275,7 @@ msgstr "Готов"
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -617,13 +618,13 @@ msgstr "Поръчка за ремонт #:"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
 msgid "Repair Order Reference"
-msgstr "Отпратка към поръчка за ремонт"
+msgstr "Референция към поръчка за ремонт"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
-msgstr "Поръчка за ремонти"
+msgstr "Поръчки за ремонти"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -663,7 +664,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:223
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr "Поръчката за ремонт е фактурирана."
+msgstr "Поръчката за ремонт е вече фактурирана."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
@@ -715,7 +716,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr "Пращане в проект"
+msgstr "Върнете в чернова"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id

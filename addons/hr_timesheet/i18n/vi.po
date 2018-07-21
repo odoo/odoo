@@ -10,13 +10,14 @@
 # Tuan Tran <tmtuan.projects@gmail.com>, 2017
 # file aio <fileaio@gmail.com>, 2017
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
 "PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +28,12 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 msgid "<span class=\"o_label\">Timesheets</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Bảng chấm công</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Timesheet Entries</span>"
-msgstr ""
+msgstr "<span>Chi tiết Bảng chấm công</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -55,7 +56,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_allow_timesheets
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
-msgstr ""
+msgstr "Cho phép Chấm công"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
@@ -65,12 +66,12 @@ msgstr "Analytic Line"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "Hiệu quả Kế hoạch Trung bình"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_crossovered_budget_line
 msgid "Budget Lines"
-msgstr ""
+msgstr "Chi tiết Ngân sách"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
@@ -84,13 +85,15 @@ msgstr ""
 #: constraint:project.task:0
 msgid "Circular references are not permitted between tasks and sub-tasks"
 msgstr ""
+"Dẫn chiếu vòng tròn / đệ quy lẫn nhau thì không được cho phép giữa các nhiệm"
+" vụ và nhiệm vụ con"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid "Click to record activities."
-msgstr ""
+msgstr "Bâm để ghi nhận các hoạt động."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_delay_hours
@@ -109,7 +112,7 @@ msgstr "Được tính bằng: Thời gian đã tiêu thụ + Thời gian còn l
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
 msgid "Computed as: Time Spent + Sub-tasks Hours."
-msgstr ""
+msgstr "Được tính bằng: Thời gian đã tiêu thụ + Thời gian nhiệm vụ con"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
@@ -155,7 +158,7 @@ msgstr "Khoảng thời gian"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_effective
 msgid "Effective Hours"
-msgstr ""
+msgstr "Số giờ Hiệu quả"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -207,7 +210,7 @@ msgstr "Dự án"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Project -"
-msgstr ""
+msgstr "Dự án -"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_remaining_hours
@@ -218,7 +221,7 @@ msgstr "Số giờ còn lại"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
 msgid "Remaining hours"
-msgstr ""
+msgstr "Số giờ còn lại"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -256,7 +259,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_children_hours
 msgid "Sub-tasks Hours"
-msgstr ""
+msgstr "Số giờ Nhiệm vụ con"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_children_hours
@@ -264,6 +267,9 @@ msgid ""
 "Sum of the planned hours of all sub-tasks (when a sub-task is closed or its "
 "spent hours exceed its planned hours, spent hours are counted instead)"
 msgstr ""
+"Tổng số giờ theo kế hoạch của các nhiệm vụ con. Khi một nhiệm vụ con được "
+"đóng hoặc số giờ đã sử dụng của chúng chạm đến số giờ theo kế hoạch, số giờ "
+"được tính là số giờ đã sử dụng"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -276,7 +282,7 @@ msgstr "Nhiệm vụ"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Nhiệm vụ theo người dùng và dự án"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -299,12 +305,12 @@ msgstr "Hoạt động chấm công"
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.timesheet_report
 msgid "Timesheet Entries"
-msgstr ""
+msgstr "Phân tích Bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Tháng của Bảng chấm công"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -356,6 +362,8 @@ msgid ""
 "                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                customers if required."
 msgstr ""
+"Bạn có thể đăng ký và theo vết giờ làm việc của bạn theo dự án mỗi ngày.\n"
+"                Thời gian được sử dụng cho dự án có thể trở thành chi phí                 và có thể xuất hoá đơn cho khách hàng theo đó nếu cần thiết."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
