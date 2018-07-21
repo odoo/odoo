@@ -171,7 +171,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr "Притежава несъгласувани вписвания"
+msgstr "Притежава необединени записи"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -192,7 +192,7 @@ msgstr "Фактури"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_issued_total
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_journal_item_count
 msgid "Journal Items"
-msgstr "Пунктове в счетоводния регистър"
+msgstr "Статии в журнал"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
@@ -217,8 +217,8 @@ msgid ""
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
 "За този партньор бе извършено съгласуване на последните фактури и плащания. "
-"То се определя или ако няма поне един несъгласуван дебит  и един "
-"несъгласуван кредит, или пък ако натиснете бутона \"Извършен\"."
+"То се определя или ако няма поне един необединен дебит  и един необединен "
+"кредит, или пък ако натиснете бутона \"Done - Извършен\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
@@ -362,8 +362,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"Партньорът има поне един несъгласуван дебит и кредит откакто е било "
-"извършено последното съгласуване на фактури и плащания."
+"Партньорът има поне един необединен дебит и кредит откакто е било извършено "
+"последното съгласуване на фактури и плащания."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -402,8 +402,7 @@ msgid ""
 "orders and vendor bills"
 msgstr ""
 "Това условие на плащане ще бъде използвано вместо това, което се извършва по"
-" подразбиране, за ордерите за покупки и сметките за "
-"доставчиците/продавачите."
+" подразбиране, за поръчките за покупка и фактурите за покупка."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -412,7 +411,7 @@ msgid ""
 "and customer invoices"
 msgstr ""
 "Това условие на плащане ще бъде използвано вместо това, което се извършва по"
-" подразбиране, за ордери за продажби и клиентски фактури."
+" подразбиране, за поръчки за продажби и фактури за продажби."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration

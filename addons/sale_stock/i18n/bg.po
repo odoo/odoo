@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kalatchev, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
@@ -47,8 +48,8 @@ msgstr "Разреши добавяне на транспортни разход
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
-"Разреши настройката на производствени свойства на ниво Ред от Поръчка "
-"(сложно)"
+"Разрешете настройката на поръчка за производство за ред на поръчка "
+"(напреднал етап)"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
@@ -60,12 +61,15 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Allows you to tag sales order lines with properties."
-msgstr "Разрешава ви да таг-вате редове от поръчка със свойства."
+msgstr ""
+"Разрешава Ви да маркирате редове от поръчка за продажби през properties."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr "Разреши избор на специфични маршрути в редове на поръчка (сложно)"
+msgstr ""
+"Изберете специфични маршрути в редовете на поръчка за продажби (напреднала "
+"фаза)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -111,7 +115,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr "Разреши Маршрути в Редове на Поръчка"
+msgstr "Разреши маршрут в редове на поръчка за продажби"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -166,7 +170,7 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr "Без специфични маршрути като MTO или дропшипинг"
+msgstr "Без специфични маршрути като MTO или drop shipping"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -182,7 +186,7 @@ msgstr "Няма достатъчно инвентаризация!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr "Маршрут на Поръчка"
+msgstr "Маршрут на поръчка"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
@@ -243,7 +247,7 @@ msgstr "Поръчка за продажба"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
 msgid "Sale Order Lines"
-msgstr "Редове на Поръчка"
+msgstr "Редове на поръчка за продажба"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -253,12 +257,12 @@ msgstr "Поръчка за продажба"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ред от нареждане за продажба"
+msgstr "Ред от поръчка за продажба"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Статистика на нареждани за продажби"
+msgstr "Статистика на поръчки за продажби"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
@@ -273,17 +277,18 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Избираемо на ниво Ред от Поръчка"
+msgstr "Избираемо на ред от поръчка за продажби"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship all products at once, without back orders"
-msgstr "Достави всички продукти наведнъж, без back orders"
+msgstr "Доставете всички продукти наведнъж, без обратни поръчки"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr "Доставяй продуктите когато някои са налични, и разреши back orders"
+msgstr ""
+"Доставяй продуктите когато някои са налични, и разреши обратни поръчки"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -315,7 +320,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "Към кредитно известие"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
@@ -354,7 +359,7 @@ msgid ""
 "the delivery order if needed."
 msgstr ""
 "Вие намалявате поръчаното количество! Не забравяйте ръчно да актуализирате "
-"Доставката, ако е необходимо."
+"реда на доставките, ако е необходимо."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:146

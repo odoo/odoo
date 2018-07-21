@@ -6,6 +6,7 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # kalatchev, 2016
 # Martin Trigaux, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Todor Mladenov <tmladenov@dir.bg>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
@@ -209,6 +210,9 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
 msgstr ""
+"Описание на продукта, който желаете да споделите с Вашите доставчици. Това "
+"описание ще бъде копирано на всяка поръчка за покупка, квитанция и фактура "
+"за покупка/кредитно известие."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -852,8 +856,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"По подразбиране мер. ед. използвани при нареждане за закупуване. Трябва да "
-"бъде в същата категория като мер. ед. по подразбиране."
+"Мерна единица по подразбиране, изолзвана при поръчка за покупка. Трябва да "
+"бъде в същата категория като мерната единица по подразбиране."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
@@ -883,7 +887,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value_sequence
 msgid "Determine the display order"
-msgstr "Определя реда на показване"
+msgstr "Определете реда на показване"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_display_name
@@ -946,7 +950,7 @@ msgstr "Крайна дата на цената от този доставчик
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr "Край на срока за валидиране на елемента за ценообразуване"
+msgstr "Краен срока за валидиране на реда за ценообразуване"
 
 #. module: product
 #: code:addons/product/models/product.py:43
@@ -1499,7 +1503,7 @@ msgstr "Управление на няколко мерни единици"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr "Управление на ценови листи"
+msgstr "Управлявайте редовете на ценовите листи"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1810,7 +1814,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr "Ценова листа"
+msgstr "Редове ценова листа"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -1825,7 +1829,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "Ред ценова листа - идентификации"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2

@@ -11,13 +11,14 @@
 # PHAM QUOC MY <mypham2802@gmail.com>, 2016
 # Thang Duong Bao <nothingctrl@gmail.com>, 2017
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,7 +202,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_default
 msgid "Default paper format ?"
-msgstr ""
+msgstr "Định dạng giấy mặc định?"
 
 #. module: report
 #. openerp-web
@@ -255,6 +256,8 @@ msgstr ""
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Lỗi! Bạn không thể chọn định dạng động thời với một chiều rộng/chiều cao "
+"trang cụ thể."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -377,13 +380,13 @@ msgstr "Định dạng trang in"
 #. module: report
 #: model:ir.actions.act_window,name:report.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr ""
+msgstr "Cấu hình Định dạng Trang"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
-msgstr ""
+msgstr "Định trạng Trang in"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
@@ -399,7 +402,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_format
 msgid "Paper size"
-msgstr ""
+msgstr "Cỡ Trang"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -415,13 +418,13 @@ msgstr ""
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
-msgstr ""
+msgstr "Xem trước External Report"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "Xem trước báo cáo nội bộ"
 
 #. module: report
 #. openerp-web
@@ -433,7 +436,7 @@ msgstr "In"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Tên báo cáo được in"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
@@ -485,12 +488,12 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "Đây là một mẫu của external report"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "Đây là ví dụ của báo cáo nội bộ"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
@@ -539,12 +542,14 @@ msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf không thành công (mã lỗi: %s). Giới hạn bộ nhớ quá thấp hoặc  số"
+" tệp tối đa của quy trình con đạt được. Thông báo: %s"
 
 #. module: report
 #: code:addons/report/models/report.py:452
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr ""
+msgstr "Wkhtmltopdf không thành công (mã lỗi: %s). Thông báo: %s"
 
 #. module: report
 #. openerp-web
@@ -575,6 +580,9 @@ msgid ""
 "shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
+"Bản cài đặt Wkhtmltopdf dường như bị lỗi. Báo cáo sẽ được hiển thị bằng "
+"html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
 #: model:ir.model,name:report.model_base_config_settings

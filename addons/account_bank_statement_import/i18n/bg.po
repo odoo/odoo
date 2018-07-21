@@ -58,13 +58,13 @@ msgstr "Признати/допуснати сметки"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid "Allow Cancelling Entries"
-msgstr "Позволете анулиране на вписвания"
+msgstr "Позволете отхвърляне на записи"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
 #, python-format
 msgid "Already imported items"
-msgstr "Вече въведени пунктове"
+msgstr "Вече въведени редове"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
@@ -96,7 +96,7 @@ msgstr "Банкови такси"
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
-msgstr "Име на банковия счетоводен регистър"
+msgstr "Име на банковия журнал"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -126,8 +126,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
-"Счетоводният регистър,  в който да бъде въведено това извлечение, не може да"
-" бъде намерен. Моля изберете счетоводен регистър ръчно."
+"Не се открива в кой журнал е въведено това извлечение. Моля изберете журнала"
+" ръчно."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -136,7 +136,7 @@ msgid ""
 " refunds made from this journal"
 msgstr ""
 "Отметнете това поле, ако не желаете да споделяте същата последователност за "
-"фактури и възстановявания на суми, направени от този счетоводен регистър."
+"фактури и кредитни известия, направени от този журнал."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -144,9 +144,8 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"Отметнете това поле, ако желаете да позволите отмяната на вписванията, "
-"отнасящи се до този счетоводен регистър, или на фактурата, отнасяща се до "
-"този счетоводен регистър."
+"Отметнете това поле, ако желаете да позволите отмяната на записите, отнасящи"
+" се до този журнал, или на фактурата, отнасяща се до този журнал."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -161,7 +160,7 @@ msgstr "Фирма/компания"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
 msgid "Company related to this journal"
-msgstr "Компания, свързана с този счетоводен регистър"
+msgstr "Компания, свързана с този журнал"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
@@ -198,7 +197,7 @@ msgstr "Дебитни методи"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr "Специализирана последователност при обезщетянаване"
+msgstr "Специализирана последователност при кредитни известия"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -223,7 +222,7 @@ msgid ""
 "and sales orders."
 msgstr ""
 "Покажете тази банкова сметка в долния колонтитул на принтираните документи "
-"като фактури и ордери за продажби."
+"като фактури и поръчки за продажби."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -237,7 +236,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
 msgid "Entry Sequence"
-msgstr "Последователност при вписванията"
+msgstr "Последователност при записите"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
@@ -286,8 +285,7 @@ msgstr "Въведете банково извлечение"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Import Bank Statement Journal Creation Wizard"
-msgstr ""
-"Въведете съветник за създаване на счетоводен ретистър с банкови извлечения"
+msgstr "Въведете съветник за създаване на журнал с банкови извлечения"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -317,24 +315,24 @@ msgstr "Действа като сметка по подразбиране ил�
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
 msgid "Journal"
-msgstr "Счетоводен регистър"
+msgstr "Журнал"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
-msgstr "Създаване на счетоводен регистър"
+msgstr "Създаване на журнал"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_name
 msgid "Journal Name"
-msgstr "Име на счетоводен регистър"
+msgstr "Име на журнала"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
 msgid "Journal id"
-msgstr "Счетоводен регистър - идентификация"
+msgstr "Журнал - идентификация"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -342,9 +340,9 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
-"Просто натиснете бутона ОК, за да създадете сметката/счетоводния регистър и "
-"да приключите въвеждането. В случай, че сте сгрешили, натиснете 'Отмяна - "
-"Cancel', за да предотвратите въвеждането."
+"Просто натиснете бутона ОК, за да създадете сметка/журнал и приключите "
+"въвеждането. В случай, че сте сгрешили, натиснете 'Отмяна - Cancel', за да "
+"предотвратите въвеждането."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -388,7 +386,7 @@ msgid ""
 msgstr ""
 "Начини на плащане с цел събиране на пари. Модулите на Odoo предлагат "
 "различни средства за обработка на плащания, но винаги можете да използвате "
-"т.нар. \"ръчен\" метод на раз/плащане, за да управлявате плащанията извън "
+"т.нар. \"ръчен\" метод на плащане, за да управлявате плащанията извън "
 "софтуера."
 
 #. module: account_bank_statement_import
@@ -400,7 +398,7 @@ msgid ""
 msgstr ""
 "Начини на плащане с цел изпращане на пари. Модулите на Odoo предлагат "
 "различни средства за обработка на плащания, но винаги можете да използвате "
-"т.нар. \"ръчен\" метод на раз/плащане, за да управлявате плащанията извън "
+"т.нар. \"ръчен\" метод на плащане, за да управлявате плащанията извън "
 "софтуера."
 
 #. module: account_bank_statement_import
@@ -427,7 +425,7 @@ msgstr "Приходна сметка"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Refund Entry Sequence"
-msgstr "Последователност при вписвания на обезщетения"
+msgstr "Последователност в записите на кредитни известия"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -437,10 +435,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Изберете 'Продажба - Sale' за счетоводните регистри с фактурите на клиентите.\n"
-"Изберете 'Покупка - Purchase' за счетоводните регистри със сметките на продавачите/доставчиците.\n"
-"Изберете 'В брой - Cash' или 'Банка - Bank' за счетоводни регистри, използвани при раз/плащания с клиенти или търговци/доставчици.\n"
-"Изберете 'Общо - General' за различни оперативни счетоводни регистри."
+"Изберете 'Продажба - Sale' за журнали с фактури за продажба.\n"
+"Изберете 'Покупка - Purchase' за журнали с фактури за покупка.\n"
+"Изберете 'В брой - Cash' или 'Банка - Bank' за журнали, използвани при раз/плащания с клиенти или търговци/доставчици.\n"
+"Изберете 'Общо - General' за различни оперативни журнали."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -465,7 +463,7 @@ msgstr "Покажете в долния колонтитул на фактур�
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Покажете счетоводния регистър на таблото"
+msgstr "Покажете журнала на таблото"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -476,16 +474,14 @@ msgid ""
 msgstr ""
 "Сметката на извлечението, което въвеждате, все още не е регистрирано в Odoo."
 " За да придвижите процедурата с въвеждането, трябва да съдадете банков "
-"счетоводен регистър за тази сметка."
+"журнал за тази сметка."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
-"Сметката на това извлечение (%s) iне е същата като счетоводния регистър "
-"(%s)."
+msgstr "Сметката на това извлечение (%s) iне е същата като журнала (%s)."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
@@ -494,8 +490,8 @@ msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
 msgstr ""
-"Валутата на банковото извлечение (%s) не е същата като валутата на "
-"счетоводния регистър (%s) !"
+"Валутата на банковото извлечение (%s) не е същата като валутата на журнала "
+"(%s) !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -505,9 +501,7 @@ msgstr "Валутата използвана за да се въведе изв
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
-"Вписванията в този счетоводен регистър ще бъдат назовани посредством този "
-"префикс."
+msgstr "Статиите в този журнал ще бъдат упоменати посредством този префикс."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -515,8 +509,8 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Това поле съдържа информацията, свързана с номерирането/преброяването на "
-"вписванията в счетоводния регистър на този счетоводен регистър."
+"Това поле съдържа информацията, свързана с номерирането на записите в този "
+"журнал."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -524,8 +518,8 @@ msgid ""
 "This field contains the information related to the numbering of the refund "
 "entries of this journal."
 msgstr ""
-"Това поле съдържа информацията, свързана с номерирането на вписванията на "
-"обезщетения в този счетоводен регистър."
+"Това поле съдържа информацията, свързана с номерирането на записите за "
+"кредитни известия в този журнал."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
@@ -547,9 +541,7 @@ msgstr "Вид"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
-"Използва се за подреждане на счетоводни регистри в диаграмите/изгледа на "
-"таблото"
+msgstr "Използва се за подреждане на журнали в изгледа на таблото"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
@@ -572,7 +564,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Дали този счетоводен регистър трябва да се покаже на таблото или не"
+msgstr "Дали този журнал трбва да се изобрази на таблото или не"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
@@ -588,7 +580,7 @@ msgid ""
 " journal: %s"
 msgstr ""
 "Трябва да настроите дебитна сметка по подразбиране и кредитна сметка по "
-"подразбиране за счетоводния регистър: %s"
+"подразбиране за журнала: %s"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
