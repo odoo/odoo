@@ -13,18 +13,18 @@
 # Rolandas <info@paninfo.lt>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Paulius Sladkevičius <paulius@versada.eu>, 2017
 # Elvinas Černys <elvinas@digitouch.lt>, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -269,6 +269,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                       Dokumentai yra prisegti prie jūsų projekto užduočių ar problemų.</p><p>\n"
+"                        Siųskite žinutes arba veskite vidinius užrašus su prisegtukais, kad\n"
+"                        susietumėte dokumentus su savo projektu.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:144
@@ -545,6 +550,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and is extremely useful for several cases."
 msgstr ""
+"<strong>Puiki Odoo funkcija yra kolektyvinės užrašinės, vadinamos Etherpad, integracija.</strong><br/>\n"
+"                            Ji pakeičia standartinę aprašymo vietą užduotyse ir yra ypatingai naudinga keliais atvejais."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -964,6 +971,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this task\n"
 " * Green indicates the task is ready to be pulled to the next stage"
 msgstr ""
+"Užduoties kanban būsena parodo specialias būsenas, veikiančias ją:\n"
+" * Pilka yra numatytoji situacija\n"
+" * Raudona rodo, kad kažkas neleidžia šiai užduočiai progresuoti\n"
+" * Žalia rodo, kad užduotis yra paruošta perkėlimui į kitą stadiją"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1530,7 +1541,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create at least 3 tasks"
-msgstr "Sukurti mažiausiai 3 užduotis"
+msgstr "Sukurkite bent 3 užduotis"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1664,7 +1675,7 @@ msgstr "Klientų aptarnavimo kortelės"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr ""
+msgstr "Pritaikymas"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
@@ -2419,6 +2430,8 @@ msgid ""
 "It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
 "                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
+"Svarbiausia - aiškiai išsiaiškinti, kodėl jūs norite naudoti Odoo Projektą ir kokie yra jūsų tikslai.\n"
+"                        Aišku, yra daugybė būdų valdyti projektą, tačiau norėdami rasti geriausią sau, turite žinoti, ką tiksliai norite pasiekti. Vėliau mes jūsų tikslus paversime tikrais jūsų kompanijos patobulinimais."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3756,6 +3769,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Modelis (Odoo dokumento rūšis), su kuriuo susijęs šis pseudonimas. Visi "
+"gaunami laiškai, kurie neatsako į egzistuojantį įrašą, sukurs naują šio "
+"modelio įrašą (pvz. projekto užduotį)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name

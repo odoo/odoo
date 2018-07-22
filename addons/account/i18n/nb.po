@@ -7,6 +7,7 @@
 # Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
+# Nils Fredrik Gjerull, 2017
 # Roy Edvard Ellingsen <roy@royedvard.com>, 2018
 # Aleksander, 2018
 # Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018
@@ -33,17 +34,21 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Statusen 'Kladd' anvendes når en bruker fyller inn en ny og ubekreftet faktura.\n"
+"* Statusen 'Åpen' anvendes når en bruker oppretter en faktura. Den forblir i samme status inntil fakturaen blir betalt.\n"
+"* Statusen 'Betalt' blir satt når fakturaen er betalt. Dette kan føre til at de tilknyttete posteringene blir avstemt, men det er avhengig av oppsettet.\n"
+"* Statusen 'Avbrutt' anvendes når brukeren avbryter en faktura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr "# tall"
+msgstr "# sifre"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_code_digits
 msgid "# of Digits *"
-msgstr "# tall *"
+msgstr "# sifre *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -80,7 +85,7 @@ msgstr "${object.subject}"
 #: code:addons/account/models/account_bank_statement.py:462
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr ""
+msgstr "transaksjoner var automatisk avstemt."
 
 #. module: account
 #: code:addons/account/models/account.py:794
@@ -114,18 +119,18 @@ msgstr "- Første nummer:"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "Avstem"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "Se delevis avstemte posteringer"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:463
 #, python-format
 msgid "1 transaction was automatically reconciled."
-msgstr ""
+msgstr "1 transaksjon var automatisk avstemt."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -156,7 +161,7 @@ msgstr ": Hovedbok"
 #: code:addons/account/models/account.py:539
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": Refusjon"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -177,6 +182,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hei ${object.partner_id.name},</p>\n"
+"<p>Takk for din betaling.<br/>Her er din kvittering <strong>${(object.name or '').replace('/','-')}</strong> på totalt <strong>${format_amount(object.amount, object.currency_id)}</strong> fra ${object.company_id.name}.</p>\n"
+"<p>Hvis du har noen spørsmål er det bare å kontakte oss.</p>\n"
+"<p>Vennlig hilsen,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -406,6 +421,9 @@ msgid ""
 "                                        <strong>Accountant</strong> (Advanced access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Regnskapsfører</strong> (Avansert tilgang)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -414,6 +432,9 @@ msgid ""
 "                                        <strong>Advisor</strong> (Full access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Rådgiver</strong> (Full tilgang)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -422,6 +443,9 @@ msgid ""
 "                                        <strong>Billing</strong> (Limited access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Fakturering</strong> (Begrenset tilgang)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -441,6 +465,9 @@ msgid ""
 "                                        <strong>Invoice payment by Check</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Fakturabetaling med sjekk</strong>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -471,6 +498,9 @@ msgid ""
 "                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Avstem kontoutskrift</strong>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -503,7 +533,7 @@ msgstr "<span> Til </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr ""
+msgstr "<span>Posteringer</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

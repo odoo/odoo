@@ -111,7 +111,7 @@ msgstr "%s (کپی)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>بر</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -325,6 +325,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
 "class=\"hidden-xs\"> Paid</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\">پرداخت شده</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -332,6 +334,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
 "class=\"hidden-xs\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
+"class=\"hidden-xs\">لغو شده</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -339,6 +343,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> در انتظار پرداخت</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -354,6 +360,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>وارد کردن از یک فایل</strong><br/>\n"
+"                                        <span class=\"small\">توصیه شده برای &gt;۱۰۰ محصول</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -364,6 +375,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>وارد کردن</strong><br/>\n"
+"                                        <span class=\"small\">بیش از ۲۰۰ تماس\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -374,6 +390,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> ایجاد دستی</strong><br/>\n"
+"                                        <span class=\"small\">کمتر از ۲۰۰ تماس\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -384,6 +405,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> ایجاد دستی</strong><br/>\n"
+"                                        <span class=\"small\">توصیه شده برای کمتر از ۱۰۰ محصول</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -511,7 +537,7 @@ msgstr "<span> به</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr ""
+msgstr "<span>ورودی‌های روزنامه"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -571,7 +597,7 @@ msgstr "<strong>2. ثبت \\رداخت های بی همتا</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>مقدار سر رسید</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -597,6 +623,8 @@ msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement import."
 msgstr ""
+"<strong>واسط بانکداری:</strong> با همسان سازی همزمان فید بانک و ورود "
+"صورتحساب بانک."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -749,7 +777,7 @@ msgstr "<strong>دفتر روزنامه:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Journals:</strong>"
-msgstr ""
+msgstr "<strong>روزنامه‌ها:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -761,7 +789,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Memo: </strong>"
-msgstr ""
+msgstr "<strong>یادداشت: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -876,12 +904,12 @@ msgstr "<strong>مرجع:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Revenue Recognition</strong>"
-msgstr ""
+msgstr "<strong>تشخیص درآمد</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Send follow-up letters</strong>"
-msgstr ""
+msgstr "<strong>ارسال نامه‌های بعدی</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -967,7 +995,7 @@ msgstr "<strong>فروشنده: </strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>to </strong>"
-msgstr ""
+msgstr "<strong>تا </strong>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -983,7 +1011,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:383
 #, python-format
 msgid "A Cash transaction can't have a 0 amount."
-msgstr ""
+msgstr "تراکنش صندوق نمی تواند مقدار 0 داشته باشد."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1731
@@ -1001,7 +1029,7 @@ msgstr ""
 #: code:addons/account/models/account.py:707
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "یک حساب بانکی تنها می تواند به یک روزنامه تعلق داشته باشد."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1122,7 +1150,7 @@ msgstr "حساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr ""
+msgstr "حسابدار حساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -1132,7 +1160,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Account Balances"
-msgstr ""
+msgstr "ترازهای حساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
@@ -1186,7 +1214,7 @@ msgstr "داده حساب"
 #: model:ir.ui.view,arch_db:account.view_account_group_form
 #: model:ir.ui.view,arch_db:account.view_account_group_tree
 msgid "Account Group"
-msgstr ""
+msgstr "گروه حساب"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_group_tree
@@ -1204,7 +1232,7 @@ msgstr "روزنامه حساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_account_line_id
 msgid "Account Line"
-msgstr ""
+msgstr "سطر حساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_ids
@@ -1291,7 +1319,7 @@ msgstr "آمار حساب"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr ""
+msgstr "برچسب حساب"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
@@ -1438,7 +1466,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
 msgid "Account to Use Instead"
-msgstr ""
+msgstr "حسابی جایگزین"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_cash_basis_account
@@ -1457,7 +1485,7 @@ msgstr "حسابداری"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting App Options"
-msgstr ""
+msgstr "گزینه‌های برنامه حسابداری"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -1538,7 +1566,7 @@ msgstr "کنش‌ها"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Other Currencies"
-msgstr ""
+msgstr "فعال کردن ارزهای دیگر"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1567,7 +1595,7 @@ msgstr "افزودن"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "اضافه کردن یادداشت اعتباری"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1697,12 +1725,12 @@ msgstr "همه داده ها"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_all_partner_invoices
 msgid "All Invoices"
-msgstr ""
+msgstr "تمام فاکتورها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr ""
+msgstr "همه خطوط هماهنگ شده"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1844,14 +1872,14 @@ msgstr "مقدار"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount Currency"
-msgstr ""
+msgstr "مقدار ارز"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
 #: model:ir.ui.view,arch_db:account.invoice_tree
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Amount Due"
-msgstr ""
+msgstr "مقدار سر رسید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
@@ -1866,7 +1894,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "Amount Paid"
-msgstr ""
+msgstr "مقدار پرداخت شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_rounding
@@ -1876,13 +1904,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
 msgid "Amount Signed"
-msgstr ""
+msgstr "مقدار امضاء شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_amount_type
 msgid "Amount Type"
-msgstr ""
+msgstr "نوع مقدار"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
@@ -1990,13 +2018,13 @@ msgstr "سطرتحلیلی"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr ""
+msgstr "سطرهای تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Tags"
-msgstr ""
+msgstr "برچسبهای تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -2006,22 +2034,22 @@ msgstr "حساب تحلیلی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_line_ids
 msgid "Analytic lines"
-msgstr ""
+msgstr "سطرهای تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
 msgid "Analytic tags"
-msgstr ""
+msgstr "برچسبهای تحلیلی"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr ""
+msgstr "تحلیلی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
 msgid "Appears in VAT report"
-msgstr ""
+msgstr "در گزارش ارزش افزوده نشان داده می‌شود"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -2089,7 +2117,7 @@ msgstr "مدیریت دارایی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
 msgid "Associated Account Templates"
-msgstr ""
+msgstr "قالبهای حساب مربوطه"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
@@ -2109,7 +2137,7 @@ msgstr "آگوست"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-detect"
-msgstr ""
+msgstr "تشخیص خودکار"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2119,7 +2147,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automated Entries"
-msgstr ""
+msgstr "ورودی‌های خودکار"
 
 #. module: account
 #: code:addons/account/models/company.py:354
@@ -2136,19 +2164,19 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatic Import"
-msgstr ""
+msgstr "ورودی خودکار"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Automatic formatting"
-msgstr ""
+msgstr "قالب بندی خودکار"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:24
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "هماهنگ سازی خودکار"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:468
@@ -2165,7 +2193,7 @@ msgstr "قیمت میانگین"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Awaiting payments"
-msgstr ""
+msgstr "پرداخت‌های در انتظار"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:189
@@ -2176,7 +2204,7 @@ msgstr "صورتحساب"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr ""
+msgstr "بد حساب"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2221,7 +2249,7 @@ msgstr "بانک"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank &amp; Cash"
-msgstr ""
+msgstr "بانک &amp; صندوق"
 
 #. module: account
 #: code:addons/account/models/company.py:163
@@ -2239,7 +2267,7 @@ msgstr "حساب بانکی"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Account Name"
-msgstr ""
+msgstr "نام حساب بانکی"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_partner_bank_id
@@ -2277,7 +2305,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
 msgid "Bank Journals"
-msgstr ""
+msgstr "روزنامه‌های بانک"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -2315,7 +2343,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "سطر صورتحساب بانک"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
@@ -2365,7 +2393,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:39
 #, python-format
 msgid "Bank: Balance"
-msgstr ""
+msgstr "بانک: تراز"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
@@ -2383,7 +2411,7 @@ msgstr "مقدار پایه"
 #: selection:account.tax,tax_exigibility:0
 #: selection:account.tax.template,tax_exigibility:0
 msgid "Based on Invoice"
-msgstr ""
+msgstr "بر اساس فاکتور"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_tax_exigibility
@@ -2397,7 +2425,7 @@ msgstr ""
 #: selection:account.tax,tax_exigibility:0
 #: selection:account.tax.template,tax_exigibility:0
 msgid "Based on Payment"
-msgstr ""
+msgstr "بر اساس پرداخت"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2420,33 +2448,33 @@ msgstr "مطلق به شرکت فعلی کاربر است"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Bill"
-msgstr ""
+msgstr "صورتحساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "Bill Date"
-msgstr ""
+msgstr "تازیخ صورتحساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Bill lines"
-msgstr ""
+msgstr "سطرهای قبض"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Billing"
-msgstr ""
+msgstr "صورتحساب"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Billing Manager"
-msgstr ""
+msgstr "مدیر صورتحساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr ""
+msgstr "صورتحساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2457,7 +2485,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:186
 #, python-format
 msgid "Bills to pay"
-msgstr ""
+msgstr "صورتحساب برای پرداخت"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -2477,7 +2505,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_budget
 msgid "Budget Management"
-msgstr ""
+msgstr "مدیریت بودجه"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_business_intelligence_menu
@@ -2778,7 +2806,7 @@ msgstr "پوسته نمودار"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr ""
+msgstr "قالبهای نمودار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_coa_done
@@ -2867,7 +2895,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr ""
+msgstr "چکها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -2899,32 +2927,32 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
-msgstr ""
+msgstr "برای افزودن روزنامه کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "برای افزودن برچسب جدید کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
 msgid "Click to add an account."
-msgstr ""
+msgstr "برای افزودن حساب کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Click to create a credit note."
-msgstr ""
+msgstr "برای ایجاد یادداشت اعتبار کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
 msgid "Click to create a customer invoice."
-msgstr ""
+msgstr "برای ایجاد فاکتور مشتری کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Click to create a journal entry."
-msgstr ""
+msgstr "برای ایجاد ورودی روزنامه کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -2939,7 +2967,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
 msgid "Click to define a new account type."
-msgstr ""
+msgstr "برای ایجاد نوع حساب جدید کلیک کنید."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -2960,7 +2988,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:account.action_account_payments
 #: model:ir.actions.act_window,help:account.action_account_payments_payable
 msgid "Click to register a payment"
-msgstr ""
+msgstr "برای ثبت پرداخت کلیک کنید"
 
 #. module: account
 #. openerp-web
@@ -3106,7 +3134,7 @@ msgstr "ارز شرکت"
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:25
 #, python-format
 msgid "Company Data"
-msgstr ""
+msgstr "داده شرکت"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_company_data_done
@@ -3340,7 +3368,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Customers"
-msgstr ""
+msgstr "ایجاد مشتری‌ها"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4440,7 +4468,7 @@ msgstr "خطا!"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Excel template"
-msgstr ""
+msgstr "قالب اکسل"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:191
@@ -4790,7 +4818,7 @@ msgstr "آینده"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "فعالیتهای آینده"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6066,7 +6094,7 @@ msgstr "آخرین به‌روزرسانی در تاریخ "
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Last Month"
-msgstr ""
+msgstr "ماه گذشته"
 
 #. module: account
 #. openerp-web
@@ -6237,7 +6265,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "فعالیتهای اخیر"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_last_time_entries_checked
@@ -6682,7 +6710,7 @@ msgstr "چند ارزی"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "My Activities"
-msgstr ""
+msgstr "فعالیتها من"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10172,7 +10200,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "فعالیتها امروز"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total
@@ -10750,7 +10778,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier
 msgid "Vendors"
-msgstr ""
+msgstr "فروشندگاه"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -10783,7 +10811,7 @@ msgstr "هشدار!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_group_warning_account
 msgid "Warnings"
-msgstr ""
+msgstr "هشدارهال"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

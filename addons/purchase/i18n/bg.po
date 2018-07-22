@@ -107,7 +107,7 @@ msgstr "Сметки на Доставчика"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
 msgid "# of Bills"
-msgstr ""
+msgstr "# от фактури за покупка"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
@@ -124,7 +124,7 @@ msgstr "Поръчка за покупка"
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.mail_template_data_notification_email_purchase_order
@@ -392,6 +392,8 @@ msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
 msgstr ""
+"Асоциирана поръчка за покупка. Попълнена автоматично, когато на фактурата за"
+" покупка е и збрана поръчка за покупка."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -411,7 +413,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
 msgid "Bill Lines"
-msgstr ""
+msgstr "Редове на фактура за покупка"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
@@ -436,7 +438,7 @@ msgstr "Фактури"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Bills Received"
-msgstr ""
+msgstr "Получени фактури за покупка"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -512,6 +514,8 @@ msgstr ""
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
 msgstr ""
+"Натиснете бутона, за да създадете оферта, оято ще бъде конвертирана в "
+"поръчка за покупка."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -521,7 +525,7 @@ msgstr "Кликнете за създаване на нова Поръчка."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Click to create a vendor bill."
-msgstr ""
+msgstr "Натиснете бутона, за да създадете фактура за покупка."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -533,6 +537,8 @@ msgstr "Кликнете за да дефинирате нов продукт"
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr ""
+"Натиснете бутона, за да запишете фактура за покупка, свързана с тази "
+"покупка."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -576,7 +582,7 @@ msgstr "Потвърдете поръчката в една стъпка"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
-msgstr ""
+msgstr "Потвърдените поръчки за покупки не могат да се редактират"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1065,12 +1071,12 @@ msgstr "Бележки"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
-msgstr ""
+msgstr "Нищо за плащане"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On ordered quantities"
-msgstr ""
+msgstr "Върху поръчани количества"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_method
@@ -1079,6 +1085,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"На поръчани количества: контролирайте фактурите за покупки на базата на поръчани количества.\n"
+"На получени количества: контролирайте фактурите за покупки на базата на получени количества."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1339,7 +1347,7 @@ msgstr "Поръчка Потвърждение #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr ""
+msgstr "Фискална позиция на поръчката за покупка"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -2039,6 +2047,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Фактури за покупка могат да бъдат предварително създадени на основата на поръчки за\n"
+"                    покупки или квитанции. Това Ви позволява да контролирате фактурите за покупка,\n"
+"                    които получавате от доставчика си според чернова\n"
+"                     документа в Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -2049,7 +2061,7 @@ msgstr "Обем"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr ""
+msgstr "Изчакващи фактури за покупки"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse

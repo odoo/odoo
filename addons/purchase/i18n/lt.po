@@ -11,18 +11,18 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Anatolij, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 14:51+0000\n"
 "PO-Revision-Date: 2018-04-27 14:51+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -773,7 +773,7 @@ msgstr "Gauti 2 lygių patikrinimus užsakymo patvirtinimui"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr "Gauti perspėjimus dėl produktų ar pardavėjų užsakymuose"
+msgstr "Gauti perspėjimus dėl produktų ar tiekėjų užsakymuose"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -810,13 +810,13 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"Jei įjungta, aktyvuoja 3 dalių sutapimą pardavėjo sąskaitose: prekės turi "
+"Jei įjungta, aktyvuoja 3 dalių sutapimą tiekėtjų sąskaitose: prekės turi "
 "būti gautos, kad būtų galima apmokėti sąskaitą."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Import vendor pricelists"
-msgstr "Importuoti pardavėjo kainoraščius"
+msgstr "Importuoti tiekėjo kainoraščius"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:206
@@ -1314,7 +1314,7 @@ msgid ""
 msgstr ""
 "Pirkimų analizė leidžia jums lengvai patikrinti ir analizuoti jūsų "
 "kompanijos pirkimo istoriją ir planų įvykdymą. Iš šio meniu galite sekti "
-"savo derybų sėkmę, jūsų pardavėjų pristatymo sėkmę ir kt."
+"savo derybų sėkmę, jūsų tiekėjų pristatymo sėkmę ir kt."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
@@ -1590,7 +1590,7 @@ msgstr "Kainos paklausimas #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr "Reikalauti pardavėjų pristatymo klientams"
+msgstr "Reikalauti tiekėjų pristatymo klientams"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1773,7 +1773,7 @@ msgid ""
 msgstr ""
 "Produkto formoje yra detali informacija pirkimo proceso\n"
 "pagerinimui: kainos, įsigijimo logistika, buhalteriniai duomenys,\n"
-"galimi pardavėjai ir kt."
+"galimi tiekėjai ir kt."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1784,7 +1784,7 @@ msgid ""
 msgstr ""
 "Produkto formoje yra detali informacija pirkimo proceso\n"
 "pagerinimui: kainos, įsigijimo logistika, buhalteriniai duomenys,\n"
-"galimi pardavėjai ir kt."
+"galimi tikėjai ir kt."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:649
@@ -1819,7 +1819,7 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
-"Su produktu %s nėra susieta jokių pardavėjų. Nustatykite pardavėją šiam "
+"Su produktu %s nėra susieta jokių tiekėjų. Nustatykite pardavėją šiam "
 "produktui."
 
 #. module: purchase
@@ -2040,7 +2040,7 @@ msgstr "Pagalbinis laukas išreiškiantis sumą valiuta"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr "Pardavėjas"
+msgstr "Tiekėjas"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -2050,7 +2050,7 @@ msgstr "Pardavėjas"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills"
-msgstr "Pardavėjų sąskaitos"
+msgstr "Tiekėjų sąskaitos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
@@ -2067,7 +2067,7 @@ msgstr "Tiekėjo numeris"
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Vendors"
-msgstr "Pardavėjai"
+msgstr "Tiekėjai"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
