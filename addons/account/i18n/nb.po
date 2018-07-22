@@ -11,13 +11,14 @@
 # Roy Edvard Ellingsen <roy@royedvard.com>, 2018
 # Mari Løken <inactive+mari123@transifex.com>, 2018
 # Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018
+# Nils Fredrik Gjerull, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-25 08:13+0000\n"
 "PO-Revision-Date: 2018-06-25 08:13+0000\n"
-"Last-Translator: Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018\n"
+"Last-Translator: Nils Fredrik Gjerull, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Statusen 'Kladd' anvendes når en bruker fyller inn en ny og ubekreftet faktura.\n"
+"* Statusen 'Åpen' anvendes når en bruker oppretter en faktura. Den forblir i samme status inntil fakturaen blir betalt.\n"
+"* Statusen 'Betalt' blir satt når fakturaen er betalt. Dette kan føre til at de tilknyttete regnskapsoppføringene blir balansert, men det er avhengig av oppsettet.\n"
+"* Statusen 'Avbrutt' anvendes når brukeren avbryter en faktura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -60,7 +65,7 @@ msgstr "${object.company_id.name} Kvittering (Ref ${object.name or 'n/a' })"
 #: code:addons/account/models/reconciliation_widget.py:44
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr ""
+msgstr "transaksjoner var automatisk balansert"
 
 #. module: account
 #: code:addons/account/models/account.py:837
@@ -95,18 +100,18 @@ msgstr "- Første nummer:"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "Avstem"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "Se delevis avstemte oppføringer"
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:45
 #, python-format
 msgid "1 transaction was automatically reconciled."
-msgstr ""
+msgstr "1 transaksjon var automatisk avstemt"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -137,7 +142,7 @@ msgstr ": Hovedbok"
 #: code:addons/account/models/account.py:587
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": Refusjon"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -158,6 +163,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hei ${object.partner_id.name},</p>\n"
+"<p>Takk for din betaling.<br/>Her er din kvittering <strong>${(object.name or '').replace('/','-')}</strong> på totalt <strong>${format_amount(object.amount, object.currency_id)}</strong> fra ${object.company_id.name}.</p>\n"
+"<p>Hvis du har noen spørsmål er det bare å kontakte oss.</p>\n"
+"<p>Vennlig hilsen,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -263,7 +278,7 @@ msgstr "<span> Til </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr ""
+msgstr "<span>Posteringer</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
