@@ -4,9 +4,9 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Duy BQ <duybq86@gmail.com>, 2017
+# Martin Trigaux, 2017
 # son dang <son.dang@doda100.com>, 2017
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
 # Phạm Lân <phamquanglan@gmail.com>, 2017
 # Dang Hanh <hanh.dtm@komit-consulting.com>, 2018
 msgid ""
@@ -31,12 +31,12 @@ msgstr "Từ"
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Khách hàng</strong>"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
-msgstr ""
+msgstr "<strong>Sản phẩm</strong>"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -47,7 +47,7 @@ msgstr "Các tài khoản"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
-msgstr "Tài khoản quản trị"
+msgstr "Tài khoản KT quản trị"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -60,14 +60,14 @@ msgstr "Tài khoản quản trị mặc định"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Phân tích Phân Phối"
+msgstr "Phân bổ KT Quản trị"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr "Quy tắc quản trị"
+msgstr "Quy tắc KT quản trị"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
@@ -88,22 +88,22 @@ msgstr "Được tạo bởi"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
 msgid "Created on"
-msgstr "Thời điểm tạo"
+msgstr "Được tạo vào"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
-msgstr ""
+msgstr "GIá trị phân tích mặc định"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "Mặc định ngày kết thúc cho tài khoản quản trị này."
+msgstr "Mặc định ngày kết thúc cho tài khoản kt quản trị này."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
-msgstr "Mặc định ngày bắt đầu cho tài khoản quản trị này."
+msgstr "Mặc định ngày bắt đầu cho tài khoản kt quản trị này."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
@@ -119,7 +119,7 @@ msgstr "Ngày kết thúc"
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "Chỉ ra thứ tự trình tự khi hiển thị một danh sách phân bổ quản trị"
+msgstr "Chỉ ra thứ tự trình tự khi hiển thị một danh sách phân bổ kt quản trị"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -134,7 +134,7 @@ msgstr "ID"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Chi tiết hóa đơn"
+msgstr "Chi tiết hoá đơn"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
@@ -149,7 +149,7 @@ msgstr "Cập nhật lần cuối bởi"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
@@ -176,7 +176,7 @@ msgid ""
 "company, it will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một công ty mà sẽ sử dụng tài khoản quản trị trong tài khoản quản trị "
-"mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng ta chọn "
+"mặc định (ví dụ: tạo mới hoá đơn khách hàng hoặc đơn hàng nếu chúng ta chọn "
 "công ty này, nó sẽ tự động thực hiện việc này như là một tài khoản quản trị)"
 
 #. module: account_analytic_default
@@ -187,7 +187,7 @@ msgid ""
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một đối tác mà sẽ sử dụng tài khoản quản trị chỉ định trong tài khoản "
-"quản trị mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng"
+"quản trị mặc định (ví dụ: tạo mới hoá đơn khách hàng hoặc đơn hàng nếu chúng"
 " ta chọn đối tác này, nó sẽ tự động thực hiện như là một tài khoản quản trị)"
 
 #. module: account_analytic_default
@@ -198,7 +198,7 @@ msgid ""
 "product, it will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một sản phẩm mà sẽ sử dụng tài khoản quản trị chỉ định trong tài khoản "
-"quản trị mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng"
+"quản trị mặc định (ví dụ: tạo mới hoá đơn khách hàng hoặc đơn hàng nếu chúng"
 " ta chọn sản phẩm này, nó sẽ tự động thực hiện việc này như là một tài khoản"
 " quản trị)"
 

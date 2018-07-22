@@ -3,6 +3,7 @@
 # * account_payment
 # 
 # Translators:
+# Duy BQ <duybq86@gmail.com>, 2017
 # fanha99 <fanha99@hotmail.com>, 2017
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Thanh toán ngay"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -64,6 +65,8 @@ msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Đang chờ</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -71,17 +74,19 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Hoàn tất</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>Giao dịch</strong>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:80
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Số tiền không khớp (%s)"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:52
@@ -90,40 +95,42 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Nếu chúng tôi lưu thông tin thanh toán của bạn trên hệ thống của chúng tôi, "
+"các thanh toán thuê bao sẽ được tự động thực hiện."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
 msgid "Invoice"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Giao dịch gần nhất"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "Số giao dịch thanh toán"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Thanh toán & Xác nhận"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:119
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Thanh toán ngay"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "Pay with"
-msgstr ""
+msgstr "Thanh toán với"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
@@ -133,13 +140,13 @@ msgstr "Payment Acquirer"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Giao dịch thanh toán"
 
 #. module: account_payment
 #: code:addons/account_payment/models/account_invoice.py:28
 #, python-format
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Giao dịch Thanh toán"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -182,21 +189,24 @@ msgstr ""
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Đã xảy ra lỗi khi xử lý thanh toán của bạn: số tiền giao dịch có vấn "
+"đề.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Đã xảy ra lỗi khi xử lý thanh toán của bạn: giao dịch bị lỗi.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
+msgstr "Đã xảy ra lỗi khi xử lý thanh toán của bạn: giao dịch có vấn đề.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Đã xảy ra lỗi khi xử lý thanh toán của bạn: ID thẻ tín dụng không hợp lệ."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
@@ -207,4 +217,4 @@ msgstr "Giao dịch"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Thanh toán của bạn đã được ủy quyền."

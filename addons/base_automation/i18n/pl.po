@@ -459,6 +459,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Podaj pole używane do łączenia nowo utworzonego rekordu na rekordzie "
+"używanego przez działanie serwera."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_code
@@ -496,6 +498,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Ustawienie wartości powoduje, że ta czynność jest dostępna na pasku bocznym "
+"dla danego modelu."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -528,6 +532,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Typ działania serwera. Dostępne są następujące wartości:\n"
+"- 'Wykonaj kod Pythona': blok kodu Pythona, który zostanie wykonany\n"
+"- \"Utwórz lub skopiuj nowy rekord\": utwórz nowy rekord z nowymi wartościami lub skopiuj istniejący rekord do bazy danych\n"
+"- \"Zapisz w rekordzie\": zaktualizuj wartości rekordu\n"
+"- \"Wykonaj kilka działań\": zdefiniuj akcję, która uruchamia kilka innych działań serwera\n"
+"- \"Dodaj obserwujących\": dodaj obserwujących do rekordu (dostępne w Dyskusja)\n"
+"- \"Wyślij wiadomość e-mail\": automatycznie wysyła e-mail (dostępny w email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -572,6 +583,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"W przypadku wielu akcji kolejność wykonywania zależy od sekwencji. Niski "
+"numer oznacza wysoki priorytet."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
@@ -592,6 +605,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Napisz kod Pythona, który wykona akcja. Niektóre zmienne są dostępne do "
+"użycia; pomoc dotycząca wyrażenia Python jest podana w zakładce pomocy."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

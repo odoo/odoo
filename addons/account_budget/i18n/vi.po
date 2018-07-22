@@ -3,19 +3,18 @@
 # * account_budget
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # fanha99 <fanha99@hotmail.com>, 2017
 # son dang <son.dang@doda100.com>, 2017
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
+# Duy BQ <duybq86@gmail.com>, 2017
 # Phạm Lân <phamquanglan@gmail.com>, 2017
-# Dang Hanh <hanh.dtm@komit-consulting.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 11:34+0000\n"
 "PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: Dang Hanh <hanh.dtm@komit-consulting.com>, 2018\n"
+"Last-Translator: Phạm Lân <phamquanglan@gmail.com>, 2017\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,10 +30,11 @@ msgid ""
 "                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)"
 msgstr ""
-"Ngân sách là dự báo thu nhập và / hoặc chi phí của công ty bạn\n"
-" dự kiến trong một giai đoạn trong tương lai. Một ngân sách được xác định trên một vài \n"
-" tài khoản tài chính và / hoặc tài khoản phân tích (có thể đại diện cho\n"
-"dự án, phòng ban, loại sản phẩm, ...)"
+"Một ngân sách là một dự báo về doanh thu hoặc/và chi phí của công ty đối\n"
+"                với một chu kỳ trong tương lai. Một ngân sách được định nghĩa\n"
+"                đối với một số tài khoản kế toán tài chính hoặc/và tài khoản\n"
+"                kế toán quản trị (mà đại diện cho dự án, phòng ban, nhóm sản\n"
+"                phẩm, v.v.)"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -45,7 +45,7 @@ msgstr "Các tài khoản"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_percentage
 msgid "Achievement"
-msgstr ""
+msgstr "Thành tựu/Đạt được"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
@@ -71,12 +71,12 @@ msgstr "Ngân sách"
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Budget Items"
-msgstr ""
+msgstr "Hạng mục Ngân sách"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Chi tiết Ngân sách"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account_crossovered_budget_line
@@ -88,13 +88,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
 msgid "Budget Lines"
-msgstr ""
+msgstr "Chi tiết Ngân sách"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
-msgstr ""
+msgstr "Tên Ngân sách"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
@@ -118,7 +118,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
 msgid "Budgets"
-msgstr "Các ngân sách"
+msgstr "Ngân sách"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -129,11 +129,17 @@ msgid ""
 "                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period."
 msgstr ""
+"Bằng cách theo dõi nơi mà tiền của bạn sẽ đến, bạn có thể sẽ ít\n"
+"                tiêu quá giới hạn ngân sách và dễ dàng đáp ứng mục\n"
+"                tiêu tài chính hơn. Dự báo một ngân sách bằng cách\n"
+"                chi tiết hoá các khoản thu dự kiến với từng tài khoản\n"
+"                kt quản trị và theo dõi tiến triển của nó dựa trên\n"
+"                thực tế trong chu kỳ."
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Cancel Budget"
-msgstr ""
+msgstr "Huy Ngân sách"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -143,7 +149,7 @@ msgstr "Đã hủy"
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Click to create a new budget."
-msgstr ""
+msgstr "Bấm để tạo mới một Ngân sách"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_company_id
@@ -174,7 +180,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_date
 msgid "Created on"
-msgstr "Thời điểm tạo"
+msgstr "Được tạo vào"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_display_name
@@ -198,7 +204,7 @@ msgstr "Bản thảo"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Draft Budgets"
-msgstr ""
+msgstr "Ngân sách dự thảo"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_to
@@ -218,7 +224,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget___last_update
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines___last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_uid
@@ -232,7 +238,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật lần cuối"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_name
@@ -242,7 +248,7 @@ msgstr "Tên"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_paid_date
 msgid "Paid Date"
-msgstr "Ngày đã thanh toán"
+msgstr "Ngày đã Thanh toán"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -253,19 +259,19 @@ msgstr "Chu kỳ"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_planned_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Planned Amount"
-msgstr ""
+msgstr "Giá trị theo Kế hoạch"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_practical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Practical Amount"
-msgstr ""
+msgstr "Giá trị thực tế"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Reset to Draft"
-msgstr "Thiết lập về dự thảo"
+msgstr "Đặt về dự thảo"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_creating_user_id
@@ -281,7 +287,7 @@ msgstr "Ngày bắt đầu"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_state
 msgid "Status"
-msgstr "Trạng thái"
+msgstr "Tình trạng"
 
 #. module: account_budget
 #: code:addons/account_budget/models/account_budget.py:31
@@ -293,22 +299,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Theoretical Amount"
-msgstr ""
+msgstr "Giá trị theo lý thuyết"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Theoritical Amount"
-msgstr ""
+msgstr "Giá trị theo lý thuyết"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve"
-msgstr ""
+msgstr "Chờ duyệt"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve Budgets"
-msgstr ""
+msgstr "Chờ duyệt các Ngân sách"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
