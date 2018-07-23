@@ -4088,6 +4088,15 @@ class BaseModel(object):
                     if table not in query.tables:
                         query.tables.append(table)
 
+        if self._transient:
+            # One single implicit access rule for transient models: owner only!
+            # This is ok because we assert that TransientModels always have
+            # log_access enabled, so that 'create_uid' is always there.
+            domain = [('create_uid', '=', self._uid)]
+            tquery = self._where_calc(domain, active_test=False)
+            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
+            return
+
         # apply main rules on the object
         Rule = self.env['ir.rule']
         where_clause, where_params, tables = Rule.domain_get(self._name, mode)
@@ -4234,10 +4243,6 @@ class BaseModel(object):
         :return: a list of record ids or an integer (if count is True)
         """
         self.sudo(access_rights_uid or self._uid).check_access_rights('read')
-
-        # For transient models, restrict access to the current user, except for the super-user
-        if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
-            args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
