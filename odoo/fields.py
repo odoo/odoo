@@ -2590,7 +2590,7 @@ class Many2many(_RelationalMulti):
             reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
 
     def read(self, records):
-        comodel = records.env[self.comodel_name]
+        comodel = records.env[self.comodel_name].with_context(**self.context)
 
         # String domains are supposed to be dynamic and evaluated on client-side
         # only (thus ignored here).
