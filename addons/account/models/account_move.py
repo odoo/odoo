@@ -1271,6 +1271,8 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def _query_get(self, domain=None):
+        self.check_access_rights('read')
+
         context = dict(self._context or {})
         domain = domain or []
         if not isinstance(domain, (list, tuple)):
@@ -1328,6 +1330,10 @@ class AccountMoveLine(models.Model):
         tables = ''
         if domain:
             query = self._where_calc(domain)
+
+            # Wrap the query with 'company_id IN (...)' to avoid bypassing company access rights.
+            self._apply_ir_rules(query)
+
             tables, where_clause, where_clause_params = query.get_sql()
         return tables, where_clause, where_clause_params
 

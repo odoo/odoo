@@ -9,7 +9,7 @@ class report_product_pricelist(models.AbstractModel):
     _name = 'report.product.report_pricelist'
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         data = data if data is not None else {}
         pricelist = self.env['product.pricelist'].browse(data.get('form', {}).get('price_list', False))
         products = self.env['product.product'].browse(data.get('ids', data.get('active_ids')))

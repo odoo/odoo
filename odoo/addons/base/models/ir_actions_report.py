@@ -658,7 +658,7 @@ class IrActionsReport(models.Model):
         report_model = self.env.get(report_model_name)
 
         if report_model is not None:
-            data = report_model.get_report_values(docids, data=data)
+            data = report_model._get_report_values(docids, data=data)
         else:
             docs = self.env[self.model].browse(docids)
             data = {

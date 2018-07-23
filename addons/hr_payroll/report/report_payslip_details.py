@@ -86,7 +86,7 @@ class PayslipDetailsReport(models.AbstractModel):
         return res
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         payslips = self.env['hr.payslip'].browse(docids)
         return {
             'doc_ids': docids,

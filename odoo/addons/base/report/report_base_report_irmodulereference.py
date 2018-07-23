@@ -26,7 +26,7 @@ class IrModelReferenceReport(models.AbstractModel):
         return []
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report']._get_report_from_name('base.report_irmodulereference')
         selected_modules = self.env['ir.module.module'].browse(docids)
         return {
