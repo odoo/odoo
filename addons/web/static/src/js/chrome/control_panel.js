@@ -51,7 +51,7 @@ var ControlPanelMixin = {
      */
     update_control_panel: function(cp_status, options) {
         if (this.cp_bus) {
-            this.cp_bus.trigger_up("update", {cp_status: cp_status || {},
+            this.cp_bus.trigger("update", {cp_status: cp_status || {},
                 options: options || {}});
         }
     },
@@ -130,8 +130,8 @@ var ControlPanel = Widget.extend({
      * elements that are not in status.cp_content
      */
     update: function(event) {
-        var status = event.data ? event.data.cp_status : event;
-        var options = event.data ? event.data.options : event.options;
+        var status = event.cp_status ? event.cp_status : event;
+        var options = event.options;
         this.bus.updateIndex++;
 
         this._toggle_visibility(!status.hidden);
