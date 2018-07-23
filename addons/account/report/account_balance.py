@@ -59,7 +59,7 @@ class ReportTrialBalance(models.AbstractModel):
 
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 

@@ -42,7 +42,7 @@ class payroll_advice_report(models.AbstractModel):
         return result
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         advice = self.env['hr.payroll.advice'].browse(docids)
         return {
             'doc_ids': docids,
