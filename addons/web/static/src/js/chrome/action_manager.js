@@ -386,7 +386,7 @@ var ActionManager = Widget.extend({
                 options = options || {};
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
-                if (options.silent !== true) {
+                if (options && options.data.arg.silent !== true) {
                     controller.onClose(options.infos);
                 }
             });
