@@ -355,11 +355,11 @@ var MailManager =  AbstractService.extend({
      * @param {function} [dmRedirectionCallback] only used if 'res.partner',
      *   a function that has a threadID as input
      */
-    redirect: function (resModel, resID, dmRedirectionCallback) {
-        if (resModel === 'res.partner') {
-            this._redirectPartner(resModel, resID, dmRedirectionCallback);
+    redirect: function (data, dmRedirectionCallback) {
+        if (data.resModel === 'res.partner') {
+            this._redirectPartner(data, dmRedirectionCallback);
         } else {
-            this._redirectDefault(resModel, resID);
+            this._redirectDefault(data);
         }
     },
     /**
@@ -968,7 +968,9 @@ var MailManager =  AbstractService.extend({
      * @param {string} resModel
      * @param {integer} resID
      */
-    _redirectDefault: function (resModel, resID) {
+    _redirectDefault: function (data) {
+        var resModel = data.resModel;
+        var resID = data.resID;
         var self = this;
         this._rpc({
                 model: resModel,
@@ -1005,7 +1007,9 @@ var MailManager =  AbstractService.extend({
      * @param {function} dmRedirection a function callback that has
      *   threadID as input
      */
-    _redirectPartner: function (resModel, resID, dmRedirection) {
+    _redirectPartner: function (data, dmRedirection) {
+        var resModel = data.resModel;
+        var resID = data.resID;
         var self = this;
         var domain = [['partner_id', '=', resID]];
         this._rpc({
