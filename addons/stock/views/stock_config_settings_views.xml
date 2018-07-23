@@ -11,6 +11,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
                     </header>
                     <group string="Traceability" name="traceability">
+                        <field name="company_id" invisible="1"/>
                         <field name="group_stock_production_lot" widget="radio"/>
                         <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}"/>
                         <field name="group_stock_tracking_lot" widget="radio"/>
