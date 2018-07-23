@@ -104,13 +104,13 @@
         </record>
 
         <!-- Employee -->
-        <record id="hr.employee_root" model="hr.employee">
+        <record id="hr.employee_admin" model="hr.employee">
             <field name="timesheet_cost">100</field>
         </record>
 
         <record id="hr.employee_qdp" model="hr.employee">
             <field name="timesheet_cost">75</field>
-            <field name="parent_id" ref="hr.employee_root"/>
+            <field name="parent_id" ref="hr.employee_admin"/>
         </record>
 
         <record id="sale_order_1" model="sale.order">
@@ -186,7 +186,7 @@
         <!-- Timesheets on sale_order_1 -->
         <record id="timesheet_1" model="account.analytic.line">
             <field name="name">Design</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=3,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -194,7 +194,7 @@
         </record>
         <record id="timesheet_2" model="account.analytic.line">
             <field name="name">Fine tuning</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=2,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -202,7 +202,7 @@
         </record>
         <record id="timesheet_3" model="account.analytic.line">
             <field name="name">Assembling</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -210,7 +210,7 @@
         </record>
         <record id="timesheet_4" model="account.analytic.line">
             <field name="name">Delivery</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
@@ -219,7 +219,7 @@
 
         <record id="timesheet_5" model="account.analytic.line">
             <field name="name">Requirements analysis</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -227,7 +227,7 @@
         </record>
         <record id="timesheet_6" model="account.analytic.line">
             <field name="name">Client meeting</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -251,7 +251,7 @@
         </record>
         <record id="timesheet_9" model="account.analytic.line">
             <field name="name">Building</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=4,weeks=-2)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -259,7 +259,7 @@
         </record>
         <record id="timesheet_10" model="account.analytic.line">
             <field name="name">Research</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -267,7 +267,7 @@
         </record>
         <record id="timesheet_11" model="account.analytic.line">
             <field name="name">Assembling</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -291,7 +291,7 @@
         </record>
         <record id="timesheet_14" model="account.analytic.line">
             <field name="name">Wood chopping</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=4,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">1.00</field>
             <field name="project_id" ref="project_support"/>
@@ -342,7 +342,7 @@
         </record>
         <record id="timesheet_20" model="account.analytic.line">
             <field name="name">Document analysis</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-4)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">4.00</field>
             <field name="project_id" ref="project_support"/>
@@ -350,7 +350,7 @@
         </record>
         <record id="timesheet_21" model="account.analytic.line">
             <field name="name">Design analysis</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-3)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">4.00</field>
             <field name="project_id" ref="project_support"/>
@@ -368,7 +368,7 @@
         <!-- Non billable Timesheets in project_support -->
         <record id="timesheet_23" model="account.analytic.line">
             <field name="name">Technical training</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-10)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -376,7 +376,7 @@
         </record>
         <record id="timesheet_24" model="account.analytic.line">
             <field name="name">Internal training</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-12)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -384,7 +384,7 @@
         </record>
         <record id="timesheet_25" model="account.analytic.line">
             <field name="name">Internal discussion</field>
-            <field name="employee_id" ref="hr.employee_root"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(months=-4, days=-13)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="project_id" ref="project.project_project_1"/>

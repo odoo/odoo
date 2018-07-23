@@ -10,14 +10,14 @@ from odoo.tools import pycompat
 
 class TestPerformance(TransactionCase):
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_read_base(self):
         """ Read records. """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(admin=3, demo=3):
+        with self.assertQueryCount(__system__=3, demo=3):
             # without cache
             for record in records:
                 record.partner_id.country_id.name
@@ -32,54 +32,54 @@ class TestPerformance(TransactionCase):
             for record in records:
                 record.value_pc
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_write_base(self):
         """ Write records (no recomputation). """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(admin=1, demo=1):
+        with self.assertQueryCount(__system__=1, demo=1):
             records.write({'name': 'X'})
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_write_base_with_recomputation(self):
         """ Write records (with recomputation). """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(admin=3, demo=3):
+        with self.assertQueryCount(__system__=3, demo=3):
             records.write({'value': 42})
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_create_base(self):
         """ Create records. """
-        with self.assertQueryCount(admin=6, demo=6):
+        with self.assertQueryCount(__system__=6, demo=6):
             self.env['test_performance.base'].create({'name': 'X'})
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_create_base_with_lines(self):
         """ Create records with one2many lines. """
-        with self.assertQueryCount(admin=20, demo=20):
+        with self.assertQueryCount(__system__=20, demo=20):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'line_ids': [(0, 0, {'value': val}) for val in range(10)],
             })
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_create_base_with_tags(self):
         """ Create records with many2many tags. """
-        with self.assertQueryCount(admin=17, demo=17):
+        with self.assertQueryCount(__system__=17, demo=17):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'tag_ids': [(0, 0, {'name': val}) for val in range(10)],
             })
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     @warmup
     def test_several_prefetch(self):
         initial_records = self.env['test_performance.base'].search([])
@@ -91,11 +91,11 @@ class TestPerformance(TransactionCase):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 1280)
         # should only cause 2 queries thanks to prefetching
-        with self.assertQueryCount(admin=2, demo=2):
+        with self.assertQueryCount(__system__=2, demo=2):
             records.mapped('value')
         records.invalidate_cache(['value'])
 
-        with self.assertQueryCount(admin=2, demo=2):
+        with self.assertQueryCount(__system__=2, demo=2):
             with self.env.do_in_onchange():
                 records.mapped('value')
         self.env.cr.execute(
@@ -115,22 +115,22 @@ class TestPerformance(TransactionCase):
             'value': sum(groups[partner.id]),
         } for partner in partners]
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     def test_read_group_with_name_get(self):
         model = self.env['test_performance.base']
         expected = self.expected_read_group()
         # use read_group and check the expected result
-        with self.assertQueryCount(admin=2, demo=2):
+        with self.assertQueryCount(__system__=2, demo=2):
             model.invalidate_cache()
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(result, expected)
 
-    @users('admin', 'demo')
+    @users('__system__', 'demo')
     def test_read_group_without_name_get(self):
         model = self.env['test_performance.base']
         expected = self.expected_read_group()
         # use read_group and check the expected result
-        with self.assertQueryCount(admin=1, demo=1):
+        with self.assertQueryCount(__system__=1, demo=1):
             model.invalidate_cache()
             result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
             self.assertEqual(len(result), len(expected))
@@ -140,5 +140,5 @@ class TestPerformance(TransactionCase):
                 self.assertEqual(res['partner_id_count'], exp['partner_id_count'])
                 self.assertEqual(res['value'], exp['value'])
         # now serialize to json, which should force evaluation
-        with self.assertQueryCount(admin=1, demo=1):
+        with self.assertQueryCount(__system__=1, demo=1):
             json.dumps(result)
