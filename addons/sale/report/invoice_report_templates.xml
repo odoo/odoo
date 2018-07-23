@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//address" position="before">
             <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
-                <t t-set="address2">
+                <t t-set="information_block">
                     <div groups="sale.group_delivery_invoice_address">
                         <strong>Shipping address:</strong>
                         <div t-field="o.partner_shipping_id"

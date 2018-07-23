@@ -148,13 +148,10 @@
         <t t-set="colclass" t-value="'col-xs-5 col-xs-offset-7'"/>
         <t t-if="address">
             <div class="row">
-                <t t-if="address2">
+                <t t-if="information_block">
                     <t t-set="colclass" t-value="'col-xs-5 col-xs-offset-1'"/>
                     <div name="invoice_address2" class="col-xs-6">
-                        <t t-raw="address2"/>
-                        <t t-if="address3">
-                            <t t-raw="address3"/>
-                        </t>
+                        <t t-raw="information_block"/>
                     </div>
                 </t>
                 <div name="invoice_address" t-att-class="colclass">
@@ -347,18 +344,7 @@
             <t t-set="company" t-value="res_company"/>
         </t>
 
-        <t t-if="company.external_report_layout == 'background'">
-            <t t-call="web.external_layout_background"><t t-raw="0"/></t>
-        </t>
-        <t t-if="company.external_report_layout == 'boxed'">
-            <t t-call="web.external_layout_boxed"><t t-raw="0"/></t>
-        </t>
-        <t t-if="company.external_report_layout == 'clean'">
-            <t t-call="web.external_layout_clean"><t t-raw="0"/></t>
-        </t>
-        <t t-if="company.external_report_layout in (False, 'standard')">
-            <t t-call="web.external_layout_standard"><t t-raw="0"/></t>
-        </t>
+        <t t-call="web.external_layout_{{company.external_report_layout}}"><t t-raw="0"/></t>
     </template>
 
     <template id="internal_layout">

@@ -23,7 +23,7 @@
         </template>
 
         <!-- New report layout for din5008 format -->
-        <template id="external_layout_din5008">
+        <template id="web.external_layout_din5008">
             <t t-if="not o and doc">
                 <t t-set="o" t-value="doc"/>
             </t>
@@ -55,14 +55,9 @@
                             </div>
                             <span t-field="company.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
-                            <t t-if="address2">
+                            <t t-if="information_block">
                                 <div class="address">
-                                    <t t-raw="address2"/>
-                                </div>
-                            </t>
-                            <t t-if="address3">
-                                <div class="address">
-                                    <t t-raw="address3"/>
+                                    <t t-raw="information_block"/>
                                 </div>
                             </t>
                         </div>
