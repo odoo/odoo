@@ -206,6 +206,8 @@
                                 </div>
                                 <field name="writeoff_account_id" string="Post Difference In"
                                     attrs="{'invisible': [('payment_difference_handling','=','open')], 'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                <field name="writeoff_analytic_account_id" string="Post Difference In Analytic Account"
+                                    attrs="{'invisible': [('payment_difference_handling','=','open')]}"/>
                             </group>
                         </group>
                     </sheet>
