@@ -346,6 +346,10 @@ class Users(models.Model):
     def onchange_parent_id(self):
         return self.mapped('partner_id').onchange_parent_id()
 
+    @api.onchange('group_base_user')
+    def _onchange_group_base_user(self):
+        self.groups_id = self._get_groups_for_limited_user()
+
     @api.multi
     @api.constrains('company_id', 'company_ids')
     def _check_company(self):
@@ -358,6 +362,18 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+
+    def _get_groups_for_limited_user(self):
+        group_portal = self.env.ref('base.group_portal', False)
+        group_public = self.env.ref('base.group_public', False)
+        if self.group_base_user == (group_portal and group_portal.id) or False:
+            template_portal_user_id = self.env['ir.config_parameter'].get_param('base.template_portal_user_id')
+            user = self.browse(int(template_portal_user_id)) or self.env.ref('base.template_portal_user_id', False)
+        elif self.group_base_user == (group_public and group_public.id) or False:
+            user = self.env.ref('base.public_user', False)
+        else:
+            user = self.env.ref('base.default_user', False)
+        return (user or self.env['res.users']).groups_id
 
     @api.multi
     def toggle_active(self):
@@ -787,10 +803,14 @@ class Users(models.Model):
         """Update 'groups_id' according the group fields values in cache."""
         computed_group_fields = [field for field in self._field_computed.keys() if field.compute == '_compute_groups_id']
         all_groups = self.env['res.groups'].search([])
+        limited_access_groups = self.env.ref('base.group_portal') + self.env.ref('base.group_public')
         for user in self:
             # we need to read all values in cache before any prefetch
             field_values = {field: user[field.name] for field in computed_group_fields if field.name in user._cache}
             groups_id_vals = []
+            if user.group_base_user in limited_access_groups.ids:
+                groups_id_vals = self._get_groups_for_limited_user()
+                continue
             for field, value in field_values.items():
                 # Checkbox group
                 if getattr(field, 'group_xml_id', None):
