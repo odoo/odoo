@@ -61,7 +61,7 @@ class ReportAssertAccount(models.AbstractModel):
         return result
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report']._get_report_from_name('account_test.report_accounttest')
         records = self.env['accounting.assert.test'].browse(self.ids)
         return {

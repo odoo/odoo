@@ -9,7 +9,7 @@ class ReportBomStructure(models.AbstractModel):
     _name = 'report.mrp.report_bom_structure'
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         docs = []
         for bom_id in docids:
             bom = self.env['mrp.bom'].browse(bom_id)
