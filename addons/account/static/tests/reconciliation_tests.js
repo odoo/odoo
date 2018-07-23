@@ -1798,5 +1798,54 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
+
+    QUnit.test('Automatic Reconciliation: Don\'t loose pager when adding last line of a page', function (assert) {
+        assert.expect(2);
+
+        function standard_partner (list, partner_id) {
+            _.each(list, function (item) {
+                item.partner_id = partner_id;
+            });
+        };
+
+        this.params.options.params.limitMoveLines = 1;
+        standard_partner(this.params.mv_lines['[5,"",0,6]'], 8);
+
+        // Overlap of those requests is normal
+        // the pager is implemented as:
+        // if there is at least 1 more line than my limit, the pager is active
+        this.params.mv_lines['[5,"",0,2]'] = this.params.mv_lines['[5,"",0,6]'].slice(0,2);
+        this.params.mv_lines['[5,"",1,2]'] = this.params.mv_lines['[5,"",0,6]'].slice(1,2);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+        });
+        clientAction.appendTo($('#qunit-fixture'));
+
+        var widget = clientAction.widgets[0];
+
+        var $nextPage = widget.$('.match .match_controls .fa-chevron-right:not(disabled)');
+        assert.ok($nextPage.length,
+            'We should have a next page');
+        $nextPage.click();
+
+        // Add the second's page record
+        widget.$('.match tr[data-line-id=112] td:first').click();
+
+        assert.ok(widget.$('.match tr[data-line-id=109]').length,
+            'the record of the first page must be proposed');
+
+        clientAction.destroy();
+    });
 });
 });
