@@ -212,3 +212,19 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+
+class ProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    purchase_order_ids = fields.Many2many('purchase.order', string="Purchase Orders", compute='_compute_purchase_order_ids', readonly=True, store=False)
+
+    @api.depends('name')
+    def _compute_purchase_order_ids(self):
+        for lot in self:
+            stock_moves = self.env['stock.move.line'].search([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done')
+            ]).mapped('move_id').filtered(
+                lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
+            lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
