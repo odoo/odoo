@@ -99,7 +99,6 @@ class ResPartner(models.Model):
             is actually a VAT number.
             """
 
-        # TODO only do this depending on user vat setting: company vat_check_vies?
         if len(name) > 5 and name[:2].lower() in stdnum_vat.country_codes:
             result = self._get_partner_vals(name)
             if result[0] and result[1]:
