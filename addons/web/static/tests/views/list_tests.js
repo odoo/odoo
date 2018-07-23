@@ -2674,7 +2674,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: moving left/right with keydown', function (assert) {
+    QUnit.skip('navigation: moving left/right with keydown', function (assert) {
         assert.expect(8);
 
         this.data.foo.fields.foo.type = 'text';
