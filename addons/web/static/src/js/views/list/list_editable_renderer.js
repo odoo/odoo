@@ -932,7 +932,7 @@ ListRenderer.include({
         } else {
             var self = this;
             this.unselectRow().then(function () {
-                self.trigger_up('list_record_remove', {id: id});
+                self.trigger('list_record_remove', {id: id});
             });
         }
     },
