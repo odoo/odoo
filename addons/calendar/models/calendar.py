@@ -111,7 +111,7 @@ class Attendee(models.Model):
 
     _name = 'calendar.attendee'
     _rec_name = 'common_name'
-    _description = 'Attendee information'
+    _description = 'Calendar Registration'
 
     def _default_access_token(self):
         return uuid.uuid4().hex
