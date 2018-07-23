@@ -45,9 +45,11 @@ var PivotView = AbstractView.extend({
         var measures = {};
         var groupableFields = {};
 
+        var ignoredGroupableFields = this.arch.attrs.ignored_fields ? this.arch.attrs.ignored_fields.split(',') : [];
+
         this.fields.__count = {string: _t("Count"), type: "integer"};
         _.each(this.fields, function (field, name) {
-            if ((name !== 'id') && (field.store === true)) {
+            if (name !== 'id' && field.store === true && !_.contains(ignoredGroupableFields, name)) {
                 if (_.contains(['integer', 'float', 'monetary'], field.type) ||
                     _.contains(params.additionalMeasures, name)) {
                         measures[name] = field;
