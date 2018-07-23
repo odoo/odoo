@@ -29,7 +29,8 @@
                             </div>
                         </group>
                         <group>
-                            <field name="next_type_ids" widget="many2many_tags"/>
+                            <field name="next_type_ids" widget="many2many_tags"
+                                context="{'default_res_model_id': res_model_id}"/>
                         </group>
                     </group>
                 </sheet>
