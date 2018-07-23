@@ -126,20 +126,20 @@ CREATE TABLE res_partner (
 ---------------------------------
 insert into res_currency (id, name, symbol) VALUES (1, 'EUR', '€');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
-select setval('res_currency_id_seq', 2);
+select setval('res_currency_id_seq', 1);
 
 insert into res_company (id, name, partner_id, currency_id, create_date) VALUES (1, 'My Company', 1, 1, now() at time zone 'UTC');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
-select setval('res_company_id_seq', 2);
+select setval('res_company_id_seq', 1);
 
 insert into res_partner (id, name, company_id, create_date) VALUES (1, 'My Company', 1, now() at time zone 'UTC');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
-select setval('res_partner_id_seq', 2);
+select setval('res_partner_id_seq', 1);
 
-insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (1, 'admin', 'admin', true, 1, 1, now() at time zone 'UTC');
+insert into res_users (id, login, password, active, partner_id, company_id, create_date) VALUES (1, '__system__', NULL, false, 1, 1, now() at time zone 'UTC');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
-select setval('res_users_id_seq', 2);
+select setval('res_users_id_seq', 1);
 
 insert into res_groups (id, name) VALUES (1, 'Employee');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('group_user', 'base', 'res.groups', true, 1);
-select setval('res_groups_id_seq', 2);
+select setval('res_groups_id_seq', 1);

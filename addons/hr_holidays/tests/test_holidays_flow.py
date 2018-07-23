@@ -235,8 +235,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(ValidationError):
             hol2_manager_group.action_confirm()
 
-        employee_id = self.ref('hr.employee_root')
-        # cl can be of maximum 20 days for employee_root
+        employee_id = self.ref('hr.employee_admin')
+        # cl can be of maximum 20 days for employee_admin
         hol3_status = self.env.ref('hr_holidays.holiday_status_cl').with_context(employee_id=employee_id)
         # I assign the dates in the holiday request for 1 day
         hol3 = Requests.create({
@@ -355,7 +355,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # Print the HR Holidays(Summary Department) Report through the wizard
         ctx = {
             'model': 'hr.department',
-            'active_ids': [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
+            'active_ids': [self.ref('hr.employee_admin'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
@@ -367,11 +367,11 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # Print the HR Holidays(Summary Employee) Report through the wizard
         ctx = {
             'model': 'hr.employee',
-            'active_ids': [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
+            'active_ids': [self.ref('hr.employee_admin'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
-            'emp': [(6, 0, [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')])],
+            'emp': [(6, 0, [self.ref('hr.employee_admin'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')])],
             'holiday_type': 'Approved'
         }
         test_reports.try_report_action(self.env.cr, self.env.uid, 'action_hr_holidays_summary_employee', wiz_data=data_dict, context=ctx, our_module='hr_holidays')
