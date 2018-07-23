@@ -12,20 +12,17 @@ var core = require('web.core');
 var _t = core._t;
 
 var PartnerVatFieldMany2One = FieldMany2One.extend({
-
-    // TODO: maybe override _quickCreate
-
     /**
      * @private
      * @override
      */
-    _search: function (search_val) {
+    _search: function (search_val, additionalContext) {
         var self = this;
         var def = $.Deferred();
 
-        var parent = this._super.apply(this, arguments);
+        var context = _.extend(additionalContext, { 'query_vies': true});
 
-        // TODO only do this depending on user vat setting: company vat_check_vies?
+        var parent = this._super.apply(this, search_val, context);
 
         // TODO also intercept the M2ODialog to give it the proper context
 
