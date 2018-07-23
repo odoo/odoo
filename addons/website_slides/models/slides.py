@@ -488,7 +488,9 @@ class Slide(models.Model):
             slide.channel_id.message_post(
                 subject=subject,
                 body=html_body,
-                subtype='website_slides.mt_channel_slide_published')
+                subtype='website_slides.mt_channel_slide_published',
+                notif_layout='mail.mail_notification_light',
+            )
         return True
 
     @api.one
