@@ -17,7 +17,7 @@
             <field name="type">private</field>
         </record>
 
-        <record id="hr.employee_root" model="hr.employee">
+        <record id="hr.employee_admin" model="hr.employee">
             <field name="address_home_id" ref="res_partner_address_fp"/>
         </record>
 
@@ -51,6 +51,7 @@
 
         <record id="travel_by_air_expense" model="hr.expense">
             <field name="name">Travel by Air</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
             <field name="product_id" ref="air_ticket"/>
             <field eval="700.0" name="unit_amount"/>
@@ -60,6 +61,7 @@
 
         <record id="hotel_bill_expense" model="hr.expense">
             <field name="name">Hotel Expenses</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_account_id" ref="analytic.analytic_nebula"/>
             <field name="product_id" ref="product.expense_hotel"/>
             <field eval="400.0" name="unit_amount"/>

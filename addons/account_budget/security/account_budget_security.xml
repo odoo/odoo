@@ -27,5 +27,9 @@
             <field eval="[(4,ref('analytic.group_analytic_accounting'))]" name="groups_id"/>
         </record>
 
+        <record model="res.users" id="base.user_admin">
+            <field eval="[(4,ref('analytic.group_analytic_accounting'))]" name="groups_id"/>
+        </record>
+
     </data>
 </odoo>

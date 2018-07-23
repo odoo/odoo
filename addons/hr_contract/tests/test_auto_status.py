@@ -10,7 +10,7 @@ class TestHrContracts(TransactionCase):
     def setUp(self):
         super(TestHrContracts, self).setUp()
         self.contracts = self.env['hr.contract'].with_context(tracking_disable=True)
-        self.employee = self.env.ref('hr.employee_root')
+        self.employee = self.env.ref('hr.employee_admin')
         self.test_contract = dict(name='Test', wage=1, employee_id=self.employee.id, state='open')
 
     def apply_cron(self):

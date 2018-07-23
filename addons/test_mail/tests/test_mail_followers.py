@@ -178,7 +178,6 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
             'name': 'Test',
             'user_id': self.user_admin.id,
         })
-
         self.assertEqual(sub.message_partner_ids, (self.user_employee.partner_id | self.user_admin.partner_id))
 
     def test_auto_subscribe_defaults(self):

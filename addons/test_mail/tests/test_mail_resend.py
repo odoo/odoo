@@ -88,7 +88,7 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
         def connect_failure(**kwargs):
             raise Exception
         with patch.object(IrMailServer, 'connect', side_effect=connect_failure):
-            message = self.test_record.sudo().message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+            message = self.test_record.sudo(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
         self.assertBusMessage([self.partner_admin])
         self.assertEmails(self.partner_admin, [])
         self.assertNotifStates(('exception', 'exception', 'exception', 'exception'), message)
@@ -113,12 +113,12 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
     def test_mail_send_no_failure(self):
         self.user1.write({"email": 'u1@example.com'})
         self.partner1.write({"email": 'p1@example.com'})
-        message = self.test_record.sudo().message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+        message = self.test_record.sudo(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
         self.assertBusMessage([])  # one update for cancell
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_remove_mail_become_canceled(self):
-        message = self.test_record.sudo().message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+        message = self.test_record.sudo(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
         self.assertEmails(self.partner_admin, self.partners)
         self.assertBusMessage([self.partner_admin] * 2)  # two failure sent on bus, one for each mail
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})
@@ -132,7 +132,7 @@ class TestMailResend(common.BaseFunctionalTest, common.MockEmails):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_cancel_all(self):
-        message = self.test_record.sudo().message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
+        message = self.test_record.sudo(self.user_admin).message_post(partner_ids=self.partners.ids, subtype='mail.mt_comment', message_type='notification')
         self.assertNotifStates(('exception', 'sent', 'exception', 'sent'), message)
         self.assertBusMessage([self.partner_admin] * 2)
         wizard = self.env['mail.resend.message'].with_context({'mail_message_to_resend': message.id}).create({})

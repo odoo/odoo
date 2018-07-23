@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Admin should not receive emails at creation -->
+        <!-- user root should not receive emails at creation -->
         <record id="base.user_root" model="res.users">
             <field name="notification_type">inbox</field>
         </record>

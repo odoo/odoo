@@ -119,7 +119,7 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
             message.sudo(user_portal).set_message_done()
 
     def test_set_star(self):
-        msg = self.test_record.message_post(body='My Body', subject='1')
+        msg = self.test_record.sudo(self.user_admin).message_post(body='My Body', subject='1')
         msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as starred

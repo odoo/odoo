@@ -36,10 +36,12 @@ class MailMail(models.Model):
     # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
     # and during unlink() we will not cascade delete the parent and its attachments
     notification = fields.Boolean('Is Notification', help='Mail has been created to notify people of an existing mail.message')
-    # recipients
+    # recipients: include inactive partners (they may have been archived after
+    # the message was sent, but they should remain visible in the relation)
     email_to = fields.Text('To', help='Message recipients (emails)')
     email_cc = fields.Char('Cc', help='Carbon copy message recipients')
-    recipient_ids = fields.Many2many('res.partner', string='To (Partners)')
+    recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
+        context={'active_test': False})
     # process
     state = fields.Selection([
         ('outgoing', 'Outgoing'),

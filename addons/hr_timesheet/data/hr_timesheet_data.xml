@@ -5,7 +5,7 @@
 	only by admin when installing hr_timesheet, to avoid confusing -->
     <record id="web_tour_project_consumed_by_admin" model="web_tour.tour">
         <field name="name">project_tour</field>
-        <field name="user_id" ref='base.user_root'/>
+        <field name="user_id" ref='base.user_admin'/>
     </record>
 
     <!-- Set the JS widget -->

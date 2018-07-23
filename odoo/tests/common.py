@@ -856,9 +856,10 @@ def users(*logins):
         old_uid = self.uid
         try:
             # retrieve users
+            Users = self.env['res.users'].with_context(active_test=False)
             user_id = {
                 user.login: user.id
-                for user in self.env['res.users'].search([('login', 'in', list(logins))])
+                for user in Users.search([('login', 'in', list(logins))])
             }
             for login in logins:
                 with self.subTest(login=login):
