@@ -4,6 +4,7 @@ odoo.define('web.FiltersMenu', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
+var DomainSelectorDialog = require('web.DomainSelectorDialog');
 var DropdownMenu = require('web.DropdownMenu');
 var search_filters = require('web.search_filters');
 var time = require('web.time');
@@ -16,8 +17,10 @@ var FiltersMenu = DropdownMenu.extend({
     custom_events: {
         remove_proposition: '_onRemoveProposition',
         confirm_proposition: '_onConfirmProposition',
+        domain_selected: '_onDomainSelected',
     },
     events: _.extend({}, DropdownMenu.prototype.events, {
+        'click .o_add_advanced_filter': '_onAdvancedSearchClick',
         'click .o_add_custom_filter': '_onAddCustomFilterClick',
         'click .o_add_condition': '_appendProposition',
         'click .o_apply_filter': '_onApplyClick',
@@ -45,8 +48,9 @@ var FiltersMenu = DropdownMenu.extend({
      *   }
      * @param {Object} fields 'field_get' of a model: mapping from field name
      * to an object with its properties
+     * @param {String} model technical name of current model
      */
-    init: function (parent, filters, fields) {
+    init: function (parent, filters, fields, model) {
         // determines where the filter menu is displayed and its style
         this.isMobile = config.device.isMobile;
         // determines list of options used by filter of type 'date'
@@ -78,6 +82,7 @@ var FiltersMenu = DropdownMenu.extend({
             icon: 'fa fa-filter',
             symbol: this.isMobile ? 'fa fa-chevron-right float-right mt4' : false,
         };
+        this.model = model;
         this._super(parent, dropdownHeader, filters, this.fields);
     },
 
@@ -100,6 +105,41 @@ var FiltersMenu = DropdownMenu.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Open advanced search dialog
+     *
+     * @returns {$.Deferred} The opening dialog itself.
+     */
+    _advancedSearchOpen: function () {
+        var dialog = new DomainSelectorDialog(
+            this,
+            this.model,
+            // Add dummy 1st domain node by default
+            "[['id', '=', 1]]",
+            {
+                debugMode: core.debug,
+                readonly: false,
+            }
+        );
+        return dialog.open();
+    },
+    /**
+     * Apply advanced search
+     *
+     * @param {Array} domain it will be added to current search
+     * @param {String} label string to label this domain leaf
+     */
+    _advancedSearchCommit: function (domain, label) {
+        _.invoke(this.propositions, "destroy");
+        var proposition = new search_filters.AdvancedSearchProposition(
+            this,
+            domain,
+            label
+        );
+        this.propositions = [proposition];
+        this._commitSearch();
+        this._toggleCustomFilterMenu();
+    },
     /**
      * Add a proposition inside the custom filter edition menu
      *
@@ -230,6 +270,25 @@ var FiltersMenu = DropdownMenu.extend({
         event.preventDefault();
         event.stopPropagation();
         this._toggleCustomFilterMenu();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAdvancedSearchClick: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this._advancedSearchOpen();
+    },
+    /**
+     * Apply advanced search on dialog save
+     *
+     * @private
+     * @param {OdooEvent} event A `domain_selected` event from the dialog.
+     */
+    _onDomainSelected: function (event) {
+        event.stopPropagation();
+        this._advancedSearchCommit(event.data.domain, event.data.human_domain);
     },
     /**
      * @private

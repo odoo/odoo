@@ -36,6 +36,11 @@ var operator_mapping = {
     "set": _lt("is set"),
     "not set": _lt("is not set"),
 };
+var join_mapping = {
+    "&": _(" and "),
+    "|": _(" or "),
+    "!": _(" is not "),
+};
 
 /**
  * Abstraction for widgets which can represent and allow edition of a domain.
@@ -99,6 +104,15 @@ var DomainNode = Widget.extend({
      * @returns {Array}
      */
     getDomain: function () {},
+    /**
+     * Should return a human-readable representation of the domain.
+     *
+     * @abstract
+     * @returns {String} human-readable domain
+     */
+    getHumanDomain: function () {
+        return "";
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -233,6 +247,22 @@ var DomainTree = DomainNode.extend({
         var nbChildRequired = this.operator === "!" ? 1 : 2;
         var operators = _.times(nbChildren - nbChildRequired + 1, _.constant(this.operator));
         return operators.concat(childDomains);
+    },
+
+    /**
+     * Get a human-readable representation of the domain.
+     *
+     * @returns {String} human-readable domain
+     */
+    getHumanDomain: function () {
+        var human_domains = [];
+        _.each(this.children, function (child) {
+            human_domains.push(child.getHumanDomain());
+        });
+        return _.str.sprintf(
+            "(%s)",
+            human_domains.join(join_mapping[this.operator])
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -481,6 +511,17 @@ var DomainSelector = DomainTree.extend({
         return this._redraw(domain);
     },
 
+    /**
+     * Get a human-readable representation of the domain.
+     *
+     * @returns {String} human-readable domain
+     */
+    getHumanDomain: function () {
+        var result = this._super.apply(this, arguments);
+        // Remove surrounding parenthesis
+        return result.slice(1, -1);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -724,7 +765,38 @@ var DomainLeaf = DomainNode.extend({
     getDomain: function () {
         return [[this.chain, this.operator, this.value]];
     },
-
+    /**
+     * Get a human-readable representation of the domain.
+     *
+     * @returns {String} human-readable domain
+     */
+    getHumanDomain: function () {
+        var chain = [],
+            operator = this.operator_mapping[this.operator],
+            value = _.str.sprintf('"%s"', this.value);
+        // Humanize chain
+        this.chain.split(".").forEach(function (element, index) {
+            chain.push(
+                _.findWhere(
+                    this.fieldSelector.pages[index],
+                    {name: element}
+                ).string || element
+            );
+        }, this);
+        // Special beautiness for some values
+        if (this.operator === "=" && _.isBoolean(this.value)) {
+            operator = this.operator_mapping[this.value ? "set" : "not set"];
+            value = "";
+        } else if (_.isArray(this.value)) {
+            value = _.str.sprintf('["%s"]', this.value.join('", "'));
+        }
+        return _.str.sprintf(
+            "%s %s %s",
+            chain.join(" > "),
+            operator || this.operator,
+            value
+        ).trim();
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

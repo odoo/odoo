@@ -878,7 +878,7 @@ var SearchView = Widget.extend({
             self.groupsMapping.push({groupId: groupId, group: group, category: 'Filters'});
         });
 
-        return new FiltersMenu(self, filters, self.fields);
+        return new FiltersMenu(self, filters, self.fields, self.dataset.model);
     },
 
     /**

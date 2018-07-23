@@ -1117,6 +1117,9 @@
 
 <t t-name="FiltersMenuGenerator">
     <div class="dropdown-divider"/>
+    <li class="o_add_advanced_filter">
+        <a>Add Advanced Filter</a>
+    </li>
     <button t-if="Object.keys(widget.fields).length !== 0" type="button" class="dropdown-item o_add_custom_filter o_closed_menu">Add Custom Filter</button>
     <div class="dropdown-item-text o_add_filter_menu">
         <button class="btn btn-primary o_apply_filter" type="button">Apply</button>

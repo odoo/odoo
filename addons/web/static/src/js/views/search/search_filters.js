@@ -3,11 +3,34 @@ odoo.define('web.search_filters', function (require) {
 
 var core = require('web.core');
 var datepicker = require('web.datepicker');
+var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var _lt = core._lt;
+
+/**
+ * An almost dummy search proposition, to use with domain widget
+ */
+var AdvancedSearchProposition = Widget.extend({
+    init: function (parent, domain, label) {
+        this._super(parent);
+        this.domain = new Domain(domain);
+        this.label = label;
+    },
+
+    get_filter: function () {
+        return {
+            attrs: {
+                domain: this.domain.toArray(),
+                string: this.label || this.domain.toString(),
+            },
+            children: [],
+            tag: "filter",
+        };
+    },
+});
 
 var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
@@ -374,6 +397,7 @@ core.search_filters_registry
     .add('id', Id);
 
 return {
+    AdvancedSearchProposition: AdvancedSearchProposition,
     ExtendedSearchProposition: ExtendedSearchProposition
 };
 
