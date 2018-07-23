@@ -150,7 +150,7 @@ class StockMove(models.Model):
         return action_data
 
     def _get_price_unit(self):
-        """ Returns the unit price to store on the quant """
+        """ Returns the unit price """
         return not self.company_id.currency_id.is_zero(self.price_unit) and self.price_unit or self.product_id.standard_price
 
     @api.model
