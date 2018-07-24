@@ -1156,8 +1156,8 @@ var MediaDialog = Dialog.extend({
             } else if (self.$media.is('a.o_image')) {
                 tabToShow = 'document';
             } else if (self.$media.attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
-                tabToShow = 'video';
-            } else if (self.$media.parent().attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
+                self.$('[href="#editor-media-video"]').tab('show');
+            } else if (self.$media.parent().attr('class') && self.$media.parent().attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
                 self.$media = self.$media.parent();
                 self.media = self.$media[0];
                 tabToShow = 'video';
