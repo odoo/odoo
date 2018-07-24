@@ -141,7 +141,7 @@ class StockPicking(models.Model):
             default_model='stock.picking',
             default_use_template=bool(delivery_template_id),
             default_template_id=delivery_template_id,
-            custom_layout='mail.mail_notification_borders'
+            custom_layout='mail.mail_notification_light'
         )
         return {
             'type': 'ir.actions.act_window',

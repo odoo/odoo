@@ -8,12 +8,6 @@ from odoo import api, models, fields
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    def _default_order_mail_template(self):
-        if self.env['ir.module.module'].search([('name', '=', 'website_quote')]).state in ('installed', 'to upgrade'):
-            return self.env.ref('website_quote.confirmation_mail').id
-        else:
-            return self.env.ref('sale.email_template_edi_sale').id
-
     def _default_recovery_mail_template(self):
         try:
             return self.env.ref('website_sale.mail_template_sale_cart_recovery').id
@@ -39,10 +33,6 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_stock = fields.Boolean("Inventory", help='Installs the "Website Delivery Information" application')
 
     module_account_invoicing = fields.Boolean("Invoicing")
-
-    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
-        default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
-        help="Email sent to customer at the end of the checkout process", readonly=True)
 
     automatic_invoice = fields.Boolean("Automatic Invoice",
                                        help="The invoice is generated automatically and available in the customer portal "

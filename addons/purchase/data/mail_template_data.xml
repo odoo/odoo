@@ -4,8 +4,8 @@
         <record id="email_template_edi_purchase" model="mail.template">
             <field name="name">Purchase Order: Send RFQ</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="email_from">${object.create_uid.email_formatted | safe}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="email_from">${object.create_uid.email_formatted | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -40,8 +40,8 @@
         <record id="email_template_edi_purchase_done" model="mail.template">
             <field name="name">Purchase Order: Send PO</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
-            <field name="email_from">${object.create_uid.email_formatted | safe}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="email_from">${object.create_uid.email_formatted | safe}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
@@ -62,6 +62,8 @@
         from ${object.company_id.name}.
         <br /><br />
         Do not hesitate to contact us if you have any question.
+        <br /><br />
+        Best regards,
     </p>
 </div></field>
             <field name="report_template" ref="action_report_purchase_order"/>
