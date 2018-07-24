@@ -144,6 +144,23 @@
 
     <!-- External layouts styles -->
 
+    <template id="address_layout">
+        <t t-set="colclass" t-value="'col-xs-5 col-xs-offset-7'"/>
+        <t t-if="address">
+            <div class="row">
+                <t t-if="information_block">
+                    <t t-set="colclass" t-value="'col-xs-5 col-xs-offset-1'"/>
+                    <div name="information_block" class="col-xs-6">
+                        <t t-raw="information_block"/>
+                    </div>
+                </t>
+                <div name="address" t-att-class="colclass">
+                    <t t-raw="address"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="external_layout_background">
         <div class="header o_background_header">
             <div class="pull-right">
@@ -161,6 +178,7 @@
         </div>
 
         <div class="article o_report_layout_background">
+            <t t-call="web.address_layout" />
             <t t-raw="0" />
         </div>
 
@@ -200,7 +218,8 @@
         </div>
 
         <div class="article o_report_layout_boxed">
-          <t t-raw="0" />
+            <t t-call="web.address_layout" />
+            <t t-raw="0" />
         </div>
 
         <div class="footer o_boxed_footer">
@@ -238,6 +257,7 @@
         </div>
 
         <div class="article o_report_layout_clean">
+            <t t-call="web.address_layout" />
             <t t-raw="0" />
         </div>
 
@@ -285,6 +305,7 @@
         </div>
 
         <div class="article o_report_layout_standard">
+            <t t-call="web.address_layout" />
             <t t-raw="0" />
         </div>
 
@@ -323,18 +344,7 @@
             <t t-set="company" t-value="res_company"/>
         </t>
 
-        <t t-if="company.external_report_layout == 'background'">
-            <t t-call="web.external_layout_background"><t t-raw="0"/></t>
-        </t>
-        <t t-if="company.external_report_layout == 'boxed'">
-            <t t-call="web.external_layout_boxed"><t t-raw="0"/></t>
-        </t>
-        <t t-if="company.external_report_layout == 'clean'">
-            <t t-call="web.external_layout_clean"><t t-raw="0"/></t>
-        </t>
-        <t t-if="company.external_report_layout in (False, 'standard')">
-            <t t-call="web.external_layout_standard"><t t-raw="0"/></t>
-        </t>
+        <t t-call="web.external_layout_{{company.external_report_layout or 'standard'}}"><t t-raw="0"/></t>
     </template>
 
     <template id="internal_layout">

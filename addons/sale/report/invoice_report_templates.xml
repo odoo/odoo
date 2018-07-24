@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document_inherit_sale" inherit_id="account.report_invoice_document">
-        <xpath expr="//div[@name='invoice_address']" position="attributes">
+        <xpath expr="//address" position="attributes">
             <attribute name="groups">!sale.group_delivery_invoice_address</attribute>
         </xpath>
-        <xpath expr="//div[@name='invoice_address']" position="before">
-            <div class="col-xs-6" groups="sale.group_delivery_invoice_address">
-                <div t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
-                    <strong>Shipping address:</strong>
-                    <div t-field="o.partner_shipping_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                </div>
-            </div>
-
-            <div class="col-xs-5 col-xs-offset-1" groups="sale.group_delivery_invoice_address">
-                <div t-field="o.partner_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
-            </div>
+        <xpath expr="//address" position="before">
+            <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
+                <t t-set="information_block">
+                    <div groups="sale.group_delivery_invoice_address">
+                        <strong>Shipping address:</strong>
+                        <div t-field="o.partner_shipping_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                </t>
+            </t>
+            <div t-field="o.partner_id"
+                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' groups="sale.group_delivery_invoice_address"/>
+            <div t-if="o.partner_id.vat" class="mt16" groups="sale.group_delivery_invoice_address"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
         </xpath>
     </template>
 </odoo>
