@@ -72,18 +72,16 @@
                 max-width: 70%;
                 line-height: 1.2;
 
-                .o_stat_value {
+                > .o_stat_value, > .o_stat_text {
                     .o-text-overflow(block);
+                }
+
+                .o_stat_value {
                     font-weight: 700;
                     color: @odoo-brand-primary;
                 }
                 .o_stat_text {
-                    .o-text-overflow(block);
                     font-size: small;
-
-                    .o_stat_value {
-                        display: inline;
-                    }
                 }
             }
             > span {
