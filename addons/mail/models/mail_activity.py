@@ -172,7 +172,7 @@ class MailActivity(models.Model):
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
             self.summary = self.activity_type_id.summary
-            self.date_deadline = (datetime.now() + timedelta(days=self.activity_type_id.days))
+            self.date_deadline = fields.Date.from_string(fields.Date.context_today(self)) + timedelta(days=self.activity_type_id.days)
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
