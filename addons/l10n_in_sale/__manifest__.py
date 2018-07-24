@@ -12,7 +12,6 @@
     ],
     'data': [
         'views/report_sale_order.xml',
-        'views/report_invoice_view.xml',
     ],
     'installable': True,
     'application': False,
