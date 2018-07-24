@@ -270,8 +270,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
         'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
         'input input.filter': '_onFilterChange',
-        'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
-        'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
+        'click .match .load-more a': '_onLoadMore',
         'click .match .mv_line td': '_onSelectMoveLine',
         'click .accounting_view tbody .mv_line td': '_onSelectProposition',
         'click .o_reconcile_models button': '_onQuickCreateProposition',
@@ -427,9 +426,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         });
 
         // mv_lines
-        var $mv_lines = this.$('.match table tbody').empty();
         var stateMvLines = state.mv_lines || [];
-        _.each(stateMvLines.slice(0, state.limitMoveLines), function (line) {
+        var recs_count = stateMvLines.length > 0 ? stateMvLines[0].recs_count : 0;
+        var remaining = recs_count - stateMvLines.length;
+        var $mv_lines = this.$('.match table tbody').empty();
+
+        _.each(stateMvLines, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
                 $('<span class="line_info_button fa fa-info-circle"/>')
@@ -438,8 +440,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             $mv_lines.append($line);
         });
-        this.$('.match .fa-chevron-right').toggleClass('disabled', stateMvLines.length <= state.limitMoveLines);
-        this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
+        this.$('.match div.load-more').toggle(remaining > 0);
+        this.$('.match div.load-more span').text(remaining);
         this.$('.match').css('max-height', !stateMvLines.length && !state.filter.length ? '0px' : '');
 
         // balance
@@ -733,13 +735,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onPrevious: function () {
-        this.trigger_up('change_offset', {'data': -1});
-    },
-    /**
-     * @private
-     */
-    _onNext: function () {
+    _onLoadMore: function (ev) {
+        ev.preventDefault();
         this.trigger_up('change_offset', {'data': 1});
     },
     /**

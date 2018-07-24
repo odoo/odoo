@@ -110,7 +110,7 @@ var StatementModel = BasicModel.extend({
         this.valuemax = 0;
         this.alreadyDisplayed = [];
         this.defaultDisplayQty = 10;
-        this.limitMoveLines = options && options.limitMoveLines || 5;
+        this.limitMoveLines = options && options.limitMoveLines || 15;
     },
 
     //--------------------------------------------------------------------------
@@ -130,20 +130,7 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
         this._addProposition(line, prop);
-
-        // Check whether we have some propositions left
-        // If we don't, it means we are on an empty page
-        // so let's go back to the previous page
-        // Through the offset
-        var propLineIds = _.map(line.reconciliation_proposition, function(prop) {
-                return prop.id;
-            });
-        var leftOversProps = _.filter(line.mv_lines, function(mv_line) {
-            return propLineIds.indexOf(mv_line.id) === -1;
-        });
-        if (line.offset && !leftOversProps.length) {
-            line.offset -= line.limitMoveLines;
-        }
+        line.limit_override = (line.offset + 1) * this.limitMoveLines;
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
@@ -509,6 +496,8 @@ var StatementModel = BasicModel.extend({
     removeProposition: function (handle, id) {
         var self = this;
         var line = this.getLine(handle);
+        // new limit = previous limit + 1, the one put back
+        line.limit_override = (line.offset + 1) * this.limitMoveLines;
         var prop = _.find(line.reconciliation_proposition, {'id' : id});
         if (prop) {
             line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
@@ -1006,9 +995,15 @@ var StatementModel = BasicModel.extend({
     _formatMoveLine: function (handle, mv_lines) {
         var self = this;
         var line = this.getLine(handle);
-        _.extend(line, {'mv_lines': mv_lines});
+        if (line.offset === 0 || line.limit_override) {
+            line.mv_lines = mv_lines;
+            delete line.limit_override;
+        } else {
+            line.mv_lines = line.mv_lines.concat(mv_lines);
+        }
         this._formatLineProposition(line, mv_lines);
-        if (line.mode !== 'create' && !mv_lines.length && !line.filter.length) {
+
+        if (line.mode !== 'create' && !line.mv_lines.length && !line.filter.length) {
             line.mode = this.avoidCreate || !line.balance.amount ? 'inactive' : 'create';
             if (line.mode === 'create') {
                 return this._computeLine(line).then(function () {
@@ -1135,8 +1130,16 @@ var StatementModel = BasicModel.extend({
             });
         })));
         var filter = line.filter || "";
+        var limit = this.limitMoveLines;
         var offset = line.offset;
-        var limit = this.limitMoveLines+1;
+        if (line.limit_override) {
+            // If we have a limit_override, it means we are either adding/removing
+            // a line from the matching table, hence keep same number of displayed
+            // proposition below by setting offset to 0 and limit to the current
+            // number of proposition loaded
+            offset = 0;
+            limit = line.limit_override;
+        }
         return this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'get_move_lines_for_bank_statement_line',
@@ -1505,8 +1508,12 @@ var ManualModel = StatementModel.extend({
             });
         })));
         var filter = line.filter || "";
+        var limit = this.limitMoveLines;
         var offset = line.offset;
-        var limit = this.limitMoveLines+1;
+        if (line.limit_override) {
+            limit = line.limit_override;
+            offset = 0;
+        }
         var args = [line.account_id.id, line.partner_id, excluded_ids, filter, offset, limit];
         return this._rpc({
                 model: 'account.reconciliation.widget',

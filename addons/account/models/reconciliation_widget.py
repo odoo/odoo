@@ -116,9 +116,10 @@ class AccountReconciliation(models.AbstractModel):
             partner_id = st_line.partner_id.id
 
         domain = self._domain_move_lines_for_reconciliation(st_line, aml_accounts, partner_id, excluded_ids=excluded_ids, search_str=search_str)
+        recs_count = self.env['account.move.line'].search_count(domain)
         aml_recs = self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
         target_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.journal_id.company_id.currency_id
-        return self._prepare_move_lines(aml_recs, target_currency=target_currency, target_date=st_line.date)
+        return self._prepare_move_lines(aml_recs, target_currency=target_currency, target_date=st_line.date, recs_count=recs_count)
 
     @api.model
     def get_bank_statement_line_data(self, st_line_ids, excluded_ids=None):
@@ -221,13 +222,14 @@ class AccountReconciliation(models.AbstractModel):
         Currency = self.env['res.currency']
 
         domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, search_str)
+        recs_count = Account_move_line.search_count(domain)
         lines = Account_move_line.search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
         if target_currency_id:
             target_currency = Currency.browse(target_currency_id)
         else:
             account = Account.browse(account_id)
             target_currency = account.currency_id or account.company_id.currency_id
-        return self._prepare_move_lines(lines, target_currency=target_currency)
+        return self._prepare_move_lines(lines, target_currency=target_currency,recs_count=recs_count)
 
     @api.model
     def get_all_data_for_manual_reconciliation(self, partner_ids, account_ids):
@@ -494,7 +496,7 @@ class AccountReconciliation(models.AbstractModel):
         return domain
 
     @api.model
-    def _prepare_move_lines(self, move_lines, target_currency=False, target_date=False):
+    def _prepare_move_lines(self, move_lines, target_currency=False, target_date=False, recs_count=0):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
             :param move_line_ids:
@@ -583,6 +585,7 @@ class AccountReconciliation(models.AbstractModel):
                     total_amount = company_currency._convert((line.debit - line.credit), target_currency, company, date)
                     total_amount_currency = line.currency_id and line.amount_currency or (line.debit - line.credit)
 
+            ret_line['recs_count'] = recs_count
             ret_line['debit'] = amount > 0 and amount or 0
             ret_line['credit'] = amount < 0 and -amount or 0
             ret_line['amount_currency'] = amount_currency
