@@ -382,12 +382,11 @@ var ActionManager = Widget.extend({
              * @param {boolean} [options.silent=false] if set, do not call the
              *   `on_close` handler.
              */
-            dialog.on('closed', self, function (options) {
-                options = options || {};
+            dialog.on('closed', self, function (ev) {
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
-                if (options && options.data.arg.silent !== true) {
-                    controller.onClose(options.infos);
+                if (ev.data.silent !== true) {
+                    controller.onClose(ev.data.infos);
                 }
             });
             controller.dialog = dialog;
