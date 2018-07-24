@@ -69,33 +69,33 @@
         <record id="view_move_kandan" model="ir.ui.view">
             <field name="name">stock.move.kanban</field>
             <field name="model">stock.move</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="name"/>
                     <field name="product_id"/>
-                    <field name="priority"/>
-                    <field name="state"/>
                     <field name="show_details_visible"/>
+                    <field name="product_uom_qty"/>
+                    <field name="quantity_done"/>
+                    <field name="reserved_availability"/>
+                    <field name="inventory_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
-                                        <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                        <strong class="o_kanban_record_title"><span><field name="product_id"/></span></strong>
                                     </div>
-                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'assigned': 'success', 'confirmed': 'default'}}"/>
+                                    <button name="action_show_details" string="Register lots, packs, location"
+                                            class="o_icon_button fa fa-list" type="object"
+                                            attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <field name="product_id"/>
-                                </div>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <button name="action_show_details" string="Register lots, packs, location"
-                                                class="o_icon_button fa fa-list" type="object"
-                                                attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                    <div attrs="{'invisible': [('inventory_id', '=', False)]}">
+                                        <span>Initial Demand <field name="product_uom_qty"/></span><br/>
+                                        <span>Quantity Done <field name="quantity_done"/></span>
                                     </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <span><field name="product_uom_qty"/></span>
+                                    <div attrs="{'invisible': [('inventory_id', '!=', False)]}">
+                                        <span>Quantity Done <field name="quantity_done"/>/<field name="reserved_availability"/></span>
                                     </div>
                                 </div>
                             </div>
