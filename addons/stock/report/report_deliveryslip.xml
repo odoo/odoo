@@ -49,7 +49,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="not o.move_line_ids">
+                    <table class="table table-condensed mt48" t-if="o.state!='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -57,16 +57,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_lines" t-as="move">
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <tr t-foreach="lines" t-as="move">
                                 <td><span t-field="move.product_id"/></td>
                                 <td>
-                                    <span t-field="move.quantity_done"/>
+                                    <span t-field="move.product_uom_qty"/>
                                     <span t-field="move.product_uom"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="o.move_line_ids">
+                    <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state=='done'">
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_production_lot"/>
                         <thead>
                             <tr>
