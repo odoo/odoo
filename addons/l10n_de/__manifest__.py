@@ -22,5 +22,6 @@ German accounting chart and localization.
         'data/res.country.state.csv',
         'data/menuitem_data.xml',
         'views/account_view.xml',
+        'report/din5008_report.xml',
     ],
 }
