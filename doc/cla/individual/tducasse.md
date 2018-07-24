@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-tducasse thibaud.ducasse@gmail.com https://github.com/tducasse
+tducasse 11507599+tducasse@users.noreply.github.com https://github.com/tducasse
