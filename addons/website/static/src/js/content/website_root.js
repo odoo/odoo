@@ -289,7 +289,7 @@ var WebsiteRoot = BodyManager.extend({
     _multiWebsiteSwitch: function (ev) {
         var website_id_to_switch_to = ev.target.getAttribute('website-id');
         this._rpc({
-            route: '/website/set_session_website',
+            route: '/website/force_website',
             params: {
                 website_id: website_id_to_switch_to || false,
             },

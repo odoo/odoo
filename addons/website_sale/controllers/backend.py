@@ -13,9 +13,10 @@ class WebsiteSaleBackend(WebsiteBackend):
 
     @http.route()
     def fetch_dashboard_data(self, website_id, date_from, date_to):
-        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
-        current_website = request.env['website'].browse(website_id) if website_id else request.env['website'].get_current_website()
+        Website = request.env['website']
+        current_website = website_id and Website.browse(website_id) or Website.get_current_website()
 
+        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
         sales_values = dict(
             graph=[],
             best_sellers=[],

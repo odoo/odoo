@@ -21,19 +21,13 @@ class View(models.Model):
 
     customize_show = fields.Boolean("Show As Optional Inherit", default=False)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
-    page_ids = fields.One2many('website.page', compute='_compute_page_ids', store=False)
+    page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     theme_id = fields.Many2one('ir.module.module')
 
     @api.one
     def _compute_first_page_id(self):
         self.first_page_id = self.env['website.page'].search([('view_id', '=', self.id)], limit=1)
-
-    @api.one
-    def _compute_page_ids(self):
-        self.page_ids = self.env['website.page'].search(
-            [('view_id', '=', self.id)]
-        )
 
     @api.multi
     def write(self, vals):
@@ -165,7 +159,7 @@ class View(models.Model):
     def _view_obj(self, view_id):
         if isinstance(view_id, pycompat.string_types):
             if 'website_id' in self._context:
-                domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', self._context.get('website_id'))]
+                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
                 order = 'website_id'
             else:
                 domain = [('key', '=', view_id)]
@@ -189,8 +183,7 @@ class View(models.Model):
     def _get_inheriting_views_arch_domain(self, view_id, model):
         domain = super(View, self)._get_inheriting_views_arch_domain(view_id, model)
         current_website = self._get_inheriting_views_arch_website(view_id)
-
-        website_views_domain = [('theme_id', '=', False), '|', ('website_id', '=', False), ('website_id', '=', current_website.id)]
+        website_views_domain = current_website.website_domain()
         # when rendering for the website we have to include inactive views
         # we will prefer inactive website-specific views over active generic ones
         if current_website:
@@ -220,7 +213,7 @@ class View(models.Model):
             current_website = self.env['website'].browse(self._context.get('website_id'))
             key_domain = [('key', '=', xml_id)]
             theme_views_domain = [('theme_id', 'in', current_website.theme_ids.ids)]
-            website_views_domain = [('theme_id', '=', False), '|', ('website_id', '=', False), ('website_id', '=', current_website.id)]
+            website_views_domain = [('theme_id', '=', False)] + current_website.website_domain()
             domain = expression.AND([expression.OR([theme_views_domain, website_views_domain]), key_domain])
 
             view = self.search(domain, order='website_id', limit=1)
