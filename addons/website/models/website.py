@@ -791,13 +791,10 @@ class Page(models.Model):
         return most_specific_page == page_to_test
 
     @api.model
-    def get_page_info(self, id, website_id):
-        item = self.search_read(
-            domain=[('id', '=', id)] + self.env['website'].website_domain(website_id),
-            fields=['id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish', 'menu_ids', 'is_homepage', 'website_id'],
-            limit=1
+    def get_page_info(self, id):
+        return self.browse(id).read(
+            ['id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish', 'menu_ids', 'is_homepage', 'website_id'],
         )
-        return item
 
     @api.multi
     def get_view_identifier(self):
@@ -845,16 +842,20 @@ class Page(models.Model):
         # Edits via the page manager shouldn't trigger the COW
         # mechanism and generate new pages. The user manages page
         # visibility manually with is_published here.
-        page.with_context(no_cow=True).write({
+        w_vals = {
             'key': page_key,
             'name': data['name'],
             'url': url,
             'is_published': data['website_published'],
-            'website_id': website.id if data['restrict_to_current_website'] else False,
+            'website_id': False if data['share_page_info'] else website.id,
             'website_indexed': data['website_indexed'],
             'date_publish': data['date_publish'] or None,
             'is_homepage': data['is_homepage'],
-        })
+        }
+        # toggle is hidden to prevent user to unshare a page
+        if 'share_page_info' in data:
+            w_vals['website_id'] = False if data['share_page_info'] else website.id
+        page.with_context(no_cow=True).write(w_vals)
 
         # Create redirect if needed
         if data['create_redirect']:
