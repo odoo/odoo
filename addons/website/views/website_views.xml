@@ -159,8 +159,9 @@
                 <tree string="Website Pages" default_order="name">
                     <field name="name"/>
                     <field name="url"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="website_indexed"/>
-                    <field name="website_published"/>
+                    <field name="website_published" string="Page Published"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>

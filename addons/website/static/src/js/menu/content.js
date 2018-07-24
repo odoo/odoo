@@ -542,7 +542,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         this._rpc({
             model: 'website.menu',
             method: 'save',
-            args: [[context.website_id], { data: data, to_delete: self.to_delete }],
+            args: [context.website_id, { data: data, to_delete: self.to_delete }],
             context: context,
         }).then(function () {
             return _super();

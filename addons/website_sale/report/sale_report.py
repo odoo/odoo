@@ -8,14 +8,7 @@ class SaleReport(models.Model):
 
     website_id = fields.Many2one('website', readonly=True)
 
-    def _select(self):
-        select = super(SaleReport, self)._select()
-        select += ', s.website_id as website_id'
-
-        return select
-
-    def _group_by(self):
-        group_by = super(SaleReport, self)._group_by()
-        group_by += ', s.website_id'
-
-        return group_by
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+        fields['website_id'] = ", s.website_id as website_id"
+        groupby += ', s.website_id'
+        return super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
