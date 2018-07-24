@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo.exceptions import UserError
-from odoo.fields import Date
+from odoo.fields import Date, Datetime
 from odoo.tests.common import TransactionCase
 
 
@@ -3260,7 +3260,7 @@ class TestStockValuation(TransactionCase):
     def test_at_date_standard_1(self):
         self.product1.product_tmpl_id.cost_method = 'standard'
 
-        now = Date.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
         date3 = now - timedelta(days=6)
@@ -3454,7 +3454,7 @@ class TestStockValuation(TransactionCase):
         """
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
-        now = Date.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
         date3 = now - timedelta(days=6)
@@ -3617,7 +3617,7 @@ class TestStockValuation(TransactionCase):
     def test_at_date_fifo_2(self):
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
-        now = Date.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
         date3 = now - timedelta(days=6)
