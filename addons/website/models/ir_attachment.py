@@ -14,6 +14,13 @@ class Attachment(models.Model):
     website_url = fields.Char(string="Website URL", related='local_url', deprecated=True)
 
     @api.model
+    def create(self, vals):
+        website = self.env['website'].get_current_website()
+        if website and 'website_id' not in vals and 'not_force_website_id' not in self.env.context:
+            vals['website_id'] = website.id
+        return super(Attachment, self).create(vals)
+
+    @api.model
     def get_serving_groups(self):
         return super(Attachment, self).get_serving_groups() + ['website.group_website_designer']
 

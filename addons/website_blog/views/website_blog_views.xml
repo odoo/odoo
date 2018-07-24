@@ -73,6 +73,7 @@
                             <field name="name" placeholder="Blog Post Title"/>
                             <field name="subtitle" placeholder="Blog Subtitle"/>
                             <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
                         </group>
                         <group string="Publishing Options">
                             <field name="author_id"/>

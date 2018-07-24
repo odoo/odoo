@@ -99,15 +99,15 @@ class Website(models.Model):
     installed_theme_id = fields.Many2one('ir.module.module')
     theme_ids = fields.Many2many('ir.module.module', 'website_theme', 'website_id', 'ir_module_module_id')
     auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation (B2B)'),
-        ('b2c', 'Free sign up (B2C)'),
+        ('b2b', 'On invitation'),
+        ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
 
     @api.multi
     def _compute_menu(self):
         Menu = self.env['website.menu']
         for website in self:
-            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', 'in', (website.id, False))], order='id', limit=1).id
+            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
 
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
@@ -162,6 +162,18 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
+        top_menu = self.env['website.menu'].create({
+            'name': 'Top Menu for website ' + str(self.id),
+            'website_id': self.id,
+            'sequence': 0
+        })
+        self.menu_id = top_menu.id
+        self.env['website.menu'].create({
+            'name': 'Home', 'url': '/',
+            'website_id': self.id,
+            'parent_id': top_menu.id,
+            'sequence': 10
+        })
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
@@ -196,10 +208,11 @@ class Website(models.Model):
         if view.arch_fs:
             view.arch_fs = False
 
+        website = self.get_current_website()
         if ispage:
             page = self.env['website.page'].create({
                 'url': page_url,
-                'website_id': self.get_current_website().id,
+                'website_id': website.id,  # remove it if only one webiste or not?
                 'view_id': view.id,
             })
             result['view_id'] = view.id
@@ -207,9 +220,9 @@ class Website(models.Model):
             self.env['website.menu'].create({
                 'name': name,
                 'url': page_url,
-                'parent_id': self.get_current_website().menu_id.id,
+                'parent_id': website.menu_id.id,
                 'page_id': page.id,
-                'website_id': self.get_current_website().id,
+                'website_id': website.id,
             })
         return result
 
@@ -222,7 +235,10 @@ class Website(models.Model):
             :param page_url : the url to be checked for uniqueness
         """
         inc = 0
-        domain_static = self.get_current_website().website_domain()
+        # we only want a unique_path for website specific.
+        # we need to be able to have /url for website=False, and /url for website=1
+        # in case of duplicate, page manager will allow you to manage this case
+        domain_static = [('website_id', '=', self.get_current_website().id)]  # .website_domain()
         page_temp = page_url
         while self.env['website.page'].with_context(active_test=False).sudo().search([('url', '=', page_temp)] + domain_static):
             inc += 1
@@ -877,7 +893,10 @@ class Page(models.Model):
             # is copied from.
             # (eg: website_version: an ir.ui.view record with the same key is
             # expected to be the same ir.ui.view but from another version)
-            new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name, _('(copy)'))})
+            website_id = default.get('website_id')
+            # website_id should be set during copy to avoid copying a generic page to another generic copy and then write on it
+            # which would result in the generic page copied to a generic one and a specific one
+            new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name, _('(copy)')), 'website_id': website_id.id})
             default = {
                 'name': '%s %s' % (self.name, _('(copy)')),
                 'url': self.env['website'].get_unique_path(self.url),
@@ -891,8 +910,10 @@ class Page(models.Model):
             :param page_id : website.page identifier
         """
         page = self.browse(int(page_id))
-        new_page = page.copy()
-        if clone_menu:
+        new_page = page.copy(dict(website_id=self.env['website'].get_current_website()))
+        # Should not clone menu if the page was cloned from one website to another
+        # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
+        if clone_menu and new_page.website_id == page.website_id:
             menu = self.env['website.menu'].search([('page_id', '=', page_id)], limit=1)
             if menu:
                 # If the page being cloned has a menu, clone it too
@@ -909,7 +930,7 @@ class Page(models.Model):
         for page in self:
             # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
             pages_linked_to_iruiview = self.search(
-                [('view_id', '=', self.view_id.id), ('id', '!=', self.id)]
+                [('view_id', '=', page.view_id.id), ('id', '!=', page.id)]
             )
             if len(pages_linked_to_iruiview) == 0 and not page.view_id.inherit_children_ids:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
@@ -946,37 +967,27 @@ class Menu(models.Model):
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
-    @api.multi
-    def unlink(self):
-        '''This implements COU (copy-on-unlink). When deleting a generic menu
-        item website-specific menu items will be created.'''
-        current_website_id = self._context.get('website_id')
-
-        if current_website_id and not self._context.get('no_cow'):
-            for menu in self.filtered(lambda menu: not menu.website_id):
-                for website in self.env['website'].search([('id', '!=', current_website_id)]):
-                    # reuse the COW mechanism to create website-specific copies
-                    menu.with_context(website_id=website.id).write({})
-
-        return super(Menu, self).unlink()
-
-    @api.multi
-    def write(self, vals):
-        '''This implements COW (copy-on-write). This way editing websites does
-        not impact other websites and newly created websites will only
-        contain the default menus.
+    @api.model
+    def create(self, vals):
+        ''' In case a menu without a website_id is trying to be created, we duplicate
+            it for every website.
+            Note: Particulary useful when installing a module that adds a menu like
+                  /shop. So every website has the shop menu.
         '''
-        current_website_id = self._context.get('website_id')
-
-        if current_website_id and not self.website_id and not self._context.get('no_cow'):
-            new_website_specific_menu = self.copy({'website_id': current_website_id})
-
-            for child in self.child_id:
-                child.write({'parent_id': new_website_specific_menu.id})
-
-            return new_website_specific_menu.write(vals)
-
-        return super(Menu, self).write(vals)
+        if vals.get('website_id'):
+            return super(Menu, self).create(vals)
+        elif self._context.get('website_id'):
+            vals.update({'website_id': self._context.get('website_id')})
+            return super(Menu, self).create(vals)
+        else:
+            # create for every site
+            for website in self.env['website'].search([]):
+                vals.update({
+                    'website_id': website.id,
+                    'parent_id': website.menu_id.id,
+                })
+                res = super(Menu, self).create(vals)
+        return res  # create loop, what to return ? last created record ?
 
     @api.one
     def _compute_visible(self):
@@ -1000,21 +1011,6 @@ class Menu(models.Model):
                     url = '/%s' % self.url
         return url
 
-    def get_children_for_current_website(self):
-        most_specific_child_menus = self.env['website.menu']
-        website_id = self._context.get('website_id')
-
-        if not website_id:
-            return self.child_id
-
-        for child in self.child_id:
-            if child.website_id and child.website_id.id == website_id:
-                most_specific_child_menus |= child
-            elif not child.website_id and not any(child.clean_url() == child2.clean_url() and child2.website_id.id == website_id for child2 in self.child_id):
-                most_specific_child_menus |= child
-
-        return most_specific_child_menus
-
     # would be better to take a menu_id as argument
     @api.model
     def get_tree(self, website_id, menu_id=None):
@@ -1031,7 +1027,7 @@ class Menu(models.Model):
                 children=[],
                 is_homepage=is_homepage,
             )
-            for child in node.get_children_for_current_website():
+            for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
         if menu_id:
@@ -1055,7 +1051,7 @@ class Menu(models.Model):
             mid = menu['id']
             # new menu are prefixed by new-
             if isinstance(mid, pycompat.string_types):
-                new_menu = self.create({'name': menu['name']})
+                new_menu = self.create({'name': menu['name'], 'website_id': website_id})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])

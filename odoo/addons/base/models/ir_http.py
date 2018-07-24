@@ -171,9 +171,10 @@ class IrHttp(models.AbstractModel):
             if serve:
                 return serve
 
-        # Don't handle exception but use werkeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode']:
-            raise
+        # Don't handle exception but use werkzeug debugger if server in --dev mode
+        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+            raise exception
+
         try:
             return request._handle_exception(exception)
         except AccessDenied:

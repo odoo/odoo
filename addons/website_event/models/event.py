@@ -84,7 +84,7 @@ class Event(models.Model):
                     event.menu_id.unlink()
                 elif event.website_menu:
                     if not event.menu_id:
-                        root_menu = self.env['website.menu'].create({'name': event.name})
+                        root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.id})
                         event.menu_id = root_menu
                     for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                         event._create_menu(sequence, name, url, xml_id)
@@ -99,6 +99,7 @@ class Event(models.Model):
             'url': url,
             'parent_id': self.menu_id.id,
             'sequence': sequence,
+            'website_id': self.id,
         })
         return menu
 

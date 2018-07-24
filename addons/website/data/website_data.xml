@@ -10,7 +10,8 @@
         </record>
 
         <record id="main_menu" model="website.menu">
-            <field name="name">Top Menu</field>
+          <field name="name">Top Menu</field>
+          <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="menu_homepage" model="website.menu">
@@ -18,6 +19,7 @@
             <field name="url">/</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="menu_contactus" model="website.menu">
@@ -25,6 +27,7 @@
             <field name="url">/contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->

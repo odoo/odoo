@@ -55,7 +55,6 @@ var ThemeCustomizeDialog = Dialog.extend({
      */
     start: function () {
         var self = this;
-
         this._generateDialogHTML();
         this.$modal.addClass('o_theme_customize_modal');
 
@@ -77,7 +76,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             this._loadViews()
         );
     },
-    
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

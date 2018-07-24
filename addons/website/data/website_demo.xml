@@ -176,7 +176,7 @@ response = request.render("website.template_partner_comment", {
         <record id="website2_menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
             <field name="url">/contactus</field>
-            <field name="parent_id" ref="website.main_menu"/>
+            <field name="parent_id" search="[('website_id', '=', ref('website2')), ('parent_id', '=', False)]"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="website2"/>
             <field name="page_id" ref="website2_contactus_page" />

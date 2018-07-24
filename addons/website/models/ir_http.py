@@ -179,7 +179,7 @@ class Http(models.AbstractModel):
                     return response
             except Exception as e:
                 if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
-                    raise
+                    raise e
                 exception = e
 
             values = dict(
