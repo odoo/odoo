@@ -80,7 +80,7 @@ class FleetVehicle(models.Model):
     def _get_acquisition_date(self):
         self.ensure_one()
         return babel.dates.format_date(
-            date=Date.from_string(self.acquisition_date),
+            date=self.acquisition_date,
             format='MMMM y',
             locale=self._context.get('lang') or 'en_US'
         )
