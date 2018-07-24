@@ -207,13 +207,82 @@ class LunchOrderLine(models.Model):
                 line.with_context(lunch_date=line.order_id.date)._check_supplier_availibility()
         return res
 
-    @api.one
     def order(self):
         """
         The order_line is ordered to the vendor but isn't received yet
         """
         if self.user_has_groups("lunch.group_lunch_manager"):
-            self.state = 'ordered'
+            self.write({'state': 'ordered'})
+
+            order = {
+                'supplier': False,
+                'company': False,
+                'currency': False,
+            }
+            group_lines = {}
+            for line in self:
+                if not line.supplier:
+                    # do not send emails for products with no suppliers
+                    continue
+
+                if order['supplier'] and line.supplier != order['supplier']:
+                    raise ValidationError(_("Validate order for one supplier at a time to send emails (mixed orders from %s and %s)") % (
+                                            order['supplier'].display_name, line.supplier.display_name))
+                order['supplier'] = line.supplier
+
+                if order['company'] and line.order_id.company_id != order['company']:
+                    raise ValidationError(_("Validate order for one company at a time to send emails (mixed orders from %s and %s)") % (
+                                            order['company'].name, line.order_id.company_id.name))
+                order['company'] = line.order_id.company_id
+
+                if order['currency'] and line.currency_id != order['currency']:
+                    raise ValidationError(_("Validate order for one currency at a time to send emails (mixed orders from %s and %s)") % (
+                                            order['currency'].name, line.currency_id.name))
+                order['currency'] = line.currency_id
+
+                # group the order by products and note
+                key = (line.product_id, line.note)
+                group_lines.setdefault(key, 0)
+                group_lines[key] += 1
+
+            order['company_name'] = order['company'].name
+            order['currency_id'] = order['currency'].id
+            order['supplier_id'] = order['supplier'].id
+            order['supplier_name'] = order['supplier'].name
+            order['supplier_email'] = order['supplier'].email_formatted
+
+            lines = []
+            # sort by product name, note
+            for product, note in sorted(group_lines, key=lambda k: (k[0].name, bool(k[1]))):
+                quantity = group_lines[(product, note)]
+                lines.append({
+                    'product': product.name,
+                    'note': note or '',
+                    'quantity': quantity,
+                    'price': product.price * quantity,
+                })
+
+            order['amount_total'] = sum(l['price'] for l in lines)
+
+            template = self.env.ref('lunch.lunch_order_mail_supplier', raise_if_not_found=False)
+            ctx = dict(
+                default_composition_mode='comment',
+                default_model='lunch.order',
+                default_use_template=bool(template),
+                default_template_id=template.id,
+                default_lang=order['supplier'].lang or self.env.user.lang,
+                order=order,
+                lines=lines,
+            )
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.compose.message',
+                'target': 'new',
+                'context': ctx,
+            }
+
         else:
             raise AccessError(_("Only your lunch manager processes the orders."))
 
