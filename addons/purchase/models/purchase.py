@@ -171,7 +171,7 @@ class PurchaseOrder(models.Model):
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id, quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order[:10], uom_id=line.product_uom)
+                date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
             line.date_planned = line._get_date_planned(seller)
         return new_po
 
@@ -590,7 +590,7 @@ class PurchaseOrderLine(models.Model):
         seller = self.product_id._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
-            date=self.order_id.date_order and self.order_id.date_order[:10],
+            date=self.order_id.date_order and fields.Date.to_string(self.order_id.date_order),
             uom_id=self.product_uom,
             params=params)
 
