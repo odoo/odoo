@@ -35,5 +35,9 @@ class HrEmployee(models.Model):
             subject = MailTemplate.render_template(template_new_employee.subject, 'hr.employee', self.id)
             channel_all_employees.message_post(
                 body=body_html, subject=subject,
-                subtype='mail.mt_comment')
+                subtype='mail.mt_comment',
+                notif_layout='mail.mail_notification_light',
+                notif_values={
+                    'model_description': self._description.lower(),
+                })
         return True
