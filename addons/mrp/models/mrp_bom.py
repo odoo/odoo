@@ -6,6 +6,8 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 
+from itertools import groupby
+
 
 class MrpBom(models.Model):
     """ Defines bills of material for a product or a product template """
@@ -292,8 +294,10 @@ class MrpBomLine(models.Model):
         custom control. It currently checks that all variant values are in the
         product. """
         if self.attribute_value_ids:
-            if not product or self.attribute_value_ids - product.attribute_value_ids:
-                return True
+            for att, att_values in groupby(self.attribute_value_ids, lambda l: l.attribute_id):
+                values = self.env['product.attribute.value'].concat(*list(att_values))
+                if not (product.attribute_value_ids & values):
+                    return True
         return False
 
     @api.multi
