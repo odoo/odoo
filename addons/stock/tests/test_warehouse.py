@@ -62,7 +62,7 @@ class TestWarehouse(TestStockCommon):
         # Check inventory obj details (1 inventory with 1 line, because 1 product change)
         inventory = self.env['stock.inventory'].search([('id', 'not in', self.existing_inventories.ids)])
         self.assertEqual(len(inventory), 1)
-        self.assertIn('INV: %s' % self.product_1.name, inventory.name)
+        self.assertIn('INV: %s' % self.product_1.display_name, inventory.name)
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.product_id, self.product_1)
         self.assertEqual(inventory.line_ids.product_qty, 50.0)
