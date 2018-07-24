@@ -113,6 +113,10 @@ Running the server
 
     runs tests after installing modules
 
+.. option:: --test-tags 'tag_1,tag_2,...,-tag_n'
+
+    select the tests to run by using tags.
+
 .. option:: --dev <feature,feature,...,feature>
 
     * ``all``: all the features below are activated
