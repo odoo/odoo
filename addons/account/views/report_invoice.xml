@@ -195,6 +195,9 @@
                             </div>
                         </div>
                     </div>
+                    <p t-if="o.reference_type != 'none' and o.reference">
+                        Please use the following communication for your payment : <b><span t-field="o.reference"/></b>
+                    </p>
                     <p t-if="o.comment" name="comment">
                         <span t-field="o.comment"/>
                     </p>

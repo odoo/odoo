@@ -20,14 +20,14 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     @api.model
-    def _get_reference_type(self):
+    def _get_reference_types(self):
         """Add BBA Structured Communication Type and change labels from 'reference' into 'communication' """
-        res = super(AccountInvoice, self)._get_reference_type()
+        res = super(AccountInvoice, self)._get_reference_types()
         res[[i for i, x in enumerate(res) if x[0] == 'none'][0]] = ('none', _('Free Communication'))
         res.append(('bba', 'BBA Structured Communication'))
         return res
 
-    reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
+    reference_type = fields.Selection('_get_reference_types', string='Payment Reference',
         required=True, readonly=True)
 
     @api.constrains('reference', 'reference_type')
@@ -47,20 +47,6 @@ class AccountInvoice(models.Model):
             mod = base % 97 or 97
             if mod == int(bbacomm[-2:]):
                 return True
-
-    @api.onchange('partner_id', 'type', 'reference_type')
-    def _onchange_partner_id(self):
-        result = super(AccountInvoice, self)._onchange_partner_id()
-        reference = False
-        reference_type = 'none'
-        if self.partner_id:
-            if (self.type == 'out_invoice'):
-                reference_type = self.partner_id.out_inv_comm_type
-                if reference_type:
-                    reference = self.generate_bbacomm(self.type, reference_type, self.partner_id.id, '')['value']['reference']
-        self.reference_type = reference_type or 'none'
-        self.reference = reference
-        return result
 
     def generate_bbacomm(self, type, reference_type, partner_id, reference):
         reference = reference or ''
@@ -124,6 +110,13 @@ class AccountInvoice(models.Model):
                     raise UserError(_("Unsupported Structured Communication Type Algorithm '%s' !"
                                         "\nPlease contact your Odoo support channel.") % algorithm)
         return {'value': {'reference': reference}}
+
+    @api.multi
+    def _get_computed_reference(self):
+        # Override.
+        if self.reference_type == 'bba':
+            return self.generate_bbacomm(self.type, self.reference_type, self.partner_id.id, '')['value']['reference']
+        return super(AccountInvoice, self)._get_computed_reference()
 
     @api.model
     def create(self, vals):

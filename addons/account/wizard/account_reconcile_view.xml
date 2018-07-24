@@ -26,14 +26,11 @@
             </field>
         </record>
 
-        <record id="action_view_account_move_line_reconcile" model="ir.actions.act_window">
+        <record id="action_view_account_move_line_reconcile" model="ir.actions.client">
             <field name="name">Reconcile Entries</field>
-            <field name="res_model">account.move.line.reconcile</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_account_move_line_reconcile_full"/>
-            <field name="target">new</field>
-            <field name="binding_model_id" ref="account.model_account_move_line" />
+            <field name="tag">manual_reconciliation_view</field>
+            <field name="binding_model_id" ref="account.model_account_move_line"/>
+            <field name="binding_type">action</field>
         </record>
 
         <record id="account_move_line_reconcile_writeoff" model="ir.ui.view">

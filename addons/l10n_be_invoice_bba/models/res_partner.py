@@ -12,7 +12,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_comm_type(self):
-        return self.env['account.invoice']._get_reference_type()
+        return self.env['account.invoice']._get_reference_types()
 
     out_inv_comm_type = fields.Selection('_get_comm_type', string='Communication Type', change_default=True,
         help='Select Default Communication Type for Outgoing Invoices.', default='none')

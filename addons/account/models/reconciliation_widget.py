@@ -265,6 +265,7 @@ class AccountReconciliation(models.AbstractModel):
         assert account_type in ('payable', 'receivable', None)
         is_partner = res_type == 'partner'
         res_alias = is_partner and 'p' or 'a'
+        aml_ids = self._context.get('active_ids') and tuple(self._context.get('active_ids'))
 
         query = ("""
             SELECT {0} account_id, account_name, account_code, max_date,
@@ -302,7 +303,8 @@ class AccountReconciliation(models.AbstractModel):
                             {7}
                             AND l.amount_residual < 0
                         )
-                    GROUP BY {8} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
+                        {8}
+                    GROUP BY {9} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
                     ORDER BY {res_alias}.last_time_entries_checked
                 ) as s
             WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
@@ -315,6 +317,7 @@ class AccountReconciliation(models.AbstractModel):
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
                 self.env.user.company_id.id,
                 is_partner and 'AND l.partner_id = p.id' or ' ',
+                aml_ids and 'AND l.id IN %(aml_ids)s' or '',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias
             ))
