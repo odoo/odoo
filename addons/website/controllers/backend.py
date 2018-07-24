@@ -9,6 +9,7 @@ class WebsiteBackend(http.Controller):
 
     @http.route('/website/fetch_dashboard_data', type="json", auth='user')
     def fetch_dashboard_data(self, website_id, date_from, date_to):
+        Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
         has_group_designer = request.env.user.has_group('website.group_website_designer')
         dashboard_data = {
@@ -22,7 +23,7 @@ class WebsiteBackend(http.Controller):
             }
         }
 
-        current_website = request.env['website'].browse(website_id) if website_id else request.env['website'].get_current_website()
+        current_website = website_id and Website.browse(website_id) or Website.get_current_website()
         dashboard_data['websites'] = request.env['website'].search_read([], ['id', 'name'])
         for website in dashboard_data['websites']:
             if website['id'] == current_website.id:

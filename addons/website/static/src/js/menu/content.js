@@ -980,7 +980,7 @@ function _deletePage(pageId, fromPageManagement) {
 }
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
-websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');
+websiteRootData.websiteRootRegistry.add(PageManagement, '#list_website_pages');
 
 return {
     PagePropertiesDialog: PagePropertiesDialog,

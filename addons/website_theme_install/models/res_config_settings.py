@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def website_install_theme(self):
-        self.website_id._fix_to_session()
+        self.website_id._force()
         return {
             'type': 'ir.actions.act_url',
             'url': '/web#action=website_theme_install.theme_install_kanban_action',
