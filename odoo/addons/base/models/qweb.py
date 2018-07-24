@@ -1025,7 +1025,7 @@ class QWeb(object):
         varset = self._values_var(ast.Str(varname), ctx=ast.Store())
 
         if 't-value' in el.attrib:
-            value = self._compile_expr(el.attrib.pop('t-value'))
+            value = self._compile_expr(el.attrib.pop('t-value') or 'None')
         elif 't-valuef' in el.attrib:
             value = self._compile_format(el.attrib.pop('t-valuef'))
         else:
