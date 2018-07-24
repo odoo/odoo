@@ -103,7 +103,7 @@ class Location(models.Model):
         for location in self:
             orig_location = location
             name = location.name
-            while location.location_id and location.usage != 'view':
+            while location.location_id:
                 location = location.location_id
                 if not name:
                     raise UserError(_('You have to set a name for this location.'))
