@@ -58,7 +58,7 @@ class WebsiteEventController(http.Controller):
                 ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
                 ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
                 0],
-            ['old', _('Old Events'), [
+            ['old', _('Past Events'), [
                 ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
                 0],
         ]
