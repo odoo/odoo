@@ -25,13 +25,7 @@ var RainbowMan = Widget.extend({
      * @constructor
      * @param {Object} [options]
      * @param {string} [options.message] Message to be displayed on rainbowman card
-     * @param {string} [options.fadeout='medium'] Delay for rainbowman to disappear
-     *   [options.fadeout='fast'] will make rainbowman dissapear quickly,
-     *   [options.fadeout='medium'] and [options.fadeout='slow'] will wait
-     *     little longer before disappearing (can be used when [options.message]
-     *     is longer),
-     *   [options.fadeout='no'] will keep rainbowman on screen until user clicks
-     *     anywhere outside rainbowman
+     * @param {string} [options.fadeout='medium'] Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear quickly, 'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer), 'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
      * @param {string} [options.img_url] URL of the image to be displayed
      */
     init: function (options) {

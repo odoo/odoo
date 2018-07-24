@@ -685,12 +685,14 @@ var BasicModel = AbstractModel.extend({
      *
      * Case for not abandoning the record:
      *
-     *  1. flagged as 'no abandon' (i.e. during a `default_get`, including any
-     *     `onchange` from a `default_get`)
-     *  2. registered in a list on addition
-     *      2.1. registered as non-new addition
-     *      2.2. registered as new additon on update
-     *  3. record is not new
+     * 1. flagged as 'no abandon' (i.e. during a `default_get`, including any
+     *    `onchange` from a `default_get`)
+     * 2. registered in a list on addition
+     *
+     *    2.1. registered as non-new addition
+     *    2.2. registered as new additon on update
+     *
+     * 3. record is not new
      *
      * Otherwise, the record can be abandoned.
      *

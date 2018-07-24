@@ -15,6 +15,7 @@ from sphinx.ext.autodoc import members_set_option, bool_option, ALL
 from autojsdoc.ext.extractor import read_js
 from ..parser import jsdoc, types
 
+class DocumenterError(Exception): pass
 
 @contextlib.contextmanager
 def addto(parent, newnode):
@@ -157,6 +158,11 @@ class Documenter(object):
         """
         :rtype: List[nodes.Node]
         """
+        try:
+            return self._generate(all_members=all_members)
+        except Exception as e:
+            raise DocumenterError("Failed to document %s" % self.item) from e
+    def _generate(self, all_members=False):
         objname = self.item.name
         prefixed = (self.item['sourcemodule'].name + '.' + objname) if self.item['sourcemodule'] else None
         objtype = self.objtype
