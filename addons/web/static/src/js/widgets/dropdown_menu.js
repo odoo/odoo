@@ -21,24 +21,23 @@ var DropdownMenu = Widget.extend({
      * override
      *
      * @param {Widget} parent
-     * @param {Object} dropdowHeader object used to customize the dropdown menu. The keys:
-     *                      - 'title' (e.g. 'Group By')
-     *                      - 'icon' (e.g. 'fa-bars')
-     *                      - 'symbol' (e.g. 'caret')
-     *                      - 'category' (describes the type of items)
-     *                      - 'style' (button style)
-     * @param {Object} items list of menu items (type IGMenuItem below)
-     *   interface IMenuItem {
-     *      itemId: string; (optional) unique id associated with the item
-     *      description: string; label printed on screen
-     *      groupId: string;
-     *      isActive: boolean; (optional) determines if the item is considered active
-     *      isOpen: boolean; (optional) in case there are options the submenu presenting the options
-     *                                is opened or closed according to isOpen
-     *      isRemovable: boolean; (optional) can be removed from menu
-     *      options: array of objects with 'optionId' and 'description' keys; (optional)
-     *      currentOptionId: string refers to an optionId that is activated if item is active (optional)
-     *   }
+     * @param {Object} dropdownHeader object used to customize the dropdown menu.
+     * @param {String} dropdownHeader.title
+     * @param {String} dropdownHeader.icon
+     * @param {String} dropdownHeader.symbol
+     * @param {String} dropdownHeader.category descripbes the type of items
+     * @param {String} dropdownHeader.style the button style
+     * @param {Object[]} items list of menu items
+     *
+     * Menu items:
+     *
+     * * itemId: string; (optional) unique id associated with the item
+     * * description: string; label printed on screen
+     * * groupId: string;
+     * * isActive: boolean; (optional) determines if the item is considered active
+     * * isOpen: boolean; (optional) in case there are options the submenu presenting the options is opened or closed according to isOpen
+     * * isRemovable: boolean; (optional) can be removed from menu options: array of objects with 'optionId' and 'description' keys; (optional)
+     * * currentOptionId: string refers to an optionId that is activated if item is active (optional)
      */
     init: function (parent, dropdownHeader, items) {
         this._super(parent);
@@ -67,7 +66,7 @@ var DropdownMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @param {Array[number]} groupIds
+     * @param {Number[]} groupIds
      */
     unsetGroups: function (groupIds) {
         var self = this;

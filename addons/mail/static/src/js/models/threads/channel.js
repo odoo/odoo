@@ -271,8 +271,8 @@ var Channel = ThreadWithCache.extend({
     /**
      * States whether this channel is a chat or not.
      * These types of channels are chat:
-     *      - direct messages (DM)
-     *      - livechat
+     * - direct messages (DM)
+     * - livechat
      *
      * @override
      * @returns {boolean}

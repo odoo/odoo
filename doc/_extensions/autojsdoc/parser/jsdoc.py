@@ -233,6 +233,12 @@ class ModuleDoc(NSDoc):
         vars['exports'] = self.exports
         return vars
 
+    def __str__(self):
+        s = super().__str__()
+        if self['sourcefile']:
+            s += " in file " + self['sourcefile']
+        return s
+
 class ClassDoc(NSDoc):
     namekey = 'class'
     @property

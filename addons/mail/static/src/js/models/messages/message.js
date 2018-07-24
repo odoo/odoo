@@ -132,7 +132,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     /**
      * Get the text to display for the author of the message
      *
-     * Rule of precedence for the displayed author:
+     * Rule of precedence for the displayed author::
      *
      *      author name > sender email > "anonymous"
      *

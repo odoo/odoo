@@ -126,10 +126,12 @@ var ModeratorRejectMessageDialog = Dialog.extend({
      * @param {Object} params
      * @param {integer[]} params.messageIDs list of message IDs to send
      *   'reject' decision reason
-     * @param {function} params.proceedReject a function to call when the
-     *   moderator confirms the reason for rejecting the messages. This
-     *   function passes an object as the reason for reject, which is
-     *   structured as follow:
+     * @param {function} params.proceedReject
+     *
+     *      a function to call when the
+     *      moderator confirms the reason for rejecting the
+     *      messages. This function passes an object as the
+     *      reason for reject, which is structured as follow::
      *
      *          {
      *              title: <string>,
@@ -602,7 +604,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * cancel his action.
      *
      * @private
-     * @param {number[]]} messageIDs list of message IDs to reject
+     * @param {number[]} messageIDs list of message IDs to reject
      */
     _rejectMessages: function (messageIDs) {
         var self = this;

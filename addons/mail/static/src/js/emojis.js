@@ -14,11 +14,11 @@ odoo.define('mail.emojis', function (require) {
  * This data represent all the available emojis that are supported on the web
  * client:
  *
- *    - key: this is the source representation of an emoji, i.e. its "character"
- *           representation. This is a string that can be easily typed by the
- *           user and then translated to its unicode representation (see value)
- *    - value: this is the unicode representation of an emoji, i.e. its "true"
- *             representation in the system.
+ * - key: this is the source representation of an emoji, i.e. its "character"
+ *        representation. This is a string that can be easily typed by the
+ *        user and then translated to its unicode representation (see value)
+ * - value: this is the unicode representation of an emoji, i.e. its "true"
+ *          representation in the system.
  */
 var data = {
     ":)":             "😊",

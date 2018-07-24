@@ -19,8 +19,8 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
 
     /**
      * @override
-     * @param {mail.Manager} param.parent
      * @param {Object} params
+     * @param {mail.Manager} params.parent
      * @param {Object} params.data
      * @param {string} [params.data.channel_type]
      * @param {string} params.data.name
@@ -104,7 +104,7 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * the new state in the interface.
      *
      * @override
-     * @param {boolean} boolean
+     * @param {boolean} folded
      */
     fold: function (folded) {
         this._super.apply(this, arguments);

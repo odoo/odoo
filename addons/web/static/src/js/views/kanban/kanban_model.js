@@ -133,9 +133,9 @@ var KanbanModel = BasicModel.extend({
     /**
      * Add the following (kanban specific) keys when performing a `get`:
      * 
-     *  - tooltipData
-     *  - progressBarValues
-     *  - isGroupedByM2ONoColumn
+     * - tooltipData
+     * - progressBarValues
+     * - isGroupedByM2ONoColumn
      *
      * @override
      * @see _readTooltipFields

@@ -47,7 +47,7 @@ var WebsiteLivechatMessage =  AbstractMessage.extend({
     /**
      * Get the text to display for the author of the message
      *
-     * Rule of precedence for the displayed author:
+     * Rule of precedence for the displayed author::
      *
      *      author name > default usernane
      *

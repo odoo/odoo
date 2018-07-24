@@ -11,7 +11,7 @@ var AbstractThreadWindow = require('mail.AbstractThreadWindow');
 var LivechatWindow = AbstractThreadWindow.extend({
     /**
      * @override
-     * @param {?} parent
+     * @param parent
      * @param {im_livechat.model.WebsiteLivechat} thread
      */
     init: function (parent, thread) {
