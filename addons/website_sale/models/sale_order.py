@@ -23,18 +23,8 @@ class SaleOrder(models.Model):
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
-    can_directly_mark_as_paid = fields.Boolean(compute='_compute_can_directly_mark_as_paid',
-        string="Can be directly marked as paid", store=True,
-        help="""Checked if the sales order can directly be marked as paid, i.e. if the quotation
-                is sent or confirmed and if the payment acquire is of the type transfer or manual""")
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
-
-    @api.depends('state', 'transaction_ids')
-    def _compute_can_directly_mark_as_paid(self):
-        for order in self:
-            transaction = order.get_portal_last_transaction()
-            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and transaction and transaction.acquirer_id.provider in ['transfer', 'manual']
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
@@ -240,22 +230,6 @@ class SaleOrder(models.Model):
                 'active_ids': self.ids,
             },
         }
-
-    def action_mark_as_paid(self):
-        """ Mark directly a sales order as paid if:
-                - State: Quotation Sent, or sales order
-                - Provider: wire transfer or manual config
-            The transaction is marked as done
-            The invoice may be generated and marked as paid if configured in the website settings
-            """
-        self.ensure_one()
-        if self.can_directly_mark_as_paid:
-            self.action_confirm()
-            if self.env['ir.config_parameter'].sudo().get_param('sale_payment.automatic_invoice', default=False):
-                self.payment_tx_id._generate_and_pay_invoice()
-            self.payment_tx_id.state = 'done'
-        else:
-            raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
 
     def _set_demo_create_date(self, create_date):
         self.env.cr.execute("""UPDATE sale_order SET create_date=%s WHERE id IN %s """, (create_date, tuple(self.ids)))
