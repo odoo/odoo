@@ -80,6 +80,14 @@ class WebsitePayment(http.Controller):
             tx = request.env['payment.transaction'].browse(tx_id)
             status = (tx.state == 'done' and 'success') or 'danger'
             message = (tx.state == 'done' and _('Your payment was successful! It may take some time to be validated on our end.')) or _('Oops! There was a problem with your payment.')
+            if tx.acquirer_id and tx.acquirer_id.provider == 'transfer':
+                status = (tx.state in ('done', 'pending') and 'success') or 'danger'
+                if tx.state == 'done':
+                    message = tx.acquirer_id.done_msg
+                elif tx.state == 'pending':
+                    message = tx.acquirer_id.pending_msg
+                else:
+                    message = tx.acquirer_id.error_msg
             return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
