@@ -515,8 +515,8 @@ class EventRegistration(models.Model):
     @api.multi
     def get_date_range_str(self):
         self.ensure_one()
-        today = fields.Datetime.from_string(fields.Datetime.now())
-        event_date = fields.Datetime.from_string(self.event_begin_date)
+        today = fields.Datetime.now()
+        event_date = self.event_begin_date
         diff = (event_date.date() - today.date())
         if diff.days <= 0:
             return _('today')

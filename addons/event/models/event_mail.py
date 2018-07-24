@@ -4,6 +4,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools
+from odoo.fields import Datetime as Dt
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
