@@ -182,6 +182,9 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/task/<int:task_id>'], type='http', auth="user", website=True)
     def portal_my_task(self, task_id=None, **kw):
         task = request.env['project.task'].browse(task_id)
+        task.check_access_rights('read')
+        task.check_access_rule('read')
+
         vals = {
             'task': task,
             'user': request.env.user
