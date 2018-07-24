@@ -288,8 +288,8 @@ class HolidaysAllocation(models.Model):
     def _check_leave_type_validity(self):
         for allocation in self:
             if allocation.holiday_status_id.validity_start and allocation.holiday_status_id.validity_stop:
-                vstart = fields.Date.from_string(allocation.holiday_status_id.validity_start)
-                vstop = fields.Date.from_string(allocation.holiday_status_id.validity_stop)
+                vstart = allocation.holiday_status_id.validity_start
+                vstop = allocation.holiday_status_id.validity_stop
                 today = fields.Date.today()
 
                 if vstart > today or vstop < today:
