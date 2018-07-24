@@ -224,25 +224,27 @@ class Website(Home):
             'name': {'label': _('Sort by Name'), 'order': 'name'},
         }
         # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'name')['order']
+        sort_order = searchbar_sortings.get(sortby, 'name')['order'] + ', website_id desc'
 
         domain = request.website.website_domain()
         if search:
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
-        pages_count = Page.search_count(domain)
+        pages = Page.search(domain, order=sort_order)
+        if sortby != 'url':
+            pages = pages.filtered(pages._is_most_specific_page)
+        pages_count = len(pages)
 
+        step = 50
         pager = portal_pager(
             url="/website/pages",
             url_args={'sortby': sortby},
             total=pages_count,
             page=page,
-            step=50
+            step=step
         )
-        pages = Page.search(domain, order=sort_order, limit=50, offset=pager['offset'])
 
-        # only include pages if they are the most specific one available
-        pages = pages.filtered(pages._is_most_specific_page)
+        pages = pages[(page - 1) * step:page * step]
 
         values = {
             'pager': pager,

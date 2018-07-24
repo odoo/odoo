@@ -468,11 +468,19 @@ body .modal {
         background-color: $o-brand-odoo;
         color: white;
     }
-    td > a.fa {
-        margin-left: 5px;
-        color: $o-brand-odoo;
+    td, th {
+        padding: 0.45rem;
+    }
+    td {
+        > a.fa {
+            margin-left: 5px;
+            color: $o-brand-odoo;
+        }
+        .text-muted {
+            opacity: 0.5;
+        }
     }
     .fa-check, .fa-eye-slash {
-        color: $o-brand-primary;
+        color: #00a09d;
     }
 }
