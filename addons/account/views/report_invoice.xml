@@ -4,15 +4,12 @@
         <template id="report_invoice_document">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang': lang})"/>
-                <div class="page">
-                    <div class="row">
-                        <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
-                            <address t-field="o.partner_id"
+                <t t-set="address">
+                    <address t-field="o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                             <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
-                        </div>
-                    </div>
-
+                </t>
+                <div class="page">
                     <h2>
                         <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
                         <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
