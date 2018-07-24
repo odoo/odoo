@@ -202,7 +202,7 @@ return AbstractModel.extend({
      * @returns {string}
      */
     _sanitizeValue: function (value, field) {
-        if (value === false) return _t("Undefined");
+        if (value === false && this.fields[field].type !== 'boolean') return _t("Undefined");
         if (value instanceof Array) return value[1];
         if (field && this.fields[field] && (this.fields[field].type === 'selection')) {
             var selected = _.where(this.fields[field].selection, {0: value})[0];
