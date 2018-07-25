@@ -713,10 +713,10 @@ class MassMailing(models.Model):
         # avoid loading a large number of records in memory
         # + use a basic heuristic for extracting emails
         query = """
-            SELECT lower(substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+            SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
               FROM mail_mail_statistics s
               JOIN %(target)s t ON (s.res_id = t.id)
-             WHERE substring(%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+             WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
         """
         if self.mass_mailing_campaign_id.unique_ab_testing:
             query +="""

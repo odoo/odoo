@@ -57,6 +57,7 @@ class MailMailStats(models.Model):
                                     help='Last state update of the mail',
                                     store=True)
     recipient = fields.Char(compute="_compute_recipient")
+    email = fields.Char(string="Recipient email address")
 
     @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'ignored')
     def _compute_state(self):
