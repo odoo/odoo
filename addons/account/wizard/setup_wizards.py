@@ -52,6 +52,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _name = 'account.setup.bank.manual.config'
 
+    res_partner_bank_id = fields.Many2one(comodel_name='res.partner.bank', ondelete='cascade', required=True)
     create_or_link_option = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
     new_journal_name = fields.Char(compute='compute_new_journal_related_data', inverse='set_linked_journal_id', required=True, help='Will be used to name the Journal related to this bank account')
     linked_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', compute='compute_linked_journal_id', inverse='set_linked_journal_id')
