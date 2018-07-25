@@ -825,7 +825,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('column width should not change when switching mode', function (assert) {
-        assert.expect(10);
+        assert.expect(4);
 
         // Warning: this test is css dependant
         var list = createView({
@@ -839,23 +839,31 @@ QUnit.module('Views', {
                         '<field name="m2m" widget="many2many_tags"/>' +
                     '</tree>',
         });
+
         var startWidths = _.pluck(list.$('thead th'), 'offsetWidth');
+        var startWidth = list.$('table').addBack('table').width();
 
         // start edition of first row
         list.$('td:not(.o_list_record_selector)').first().click();
 
         var editionWidths = _.pluck(list.$('thead th'), 'offsetWidth');
+        var editionWidth = list.$('table').addBack('table').width();
 
         // leave edition
         list.$buttons.find('.o_list_button_save').click();
-        var readonlyWidths = _.pluck(list.$('thead th'), 'offsetWidth');
 
-        for (var i = 0; i < startWidths.length; i++) {
-            assert.strictEqual(startWidths[i], editionWidths[i],
-                'width of columns should remain unchanged which switching from readonly to edit mode');
-            assert.strictEqual(editionWidths[i], readonlyWidths[i],
-                'width of columns should remain unchanged which switching from edit to readonly mode');
-        }
+        var readonlyWidths = _.pluck(list.$('thead th'), 'offsetWidth');
+        var readonlyWidth = list.$('table').addBack('table').width();
+
+        assert.strictEqual(editionWidth, startWidth,
+            "table should have kept the same width when switching from readonly to edit mode");
+        assert.deepEqual(editionWidths, startWidths,
+            "width of columns should remain unchanged when switching from readonly to edit mode");
+        assert.strictEqual(readonlyWidth, editionWidth,
+            "table should have kept the same width when switching from edit to readonly mode");
+        assert.deepEqual(readonlyWidths, editionWidths,
+            "width of columns should remain unchanged when switching from edit to readonly mode");
+
         list.destroy();
     });
 
