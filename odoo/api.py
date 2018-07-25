@@ -42,7 +42,7 @@ __all__ = [
     'cr_uid_ids', 'cr_uid_ids_context',
     'cr_uid_records', 'cr_uid_records_context',
     'constrains', 'depends', 'onchange', 'returns',
-    'call_kw',
+    'call_kw', 'preupdate', 'postupdate',
 ]
 
 import logging
@@ -66,6 +66,8 @@ _logger = logging.getLogger(__name__)
 #  - method._returns: set by @returns, specifies return model
 #  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
+#  - method._preupdate: set by @preupdate, specifies preupdate fields
+#  - method._postupdate: set by @postupdate, specifies postupdate fields
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
@@ -197,6 +199,50 @@ def onchange(*args):
             supported and will be ignored
     """
     return attrsetter('_onchange', args)
+
+
+def preupdate(*args):
+    """ Return a decorator for a method to run before creating or modifying
+        records. The preupdate method can modify the dictionary of field values
+        before the actual creation/update. All arguments must be field names::
+
+            @preupdate('foo', 'bar')
+            def _preupdate_name(self, vals):
+                vals['baz'] = vals.get('foo', "") + vals.get('bar', "")
+
+        The method is invoked if some of the given field names are part of the
+        update. If no argument is given, the method is always invoked. The
+        method is invoked on an empty ``self`` upon create, and with the
+        modified records upon write.
+
+        .. warning::
+
+            ``@preupdate`` only supports simple field names, dotted names (like
+            'partner_id.customer') are not supported and will be ignored.
+    """
+    return attrsetter('_preupdate', args)
+
+
+def postupdate(*args):
+    """ Return a decorator for a method to run after creating or modifying
+        records. All arguments must be field names::
+
+            @api.postupdate('parent_id')
+            def _postupdate_parent_id(self, vals):
+                for record in self:
+                    if record.parent_id.customer:
+                        record.customer = True
+
+        The method is invoked if some of the given field names are part of the
+        update. If no argument is given, the method is always invoked. The
+        method is invoked on the created/modified records.
+
+        .. warning::
+
+            ``@postupdate`` only supports simple field names, dotted names (like
+            'partner_id.customer') are not supported and will be ignored.
+    """
+    return attrsetter('_postupdate', args)
 
 
 def depends(*args):

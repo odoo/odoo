@@ -559,3 +559,24 @@ class AttachmentHost(models.Model):
         'test_new_api.attachment', 'res_id', auto_join=True,
         domain=lambda self: [('res_model', '=', self._name)],
     )
+
+
+class TestAPIUpdate(models.Model):
+    _name = 'test_new_api.update'
+    _description = 'test api preupdate and postupdate'
+
+    name = fields.Char()
+    sent = fields.Boolean()
+    count = fields.Integer()
+
+    @api.preupdate('count')
+    def _preupdate_count(self, vals):
+        if vals['count'] == 0:
+            vals['name'] = 'Duck'
+        elif vals['count'] == 100:
+            vals['name'] = 'Century'
+
+    @api.postupdate('count')
+    def _postupdate_count(self, vals):
+        if vals['count'] == 100:
+            self.write({'sent': True})

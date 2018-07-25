@@ -557,7 +557,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             child_class._build_model_attributes(pool)
 
     @classmethod
-    def _init_constraints_onchanges(cls):
+    def _init_api_methods(cls):
         # store sql constraint error messages
         for (key, _, msg) in cls._sql_constraints:
             cls.pool._sql_error[cls._table + '_' + key] = msg
@@ -565,42 +565,37 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
         cls._onchange_methods = BaseModel._onchange_methods
+        cls._preupdate_methods = BaseModel._preupdate_methods
+        cls._postupdate_methods = BaseModel._postupdate_methods
 
-    @property
-    def _constraint_methods(self):
-        """ Return a list of methods implementing Python constraints. """
-        def is_constraint(func):
-            return callable(func) and hasattr(func, '_constrains')
+    @classmethod
+    def _retrieve_api_methods(cls):
+        # memoize the results on cls, in order to compute them once
+        cls._constraint_methods = []
+        cls._onchange_methods = defaultdict(list)
+        cls._preupdate_methods = []
+        cls._postupdate_methods = []
 
-        cls = type(self)
-        methods = []
-        for attr, func in getmembers(cls, is_constraint):
-            for name in func._constrains:
-                field = cls._fields.get(name)
-                if not field:
-                    _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
-                elif not (field.store or field.inverse or field.inherited):
-                    _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
-            methods.append(func)
-
-        # optimization: memoize result on cls, it will not be recomputed
-        cls._constraint_methods = methods
-        return methods
-
-    @property
-    def _onchange_methods(self):
-        """ Return a dictionary mapping field names to onchange methods. """
-        def is_onchange(func):
-            return callable(func) and hasattr(func, '_onchange')
-
-        # collect onchange methods on the model's class
-        cls = type(self)
-        methods = defaultdict(list)
-        for attr, func in getmembers(cls, is_onchange):
-            for name in func._onchange:
+        def check_field_names(func, decorator):
+            for name in getattr(func, '_' + decorator):
                 if name not in cls._fields:
-                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
-                methods[name].append(func)
+                    _logger.warning("%s.%s: @%s parameter %r is not a field name",
+                                    cls._name, func.__name__, decorator, name)
+
+        for attr, func in getmembers(cls, callable):
+            if hasattr(func, '_constrains'):
+                check_field_names(func, 'constrains')
+                cls._constraint_methods.append(func)
+            if hasattr(func, '_onchange'):
+                check_field_names(func, 'onchange')
+                for name in func._onchange:
+                    cls._onchange_methods[name].append(func)
+            if hasattr(func, '_preupdate'):
+                check_field_names(func, 'preupdate')
+                cls._preupdate_methods.append(func)
+            if hasattr(func, '_postupdate'):
+                check_field_names(func, 'postupdate')
+                cls._postupdate_methods.append(func)
 
         # add onchange methods to implement "change_default" on fields
         def onchange_default(field, self):
@@ -611,11 +606,32 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         for name, field in cls._fields.items():
             if field.change_default:
-                methods[name].append(functools.partial(onchange_default, field))
+                func = functools.partial(onchange_default, field)
+                cls._onchange_methods[name].append(func)
 
-        # optimization: memoize result on cls, it will not be recomputed
-        cls._onchange_methods = methods
-        return methods
+    @property
+    def _constraint_methods(self):
+        """ Return a list of methods implementing Python constraints. """
+        self._retrieve_api_methods()
+        return self._constraint_methods
+
+    @property
+    def _onchange_methods(self):
+        """ Return a dictionary mapping field names to onchange methods. """
+        self._retrieve_api_methods()
+        return self._onchange_methods
+
+    @property
+    def _preupdate_methods(self):
+        """ Return a list of preupdate methods. """
+        self._retrieve_api_methods()
+        return self._preupdate_methods
+
+    @property
+    def _postupdate_methods(self):
+        """ Return a list of postupdate methods. """
+        self._retrieve_api_methods()
+        return self._postupdate_methods
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
@@ -1070,6 +1086,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             converted = convert(record, functools.partial(_log, extras, stream.index))
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
+
+    def _process_preupdates(self, vals):
+        """ Run the preupdate methods on ``vals``. """
+        field_names = set(vals)
+        for func in self._preupdate_methods:
+            names = func._preupdate
+            if not names or any(name in field_names for name in names):
+                func(self, vals)
+
+    def _process_postupdates(self, vals):
+        """ Run the postupdate methods on ``vals``. """
+        field_names = set(vals)
+        for func in self._postupdate_methods:
+            names = func._postupdate
+            if not names or any(name in field_names for name in names):
+                func(self, vals)
 
     @api.multi
     def _validate_fields(self, field_names):
@@ -2653,8 +2685,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 with tools.ignore(*exceptions):
                     field.setup_triggers(self)
 
-        # register constraints and onchange methods
-        cls._init_constraints_onchanges()
+        # register constraints, onchange, preupdate and postupdate methods
+        cls._init_api_methods()
 
         # validate rec_name
         if cls._rec_name:
@@ -3307,6 +3339,8 @@ Fields:
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
+        self._process_preupdates(vals)
+
         # distribute fields into sets for various purposes
         store_vals = {}
         inverse_vals = {}
@@ -3395,6 +3429,8 @@ Fields:
 
                 # check Python constraints for inversed fields
                 self._validate_fields(set(inverse_vals) - set(store_vals))
+
+            self._process_postupdates(store_vals)
 
             # recompute fields
             if self.env.recompute and self._context.get('recompute', True):
@@ -3552,6 +3588,8 @@ Fields:
             # add missing defaults
             vals = self._add_missing_default_values(vals)
 
+            self._process_preupdates(vals)
+
             # distribute fields into sets for various purposes
             data = {}
             data['stored'] = stored = {}
@@ -3643,6 +3681,7 @@ Fields:
         # check Python constraints for non-stored inversed fields
         for data in data_list:
             data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
+            data['record']._process_postupdates(data['stored'])
 
         # recompute fields
         if self.env.recompute and self._context.get('recompute', True):

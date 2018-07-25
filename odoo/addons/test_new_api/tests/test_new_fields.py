@@ -1523,3 +1523,33 @@ class TestRequiredMany2one(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             field._setup_regular_base(Model)
+
+
+class TestAPIUpdate(common.TransactionCase):
+
+    def test_api_update(self):
+        # create with 0, then write 42, then write 100
+        record = self.env['test_new_api.update'].create({'name': 'test', 'count': 0})
+        self.assertEqual(record.name, 'Duck', "preupdate not executed on create")
+        self.assertEqual(record.sent, False, "postupdate should do nothing")
+
+        record.write({'count': 42})
+        self.assertEqual(record.name, 'Duck', "preupdate should do nothing")
+        self.assertEqual(record.sent, False, "postupdate should do nothing")
+
+        record.write({'count': 100})
+        self.assertEqual(record.name, 'Century', "preupdate not executed on write")
+        self.assertEqual(record.sent, True, "postupdate not executed on write")
+
+        # create with 100, then write 42, then write 0
+        record = self.env['test_new_api.update'].create({'name': 'test', 'count': 100})
+        self.assertEqual(record.name, 'Century', "preupdate not executed on create")
+        self.assertEqual(record.sent, True, "postupdate not executed on create")
+
+        record.write({'count': 42})
+        self.assertEqual(record.name, 'Century', "preupdate should do nothing")
+        self.assertEqual(record.sent, True, "postupdate should do nothing")
+
+        record.write({'count': 0})
+        self.assertEqual(record.name, 'Duck', "preupdate not executed on write")
+        self.assertEqual(record.sent, True, "postupdate should do nothing")
