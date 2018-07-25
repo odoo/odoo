@@ -620,5 +620,71 @@ QUnit.test('confirm dialog when administrator leave (not chat) channel', functio
 
 });
 
+QUnit.test('convert emoji sources to unicodes on message_post', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    var bus = this.services[1].prototype.bus;
+    var receiveMessageDef = $.Deferred();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'message_post') {
+                assert.strictEqual(args.kwargs.body, "😊 😂",
+                    "message_post data should have all emojis in their unicode representation");
+
+                var data = {
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    channel_ids: [1],
+                };
+                var notification = [[false, 'mail.channel'], data];
+                bus.trigger('notification', [notification]);
+                receiveMessageDef.resolve();
+                return $.when(42);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+
+        // click on general
+        $general.click();
+        var $input = discuss.$('textarea.o_composer_text_field').first();
+
+        $input.focus();
+        $input.val(":) x'D");
+        $input.trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+
+        receiveMessageDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+
+                assert.strictEqual(discuss.$('.o_thread_message_content').text().replace(/\s/g, ""),
+                    "😊😂",
+                    "New posted message should contain all emojis in their unicode representation");
+                discuss.destroy();
+                done();
+        });
+        });
+    });
 });
+
 });
