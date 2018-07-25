@@ -1135,7 +1135,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         request.uid = uid
         request.disable_db = False
 
-        del request.env
+        if hasattr(request, 'env'):
+            del request.env
 
         if uid: self.get_context()
         return uid
