@@ -244,7 +244,7 @@
                                         <tr>
                                             <t t-foreach="timesheet_forecast_table['header']" t-as="header_val">
                                                 <th t-att-class="'o_right_bordered' if header_val_index in [5,10] else ''">
-                                                    <span><t t-esc="header_val"/></span>
+                                                    <span t-att-title="header_val['tooltip']"><t t-esc="header_val['label']"/></span>
                                                 </th>
                                             </t>
                                         </tr>
