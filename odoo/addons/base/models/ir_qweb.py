@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import ast
+import copy
 import json
 import logging
 from collections import OrderedDict
@@ -54,7 +55,38 @@ class IrQWeb(models.AbstractModel, QWeb):
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
-        return super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
+        result = super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
+
+        if b'data-pagebreak=' not in result:
+            return result
+
+        fragments = html.fragments_fromstring(result)
+
+        for fragment in fragments:
+            for row in fragment.iterfind('.//tr[@data-pagebreak]'):
+                table = next(row.iterancestors('table'))
+                newtable = html.Element('table', attrib=dict(table.attrib))
+                thead = table.find('thead')
+                if thead:
+                    newtable.append(copy.deepcopy(thead))
+                # TODO: copy caption & tfoot as well?
+                # TODO: move rows in a tbody if row.getparent() is one?
+
+                pos = row.get('data-pagebreak')
+                assert pos in ('before', 'after')
+                for sibling in row.getparent().iterchildren('tr'):
+                    if sibling is row:
+                        if pos == 'after':
+                            newtable.append(sibling)
+                        break
+                    newtable.append(sibling)
+
+                table.addprevious(newtable)
+                table.addprevious(html.Element('div', attrib={
+                    'style': 'page-break-after: always'
+                }))
+
+        return b''.join(html.tostring(f) for f in fragments)
 
     def default_values(self):
         """ attributes add to the values for each computed template
