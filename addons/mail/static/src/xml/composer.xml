@@ -2,12 +2,18 @@
 <templates xml:space="preserve">
 
      <div t-name="mail.Composer" t-attf-class="o_thread_composer #{widget.extended ? 'o_thread_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
+         <div t-if="widget.isMini || !widget.notInline" class="o_file_drop_zone_container d-none">
+            <h4>Drag Files Here <span class="fa fa-download"/></h4>
+         </div>
          <div class="o_composer_container">
              <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar rounded-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
              <div t-if="widget.extended" class="o_composer_subject">
                  <input tabindex="1" type="text" placeholder="Subject" class="o_input"/>
              </div>
              <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
+                <div t-if="widget.notInline" class="o_file_drop_zone_container d-none">
+                    <h4>Drag Files Here <span class="fa fa-download"/></h4>
+                </div>
                 <div class="o_composer_input">
                     <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
                     <div class="o_chatter_composer_tools">
