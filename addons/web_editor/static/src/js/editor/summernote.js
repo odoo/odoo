@@ -1033,7 +1033,7 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
-options.styleTags = ['p', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+options.styleTags = ['p', 'pre', 'small', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();

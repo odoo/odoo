@@ -1525,10 +1525,15 @@ var LinkDialog = Dialog.extend({
         }
 
         var style = this.$('input[name="link_style_color"]:checked').val() || '';
+        var shape = this.$('select[name="link_style_shape"]').val() || '';
         var size = this.$('select[name="link_style_size"]').val() || '';
+        var shapes = shape.split(',');
+        var outline = shapes[0] === 'outline';
+        shape = shapes.slice(outline ? 1 : 0).join(' ');
         var classes = (this.data.className || '')
-            + ((style && style.length) ? (' btn btn-' + style) : '')
-            + ((size && size.length) ? (' btn-' + size) : '');
+            + (style ? (' btn btn-' + (outline ? 'outline-' : '') + style) : '')
+            + (shape ? (' ' + shape) : '')
+            + (size ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
 
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {

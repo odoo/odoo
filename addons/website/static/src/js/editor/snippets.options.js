@@ -125,7 +125,7 @@ options.registry.carousel = options.Class.extend({
             self.trigger_up('option_update', {
                 optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
-                data: self.$target.find('.item.active'),
+                data: self.$target.find('.carousel-item.active'),
             });
         });
 
@@ -167,7 +167,7 @@ options.registry.carousel = options.Class.extend({
      */
     cleanForSave: function () {
         this._super.apply(this, arguments);
-        this.$target.find('.item').removeClass('next prev left right active')
+        this.$target.find('.carousel-item').removeClass('next prev left right active')
             .first().addClass('active');
         this.$target.find('.carousel-indicators').find('li').removeClass('active').html('')
             .first().addClass('active');
@@ -185,12 +185,12 @@ options.registry.carousel = options.Class.extend({
      */
     addSlide: function (previewMode) {
         var self = this;
-        var cycle = this.$inner.find('.item').length;
-        var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
+        var cycle = this.$inner.find('.carousel-item').length;
+        var $active = this.$inner.find('.carousel-item.active, .carousel-item.prev, .carousel-item.next').first();
         var index = $active.index();
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = this.$('.item:first').clone(true);
+        var $clone = this.$('.carousel-item:first').clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
@@ -209,7 +209,7 @@ options.registry.carousel = options.Class.extend({
 
         var self = this;
 
-        var $items = this.$inner.find('.item');
+        var $items = this.$inner.find('.carousel-item');
         var cycle = $items.length - 1;
         var $active = $items.filter('.active');
         var index = $active.index();
@@ -801,7 +801,7 @@ options.registry.collapse = options.Class.extend({
         $tab.data('parent', '#'+tablist_id);
 
         // link to the collapse
-        var $panel = this.$target.find('.panel-collapse');
+        var $panel = this.$target.find('.collapse');
         var panel_id = $panel.attr('id');
         if (!panel_id) {
             while ($('#'+(panel_id = 'myCollapseTab' + time)).length) {
@@ -829,7 +829,7 @@ options.registry.gallery = options.Class.extend({
         // Make sure image previews are updated if images are changed
         this.$target.on('save', 'img', function (ev) {
             var $img = $(ev.currentTarget);
-            var index = self.$target.find('.item.active').index();
+            var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
