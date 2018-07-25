@@ -717,11 +717,12 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def _create_stock_moves(self, picking):
-        moves = self.env['stock.move']
+        moves = self.env['stock.move'].with_context(recompute=False)
         done = self.env['stock.move'].browse()
         for line in self:
             for val in line._prepare_stock_moves(picking):
                 done += moves.create(val)
+        done.recompute()
         return done
 
     @api.multi
