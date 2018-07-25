@@ -5058,6 +5058,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     }
             """
             def __init__(self, model, dotnames):
+                super(PrefixTree, self).__init__()
                 if not dotnames:
                     return
                 # group dotnames by prefix
