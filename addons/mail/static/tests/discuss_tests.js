@@ -580,5 +580,111 @@ QUnit.test('do not crash when destroyed between start en end of _renderSearchVie
     testUtils.unpatch(SearchView);
 });
 
+QUnit.test('confirm dialog when administrator leave (not chat) channel', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "MyChannel",
+                create_uid: 3,
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            uid: 3,
+        },
+    })
+    .then(function (discuss) {
+        // Unsubscribe on MyChannel as administrator
+        discuss.$('.o_mail_partner_unpin').click();
+
+        assert.strictEqual($('.modal-dialog').length, 1,
+            "should display a dialog");
+        assert.strictEqual($('.modal-body').text(),
+            "You are the administrator of this channel. Are you sure you want to unsubscribe?",
+            "Warn user that he will be unsubscribed from channel as admin.");
+        discuss.destroy();
+        done();
+    });
+
 });
+
+QUnit.test('convert emoji sources to unicodes on message_post', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    var bus = this.services[1].prototype.bus;
+    var receiveMessageDef = $.Deferred();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'message_post') {
+                assert.strictEqual(args.kwargs.body, "😊 😂",
+                    "message_post data should have all emojis in their unicode representation");
+
+                var data = {
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    channel_ids: [1],
+                };
+                var notification = [[false, 'mail.channel'], data];
+                bus.trigger('notification', [notification]);
+                receiveMessageDef.resolve();
+                return $.when(42);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+
+        // click on general
+        $general.click();
+        var $input = discuss.$('textarea.o_composer_text_field').first();
+
+        $input.focus();
+        $input.val(":) x'D");
+        $input.trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+
+        receiveMessageDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+
+                assert.strictEqual(discuss.$('.o_thread_message_content').text().replace(/\s/g, ""),
+                    "😊😂",
+                    "New posted message should contain all emojis in their unicode representation");
+                discuss.destroy();
+                done();
+        });
+        });
+    });
+});
+
 });

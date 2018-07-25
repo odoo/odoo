@@ -331,6 +331,32 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Ask confirmation to the user to unsubscribe, due to the user being the
+     * administrator of the channel.
+     *
+     * @private
+     * @param {mail.model.Channel} channel a channel for which the current user
+     *   is administrator of.
+     */
+    _askConfirmationAdminUnsubscribe: function (channel) {
+        Dialog.confirm(this,
+            _t("You are the administrator of this channel. Are you sure you want to unsubscribe?"),
+            {
+                buttons: [{
+                    text: _t("Unsubscribe"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: function () {
+                        channel.unsubscribe();
+                    }
+                }, {
+                    text: _t("Discard"),
+                    close: true,
+                }]
+            }
+        );
+    },
+    /**
      * Ban the authors of the messages with ID in `messageIDs`
      * Show a confirmation dialog to the moderator.
      *
@@ -1363,7 +1389,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         ev.stopPropagation();
         var channelID = $(ev.target).data('thread-id');
         var channel = this.call('mail_service', 'getChannel', channelID);
-        channel.unsubscribe();
+        if (channel.isAdministrator()) {
+            this._askConfirmationAdminUnsubscribe(channel);
+        } else {
+            channel.unsubscribe();
+        }
     },
     /**
      * @private

@@ -11,7 +11,7 @@ class CrmTeam(models.Model):
 
     use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away. "
                                                               "This will add specific action buttons to your dashboard.")
-    use_invoices = fields.Boolean('Set Invoicing Target', help="Check this box to set an invoicing target for this sales channel.")
+    use_invoices = fields.Boolean('Set Invoicing Target', help="Check this box to set an invoicing target for this Sales Team.")
     invoiced = fields.Integer(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,

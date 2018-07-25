@@ -4,6 +4,7 @@ odoo.define('mail.model.Channel', function (require) {
 var ThreadWithCache = require('mail.model.ThreadWithCache');
 var mailUtils = require('mail.utils');
 
+var session = require('web.session');
 var time = require('web.time');
 
 /**
@@ -21,6 +22,8 @@ var Channel = ThreadWithCache.extend({
      * @param {Object} params.data
      * @param {string} [params.data.anonymous_name]
      * @param {string} params.data.channel_type
+     * @param {integer} [params.data.create_uid] the ID of the user that has
+     *   created the channel.
      * @param {boolean} params.data.group_based_subscription
      * @param {boolean} [params.data.is_minimized=false]
      * @param  {boolean} params.data.is_moderator whether the current user is
@@ -49,6 +52,7 @@ var Channel = ThreadWithCache.extend({
         this._autoswitch = 'autoswitch' in options ? options.autoswitch : true;
         this._chat = undefined; // FIXME: could be dropped when livechat and DM are moved out of this class
         this._commands = undefined;
+        this._creatorUID = data.create_uid;
         this._detached = data.is_minimized;
         this._directPartnerID = undefined;
         this._folded = data.state === 'folded';
@@ -246,6 +250,15 @@ var Channel = ThreadWithCache.extend({
      */
     incrementNeedactionCounter: function () {
         this._needactionCounter++;
+    },
+    /**
+     * Tells whether the current user is administrator of the channel.
+     * Note that there is no administrator for chat channels
+     *
+     * @returns {boolean}
+     */
+    isAdministrator: function () {
+        return session.uid === this._creatorUID && !this.isChat();
     },
     /**
      * States whether the channel should be auto-selected on creation

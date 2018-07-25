@@ -123,6 +123,27 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
     });
+
+    QUnit.test('view switcher button should be displayed in dropdown on mobile screens', function (assert) {
+        assert.expect(3);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        assert.ok($('.o_control_panel .o_cp_switch_buttons button.dropdown-toggle').length, 1,
+            "view switcher button should be displayed");
+        assert.ok($('.o_cp_switch_buttons .o_cp_switch_kanban').hasClass('active'),
+            "kanban should be the active view");
+        assert.ok($('.o_cp_switch_buttons .o_switch_view_button_icon').hasClass('fa-th-large'),
+            "view switcher button icon should be an icon of the kanban");
+
+        actionManager.destroy();
+    });
 });
 
 });

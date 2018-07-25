@@ -8,11 +8,11 @@ class NewLeadNotification(TestCrmCases):
 
     def test_new_lead_notification(self):
         """ Test newly create leads like from the website. People and channels
-        subscribed to the sales channel shoud be notified. """
-        # subscribe a partner and a channel to the sales channel with new lead subtype
+        subscribed to the Sales Team shoud be notified. """
+        # subscribe a partner and a channel to the Sales Team with new lead subtype
         channel_listen = self.env['mail.channel'].create({'name': 'Listener'})
         sales_team_1 = self.env['crm.team'].create({
-            'name': 'Test Sales Channel',
+            'name': 'Test Sales Team',
             'alias_name': 'test_sales_team',
         })
 

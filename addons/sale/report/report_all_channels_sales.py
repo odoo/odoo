@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools
 
 class PosSaleReport(models.Model):
     _name = "report.all.channels.sales"
-    _description = "All sales orders grouped by sales channels"
+    _description = "All sales orders grouped by Sales Teams"
     _auto = False
 
     name = fields.Char('Order Reference', readonly=True)
@@ -23,7 +23,7 @@ class PosSaleReport(models.Model):
     price_subtotal = fields.Float(string='Price Subtotal', readonly=True)
     product_qty = fields.Float('Product Quantity', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
 
     def _so(self):
         so_str = """
