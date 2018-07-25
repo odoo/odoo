@@ -478,7 +478,6 @@ var StatementModel = BasicModel.extend({
 
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
-        focus.reconcile_tax_included = reconcileModel.force_tax_included;
         line.reconciliation_proposition.push(focus);
 
         if (reconcileModel.has_second_line) {
@@ -488,7 +487,6 @@ var StatementModel = BasicModel.extend({
             });
             focus = this._formatQuickCreate(line, second);
             focus.reconcileModelId = reconcileModelId;
-            focus.reconcile_tax_included = reconcileModel.force_second_tax_included;
             line.reconciliation_proposition.push(focus);
             this._computeReconcileModels(handle, reconcileModelId);
         }
@@ -641,9 +639,12 @@ var StatementModel = BasicModel.extend({
         if ('account_id' in values || 'amount' in values || 'tax_id' in values  || 'force_tax_included' in values) {
             prop.__tax_to_recompute = true;
 
-            // Set force_tax_included at the 'price_include' tax value when changing the tax.
-            if('tax_id' in values)
+            if(values.tax_id)
+                // Set force_tax_included at the 'price_include' tax value when changing the tax.
                 values.tax_id.readonly_force_tax_included = prop.force_tax_included = this.taxes[values.tax_id.id];
+            else if('tax_id' in values && prop.base_amount && prop.base_amount != prop.amount)
+                // When removing a price_included tax, reset the amount to the base_amount.
+                prop.amount = prop.base_amount;
         }
         line.createForm = _.pick(prop, this.quickCreateFields);
 
@@ -834,9 +835,8 @@ var StatementModel = BasicModel.extend({
                 });
 
                 var args = [[prop.tax_id.id], prop.base_amount, formatOptions.currency_id];
-                var force_price_include = prop.reconcileModelId ? prop.reconcile_tax_included : line.createForm.force_tax_included;
                 var add_context = {'round': true};
-                if(force_price_include)
+                if(line.createForm.force_tax_included)
                     add_context.force_price_include = true;
                 tax_defs.push(self._rpc({
                         model: 'account.tax',
