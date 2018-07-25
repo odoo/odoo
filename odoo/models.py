@@ -5106,7 +5106,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue
                 field = record._fields[name]
                 if not subnames:
-                    result[name] = field.convert_to_onchange(new[name], record, subnames)
+                    result[name] = field.convert_to_onchange(new[name], record, {})
                     continue
                 # x2many fields: serialize value as commands
                 result[name] = commands = [(5,)]
