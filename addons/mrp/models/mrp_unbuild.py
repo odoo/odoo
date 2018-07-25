@@ -157,6 +157,7 @@ class MrpUnbuild(models.Model):
                 'product_uom_qty': unbuild.product_qty,
                 'location_id': unbuild.location_id.id,
                 'location_dest_id': unbuild.product_id.property_stock_production.id,
+                'warehouse_id': unbuild.location_id.get_warehouse().id,
                 'origin': unbuild.name,
                 'consume_unbuild_id': unbuild.id,
             })
@@ -189,6 +190,7 @@ class MrpUnbuild(models.Model):
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,
             'location_id': raw_move.location_dest_id.id,
+            'warehouse_id': self.location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
         })
 
@@ -203,6 +205,7 @@ class MrpUnbuild(models.Model):
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,
             'location_id': self.product_id.property_stock_production.id,
+            'warehouse_id': self.location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
         })
 
