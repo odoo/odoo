@@ -100,7 +100,7 @@
             <field name="name">account.setup.opening.move.line.tree</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree editable="top" create="1" delete="1">
+                <tree editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
