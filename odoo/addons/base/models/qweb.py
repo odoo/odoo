@@ -498,10 +498,10 @@ class QWeb(object):
             line_id = 0
             for line in code:
                 if not line:
-                    if %s <= 0: print ""
+                    if %s <= 0: print ("")
                     continue
                 if line.startswith('def ') or line.startswith('from ') or line.startswith('import '):
-                    if %s <= 0: print "      \t", line
+                    if %s <= 0: print ("      \t", line)
                     continue
                 line_id += 1
                 total += profiling.get(line_id, 0)
@@ -509,10 +509,10 @@ class QWeb(object):
                 if %s <= dt:
                     prof_total += profiling.get(line_id, 0)
                     display = "%%.2f\t" %% dt
-                    print (" " * (7 - len(display))) + display, line
+                    print ((" " * (7 - len(display))) + display, line)
                 elif dt < 0 and %s <= 0:
-                    print "     ?\t", line
-            print "'%s' Total: %%d/%%d" %% (round(prof_total*1000), round(total*1000))
+                    print ("     ?\t", line)
+            print ("'%s' Total: %%d/%%d" %% (round(prof_total*1000), round(total*1000)))
             """ % (p, p, p, p, str(options['template']).replace('"', ' ')))).body)
 
     def _base_module(self):
@@ -1147,8 +1147,8 @@ class QWeb(object):
         # create function $foreach
         def_name = self._create_def(options, self._compile_directives(el, options), prefix='foreach', lineno=el.sourceline)
 
-        # for x in foreach_iterator(values, $expr, $varname):
-        #     $foreach(self, append, values, options)
+        # for $values in foreach_iterator(values, $expr, $varname):
+        #     $foreach(self, append, $values, options)
         return [ast.For(
             target=ast.Name(id=values, ctx=ast.Store()),
             iter=ast.Call(
@@ -1277,7 +1277,7 @@ class QWeb(object):
                     ast_options.keys.append(ast.Str(key))
                     ast_options.values.append(value)
 
-        return ast_options.keys and ast_options or None
+        return ast_options if ast_options and ast_options.keys else None
 
     def _compile_directive_field(self, el, options):
         """ Compile something like ``<span t-field="record.phone">+1 555 555 8069</span>`` """
