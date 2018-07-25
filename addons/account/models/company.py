@@ -66,6 +66,8 @@ Best Regards,'''))
     account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
+        help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     # account invoice onboarding
     account_invoice_onboarding_closed = fields.Boolean(
