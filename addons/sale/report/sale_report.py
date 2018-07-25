@@ -13,7 +13,7 @@ class SaleReport(models.Model):
     _order = 'date desc'
 
     name = fields.Char('Order Reference', readonly=True)
-    date = fields.Datetime('Date Order', readonly=True)
+    date = fields.Datetime('Order Date', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
