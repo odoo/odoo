@@ -48,7 +48,6 @@
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
-        'views/stock_incoterms_views.xml',
         'views/stock_production_lot_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_scrap_views.xml',
@@ -68,7 +67,6 @@
 
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
-        'data/stock_incoterms_data.xml',
         'data/stock_sequence_data.xml',
     ],
     'qweb': [

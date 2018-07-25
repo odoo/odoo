@@ -17,3 +17,4 @@ from . import account_cash_rounding
 from . import reconciliation_widget
 from . import res_users
 from . import res_company
+from . import account_incoterms
