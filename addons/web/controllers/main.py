@@ -1177,7 +1177,8 @@ class Binary(http.Controller):
                 args.append({
                     'filename': filename,
                     'mimetype': ufile.content_type,
-                    'id': attachment.id
+                    'id': attachment.id,
+                    'size': attachment.file_size
                 })
         return out % (json.dumps(callback), json.dumps(args))
 

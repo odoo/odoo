@@ -13,7 +13,6 @@
 }
 
 .o_thread_composer {
-    position: relative;
     flex: 0 0 auto;
     display: flex;
     margin: 1px 0;
@@ -111,6 +110,7 @@
         .o_composer {
             border-radius: 2px;
             textarea {
+                padding-top: $o-mail-chatter-gap !important;
                 padding-right: $grid-gutter-width; // avoid overlaps betwenn textarea and o_composer_button_full_composer
             }
 
@@ -143,7 +143,7 @@
                 flex: 1 0 100%;
             }
             .o_composer, .o_composer_subject {
-                padding: $o-mail-chatter-gap $o-mail-chatter-gap 0;
+                padding: 0 $o-mail-chatter-gap 0;
             }
             .o_composer_send {
                 margin-top: $o-mail-chatter-gap;
@@ -167,6 +167,10 @@
             .o_composer_input {
                 display: flex;
                 flex-flow: row wrap;
+
+                textarea {
+                    padding-top: 0px !important;
+                }
             }
             .o_composer_text_field {
                 flex: 1 1 50%;
@@ -229,6 +233,21 @@
         .o_composer_button_send, .o_chatter_avatar {
             display: none !important;
         }
+    }
+
+    .o_file_drop_zone_container {
+        display: flex;
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        height: 100%;
+        width: 100%;
+        color: $o-brand-primary;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px dashed $o-brand-primary;
+        z-index: 1;
+        align-items: center;
+        justify-content: center;
     }
 }
 
