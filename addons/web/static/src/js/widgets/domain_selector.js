@@ -59,6 +59,8 @@ var DomainNode = Widget.extend({
      * @param {Array|string} domain - the prefix representation of the domain
      * @param {Object} [options] - an object with possible values:
      * @param {boolean} [options.readonly=true] - true if is readonly
+     * @param {Array} [options.default] - default domain used when creating a
+     *   new node
      * @param {string[]} [options.operators=null]
      *        a list of available operators (null = all of supported ones)
      * @param {boolean} [options.debugMode=false] - true if should be in debug
@@ -409,7 +411,7 @@ var DomainTree = DomainNode.extend({
      * @param {OdooEvent} e
      */
     _onNodeAdditionAsk: function (e) {
-        var domain = [["id", "=", 1]];
+        var domain = this.options.default || [["id", "=", 1]];
         if (e.data.newBranch) {
             domain = [this.operator === "&" ? "|" : "&"].concat(domain).concat(domain);
         }
@@ -548,7 +550,7 @@ var DomainSelector = DomainTree.extend({
      * node
      */
     _onAddFirstButtonClick: function () {
-        this._addChild([["id", "=", 1]]);
+        this._addChild(this.options.default || [["id", "=", 1]]);
     },
     /**
      * Called when the debug input value is changed -> constructs the tree
