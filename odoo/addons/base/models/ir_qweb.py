@@ -179,7 +179,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                             args=[ast.Str('debug')],
                             keywords=[], starargs=None, kwargs=None
                         )),
-                        ast.keyword('async', self._get_attr_bool(el.get('async', False))),
+                        ast.keyword('async_load', self._get_attr_bool(el.get('async_load', False))),
                         ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
                     ],
                     starargs=None, kwargs=None
@@ -278,11 +278,9 @@ class IrQWeb(models.AbstractModel, QWeb):
     # compatibility to remove after v11 - DEPRECATED
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'kw.get("async")', 'async_load', keys=("website_id",)),
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', keys=("website_id",)),
     )
-    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None, **kw):
-        if 'async' in kw:
-            async_load = kw['async']
+    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
         asset = self.get_asset_bundle(xmlid, files, remains, env=self.env)
         return asset.to_html(css=css, js=js, debug=debug, async_load=async_load, url_for=(values or {}).get('url_for', lambda url: url))
@@ -291,11 +289,9 @@ class IrQWeb(models.AbstractModel, QWeb):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'kw.get("async")', 'async_load', keys=("website_id",)),
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', keys=("website_id",)),
     )
-    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None, **kw):
-        if 'async' in kw:
-            async_load = kw['async']
+    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
         asset = self.get_asset_bundle(xmlid, files, env=self.env)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
