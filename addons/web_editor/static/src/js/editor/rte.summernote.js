@@ -286,6 +286,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
+            $container.find('.btn-group:has(button[data-event="imageShape"])').removeClass("d-none");
 
         } else {
             $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
@@ -1034,6 +1035,7 @@ $.summernote.lang.odoo = {
       normal: _t('Normal'),
       blockquote: _t('Quote'),
       pre: _t('Code'),
+      small: _t('Small'),
       h1: _t('Header 1'),
       h2: _t('Header 2'),
       h3: _t('Header 3'),

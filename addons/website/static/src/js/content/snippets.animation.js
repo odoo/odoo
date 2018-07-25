@@ -573,7 +573,7 @@ registry.parallax = Animation.extend({
 });
 
 registry.share = Animation.extend({
-    selector: '.oe_share',
+    selector: '.s_share, .oe_share', // oe_share for compatibility
 
     /**
      * @override

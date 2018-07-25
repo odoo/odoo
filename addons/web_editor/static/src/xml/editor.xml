@@ -258,6 +258,18 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-form-label col-md-3">Style</label>
+                    <div class="col-md-9">
+                        <select name="link_style_shape" class="form-control col-md-3 link-shape">
+                            <option value="" selected="selected">Default</option>
+                            <option value="outline">Outline</option>
+                            <option value="rounded-circle">Rounded</option>
+                            <option value="outline,rounded-circle">Outline-Rounded</option>
+                            <option value="flat">Flat</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-form-label col-md-3">Color</label>
                     <div class="col-md-9">
                         <div class="o_link_dialog_color">
@@ -266,7 +278,7 @@
                                 <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
                                 <i class="fa"/>
                             </label>
-                            <t t-foreach="['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
+                            <t t-foreach="['primary', 'secondary', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger']" t-as="color">
                                 <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
                                     <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
                                     <i class="fa"/>
