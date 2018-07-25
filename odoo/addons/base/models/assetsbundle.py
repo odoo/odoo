@@ -111,10 +111,7 @@ class AssetsBundle(object):
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
     # depreciated and will remove after v11
-    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, url_for=(lambda url: url), **kw):
-        if 'async' in kw:
-            _logger.warning("Using deprecated argument 'async' in to_html call, use 'async_load' instead.")
-            async_load = kw['async']
+    def to_html(self, sep=None, css=True, js=True, debug=False, async_load=False, url_for=(lambda url: url)):
         nodes = self.to_node(css=css, js=js, debug=debug, async_load=async_load)
 
         if sep is None:
@@ -133,13 +130,10 @@ class AssetsBundle(object):
 
         return sep + sep.join(response)
 
-    def to_node(self, css=True, js=True, debug=False, async_load=False, **kw):
+    def to_node(self, css=True, js=True, debug=False, async_load=False):
         """
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
-        if 'async' in kw:
-            _logger.warning("Using deprecated argument 'async' in to_node call, use 'async_load' instead.")
-            async_load = kw['async']
         response = []
         if debug == 'assets':
             if css and self.stylesheets:
