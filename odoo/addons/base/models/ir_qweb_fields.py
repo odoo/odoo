@@ -301,6 +301,18 @@ class ManyToOneConverter(models.AbstractModel):
         return nl2br(html_escape(value, options)) if value else ''
 
 
+class ManyToManyConverter(models.AbstractModel):
+    _name = 'ir.qweb.field.many2many'
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def value_to_html(self, value, options):
+        if not value:
+            return False
+        text = ', '.join(value.sudo().mapped('display_name'))
+        return nl2br(html_escape(text, options))
+
+
 class HTMLConverter(models.AbstractModel):
     _name = 'ir.qweb.field.html'
     _inherit = 'ir.qweb.field'
