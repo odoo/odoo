@@ -107,6 +107,8 @@ class TreeCase(unittest.TestCase):
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
 
     def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertIsNotNone(n1, msg)
+        self.assertIsNotNone(n2, msg)
         self.assertEqual(n1.tag, n2.tag, msg)
         # Because lxml.attrib is an ordereddict for which order is important
         # to equality, even though *we* don't care
@@ -116,7 +118,7 @@ class TreeCase(unittest.TestCase):
         self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
 
         for c1, c2 in izip_longest(n1, n2):
-            self.assertEqual(c1, c2, msg)
+            self.assertTreesEqual(c1, c2, msg)
 
 
 class MetaCase(type):
