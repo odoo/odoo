@@ -197,7 +197,8 @@ function realSetTimeout (fct, millis) {
 /**
  * Load css asynchronously: fetch it from the url parameter and add a link tag
  * to <head>.
- * If the url has already been requested and loaded, the promise will resolve immediately.
+ * If the url has already been requested and loaded, the promise will resolve
+ * immediately.
  *
  * @param {String} url of the css to be fetched
  * @returns {Deferred} resolved when the css has been loaded.
@@ -207,18 +208,22 @@ var loadCSS = (function () {
 
     return function loadCSS(url) {
         if (url in urlDefs) {
-            return urlDefs[url];
+            // nothing to do here
+        } else if ($('link[href="' + url + '"]').length) {
+            // the link is already in the DOM, the deferred can be resolved
+            urlDefs[url] = $.when();
+        } else {
+            var $link = $('<link>', {
+                'href': url,
+                'rel': 'stylesheet',
+                'type': 'text/css'
+            });
+            urlDefs[url] = $.Deferred();
+            $link.on('load', function () {
+                urlDefs[url].resolve();
+            });
+            $('head').append($link);
         }
-        var $link = $('<link>', {
-            'href': url,
-            'rel': 'stylesheet',
-            'type': 'text/css'
-        });
-        urlDefs[url] = $.Deferred();
-        $link.on('load', function () {
-            urlDefs[url].resolve();
-        });
-        $('head').append($link);
         return urlDefs[url];
     };
 })();
