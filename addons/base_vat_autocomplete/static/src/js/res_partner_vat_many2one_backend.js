@@ -19,11 +19,13 @@ var PartnerVatFieldMany2One = FieldMany2One.extend({
      * @private
      * @override
      */
-    _search: function (search_val) {
+    _search: function (search_val, additionalContext) {
         var self = this;
         var def = $.Deferred();
 
-        var parent = this._super.apply(this, arguments);
+        var context = _.extend(additionalContext, { 'query_vies': true});
+
+        var parent = this._super.apply(this, search_val, context);
 
         // TODO only do this depending on user vat setting: company vat_check_vies?
 

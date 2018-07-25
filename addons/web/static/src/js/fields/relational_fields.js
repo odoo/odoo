@@ -360,12 +360,12 @@ var FieldMany2One = AbstractField.extend({
      * @param {String} search_val: the value to search
      * @returns {Deferred}
      */
-    _search: function (search_val) {
+    _search: function (search_val, additionalContext) {
         var self = this;
         var def = $.Deferred();
         this.orderer.add(def);
 
-        var context = this.record.getContext(this.recordParams);
+        var context = _.extend(this.record.getContext(this.recordParams), additionalContext || {});
         var domain = this.record.getDomain(this.recordParams);
 
         var blacklisted_ids = this._getSearchBlacklist();
