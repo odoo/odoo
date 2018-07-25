@@ -267,6 +267,8 @@ class ModelConverter(ModelConverter):
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].sudo(uid)
+        # Allow to current_website_id directly in route domain
+        args.update(current_website_id=request.env['website'].get_current_website().id)
         domain = safe_eval(self.domain, (args or {}).copy())
         if dom:
             domain += dom

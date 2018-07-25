@@ -15,6 +15,7 @@
             <field name="arch" type="xml">
                 <tree string="Forums">
                     <field name="name"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
                     <field name="allow_question"/>
                     <field name="allow_link"/>
@@ -39,6 +40,9 @@
                             <field name="name"/>
                         </h1>
                         <field name="description"/>
+                        <group>
+                            <field name="website_id" groups="website.group_multi_website"/>
+                        </group>
                         <notebook>
                             <page string="Options">
                               <group string="Post Types">
@@ -138,6 +142,7 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="forum_id"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                 </tree>
             </field>
         </record>
@@ -160,6 +165,7 @@
                         <group>
                             <group>
                                 <field name="forum_id"/>
+                                <field name="website_id" groups="website.group_multi_website"/>
                                 <field name="parent_id"/>
                             </group><group>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

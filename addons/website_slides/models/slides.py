@@ -26,7 +26,7 @@ class Channel(models.Model):
     channels. """
     _name = 'slide.channel'
     _description = 'Channel for Slides'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
     _order_by_strategy = {
         'most_viewed': 'total_views desc',
@@ -330,6 +330,7 @@ class Slide(models.Model):
                 self[key] = value
 
     # website
+    website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')
     likes = fields.Integer('Likes')
     dislikes = fields.Integer('Dislikes')
@@ -469,14 +470,17 @@ class Slide(models.Model):
         return groups
 
     def get_related_slides(self, limit=20):
-        domain = [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        domain = request.website.website_domain()
+        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
         if self.category_id:
             domain += [('category_id', '=', self.category_id.id)]
         for record in self.search(domain, limit=limit):
             yield record
 
     def get_most_viewed_slides(self, limit=20):
-        for record in self.search([('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)], limit=limit, order='total_views desc'):
+        domain = request.website.website_domain()
+        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        for record in self.search(domain, limit=limit, order='total_views desc'):
             yield record
 
     def _post_publication(self):
@@ -542,7 +546,7 @@ class Slide(models.Model):
         return {'error': _('Unknown document')}
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
-        key = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
+        key = self.env['website'].get_current_website().website_slide_google_app_key
         fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet', 'fields': 'items(id,snippet)'}, 'json')
         if fetch_res.get('error'):
             return fetch_res
@@ -592,7 +596,7 @@ class Slide(models.Model):
             if access_token:
                 params['access_token'] = access_token
         if not params.get('access_token'):
-            params['key'] = self.env['ir.config_parameter'].sudo().get_param('website_slides.google_app_key')
+            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
 
         fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
         if fetch_res.get('error'):

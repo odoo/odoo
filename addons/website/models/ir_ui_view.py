@@ -297,3 +297,6 @@ class View(models.Model):
             'url': '/website/pages',
             'target': 'self',
         }
+
+    def _read_template_keys(self):
+        return super(View, self)._read_template_keys() + ['website_id']

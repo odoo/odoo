@@ -68,6 +68,28 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="product_product_website_tree_view">
+        <field name="name">product.product.website.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_website_tree_view">
+        <field name="name">product.template.website.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="product_template_form_view">
         <field name="name">product.template.product.website.form</field>
         <field name="model">product.template</field>
@@ -85,6 +107,7 @@
                     <group name="shop">
                         <group string="Shop">
                             <field name="website_url" invisible="1"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                             <field name="alternative_product_ids" widget="many2many_tags"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
@@ -182,6 +205,7 @@
                         <group>
                             <field name="name"/>
                             <field name="parent_id"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
                             <field name="sequence"/>
                         </group>
                     </div>
@@ -197,6 +221,7 @@
             <tree string="Product Public Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
+                <field name="website_id" groups="website.group_multi_website"/>
             </tree>
         </field>
     </record>
