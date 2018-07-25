@@ -5,7 +5,13 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <search string="Sales">
-                <filter name="year" string="Date" date="date"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Confirmed Orders" name="confirmed" domain="[('state', 'in', ['sale', 'done'])]"/>
+                <separator/>
+                <filter name="order_date" string="Order Date" date="date" default_period="last_30_days"/>
+                <filter name="confirmed_date" string="Confirmed" date="confirmation_date"/>
             </search>
         </field>
     </record>
