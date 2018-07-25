@@ -81,7 +81,7 @@ class StockProductionLot(models.Model):
                 ('mail_activity_type_id','=', mail_activity_type)]))
         for lot in lots:
             lot.activity_schedule('product_expiry.mail_activity_type_alert_date_reached',
-            user_id=lot.product_id.responsible_id.id, note=_("The alert date has been reached for this lot/serial number")
+            user_id=lot.product_id.responsible_id.id, note=_("The alert date has been reached for this lot/serial number.")
         )
 
 class ProcurementGroup(models.Model):
