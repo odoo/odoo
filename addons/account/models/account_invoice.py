@@ -302,6 +302,7 @@ class AccountInvoice(models.Model):
         readonly=True, index=True, ondelete='restrict', copy=False,
         help="Link to the automatically generated Journal Items.")
 
+    amount_by_group = fields.Binary(string="Taxe amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
     amount_untaxed = fields.Monetary(string='Untaxed Amount',
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount in Company Currency', currency_field='company_currency_id',
@@ -1488,22 +1489,21 @@ class AccountInvoice(models.Model):
             return 'account.mt_invoice_created'
         return super(AccountInvoice, self)._track_subtype(init_values)
 
-    @api.multi
-    def _get_tax_amount_by_group(self):
-        self.ensure_one()
-        currency = self.currency_id or self.company_id.currency_id
-        fmt = partial(formatLang, self.with_context(lang=self.partner_id.lang).env, currency_obj=currency)
-        res = {}
-        for line in self.tax_line_ids:
-            res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-            res[line.tax_id.tax_group_id]['amount'] += line.amount
-            res[line.tax_id.tax_group_id]['base'] += line.base
-        res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = [(
-            r[0].name, r[1]['amount'], r[1]['base'],
-            fmt(r[1]['amount']), fmt(r[1]['base']),
-        ) for r in res]
-        return res
+    def _amount_by_group(self):
+        for invoice in self:
+            currency = invoice.currency_id or invoice.company_id.currency_id
+            fmt = partial(formatLang, invoice.with_context(lang=invoice.partner_id.lang).env, currency_obj=currency)
+            res = {}
+            for line in invoice.tax_line_ids:
+                res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                res[line.tax_id.tax_group_id]['amount'] += line.amount
+                res[line.tax_id.tax_group_id]['base'] += line.base
+            res = sorted(res.items(), key=lambda l: l[0].sequence)
+            invoice.amount_by_group = [(
+                r[0].name, r[1]['amount'], r[1]['base'],
+                fmt(r[1]['amount']), fmt(r[1]['base']),
+                len(res),
+            ) for r in res]
 
 
 class AccountInvoiceLine(models.Model):
@@ -1538,6 +1538,10 @@ class AccountInvoiceLine(models.Model):
                 return journal.default_credit_account_id.id
             return journal.default_debit_account_id.id
 
+    def _get_price_tax(self):
+        for l in self:
+            l.price_tax = l.price_total - l.price_subtotal
+
     name = fields.Text(string='Description', required=True)
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.")
@@ -1561,6 +1565,7 @@ class AccountInvoiceLine(models.Model):
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_price',
         help="Total amount in the currency of the company, negative for credit note.")
+    price_tax = fields.Monetary(string='Tax Amount', compute='_get_price_tax', store=False)
     quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'),
