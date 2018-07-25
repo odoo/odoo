@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead"
                                 attrs="{'invisible': [('group_use_lead','=',False)]}"
-                                title="Emails received to that address generate new leads not assigned to any sales channel yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific sales channels. To do so, set an email alias on the sales channel."
+                                title="Emails received to that address generate new leads not assigned to any Sales Team yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific Sales Teams. To do so, set an email alias on the Sales Team."
                                 groups="base.group_no_one">
                             <div class="o_setting_left_pane">
                                 <field name="generate_lead_from_alias"/>
@@ -34,7 +34,7 @@
                                 <label for="generate_lead_from_alias" string="Manual Assignation of Incoming Emails"/>
                                 <div class="text-muted">
                                     Generate leads from incoming emails and assign them
-                                    to a sales channel manually
+                                    to a Sales Team manually
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('generate_lead_from_alias','=',False)]}">
                                     <div class="mt16">

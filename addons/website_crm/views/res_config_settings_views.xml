@@ -15,9 +15,15 @@
                                 Add a contact form in the <a href="/contactus">Contact Us</a> page
                             </div>
                             <div class="row">
-                                <label class="col-md-3 o_light_label" string="Sales Channel" for="crm_default_team_id"/>
+                                <label class="col-md-3 o_light_label" string="Sales Team" for="crm_default_team_id"/>
                                 <field name="crm_default_team_id" class="oe_inline"/>
                             </div>
+                            <div class="content-group mb16" attrs="{'invisible': [('crm_default_team_id', '!=', False)]}">
+                                <div class="text-muted" id="msg_sale_team_setting">
+                                    Please set a Sales Team for the website. Otherwise you can't follow related events.
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <label class="col-md-3 o_light_label" string="Salesperson" for="crm_default_user_id"/>
                                 <field name="crm_default_user_id" class="oe_inline"/>

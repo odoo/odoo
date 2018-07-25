@@ -22,7 +22,7 @@
 
         <!-- Case Teams Action -->
         <record id="crm_team_salesteams_act" model="ir.actions.act_window">
-            <field name="name">Sales Channel Dashboard</field>
+            <field name="name">Sales Teams</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
@@ -30,9 +30,9 @@
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Define a new sales channel
+                    Define a new Sales Team
                 </p><p>
-                    Use sales channels to organize your sales departments. 
+                    Use Sales Teams to organize your sales departments. 
                     Each channel will work with a separate pipeline.
                 </p>
             </field>
@@ -44,7 +44,7 @@
             <field name="name">crm.team.form</field>
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
-                <form string="Sales Channel">
+                <form string="Sales Team">
                     <sheet>
                       <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
@@ -52,7 +52,7 @@
                             </button>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Sales Channel"/>
+                            <label for="name" class="oe_edit_only" string="Sales Team"/>
                             <h1>
                                 <field name="name" placeholder="Salesteam name..."/>
                             </h1>
@@ -114,7 +114,7 @@
             <field name="model">crm.team</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Sales Channel">
+                <tree string="Sales Team">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="user_id"/>
@@ -154,7 +154,7 @@
         </template>
 
         <record id="sales_team_config_action" model="ir.actions.act_window">
-            <field name="name">Sales Channels</field>
+            <field name="name">Sales Teams</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -162,9 +162,9 @@
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Define a new sales channel
+                    Define a new Sales Team
                 </p><p>
-                    Use sales channels to organize your sales departments. 
+                    Use Sales Teams to organize your sales departments. 
                     Each channel will work with a separate pipeline.
                 </p>
             </field>

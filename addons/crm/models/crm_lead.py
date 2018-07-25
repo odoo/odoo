@@ -63,23 +63,23 @@ class Lead(models.Model):
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True,
+    partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
         help="Linked partner (optional). Usually created when converting the lead.")
     active = fields.Boolean('Active', default=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    email_from = fields.Char('Email', help="Email address of the contact", index=True)
+    email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
-    team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
-        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
+    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the Sales Team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
     email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
-    description = fields.Text('Notes')
+    description = fields.Text('Notes', track_visibility='onchange', track_sequence=6)
     create_date = fields.Datetime('Create Date', readonly=True)
     write_date = fields.Datetime('Update Date', readonly=True)
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
-    contact_name = fields.Char('Contact Name')
-    partner_name = fields.Char("Customer Name", index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
+    partner_name = fields.Char("Customer Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
     opt_out = fields.Boolean(string='Opt-Out', oldname='optout',
         help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
              "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing.")
@@ -124,7 +124,7 @@ class Lead(models.Model):
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
-    phone = fields.Char('Phone')
+    phone = fields.Char('Phone', track_visibility='onchange', track_sequence=5)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
@@ -286,7 +286,7 @@ class Lead(models.Model):
 
     @api.model
     def create(self, vals):
-        # set up context used to find the lead's sales channel which is needed
+        # set up context used to find the lead's Sales Team which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
@@ -647,7 +647,7 @@ class Lead(models.Model):
             The resulting lead/opportunity will be the most important one (based on its confidence level)
             updated with values from other opportunities to merge.
             :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
-            :param team : the id of the sales channel. If not given, will be determined by `_merge_data`.
+            :param team : the id of the Sales Team. If not given, will be determined by `_merge_data`.
             :return crm.lead record resulting of th merge
         """
         if len(self.ids) <= 1:
@@ -671,7 +671,7 @@ class Lead(models.Model):
         # the first (head opp) will be a priority.
         merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
 
-        # force value for saleperson and sales channel
+        # force value for saleperson and Sales Team
         if user_id:
             merged_data['user_id'] = user_id
         if team_id:
@@ -680,7 +680,7 @@ class Lead(models.Model):
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head.merge_dependences(opportunities_tail)
 
-        # check if the stage is in the stages of the sales channel. If not, assign the stage with the lowest sequence
+        # check if the stage is in the stages of the Sales Team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
             team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence')
             if merged_data.get('stage_id') not in team_stage_ids.ids:
@@ -726,7 +726,7 @@ class Lead(models.Model):
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
             :param customer : res.partner record
-            :param team_id : identifier of the sales channel to determine the stage
+            :param team_id : identifier of the Sales Team to determine the stage
         """
         if not team_id:
             team_id = self.team_id.id if self.team_id else False
@@ -951,7 +951,7 @@ class Lead(models.Model):
         return self.message_post(body=message)
 
     # ----------------------------------------
-    # Sales Channel Dashboard
+    # Sales Team Dashboard
     # ----------------------------------------
 
     @api.model
@@ -1112,6 +1112,9 @@ class Lead(models.Model):
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]
+
+        if self.team_id:
+            salesman_actions.append({'url': self._notify_get_action_link('view', res_id=self.team_id.id, model=self.team_id._name), 'title': _('Sales Team Settings')})
 
         new_group = (
             'group_sale_salesman', lambda partner: bool(partner.user_ids) and any(user.has_group('sales_team.group_sale_salesman') for user in partner.user_ids), {
