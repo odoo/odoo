@@ -3,8 +3,9 @@
 
 import logging
 import re
+import datetime
 
-from odoo import api, models, tools
+from odoo import api, models, tools, fields
 from odoo.tools import decode_smtp_header, decode_message_header
 
 _logger = logging.getLogger(__name__)
