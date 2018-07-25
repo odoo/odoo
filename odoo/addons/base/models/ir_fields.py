@@ -77,7 +77,8 @@ class IrFieldsConverter(models.AbstractModel):
                     converted[field] = False
                     continue
                 try:
-                    converted[field], ws = converters[field](value)
+                    field_name = field.split(':')[0]
+                    converted[field], ws = converters[field_name](value)
                     for w in ws:
                         if isinstance(w, str):
                             # wrap warning string in an ImportWarning for

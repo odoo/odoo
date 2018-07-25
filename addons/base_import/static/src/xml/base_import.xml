@@ -180,4 +180,16 @@
             <t t-call="ImportView.import_button"/>
         </t>
     </t>
+    <span t-name="ImportView.translate" class="o_import_translate d-none">
+        <a class="o_import_translate_icon ml4" href="#" title="Choose the translation to import from this column."><i class="fa fa-globe"></i></a>
+        <div><i class="o_import_translate_text text-muted"></i></div>
+    </span>
+    <div t-name="ImportView.TranslateDialog">
+        <select class="custom-select">
+            <option></option>
+            <option t-foreach="installed_langs" t-as="lang" t-att-value="lang" t-att-selected="selected_lang == lang ? '1' : None">
+                <t t-esc="installed_langs[lang]"/>
+            </option>
+        </select>
+    </div>
 </templates>

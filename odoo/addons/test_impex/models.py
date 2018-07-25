@@ -21,6 +21,7 @@ MODELS = [
     ('decimal', fields.Float(digits=(16, 3))),
     ('string.bounded', fields.Char(size=16)),
     ('string.required', fields.Char(size=None, required=True)),
+    ('string.translate', fields.Char(translate=True)),
     ('string', fields.Char(size=None)),
     ('date', fields.Date()),
     ('datetime', fields.Datetime()),

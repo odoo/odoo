@@ -3,6 +3,7 @@ odoo.define('base_import.import', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var session = require('web.session');
 var time = require('web.time');
 
@@ -128,6 +129,7 @@ var DataImport = AbstractAction.extend({
                 }
             }));
         },
+        'click .o_import_translate_icon': '_onClickTranslateIcon',
     },
     init: function (parent, action) {
         this._super.apply(this, arguments);
@@ -371,6 +373,7 @@ var DataImport = AbstractAction.extend({
         this.$form.find('.o_view_nocontent').addClass('d-none');
         this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
+        this.installedLangs = result.installed_langs;
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
         if (result.headers.length === 1) {
@@ -429,6 +432,15 @@ var DataImport = AbstractAction.extend({
                 }
             }
 
+            var $columnHeader = self.$('.oe_import_grid-header .oe_import_grid-cell:eq(' + k + ') .o_import_header_name');
+            var $translateNode = $(QWeb.render('ImportView.translate')).insertAfter($columnHeader);
+            bind = function (data) {
+                $translateNode.toggleClass('d-none', !data.translate)
+                    .attr('data-field', data.id)
+                    .attr('data-lang', '')
+                    .find('.o_import_translate_text').text('');
+            }
+
             $(v).select2({
                 allowClear: true,
                 minimumInputLength: 0,
@@ -451,6 +463,47 @@ var DataImport = AbstractAction.extend({
                 bind(item_finder(e.currentTarget.value));
             });
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open dialog to select language to import translate term
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClickTranslateIcon: function (ev) {
+        ev.preventDefault();
+        var self = this;
+        var $translateNode = $(ev.currentTarget).closest('.o_import_translate');
+        new Dialog(this, {
+            title: _t("Import as following translation"),
+            size: 'small',
+            $content: QWeb.render('ImportView.TranslateDialog', {
+                selected_lang: $translateNode.attr('data-lang'),
+                installed_langs: this.installedLangs,
+            }),
+            buttons: [{
+                text: _t('Save'),
+                classes: 'btn-primary',
+                close: true,
+                click: function () {
+                    var selectedLang = this.$('select').val();
+                    // If a language is selected, automatically unselect language from other field pointing the same
+                    self.$('.o_import_translate[data-field="' + $translateNode.attr('data-field') + '"][data-lang="' + selectedLang + '"]')
+                        .attr('data-lang', '')
+                        .find('.o_import_translate_text').text('');
+                    $translateNode.attr('data-lang', selectedLang)
+                        .find('.o_import_translate_text').text(selectedLang ? _t('Import as ') + self.installedLangs[selectedLang] : '');
+                }
+            }, {
+                text: _t('Discard'),
+                close: true
+            }]
+        }).open();
     },
     generate_fields_completion: function (root, index) {
         var basic = [];
@@ -480,7 +533,8 @@ var DataImport = AbstractAction.extend({
                     id: id,
                     text: label,
                     required: field.required,
-                    type: field.type
+                    type: field.type,
+                    translate: field.translate,
                 });
 
             }
@@ -547,8 +601,17 @@ var DataImport = AbstractAction.extend({
 
     //- import itself
     call_import: function (kwargs) {
+        var columnsLang = {};
+        _.each(this.$('.oe_import_grid-header .oe_import_grid-cell .o_import_translate'), function (el, index) {
+            columnsLang[index] = $(el).attr('data-lang');
+        });
         var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
-            return $(el).select2('val') || false;
+            var name = $(el).select2('val');
+            var lang = columnsLang[index];
+            if (lang) {
+                name = name + ':' + lang;
+            }
+            return name || false;
         }).get();
         var columns = this.$('.oe_import_grid-header .oe_import_grid-cell .o_import_header_name').map(function () {
             return $(this).text().trim().toLowerCase() || false;

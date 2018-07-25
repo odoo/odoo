@@ -201,6 +201,9 @@ class Import(models.TransientModel):
                 'type': field['type'],
             }
 
+            if field.get('translate'):
+                field_value['translate'] = True
+
             if field['type'] in ('many2many', 'many2one'):
                 field_value['fields'] = [
                     dict(field_value, name='id', string=_("External ID"), type='id'),
@@ -588,6 +591,7 @@ class Import(models.TransientModel):
 
             return {
                 'fields': fields,
+                'installed_langs': {lang[0]: lang[1].split('/')[0].strip() for lang in self.env['res.lang'].get_installed()},
                 'matches': matches or False,
                 'headers': headers or False,
                 'headers_type': header_types or False,
