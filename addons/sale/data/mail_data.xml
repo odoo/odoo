@@ -27,6 +27,7 @@
             <field name="name">Quotation sent</field>
             <field name="sequence">20</field>
             <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('sale.mt_order_sent')"/>
             <field name="relation_field">team_id</field>
         </record>
@@ -34,6 +35,7 @@
             <field name="name">Sales Order Confirmed</field>
             <field name="sequence">21</field>
             <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('sale.mt_order_confirmed')"/>
             <field name="relation_field">team_id</field>
         </record>

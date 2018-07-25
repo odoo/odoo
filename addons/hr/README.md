@@ -80,7 +80,7 @@ performers to the entire channel and publicly recognize a job well done.
 
 ### Leaderboards
 
-Promote leaders and competition amongst sales channel with performance ratios.
+Promote leaders and competition amongst Sales Team with performance ratios.
 
 ### Personal Objectives
 

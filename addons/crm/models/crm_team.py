@@ -118,7 +118,7 @@ class Team(models.Model):
     @api.constrains('dashboard_graph_model', 'use_opportunities')
     def _check_graph_model(self):
         if not self.use_opportunities and self.dashboard_graph_model == 'crm.lead':
-            raise ValidationError(_("You have to enable the Pipeline on your sales channel to be able to set it as a content for the graph"))
+            raise ValidationError(_("You have to enable the Pipeline on your Sales Team to be able to set it as a content for the graph"))
 
     @api.multi
     def write(self, vals):
@@ -136,11 +136,11 @@ class Team(models.Model):
         if not user_team_id:
             user_team_id = self.search([], limit=1).id
             action['help'] = _("""<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>
-    Looks like you are not a member of a sales channel. You should add yourself
-    as a member of one of the sales channel.
+    Looks like you are not a member of a Sales Team. You should add yourself
+    as a member of one of the Sales Team.
 </p>""")
             if user_team_id:
-                action['help'] += "<p>As you don't belong to any sales channel, Odoo opens the first one by default.</p>"
+                action['help'] += "<p>As you don't belong to any Sales Team, Odoo opens the first one by default.</p>"
 
         action_context = safe_eval(action['context'], {'uid': self.env.uid})
         if user_team_id:
