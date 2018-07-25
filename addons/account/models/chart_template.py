@@ -648,11 +648,13 @@ class AccountChartTemplate(models.Model):
                 'account_id': acc_template_ref[account_reconcile_model.account_id.id],
                 'label': account_reconcile_model.label,
                 'amount_type': account_reconcile_model.amount_type,
+                'force_tax_included': account_reconcile_model.force_tax_included,
                 'amount': account_reconcile_model.amount,
                 'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
                 'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
                 'second_label': account_reconcile_model.second_label,
                 'second_amount_type': account_reconcile_model.second_amount_type,
+                'force_second_tax_included': account_reconcile_model.force_second_tax_included,
                 'second_amount': account_reconcile_model.second_amount,
                 'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
             }
