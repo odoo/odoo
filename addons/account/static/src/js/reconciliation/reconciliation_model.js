@@ -641,9 +641,9 @@ var StatementModel = BasicModel.extend({
         if ('account_id' in values || 'amount' in values || 'tax_id' in values  || 'force_tax_included' in values) {
             prop.__tax_to_recompute = true;
 
-            // Set force_tax_included at the 'price_include' tax value.
+            // Set force_tax_included at the 'price_include' tax value when changing the tax.
             if('tax_id' in values)
-                values.tax_id.price_include = prop.force_tax_included = this.taxes[values.tax_id.id];
+                values.tax_id.readonly_force_tax_included = prop.force_tax_included = this.taxes[values.tax_id.id];
         }
         line.createForm = _.pick(prop, this.quickCreateFields);
 
@@ -1055,10 +1055,16 @@ var StatementModel = BasicModel.extend({
             var amount = field_utils.format.monetary(Math.abs(prop.base_amount), {}, formatOptions);
             prop.base_amount = sign * field_utils.parse.monetary(amount, {}, formatOptions);
         }
+
+        // Set the readonly_force_tax_included value.
+        if(prop.tax_id)
+            prop.tax_id.readonly_force_tax_included = this.taxes[prop.tax_id.id];
+
+        // Set the force_tax_included value.
         if(prop.tax_id && values.force_tax_included !== undefined)
-            prop.force_tax_included = prop.tax_id.price_include = values.force_tax_included;
+            prop.force_tax_included = values.force_tax_included;
         else if(prop.tax_id && this.taxes[prop.tax_id.id])
-            prop.force_tax_included = prop.tax_id.price_include = this.taxes[prop.tax_id.id];
+            prop.force_tax_included = this.taxes[prop.tax_id.id];
         prop.amount = prop.base_amount;
         return prop;
     },

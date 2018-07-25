@@ -391,6 +391,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         });
 
         var targetLineAmount = state.st_line.amount;
+
         _.each(props, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
@@ -472,8 +473,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 });
             });
             if(state.createForm.tax_id){
-                // Set the 'Tax Include' field editable or not depending of the price_include's account.tax value.
-                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
+                // Set the 'Tax Include' field editable or not depending of the 'readonly_force_tax_included' value.
+                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.readonly_force_tax_included);
             }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
