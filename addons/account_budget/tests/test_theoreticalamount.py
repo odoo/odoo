@@ -74,7 +74,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
         ]
         for date, expected_amount in test_list:
             _logger.info("Checking theoritical amount for the date: " + date)
-            self.mock_date.today.return_value = date
+            self.mock_date.today.return_value = Date.from_string(date)
             self.assertAlmostEqual(self.line.theoritical_amount, expected_amount)
             #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
             self.line.invalidate_cache()
@@ -90,7 +90,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
         ]
         for date, expected_amount in test_list:
             _logger.info("Checking theoritical amount for the date: " + date)
-            self.mock_date.today.return_value = date
+            self.mock_date.today.return_value = Date.from_string(date)
             self.assertAlmostEqual(self.paid_date_line.theoritical_amount, expected_amount)
             #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
             self.paid_date_line.invalidate_cache()
