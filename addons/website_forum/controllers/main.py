@@ -81,7 +81,8 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum'], type='http', auth="public", website=True)
     def forum(self, **kwargs):
-        forums = request.env['forum.forum'].search([])
+        domain = request.website.get_current_website().website_domain()
+        forums = request.env['forum.forum'].search(domain)
         return request.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
@@ -104,6 +105,7 @@ class WebsiteForum(http.Controller):
     def sitemap_forum(env, rule, qs):
         Forum = env['forum.forum']
         dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
+        dom += env['website'].get_current_website().website_domain()
         for f in Forum.search(dom):
             loc = '/forum/%s' % slug(f)
             if not qs or qs.lower() in loc:
@@ -115,6 +117,9 @@ class WebsiteForum(http.Controller):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
     def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
+        if not forum.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         Post = request.env['forum.post']
 
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')]
@@ -174,7 +179,7 @@ class WebsiteForum(http.Controller):
         })
         return request.render("website_forum.forum_index", values)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/faq'], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/faq'''], type='http', auth="public", website=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
@@ -232,7 +237,7 @@ class WebsiteForum(http.Controller):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
@@ -548,8 +553,8 @@ class WebsiteForum(http.Controller):
     # User
     # --------------------------------------------------
 
-    @http.route(['/forum/<model("forum.forum"):forum>/users',
-                 '/forum/<model("forum.forum"):forum>/users/page/<int:page>'],
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/users''',
+                 '''/forum/<model("forum.forum"):forum>/users/page/<int:page>'''],
                 type='http', auth="public", website=True)
     def users(self, forum, page=1, **searches):
         User = request.env['res.users']
@@ -733,7 +738,7 @@ class WebsiteForum(http.Controller):
     # Badges
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/badge', type='http', auth="public", website=True)
+    @http.route('''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/badge''', type='http', auth="public", website=True)
     def badges(self, forum, **searches):
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search([('challenge_ids.category', '=', 'forum')])

@@ -60,6 +60,7 @@
                         <group>
                             <field name="channel_id"/>
                             <field name="category_id" context="{'default_channel_id': channel_id}"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
                             <field name="website_url"/>
                         </group>
                         <notebook>
@@ -108,6 +109,7 @@
             <field name="arch" type="xml">
                 <tree string="Slides">
                     <field name="name"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
                     <field name="slide_type"/>
                     <field name="channel_id"/>
@@ -198,7 +200,7 @@
                 </p>
             </field>
         </record>
-        
+
         <!-- SLIDE.CHANNEL VIEWS -->
         <record model="ir.ui.view" id="view_slide_channel_form">
             <field name="name">slide.channel.form</field>
@@ -229,6 +231,7 @@
                             <page string="General">
                                 <group>
                                     <group>
+                                        <field name="website_id" groups="website.group_multi_website"/>
                                         <field name="promote_strategy" widget="radio"/>
                                         <field name="custom_slide_id" class="oe_edit_only" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}" domain="[('channel_id','=',id), ('website_published','=',True)]"/>
                                         <field name="promoted_slide_id" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}"/>
@@ -269,6 +272,7 @@
                 <tree string="Channel">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
                     <field name="visibility"/>
                     <field name="promote_strategy"/>
@@ -297,7 +301,7 @@
                 </p>
             </field>
         </record>
-        
+
         <menuitem name="Slides"
             id="menu_website_slides_root"
             sequence="32"
@@ -310,13 +314,13 @@
             sequence="140"
             parent="website.menu_website_global_configuration"
             groups="website.group_website_designer"/>
-    
-        <menuitem action="action_slide_channels" id="menu_action_slide_channels_global" 
+
+        <menuitem action="action_slide_channels" id="menu_action_slide_channels_global"
             parent="menu_website_slides_root_global" sequence="1"/>
-        
+
         <menuitem action="action_ir_slide_category" id="menu_action_ir_slide_category_global" parent="menu_website_slides_root_global" sequence="2"/>
-        
+
         <menuitem action="action_slide_tag" id="menu_slide_tag" parent="menu_website_slides_root_global" sequence="10" groups="base.group_no_one"/>
-    
+
     </data>
 </odoo>

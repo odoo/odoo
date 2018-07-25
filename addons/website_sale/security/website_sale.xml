@@ -12,6 +12,13 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="product_public_category_public" model="ir.rule">
+        <field name="name">Public product category public</field>
+        <field name="model_id" ref="model_product_public_category"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+
     <record id="product_supplierinfo_public" model="ir.rule">
         <field name="name">Public product supplierinfo</field>
         <field name="model_id" ref="product.model_product_supplierinfo"/>

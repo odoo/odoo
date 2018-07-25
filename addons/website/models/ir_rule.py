@@ -8,5 +8,9 @@ class IrRule(models.Model):
     @api.model
     def _eval_context(self):
         res = super(IrRule, self)._eval_context()
-        res['website_id'] = self._context.get('website_id')
+        res['website_id'] = self.env['website'].get_current_website().id
         return res
+
+    def _compute_domain_keys(self):
+        """ Return the list of context keys to use for caching ``_compute_domain``. """
+        return super(IrRule, self)._compute_domain_keys() + ['website_id']

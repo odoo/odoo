@@ -64,26 +64,26 @@
                             </span>
                         </h4>
                         <div class="text-muted">
-                            <span class="fa fa-calendar mr8" role="img" aria-label="Post date" title="Post date"> <span t-field="post.post_date"/></span>
-                            <span class="fa fa-folder-open"> In
-                                <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
-                                <span t-field="post.blog_id"/>
-                                </a>
-                            </span>
+                            <span class="fa fa-calendar mr8" role="img" aria-label="Post date" title="Post date" />
+                            <span t-field="post.post_date"/>
+                            <span class="fa fa-folder-open" /> In
+                            <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
+                            <span t-field="post.blog_id"/>
+                            </a>
                         </div>
-                        <div class="text-muted fa fa-tags">
+                        <div class="text-muted">
+                            <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
                             <span t-field="post.website_meta_keywords"/>
                             <span t-if="editable and not post.website_meta_keywords" class="badge badge-danger">
                                 No keywords defined!
                             </span>
                         </div>
                         <div class="text-muted" t-if="len(post.message_ids) &gt; 0">
-                            <span class="fa fa-comment-o">
-                                <a t-attf-href="#{blog_url('', ['blogpost'], blogpost=post)}#comments">
-                                    <t t-if="len(post.message_ids) &lt;= 1" ><t t-esc="len(post.message_ids)"/> comment</t>
-                                    <t t-if="len(post.message_ids) > 1"><t t-esc="len(post.message_ids)"/> comments</t>
-                                </a>
-                            </span>
+                            <span class="fa fa-comment-o"/>
+                            <a t-attf-href="#{blog_url('', ['blogpost'], blogpost=post)}#comments">
+                                <t t-if="len(post.message_ids) &lt;= 1" ><t t-esc="len(post.message_ids)"/> comment</t>
+                                <t t-if="len(post.message_ids) > 1"><t t-esc="len(post.message_ids)"/> comments</t>
+                            </a>
                         </div>
                         <div class="text-muted mb16" t-field="post.website_meta_description"/>
                       </div>

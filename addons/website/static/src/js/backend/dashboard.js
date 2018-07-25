@@ -112,6 +112,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
             route: '/website/dashboard/set_ga_data',
             params: {
+                'website_id': self.website_id,
                 'ga_client_id': ga_client_id,
                 'ga_analytics_key': ga_analytics_key,
             },
