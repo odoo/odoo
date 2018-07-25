@@ -128,8 +128,17 @@ class SaleTimesheetController(http.Controller):
         #
         # Table grouped by SO / SOL / Employees
         #
+        timesheet_forecast_table_rows = self._table_get_line_values(projects)
+        if timesheet_forecast_table_rows:
+            values['timesheet_forecast_table'] = timesheet_forecast_table_rows
+        return values
+
+    def _table_get_line_values(self, projects):
+        """ return the header and the rows informations of the table """
         if not projects:
-            return values
+            return False
+
+        uom_hour = request.env.ref('uom.product_uom_hour')
 
         # build SQL query and fetch raw data
         query, query_params = self._table_rows_sql_query(projects)
@@ -218,11 +227,10 @@ class SaleTimesheetController(http.Controller):
                             timesheet_forecast_table_rows.append(employee_row)
 
         # complete table data
-        values['timesheet_forecast_table'] = {
+        return {
             'header': self._table_header(projects),
             'rows': timesheet_forecast_table_rows
         }
-        return values
 
     def _table_header(self, projects):
         initial_date = fields.Date.from_string(fields.Date.today())
@@ -232,8 +240,17 @@ class SaleTimesheetController(http.Controller):
             month_index = fields.Date.from_string(date).month
             return babel.dates.get_month_names('abbreviated', locale=request.env.context.get('lang', 'en_US'))[month_index]
 
-        header = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
-        return header
+        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
+
+        result = []
+        for name in header_names:
+            result.append({
+                'label': name,
+                'tooltip': '',
+            })
+        # add tooltip for reminaing
+        result[-1]['tooltip'] = _('What is still to deliver based on sold hours and hours already done. Equals to sold hours - done hours.')
+        return result
 
     def _table_row_default(self, projects):
         lenght = len(self._table_header(projects))
