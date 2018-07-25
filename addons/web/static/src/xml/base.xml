@@ -771,7 +771,7 @@
 </t>
 <ul t-name="ModelFieldSelector.page" class="o_field_selector_page">
     <t t-foreach="lines" t-as="line">
-        <t t-set="relationToFollow" t-value="followRelations &amp;&amp; line.relation"/>
+        <t t-set="relationToFollow" t-value="followRelations(line) &amp;&amp; line.relation"/>
         <li t-attf-class="o_field_selector_item #{relationToFollow and 'o_field_selector_next_page' or 'o_field_selector_select_button'}#{line_index == 0 and ' active' or ''}"
             t-att-data-name="line.name">
             <t t-esc="line.string"/>
