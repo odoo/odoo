@@ -4,9 +4,12 @@
 import uuid
 
 from datetime import datetime, timedelta
+from functools import partial
+from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
+from odoo.tools.misc import formatLang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
 
@@ -146,6 +149,7 @@ class SaleOrder(models.Model):
     note = fields.Text('Terms and conditions', default=_default_note)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='onchange', track_sequence=5)
+    amount_by_group = fields.Binary(string="Taxe amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always', track_sequence=6)
 
@@ -617,23 +621,48 @@ class SaleOrder(models.Model):
             })
             order.analytic_account_id = analytic
 
-    @api.multi
-    def _get_tax_amount_by_group(self):
+    def _amount_by_group(self):
+        for order in self:
+            currency = order.currency_id or order.company_id.currency_id
+            fmt = partial(formatLang, self.with_context(lang=order.partner_id.lang).env, currency_obj=currency)
+            res = {}
+            for line in self.order_line:
+                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+                taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=self.partner_shipping_id)['taxes']
+                for tax in line.tax_id:
+                    group = tax.tax_group_id
+                    res.setdefault(group, {'amount': 0.0, 'base': 0.0})
+                    for t in taxes:
+                        if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
+                            res[group]['amount'] += t['amount']
+                            res[group]['base'] += t['base']
+            res = sorted(res.items(), key=lambda l: l[0].sequence)
+            order.amount_by_group = [(
+                l[0].name, l[1]['amount'], l[1]['base'],
+                fmt(l[1]['amount']), fmt(l[1]['base']),
+                len(res),
+            ) for l in res]
+
+    def order_lines_layouted(self):
+        """
+        Returns this order lines classified by sale_layout_category and separated in
+        pages according to the category pagebreaks. Used to render the report.
+        """
         self.ensure_one()
-        res = {}
-        for line in self.order_line:
-            price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-            taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=self.partner_shipping_id)['taxes']
-            for tax in line.tax_id:
-                group = tax.tax_group_id
-                res.setdefault(group, {'amount': 0.0, 'base': 0.0})
-                for t in taxes:
-                    if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
-                        res[group]['amount'] += t['amount']
-                        res[group]['base'] += t['base']
-        res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = [(l[0].name, l[1]['amount'], l[1]['base'], len(res)) for l in res]
-        return res
+        report_pages = [[]]
+        for category, lines in groupby(self.order_line, lambda l: l.layout_category_id):
+            # If last added category induced a pagebreak, this one will be on a new page
+            if report_pages[-1] and report_pages[-1][-1]['pagebreak']:
+                report_pages.append([])
+            # Append category to current report page
+            report_pages[-1].append({
+                'name': category and category.name or _('Uncategorized'),
+                'subtotal': category and category.subtotal,
+                'pagebreak': category and category.pagebreak,
+                'lines': list(lines)
+            })
+
+        return report_pages
 
     def get_portal_confirmation_action(self):
         if self.company_id.portal_confirmation_sign and not self.signature:
