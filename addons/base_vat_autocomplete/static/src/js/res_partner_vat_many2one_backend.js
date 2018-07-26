@@ -27,6 +27,8 @@ var PartnerVatFieldMany2One = FieldMany2One.extend({
 
         var parent = this._super.apply(this, search_val, context);
 
+        // TODO only do this depending on user vat setting: company vat_check_vies?
+
         // TODO also intercept the M2ODialog to give it the proper context
 
         // TODO maybe code this better
