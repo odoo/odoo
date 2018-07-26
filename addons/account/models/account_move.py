@@ -948,7 +948,7 @@ class AccountMoveLine(models.Model):
             total = 0
             total_currency = 0
             writeoff_lines = []
-            date = time.strftime('%Y-%m-%d')
+            date = fields.Date.from_string(time.strftime('%Y-%m-%d'))
             for vals in lines:
                 # Check and complete vals
                 if 'account_id' not in vals or 'journal_id' not in vals:

@@ -116,7 +116,7 @@ Best Regards,'''))
 
         previous_month = fields.Date.today() + relativedelta(months=-1)
         days_previous_month = calendar.monthrange(previous_month.year, previous_month.month)
-        previous_month = previous_month.replace(day=days_previous_month[1]).timetuple()
+        previous_month = previous_month.replace(day=days_previous_month[1])
         for company in self:
             old_fiscalyear_lock_date = company.fiscalyear_lock_date
 
