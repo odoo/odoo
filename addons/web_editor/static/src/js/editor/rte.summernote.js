@@ -1208,15 +1208,15 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         }
         data.__alreadyDone = true;
         var linkDialog = new weWidgets.LinkDialog(this,
-            data.data.options || {},
-            data.data.$editable,
-            data.data.linkInfo
+            data.options || {},
+            data.$editable,
+            data.linkInfo
         );
-        if (data.data.onSave) {
-            linkDialog.on('save', this, data.data.onSave);
+        if (data.onSave) {
+            linkDialog.on('save', this, data.onSave);
         }
-        if (data.data.onCancel) {
-            linkDialog.on('cancel', this, data.data.onCancel);
+        if (data.onCancel) {
+            linkDialog.on('cancel', this, data.onCancel);
         }
         linkDialog.open();
     },
@@ -1234,18 +1234,18 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
 
         var mediaDialog = new weWidgets.MediaDialog(this,
             _.extend({
-                res_model: data.data.$editable.data('oe-model'),
-                res_id: data.data.$editable.data('oe-id'),
-                domain: data.data.$editable.data('oe-media-domain'),
-            }, data.data.options),
-            data.data.$editable,
-            data.data.media
+                res_model: data.$editable.data('oe-model'),
+                res_id: data.$editable.data('oe-id'),
+                domain: data.$editable.data('oe-media-domain'),
+            }, data.options),
+            data.$editable,
+            data.media
         );
-        if (data.data.onSave) {
-            mediaDialog.on('save', this, data.data.onSave);
+        if (data.onSave) {
+            mediaDialog.on('save', this, data.onSave);
         }
         if (data.onCancel) {
-            mediaDialog.on('cancel', this, data.data.onCancel);
+            mediaDialog.on('cancel', this, data.onCancel);
         }
         mediaDialog.open();
     },
