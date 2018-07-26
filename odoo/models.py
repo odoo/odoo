@@ -5114,6 +5114,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             """
             result = {}
             for name, subnames in tree.items():
+                if name == 'id':
+                    continue
                 if old and old[name] == new[name]:
                     continue
                 field = record._fields[name]
