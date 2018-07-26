@@ -243,14 +243,20 @@ var InputField = DebouncedField.extend({
     _prepareInput: function ($input) {
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
-        this.$input.attr({
-            type: this.nodeOptions.isPassword ? 'password' : 'text',
-            placeholder: this.attrs.placeholder || "",
-            autocomplete: this.nodeOptions.isPassword ?
-                'new-password' :
-                this.attrs.autocomplete,
-        });
-        this.$input.val(this._formatValue(this.value));
+
+        var inputAttrs = { placeholder: this.attrs.placeholder || "" };
+        var inputVal;
+        if (this.nodeOptions.isPassword) {
+            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
+            inputVal = this.value;
+        } else {
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete });
+            inputVal = this._formatValue(this.value);
+        }
+
+        this.$input.attr(inputAttrs);
+        this.$input.val(inputVal);
+
         return this.$input;
     },
     /**
