@@ -249,6 +249,7 @@ class res_currency(osv.osv):
         """
         company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         function = ""
+        company_currency_format=""
         for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places', 'position'], context=context):
             symbol = row['symbol'] or row['name']
             format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(row['decimal_places']) + "]}, 0.00)"
