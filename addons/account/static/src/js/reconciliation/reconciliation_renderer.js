@@ -657,6 +657,14 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             if (event.data.changes.amount && isNaN(event.data.changes.amount)) {
                 return;
             }
+            if (fieldName === 'tax_id') {
+                if (event.data.changes.tax_id === false) {
+                    $('.create_force_tax_included').addClass('hidden');
+                }
+                else {
+                    $('.create_force_tax_included').removeClass('hidden');   
+                }
+            }
             this.trigger_up('update_proposition', {'data': event.data.changes});
         }
     },
