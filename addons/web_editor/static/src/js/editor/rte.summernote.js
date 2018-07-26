@@ -427,7 +427,7 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     $editable.data('NoteHistory').recordUndo();
 
     var def = new $.Deferred();
-    core.bus.trigger_up('link_dialog_demand', {
+    core.bus.trigger('link_dialog_demand', {
         $editable: $editable,
         linkInfo: linkInfo,
         onSave: function (linkInfo) {
@@ -449,7 +449,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     var media = $(r.sc).parents().addBack().filter(function (i, el) {
         return dom.isImg(el);
     })[0];
-    core.bus.trigger_up('media_dialog_demand', {
+    core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
         options: {
@@ -463,7 +463,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
 $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
-    core.bus.trigger_up('alt_dialog_demand', {
+    core.bus.trigger('alt_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -490,7 +490,7 @@ $.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, cus
 $.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
-    core.bus.trigger_up('crop_image_dialog_demand', {
+    core.bus.trigger('crop_image_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });

@@ -80,6 +80,7 @@ var ServiceProviderMixin = {
      * @param  {OdooEvent} event
      */
     _call_service: function (event) {
+        console.log(event)
         var args = event.data.args || [];
         if (event.data.service === 'ajax' && event.data.method === 'rpc') {
             // ajax service uses an extra 'target' argument for rpc
