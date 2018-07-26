@@ -23,8 +23,7 @@ except ImportError:
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    @api.model
-    def _get_partner_vals(self, vat):
+    def _get_vies_company_data(self, vat):
         def _check_city(lines, country='BE'):
             if country == 'GB':
                 ukzip = '[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}'
@@ -53,74 +52,48 @@ class ResPartner(models.Model):
             result = client.service.checkVat(partner_vat[:2], partner_vat[2:])
         except:
             # Avoid blocking the client when the service is unreachable/unavailable
-            return False, {}
+            return False
 
         if not result['valid']:
-            return False, {}
+            return False
 
-        partner_name = False
-        partner_address = {}
         if result['name'] != '---':
-            partner_name = result['name']
+            partner = {}
 
-        #parse the address from VIES and fill the partner's data
-        if result['address'] == '---': return partner_name, {}
+            partner['name'] = result['name']
+            partner['vat'] = result['countryCode'] + result['vatNumber']
 
-        lines = [x for x in result['address'].split("\n") if x]
-        if len(lines) == 1:
-            lines = [x.strip() for x in lines[0].split(',') if x]
-        if len(lines) == 1:
-            lines = [x.strip() for x in lines[0].split('   ') if x]
+            lines = [x for x in result['address'].split("\n") if x]
+            if len(lines) == 1:
+                lines = [x.strip() for x in lines[0].split(',') if x]
+            if len(lines) == 1:
+                lines = [x.strip() for x in lines[0].split('   ') if x]
 
-        partner_address['street'] = lines.pop(0)
-        #_set_address_field(partner, 'street', lines.pop(0))
+            partner['street'] = lines.pop(0).title()
 
-        if len(lines) > 0:
-            res = _check_city(lines, result['countryCode'])
-            if res:
-                partner_address['zip'] = res[0]
-                partner_address['city'] = res[1]
-                #_set_address_field(partner, 'zip', res[0])
-                #_set_address_field(partner, 'city', res[1])
-        if len(lines) > 0:
-            partner_address['street2'] = lines.pop(0)
-            #_set_address_field(partner, 'street2', lines.pop(0))
+            if len(lines) > 0:
+                res = _check_city(lines, result['countryCode'])
+                if res:
+                    partner['zip'] = res[0]
+                    partner['city'] = res[1].title()
+            if len(lines) > 0:
+                partner['street2'] = lines.pop(0).title()
 
-        country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
+            country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
+            partner['country_id'] = country and country.id or False
 
-        #_set_address_field(partner, 'country_id', country and country.id or False)
-        partner_address['country_id'] = country and country.id or False
-        return partner_name, partner_address
+            return partner
 
-    @api.model
-    def name_create(self, name):
-        """ Override of orm's name_create method for partners. The purpose is
-            to handle creating a new partner using data from VIES if the "name"
-            is actually a VAT number.
-            """
+        return False
 
-        # TODO only do this depending on user vat setting: company vat_check_vies?
-        if len(name) > 5 and name[:2].lower() in stdnum_vat.country_codes:
-            result = self._get_partner_vals(name)
-            if result[0] and result[1]:
-                values = {
-                    'city': result[1].get('city'),
-                    'country_id': result[1].get('country_id'),
-                    'is_company': True,
-                    'name': result[0],
-                    'street': result[1].get('street'),
-                    'vat': name,
-                    'zip': result[1].get('zip'),
-                }
-                partner = self.create(values)
-                return partner.name_get()[0]
-        return super(ResPartner, self).name_create(name)
+    def _check_vat_format(self, search_val):
+        return len(search_val) > 5 and search_val[:2].lower() in stdnum_vat.country_codes
 
     @api.model
-    def vat_search(self, search_val=""):
-        if len(search_val) > 5 and search_val[:2].lower() in stdnum_vat.country_codes:
-            return self._get_partner_vals(search_val)
-        return (False, {})
+    def vies_vat_search(self, search_val=""):
+        if self._check_vat_format(search_val):
+            return self._get_vies_company_data(search_val)
+        return False
 
     @api.onchange('vat')
     def vies_vat_change(self):
@@ -131,17 +104,18 @@ class ResPartner(models.Model):
             if not partner.vat:
                 continue
             # If a field is not set in the response, wipe it anyway
-            non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
-            if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat.country_codes:
-                partner_name, partner_address = self._get_partner_vals(partner.vat)
+            non_set_address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+            if self._check_vat_format(partner.vat):
+                company_data = self._get_vies_company_data(partner.vat)
 
-                if not partner.name and partner_name:
-                    partner.name = partner_name
+                if not partner.name and company_data['name']:
+                    partner.name = company_data['name']
 
                 #set the address fields
-                for field, value in partner_address.items():
-                    partner[field] = value
-                    non_set_address_fields.remove(field)
+                for field, value in company_data.items():
+                    if(field in non_set_address_fields):
+                        partner[field] = value
+                        non_set_address_fields.remove(field)
                 for field in non_set_address_fields:
                     if partner[field]:
                         partner[field] = False
@@ -153,14 +127,16 @@ class ResCompany(models.Model):
     @api.onchange('vat')
     def vies_vat_change(self):
         self.ensure_one()
-        company_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
-        company_name, company_address = self.env['res.partner']._get_partner_vals(self.vat)
-        if not self.name and company_name:
-            self.name = company_name
+        company_address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+        company_data = self.env['res.partner']._get_vies_company_data(self.vat)
+        if not self.name and company_data['name']:
+            self.name = company_data['name']
+
         #set the address fields
-        for field, value in company_address.items():
-            self[field] = value
-            company_address_fields.remove(field)
+        for field, value in company_data.items():
+            if(field in company_address_fields):
+                self[field] = value
+                company_address_fields.remove(field)
         for field in company_address_fields:
             if self[field]:
                 self[field] = False
