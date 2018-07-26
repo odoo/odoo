@@ -242,6 +242,11 @@ class PosConfig(models.Model):
         if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
+    @api.constrains('company_id', 'available_pricelist_ids')
+    def _check_companies(self):
+        if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
+            raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
