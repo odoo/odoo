@@ -25,7 +25,7 @@ class Http(models.AbstractModel):
         return {
             "session_id": request.session.sid,
             "uid": request.session.uid,
-            "is_system": request.env.user._is_system(),
+            "is_system": request.env.user._is_system() if request.session.uid else False,
             "is_superuser": request.env.user._is_superuser() if request.session.uid else False,
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
