@@ -6046,8 +6046,8 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('span[name="foo"]').text(), '***',
             "password should be displayed with stars");
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[name="foo"]').val(), '***',
-            "password should be displayed with stars");
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'yop',
+            "input value should be the password");
         assert.strictEqual(form.$('input[name="foo"]').prop('type'), 'password',
             "input should be of type password");
         form.destroy();
@@ -6068,8 +6068,8 @@ QUnit.module('Views', {
         });
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[name="foo"]').val(), '***',
-            "password should be displayed with stars");
+        assert.strictEqual(form.$('input[name="foo"]').prop('type'), 'password',
+            "input should be of type password");
         assert.strictEqual(form.$('input[name="display_name"]').attr('autocomplete'), 'coucou',
             "attribute autocomplete should be set");
         assert.strictEqual(form.$('input[name="foo"]').attr('autocomplete'), 'new-password',
