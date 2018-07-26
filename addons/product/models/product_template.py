@@ -258,6 +258,7 @@ class ProductTemplate(models.Model):
         else:
             return self.env.ref('product.product_uom_kgm')
 
+    @api.depends('weight')
     def _compute_weight_uom_id(self):
         weight_uom_id = self._get_weight_uom_id_from_ir_config_parameter()
         for product_template in self:

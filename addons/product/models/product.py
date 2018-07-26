@@ -137,6 +137,8 @@ class ProductProduct(models.Model):
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
         help="Weight of the product, packaging not included. The unit of measure can be changed in the general settings")
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
+    weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
@@ -151,6 +153,26 @@ class ProductProduct(models.Model):
 
     def _get_invoice_policy(self):
         return False
+
+    @api.model
+    def _get_weight_uom_id_from_ir_config_parameter(self):
+        """ Get the unit of measure to interpret the `weight` field. By default, we considerer
+        that weights are expressed in kilograms. Users can configure to express them in pounds
+        by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
+        and "1" as value.
+        """
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
+        if product_weight_in_lbs_param == '1':
+            return self.env.ref('product.product_uom_lb')
+        else:
+            return self.env.ref('product.product_uom_kgm')
+
+    @api.depends('weight')
+    def _compute_weight_uom_id(self):
+        weight_uom_id = self._get_weight_uom_id_from_ir_config_parameter()
+        for product_template in self:
+            product_template.weight_uom_id = weight_uom_id
 
     def _compute_product_price(self):
         prices = {}
