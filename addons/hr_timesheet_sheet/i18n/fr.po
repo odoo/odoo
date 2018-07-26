@@ -3,15 +3,19 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Leo Schmitt <lschmitt@yziact.fr>, 2015
+# Benedicte HANET <hanetb@gmail.com>, 2016
+# Clo <clo@odoo.com>, 2015
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
+# Martin Trigaux, 2016
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-14 20:08+0000\n"
-"Last-Translator: Lucas Deliege <lud@odoo.com>\n"
+"POT-Creation-Date: 2016-01-13 10:41+0000\n"
+"PO-Revision-Date: 2016-01-25 18:12+0000\n"
+"Last-Translator: Benedicte HANET <hanetb@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +29,17 @@ msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
 "* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
 "* The 'Done' status is used when users timesheet is accepted by his/her senior."
-msgstr "* Le statut 'Brouillon' est utilisé quand un utilisateur enregistre un nouveau et une feuille de temps  non confirmée.\n* Le statut «confirmé» est utilisé pour confirmer la feuille de temps par l'utilisateur\n* Le statut «Terminé» est utilisé lorsque les feuilles  de temps sont acceptées par le/la responsable."
+msgstr "* Le statut \"Brouillon\" est utilisé quand un utilisateur enregistre une nouvelle feuille de temps  non confirmée.\n* Le statut \"Confirmée\" est utilisé pour confirmer la feuille de temps par l'utilisateur\n* Le statut \"Terminée\" est utilisé lorsque les feuilles  de temps sont acceptées par le/la responsable."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
 msgid "# Nbr Timesheet"
-msgstr "# nombre de feuilles de temps"
+msgstr "Nb. de feuilles de temps"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
 msgid "# Total Attendance"
-msgstr "# Présence totale"
+msgstr "Nb. de présence totale"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
@@ -45,7 +49,7 @@ msgstr "# Différence totale"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
 msgid "# Total Timesheet"
-msgstr "# Total des feuilles de temps"
+msgstr "Nb. total de feuilles de temps"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -95,7 +99,7 @@ msgstr "Approuver"
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Approved"
-msgstr "Confirmé par fournisseur"
+msgstr "Confirmé par responsable"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
@@ -309,11 +313,6 @@ msgstr "si elle est cochée, de nouveaux messages requièrent votre attention."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-msgid "Important Messages"
-msgstr "Messages Importants"
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "In Draft"
 msgstr "A l'état \"Brouillon\""
 
@@ -380,11 +379,6 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
-msgid "Messages and communication history"
-msgstr "Historique des messages et communications"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr "Mois"
@@ -408,6 +402,12 @@ msgid ""
 msgstr "Ma feuille de temps ouvre une feuille de temps de façon à vous permettre de saisir vos activités dans le système. Sur le même formulaire, vous pouvez enregistrer vos présences (entrées/sorties) et décrire les heures de travail effectuées et les imputer sur les différents projets.\r\nA la fin de la période définie par la société, la feuille de temps est confirmée par l'utilisateur et peut être validée par son responsable. Si nécessaire, et comme défini pour chaque projet, vous pouvez générer les factures en fonction des feuilles de temps."
 
 #. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
+msgid "My Timesheets"
+msgstr "Mes feuilles de temps"
+
+#. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
@@ -416,7 +416,7 @@ msgstr "Nouveau"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr "Nouvelle feuille de temps à approuver"
+msgstr "Nouvelle feuille de temps à approuver."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -426,7 +426,7 @@ msgstr "Note"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Nombre d'Actions"
+msgstr "Nombre d'actions"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction_counter
@@ -502,7 +502,7 @@ msgstr "Rechercher dans les feuilles de temps"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Set to Draft"
-msgstr "Mettre à l'état \"Brouillon\""
+msgstr "Marquer comme brouillon"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_account_analytic_line_sheet_id
@@ -630,6 +630,7 @@ msgstr "Feuilles de temps par période"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
@@ -687,6 +688,7 @@ msgstr "Total des feuilles de temps"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
 msgstr "Messages non lus"
 
@@ -750,7 +752,7 @@ msgstr "Vous ne pouvez pas saisir une date de présence en dehors des dates de f
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr "Vous ne pouvez pas entrer une présence dans une feuille de temps déjà soumise. Demandez à votre responsable de la réinitialisée avant d'ajouter une présence."
+msgstr "Vous ne pouvez pas entrer une présence dans une feuille de temps déjà soumise. Demandez à votre responsable de la réinitialiser avant d'ajouter une présence."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:231
@@ -785,7 +787,7 @@ msgid ""
 msgstr "Vous ne pouvez pas avoir 2 feuilles de temps qui se chevauchent!\nSVP utilisez le menu 'Ma feuille de temps actuelle' pour éviter ce problème."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
@@ -793,24 +795,25 @@ msgid ""
 msgstr "Vous ne pouvez pas avoir 2 feuilles de temps qui se chevauchent!\nVous devriez utiliser le menu 'Ma feuille de temps' pour éviter ce problème."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "Vous ne pouvez pas modifier une entrée dans une feuille de temps confirmée."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:353
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Vous ne pouvez pas modifier une entrée dans une feuille de temps confirmée."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
-msgstr "Vous devez remplir votre feuille de temps chaque jour, et les confirmer\nà la fin de la semaine. Une fois la feuille confirmée, elle doit être\nvalidée par un manager."
+msgstr "Vous devez remplir votre feuille de temps chaque jour, et les confirmer\nà la fin de la semaine. Une fois la feuille confirmée, elle doit être\nvalidée par un gestionnaire."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -823,6 +826,11 @@ msgstr "Vous serez en mesure d'enregistrer vos heures de travail et vos activit�
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid "new timesheet."
+msgstr "nouvelle feuille de temps"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form

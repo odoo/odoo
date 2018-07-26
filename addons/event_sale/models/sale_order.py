@@ -30,8 +30,8 @@ class sale_order_line(osv.osv):
             help="Choose an event ticket and it will automatically create a registration for this event ticket."),
         # those 2 fields are used for dynamic domains and filled by onchange
         # TDE: really necessary ? ...
-        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type"),
-        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
+        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type", readonly=True),
+        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean', readonly=True),
     }
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
@@ -56,7 +56,7 @@ class sale_order_line(osv.osv):
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
-        Registration = self.env['event.registration']
+        Registration = self.env['event.registration'].sudo()
         registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
         for so_line in [l for l in self if l.event_id]:
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)

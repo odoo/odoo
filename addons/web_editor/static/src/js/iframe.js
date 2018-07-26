@@ -59,6 +59,16 @@ snippet_editor.Class.include({
     }
 });
 
+rte.Class.include({
+    config: function ($editable) {
+        var config = this._super($editable);
+        if ($.deparam($.param.querystring()).debug !== undefined) {
+            config.airPopover.splice(7, 0, ['view', ['codeview']]);
+        }
+        return config;
+    }
+});
+
 translator.Class.include({
     start: function () {
         var res = this._super();

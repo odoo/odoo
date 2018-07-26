@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-09-30 09:25+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,12 @@ msgstr "Rekeningvaluta"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
 msgid "Action Needed"
+msgstr "Vereist actie"
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
 msgstr ""
 
 #. module: analytic
@@ -104,7 +110,7 @@ msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
+msgid "Archived"
 msgstr ""
 
 #. module: analytic
@@ -219,7 +225,7 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Schermnaam"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
@@ -229,12 +235,12 @@ msgstr "Volgers"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Volgers (Kanalen)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Volgers (Partners)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
@@ -263,7 +269,7 @@ msgstr "Als dit is ingeschakeld, zijn er nieuwe berichten die uw aandacht vragen
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -277,7 +283,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Is Volger"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
@@ -290,7 +296,7 @@ msgstr "Datum laatste bericht"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Laatst Aangepast op"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
@@ -314,11 +320,6 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatiehistoriek"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
 msgstr ""
@@ -331,17 +332,17 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Aantal acties"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Aantal ongelezen berichten"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -385,6 +386,11 @@ msgid "Select the Period for Analysis"
 msgstr "Kies de te analyseren periode"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
 msgid "Tags"
@@ -423,7 +429,7 @@ msgstr "Ongelezen berichten"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Teller ongelezen berichten"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id

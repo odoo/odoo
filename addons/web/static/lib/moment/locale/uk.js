@@ -122,6 +122,10 @@
 
         // M. E.: those two are virtually unused but a user might want to implement them for his/her website for some reason
 
+        meridiemParse: /ночі|ранку|дня|вечора/,
+        isPM: function (input) {
+            return /^(дня|вечора)$/.test(input);
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 4) {
                 return "ночі";

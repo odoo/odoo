@@ -47,7 +47,7 @@ class MassMailingList(osv.Model):
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
         ),
-        'popup_content': fields.html("Website Popup Content", translate=True, required=True, sanitize=False),
+        'popup_content': fields.html("Website Popup Content", translate=True, sanitize=False),
         'popup_redirect_url': fields.char("Website Popup Redirect URL"),
     }
 
@@ -431,7 +431,10 @@ class MassMailing(osv.Model):
         for model_name in self.pool:
             model = self.pool[model_name]
             if hasattr(model, '_mail_mass_mailing') and getattr(model, '_mail_mass_mailing'):
-                res.append((model._name, getattr(model, '_mail_mass_mailing')))
+                if getattr(model, 'message_mass_mailing_enabled'):
+                    res.append((model._name, model.message_mass_mailing_enabled()))
+                else:
+                    res.append((model._name, model._mail_mass_mailing))
         res.append(('mail.mass_mailing.contact', _('Mailing List')))
         return res
 
@@ -484,7 +487,7 @@ class MassMailing(osv.Model):
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
         'schedule_date': fields.datetime('Schedule in the Future'),
-        'body_html': fields.html('Body', translate=True),
+        'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
@@ -635,7 +638,7 @@ class MassMailing(osv.Model):
         if groupby and groupby[0] == "state":
             # Default result structure
             # states = self._get_state_list(cr, uid, context=context)
-            states = [('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')]
+            states = [('draft', _('Draft')), ('in_queue', _('In Queue')), ('sending', _('Sending')), ('done', _('Sent'))]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
                 '__domain': domain + [('state', '=', state_value)],
@@ -663,7 +666,8 @@ class MassMailing(osv.Model):
             email_fname = 'email_from'
             if 'email' in model._fields:
                 email_fname = 'email'
-            record_ids = model.search(cr, uid, [('id', 'in', res_ids), (email_fname, 'ilike', email)], context=context)
+            ctx = dict(context or {}, active_test=False)
+            record_ids = model.search(cr, uid, [('id', 'in', res_ids), (email_fname, 'ilike', email)], context=ctx)
             model.write(cr, uid, record_ids, {'opt_out': value}, context=context)
 
     #------------------------------------------------------
@@ -677,12 +681,16 @@ class MassMailing(osv.Model):
             for item in list_ids:
                 if isinstance(item, (int, long)):
                     mailing_list_ids.add(item)
-                elif len(item) == 3:
+                elif len(item) == 2 and item[0] == 4:  # 4, id
+                    mailing_list_ids.add(item[1])
+                elif len(item) == 3:  # 6, 0, ids
                     mailing_list_ids |= set(item[2])
             if mailing_list_ids:
                 value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
+        elif 'opt_out' in self.pool[mailing_model]._fields:
+            value['mailing_domain'] = "[('opt_out', '=', False)]"
         else:
             value['mailing_domain'] = []
         value['body_html'] = "on_change_model_and_list"
@@ -777,6 +785,7 @@ class MassMailing(osv.Model):
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
                 'no_auto_thread': mailing.reply_to_mode != 'thread',
+                'template_id': None,
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
@@ -828,9 +837,12 @@ class MassMailing(osv.Model):
 
         for mass_mailing_id in mass_mailing_ids:
             mass_mailing_record = self.browse(cr, uid, mass_mailing_id, context=context)
+            _uid = mass_mailing_record.write_uid.id or uid
+            _context = self.pool.get("res.users").context_get(cr, _uid, context=context)
+            _context = dict(context or {}, **_context)
 
-            if len(self.get_remaining_recipients(cr, uid, mass_mailing_record, context=context)) > 0:
-                self.write(cr, uid, [mass_mailing_id], {'state': 'sending'}, context=context)
-                self.send_mail(cr, uid, [mass_mailing_id], context=context)
+            if len(self.get_remaining_recipients(cr, uid, mass_mailing_record, context=_context)) > 0:
+                self.write(cr, uid, [mass_mailing_id], {'state': 'sending'}, context=_context)
+                self.send_mail(cr, uid, [mass_mailing_id], context=_context)
             else:
-                self.write(cr, uid, [mass_mailing_id], {'state': 'done'}, context=context)
+                self.write(cr, uid, [mass_mailing_id], {'state': 'done'}, context=_context)

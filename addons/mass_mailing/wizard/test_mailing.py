@@ -11,7 +11,8 @@ class TestMassMailing(osv.TransientModel):
     _columns = {
         'email_to': fields.char('Recipients', required=True,
             help='Comma-separated list of email addresses.'),
-        'mass_mailing_id': fields.many2one('mail.mass_mailing', 'Mailing', required=True),
+        'mass_mailing_id': fields.many2one(
+            'mail.mass_mailing', 'Mailing', required=True, ondelete='cascade'),
     }
 
     _defaults = {
@@ -25,6 +26,8 @@ class TestMassMailing(osv.TransientModel):
             test_emails = tools.email_split(wizard.email_to)
             mail_ids = []
             for test_mail in test_emails:
+                # Convert links in absolute URLs before the application of the shortener
+                self.pool['mail.mass_mailing'].write(cr, uid, [mailing.id], {'body_html': self.pool['mail.template']._replace_local_links(cr, uid, mailing.body_html, context)}, context=context)
                 mail_values = {
                     'email_from': mailing.email_from,
                     'reply_to': mailing.reply_to,

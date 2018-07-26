@@ -3,26 +3,28 @@
 # * stock_landed_costs
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-30 10:59+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
+"PO-Revision-Date: 2017-07-19 08:59+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/stock_landed_costs.py:126
 #: code:addons/stock_landed_costs/stock_landed_costs.py:130
 #, python-format
 msgid " already out"
-msgstr ""
+msgstr "już"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
@@ -48,7 +50,7 @@ msgstr "Dodatkowe koszty nabycia"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Wg obecnych kosztów"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -81,12 +83,12 @@ msgstr "Anulowano"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Kliknij, aby utworzyć nowy koszt nabycia."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Kliknij, by utworzyć nowy rodzaj kosztu nabycia."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -253,7 +255,7 @@ msgstr "Koszt nabycia"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr ""
+msgstr "Nazwa kosztu nabycia"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -342,7 +344,7 @@ msgstr "Liczba nieprzeczytanych wiadomości"
 #: code:addons/stock_landed_costs/stock_landed_costs.py:181
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Tylko projekty kosztów nabycia mogą być zatwierdzane"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids

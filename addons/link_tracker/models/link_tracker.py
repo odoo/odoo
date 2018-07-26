@@ -4,13 +4,14 @@ import random
 import re
 import string
 
-from lxml.html import parse
-from urllib import urlencode
+from lxml import html
 from urllib2 import urlopen
 from urlparse import urljoin
 from urlparse import urlparse
+from werkzeug import url_encode, unescape
 
 from openerp import models, fields, api, _
+from openerp.tools import ustr
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
 
@@ -53,7 +54,7 @@ class link_tracker(models.Model):
             href = match[0]
             long_url = match[1]
 
-            vals['url'] = long_url
+            vals['url'] = unescape(long_url)
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 link = self.create(vals)
@@ -101,14 +102,14 @@ class link_tracker(models.Model):
             if attr:
                 utms[key] = attr
 
-        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, urlencode(utms), parsed.query, parsed.fragment)
+        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, url_encode(utms), parsed.query, parsed.fragment)
 
     @api.model
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
             page = urlopen(url, timeout=5)
-            p = parse(page)
+            p = html.fromstring(ustr(page.read()).encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
             title = url

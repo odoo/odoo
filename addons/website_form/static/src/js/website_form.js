@@ -47,6 +47,7 @@ odoo.define('website_form.animation', function (require) {
 
         send: function(e) {
             e.preventDefault();  // Prevent the default submit behavior
+            this.$target.find('.o_website_form_send').off();  // Prevent users from crazy clicking
 
             var self = this;
 
@@ -157,13 +158,15 @@ odoo.define('website_form.animation', function (require) {
 
                     // Special cases for dates and datetimes
                     } else if ($(input).hasClass('o_website_form_date')) {
-                        return !self.is_datetime_valid(input.value, 'date');
+                        if (!self.is_datetime_valid(input.value, 'date')) {
+                            return true;
+                        }
                     } else if ($(input).hasClass('o_website_form_datetime')) {
-                        return !self.is_datetime_valid(input.value, 'datetime');
-
-                    } else {
-                        return !input.checkValidity();
+                        if (!self.is_datetime_valid(input.value, 'datetime')) {
+                            return true;
+                        }
                     }
+                    return !input.checkValidity();
                 })
 
                 // Update field color if invalid or erroneous
@@ -211,6 +214,10 @@ odoo.define('website_form.animation', function (require) {
         },
 
         update_status: function(status) {
+            var self = this;
+            if (status != 'success') {  // Restore send button behavior if result is an error
+                this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
+            }
             this.$target.find('#o_website_form_result').replaceWith(qweb.render("website_form.status_" + status))
         },
     });

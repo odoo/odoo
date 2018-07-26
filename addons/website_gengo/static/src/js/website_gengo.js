@@ -18,14 +18,13 @@ if (!translate.edit_translations) {
 
 ajax.loadXML('/website_gengo/static/src/xml/website.gengo.xml', qweb);
 
-website.TopBar.include({
-    events: _.extend({}, website.TopBar.prototype.events, {
+translate.Class.include({
+    events: _.extend({}, translate.Class.prototype.events, {
         'click a[data-action=translation_gengo_post]': 'translation_gengo_post',
         'click a[data-action=translation_gengo_info]': 'translation_gengo_info',
     }),
     edit:function () {
         this.gengo_translate = true;
-        this._super.apply(this, arguments);
         var self = this;
         var gengo_langs = ["ar_SY","id_ID","nl_NL","fr_CA","pl_PL","zh_TW","sv_SE","ko_KR","pt_PT","en_US","ja_JP","es_ES","zh_CN","de_DE","fr_FR","fr_BE","ru_RU","it_IT","pt_BR","pt_BR","th_TH","nb_NO","ro_RO","tr_TR","bg_BG","da_DK","en_GB","el_GR","vi_VN","he_IL","hu_HU","fi_FI"];
         if (gengo_langs.indexOf(base.get_context()['lang']) !== -1){
@@ -33,6 +32,7 @@ website.TopBar.include({
             self.$('button[data-action=save]')
             .after(qweb.render('website.ButtonGengoTranslator'));
         }
+        this._super.apply(this, arguments);
     },
     translation_gengo_display:function(){
         var self = this;
@@ -57,29 +57,25 @@ website.TopBar.include({
                     dialog.$el.modal('hide');
                     self.$el.find('.gengo_post').addClass("hidden");
                     self.$el.find('.gengo_wait').removeClass("hidden");
-                    var trans ={}
+                    var trans = [];
                     $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
                         var $node = $(this);
                         var data = $node.data();
-                        if (!trans[data.oeTranslationViewId]) {
-                            trans[data.oeTranslationViewId] = [];
-                        }
-                        trans[data.oeTranslationViewId].push({
-                            initial_content: qweb.tools.html_escape(self.getInitialContent(this)),
-                            new_content: qweb.tools.html_escape(self.getInitialContent(this)),
+
+                        var val = ($node.is('img')) ? $node.attr('alt') : $node.text();
+                        trans.push({
+                            initial_content: qweb.tools.html_escape(val),
                             translation_id: data.oeTranslationId || null,
                             gengo_translation: gengo_service_level,
                             gengo_comment:"\nOriginal Page: " + document.URL
                         });
                     });
-                    ajax.jsonRpc('/website/set_translations', 'call', {
+                    ajax.jsonRpc('/website_gengo/set_translations', 'call', {
                         'data': trans,
                         'lang': base.get_context()['lang'],
                     }).then(function () {
-                        self.$el.find('.gengo_wait').addClass("hidden");
-                        self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
                         ajax.jsonRpc('/website/post_gengo_jobs', 'call', {});
-                        self.save();
+                        self.save_and_reload();
                     }).fail(function () {
                         alert("Could not Post translation");
                     });
@@ -96,7 +92,7 @@ website.TopBar.include({
     translation_gengo_info: function () {
         var repr =  $(document.documentElement).data('mainObject');
         var translated_ids = [];
-        $('.oe_translatable_text').not(".oe_translatable_inprogress").each(function(){
+        $('[data-oe-translation-state="translated"]').each(function () {
             translated_ids.push($(this).attr('data-oe-translation-id'));
         });
         ajax.jsonRpc('/website/get_translated_length', 'call', {
@@ -105,7 +101,6 @@ website.TopBar.include({
         }).done(function(res){
             var dialog = new GengoTranslatorStatisticDialog(res);
             dialog.appendTo($(document.body));
-
         });
     },
 });

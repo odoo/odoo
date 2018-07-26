@@ -5,14 +5,15 @@
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016,2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-13 12:39+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-04-20 11:38+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,13 +87,19 @@ msgid "Allow external users to sign up"
 msgstr "Toestaan dat externe gebruikers inloggen"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Er is een e-mail verzonden met informatie over het resetten van uw wachtwoord."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Er is al een gebruiker geregistreerd met dit e-mailadres."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authenticatie mislukt."
@@ -125,7 +132,13 @@ msgid "Connected"
 msgstr "Verbonden"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr "Het was niet mogelijk een nieuw account aan te maken."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
 msgstr "Uw wachtwoord kon niet reset worden"
@@ -177,7 +190,7 @@ msgid "Reset Password"
 msgstr "Stel wachtwoord opnieuw in"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Wachtwoord opnieuw instellen: ongeldige gebruikersnaam of e-mail"
@@ -190,7 +203,7 @@ msgstr "Verstuur wachtwoord reset instructies"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr "Verstuur een uitnodigings e-mail"
+msgstr "Verstuur een uitnodigingsmail"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login

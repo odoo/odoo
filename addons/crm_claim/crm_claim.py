@@ -171,8 +171,8 @@ class res_partner(osv.osv):
     def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
         Claim = self.pool['crm.claim']
         return {
-            partner_id: Claim.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)  
-            for partner_id in ids
+            partner_id.id: Claim.search_count(cr,uid, ['|', ('partner_id', 'in', partner_id.child_ids.ids), ('partner_id', '=', partner_id.id)], context=context)
+            for partner_id in self.pool['res.partner'].browse(cr, uid, ids, context=context)
         }
 
     _columns = {

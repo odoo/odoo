@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_theme_install_assets" inherit_id="web.assets_backend" name="Website Theme Install Assets">
+        <xpath expr="//link[last()]" position="after">
+            <link href="/website_theme_install/static/src/less/website_theme_install.less" rel="stylesheet" type="text/less"/>
+        </xpath>
+    </template>
+</odoo>

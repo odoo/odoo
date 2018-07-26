@@ -9,4 +9,4 @@ class sale_report(models.Model):
     margin = fields.Float('Margin')
 
     def _select(self):
-        return super(sale_report, self)._select() + ", SUM(l.margin) AS margin"
+        return super(sale_report, self)._select() + ", SUM(l.margin / COALESCE(cr.rate, 1.0)) as margin"

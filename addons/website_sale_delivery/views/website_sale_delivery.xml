@@ -9,8 +9,7 @@
                   <span class="col-xs-6 text-left text-muted">
                       <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-field-options='{
                               "widget": "monetary",
-                              "from_currency": "website_sale_order.currency_id",
-                              "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                              "display_currency": "website_sale_order.currency_id"
                           }'/>
                   </span>
             </div>

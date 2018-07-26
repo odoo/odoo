@@ -1,3 +1,10 @@
+odoo.define_section('eval.basics', ['web.pyeval'], function(test, mock) {
+    test('not prefix', function (assert) {
+        assert.ok(py.eval('not False'));
+        assert.ok(py.eval('not foo', {foo: false}));
+        assert.ok(py.eval('not a in b', {a: 3, b: [1, 2, 4, 8]}));
+    });
+});
 odoo.define_section('eval.types', ['web.pyeval'], function (test, mock) {
 
     function makeTimeCheck (assert, pyeval) {
@@ -529,7 +536,7 @@ odoo.define_section('eval.edc.nonliterals', ['web.pyeval', 'web.session'], funct
         var result = pyeval.sync_eval_domains_and_contexts({
             domains: [
                 [['type', '=', 'contract']],
-                { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["state", "=", "pending"]]],
+                { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["type", "=", "contract"], ["state", "=", "pending"]]],
                   "__eval_context": null,
                   "__ref": "compound_domain"
                 },
@@ -545,7 +552,8 @@ odoo.define_section('eval.edc.nonliterals', ['web.pyeval', 'web.session'], funct
         assert.deepEqual(result.domain, [
             ["type", "=", "contract"],
             "|", ["state", "in", ["open", "draft"]],
-                 ["state", "=", "pending"],
+                "&", ["type", "=", "contract"],
+                     ["state", "=", "pending"],
             "|",
                 "&", ["date", "!=", false],
                      ["date", "<=", today],

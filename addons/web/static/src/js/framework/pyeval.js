@@ -757,6 +757,12 @@ var wrapping_dict = py.type('wrapping_dict', null, {
     __getattr__: function (key) {
         return this.__getitem__(py.str.fromJSON(key));
     },
+    __len__: function () {
+        return Object.keys(this._store).length
+    },
+    __nonzero__: function () {
+        return py.PY_size(this) > 0 ? py.True : py.False;
+    },
     get: function () {
         var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
 
@@ -779,6 +785,12 @@ var wrapping_list = py.type('wrapping_list', null, {
     },
     __getitem__: function (index) {
         return wrap(this._store[index.toJSON()]);
+    },
+    __len__: function () {
+        return this._store.length;
+    },
+    __nonzero__: function () {
+        return py.PY_size(this) > 0 ? py.True : py.False;
     },
     fromJSON: function (ar) {
         var instance = py.PY_call(wrapping_list);
@@ -838,29 +850,60 @@ function eval_contexts (contexts, evaluation_context) {
 function eval_domains (domains, evaluation_context) {
     evaluation_context = _.extend(pycontext(), evaluation_context || {});
     var result_domain = [];
+    // Normalize only if the first domain is the array ["|"] or ["!"]
+    var need_normalization = (
+        domains &&
+        domains.length > 0 &&
+        domains[0].length === 1 &&
+        (domains[0][0] === "|" || domains[0][0] === "!")
+    );
     _(domains).each(function (domain) {
         if (_.isString(domain)) {
             // wrap raw strings in domain
             domain = { __ref: 'domain', __debug: domain };
         }
+        var domain_array_to_combine;
         switch(domain.__ref) {
         case 'domain':
             evaluation_context.context = evaluation_context;
-            result_domain.push.apply(
-                result_domain, py.eval(domain.__debug, wrap_context(evaluation_context)));
+            domain_array_to_combine = py.eval(domain.__debug, wrap_context(evaluation_context));
             break;
         case 'compound_domain':
             var eval_context = eval_contexts([domain.__eval_context]);
-            result_domain.push.apply(
-                result_domain, eval_domains(
-                    domain.__domains, _.extend(
-                        {}, evaluation_context, eval_context)));
+            domain_array_to_combine = eval_domains(
+                domain.__domains, _.extend({}, evaluation_context, eval_context)
+            );
             break;
         default:
-            result_domain.push.apply(result_domain, domain);
+            domain_array_to_combine = domain;
         }
+        if (need_normalization) {
+            domain_array_to_combine = get_normalized_domain(domain_array_to_combine);
+        }
+        result_domain.push.apply(result_domain, domain_array_to_combine);
     });
     return result_domain;
+}
+
+/**
+ * Returns a normalized copy of the given domain array. Normalization is
+ * is making the implicit "&" at the start of the domain explicit, e.g.
+ * [A, B, C] would become ["&", "&", A, B, C].
+ *
+ * @param {Array} domain_array
+ * @returns {Array} normalized copy of the given array
+ */
+function get_normalized_domain(domain_array) {
+    var expected = 1; // Holds the number of expected domain expressions
+    _.each(domain_array, function (item) {
+        if (item === "&" || item === "|") {
+            expected++;
+        } else if (item !== "!") {
+            expected--;
+        }
+    });
+    var new_explicit_ands = _.times(-expected, _.constant("&"));
+    return new_explicit_ands.concat(domain_array);
 }
 
 function eval_groupbys (contexts, evaluation_context) {
@@ -946,7 +989,7 @@ function eval_arg (arg) {
     case 'context': case 'compound_context':
         return pyeval('contexts', [arg]);
     default:
-        throw new Error(_t("Unknown nonliteral type " + arg.__ref));
+        throw new Error(_t("Unknown nonliteral type ") + ' ' + arg.__ref);
     }
 }
 

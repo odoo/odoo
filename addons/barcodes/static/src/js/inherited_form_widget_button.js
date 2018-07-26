@@ -15,7 +15,8 @@ var ButtonBarcodeHandlerMixin = _.extend({}, BarcodeHandlerMixin, {
             var self = this;
             this.on_barcode_scanned = function(barcode) {
                 var match = barcode.match(/O-BTN\.(.+)/);
-                if (match && match[1] === self.node.attrs.barcode_trigger && self.$el.is(':visible')) {
+                if (match && match[1] === self.node.attrs.barcode_trigger &&
+                    (self.$el.is(':visible') || self.$el.parent('.dropdown-menu'))) {
                     self.on_click();
                 }
             };

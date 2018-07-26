@@ -88,14 +88,14 @@
                         <div name="project"/>
                         <group name="main">
                             <group>
-                                <field name="account_type" invisible="1"/>
+                                <field name="code"/>
                                 <field name="partner_id"/>
                             </group>
                             <group>
-                                <field name="code"/>
                                 <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="company_id"/>
-                                <field name="currency_id"/>
+                                <field name="account_type"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             </group>
                         </group>
                         <notebook>
@@ -135,6 +135,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
+                    <filter string="Active" domain="[('account_type','=','normal')]" name="active"/>
                     <group expand="0" string="Group By...">
                         <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>
@@ -148,6 +149,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
+            <field name="context">{'search_default_active':1}</field>
             <field name="view_id" ref="view_account_analytic_account_list"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -160,7 +162,8 @@
             <field name="name">Analytic Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_account_analytic_account_search"/>
+            <field name="context">{'search_default_active':1}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -176,7 +179,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="account_id"/>
+                                <field name="account_id" domain="[('account_type', '=', 'normal')]"/>
                                 <field name="date"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>

@@ -3,14 +3,14 @@
 # * google_account
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-13 20:02+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"POT-Creation-Date: 2017-08-16 15:23+0000\n"
+"PO-Revision-Date: 2017-08-16 17:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,10 +54,40 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:98
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid"
+msgstr "Niečo sa pokazilo počas generovania vášho tokenu. Možno je váš autorizačný kód neplatný"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:37
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr "Niečo sa pokazilo počas generovania vášho tokenu. Možno je váš autorizačný kód neplatný alebo už expirovaný"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:128
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired [%s]"
+msgstr "Niečo sa pokazilo počas generovania vášho tokenu. Možno je váš autorizačný kód neplatný alebo už expirovaný [%s]"
+
+#. module: google_account
 #: code:addons/google_account/google_account.py:173
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Niečo sa pokazilo na vašej požiadavke na google"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:109
+#, python-format
+msgid "The account for the Google service '%s' is not configured"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service

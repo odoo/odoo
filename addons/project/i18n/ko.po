@@ -3,13 +3,14 @@
 # * project
 # 
 # Translators:
+# Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-30 02:53+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-01-24 01:08+0000\n"
+"Last-Translator: Jongkwan, Yeom <jongkwanyeom@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "- The Odoo Team"
-msgstr ""
+msgstr "- The Odoo Team"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -68,7 +69,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
-msgstr ""
+msgstr "2. 이제 <strong>필요한 프로젝트</strong>의 리스트를 만들어봅시다 :"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -94,7 +95,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 지금설치"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -104,7 +105,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> 웹사이트 라이브채팅"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -803,7 +804,7 @@ msgstr "적용"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -967,7 +968,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,help:project.field_project_project_use_tasks
 msgid "Check this box to manage internal activities through this project"
-msgstr ""
+msgstr "이 프로젝트를 통해 내부 활동을 관리하려면이 상자를 선택하십시오."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_use_timesheets
@@ -992,7 +993,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "클릭해서 새로운 태그를 추가합니다."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1046,7 +1047,7 @@ msgstr "회사"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr ""
+msgstr "회사 UOM"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1215,7 +1216,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer Service"
-msgstr ""
+msgstr "고객서비스"
 
 #. module: project
 #. openerp-web
@@ -1258,7 +1259,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr ""
+msgstr "알림"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_date
@@ -1357,6 +1358,13 @@ msgid "Development Process"
 msgstr ""
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:50
+#, python-format
+msgid "Discard"
+msgstr "폐기"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
 #: model:ir.model.fields,field_description:project.field_project_tags_display_name
@@ -1366,7 +1374,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "표시 이름"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
@@ -1537,6 +1545,13 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:web.tip,description:project.project_tip_3
+msgid ""
+"Every event on a task is logged in this section. Send a new message to "
+"notify followers or log an internal note."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
 msgstr "예제"
@@ -1621,13 +1636,13 @@ msgstr "팔로워"
 #: model:ir.model.fields,field_description:project.field_project_project_message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "팔로워"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "팔로워(파트너)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1876,13 +1891,6 @@ msgid "Implement"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_project_project_filter
-#: model:ir.ui.view,arch_db:project.view_task_kanban
-#: model:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Important Messages"
-msgstr ""
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
 msgstr ""
@@ -2089,7 +2097,7 @@ msgstr "최신 수정일"
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "최근 수정"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
@@ -2205,7 +2213,7 @@ msgstr "월"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "더 보기 <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2289,7 +2297,7 @@ msgstr "노트"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "알림"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
@@ -2596,6 +2604,12 @@ msgid "Project Tasks"
 msgstr "프로젝트 업무"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
+msgid "Project Time Unit"
+msgstr ""
+
+#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "프로젝트 업무"
@@ -2609,14 +2623,22 @@ msgstr "프로젝트 업무"
 #: code:addons/project/project.py:282
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
+#: model:ir.model.fields,field_description:project.field_project_project_project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.menu,name:project.portal_services_projects
+#: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
 #: model:ir.ui.view,arch_db:project.task_company
 #: model:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Projects"
 msgstr "프로젝트"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Projects using this stage"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_project_issue_sheet
@@ -2628,7 +2650,7 @@ msgstr "프로젝트 이슈/버그 관리에 작업표 지원을 제공합니다
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
 msgid "Rating"
-msgstr ""
+msgstr "평가"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2723,6 +2745,13 @@ msgid "Remaining Time"
 msgstr "잔여 시간"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:48
+#, python-format
+msgid "Remove Cover Image"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
 msgstr ""
@@ -2744,7 +2773,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "보고"
 
 #. module: project
 #. openerp-web
@@ -2793,6 +2822,13 @@ msgstr "검색"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
 msgstr "프로젝트 검색"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:46
+#, python-format
+msgid "Select"
+msgstr "선택하기"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2938,6 +2974,11 @@ msgid "Starting Date"
 msgstr "시작일"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2945,9 +2986,14 @@ msgid "Status"
 msgstr "상태"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
+msgid "Subscriptions"
+msgstr ""
+
+#. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "태그명이 이미 존재합니다."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3081,6 +3127,7 @@ msgstr "업무에 대한 업무의 작업"
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,field_description:project.field_project_project_task_count
+#: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_project_project_use_tasks
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
@@ -3271,6 +3318,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
@@ -3391,6 +3439,9 @@ msgstr "할당되지 않은 업무"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_unread
 #: model:ir.model.fields,field_description:project.field_project_task_message_unread
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+#: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
 msgstr "읽지 않은 메시지"
 
@@ -3398,7 +3449,7 @@ msgstr "읽지 않은 메시지"
 #: model:ir.model.fields,field_description:project.field_project_project_message_unread_counter
 #: model:ir.model.fields,field_description:project.field_project_task_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3525,7 +3576,7 @@ msgstr "웹사이트 대화 이력"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr ""
+msgstr "환영합니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3684,7 +3735,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr ""
+msgstr "이메일 보내기"
 
 #. module: project
 #: code:addons/project/project.py:569
@@ -3698,6 +3749,9 @@ msgid "to describe<br/> your experience or to suggest improvements !"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 msgid "unknown"
 msgstr "알 수 없음"

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-21 12:21+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-17 23:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +118,7 @@ msgstr "<p>Dear ${object.partner_name or 'applicant'},</p>\n        <p>Agradecem
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Reuniões</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -519,7 +519,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br/>\n"
+"Create email and url for each distinct source. <br>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
 msgstr ""
 
@@ -658,7 +658,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Display Interview Form"
-msgstr ""
+msgstr "Exibir Formulário de Entrevista"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_display_name
@@ -745,7 +745,7 @@ msgstr "Funcionário"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_employee_name
 msgid "Employee Name"
-msgstr ""
+msgstr "Nome do Funcionário"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_emp_id
@@ -767,7 +767,7 @@ msgstr "Excelente"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_expected_employee
 msgid "Expected Employee"
-msgstr ""
+msgstr "Funcionário Esperado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
@@ -897,6 +897,11 @@ msgid "HR Department"
 msgstr "Departamento de RH"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -961,13 +966,6 @@ msgid "Important"
 msgstr "Importante"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
-msgid "Important Messages"
-msgstr "Mensagens Importantes"
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
 msgstr "Qualificação inicial"
@@ -991,12 +989,12 @@ msgstr "Cargo"
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Campanha de Trabalho"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr ""
+msgstr "Id. do Trabalho"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
@@ -1011,12 +1009,12 @@ msgstr "Cargo"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr ""
+msgstr "Posição de Trabalho Criada"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr ""
+msgstr "Posição de Trabalho criada"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1127,11 +1125,6 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
 msgid "Mobile"
 msgstr "Telemóvel"
@@ -1177,17 +1170,17 @@ msgstr "Novo candidato"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr ""
+msgstr "Novos Candidatos"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
 msgid "New Application"
-msgstr ""
+msgstr "Novo Candidatura"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
 msgid "New Applications"
-msgstr ""
+msgstr "Novas Candidaturas"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:428
@@ -1233,7 +1226,7 @@ msgstr "Próximas ações"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "No Interview Form"
-msgstr ""
+msgstr "Nenhum Formulário de Entrevista"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:395
@@ -1363,8 +1356,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Política para enviar uma mensagem sobre o documento usando o MailGateway .\n- Todos : todos podem postar\n- Parceiros: parceiros apenas autenticados\n- Seguidores: apenas os seguidores do documento relacionado\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr "Política para enviar uma mensagem sobre o documento usando o MailGateway .\n- Todos : todos podem postar\n- Parceiros: parceiros apenas autenticados\n- Seguidores: apenas os seguidores do documento relacionado ou membros dos seguintes canais\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1649,7 +1642,7 @@ msgstr "Etapas"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start Recruitment"
-msgstr ""
+msgstr "Iniciar Recrutamento"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_5
@@ -1664,7 +1657,7 @@ msgstr "Assunto / Requerente"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_name
 msgid "Subject / Application Name"
-msgstr ""
+msgstr "Assunto / Nome do Candidato"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_survey
@@ -1799,6 +1792,9 @@ msgstr "Não atribuído"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "Mensagens por ler"
 

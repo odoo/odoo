@@ -3,7 +3,6 @@
 {
     'name': 'Indian Payroll',
     'category': 'Localization',
-    'website':'http://www.openerp.com',
     'depends': ['hr_payroll'],
     'version': '1.0',
     'description': """

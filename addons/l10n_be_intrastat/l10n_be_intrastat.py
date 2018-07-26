@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models
+from openerp import fields, models, api
 
 
 class account_invoice_line(models.Model):
@@ -65,6 +65,7 @@ class product_category(models.Model):
 
     intrastat_id = fields.Many2one('report.intrastat.code', 'Intrastat Code')
 
+    @api.multi
     def get_intrastat_recursively(self):
         """ Recursively search in categories to find an intrastat code id
         """
@@ -81,6 +82,7 @@ class product_product(models.Model):
     _name = "product.product"
     _inherit = "product.product"
 
+    @api.multi
     def get_intrastat_recursively(self):
         """ Recursively search in categories to find an intrastat code id
         """

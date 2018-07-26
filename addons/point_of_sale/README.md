@@ -87,15 +87,6 @@ your store's efficiency.
 No more hassle of having to integrate softwares: get all your sales and
 inventory operations automatically posted in your G/L.
 
-Self-checkout Interface
------------------------
-
-Reduce costs by limitting the number of required cashiers. The self-checkout
-mode allows customers to scan products and pay by themselves with a dedicated
-and super easy user interface.
-
-Use lights and sounds to control the checkout distantly.
-
 Unified Data Amongst All Shops
 ------------------------------
 

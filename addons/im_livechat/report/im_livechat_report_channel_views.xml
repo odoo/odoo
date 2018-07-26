@@ -35,7 +35,7 @@
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
                     <filter name="last_week" string="Last Week" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(weeks=1)).strftime('%%Y-%%m-%%d') )]"/>
                     <group expand="0" string="Group By...">
-                        <filter name="group_by_session" string="Session" domain="[]" context="{'group_by':'session_name'}"/>
+                        <filter name="group_by_session" string="Code" domain="[]" context="{'group_by':'technical_name'}"/>
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter name="group_by_operator" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />

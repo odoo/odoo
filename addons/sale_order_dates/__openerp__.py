@@ -5,7 +5,7 @@
 {
     'name': 'Dates on Sales Order',
     'version': '1.1',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'description': """
 Add additional date information to the sales order.
 ===================================================

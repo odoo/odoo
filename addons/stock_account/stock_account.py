@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
+from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api, models
 from openerp.exceptions import UserError
@@ -23,13 +24,77 @@ class stock_inventory(osv.osv):
             ctx['force_period_date'] = inv.accounting_date
         return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    @api.model
+    def _anglo_saxon_sale_move_lines(self, name, product, uom, qty, price_unit, currency=False, amount_currency=False, fiscal_position=False, account_analytic=False):
+        """Prepare dicts describing new journal COGS journal items for a product sale.
+
+        Returns a dict that should be passed to `_convert_prepared_anglosaxon_line()` to
+        obtain the creation value for the new journal items.
+
+        :param Model product: a product.product record of the product being sold
+        :param Model uom: a product.uom record of the UoM of the sale line
+        :param Integer qty: quantity of the product being sold
+        :param Integer price_unit: unit price of the product being sold
+        :param Model currency: a res.currency record from the order of the product being sold
+        :param Interger amount_currency: unit price in the currency from the order of the product being sold
+        :param Model fiscal_position: a account.fiscal.position record from the order of the product being sold
+        :param Model account_analytic: a account.account.analytic record from the line of the product being sold
+        """
+
+        if product.type == 'product' and product.valuation == 'real_time':
+            accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            # debit account dacc will be the output account
+            dacc = accounts['stock_output'].id
+            # credit account cacc will be the expense account
+            cacc = accounts['expense'].id
+            if dacc and cacc:
+                return [
+                    {
+                        'type': 'src',
+                        'name': name[:64],
+                        'price_unit': price_unit,
+                        'quantity': qty,
+                        'price': price_unit * qty,
+                        'currency_id': currency and currency.id,
+                        'amount_currency': amount_currency,
+                        'account_id': dacc,
+                        'product_id': product.id,
+                        'uom_id': uom.id,
+                        'account_analytic_id': account_analytic and account_analytic.id,
+                    },
+
+                    {
+                        'type': 'src',
+                        'name': name[:64],
+                        'price_unit': price_unit,
+                        'quantity': qty,
+                        'price': -1 * price_unit * qty,
+                        'currency_id': currency and currency.id,
+                        'amount_currency': -1 * amount_currency,
+                        'account_id': cacc,
+                        'product_id': product.id,
+                        'uom_id': uom.id,
+                        'account_analytic_id': account_analytic and account_analytic.id,
+                    },
+                ]
+        return []
+
+    def _get_anglo_saxon_price_unit(self, uom=False):
+        price = self.standard_price
+        if not uom or self.uom_id.id == uom.id:
+            return price
+        return self.uom_id._compute_price(self.uom_id.id, price, to_uom_id=uom.id)
+
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        return self.product_id.standard_price
+        return self.product_id._get_anglo_saxon_price_unit(uom=self.uom_id)
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
@@ -67,64 +132,16 @@ class account_invoice(osv.osv):
         res: The move line entries produced so far by the parent move_line_get.
         """
         inv = i_line.invoice_id
-        company_currency = inv.company_id.currency_id.id
+        company_currency = inv.company_id.currency_id
+        price_unit = i_line._get_anglo_saxon_price_unit()
+        if inv.currency_id != company_currency:
+            currency = inv.currency_id
+            amount_currency = i_line._get_price(inv, company_currency.id, i_line, price_unit)
+        else:
+            currency = False
+            amount_currency = False
 
-        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
-            fpos = i_line.invoice_id.fiscal_position_id
-            accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
-            # debit account dacc will be the output account
-            dacc = accounts['stock_output'].id
-            # credit account cacc will be the expense account
-            cacc = accounts['expense'].id
-            if dacc and cacc:
-                price_unit = i_line._get_anglo_saxon_price_unit()
-                return [
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit': price_unit,
-                        'quantity': i_line.quantity,
-                        'price': self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
-                        'account_id':dacc,
-                        'product_id':i_line.product_id.id,
-                        'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
-                    },
-
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit': price_unit,
-                        'quantity': i_line.quantity,
-                        'price': -1 * self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
-                        'account_id':cacc,
-                        'product_id':i_line.product_id.id,
-                        'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
-                    },
-                ]
-        return []
-
-    def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
-        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date,
-                                                                    description, journal_id, context=context)
-        #for anglo-saxon accounting
-        if invoice.company_id.anglo_saxon_accounting and invoice.type == 'in_invoice':
-            fiscal_position = self.pool.get('account.fiscal.position')
-            for dummy, dummy, line_dict in invoice_data['invoice_line_ids']:
-                if line_dict.get('product_id'):
-                    product = self.pool.get('product.product').browse(cr, uid, line_dict['product_id'], context=context)
-                    counterpart_acct_id = product.property_stock_account_output and \
-                            product.property_stock_account_output.id
-                    if not counterpart_acct_id:
-                        counterpart_acct_id = product.categ_id.property_stock_account_output_categ_id and \
-                                product.categ_id.property_stock_account_output_categ_id.id
-                    if counterpart_acct_id:
-                        fpos = invoice.fiscal_position_id or False
-                        line_dict['account_id'] = fiscal_position.map_account(cr, uid,
-                                                                              fpos,
-                                                                              counterpart_acct_id)
-        return invoice_data
+        return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id)
 
 
 #----------------------------------------------------------
@@ -233,10 +250,41 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
+        if move.company_id.anglo_saxon_accounting and move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'customer':
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            ctx = context.copy()
+            ctx['force_company'] = move.company_id.id
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
+            self._create_account_move_line(cr, uid, quants, move, acc_src, acc_dest, journal_id, context=ctx)
+
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
+        quant_obj = self.pool.get('stock.quant')
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, [quant], move, context)
+
+            # If the precision required for the variable quant cost is larger than the accounting
+            # precision, inconsistencies between the stock valuation and the accounting entries
+            # may arise.
+            # For example, a box of 13 units is bought 15.00. If the products leave the
+            # stock one unit at a time, the amount related to the cost will correspond to
+            # round(15/13, 2)*13 = 14.95. To avoid this case, we split the quant in 12 + 1, then
+            # record the difference on the new quant.
+            # We need to make sure to able to extract at least one unit of the product. There is
+            # an arbitrary minimum quantity set to 2.0 from which we consider we can extract a
+            # unit and adapt the cost.
+            curr_rounding = move.company_id.currency_id.rounding
+            cost_rounded = float_round(quant.cost, precision_rounding=curr_rounding)
+            cost_correct = cost_rounded
+            if float_compare(quant.product_id.uom_id.rounding, 1.0, precision_digits=1) == 0\
+                    and float_compare(quant.qty * quant.cost, quant.qty * cost_rounded, precision_rounding=curr_rounding) != 0\
+                    and float_compare(quant.qty, 2.0, precision_rounding=quant.product_id.uom_id.rounding) >= 0:
+                qty = quant.qty
+                cost = quant.cost
+                quant_correct = quant_obj._quant_split(cr, uid, quant, quant.qty - 1.0, context=context)
+                cost_correct += (qty * cost) - (qty * cost_rounded)
+                quant_obj.write(cr, SUPERUSER_ID, [quant.id], {'cost': cost_rounded}, context=context)
+                quant_obj.write(cr, SUPERUSER_ID, [quant_correct.id], {'cost': cost_correct}, context=context)
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
@@ -252,7 +300,7 @@ class stock_quant(osv.osv):
 
         :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
         :returns: journal_id, source account, destination account, valuation account
-        :raise: osv.except_osv() is any mandatory account or journal is not defined.
+        :raise: openerp.exceptions.UserError if any mandatory account or journal is not defined.
         """
         product_obj = self.pool.get('product.template')
         accounts = product_obj.browse(cr, uid, move.product_id.product_tmpl_id.id, context).get_product_accounts()
@@ -300,7 +348,10 @@ class stock_quant(osv.osv):
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         #check that all data is correct
         if move.company_id.currency_id.is_zero(valuation_amount):
-            raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
+            if move.product_id.cost_method == 'standard':
+                raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
+            else:
+                return []
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -337,12 +388,13 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            date = context.get('force_period_date', move.date)
-            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
-                                      'line_ids': move_lines,
-                                      'date': date,
-                                      'ref': move.picking_id.name}, context=context)
-            move_obj.post(cr, uid, [new_move], context=context)
+            if move_lines:
+                date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
+                new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
+                                          'line_ids': move_lines,
+                                          'date': date,
+                                          'ref': move.picking_id.name}, context=context)
+                move_obj.post(cr, uid, [new_move], context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
@@ -368,7 +420,7 @@ class stock_move(osv.osv):
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
-        if any([q.qty <= 0 for q in move.quant_ids]):
+        if any([q.qty <= 0 for q in move.quant_ids]) or move.product_qty == 0:
             #if there is a negative quant, the standard price shouldn't be updated
             return
         #Note: here we can't store a quant.cost directly as we may have moved out 2 units (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the average valuation price we are storing we will valuate it at 6€
@@ -395,12 +447,14 @@ class stock_move(osv.osv):
                 else:
                     tmpl_dict[product_id] = 0
                     product_avail = qty_available
+                # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
+                price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
                 if product_avail <= 0:
-                    new_std_price = move.price_unit
+                    new_std_price = price_unit
                 else:
                     # Get the standard price
                     amount_unit = product.standard_price
-                    new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                    new_std_price = ((amount_unit * product_avail) + (price_unit * move.product_qty)) / (product_avail + move.product_qty)
                 tmpl_dict[product_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 ctx = dict(context or {}, force_company=move.company_id.id)

@@ -11,7 +11,7 @@
 {
     'name': 'Colombian - Accounting',
     'version': '0.8',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': 'Colombian Accounting and Tax Preconfiguration',
     'author': 'David Arnold BA HSG (devCO)',
     'depends': [

@@ -3,12 +3,13 @@
 # * google_calendar
 # 
 # Translators:
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-09 17:26+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:28+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +23,7 @@ msgstr ""
 msgid ""
 "<br/> You can now click on <b>'Create Client ID'</b>\n"
 "                                    <br/><br/>"
-msgstr ""
+msgstr "<br/> Sedaj lahko kliknete na <b>'Ustvari ID odjemalca'</b>\n                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -132,7 +133,7 @@ msgstr "Povežite se s svojim google računom in nadaljujte"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikaz naziva"
 
 #. module: google_calendar
 #. openerp-web
@@ -179,6 +180,15 @@ msgstr "Tajna šifra Google odjemalca"
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
 msgstr "Google ID mora biti unikaten!"
+
+#. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:718
+#, python-format
+msgid ""
+"Google is lost... the next synchro will be a full synchro. \n"
+"\n"
+" %s"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -326,6 +336,12 @@ msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr "Preusmerjeni boste na Google, da boste pooblastili dostop do svojega koledarja!"
 
 #. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:298
+#, python-format
+msgid "Your token is invalid or has been revoked !"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
@@ -338,4 +354,4 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"

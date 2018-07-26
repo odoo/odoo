@@ -4,7 +4,7 @@
 import logging
 import sets
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 
 _logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ class barcode_rule(models.Model):
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule, self)._get_type_selection())
         types.update([
-            ('credit', 'Credit Card')
+            ('credit', _('Credit Card'))
         ])
         return list(types)
 
@@ -36,7 +36,7 @@ class account_bank_statement_line(models.Model):
     mercury_card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     mercury_ref_no = fields.Char(string='Mercury reference number', help='Payment reference number from Mercury Pay')
     mercury_record_no = fields.Char(string='Mercury record number', help='Payment record number from Mercury Pay')
-    mercury_invoice_no = fields.Integer(string='Mercury invoice number', help='Invoice number from Mercury Pay')
+    mercury_invoice_no = fields.Float(string='Mercury invoice number', help='Invoice number from Mercury Pay')
 
     @api.one
     def _compute_prefixed_card_number(self):

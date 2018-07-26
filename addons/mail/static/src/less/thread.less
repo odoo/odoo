@@ -1,6 +1,7 @@
 @mail-thread-avatar-size: 36px;
 @mail-thread-icon-opacity: 0.6;
 @mail-thread-side-date-opacity: 0.6;
+@mail-thread-note: @gray-lighter;
 
 .o_mail_thread {
     .o_thread_show_more {
@@ -8,7 +9,8 @@
     }
 
     .o_thread_date_separator {
-        margin-bottom: 15px;
+        margin-top: 15px;
+        margin-bottom: 30px;
         border-bottom: solid @gray-lighter 2px;
         text-align: center;
 
@@ -23,6 +25,7 @@
     }
 
     .o_thread_new_messages_separator {
+        margin-bottom: 15px;
         border-bottom: solid lighten(@odoo-brand-primary, 15%) 1px;
         text-align: right;
         .o_thread_separator_label {
@@ -37,7 +40,8 @@
 
     .o_thread_message {
         .o-flex-display();
-        padding: 4px 0;
+        padding: 4px @odoo-horizontal-padding;
+        margin-bottom: 0px;
 
         .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
@@ -66,7 +70,7 @@
             }
         }
 
-        i.o_thread_message_star, i.o_thread_message_needaction  {
+        i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply  {
             cursor: pointer;
             opacity: 0;
             &.fa-star {
@@ -80,7 +84,7 @@
                 opacity: @mail-thread-side-date-opacity;
             }
 
-            i.o_thread_message_star, i.o_thread_message_needaction {
+            i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
@@ -94,6 +98,13 @@
 
         .o_thread_message_core {
             .o-flex(1, 1, auto);
+            min-width: 0;
+            max-width: 100%;
+            word-wrap: break-word;
+
+            &.o_mail_note {
+                background-color: @gray-lighter;
+            }
 
             .o_mail_subject {
                 font-style: italic;
@@ -104,11 +115,23 @@
                 color: gray;
             }
 
-            > p {
+            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+                display: none;
+            }
+
+            p {
                 margin: 0 0 9px; // Required by the old design to override a general rule on p's
                 &:last-child {
                     margin-bottom: 0;
                 }
+            }
+            a {
+                display: inline-block;
+                word-break: break-all;
+            }
+
+            .o_mail_body_long {
+                display: none;
             }
 
             .o_mail_info {
@@ -119,8 +142,17 @@
                 }
             }
 
-            .o_thread_message_star, .o_thread_message_needaction {
+            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply {
                 padding: 4px;
+            }
+        }
+
+        &.o_message_expanded .o_thread_message_core {
+            .o_mail_body_short {
+                display: none;
+            }
+            .o_mail_body_long {
+                display: block;
             }
         }
     }
@@ -128,5 +160,9 @@
         margin-top: 20px;
         margin-bottom: 20px;
         font-size: 20px;
+    }
+
+    .o_mail_no_content {
+        .o-webclient-padding();
     }
 }

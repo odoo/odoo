@@ -5,7 +5,7 @@
 {
     'name': 'CRM',
     'version': '1.0',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales',
     'sequence': 5,
     'summary': 'Leads, Opportunities, Activities',
     'description': """

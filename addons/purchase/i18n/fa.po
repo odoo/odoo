@@ -3,13 +3,14 @@
 # * purchase
 # 
 # Translators:
+# Hamed Mohammadi <hamed@dehongi.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-22 14:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-11-27 15:11+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -31,7 +32,7 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -76,7 +77,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -85,7 +86,7 @@ msgid ""
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;RFQ date: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -251,7 +252,7 @@ msgstr "اقدام مورد نیاز است"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
 msgid "Add Purchase Order"
-msgstr ""
+msgstr "اضافه کردن سفارش خرید"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
@@ -461,6 +462,11 @@ msgid "Click to define a new product."
 msgstr ""
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_1
+msgid "Click to mark products as received."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr ""
@@ -487,7 +493,7 @@ msgstr "شرکت"
 #: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "نگارش ایمیل"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -508,7 +514,7 @@ msgstr "تایید سفارش"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Confirm purchase orders in one step"
-msgstr ""
+msgstr "تایید سفارش خرید در یک گام"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
@@ -519,7 +525,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "کنترل رسیدهای خرید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_costing_method
@@ -554,7 +560,7 @@ msgstr "تاریخ موافقت"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report_date
@@ -593,6 +599,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
 msgid "Description"
 msgstr "توصیف"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
@@ -652,7 +663,7 @@ msgstr "تاریخ قابل توقع"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "فیلترهای بسط یافته"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -669,16 +680,21 @@ msgstr "دنبال‌کنندگان"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "پیروان (کانال ها)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "پیروان (شرکاء)"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
+msgstr ""
+
+#. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_3
+msgid "Get all the shipments related to this order."
 msgstr ""
 
 #. module: purchase
@@ -700,6 +716,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_id
 msgid "ID"
 msgstr "شناسه"
+
+#. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_2
+msgid ""
+"If a product has been broken or damaged during the transport, you can scrap "
+"it with this button."
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -739,7 +762,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "محموله ی در حال آمدن"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_picking_in_search_picking_inherit
@@ -756,7 +779,7 @@ msgstr ""
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "شرایط تجاری بین‌المللی یک سری شرایط از پیش تعریف شده است که در معاملات بین‌المللی مورد استفاده قرار می‌گیرد"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
@@ -921,7 +944,7 @@ msgstr "فاکتور نشده"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Not purchased"
-msgstr ""
+msgstr "خریداری نشده"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -931,12 +954,12 @@ msgstr "یادداشت‌ها"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "تعداد اقدامات"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread_counter
@@ -956,7 +979,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "باز کردن منوی خرید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
@@ -1017,12 +1040,12 @@ msgstr "همکار"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "کشور همکار"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "کشورهای همکار"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
@@ -1034,7 +1057,7 @@ msgstr "شرط پرداخت"
 #: model:ir.model.fields,field_description:purchase.field_product_product_property_account_creditor_price_difference
 #: model:ir.model.fields,field_description:purchase.field_product_template_property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "قیمت حساب های متفاوقت"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
@@ -1096,7 +1119,7 @@ msgstr "تعداد محصول"
 #: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "قالب محصول"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
@@ -1136,6 +1159,11 @@ msgstr "کالاها فقط یک واحد اندازه‌گیری دارند(س�
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
+msgid "Published"
 msgstr ""
 
 #. module: purchase
@@ -1501,6 +1529,11 @@ msgid "Taxes"
 msgstr "مالیات ها"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr ""
@@ -1564,7 +1597,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
-msgstr ""
+msgstr "برای موافقت"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_total
@@ -1691,7 +1724,7 @@ msgstr "مالیات ارزش‌افزوده:"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr ""
+msgstr "تامین کننده"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -1727,6 +1760,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_mail_mail_website_published
+msgid "Visible on the website as a comment"
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
 msgstr ""
@@ -1745,7 +1783,7 @@ msgstr "پیام‌های وب‌سایت"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -1775,11 +1813,22 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "حساب.پیکربندی.تنظیمات"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
+msgstr "خرید.پیکربندی.تنظیمات"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_description
+msgid "unknown"
 msgstr ""

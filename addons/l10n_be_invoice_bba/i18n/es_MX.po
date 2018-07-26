@@ -3,12 +3,13 @@
 # * l10n_be_invoice_bba
 # 
 # Translators:
+# David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:56+0000\n"
-"PO-Revision-Date: 2015-09-08 05:27+0000\n"
+"POT-Creation-Date: 2017-01-27 11:40+0000\n"
+"PO-Revision-Date: 2017-01-28 09:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -18,14 +19,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:29
+#, python-format
+msgid "BBA Structured Communication"
+msgstr ""
+
+#. module: l10n_be_invoice_bba
 #: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_partner_out_inv_comm_algorithm
 msgid "Communication Algorithm"
-msgstr ""
+msgstr "Algoritmo de Comunicación"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,field_description:l10n_be_invoice_bba.field_res_partner_out_inv_comm_type
 msgid "Communication Type"
-msgstr ""
+msgstr "Tipo de Comunicación"
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
@@ -38,17 +45,23 @@ msgid "Date"
 msgstr "Fecha"
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:149
+#: code:addons/l10n_be_invoice_bba/invoice.py:150
 #, python-format
 msgid ""
 "Empty BBA Structured Communication!\n"
 "Please fill in a unique BBA Structured Communication."
+msgstr "¡Vaciar BBA Comunicación Estructurado! \nPor favor, rellene un BBA Comunicación Estructurado único."
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:28
+#, python-format
+msgid "Free Communication"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "¡ Comunicación Estructurada de BBA no válida !"
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model,name:l10n_be_invoice_bba.model_account_invoice
@@ -70,12 +83,12 @@ msgstr ""
 msgid ""
 "Select Algorithm to generate the Structured Communication on Outgoing "
 "Invoices."
-msgstr ""
+msgstr "Seleccione el algoritmo para generar la comunicación estructurada sobre facturas salientes."
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_partner_out_inv_comm_type
 msgid "Select Default Communication Type for Outgoing Invoices."
-msgstr ""
+msgstr "Seleccionar Tipo de Comunicación por Omisión para Facturas Salientes"
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:158
@@ -84,7 +97,7 @@ msgstr ""
 msgid ""
 "The BBA Structured Communication has already been used!\n"
 "Please create manually a unique BBA Structured Communication."
-msgstr ""
+msgstr "¡La Comunicación BBA estructurada ya se ha utilizado! \nPor favor, cree manualmente un Comunicación Estructurado BBA único."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:102
@@ -101,7 +114,7 @@ msgstr ""
 msgid ""
 "The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\n"
 "Please create manually a unique BBA Structured Communication."
-msgstr ""
+msgstr "¡El máximo diario de facturas salientes con una comunicación generada automáticamente BBA estructurados se ha superado! \nPor favor, cree manualmente una Comunicación Estructurado BBA único."
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:130

@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from openerp import http, SUPERUSER_ID
+from openerp.addons.mass_mailing.controllers.main import MassMailController
 from openerp.http import request
 
 
-class MassMailController(http.Controller):
+class MassMailController(MassMailController):
 
-    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='none')
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
             if mailing.mailing_model == 'mail.mass_mailing.contact':
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', 'ilike', email)])
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
                 return request.website.render('website_mass_mailing.page_unsubscribe', {
                     'contacts': contacts,
                     'email': email,
                     'mailing_id': mailing_id})
             else:
-                mailing.update_opt_out(mailing_id, email, [res_id], True)
+                super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
                 return request.website.render('website_mass_mailing.page_unsubscribed')
 
     @http.route(['/mail/mailing/unsubscribe'], type='json', auth='none')
@@ -50,8 +51,12 @@ class MassMailController(http.Controller):
     def subscribe(self, list_id, email, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Contacts = request.registry['mail.mass_mailing.contact']
+        parsed_email = Contacts.get_name_email(email, context=context)[1]
 
-        contact_ids = Contacts.search_read(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], ['opt_out'], context=context)
+        contact_ids = Contacts.search_read(
+            cr, SUPERUSER_ID,
+            [('list_id', '=', int(list_id)), ('email', '=', parsed_email)],
+            ['opt_out'], context=context)
         if not contact_ids:
             Contacts.add_to_list(cr, SUPERUSER_ID, email, int(list_id), context=context)
         else:

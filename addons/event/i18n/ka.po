@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-11-04 12:01+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-01-19 11:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
 "MIME-Version: 1.0\n"
@@ -51,8 +51,8 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
 msgstr ""
 
 #. module: event
@@ -410,7 +410,7 @@ msgstr ""
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "გაუქმებულია"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
@@ -536,6 +536,13 @@ msgid "Course Summary"
 msgstr ""
 
 #. module: event
+#: model:web.tip,description:event.event_tip_1
+msgid ""
+"Create and manage registrations for this event, send emails to attendees and"
+" print identification badges."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
 #: model:ir.model.fields,field_description:event.field_event_event_create_uid
@@ -560,7 +567,7 @@ msgstr "შექმნის თარიღი"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_create_date
 msgid "Creation Date"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #. module: event
 #: code:addons/event/models/event.py:378
@@ -572,7 +579,7 @@ msgstr "კლიენტი"
 #: code:addons/event/models/event.py:376
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "კლიენტის ელ. ფოსტა"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_message_last_post
@@ -643,7 +650,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -714,7 +721,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event"
-msgstr ""
+msgstr "მოვლენა"
 
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
@@ -890,7 +897,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
 #: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "მიმდევრები"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
@@ -1020,12 +1027,6 @@ msgid "Immediately"
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
-msgid "Important Messages"
-msgstr ""
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1110,7 +1111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_message_last_post
 #: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "ბოლო შეტყობინების თარიღი"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -1122,7 +1123,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ბოლოს განახლებულია"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1228,13 +1229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration_message_ids
 msgid "Messages"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr ""
+msgstr "მესიჯები"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
@@ -1544,7 +1539,7 @@ msgstr "ანგარიშგებები"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Requirements"
-msgstr ""
+msgstr "მოთხოვნები"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
@@ -1555,7 +1550,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_user_id
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
-msgstr ""
+msgstr "პასუხისმგებელი"
 
 #. module: event
 #: model:res.groups,name:event.group_email_scheduling
@@ -1620,7 +1615,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr ""
+msgstr "დაწყების თარიღი"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
@@ -1687,7 +1682,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "ბილეთები"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
@@ -1761,6 +1756,8 @@ msgstr "შეუზღუდავი"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_unread
 #: model:ir.model.fields,field_description:event.field_event_registration_message_unread
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "წაუკითხავი შეტყობინებები"
 

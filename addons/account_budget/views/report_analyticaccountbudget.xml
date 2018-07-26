@@ -32,6 +32,8 @@
                                 <th class="text-right">Planned Amt</th>
                                 <th class="text-right">Practical Amt</th>
                                 <th class="text-right">Perc(%)</th>
+                                <th class="text-right">Start date</th>
+                                <th class="text-right">End Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,6 +44,8 @@
                                     <td class="text-right"><strong t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
                                     <td class="text-right"><strong t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
                                     <td class="text-right"><strong t-esc="formatLang(line['perc'], digits=2)"/> %</td>
+                                    <td class="text-right"><strong t-esc="formatLang(line.get('date_from') or '', date=True)"/></td>
+                                    <td class="text-right"><strong t-esc="formatLang(line.get('date_to') or '', date=True)"/></td>
                                 </tr>
                                 <tr t-if="line['status'] != 1">
                                     <td><span style="color: white;" t-esc="'.....'*(line['status'] - 1)"/><span t-esc="line['name']"/></td>

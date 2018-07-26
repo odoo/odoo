@@ -150,7 +150,7 @@ var BuildingBlock = Widget.extend({
                     return $from.closest(selector, parentNode);
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : $(selector);
+                    return $from ? cssFind($from, selector) : $(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -173,14 +173,30 @@ var BuildingBlock = Widget.extend({
                     });
                 },
                 all: is_children ? function ($from) {
-                    return ($from || self.$editable).find(selector);
+                    return cssFind($from || self.$editable, selector);
                 } : function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    $from = $from || self.$editable;
+                    return $from.filter(selector).add(cssFind($from, selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
                 }
             };
+        }
+
+        /**
+         * jQuery find function behavior is:
+         *      $('A').find('A B') <=> $('A A B')
+         * The searches behavior to find options' DOM needs to be
+         *      $('A').find('A B') <=> $('A B')
+         * This is what this function does.
+         *
+         * @param {jQuery} $from - the jQuery element(s) from which to search
+         * @param {string} selector - the CSS selector to match
+         * @returns {jQuery}
+         */
+        function cssFind($from, selector) {
+            return $from.find('*').filter(selector);
         }
     },
 
@@ -663,7 +679,7 @@ var BuildingBlock = Widget.extend({
                         animation.start(true, $target);
 
                         self.call_for_all_snippets($target, function (editor, $snippet) {
-                            editor.drop_and_build_snippet();
+                            _.defer(function () { editor.drop_and_build_snippet(); });
                         });
                         self.create_snippet_editor($target);
                         self.cover_target($target.data('overlay'), $target);
@@ -683,12 +699,10 @@ var BuildingBlock = Widget.extend({
         var self = this;
         $snippet.add(globalSelector.all($snippet)).each(function () {
             var $snippet = $(this);
-            setTimeout(function () {
-                self.create_snippet_editor($snippet);
-                if ($snippet.data("snippet-editor")) {
-                    callback.call(self, $snippet.data("snippet-editor"), $snippet);
-                }
-            });
+            self.create_snippet_editor($snippet);
+            if ($snippet.data("snippet-editor")) {
+                callback.call(self, $snippet.data("snippet-editor"), $snippet);
+            }
         });
     },
 
@@ -961,17 +975,25 @@ var Editor = Class.extend({
     },
     _drag_and_drop_stop: function (){
         var self = this;
-        var $dropzone = this.$target.prev();
-        var prev = $dropzone.length && $dropzone[0].previousSibling;
+
+        $(".oe_drop_zone").droppable('destroy').remove();
+
+        var prev = this.$target.first()[0].previousSibling;
         var next = this.$target.last()[0].nextSibling;
         var $parent = this.$target.parent();
 
-        $(".oe_drop_clone").after(this.$target);
+        var $clone = $(".oe_drop_clone");
+        if (prev === $clone[0]) {
+            prev = $clone[0].previousSibling;
+        } else if (next === $clone[0]) {
+            next = $clone[0].nextSibling;
+        }
+        $clone.after(this.$target);
 
         this.$overlay.removeClass("hidden");
         $("body").removeClass('move-important');
-        $('.oe_drop_zone').droppable('destroy').remove();
-        $(".oe_drop_clone, .oe_drop_to_remove").remove();
+        $clone.remove();
+        $(".oe_drop_to_remove").remove();
 
         if (this.dropped) {
             this.buildingBlock.parent.rte.historyRecordUndo(this.$target);

@@ -2,6 +2,7 @@
 
 import babel.dates
 import time
+import re
 import werkzeug.urls
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -162,6 +163,14 @@ class website_event(http.Controller):
         if '.' not in page:
             page = 'website_event.%s' % page
 
+        try:
+            request.website.get_template(page)
+        except ValueError:
+            # page not found
+            values['path'] = re.sub(r"^website_event\.", '', page)
+            values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
+            page = 'website.page_404'
+
         return request.website.render(page, values)
 
     @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True)
@@ -244,7 +253,7 @@ class website_event(http.Controller):
     def registration_new(self, event, **post):
         tickets = self._process_tickets_details(post)
         if not tickets:
-            return request.redirect("/event/%s" % slug(event))
+            return False
         return request.website._render("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
     def _process_registration_details(self, details):
@@ -277,7 +286,7 @@ class website_event(http.Controller):
                     Registration._prepare_attendee_values(cr, uid, registration),
                     context=context))
 
-        attendees = Registration.browse(cr, uid, registration_ids, context=context)
+        attendees = Registration.browse(cr, uid, registration_ids, context=context).sudo()
         return request.website.render("website_event.registration_complete", {
             'attendees': attendees,
             'event': event,

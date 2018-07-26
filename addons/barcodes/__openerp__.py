@@ -1,7 +1,7 @@
 {
     'name': 'Barcodes',
     'version': '2.0',
-    'category': 'Hidden/Dependency',
+    'category': 'Extra Tools',
     'summary': 'Barcodes Scanning and Parsing',
     'description': """
 This module adds support for barcode scanning and parsing.

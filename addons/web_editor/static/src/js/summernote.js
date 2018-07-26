@@ -19,6 +19,57 @@ var editor = eventHandler.modules.editor;
 var renderer = $.summernote.renderer;
 var options = $.summernote.options;
 
+// Browser-unify execCommand
+var oldJustify = {};
+_.each(['Left', 'Right', 'Full', 'Center'], function (align) {
+    oldJustify[align] = editor['justify' + align];
+    editor['justify' + align] = function ($editable, value) {
+        // Before calling the standard function, check all elements which have
+        // an 'align' attribute and mark them with their value
+        var $align = $editable.find('[align]');
+        _.each($align, function (el) {
+            var $el = $(el);
+            $el.data('__align', $el.attr('align'));
+        });
+
+        // Call the standard function
+        oldJustify[align].apply(this, arguments);
+
+        // Then:
+
+        // Remove the text-align of elements which lost the 'align' attribute
+        var $newAlign = $editable.find('[align]');
+        $align.not($newAlign).css('text-align', '');
+
+        // Transform the 'align' attribute into the 'text-align' css
+        // property for elements which received the 'align' attribute or whose
+        // 'align' attribute changed
+        _.each($newAlign, function (el) {
+            var $el = $(el);
+
+            var oldAlignValue = $align.data('__align');
+            var alignValue = $el.attr('align');
+            if (oldAlignValue === alignValue) {
+                // If the element already had an 'align' attribute and that it
+                // did not changed, do nothing (compatibility)
+                return;
+            }
+
+            $el.removeAttr('align');
+            $el.css('text-align', alignValue);
+
+            // Note the first step (removing the text-align of elemnts which
+            // lost the 'align' attribute) is kinda the same as this one, but
+            // this one handles the elements which have been edited with chrome
+            // or with this new system
+            $el.find('*').css('text-align', '');
+        });
+
+        // Unmark the elements
+        $align.removeData('__align');
+    };
+});
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Add method to Summernote*/
 
@@ -134,7 +185,7 @@ dom.hasProgrammaticStyle = function (node) {
 };
 dom.mergeFilter = function (prev, cur, parent) {
     // merge text nodes
-    if (prev && (dom.isText(prev) || ("H1 H2 H3 H4 H5 H6 LI P".indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
+    if (prev && (dom.isText(prev) || (['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'P'].indexOf(prev.tagName) !== -1 && prev !== cur.parentNode)) && dom.isText(cur)) {
         return true;
     }
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
@@ -144,13 +195,13 @@ dom.mergeFilter = function (prev, cur, parent) {
         return true;
     }
     if (prev && !dom.isBR(prev) && dom.isEqual(prev, cur) &&
-        ((prev.tagName && window.getComputedStyle(prev).display === "inline" &&
-          cur.tagName && window.getComputedStyle(cur).display === "inline"))) {
+        ((prev.tagName && dom.getComputedStyle(prev).display === "inline" &&
+          cur.tagName && dom.getComputedStyle(cur).display === "inline"))) {
         return true;
     }
     if (dom.isEqual(parent, cur) &&
-        ((parent.tagName && window.getComputedStyle(parent).display === "inline" &&
-          cur.tagName && window.getComputedStyle(cur).display === "inline"))) {
+        ((parent.tagName && dom.getComputedStyle(parent).display === "inline" &&
+          cur.tagName && dom.getComputedStyle(cur).display === "inline"))) {
         return true;
     }
     if (parent && cur.tagName === "FONT" && (!cur.firstChild || (!cur.attributes.getNamedItem('style') && !cur.className.length))) {
@@ -377,7 +428,7 @@ dom.removeSpace = function (node, begin, so, end, eo) {
 
             if (cur === begin) add = true;
 
-            if (cur.tagName && cur.tagName !== "SCRIPT" && cur.tagName !== "STYLE" && window.getComputedStyle(cur).whiteSpace !== "pre") {
+            if (cur.tagName && cur.tagName !== "SCRIPT" && cur.tagName !== "STYLE" && dom.getComputedStyle(cur).whiteSpace !== "pre") {
                 __remove_space(cur);
             }
 
@@ -550,6 +601,13 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
         so = 0;
         eo = 1;
     }
+
+    var parentNode = sc && sc.parentNode;
+    if (parentNode && sc.tagName === 'BR') {
+        sc = parentNode;
+        ec = parentNode;
+    }
+
     return {
         sc: sc,
         so: so,
@@ -558,13 +616,15 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     };
 };
 dom.indent = function (node) {
-    var margin = parseFloat(node.style.marginLeft || 0)+1.5;
-    node.style.marginLeft = margin + "em";
+    var style = dom.isCell(node) ? 'paddingLeft' : 'marginLeft';
+    var margin = parseFloat(node.style[style] || 0)+1.5;
+    node.style[style] = margin + "em";
     return margin;
 };
 dom.outdent = function (node) {
-    var margin = parseFloat(node.style.marginLeft || 0)-1.5;
-    node.style.marginLeft = margin > 0 ? margin + "em" : "";
+    var style = dom.isCell(node) ? 'paddingLeft' : 'marginLeft';
+    var margin = parseFloat(node.style[style] || 0)-1.5;
+    node.style[style] = margin > 0 ? margin + "em" : "";
     return margin;
 };
 dom.scrollIntoViewIfNeeded = function (node) {
@@ -592,7 +652,7 @@ dom.scrollIntoViewIfNeeded = function (node) {
                 // get if a parent have a scrollbar
                 parent = node.parentNode;
                 while (parent != offsetParent &&
-                    (parent.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(parent).overflowY) === -1)) {
+                    (parent.tagName === "BODY" || ["auto", "scroll"].indexOf(dom.getComputedStyle(parent).overflowY) === -1)) {
                     parent = parent.parentNode;
                 }
                 node = parent;
@@ -605,7 +665,7 @@ dom.scrollIntoViewIfNeeded = function (node) {
                 offsetParent = node.offsetParent;
             }
 
-            if ((node.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(node).overflowY) !== -1) &&
+            if ((node.tagName === "BODY" || ["auto", "scroll"].indexOf(dom.getComputedStyle(node).overflowY) !== -1) &&
                 (node.scrollTop + node.clientHeight) < (elY + elH)) {
                 node.scrollTop = (elY + elH) - node.clientHeight;
             }
@@ -643,10 +703,16 @@ dom.isRemovableEmptyNode = function (node) {
 dom.isForbiddenNode = function (node) {
     return node.tagName === "BR" || $(node).is(".fa, img");
 };
-dom.listBetween = function (sc, ec) {
+/**
+ * @todo 'so' and 'eo' were added as a bugfix and are not given everytime. They
+ * however should be as the function may be wrong without them (for example,
+ * when asking the list between an element and its parent, as there is no path
+ * from the beginning of the former to the beginning of the later).
+ */
+dom.listBetween = function (sc, ec, so, eo) {
     var nodes = [];
     var ancestor = dom.commonAncestor(sc, ec);
-    dom.walkPoint({'node': sc, 'offset': 0}, {'node': ec, 'offset': 0}, function (point) {
+    dom.walkPoint({'node': sc, 'offset': so || 0}, {'node': ec, 'offset': eo || 0}, function (point) {
         if (ancestor !== point.node || ancestor === sc || ancestor === ec) {
             nodes.push(point.node);
         }
@@ -676,6 +742,13 @@ dom.isFont = function (node) {
 dom.isVisibleText = function (textNode) {
   return !!textNode.textContent.match(/\S|\u00A0/);
 };
+
+/* avoid thinking HTML comment are visible */
+var old_isVisiblePoint = dom.isVisiblePoint;
+dom.isVisiblePoint = function (point) {
+  return point.node.nodeType !== 8 && old_isVisiblePoint.apply(this, arguments);
+};
+
 /**
  * order the style of the node to compare 2 nodes and remove attribute if empty
  *
@@ -703,7 +776,7 @@ dom.orderStyle = function (node) {
  * @return {String} className
  */
 dom.orderClass = function (node) {
-    var className = node.getAttribute('class');
+    var className = node.getAttribute && node.getAttribute('class');
     if (!className) return null;
     className = className.replace(/[\s\n\r]+/, ' ').replace(/^ | $/g, '').replace(/ +/g, ' ');
     if (!className.length) {
@@ -745,6 +818,11 @@ dom.moveContent = function (from, to) {
     }
   }
 };
+
+dom.getComputedStyle = function (node) {
+    return node.nodeType == Node.COMMENT_NODE ? {} : window.getComputedStyle(node);
+};
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -814,46 +892,82 @@ range.WrappedRange.prototype.reRange = function (keep_end, isNotBreakable) {
 
     return new range.WrappedRange(sc, so, ec, eo);
 };
-// isOnImg: judge whether range is an image node or not
+/**
+ * Returns the image the range is in or matches (if any, false otherwise).
+ *
+ * @todo this implementation may not cover all corner cases but should do the
+ * trick for all reproductible ones
+ * @returns {DOMElement|boolean}
+ */
 range.WrappedRange.prototype.isOnImg = function () {
+    // If not a selection but a cursor position, just check if a point's
+    // ancestor is an image or not
+    if (this.sc === this.ec && this.so === this.eo) {
+        return dom.ancestor(this.sc, dom.isImg);
+    }
+
+    var startPoint = {node: this.sc, offset: this.so};
+    var endPoint = {node: this.ec, offset: this.eo};
+
     var nb = 0;
     var image;
-    var startPoint = {node: this.sc.childNodes.length && this.sc.childNodes[this.so] || this.sc};
-    startPoint.offset = startPoint.node === this.sc ? this.so : 0;
-    var endPoint = {node: this.ec.childNodes.length && this.ec.childNodes[this.eo] || this.ec};
-    endPoint.offset = endPoint.node === this.ec ? this.eo : 0;
-
-    if (dom.isImg(startPoint.node)) {
-        nb ++;
-        image = startPoint.node;
-    }
+    var textNode;
     dom.walkPoint(startPoint, endPoint, function (point) {
-        if (!dom.isText(endPoint.node) && point.node === endPoint.node && point.offset === endPoint.offset) {
+        // If the element has children (not a text node and not empty node),
+        // the element cannot be considered as selected (these children will
+        // be processed to determine that)
+        if (dom.hasChildren(point.node)) {
             return;
         }
-        var node = point.node.childNodes.length && point.node.childNodes[point.offset] || point.node;
-        var offset = node === point.node ? point.offset : 0;
-        var isImg = dom.ancestor(node, dom.isImg);
-        if (!isImg && ((!dom.isBR(node) && !dom.isText(node)) || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
+
+        // Check if an ancestor of the current point is an image
+        var pointImg = dom.ancestor(point.node, dom.isImg);
+        var isText = dom.isText(point.node);
+
+        // Check if a visible element is selected, i.e.
+        // - If an ancestor of the current is an image we did not see yet
+        // - If the point is not in a br or a text (so a node with no children)
+        // - If the point is in a non empty text node we already saw
+        if (pointImg ?
+            (image !== pointImg) :
+            ((!dom.isBR(point.node) && !isText) || (textNode === point.node && point.node.textContent.match(/\S|\u00A0/)))) {
             nb++;
         }
-        if (isImg && image !== isImg) {
-            image = isImg;
-            nb ++;
+
+        // If an ancestor of the current point is an image, then save it as the
+        // image we are looking for
+        if (pointImg) {
+            image = pointImg;
+        }
+        // If the current point is a text node save it as the last text node
+        // seen (if we see it again, this might mean it is selected)
+        if (isText) {
+            textNode = point.node;
         }
     });
+
     return nb === 1 && image;
 };
 range.WrappedRange.prototype.deleteContents = function (towrite) {
-    var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    if (this.sc === this.ec && this.so === this.eo) {
+        return this;
+    }
 
-    $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-    return new range.WrappedRange(
-      prevBP.sc,
-      prevBP.so,
-      prevBP.ec,
-      prevBP.eo
-    );
+    var r;
+    var image = this.isOnImg();
+    if (image) {
+        // If the range matches/is in an image, then the image is to be removed
+        // and the cursor moved to its previous position
+        var parentNode = image.parentNode;
+        var index = _.indexOf(parentNode.childNodes, image);
+        parentNode.removeChild(image);
+        r = new range.WrappedRange(parentNode, index, parentNode, index);
+    } else {
+        r = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    }
+
+    $(dom.node(r.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
+    return new range.WrappedRange(r.sc, r.so, r.ec, r.eo);
 };
 range.WrappedRange.prototype.clean = function (mergeFilter, all) {
     var node = dom.node(this.sc === this.ec ? this.sc : this.commonAncestor());
@@ -922,12 +1036,19 @@ $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDi
   var dimension = sDim.split('x');
   var r = range.create();
   if (!r) return;
-  r = r.deleteContents();
+  r = r.deleteContents(true);
 
-  var isBodyContainer = dom.isBodyContainer;
-  dom.isBodyContainer = dom.isNotBreakable;
-  r.insertNode(editor.table.createTable(dimension[0], dimension[1]));
-  dom.isBodyContainer = isBodyContainer;
+  var table = editor.table.createTable(dimension[0], dimension[1]);
+  var parent = r.sc;
+  while (dom.isText(parent.parentNode) || dom.isRemovableEmptyNode(parent.parentNode)) {
+    parent = parent.parentNode;
+  }
+  var node = dom.splitTree(parent, {'node': r.sc, 'offset': r.so}) || r.sc;
+  node.parentNode.insertBefore(table, node);
+
+  if ($(node).text() === '' || node.textContent === '\u00A0') {
+    node.parentNode.removeChild(node);
+  }
 
   editor.afterCommand($editable);
   event.preventDefault();
@@ -938,9 +1059,10 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
     $editable.data('NoteHistory').recordUndo($editable, 'tab');
     var r = range.create();
     var outdent = outdent || false;
+    event.preventDefault();
 
-        if (r && r.isCollapsed()) {
-        if (r.isOnCell() && r.isOnCellFirst()) {
+    if (r && (dom.ancestor(r.sc, dom.isCell) || dom.ancestor(r.ec, dom.isCell))) {
+        if (r.isCollapsed() && r.isOnCell() && r.isOnCellFirst()) {
             var td = dom.ancestor(r.sc, dom.isCell);
             if (!outdent && !dom.nextElementSibling(td) && !dom.nextElementSibling(td.parentNode)) {
                 var last = dom.lastChild(td);
@@ -951,10 +1073,10 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             } else {
                 editor.table.tab(r, outdent);
             }
-            event.preventDefault();
-            return false;
+        } else {
+            $.summernote.pluginEvents.indent(event, editor, layoutInfo, outdent);
         }
-
+    } else if (r && r.isCollapsed()) {
         if (!r.sc.textContent.slice(0,r.so).match(/\S/) && r.isOnList()) {
             if (outdent) {
                 $.summernote.pluginEvents.outdent(event, editor, layoutInfo);
@@ -981,11 +1103,8 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
                 next.textContent = next.textContent.replace(/^(\u00A0)+/g, '');
                 range.create(r.sc, r.sc.textContent.length, r.sc, r.sc.textContent.length).select();
             }
-            event.preventDefault();
-            return false;
         }
     }
-    event.preventDefault();
     return false;
 };
 $.summernote.pluginEvents.untab = function (event, editor, layoutInfo) {
@@ -1050,14 +1169,9 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         }
     }
 
+    var node = dom.node(r.sc);
     var exist = r.sc.childNodes[r.so] || r.sc;
-    var node = dom.node(exist);
     exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
-    var last = node;
-    while (node && dom.isSplitable(node) && !dom.isList(node)) {
-        last = node;
-        node = node.parentNode;
-    }
 
     // table: add a tr
     var td = dom.ancestor(node, dom.isCell);
@@ -1071,7 +1185,15 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         dom.scrollIntoViewIfNeeded(br);
         event.preventDefault();
         return false;
-    } else if (last === node && !dom.isBR(node)) {
+    }
+
+    var last = node;
+    while (node && dom.isSplitable(node) && !dom.isList(node)) {
+        last = node;
+        node = node.parentNode;
+    }
+
+    if (last === node && !dom.isBR(node)) {
         node = r.insertNode(br, true);
         if (isFormatNode(last.firstChild) && $(last).closest(options.styleTags.join(',')).length) {
             dom.moveContent(last.firstChild, last);
@@ -1108,7 +1230,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         $(node).html(br);
         node = br;
     } else {
-        node = dom.splitTree(last, {'node': r.sc, 'offset': r.so});
+        node = dom.splitTree(last, {'node': r.sc, 'offset': r.so}) || r.sc;
         if (!contentBefore) {
             var cur = dom.node(dom.lastChild(node.previousSibling));
             if (!dom.isBR(cur)) {
@@ -1142,9 +1264,9 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     if (!r) return;
 
     if (!r.isCollapsed()) {
-        if (dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) {
+        if ((dom.isCell(dom.node(r.sc)) || dom.isCell(dom.node(r.ec))) && dom.node(r.sc) !== dom.node(r.ec)) {
             remove_table_content(r);
-            r = range.create(r.ec, 0).select();
+            r = range.create(r.ec, 0);
         } else {
             r = r.deleteContents(true);
         }
@@ -1191,7 +1313,7 @@ function summernote_keydown_clean (field) {
 
 function remove_table_content(r) {
     var ancestor = r.commonAncestor();
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     if (dom.isText(r.sc)) {
         r.sc.textContent = r.sc.textContent.slice(0, r.so);
     }
@@ -1214,7 +1336,6 @@ function remove_table_content(r) {
                 node.parentNode && !$(node.parentNode).hasClass('o_editable'));
         }
     }
-    event.preventDefault();
     return false;
 }
 
@@ -1344,7 +1465,7 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
         r = range.create(temp2, 0);
         r.select();
 
-        if ((dom.isText(temp) || window.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || window.getComputedStyle(temp2).display === "inline")) {
+        if ((dom.isText(temp) || dom.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || dom.getComputedStyle(temp2).display === "inline")) {
             if (dom.isText(temp2)) {
                 temp2.textContent = temp2.textContent.replace(/^\s*\S/, '');
             } else {
@@ -1491,7 +1612,7 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         r = range.create(temp2, temp2.textContent.length, temp2, temp2.textContent.length);
         r.select();
 
-        if ((dom.isText(temp) || window.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || window.getComputedStyle(temp2).display === "inline")) {
+        if ((dom.isText(temp) || dom.getComputedStyle(temp).display === "inline") && (dom.isText(temp2) || dom.getComputedStyle(temp2).display === "inline")) {
             if (dom.isText(temp2)) {
                 temp2.textContent = temp2.textContent.replace(/\S\s*$/, '');
             } else {
@@ -1713,7 +1834,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
         dom.merge(parent, start, 0, end, 1, null, true);
     }
     function indentOther (p, start, end) {
-        if (p === start || $.contains(p, start)) {
+        if (p === start || $.contains(p, start) || $.contains(start, p)) {
             flag = true;
         }
         if (flag) {
@@ -1723,7 +1844,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
                 dom.indent(p);
             }
         }
-        if (p === end || $.contains(p, end)) {
+        if (p === end || $.contains(p, end) || $.contains(end, p)) {
             flag = false;
         }
     }
@@ -1732,14 +1853,17 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var $dom = $(ancestor);
 
     if (!dom.isList(ancestor)) {
-        $dom = $(ancestor).children();
+        $dom = $(dom.node(ancestor)).children();
     }
     if (!$dom.length) {
-        $dom = $(dom.ancestor(r.sc, dom.isList));
+        $dom = $(dom.ancestor(r.sc, dom.isList) || dom.ancestor(r.sc, dom.isCell));
         if (!$dom.length) {
             $dom = $(r.sc).closest(options.styleTags.join(','));
         }
     }
+
+    // if select tr, take the first td
+    $dom = $dom.map(function () { return this.tagName === "TR" ? dom.firstElementChild(this) : this; });
 
     $dom.each(function () {
         if (flag || $.contains(this, r.sc)) {
@@ -1749,7 +1873,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
                 } else {
                     indentUL(this, r.sc, r.ec);
                 }
-            } else if (isFormatNode(this)) {
+            } else if (isFormatNode(this) || dom.ancestor(this, dom.isCell)) {
                 indentOther(this, r.sc, r.ec);
             }
         }
@@ -1811,7 +1935,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     }
 
     // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
@@ -1896,6 +2020,14 @@ eventHandler.modules.editor.currentStyle = function(target) {
         var r = range.create();
         if(r)
             styleInfo.image = r.isOnImg();
+    }
+    // Fix when the target is a link: the text-align buttons state should
+    // indicate the alignment of the link in the parent, not the text inside
+    // the link (which is not possible to customize with summernote). Summernote fixed
+    // this in their newest version... by just not showing the active button
+    // for alignments.
+    if (styleInfo.anchor) {
+        styleInfo['text-align'] = $(styleInfo.anchor).parent().css('text-align');
     }
     return styleInfo;
 }
@@ -2015,7 +2147,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         }
         if (size) {
           font.style.fontSize = "inherit";
-          if (!isNaN(size) && Math.abs(parseInt(window.getComputedStyle(font).fontSize, 10)-size)/size > 0.05) {
+          if (!isNaN(size) && Math.abs(parseInt(dom.getComputedStyle(font).fontSize, 10)-size)/size > 0.05) {
             font.style.fontSize = size + "px";
           }
         }
@@ -2287,112 +2419,16 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function summernote_paste (event) {
-
-    // keep norma feature if copy a picture
-    var clipboardData = event.originalEvent.clipboardData;
-    if (clipboardData.items) {
-        var item = list.last(clipboardData.items);
-        var isClipboardImage = item.kind === 'file' && item.type.indexOf('image/') !== -1;
-        if (isClipboardImage) {
-            return true;
-        }
-    }
-
-    if (["INPUT", "TEXTAREA"].indexOf(event.target.tagName) !== -1) {
-        return;
-    }
-
-    $(event.target).trigger('content_changed');
-
-    var r = range.create();
-    if (!r.isCollapsed()) {
-        r = r.deleteContents();
-        r.select();
-    }
-
-    var html = clipboardData.getData("text/html");
-    var $node = $('<div/>').html(html);
-
-    /* 
-        remove undesirable tag
-        filter classes and style attributes
-        remove undesirable attributes
-    */
-    $node.find('meta, script, style').remove();
-    $node.find('*').each(function() {
-        var $node = $(this);
-
-        if ($(this).attr('style')) {
-            var style = _.filter($(this).attr('style').split(/\s*;\s*/), function (style) {
-                    return /width|height|color|background-color|font-weight|text-align|font-style|text-decoration/i.test(style) && $node.css(style.split(':')[0]) !== $('body').css(style.split(':')[0]);
-                }).join(';');
-            if (style.length) {
-                $node.attr('style', style);
-            } else {
-                $node.removeAttr('style');
-            }
-        }
-
-        if ($(this).attr('class')) {
-            var classes = _.filter($(this).attr('class').split(/\s+/), function (style) {
-                    return /(^|\s)(fa|pull|text|bg)(\s|-|$)/.test(style);
-                }).join(' ');
-            if (classes.length) {
-                $node.attr('class', classes);
-            } else {
-                $node.removeAttr('class');
-            }
-        }
-    }).removeAttr('title', 'alt', 'id', 'contenteditable');
-
-    /*
-        remove unless span
-    */
-    $node.find('span:not([class]):not([style])').each(function () {
-        $(this).replaceWith($(this).contents());
-    });
-
-    /*
-        reset architecture HTML node and add <p> tag
-    */
-    var $arch = $('<div><p/></div>');
-    var $last = $arch.find('p');
-    $node.contents().each(function () {
-        if (dom.isBR(this)) {
-            $(this).remove();
-            $last = $('<p/>');
-            $arch.append($last);
-        } else if (/h[0-9]+|li|table|p/i.test(this.tagName)) {
-            $last = $('<p/>');
-            $arch.append(this).append($last);
-        } else {
-            $last.append(this);
-        }
-    });
-    $last.filter(':empty').remove();
-
-    /*
-        insert content
-    */
-    window.document.execCommand('insertHTML', false,  $arch.html());
-
-    event.preventDefault();
-    return false;
-}
-
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_attach.call(this, oLayoutInfo, options);
-    $(document).off("paste", summernote_paste).on("paste",'[contenteditable]', summernote_paste);
     $editable.on("scroll", summernote_table_scroll);
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
     var $editable = oLayoutInfo.editor().hasClass('note-editable') ? oLayoutInfo.editor() : oLayoutInfo.editor().find('.note-editable');
     fn_detach.call(this, oLayoutInfo, options);
-    $(document).off("paste", summernote_paste);
     $editable.off("scroll", summernote_table_scroll);
     $('.o_table_handler').remove();
 };

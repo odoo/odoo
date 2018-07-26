@@ -36,7 +36,6 @@
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter name="group_by_operator" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
-                        <filter name="group_by_hour" string="Creation date (hour)" domain="[]" context="{'group_by':'start_date_hour'}"/>
                         <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'start_date:day'}"/>
                         <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'start_date:week'}"/>
                         <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'start_date:month'}" />

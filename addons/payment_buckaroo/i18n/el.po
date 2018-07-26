@@ -1,0 +1,114 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_buckaroo
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2017-12-31 15:04+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:132
+#, python-format
+msgid "; multiple order found"
+msgstr ", βρέθηκαν πολλαπλές παραγγελίες"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:130
+#, python-format
+msgid "; no order found"
+msgstr ", δεν βρέθηκε παραγγελία"
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,cancel_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Άκυρο,</i> Η πληρωμή σας έχει ακυρωθεί.</span>"
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,done_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Ολοκληρώθηκε,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Ευχαριστούμε για την παραγγελία σας.</span>"
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,error_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Σφάλμα,</i> Έχετε υπ 'όψιν ότι παρουσιάστηκε κάποιο σφάλμα κατά τη διάρκεια της συναλλαγής. Η παραγγελία έχει επιβεβαιωθεί, αλλά δεν θα μπορεί να πληρωθεί. Μην διστάσετε να επικοινωνήσετε μαζί μας αν έχετε απορίες σχετικά με την κατάσταση της παραγγελίας σας.</span>"
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,pending_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Εν αναμονή,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Αλλά η παραγγελία σας δεν έχει επικυρωθεί ακόμη.</span>"
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,name:payment_buckaroo.payment_acquirer_buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:140
+#, python-format
+msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
+msgstr "Buckaroo: μη έγκυρη υπογραφή sha, λήφθηκε %s, υπολογισμένο %s, για τα δεδομένα %s"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:128
+#, python-format
+msgid "Buckaroo: received data for reference %s"
+msgstr "Buckaroo: λήφθηκαν δεδομένα αναφοράς %s"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/buckaroo.py:122
+#, python-format
+msgid ""
+"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
+"shasign (%s)"
+msgstr "Buckaroo: λήφθηκαν δεδομένα αλλά λείπει η αναφορά (%s) ή pay_id (%s) ή υπογραφή sha (%s)"
+
+#. module: payment_buckaroo
+#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
+msgid "How to configure your Buckaroo account?"
+msgstr "Πως να ρυθμίσετε τον Buckaroo λογαριασμό σας;"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Αποδέκτης Πληρωμής"
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Συναλλαγή Πληρωμής"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+msgid "SecretKey"
+msgstr "SecretKey"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+msgid "WebsiteKey"
+msgstr "WebsiteKey"
+
+#. module: payment_buckaroo
+#: model:payment.acquirer,pre_msg:payment_buckaroo.payment_acquirer_buckaroo
+msgid ""
+"You will be redirected to the Buckaroo website after clicking on the payment"
+" button."
+msgstr "Θα μεταφερθείτε στην ιστοσελίδα Buckaroo όταν κάνετε κλικ στο κουμπί πληρωμής."

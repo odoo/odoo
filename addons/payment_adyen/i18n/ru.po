@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:17+0000\n"
+"PO-Revision-Date: 2017-03-25 03:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -21,25 +21,25 @@ msgstr ""
 #: code:addons/payment_adyen/models/adyen.py:123
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; найден многократный заказ"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:121
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; заказ не найден"
 
 #. module: payment_adyen
 #: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Отмена,</i> Ваш платеж был отменен.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr ""
+msgstr "<span><i>Выполнено,</i> Ваш онлайн платеж был успешно обработан. Спасибо за ваш заказ.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
@@ -47,37 +47,37 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
+msgstr "<span><i>Ошибка,</i> Обратите внимание, что во время операции возникла ошибка. Заказ был подтвержден, но не будет оплачен. Обращайтесь к нам, если у вас есть какие-либо вопросы о состоянии вашего заказа.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr ""
+msgstr "<span><i>В ожидании,</i> Ваш онлайн платеж был успешно обработан. Но ваш заказ еще не подтвержден.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:169
 #, python-format
 msgid "Adyen: feedback error"
-msgstr ""
+msgstr "Adyen: Ошибка Обратная связь"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:131
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr ""
+msgstr "Adyen: недопустимый merchantSig, получил %s, вычисленный %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:119
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr ""
+msgstr "Adyen: получил данные для ссылки %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:112
@@ -85,17 +85,17 @@ msgstr ""
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
-msgstr ""
+msgstr "Adyen: полученные данные с отсутствующей ссылкой (%s) или отсутствует pspReference (%s)"
 
 #. module: payment_adyen
 #: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr ""
+msgstr "Как настроить учетную запись Adyen?"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
 msgid "Merchant Account"
-msgstr ""
+msgstr "Мерчант аккаунт"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
@@ -110,16 +110,16 @@ msgstr "Операция Оплаты"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
 msgid "Skin Code"
-msgstr ""
+msgstr "Код кожи"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
 msgid "Skin HMAC Key"
-msgstr ""
+msgstr "Ключ HMAC кожи"
 
 #. module: payment_adyen
 #: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "После нажатия кнопки оплаты вы будете перенаправлены на сайт Adyen."

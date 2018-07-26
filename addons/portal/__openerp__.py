@@ -8,7 +8,7 @@
         'base',
         'auth_signup',
     ],
-    'category': 'Portal',
+    'category': 'Extra Tools',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
 ================================================================================

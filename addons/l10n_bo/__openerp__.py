@@ -5,7 +5,7 @@
 
 {
     "name": "Bolivia - Accounting",
-    "version": "1.0",
+    "version": "2.0",
     "description": """
 Bolivian accounting chart and tax localization.
 
@@ -14,7 +14,7 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
     """,
     "author": "Cubic ERP",
     "website": "https://cubicERP.com",
-    "category": "Localization/Account Charts",
+    'category': 'Localization',
     "depends": ["account"],
     "data": [
         "l10n_bo_chart.xml",

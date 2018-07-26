@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-22 14:19+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-10-18 14:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
 msgid "# Analytic Rules"
-msgstr ""
+msgstr "قوانین تحلیلی"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
@@ -120,6 +120,11 @@ msgstr "مقدار"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
 msgstr ""
 
 #. module: delivery
@@ -224,6 +229,7 @@ msgstr "لغو"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "پیک"
@@ -263,7 +269,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
 msgid "Color Index"
-msgstr ""
+msgstr "رنگ پس زمینه"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
@@ -278,7 +284,7 @@ msgstr "شرط"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "کنترل رسیدهای خرید"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -358,7 +364,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
@@ -388,6 +394,11 @@ msgstr ""
 #: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
 msgstr "تحویل"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier Search"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -534,12 +545,12 @@ msgstr "دنبال‌کنندگان"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "پیروان (کانال ها)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "پیروان (شرکاء)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -582,6 +593,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
 msgid "Gross Weight"
 msgstr "وزن ناخالص"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -702,7 +718,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "خط مشی صدور فاکتور"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
@@ -804,11 +820,6 @@ msgid "Messages"
 msgstr "پیام‌ها"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
-msgid "Messages and communication history"
-msgstr "پیام‌ها و تاریخچه ارتباط"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
 msgstr ""
@@ -851,7 +862,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "تعداد اقدامات"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -861,7 +872,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
@@ -903,13 +914,14 @@ msgstr "قیمت"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Price Computation"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "قیمت حساب های متفاوقت"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -955,7 +967,7 @@ msgstr "مشخصه های محصول"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
 msgid "Product Email Template"
-msgstr ""
+msgstr "قالب ایمیل محصول"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
@@ -976,7 +988,7 @@ msgstr ""
 #: model:ir.model,name:delivery.model_product_template
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "قالب محصول"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
@@ -1017,6 +1029,7 @@ msgstr "واحد اندازه گیری خرید"
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
 msgid "Quantity"
 msgstr "تعداد"
 
@@ -1051,6 +1064,11 @@ msgstr "رسید"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
 msgstr ""
 
 #. module: delivery
@@ -1129,7 +1147,7 @@ msgid "Set price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:88
+#: code:addons/delivery/models/stock_picking.py:90
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr ""
@@ -1363,7 +1381,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "سرویس ردگیری"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
@@ -1464,7 +1482,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr ""
+msgstr "تامین کننده"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
@@ -1557,6 +1575,14 @@ msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
 "this template. The customer will receive an email for each product linked to"
 " an email template."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
 msgstr ""
 
 #. module: delivery

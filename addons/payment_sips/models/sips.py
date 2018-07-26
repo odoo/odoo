@@ -1,5 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 
+# Copyright 2015 Eezee-It
+
 import json
 import logging
 from hashlib import sha256
@@ -38,8 +40,8 @@ class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
     # Fields
     sips_merchant_id = fields.Char('SIPS API User Password',
-                                   required_if_provider='sips')
-    sips_secret = fields.Char('SIPS Secret', size=64, required_if_provider='sips')
+                                   required_if_provider='sips', groups='base.group_user')
+    sips_secret = fields.Char('SIPS Secret', size=64, required_if_provider='sips', groups='base.group_user')
 
     # Methods
     def _get_sips_urls(self, environment):

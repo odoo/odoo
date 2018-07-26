@@ -2,7 +2,8 @@
   Create demo bank statement
 -
   !python {model: ir.model.data} : |
-      journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank')])
+      default_company = self.pool.get('res.company')._company_default_get(cr, uid, 'account.journal')
+      journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'bank'), ('company_id', '=', default_company)], limit=1)
       import time
       if journal_id:
           journal_id = journal_id[0]
@@ -11,7 +12,6 @@
               'date': time.strftime('%Y')+'-01-01',
               'name': "BNK/2014/001",
               'balance_end_real': '8998.2',
-              'company_id': ref('base.main_company'),
               'balance_start': 5103.0
           }
           self._update(cr, uid, 'account.bank.statement', 'account', vals, 'demo_bank_statement_1')
@@ -19,7 +19,6 @@
               'ref': '',
               'statement_id': ref('account.demo_bank_statement_1'),
               'sequence': 1,
-              'company_id': ref('base.main_company'),
               'name': "SAJ/2014/002 and SAJ/2014/003",
               'journal_id': journal_id,
               'amount': 1175.0,
@@ -31,7 +30,6 @@
               'ref': '',
               'statement_id': ref('account.demo_bank_statement_1'),
               'sequence': 2,
-              'company_id': ref('base.main_company'),
               'name': "Bank fees",
               'journal_id': journal_id,
               'amount': -32.58,
@@ -42,7 +40,6 @@
               'ref': '',
               'statement_id': ref('account.demo_bank_statement_1'),
               'sequence': 3,
-              'company_id': ref('base.main_company'),
               'name': "Prepayment",
               'journal_id': journal_id,
               'amount': 650.0,
@@ -54,7 +51,6 @@
               'ref': '',
               'statement_id': ref('account.demo_bank_statement_1'),
               'sequence': 4,
-              'company_id': ref('base.main_company'),
               'name': "First 2000 € of SAJ/2014/001",
               'journal_id': journal_id,
               'amount': 2000.0,
@@ -66,7 +62,6 @@
               'ref': '',
               'statement_id': ref('account.demo_bank_statement_1'),
               'sequence': 5,
-              'company_id': ref('base.main_company'),
               'name': "Last Year Interests",
               'journal_id': journal_id,
               'amount': 102.78,

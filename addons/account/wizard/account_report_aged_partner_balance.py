@@ -30,7 +30,7 @@ class AccountAgedTrialBalance(models.TransientModel):
         start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
 
         for i in range(5)[::-1]:
-            stop = start - relativedelta(days=period_length)
+            stop = start - relativedelta(days=period_length - 1)
             res[str(i)] = {
                 'name': (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
                 'stop': start.strftime('%Y-%m-%d'),

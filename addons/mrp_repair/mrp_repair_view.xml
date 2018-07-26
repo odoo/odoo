@@ -168,7 +168,7 @@
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="price_unit"/>
-                                <field name="tax_id" domain="[('parent_id', '=', False), ('type_tax_use', '=', 'purchase')]" widget="many2many_tags"/>
+                                <field name="tax_id" domain="[('type_tax_use', '=', 'sale')]" widget="many2many_tags"/>
                                 <field name="to_invoice"/>
                                 <field name="price_subtotal" widget="monetary"/>
                             </tree>

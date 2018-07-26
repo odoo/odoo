@@ -95,7 +95,7 @@ CREATE TABLE ir_module_module (
     website character varying(256),
     summary character varying(256),
     name character varying(128) NOT NULL,
-    author character varying(128),
+    author character varying,
     icon varchar,
     state character varying(16),
     latest_version character varying(64),

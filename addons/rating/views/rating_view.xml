@@ -16,7 +16,7 @@
                     <field name="feedback"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_global_click">
                                 <a t-att-href="_.str.sprintf('/web?#id=%s&amp;view_type=form&amp;model=%s', record.res_id.raw_value, record.res_model.raw_value)">
                                     <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value}.png"
                                         t-attf-title="Name : #{ record.res_name.raw_value } &lt;br&gt;

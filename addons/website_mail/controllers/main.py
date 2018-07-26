@@ -65,6 +65,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
             res = res.sudo()
         else:
             raise NotFound()
+    kw.pop('csrf_token', None)
     return res.with_context({'mail_create_nosubscribe': nosubscribe}).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', False) or "comment",
                                                                                    subtype=kw.pop('subtype', False) or "mt_comment",
@@ -163,7 +164,7 @@ class WebsiteMail(http.Controller):
         except Exception:
             return False
 
-    @http.route(['/website_mail/post/post'], type='http', method=['POST'], auth='public', website=True)
+    @http.route(['/website_mail/post/post'], type='http', methods=['POST'], auth='public', website=True)
     def chatter_post(self, res_model='', res_id=None, message='', redirect=None, **kw):
         res_id = int(res_id)
         url = request.httprequest.referrer

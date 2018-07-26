@@ -50,7 +50,9 @@ class ReportTrialBalance(models.AbstractModel):
                 res['balance'] = account_result[account.id].get('balance')
             if display_account == 'all':
                 account_res.append(res)
-            if display_account in ['movement', 'not_zero'] and not currency.is_zero(res['balance']):
+            if display_account == 'not_zero' and not currency.is_zero(res['balance']):
+                account_res.append(res)
+            if display_account == 'movement' and (not currency.is_zero(res['debit']) or not currency.is_zero(res['credit'])):
                 account_res.append(res)
         return account_res
 
@@ -58,9 +60,9 @@ class ReportTrialBalance(models.AbstractModel):
     @api.multi
     def render_html(self, data):
         self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_id'))
+        docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
-        accounts = self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
         docargs = {

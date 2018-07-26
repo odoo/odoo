@@ -19,14 +19,3 @@ class Issue(models.Model):
             'target': 'self',
             'res_id': self.id,
         }
-
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Override to set the access button: everyone can see an access button
-        on their notification email. It will lead on the website view of the
-        post. """
-        res = super(Issue, self)._notification_get_recipient_groups(message, recipients)
-        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
-        for category, data in res.iteritems():
-            res[category]['button_access'] = {'url': access_action, 'title': _('View Issue')}
-        return res

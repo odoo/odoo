@@ -3,19 +3,21 @@
 # * mrp_repair
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016-2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-10-08 14:35+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
+"PO-Revision-Date: 2017-07-19 08:59+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
@@ -40,7 +42,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "(<i>Remove</i>)"
-msgstr ""
+msgstr "(<i>usunąć</i>)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -50,37 +52,37 @@ msgstr "(aktualizuj)"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<i>(Add)</i>"
-msgstr ""
+msgstr "<i>(Dodaj)</i>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Fees Line(s)</strong>"
-msgstr ""
+msgstr "<strong>opłaty Linia(e)</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Guarantee Limit:</strong>"
-msgstr ""
+msgstr "<strong>Limit gwarantowany:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot Number</strong>"
-msgstr ""
+msgstr "<strong>Numer partii</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operation Line(s)</strong>"
-msgstr ""
+msgstr "<strong>Pozycja operacji</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr ""
+msgstr "<strong>Data wydruku:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>Produkty do naprawy:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -101,7 +103,7 @@ msgstr "Wymagana akcja"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:24
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Aktywne ID nie znalezione"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -159,7 +161,7 @@ msgstr "Wybierz partnera, dla którego ta naprawa jest przeznaczona i będzie za
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid "Click to create a reparation order."
-msgstr ""
+msgstr "Kliknij aby stworzyć zamówienie naprawy."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
@@ -680,7 +682,7 @@ msgstr "Zamówienia naprawy"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "Zamówienia naprawy #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
@@ -696,7 +698,7 @@ msgstr "Zamówienie naprawy"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "Oferta naprawy #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
@@ -729,7 +731,7 @@ msgstr "Naprawiona partia"
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repairs"
-msgstr ""
+msgstr "Naprawy"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -871,7 +873,7 @@ msgstr "Cena jednostkowa"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Unit of Measure"
-msgstr "Jednostka Miary"
+msgstr "Jednostka miary"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread

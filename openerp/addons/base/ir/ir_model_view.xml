@@ -35,13 +35,13 @@
                             <field name="transient" attrs="{'readonly': [('id', '!=', False)]}"/>
                         </group>
                         <group>
-                            <field name="state" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="state" readonly="1"/>
                             <field name="modules"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Fields">
-                            <field context="{'manual':True}" name="field_id">
+                            <field name="field_id">
                                 <tree string="Fields Description">
                                     <field name="name"/>
                                     <field name="field_description"/>
@@ -62,8 +62,8 @@
                                         <page name="base" string="Base Properties">
                                             <group>
                                                 <field name="translate"
-                                                    attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                            'invisible': [('ttype','not in',['char','text'])]}"/>
+                                                    attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                            'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                                 <field name="selection"
                                                     attrs="{'required': [('ttype','in',['selection','reference'])],
                                                             'readonly': [('ttype','not in',['selection','reference'])],
@@ -103,7 +103,7 @@
                                         <page name="advanced" string="Advanced Properties">
                                             <group>
                                                 <field name="serialization_field_id"
-                                                    domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
+                                                    domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"
                                                     attrs="{'readonly': [('state','=','base')]}"/>
                                                 <field name="related"/>
                                                 <field name="depends"/>
@@ -203,7 +203,7 @@
             <field name="name">Models</field>
             <field name="res_model">ir.model</field>
             <field name="view_type">form</field>
-            <field name="context">{'manual':True}</field>
+            <field name="context">{}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
         <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
@@ -212,7 +212,7 @@
         <record id="view_model_fields_form" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <form string="Fields">
+                <form string="Fields" duplicate="false">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -225,8 +225,8 @@
                             <page name="base" string="Base Properties">
                                 <group>
                                     <field name="translate"
-                                        attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                'invisible': [('ttype','not in',['char','text'])]}"/>
+                                        attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                     <field name="selection"
                                         attrs="{'required': [('ttype','in',['selection','reference'])],
                                                 'readonly': [('ttype','not in',['selection','reference'])],
@@ -269,7 +269,7 @@
                                         domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
                                         attrs="{'readonly': [('state','=','base')]}"/>
                                     <field name="related"/>
-                                    <field name="depends"/>
+                                    <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
                                     <field name="compute"/>
                                 </group>
                                 <h3>How to define a computed field</h3>
@@ -315,7 +315,7 @@
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <tree string="Fields">
+                <tree string="Fields" duplicate="false">
                     <field name="name"/>
                     <field name="field_description"/>
                     <field name="model_id"/>
@@ -351,7 +351,7 @@
             <field name="name">Fields</field>
             <field name="res_model">ir.model.fields</field>
             <field name="view_type">form</field>
-            <field name="context">{'manual':True}</field>
+            <field name="context">{}</field>
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>

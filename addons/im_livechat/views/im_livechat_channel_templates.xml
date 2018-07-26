@@ -128,6 +128,9 @@
             <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
+            <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat_bootstrap.less"/>
+            <link rel="stylesheet" href="/web/static/src/less/variables.less"/>
+            <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
             <link rel="stylesheet" href="/mail/static/src/less/chat_window.less"></link>
             <link rel="stylesheet" href="/mail/static/src/less/thread.less"></link>
             <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat.less"/>
@@ -135,12 +138,11 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
+            <t t-translation="off">
 
             <t t-if="not info">
-                <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, channel)"/>
+                <t t-set="info" t-value="request.env['im_livechat.channel'].get_livechat_info(channel)"/>
             </t>
-
-            <t t-if="info" t-translation="off">
                 document.addEventListener("DOMContentLoaded", function(event) {
                     <t t-if="web_session_required">
                     odoo.define('web.session', function (require) {
@@ -151,15 +153,16 @@
                     </t>
 
                     odoo.define('im_livechat.livesupport', function (require) {
+            <t t-if="info['available']" t-translation="off">
                         var im_livechat = require('im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
                             $('body'),
                             "<t t-esc="info['server_url']"/>",
-                            <t t-raw="json.dumps(info.get('options', {}))"/>,
-                            <t t-raw="json.dumps(info.get('rule', False))"/>
+                            <t t-raw="json.dumps(info.get('options', {}))"/>
                         );
                         button.appendTo($('body'));
                         window.livechat_button = button;
+            </t>
                     });
                 });
             </t>

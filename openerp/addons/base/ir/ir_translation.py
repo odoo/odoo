@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from difflib import get_close_matches
 import logging
 
-from openerp import api, tools
+from openerp import api, tools, SUPERUSER_ID
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +51,8 @@ class ir_translation_import_cursor(object):
         # of ir_translation, so this copy will be much faster.
         cr.execute('''CREATE TEMP TABLE %s(
             imd_model VARCHAR(64),
-            imd_name VARCHAR(128)
+            imd_name VARCHAR(128),
+            noupdate BOOLEAN
             ) INHERITS (%s) ''' % (self._table_name, self._parent_table))
 
     def push(self, trans_dict):
@@ -108,7 +110,8 @@ class ir_translation_import_cursor(object):
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute("""UPDATE %s AS ti
-            SET res_id = imd.res_id
+            SET res_id = imd.res_id,
+                noupdate = imd.noupdate
             FROM ir_model_data AS imd
             WHERE ti.res_id IS NULL
                 AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
@@ -125,16 +128,26 @@ class ir_translation_import_cursor(object):
         # referencing non-existent data.
         cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
 
+        # detect the xml_translate fields, where the src must be the same
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        src_relevant_fields = []
+        for model in env:
+            for field_name, field in env[model]._fields.items():
+                if hasattr(field, 'translate') and callable(field.translate):
+                    src_relevant_fields.append("%s,%s" % (model, field_name))
+
         find_expr = """
                 irt.lang = ti.lang
             AND irt.type = ti.type
-            AND irt.module = ti.module
             AND irt.name = ti.name
-            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
-            AND (    ti.type NOT IN ('model', 'view')
-                 OR (ti.type = 'model' AND ti.res_id = irt.res_id)
-                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id))
-                )
+            AND (
+                    (ti.type = 'model' AND ti.res_id = irt.res_id AND ti.name IN %s AND irt.src = ti.src)
+                 OR (ti.type = 'model' AND ti.res_id = irt.res_id AND ti.name NOT IN %s)
+                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
+                 OR (ti.type = 'field')
+                 OR (ti.type = 'help')
+                 OR (ti.type NOT IN ('model', 'view', 'field', 'help') AND irt.src = ti.src)
+            )
         """
 
         # Step 2: update existing (matching) translations
@@ -144,21 +157,27 @@ class ir_translation_import_cursor(object):
                     src = ti.src,
                     state = 'translated'
                 FROM %s AS ti
-                WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
-                """ % (self._parent_table, self._table_name, find_expr))
+                WHERE %s
+                AND ti.value IS NOT NULL
+                AND ti.value != ''
+                AND noupdate IS NOT TRUE
+                """ % (self._parent_table, self._table_name, find_expr),
+                       (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
         # Step 3: insert new translations
         cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
             SELECT name, lang, res_id, src, type, value, module, state, comments
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
-              """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
+              """ % (self._parent_table, self._table_name, self._parent_table, find_expr),
+                   (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
         if self._debug:
             cr.execute('SELECT COUNT(*) FROM ONLY %s' % self._parent_table)
             c1 = cr.fetchone()[0]
             cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
-                (self._parent_table, self._table_name, find_expr))
+                (self._parent_table, self._table_name, find_expr),
+                       (tuple(src_relevant_fields), tuple(src_relevant_fields)))
             c = cr.fetchone()[0]
             _logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)
 
@@ -190,7 +209,9 @@ class ir_translation(osv.osv):
                 model = self.pool.get(model_name)
                 if model is None:
                     continue
-                field = model._fields[field_name]
+                field = model._fields.get(field_name)
+                if field is None:
+                    continue
                 if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
@@ -257,7 +278,7 @@ class ir_translation(osv.osv):
         'Language code of translation item must be among known languages' ), ]
 
     def _auto_init(self, cr, context=None):
-        super(ir_translation, self)._auto_init(cr, context)
+        res = super(ir_translation, self)._auto_init(cr, context)
 
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
         indexes = [row[0] for row in cr.fetchall()]
@@ -280,6 +301,8 @@ class ir_translation(osv.osv):
         if 'ir_translation_ltn' not in indexes:
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
+
+        return res
 
     def _check_selection_field_value(self, cr, uid, field, value, context=None):
         if field == 'lang':
@@ -456,13 +479,19 @@ class ir_translation(osv.osv):
                 continue
 
             # remap existing translations on terms when possible
+            trans_src = record_trans.mapped('src')
             for trans in record_trans:
                 if trans.src == trans.value:
                     discarded += trans
                 elif trans.src not in terms:
                     matches = get_close_matches(trans.src, terms, 1, 0.9)
                     if matches:
-                        trans.write({'src': matches[0], 'state': trans.state})
+                        if matches[0] in trans_src:
+                            # there is already a translation for this term; discard this one
+                            discarded += trans
+                        else:
+                            trans.write({'src': matches[0], 'state': trans.state})
+                            trans_src.append(matches[0])  # avoid reuse of term
                     else:
                         outdated += trans
 
@@ -494,14 +523,63 @@ class ir_translation(osv.osv):
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
+    @api.multi
+    def check(self, mode):
+        """ Check access rights of operation ``mode`` on ``self`` for the
+        current user. Raise an AccessError in case conditions are not met.
+        """
+        if self.env.user._is_admin():
+            return
+
+        # collect translated field records (model_ids) and other translations
+        trans_ids = []
+        model_ids = defaultdict(list)
+        model_fields = defaultdict(list)
+        for trans in self:
+            if trans.type == 'model':
+                mname, fname = trans.name.split(',')
+                model_ids[mname].append(trans.res_id)
+                model_fields[mname].append(fname)
+            else:
+                trans_ids.append(trans.id)
+
+        # check for regular access rights on other translations
+        if trans_ids:
+            records = self.browse(trans_ids)
+            records.check_access_rights(mode)
+            records.check_access_rule(mode)
+
+        # check for read/write access on translated field records
+        fmode = 'read' if mode == 'read' else 'write'
+        for mname, ids in model_ids.iteritems():
+            records = self.env[mname].browse(ids)
+            records.check_access_rights(fmode)
+            records.check_field_access_rights(fmode, model_fields[mname])
+            records.check_access_rule(fmode)
+
+    @api.constrains('type', 'name', 'value')
+    def _check_value(self):
+        for trans in self.with_context(lang=None):
+            if trans.type == 'model' and trans.value:
+                mname, fname = trans.name.split(',')
+                record = trans.env[mname].browse(trans.res_id)
+                field = record._fields[fname]
+                if callable(field.translate):
+                    # check whether applying (trans.src -> trans.value) then
+                    # (trans.value -> trans.src) gives the original value back
+                    value0 = field.translate(lambda term: None, record[fname])
+                    value1 = field.translate({trans.src: trans.value}.get, value0)
+                    # don't check the reverse if no translation happened
+                    if value0 == value1:
+                        continue
+                    value2 = field.translate({trans.value: trans.src}.get, value1)
+                    if value2 != value0:
+                        raise ValidationError(_("Translation is not valid:\n%s") % trans.value)
+
     @api.model
     def create(self, vals):
-        if vals.get('type') == 'model' and vals.get('value'):
-            # check and sanitize value
-            mname, fname = vals['name'].split(',')
-            field = self.env[mname]._fields[fname]
-            vals['value'] = field.check_trans_value(vals['value'])
-        record = super(ir_translation, self).create(vals)
+        record = super(ir_translation, self.sudo()).create(vals).with_env(self.env)
+        record.check('create')
         self.clear_caches()
         return record
 
@@ -509,37 +587,29 @@ class ir_translation(osv.osv):
     def write(self, vals):
         if vals.get('value'):
             vals.setdefault('state', 'translated')
-            ttype = vals.get('type') or self[:1].type
-            if ttype == 'model':
-                # check and sanitize value
-                name = vals.get('name') or self[:1].name
-                mname, fname = name.split(',')
-                field = self.env[mname]._fields[fname]
-                vals['value'] = field.check_trans_value(vals['value'])
         elif vals.get('src') or not vals.get('value', True):
             vals.setdefault('state', 'to_translate')
-        result = super(ir_translation, self).write(vals)
+        self.check('write')
+        result = super(ir_translation, self.sudo()).write(vals)
+        self.check('write')
         self.clear_caches()
         return result
 
-    def unlink(self, cursor, user, ids, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
+    @api.multi
+    def unlink(self):
+        self.check('unlink')
         self.clear_caches()
-        result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
-        return result
+        return super(ir_translation, self.sudo()).unlink()
 
     @api.model
     def insert_missing(self, field, records):
         """ Insert missing translations for `field` on `records`. """
         records = records.with_context(lang=None)
+        external_ids = records.get_external_id()  # if no xml_id, empty string
         if callable(field.translate):
             # insert missing translations for each term in src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -547,17 +617,19 @@ class ir_translation(osv.osv):
                         );
                     """
             for record in records:
+                module = external_ids[record.id].split('.')[0]
                 src = record[field.name] or None
                 for term in set(field.get_trans_terms(src)):
                     self._cr.execute(query, {
                         'name': "%s,%s" % (field.model_name, field.name),
                         'res_id': record.id,
                         'src': term,
+                        'module': module
                     })
         else:
             # insert missing translations for src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -567,10 +639,12 @@ class ir_translation(osv.osv):
                         WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
                     """
             for record in records:
+                module = external_ids[record.id].split('.')[0]
                 self._cr.execute(query, {
                     'name': "%s,%s" % (field.model_name, field.name),
                     'res_id': record.id,
                     'src': record[field.name] or None,
+                    'module': module
                 })
         self.clear_caches()
 
@@ -630,12 +704,13 @@ class ir_translation(osv.osv):
         return ir_translation_import_cursor(cr, uid, self, context=context)
 
     def load_module_terms(self, cr, modules, langs, context=None):
-        context = dict(context or {}) # local copy
+        context_template = dict(context or {}) # local copy
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:
                 continue
             for lang in langs:
+                context = dict(context_template)
                 lang_code = tools.get_iso_codes(lang)
                 base_lang_code = None
                 if '_' in lang_code:
@@ -669,3 +744,29 @@ class ir_translation(osv.osv):
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
         return True
+
+    @api.model
+    def get_technical_translations(self, model_name):
+        """ Find the translations for the fields of `model_name`
+
+        Find the technical translations for the fields of the model, including
+        string, tooltip and available selections.
+
+        :return: action definition to open the list of available translations
+        """
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        view = self.env.ref("base.view_translation_tree", False)
+        return {
+            'name': _("Technical Translation"),
+            'view_mode': 'tree',
+            'views': [(view and view.id or False, "list")],
+            'res_model': 'ir.translation',
+            'type': 'ir.actions.act_window',
+            'domain': ['|',
+                            '&',('type', '=', 'model'),
+                                '&',('res_id', 'in', fields.ids),
+                                    ('name', 'like', 'ir.model.fields,'),
+                            '&',('type', '=', 'selection'),
+                                ('name', 'like', model_name+','),
+                    ],
+        }

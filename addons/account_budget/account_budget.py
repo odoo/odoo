@@ -95,22 +95,23 @@ class crossovered_budget_lines(osv.osv):
 
     def _prac_amt(self, cr, uid, ids, context=None):
         res = {}
-        result = 0.0
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise UserError(_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
-            date_to = line.date_to
-            date_from = line.date_from
+            date_to = context.get('wizard_date_to') or line.date_to
+            date_from = context.get('wizard_date_from') or line.date_from
             if line.analytic_account_id.id:
                 cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
                        "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
                        "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
                 result = cr.fetchone()[0]
-            if result is None:
-                result = 0.00
+                if result is None:
+                    result = 0.0
+            else:
+                result = 0.0
             res[line.id] = result
         return res
 
@@ -127,24 +128,46 @@ class crossovered_budget_lines(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             today = datetime.now()
+            # Used for the report
+            if context.get('wizard_date_from') and context.get('wizard_date_to'):
+                date_from = strToDatetime(context.get('wizard_date_from'))
+                date_to = strToDatetime(context.get('wizard_date_to'))
+                if date_from < strToDatetime(line.date_from):
+                    date_from = strToDatetime(line.date_from)
+                elif date_from > strToDatetime(line.date_to):
+                    date_from = False
 
-            if line.paid_date:
-                if strToDate(line.date_to) <= strToDate(line.paid_date):
-                    theo_amt = 0.00
-                else:
-                    theo_amt = line.planned_amount
+                if date_to > strToDatetime(line.date_to):
+                    date_to = strToDatetime(line.date_to)
+                elif date_to < strToDatetime(line.date_from):
+                    date_to = False
+
+                theo_amt = 0.00
+                if date_from and date_to:
+                    line_timedelta = strToDatetime(line.date_to) - strToDatetime(line.date_from)
+                    elapsed_timedelta = date_to - date_from
+                    if elapsed_timedelta.days > 0:
+                        theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
             else:
-                line_timedelta = strToDatetime(line.date_to) - strToDatetime(line.date_from)
-                elapsed_timedelta = today - (strToDatetime(line.date_from))
-
-                if elapsed_timedelta.days < 0:
-                    # If the budget line has not started yet, theoretical amount should be zero
-                    theo_amt = 0.00
-                elif line_timedelta.days > 0 and today < strToDatetime(line.date_to):
-                    # If today is between the budget line date_from and date_to
-                    theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
+                if line.paid_date:
+                    if strToDate(line.date_to) <= strToDate(line.paid_date):
+                        theo_amt = 0.00
+                    else:
+                        theo_amt = line.planned_amount
                 else:
-                    theo_amt = line.planned_amount
+
+                    line_timedelta = strToDatetime(line.date_to) - strToDatetime(line.date_from)
+                    elapsed_timedelta = today - (strToDatetime(line.date_from))
+
+                    if elapsed_timedelta.days < 0:
+                        # If the budget line has not started yet, theoretical amount should be zero
+                        theo_amt = 0.00
+                    elif line_timedelta.days > 0 and today < strToDatetime(line.date_to):
+                        # If today is between the budget line date_from and date_to
+                        # from pudb import set_trace; set_trace()
+                        theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
+                    else:
+                        theo_amt = line.planned_amount
 
             res[line.id] = theo_amt
         return res
@@ -168,7 +191,7 @@ class crossovered_budget_lines(osv.osv):
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),

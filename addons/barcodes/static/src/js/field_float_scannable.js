@@ -2,6 +2,7 @@ odoo.define('barcodes.FieldFloatScannable', function(require) {
 "use strict";
 
 var core = require('web.core');
+var formats = require('web.formats');
 var form_widgets = require('web.form_widgets');
 
 // Field in which the user can both type normally and scan barcodes
@@ -14,7 +15,18 @@ var FieldFloatScannable = form_widgets.FieldFloat.extend({
         'keypress': 'simulateKeypress',
     },
 
+    // Widget values are parsed according to the widget type. Since this widget is of type
+    // "FieldFloatScannable" and there is no parsing planned for this type, it defaults
+    // to outputting the value as a string. Hence the need to redefine parse_value
+    parse_value: function(val, def) {
+        return formats.parse_value(val, {type: "float"}, def);
+    },
+
     simulateKeypress: function (e) {
+        /* only simulate a keypress if it has been previously prevented */
+        if (e.originalEvent.dispatched_by_barcode_reader !== true) {
+            return;
+        }
         var character = String.fromCharCode(e.which);
         var current_str = e.target.value;
         var str_before_carret = current_str.substring(0, e.target.selectionStart);

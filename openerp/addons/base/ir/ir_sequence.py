@@ -63,6 +63,24 @@ def _update_nogap(self, number_increment):
     self.invalidate_cache(['number_next'], [self.id])
     return number_next
 
+def _predict_nextval(self, seq_id):
+    """Predict next value for PostgreSQL sequence without consuming it"""
+    # Cannot use currval() as it requires prior call to nextval()
+    query = """SELECT last_value,
+                      (SELECT increment_by
+                       FROM pg_sequences
+                       WHERE sequencename = 'ir_sequence_%(seq_id)s'),
+                      is_called
+               FROM ir_sequence_%(seq_id)s"""
+    if self.env.cr._cnx.server_version < 100000:
+        query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%(seq_id)s"
+    self.env.cr.execute(query % {'seq_id': seq_id})
+    (last_value, increment_by, is_called) = self.env.cr.fetchone()
+    if is_called:
+        return last_value + increment_by
+    # sequence has just been RESTARTed to return last_value next time
+    return last_value
+
 
 class ir_sequence(models.Model):
     """ Sequence model.
@@ -82,19 +100,12 @@ class ir_sequence(models.Model):
             if element.implementation != 'standard':
                 element.number_next_actual = element.number_next
             else:
-                # get number from postgres sequence. Cannot use currval, because that might give an error when
-                # not having used nextval before.
-                query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d" % element.id
-                self.env.cr.execute(query)
-                (last_value, increment_by, is_called) = self.env.cr.fetchone()
-                if is_called:
-                    element.number_next_actual = last_value + increment_by
-                else:
-                    element.number_next_actual = last_value
+                seq_id = "%03d" % element.id
+                element.number_next_actual = _predict_nextval(self, seq_id)
 
     def _set_number_next_actual(self):
         for record in self:
-            record.write({'number_next': record.number_next_actual or 0})
+            record.write({'number_next': record.number_next_actual or 1})
 
     name = fields.Char(required=True)
     code = fields.Char('Sequence Code')
@@ -194,19 +205,21 @@ class ir_sequence(models.Model):
             return ''
 
         def _interpolation_dict():
-            now = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
+            now = range_date = effective_date = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
             if self.env.context.get('ir_sequence_date'):
-                t = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
-            else:
-                t = now
+                effective_date = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
+            if self.env.context.get('ir_sequence_date_range'):
+                range_date = datetime.strptime(self.env.context.get('ir_sequence_date_range'), '%Y-%m-%d')
+
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
                 'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
             }
             res = {}
             for key, sequence in sequences.iteritems():
-                res[key] = now.strftime(sequence)
-                res['range_' + key] = t.strftime(sequence)
+                res[key] = effective_date.strftime(sequence)
+                res['range_' + key] = range_date.strftime(sequence)
+                res['current_' + key] = now.strftime(sequence)
 
             return res
 
@@ -248,7 +261,7 @@ class ir_sequence(models.Model):
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
-        return seq_date._next()
+        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()
 
     @api.multi
     def next_by_id(self):
@@ -317,15 +330,8 @@ class ir_sequence_date_range(models.Model):
             if element.sequence_id.implementation != 'standard':
                 element.number_next_actual = element.number_next
             else:
-                # get number from postgres sequence. Cannot use currval, because that might give an error when
-                # not having used nextval before.
-                query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d_%03d" % (element.sequence_id.id, element.id)
-                self.env.cr.execute(query)
-                (last_value, increment_by, is_called) = self.env.cr.fetchone()
-                if is_called:
-                    element.number_next_actual = last_value + increment_by
-                else:
-                    element.number_next_actual = last_value
+                seq_id = "%03d_%03d" % (element.sequence_id.id, element.id)
+                element.number_next_actual = _predict_nextval(self, seq_id)
 
     def _set_number_next_actual(self):
         for record in self:

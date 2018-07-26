@@ -19,6 +19,10 @@
         weekdays : "E Diel_E Hënë_E Martë_E Mërkurë_E Enjte_E Premte_E Shtunë".split("_"),
         weekdaysShort : "Die_Hën_Mar_Mër_Enj_Pre_Sht".split("_"),
         weekdaysMin : "D_H_Ma_Më_E_P_Sh".split("_"),
+        meridiemParse: /PD|MD/,
+        isPM: function (input) {
+            return input.charAt(0) === 'M';
+        },
         meridiem : function (hours, minutes, isLower) {
             return hours < 12 ? 'PD' : 'MD';
         },

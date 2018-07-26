@@ -3,12 +3,13 @@
 # * project_issue
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-10-24 09:19+0000\n"
+"PO-Revision-Date: 2015-12-19 13:02+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,17 +21,17 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
 msgid "# Emails"
-msgstr ""
+msgstr "# Emailov"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
 msgid "# Issues"
-msgstr ""
+msgstr "# Problémov"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
 msgid "# of Issues"
-msgstr ""
+msgstr "# Problémov"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:212
@@ -41,17 +42,17 @@ msgstr "%s (kópia)"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Category:</b>"
-msgstr ""
+msgstr "<b>Kategória:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>Projekt:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">ako </span>"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
@@ -60,7 +61,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Kanban stav problému určuje šéciálne situácie ktoré ho ovplyvňujú:\n* Normálna je prednastavená situácia\n* Zablokované označuje že niečo bráni progresu tohto problému\n* Pripravený pre ďalšiu fázu indikuje, že problém je pripravený na ťah do ďalšej fázy"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
@@ -75,7 +76,7 @@ msgstr "Aktívny"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Pridať internú poznámku..."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -85,12 +86,12 @@ msgstr "Analytický účet"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr ""
+msgstr "Archivovaný"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
 msgid "Assigned"
-msgstr ""
+msgstr "Pridelené"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_user_id
@@ -98,37 +99,37 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Assigned to"
-msgstr ""
+msgstr "Pridelené (komu)"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "Priem. meškanie do uzatvorenia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
 msgid "Avg. Delay to Open"
-msgstr ""
+msgstr "Priem. meškanie do otvorenia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
 msgid "Avg. Working Hours to Close"
-msgstr ""
+msgstr "Priem. pracovných hodín na uzavretie"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "Priem. pracovných hodín na otvorenie"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Blokované"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Podľa zodpovedného"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
@@ -140,12 +141,12 @@ msgstr "Kanál"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
+msgstr "Zaškrtnite, ak chcete riadiť zákaznícke činnosti prostredníctvom tohto projektu"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid "Click to create an issue."
-msgstr ""
+msgstr "Kliknite pre vytvorenie problému."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -160,12 +161,12 @@ msgstr "Farebný index"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
 msgid "Communication Channel."
-msgstr ""
+msgstr "Komunikačný Kanál."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_channel
 msgid "Communication channel."
-msgstr ""
+msgstr "Komunikačný kanál."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_company_id
@@ -192,7 +193,7 @@ msgstr "Dátum vytvorenia"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Day"
-msgstr ""
+msgstr "Vytvoriť deň"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_uid
@@ -214,12 +215,12 @@ msgstr "Zákazník"
 #: code:addons/project_issue/project_issue.py:369
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Email zákazníka"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
-msgstr ""
+msgstr "Prispôsobte štítky problémov, volajte ich napríklad prípady."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -229,12 +230,12 @@ msgstr "Dátum"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
 msgid "Date of Closing"
-msgstr ""
+msgstr "Dátum zatvorenia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
-msgstr ""
+msgstr "Dátum otvorenia"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
@@ -244,17 +245,17 @@ msgstr "Dátum poslednej správy zaslanej záznamu."
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
 msgid "Days since creation date"
-msgstr ""
+msgstr "Dní od dátumu vytvorenia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
 msgid "Days since last action"
-msgstr ""
+msgstr "Dní od poslednej akcie"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
 msgid "Days to Assign"
-msgstr ""
+msgstr "Dni do pridelenia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
@@ -264,7 +265,7 @@ msgstr "Dni do uzatvorenia"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_deadline
 msgid "Deadline"
-msgstr ""
+msgstr "Uzávierka"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_delay
@@ -284,12 +285,12 @@ msgstr "Popis"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Rozdiel v dňoch medzi dátumom vytvorenia a súčasným dátumom"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Rozdiel v dňoch medzi poslednou akciou a súčasným dátumom"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
@@ -305,7 +306,7 @@ msgstr "Trvanie"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "Upraviť problém"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -320,12 +321,12 @@ msgstr "Ďalšie informácie"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "Stromové zobrazenie Sledovača funkcií"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature description"
-msgstr ""
+msgstr "Popis funkcie"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
@@ -358,7 +359,7 @@ msgstr "Vysoká"
 #: code:addons/project_issue/project_issue.py:345
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Beriem to"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -380,7 +381,7 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Important Messages"
-msgstr ""
+msgstr "Dôležité správy"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
@@ -398,54 +399,54 @@ msgstr "Problém"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Problém Blokovaný"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "Problém Otvorený"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "Problém pripravený"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Fáza problému zmenená"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Zhrnutie problému.."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
-msgstr ""
+msgstr "Hľadanie Sledovač problémov "
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Issue Tracker Tree"
-msgstr ""
+msgstr "Stromové zobrazenie Sloedovača problémov"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Problém blokovaný"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "Problém otvorený"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next sStage"
-msgstr ""
+msgstr "Problém pripravený pre ďalšiu fázu"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -463,34 +464,34 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 #: model:ir.ui.view,arch_db:project_issue.view_project_kanban_inherited
 msgid "Issues"
-msgstr ""
+msgstr "Problémy"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report_filtered
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 msgid "Issues Analysis"
-msgstr ""
+msgstr "Analýza problému"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Kanban blokované vysvetlenie"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Kanban prebiehajúci vysvetlenie"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "Kanban stav"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Kanban platný vysvetlenie"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -500,7 +501,7 @@ msgstr "Posledná akcia"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Last Message"
-msgstr ""
+msgstr "Posledná správa"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
@@ -517,7 +518,7 @@ msgstr "Posledná modifikácia"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_last_stage_update
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Posledná aktualizácia fázy"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
@@ -543,7 +544,7 @@ msgstr "Správa a história komunikácie"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Issues"
-msgstr ""
+msgstr "Moje problémy"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -555,7 +556,7 @@ msgstr "Nové"
 #: code:addons/project_issue/project_issue.py:347
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "Nový problém"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -566,7 +567,7 @@ msgstr "Ďalšie akcie"
 #: code:addons/project_issue/project_issue.py:390
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Bez predmetu"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -582,12 +583,12 @@ msgstr "Počet akcií"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "Počet dní na uzatvorenie projektového problému"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Počet dní na otvorenie projektového problému."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
@@ -610,7 +611,7 @@ msgstr "Partner"
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr ""
+msgstr "Prosím, odstráňte existujúce problémy v rámci projektu prepojené na účty, ktoré chcete odstrániť."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -625,7 +626,7 @@ msgstr "Priorita"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
 msgid "Private Note"
-msgstr ""
+msgstr "Súkromná poznámka"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -647,17 +648,17 @@ msgstr "Projektový problém"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
 #: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
 msgid "Project Issues"
-msgstr ""
+msgstr "Projektové problémy"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Pripravené pre ďalšiu fázu"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
 msgid "Sale Team"
-msgstr ""
+msgstr "Obchodný tím"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
@@ -669,7 +670,7 @@ msgstr "Obchodný tím"
 msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
-msgstr ""
+msgstr "Obchodný tím, ku ktorému Prípad patrí. Definujte Zodpovedného používateľa a emailový účet pre poštovú bránu."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -687,13 +688,13 @@ msgstr "Etapa"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Fáza zmenená"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Fáza zmenená"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
@@ -714,7 +715,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Odoo sledovač problémov vám umožňuje efektiǘne riadiť veci\nako interné požiadavky, chyby softvérového vývoja, sťažbisti\nzákazníkov, problémy projektu, rozpis materálu, atď."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -722,7 +723,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Odoo sledovač problémov vám umožňuje efektívne riadiť veci\nako interné požiadavky, chyby softvérového vývoja, sťažbisti\nzákazníkov, problémy projektu, rozpis materálu, atď."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -730,7 +731,7 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr ""
+msgstr "Tieto emailové adresy budú pridané do poľa 'kópia' všetkých odchádzajúcich emailov pre\ntento záznam pred ich poslaním. Oddeľte jednotlivé email adresy čiarkou"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -745,13 +746,13 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr ""
+msgstr "Tento výkaz projektových problémov vám umožňuje analyzovať kvalitu vašej podpory alebo\npopredajného servisu. Môžete sledovať problémy podľa ich veku. Môžete analyzovať čas potrebný na otvorenie alebo zavretie problému, počet vymenených emailov a čas strávený v priemere na problémoch."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr ""
+msgstr "Nepriradené"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
@@ -771,22 +772,22 @@ msgstr "Dátum aktualizácie"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "Use Issues"
-msgstr ""
+msgstr "Použit Problémy"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "Použť Problémy ako"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
 msgid "User Email"
-msgstr ""
+msgstr "Email používateľa"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_cc
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Emaily odberateľov"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
@@ -801,34 +802,34 @@ msgstr "História komunikácie webovej stránky"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
-msgstr ""
+msgstr "Pracovných hodín na pridelenie problému"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "Pracovných hodín na uzavretie problému"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_task_id
 msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
-msgstr ""
+msgstr "Môžete prepojiť tento problém s existujúcou úlohou, alebo odtiaľto priamo vytvoriť nový"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid ""
 "You can track your issues from this menu and the action we     \n"
 "                will take."
-msgstr ""
+msgstr "Môžete sledovať svoje problémy z tohto menu a akciu \nktorú podnikneme."
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:260
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "problémy"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
-msgstr ""
+msgstr "project.issue.report"

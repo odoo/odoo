@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2015
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-11-05 04:24+0000\n"
-"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-01-22 19:23+0000\n"
+"Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +94,6 @@ msgstr "Activo Fijo"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "Cuenta de Activo Fijo"
@@ -133,6 +133,7 @@ msgstr "Fecha de Inicio de Activo"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
 msgstr "Tipo de Activo"
 
@@ -281,7 +282,7 @@ msgstr "Cerrado"
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_company_id
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Company"
-msgstr "Company"
+msgstr "Compañía"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method
@@ -357,11 +358,6 @@ msgid "Current Depreciation"
 msgstr "Depreciación Actual"
 
 #. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
-msgid "Customer"
-msgstr "Cliente"
-
-#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_date
 msgid "Date"
@@ -394,6 +390,7 @@ msgstr "Cuenta de Ganancia Diferida"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
 msgstr "Tipo de Ganancia Diferida"
 
@@ -421,9 +418,13 @@ msgstr "Depreciación"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Account"
 msgstr "Cuenta de Depreciación"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Asset Account"
+msgstr "Cuenta de Depreciación de Activos"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -440,6 +441,21 @@ msgstr "Fecha de depreciación"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "Asiento de Depreciación"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+msgid "Depreciation Entries: Asset Account"
+msgstr "Entradas de Depreciación: Cuenta de Activo"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+msgid "Depreciation Entries: Expense Account"
+msgstr "Entradas de Depreciación: Cuenta de Gasto"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Expense Account"
+msgstr "Cuenta de Gasto de Depreciación"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -723,11 +739,6 @@ msgid "Messages"
 msgstr "Mensajes"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_ids
-msgid "Messages and communication history"
-msgstr "Historial de Comunicación y Mensajes"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Modify"
 msgstr "Modificar"
@@ -802,7 +813,6 @@ msgstr "Número de mensajes no leídos"
 #: code:addons/account_asset/account_asset.py:488
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Empresa"
@@ -888,7 +898,13 @@ msgid "Reason"
 msgstr "Motivo"
 
 #. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Recognition Account"
+msgstr "Cuenta de Reconocimiento"
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
 msgstr "Reconocimiento de Cuenta de Ingreso"
 
@@ -1005,7 +1021,7 @@ msgstr "Tipo"
 #: code:addons/account_asset/static/src/js/account_asset.js:24
 #, python-format
 msgid "Unposted"
-msgstr "No asentado"
+msgstr "Sin validar"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
@@ -1031,12 +1047,12 @@ msgstr "Proveedor"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
 msgid "Website Messages"
-msgstr "Mensajes del Portal Web"
+msgstr "Mensajes del sitio web"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids
 msgid "Website communication history"
-msgstr "Historia de comunicación en Portal Web"
+msgstr "Historia de comunicación en Sitio Web"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state
@@ -1053,13 +1069,13 @@ msgid "Year"
 msgstr "Año"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:100
+#: code:addons/account_asset/account_asset.py:97
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "No puede borrar un documento en estado %s."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:102
+#: code:addons/account_asset/account_asset.py:99
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "Usted no puede borrar un documento que posee movimientos asentados."

@@ -239,7 +239,7 @@
                             <field name="nbr_reordering_rules" widget="statinfo"/>
                         </button>
                         <button name="%(product_open_orderpoint)d" type="action"
-                            attrs="{'invisible':['|',('type', '!=', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
+                            attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
                             <div class="o_form_field o_stat_info mr4">
                                 <span class="o_stat_text">Min :</span>

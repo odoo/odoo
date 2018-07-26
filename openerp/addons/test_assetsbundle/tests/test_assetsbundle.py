@@ -6,7 +6,9 @@ from openerp.tests.common import TransactionCase
 from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.modules.module import get_resource_path
 
+from mock import patch
 from os import utime
+import time
 
 
 class TestJavascriptAssetsBundle(TransactionCase):
@@ -309,3 +311,51 @@ class TestAssetsBundleInBrowser(HttpCase):
             "a + b + c + d === 10 ? console.log('ok') : console.log('error')",
             login="admin",
         )
+
+
+class TestAssetsBundleWithIRAMock(TransactionCase):
+    def setUp(self):
+        super(TestAssetsBundleWithIRAMock, self).setUp()
+        self.lessbundle_xmlid = 'test_assetsbundle.bundle3'
+        self.patcher1 = patch('openerp.addons.base.ir.ir_attachment.ir_attachment.create', wraps=self.registry['ir.attachment'].create)
+        self.patcher2 = patch('openerp.addons.base.ir.ir_attachment.ir_attachment.unlink', wraps=self.registry['ir.attachment'].unlink)
+        self.mock_ira_create = self.patcher1.start()
+        self.mock_ira_unlink = self.patcher2.start()
+
+    def _bundle(self, should_create, should_unlink):
+        self.mock_ira_create.reset_mock()
+        self.mock_ira_unlink.reset_mock()
+        AssetsBundle(self.lessbundle_xmlid, cr=self.cr, uid=self.uid, context={}, registry=self.registry).to_html(debug=True)
+        self.assertEquals(self.mock_ira_create.call_count, int(should_create))
+        self.assertEquals(self.mock_ira_unlink.call_count, int(should_unlink))
+
+    def test_01_debug_mode_assets(self):
+        """ Checks that the ir.attachments records created for compiled less assets in debug mode
+        are correctly invalidated.
+        """
+        # Compile for the first time
+        self._bundle(True, False)
+
+        # Compile a second time, without changes
+        self._bundle(False, False)
+
+        # Touch the file and compile a third time
+        path = get_resource_path('test_assetsbundle', 'static', 'src', 'less', 'test_lessfile1.less')
+        t = time.time() + 5
+        utime(path, (t, t))   # touch
+        self._bundle(True, True)
+
+        # Because we are in the same transaction since the beginning of the test, the first asset
+        # created and the second one have the same write_date, but the file's last modified date
+        # has really been modified. If we do not update the write_date to a posterior date, we are
+        # not able to reproduce the case where we compile this bundle again without changing
+        # anything.
+        self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
+
+        # Compile a fourth time, without changes
+        self._bundle(False, False)
+
+    def tearDown(self):
+        self.patcher2.stop()
+        self.patcher1.stop()
+        super(TestAssetsBundleWithIRAMock, self).tearDown()

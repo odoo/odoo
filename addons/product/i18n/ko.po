@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-30 02:53+0000\n"
+"PO-Revision-Date: 2018-01-24 08:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -146,7 +146,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -156,7 +156,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>제품의 설명</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -335,7 +335,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -607,12 +607,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "새 제품을 정의하려면 클릭하십시오."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "코드"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -679,6 +679,12 @@ msgstr "올인원 컴퓨터"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "컴퓨터"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -858,7 +864,7 @@ msgstr "견적 설명"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Vendors"
-msgstr ""
+msgstr "공급 업체에 대한 설명"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -909,7 +915,7 @@ msgstr "장치"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "표시 이름"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1113,13 +1119,13 @@ msgstr "팔로워"
 #: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "팔로워"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "팔로워(파트너)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
@@ -1558,7 +1564,7 @@ msgstr "최근 메시지 날짜"
 #: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "최근 수정"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
@@ -2086,7 +2092,7 @@ msgstr "가격표 관리"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr ""
+msgstr "가격책정"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -2492,6 +2498,12 @@ msgstr "순서"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "서버"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2909,7 +2921,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on requests for quotation."
-msgstr ""
+msgstr "이 메모는 견적 요청에 표시됩니다."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3065,7 +3077,7 @@ msgstr "읽지 않은 메시지"
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3122,7 +3134,7 @@ msgstr "변형"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "공급업체"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3270,7 +3282,7 @@ msgstr ""
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "제품 이형(異形)을 사용하면 동일한 제품의 일부 이형(異形)을 정의 할 수 있으며 전자 상거래에서 제품 관리를 쉽게 수행 할 수 있습니다"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3323,7 +3335,7 @@ msgstr "Zed+ 안티바이러스"
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm

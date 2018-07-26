@@ -56,12 +56,12 @@ class change_standard_price(osv.osv_memory):
             context = {}
         rec_id = context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context.')
-        if context.get("active_model") == 'product.product':
-            prod_obj = self.pool.get('product.product')
-            rec_id = prod_obj.browse(cr, uid, rec_id, context=context).product_tmpl_id.id
-        prod_obj = self.pool.get('product.template')
-        
-        res = self.browse(cr, uid, ids, context=context)
-        
-        prod_obj.do_change_standard_price(cr, uid, [rec_id], res[0].new_price, context)
+        new_price = self.browse(cr, uid, ids, context=context)[0].new_price
+        if context.get("active_model") == 'product.template':
+            prod_obj = self.pool.get('product.template')
+            rec_ids = prod_obj.browse(cr, uid, rec_id, context=context).product_variant_ids.mapped('id')
+        else:
+            rec_ids = [rec_id]
+        prod_obj = self.pool.get('product.product')
+        prod_obj.do_change_standard_price(cr, uid, rec_ids, new_price, context)
         return {'type': 'ir.actions.act_window_close'}

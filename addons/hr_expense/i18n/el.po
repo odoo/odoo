@@ -3,13 +3,14 @@
 # * hr_expense
 # 
 # Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-11-02 20:49+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-10 19:11+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,12 +20,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
+msgid "<strong>Currency:</strong>"
 msgstr ""
 
 #. module: hr_expense
@@ -34,13 +30,18 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Total</strong>"
+msgid "<strong>Manager:</strong>"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
+msgid "<strong>Status:</strong>"
 msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+msgid "<strong>Total</strong>"
+msgstr "<strong>Σύνολο</strong>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
@@ -55,6 +56,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
 msgstr "Λογαριασμός Αναλυτικής"
 
@@ -88,7 +90,7 @@ msgstr "Ακύρωση"
 #: model:product.product,name:hr_expense.car_travel
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr ""
+msgstr "Οδοιπορικά"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -111,6 +113,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Click here to refuse"
+msgstr ""
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_2
+msgid "Click on Action to submit multiple expenses to your manager."
 msgstr ""
 
 #. module: hr_expense
@@ -154,8 +161,9 @@ msgstr "Νόμισμα"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
-msgstr "Ημερ/νία"
+msgstr "Ημερομηνία"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_last_post
@@ -176,8 +184,9 @@ msgstr "Περιγραφή"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_display_name
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_display_name
 msgid "Display Name"
-msgstr "Όνομα εμφάνισης"
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -210,7 +219,7 @@ msgstr "Έξοδο"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
 msgid "Expense Description"
-msgstr ""
+msgstr "Περιγραφή Δαπάνης"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_journal_id
@@ -221,17 +230,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Products"
-msgstr ""
+msgstr "Προϊόντα ως Έξοδα"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Εγκεκριμένο Έξοδο"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr ""
+msgstr "Επιβεβαιωμένα έξοδα, αναμονή επιβεβαίωσης"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -241,7 +250,7 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Απόρριψη Εξόδου"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -260,22 +269,22 @@ msgstr "Έξοδα"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_view_graph
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_view_pivot
 msgid "Expenses Analysis"
-msgstr ""
+msgstr "Ανάλυση Εξόδων"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expenses Month"
-msgstr ""
+msgstr "Μήνας Εξόδων"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
 msgid "Expenses To Approve"
-msgstr ""
+msgstr "Έξοδα προς Έγκριση"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expenses by Month"
-msgstr ""
+msgstr "Έξοδα ανά Μήνα"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:206
@@ -306,7 +315,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Expenses to Invoice"
-msgstr ""
+msgstr "Έξοδα προς Τιμολόγηση"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_follower_ids
@@ -337,7 +346,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
+msgid "Generate Accounting Entries"
 msgstr ""
 
 #. module: hr_expense
@@ -353,7 +362,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
 msgid "HR Expense"
-msgstr ""
+msgstr "Έξοδο HR"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -364,7 +373,7 @@ msgstr "Έξοδα HR"
 #: model:product.product,name:hr_expense.hotel_rent
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "Διαμονή σε Ξενοδοχείο"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -374,6 +383,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_id
 msgid "ID"
 msgstr "ID"
 
@@ -410,6 +420,7 @@ msgstr "Τελευταία ημερομηνία μηνύματος"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense___last_update
 msgid "Last Modified on"
 msgstr "Τελευταία αλλαγή στις"
 
@@ -417,23 +428,18 @@ msgstr "Τελευταία αλλαγή στις"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
 msgid "Messages"
 msgstr "Μηνύματα"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -445,7 +451,7 @@ msgstr "Τα Έξοδά μου"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Team Expenses"
-msgstr ""
+msgstr "Τα Έξοδα της Ομάδας μου"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -460,12 +466,12 @@ msgstr "Νέο"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "New Expense"
-msgstr ""
+msgstr "Νέο Έξοδο"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Νέο Μήνυμα"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:260
@@ -490,7 +496,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Notes..."
-msgstr ""
+msgstr "Σημειώσεις..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
@@ -528,7 +534,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Paid"
-msgstr "Πληρωμένο"
+msgstr "Εξοφλημένο"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
@@ -546,7 +552,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Καταχώριση Ημερολογιακών Εγγραφών"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -607,12 +613,17 @@ msgid "Reporting"
 msgstr "Αναφορές"
 
 #. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_1
+msgid "Select the lines you want to submit to be reimbursed."
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:73
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure"
-msgstr ""
+msgstr "Η επιλεγμένη Μονάδα Μέτρησης δεν ανήκει στην ίδια κατηγορία με την Μονάδα Μέτρησης του Προϊόντος"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -639,7 +650,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Υποβάλλεται τη Διαχείριση "
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -649,7 +660,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
 msgid "Subtotal"
-msgstr "Υποσύνολο"
+msgstr "Μερικό σύνολο"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -664,7 +675,7 @@ msgstr "Φόροι"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_journal_id
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Το ημερολόγιο που χρησιμοποιείται όταν πραγματοποιείται το έξοδο."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_bank_journal_id
@@ -674,7 +685,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr ""
+msgstr "Αυτό το έγγραφο πρέπει να χρονολογηθεί και υπογραφεί για αποζημίωση."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_expense_to_approve
@@ -686,7 +697,7 @@ msgstr "Προς Έγκριση"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "To Pay"
-msgstr ""
+msgstr "Προς Πληρωμή"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -718,7 +729,7 @@ msgstr "Μονάδα Μέτρησης"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread
 msgid "Unread Messages"
-msgstr "Αδιάβαστα Μυνήματα"
+msgstr "Αδιάβαστα Μηνύματα"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
@@ -728,22 +739,29 @@ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
+msgstr "ΜΜ"
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_3
+msgid ""
+"Use the messaging tool to log a note and attach a document to the expense. "
+"(e.g. scan of the bill)"
 msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
+msgstr "Αναμονή Πληρωμής"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
 msgid "Website Messages"
-msgstr "Μηνύματα Ιστότοπου"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
 msgid "Website communication history"
-msgstr "Ιστορικό επικοινωνίας ιστότοπου"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
@@ -790,3 +808,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "ή"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""

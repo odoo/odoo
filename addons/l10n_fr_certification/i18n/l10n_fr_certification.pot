@@ -1,0 +1,155 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* l10n_fr_certification
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-06 16:03+0000\n"
+"PO-Revision-Date: 2017-12-06 16:03+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:108
+#, python-format
+msgid "(ref.: %s)"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:79
+#, python-format
+msgid "According to the French law, you cannot modify a journal entry in order for its posted data to be updated or deleted. Unauthorized field: %s."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:165
+#: code:addons/l10n_fr_certification/models/account.py:185
+#: code:addons/l10n_fr_certification/models/account.py:194
+#, python-format
+msgid "According to the French law, you cannot modify a journal in order for its posted data to be updated or deleted. Unauthorized field: %s."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:154
+#, python-format
+msgid "According to the French law, you cannot modify a journal item in order for its posted data to be updated or deleted. Unauthorized field: %s."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model,name:l10n_fr_certification.model_account_move
+msgid "Account Entry"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:34
+#, python-format
+msgid "An error occured when computing the inalterability. Impossible to get the unique previous posted journal entry."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model,name:l10n_fr_certification.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:123
+#, python-format
+msgid "Corrupted data on journal entry with id %s."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.ui.view,arch_db:l10n_fr_certification.view_general_fr_inalterability_inherit_config
+msgid "Data Inalterability"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.actions.server,name:l10n_fr_certification.action_check_hash_integrity
+#: model:ir.ui.menu,name:l10n_fr_certification.menu_check_move_integrity
+#: model:ir.ui.menu,name:l10n_fr_certification.menu_check_move_integrity_reporting
+#: model:ir.ui.view,arch_db:l10n_fr_certification.view_general_fr_inalterability_inherit_config
+msgid "Data Inalterability Check"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.ui.menu,name:l10n_fr_certification.inalterability_fr_statements_menu
+msgid "French Statements"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.actions.server,name:l10n_fr_certification.odoo_french_certification
+#: model:ir.ui.view,arch_db:l10n_fr_certification.view_general_fr_inalterability_inherit_config
+msgid "Get the certification now!"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model.fields,field_description:l10n_fr_certification.field_account_move_l10n_fr_hash
+msgid "Inalterability Hash"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model.fields,field_description:l10n_fr_certification.field_account_move_l10n_fr_secure_sequence_number
+msgid "Inalteralbility No Gap Sequence #"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:175
+#, python-format
+msgid "It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model,name:l10n_fr_certification.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model,name:l10n_fr_certification.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model.fields,field_description:l10n_fr_certification.field_account_move_l10n_fr_string_to_hash
+msgid "L10n fr string to hash"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: model:ir.model.fields,field_description:l10n_fr_certification.field_res_company_l10n_fr_secure_sequence_id
+msgid "Sequence to use to ensure the securisation of data"
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:136
+#, python-format
+msgid "Successful test !\n"
+"\n"
+"                         The journal entries are guaranteed to be in their original and inalterable state\n"
+"                         From: %(start_move_name)s %(start_move_ref)s\n"
+"                         To: %(end_move_name)s %(end_move_ref)s\n"
+"\n"
+"                         For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users)."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:118
+#, python-format
+msgid "There isn't any journal entry flagged for data inalterability yet for the company %s. This mechanism only runs for journal entries generated after the installation of the module France - Certification CGI 286 I-3 bis."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:99
+#, python-format
+msgid "You cannot modify a posted journal entry. This ensures its inalterability."
+msgstr ""
+
+#. module: l10n_fr_certification
+#: code:addons/l10n_fr_certification/models/account.py:82
+#, python-format
+msgid "You cannot overwrite the values ensuring the inalterability of the accounting."
+msgstr ""
+

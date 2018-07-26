@@ -44,14 +44,10 @@ class crm_activity_report(models.Model):
                     l.type as lead_type
                 from
                     "mail_message" m
-                left join
+                join
                     "crm_lead" l
                 on
                     (m.res_id = l.id)
-                inner join
-                    "crm_activity" a
-                on
-                    (m.subtype_id = a.subtype_id)
                 WHERE
                     (m.model = 'crm.lead')
             )""")

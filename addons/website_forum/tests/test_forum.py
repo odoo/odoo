@@ -210,7 +210,7 @@ class TestForum(TestForumCommon):
         init_karma = post.create_uid.karma
         post.sudo(self.user_portal).mark_as_offensive(12)
         self.assertEqual(post.state, 'offensive', 'website_forum: wrong state when marking a post as offensive')
-        self.assertEqual(post.create_uid.karma, init_karma + 5 * KARMA['gen_que_dwv'], 'website_forum: wrong karma when marking a post as offensive')
+        self.assertEqual(post.create_uid.karma, init_karma + KARMA['gen_ans_flag'], 'website_forum: wrong karma when marking a post as offensive')
 
     def test_convert_answer_to_comment_crash(self):
         Post = self.env['forum.post']

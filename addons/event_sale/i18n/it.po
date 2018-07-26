@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 18:19+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-01-21 17:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Salva"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -66,7 +71,7 @@ msgstr "Scegliere un biglietto evento e verrà automaticamente creata una regist
 #: model:product.product,name:event_sale.event_2_product
 #: model:product.template,name:event_sale.event_2_product_product_template
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "Conferenza sulle Applicazioni di Business"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
@@ -83,6 +88,11 @@ msgid "Created on"
 msgstr "Creato il"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -96,19 +106,19 @@ msgstr ""
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr ""
+msgstr "Determina se un articolo ha bisogno di creare automaticamente una registrazione alla conferma della riga di vendita."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Visualizza Nome"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
 msgid "Editor id"
-msgstr ""
+msgstr "ID Editor"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
@@ -202,7 +212,7 @@ msgstr "Ultima modifica il"
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Limitato"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
@@ -256,7 +266,7 @@ msgstr "Prezzo"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "Prezzo ridotto"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
@@ -326,7 +336,7 @@ msgstr ""
 msgid ""
 "Select event types so when we use this product in sales order lines, it will"
 " filter events of this type only."
-msgstr ""
+msgstr "Seleziona i tipi di evento che quanto usiamo questo articolo in un ordine di vendita, saranno visualizzati gli eventi di questo tipo."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -375,7 +385,7 @@ msgstr "Tipo di Biglietto"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
+msgstr "Biglietti"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
@@ -386,7 +396,7 @@ msgstr "Tipo Evento"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Prenotazione posti non confermati"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
@@ -413,9 +423,9 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "registration.editor"
-msgstr ""
+msgstr "registration.editor"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
-msgstr ""
+msgstr "registration.editor.line"

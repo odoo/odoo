@@ -3,16 +3,16 @@
 # * hr_recruitment
 # 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
+# Bole <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-29 07:25+0000\n"
-"Last-Translator: KRISTINA PALAŠ <kristina.palas@storm.hr>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-17 23:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -521,9 +521,9 @@ msgstr "Kreiraj pseudonim"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br/>\n"
+"Create email and url for each distinct source. <br>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
-msgstr "Kreirajte e-poštu i URL za svaki izvor posebno . <br/> \nKada će podnositelj zamolbe stigne znat ćete za koje radno mjesto se natječe."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -899,6 +899,11 @@ msgid "HR Department"
 msgstr "Odjel ljudskih resursa"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -961,13 +966,6 @@ msgstr "Važnost"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Važno"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
-msgid "Important Messages"
-msgstr "Važne poruke"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1127,11 +1125,6 @@ msgstr "Srednji"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_ids
 msgid "Messages"
 msgstr "Poruke"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages and communication history"
-msgstr "Poruke i povijest"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1365,8 +1358,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n- svatko: svatko može objaviti poruku\n- partneri: samo autentificirani partner\n- pratitelji: samo pratitelji srodne dokumentacije\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr "Pravila za objavu poruke na dokumentu putem poštanskog sandučića.\n- svatko: svatko može objaviti poruku\n- partneri: samo autentificirani partner\n- pratitelji: samo pratitelji srodne dokumentacije\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1801,6 +1794,9 @@ msgstr "Nedodjeljen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "Nepročitane poruke"
 

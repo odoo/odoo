@@ -12,7 +12,7 @@
             <field name="model_id" ref="portal.model_portal_wizard_user"/>
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="email_to">${object.partner_id.email}</field>
-            <field name="subject">Your Odoo account at ${user.company_id.name|safe}</field>
+            <field name="subject">Your Odoo account at ${user.company_id.name}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="True"/>

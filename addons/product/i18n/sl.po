@@ -3,14 +3,14 @@
 # * product
 # 
 # Translators:
-# leo <sp9leonardo@gmail.com>, 2015
+# Leo S. <inactive+sp9leonardo@transifex.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-22 04:28+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
+"PO-Revision-Date: 2018-01-24 11:35+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -680,6 +680,12 @@ msgstr "Računalnik vse v enem"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Računalniki"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -2495,6 +2501,12 @@ msgid "Server"
 msgstr "Strežnik"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2915,7 +2927,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr ""
+msgstr "Ta tekst bo prikazan na ponudbah."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -3123,7 +3135,7 @@ msgstr "Različice"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "Prodajalec"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3472,7 +3484,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history

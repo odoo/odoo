@@ -1,0 +1,181 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * warning
+# 
+# Translators:
+# Amkha VAYAPHATH <amkha.nazou@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2016-06-09 10:41+0000\n"
+"Last-Translator: Amkha VAYAPHATH <amkha.nazou@gmail.com>\n"
+"Language-Team: Lao (http://www.transifex.com/odoo/odoo-9/language/lo/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lo\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Blocking Message"
+msgstr "ປິດ​ການ​ແຈ້ງ​ເຕື່ອນ"
+
+#. module: warning
+#: model:ir.model,name:warning.model_account_invoice
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn
+msgid "Invoice"
+msgstr "​ໃບ​ເກັບ​ເງີນ"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "ແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ໃບ​ເກັບ​ເງີນ"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn_msg
+msgid "Message for Purchase Order"
+msgstr "ແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ສັ່ງ​ຊື້"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "ລາຍການແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ສັ່ງ​ຊື້"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "ແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ການ​ຂ່າຍ"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "ລາຍການແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ການ​ຂ່າຍ"
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "ແຈ້ງ​ເຕື່ອນສຳ​ລັບ​ການ​ຮັບ​ເຄືຶ່ອງ​ໃນ​ສ່າງ"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "No Message"
+msgstr "ບໍ່​ມີແຈ້ງ​ເຕື່ອນ"
+
+#. module: warning
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "ຄຸ່ຄ້າ"
+
+#. module: warning
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr "ແບບ​ຟອມ​ສິນ​ຄ້າ"
+
+#. module: warning
+#: model:ir.model,name:warning.model_purchase_order
+#: model:ir.model.fields,field_description:warning.field_res_partner_purchase_warn
+msgid "Purchase Order"
+msgstr "​ການ​ສັ່ງ​ຊື້"
+
+#. module: warning
+#: model:ir.model,name:warning.model_purchase_order_line
+#: model:ir.model.fields,field_description:warning.field_product_template_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "​ລາຍການການ​ສັ່ງ​ຊື້ທາງ​"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+#: model:ir.model.fields,field_description:warning.field_res_partner_sale_warn
+msgid "Sales Order"
+msgstr "ໃບສັ່ງຊື້"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: model:ir.model.fields,field_description:warning.field_product_template_sale_line_warn
+msgid "Sales Order Line"
+msgstr "ລາຍການສິນຄ້າທີ່ສັ່ງຊື້"
+
+#. module: warning
+#: code:addons/warning/warning.py:14
+#: model:ir.model.fields,help:warning.field_product_template_purchase_line_warn
+#: model:ir.model.fields,help:warning.field_product_template_sale_line_warn
+#: model:ir.model.fields,help:warning.field_res_partner_invoice_warn
+#: model:ir.model.fields,help:warning.field_res_partner_picking_warn
+#: model:ir.model.fields,help:warning.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:warning.field_res_partner_sale_warn
+#, python-format
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: warning
+#: model:ir.model.fields,field_description:warning.field_res_partner_picking_warn
+msgid "Stock Picking"
+msgstr "​ກຳ​ລັງ​ເອົາ​ເຄື່ອງ​ໃນ​ສາງ"
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Transfer"
+msgstr "​ໂອນ"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0 selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0 selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "​ເຕື່ອນ"
+
+#. module: warning
+#: code:addons/warning/warning.py:57 code:addons/warning/warning.py:93
+#: code:addons/warning/warning.py:130 code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:207 code:addons/warning/warning.py:242
+#, python-format
+msgid "Warning for %s"
+msgstr "​ເຕື່ອນ ເພື່ອ %S"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr "ເຕື່ອນ​ເພື່ອ​ໃບ​ເກັບ​ເງີນ"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr "ເຕື່ອນ​ເພື່ອ​ການ​ເອົາ​​ສິນ​ຄ້າ"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr "ເຕື່ອນ​ເພື່ອ​ການ​ສັ່ງ​ຊື້​"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr "ເຕື່ອນ​ເພື່ອ​ການ​ສັ່ງ​ຂາຍ"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr "ເຕື່ອນ​ເພື່ອ​ການ​ສັ່ງ​ຊື້​ສິນ​ຄ້ານີ້"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr "ເຕື່ອນ​ເພື່ອ​ການ​ຂາຍສິນ​ຄ້ານີ້"
+
+#. module: warning
+#: model:ir.ui.view,arch_db:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr "​ເຕື່ອນ"

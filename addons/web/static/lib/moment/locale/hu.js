@@ -62,6 +62,10 @@
             LLL : "YYYY. MMMM D., LT",
             LLLL : "YYYY. MMMM D., dddd LT"
         },
+        meridiemParse: /de|du/i,
+        isPM: function (input) {
+            return input.charAt(1).toLowerCase() === 'u';
+        },
         meridiem : function (hours, minutes, isLower) {
             if (hours < 12) {
                 return isLower === true ? 'de' : 'DE';

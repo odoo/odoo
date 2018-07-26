@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# Copyright 2015 Eezee-It
+
 import json
 import logging
 import werkzeug
@@ -32,7 +34,7 @@ class SipsController(http.Controller):
 
         sips = acquirer_obj.search([('provider', '=', 'sips')], limit=1)
 
-        security = sips._sips_generate_shasign(post)
+        security = sips.sudo()._sips_generate_shasign(post)
         if security == post['Seal']:
             _logger.debug('Sips: validated data')
             res = tx_obj.sudo().form_feedback(post, 'sips')
@@ -42,14 +44,14 @@ class SipsController(http.Controller):
 
     @http.route([
         '/payment/sips/ipn/'],
-        type='http', auth='none', methods=['POST'])
+        type='http', auth='none', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):
         """ Sips IPN. """
         self.sips_validate_data(**post)
         return ''
 
     @http.route([
-        '/payment/sips/dpn'], type='http', auth="none", methods=['POST'])
+        '/payment/sips/dpn'], type='http', auth="none", methods=['POST'], csrf=False)
     def sips_dpn(self, **post):
         """ Sips DPN """
         return_url = self._get_return_url(**post)

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:50+0000\n"
+"POT-Creation-Date: 2016-09-22 13:44+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
@@ -33,7 +33,7 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -44,11 +44,6 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
@@ -128,19 +123,14 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "(update)"
 msgstr "(bijwerken)"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-msgstr "<span groups=\"sale.group_discount_per_so_line\">Kort.(%)</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -508,6 +498,11 @@ msgid "Different prices per customer segment"
 msgstr "Verschillende prijzen per klantsegment"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Disc.(%)"
+msgstr "Korting(%)"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
 msgid "Discount"
 msgstr "Korting"
@@ -685,11 +680,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Omzetrekening"
@@ -842,6 +832,7 @@ msgstr "Facturen worden aangemaakt als concept, zodat u ze nog kan\nbijwerken vo
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Facturatie"
@@ -927,11 +918,6 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
 msgstr "Mijn orders"
@@ -945,6 +931,12 @@ msgstr "Mijn verkooporderregels"
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
 msgstr "Sta nooit het wijzigen van een bevestigde verkooporder toe"
+
+#. module: sale
+#: code:addons/sale/sale.py:96
+#, python-format
+msgid "New"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1311,6 +1303,7 @@ msgstr "Offerte verzonden"
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Quotations"
 msgstr "Offertes"
@@ -1677,9 +1670,22 @@ msgid ""
 msgstr "Er bestaat geen inkomstenrekening voor het product \"%s\". U moet eerst een grootboek aanmaken in de boekhoudinstellingen."
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
 msgstr "Dit jaar"
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1769,6 +1775,7 @@ msgstr "Maateenheden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
@@ -1783,6 +1790,11 @@ msgid "Untaxed Amount"
 msgstr "Netto bedrag"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
 msgstr "Meer verkopen"
@@ -1792,6 +1804,13 @@ msgstr "Meer verkopen"
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
 msgstr "Opportuniteit voor meerverkoop"
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist

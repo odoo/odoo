@@ -5,7 +5,7 @@
 
 {
     'name': 'Argentina - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'description': """
 Argentinian accounting chart and tax localization.
 ==================================================
@@ -15,7 +15,7 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
     """,
     'author': ['Cubic ERP'],
     'website': 'http://cubicERP.com',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'depends': ['base', 'account'],
     'data':[
         'l10n_ar_chart.xml',

@@ -2,7 +2,7 @@
 {
     'name': 'Prices Visible Discounts',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'description': """
 This module lets you calculate discounts on Sale Order lines and Invoice lines base on the partner's pricelist.
 ===============================================================================================================

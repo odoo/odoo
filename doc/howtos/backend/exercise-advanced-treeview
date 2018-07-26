@@ -10,7 +10,7 @@ Index: addons/openacademy/views/openacademy.xml
              <field name="model">openacademy.session</field>
              <field name="arch" type="xml">
 -                <tree string="Session Tree">
-+                <tree string="Session Tree" colors="#0000ff:duration&lt;5;red:duration&gt;15">
++                <tree string="Session Tree" decoration-info="duration&lt;5" decoration-danger="duration&gt;15">
                      <field name="name"/>
                      <field name="course_id"/>
 +                    <field name="duration" invisible="1"/>

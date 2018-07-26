@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
+from openerp import api, models
 from openerp.osv import fields, osv
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
@@ -32,6 +34,16 @@ class procurement_order(osv.osv):
 
     def _run(self, cr, uid, procurement, context=None):
         if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
+            # If the SO was confirmed, cancelled, set to draft then confirmed, avoid creating a new
+            # task.
+            if procurement.sale_line_id:
+                existing_task = self.pool['project.task'].search(
+                    cr, uid, [('sale_line_id', '=', procurement.sale_line_id.id)],
+                    context=context
+                )
+                if existing_task:
+                    return existing_task
+
             #create a task for the procurement
             return self._create_service_task(cr, uid, procurement, context=context)
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
@@ -79,7 +91,7 @@ class procurement_order(osv.osv):
             'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or procurement.partner_dest_id.id,
             'user_id': procurement.product_id.product_manager.id,
             'procurement_id': procurement.id,
-            'description': procurement.name + '\n',
+            'description': procurement.name + '<br/>',
             'project_id': project and project.id or False,
             'company_id': procurement.company_id.id,
         },context=context)
@@ -123,7 +135,7 @@ class project_task(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         for task in self.browse(cr, uid, ids, context=context):
             if task.procurement_id:
-                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
+                proc_obj.check(cr, SUPERUSER_ID, [task.procurement_id.id], context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """
@@ -142,3 +154,24 @@ class project_task(osv.osv):
                 raise UserError(_('You cannot delete a task related to a Sale Order. You can only archive this task.'))
         res = super(project_task, self).unlink(cr, uid, ids, context)
         return res
+
+    def action_view_so(self, cr, uid, ids, context=None):
+        task = self.browse(cr, uid, ids, context=context)[0]
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order",
+            "views": [[False, "form"]],
+            "res_id": task.sale_line_id.order_id.id,
+            "context": {"create": False, "show_sale": True},
+        }
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type == 'service' and product.track_service == 'task':
+                return True
+        return super(ProductProduct, self)._need_procurement()

@@ -5,56 +5,37 @@ import datetime
 from lxml import etree
 import math
 import pytz
+import threading
 import urlparse
 
 import openerp
-from openerp import tools, api
+from openerp import tools, api, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-ADDRESS_FORMAT_LAYOUTS = {
-    '%(city)s %(state_code)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s" style="width: 50%%"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" style="width: 47%%" options='{"no_open": true}'/>
-            <br/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """,
-    '%(zip)s %(city)s': """
-        <div class="address_format">
-            <field name="zip" placeholder="%(zip)s" style="width: 40%%"/>
-            <field name="city" placeholder="%(city)s" style="width: 57%%"/>
-            <br/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-        </div>
-    """,
-    '%(city)s\n%(state_name)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """
+ADDRESS_FORMAT_CLASSES = {
+    '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
+    '%(zip)s %(city)s': 'o_zip_city'
 }
-
 
 class format_address(object):
     @api.model
     def fields_view_get_address(self, arch):
-        fmt = self.env.user.company_id.country_id.address_format or ''
-        for k, v in ADDRESS_FORMAT_LAYOUTS.items():
-            if k in fmt:
+        address_format = self.env.user.company_id.country_id.address_format or ''
+        for format_pattern, format_class in ADDRESS_FORMAT_CLASSES.iteritems():
+            if format_pattern in address_format:
                 doc = etree.fromstring(arch)
-                for node in doc.xpath("//div[@class='address_format']"):
-                    tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
-                    for child in node.xpath("//field"):
-                        if child.attrib.get('modifiers'):
-                            for field in tree.xpath("//field[@name='%s']" % child.attrib.get('name')):
-                                field.attrib['modifiers'] = child.attrib.get('modifiers')
-                    node.getparent().replace(node, tree)
+                for address_node in doc.xpath("//div[@class='o_address_format']"):
+                    # add address format class to address block
+                    address_node.attrib['class'] += ' ' + format_class
+                    if format_class.startswith('o_zip'):
+                        zip_fields = address_node.xpath("//field[@name='zip']")
+                        city_fields = address_node.xpath("//field[@name='city']")
+                        if zip_fields and city_fields:
+                            # move zip field before city field
+                            city_fields[0].addprevious(zip_fields[0])
                 arch = etree.tostring(doc)
                 break
         return arch
@@ -231,7 +212,8 @@ class res_partner(osv.Model, format_address):
             [('contact', 'Contact'),
              ('invoice', 'Invoice address'),
              ('delivery', 'Shipping address'),
-             ('other', 'Other address')], 'Address Type',
+             ('other', 'Other address'),
+             ("private", "Private Address")], string='Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street'),
         'street2': fields.char('Street2'),
@@ -256,45 +238,31 @@ class res_partner(osv.Model, format_address):
                  'fields, this one serves as interface. Due to the old API '
                  'limitations with interface function field, we implement it '
                  'by hand instead of a true function field. When migrating to '
-                 'the new API the code should be simplified.'),
+                 'the new API the code should be simplified. Changing the'
+                 'company_type of a company contact into a company will not display'
+                 'this contact as a company contact but as a standalone company.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
-        'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
+        'user_ids': fields.one2many('res.users', 'partner_id', 'Users', auto_join=True),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
 
         # technical field used for managing commercial fields
-        'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers)
+        'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers, index=True)
     }
 
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
         default=lambda self: self._get_default_image(False, True))
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
 
     @api.model
     def _default_category(self):
@@ -303,13 +271,21 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        img_path = openerp.modules.get_module_resource(
-            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+        if getattr(threading.currentThread(), 'testing', False) or self.env.context.get('install_mode'):
+            return False
+
+        if self.env.context.get('partner_type') == 'delivery':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'truck.png')
+        elif self.env.context.get('partner_type') == 'invoice':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'money.png')
+        else:
+            img_path = openerp.modules.get_module_resource(
+                'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
 
         # colorize user avatars
-        if not is_company:
+        if not is_company and colorize:
             image = tools.image_colorize(image)
 
         return tools.image_resize_image_big(image.encode('base64'))
@@ -498,8 +474,6 @@ class res_partner(osv.Model, format_address):
             any(partner[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(cr, uid, partner, address_fields, context=context)
             parent.update_address(addr_vals)
-            if not parent.is_company:
-                parent.write({'is_company': True})
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -532,14 +506,24 @@ class res_partner(osv.Model, format_address):
             vals['is_company'] = c_type == 'company'
         elif 'is_company' in vals:
             vals['company_type'] = is_company and 'company' or 'person'
-
-        result = super(res_partner, self).write(vals)
+        tools.image_resize_images(vals)
+        result = True
+        #To write in SUPERUSER on field is_company and avoid access rights problems.
+        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
+            result = super(res_partner, self).sudo().write({'is_company': vals.get('is_company')})
+            del vals['is_company']
+        result = result and super(res_partner, self).write(vals)
         for partner in self:
+            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+                self.env['res.users'].check_access_rights('write')
             self._fields_sync(partner, vals)
         return result
 
     @api.model
     def create(self, vals):
+        if vals.get('type') in ['delivery', 'invoice'] and not vals.get('image'):
+            # force no colorize for images with no transparency
+            vals['image'] = self.with_context(partner_type=vals['type'])._get_default_image(False, False)
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
         # function field not correctly triggered at create -> remove me when
@@ -550,6 +534,7 @@ class res_partner(osv.Model, format_address):
             vals['is_company'] = c_type == 'company'
         else:
             vals['company_type'] = is_company and 'company' or 'person'
+        tools.image_resize_images(vals)
         partner = super(res_partner, self).create(vals)
         self._fields_sync(partner, vals)
         self._handle_first_contact_creation(partner)
@@ -583,12 +568,11 @@ class res_partner(osv.Model, format_address):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
-        types_dict = dict(self.fields_get(cr, uid, context=context)['type']['selection'])
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name or ''
             if record.parent_id and not record.is_company:
                 if not name and record.type in ['invoice', 'delivery', 'other']:
-                    name = types_dict[record.type]
+                    name = dict(self.fields_get(cr, uid, ['type'], context=context)['type']['selection'])[record.type]
                 name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)

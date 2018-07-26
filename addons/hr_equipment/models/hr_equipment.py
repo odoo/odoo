@@ -182,6 +182,15 @@ class HrEquipment(models.Model):
             self.message_subscribe_users(user_ids=user_ids)
         return super(HrEquipment, self).write(vals)
 
+    @api.model
+    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
+        """ mail.thread override so user_id which has no special access allowance is not
+            automatically subscribed.
+        """
+        if auto_follow_fields is None:
+            auto_follow_fields = []
+        return super(HrEquipment, self)._message_get_auto_subscribe_fields(updated_fields, auto_follow_fields)
+
     @api.multi
     def _read_group_category_ids(self, domain, read_group_order=None, access_rights_uid=None):
         """ Read group customization in order to display all the category in the
@@ -236,7 +245,7 @@ class HrEquipmentRequest(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
     department_id = fields.Many2one('hr.department', string='Department')
     category_id = fields.Many2one('hr.equipment.category', string='Category')
-    equipment_id = fields.Many2one('hr.equipment', string='Asset', select=True)
+    equipment_id = fields.Many2one('hr.equipment', string='Asset', index=True)
     user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange')
     stage_id = fields.Many2one('hr.equipment.stage', string='Stage', track_visibility='onchange', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')

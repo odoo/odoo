@@ -3,13 +3,14 @@
 # * hr_attendance
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-22 01:15+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"PO-Revision-Date: 2015-12-12 17:52+0000\n"
+"Last-Translator: Matus Krnac <matus.krnac@gmail.com>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +23,17 @@ msgstr ""
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded.<br/>\n"
 "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
+msgstr "(*) Pozitívne meškanie znamená, že pracovník pracoval menej ako bolo zaznamenané.<br/>\n(*) Negatívne meškanie znamená, že zamestnanec pracoval viac než je nakódované."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "<strong>Total period</strong>"
-msgstr ""
+msgstr "<strong>Celková doba</strong>"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Absent"
-msgstr ""
+msgstr "Neprítomný"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -44,7 +45,7 @@ msgstr "Akcia"
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_action_desc
 msgid "Action Reason"
-msgstr ""
+msgstr "Dôvod akcie"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_action_type
@@ -56,12 +57,12 @@ msgstr "Typ akcie"
 msgid ""
 "Allowed difference in minutes between the signin/signout and the timesheet "
 "computation for one sheet. Set this to 0 for no tolerance."
-msgstr ""
+msgstr "Povolený rozdiel v minútach medzi prihlásením / odhlásením a výpočtom časového rozvrhu pre jeden hárok. Nastavte na 0 pre nulovú toleranciu."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
 msgid "Analysis Information"
-msgstr ""
+msgstr "Analýza informácie"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance
@@ -75,34 +76,34 @@ msgstr "Dochádzka"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_access
 msgid "Attendance Access"
-msgstr ""
+msgstr "Dochádzkový prístup"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph_filtered
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "Analýza dochádzky"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
 #: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
 msgid "Attendance Error Report"
-msgstr ""
+msgstr "Chybový výkaz dochádzky"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Attendance Errors:"
-msgstr ""
+msgstr "Dochádzkové chyby:"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr ""
+msgstr "Dochádzkové Dôvody"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_attendance_reason
 msgid "Attendance reasons"
-msgstr ""
+msgstr "Dochádzkové dôvody"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -118,7 +119,7 @@ msgid ""
 "Below the maximum tolerance, the attendance error will not be taken into "
 "account. Above the maximum tolerance, the error is considered to be "
 "voluntary and will be taken into account."
-msgstr ""
+msgstr "Nižšia ako maximálna toleranciu, docházdková chyba nebude zohľadnená. Nad maximálnu toleranciu, chyba je považovaný za dobrovoľnú a bude zohľadnená."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -130,7 +131,7 @@ msgstr "Zrušiť"
 #: code:addons/hr_attendance/static/src/js/attendance.js:41
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "Kliknite pre dprihlásenie ako %s.."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_config
@@ -154,7 +155,7 @@ msgstr "Vytvorené"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Current Month"
-msgstr ""
+msgstr "Aktuálny mesiac"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_name
@@ -164,17 +165,17 @@ msgstr "Dátum"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Date Recorded"
-msgstr ""
+msgstr "Dátum záznamu"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Date Signed"
-msgstr ""
+msgstr "Dátum podpisu"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
-msgstr ""
+msgstr "Definujte dôvod účasti"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
@@ -206,17 +207,17 @@ msgstr "Zamestnanec"
 #: model:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 #: model:ir.ui.view,arch_db:hr_attendance.view_attendance_who
 msgid "Employee attendances"
-msgstr ""
+msgstr "Dochádzky zamestnanca"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_end_date
 msgid "Ending Date"
-msgstr ""
+msgstr "Dátum ukončenia"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Chyba ! Prihlásenie (resp. odhlásenie) musí následovať odhlásenie (resp. prihlásenie)"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -226,7 +227,7 @@ msgstr "Zoskupiť podľa"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "HR hľadanie dochádzky"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_id
@@ -247,7 +248,7 @@ msgstr "Posledná modifikácia"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_sign
 msgid "Last Sign"
-msgstr ""
+msgstr "Posledný podpis"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_uid
@@ -268,17 +269,17 @@ msgstr "Naposledy upravované"
 #: code:addons/hr_attendance/static/src/js/attendance.js:39
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "Posledné prihlásenie: %s,<br />%s.<br />Kliknite pre odhlásenie."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
 msgid "Maximum Tolerance (in minutes)"
-msgstr ""
+msgstr "Maximálna tolerancia (v minútach)"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Min Delay"
-msgstr ""
+msgstr "Minimálne meškanie"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -288,13 +289,13 @@ msgstr "Mesiac"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "My Attendance"
-msgstr ""
+msgstr "Moja dochádzka"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:34
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "Žiadne záznamy neboli nájdené pre váš výber!"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
@@ -304,7 +305,7 @@ msgstr "Operácia"
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Present"
-msgstr ""
+msgstr "Súčasný"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -314,17 +315,17 @@ msgstr "Tlač"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
 msgid "Print Attendance Report Error"
-msgstr ""
+msgstr "Vytlačíť chybu dochádzkového výkazu"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr ""
+msgstr "Vytlačiť chybový výkaz dochádzky"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_name
 msgid "Reason"
-msgstr ""
+msgstr "Dôvod "
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -336,40 +337,40 @@ msgstr "Výkazy"
 #: selection:hr.attendance,action:0
 #, python-format
 msgid "Sign In"
-msgstr ""
+msgstr "Prihlásiť sa"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:156
 #: selection:hr.attendance,action:0
 #, python-format
 msgid "Sign Out"
-msgstr ""
+msgstr "Odhlásiť sa"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr ""
+msgstr "Prihlásiť sa"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign out"
-msgstr ""
+msgstr "Odhlásiť sa"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_action_desc
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "Špecifikuje dôvod pre prihlásenie sa / odhlásenie sa v prípade extra hodín."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_action_reason_name
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr ""
+msgstr "Špecifikuje dôvod pre prihlásenie sa / odhlásenie sa."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_init_date
 msgid "Starting Date"
-msgstr ""
+msgstr "Dátum začatia"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
@@ -377,12 +378,12 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr ""
+msgstr "Funkcia časového sledovania sa zameriava na správu dochádzky zamestnancov od prihlásenia sa / odhlánia sa akcie. Môžete tiež prepojiť túto funkciu k prezenčnému zariadeniu pomocou funkcií webových služieb Odoo."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Sledovanie času"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.timesheet_menu_root
@@ -397,7 +398,7 @@ msgstr "Dnes"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
 msgid "Worked Hours"
-msgstr ""
+msgstr "Odpracované hodiny"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:163
@@ -405,9 +406,9 @@ msgstr ""
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr ""
+msgstr "Skúšali ste %s s dátumom predchádzajúcim inú udalosť!\nSkúste kontaktovať HR manažéra pre korekciu dochádzky."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
 msgid "report.hr_attendance.report_attendanceerrors"
-msgstr ""
+msgstr "report.hr_attendance.report_attendanceerrors"

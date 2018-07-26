@@ -22,4 +22,7 @@ class PaymentConfigSettings(models.TransientModel):
     @api.multi
     def set_default_acquirer(self):
         for wizard in self:
-            self.env['ir.values'].set_default('payment.transaction', 'acquirer_id', wizard.default_acquirer.id, company_id=self.env.user.company_id.id)
+            ir_values = self.env['ir.values']
+            if self.user_has_groups('base.group_configuration'):
+                ir_values = ir_values.sudo()
+            ir_values.set_default('payment.transaction', 'acquirer_id', wizard.default_acquirer.id, company_id=self.env.user.company_id.id)

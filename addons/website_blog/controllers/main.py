@@ -132,10 +132,11 @@ class WebsiteBlog(http.Controller):
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
-            url=blog_url(),
+            url=request.httprequest.path.partition('/page/')[0],
             total=len(blog_posts),
             page=page,
             step=self._blog_post_per_page,
+            url_args=opt,
         )
         pager_begin = (page - 1) * self._blog_post_per_page
         pager_end = page * self._blog_post_per_page
@@ -228,8 +229,8 @@ class WebsiteBlog(http.Controller):
         all_post_ids = blog_post_obj.search(cr, uid, [('blog_id', '=', blog.id)], context=context)
         # should always return at least the current post
         current_blog_post_index = all_post_ids.index(blog_post.id)
-        next_post_id = all_post_ids[0 if current_blog_post_index == len(all_post_ids) - 1 \
-                            else current_blog_post_index + 1]
+        nb_posts = len(all_post_ids)
+        next_post_id = all_post_ids[(current_blog_post_index + 1) % nb_posts] if nb_posts > 1 else None
         next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
 
         values = {

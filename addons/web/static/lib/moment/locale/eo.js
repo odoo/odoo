@@ -26,6 +26,10 @@
             LLL : "D[-an de] MMMM, YYYY LT",
             LLLL : "dddd, [la] D[-an de] MMMM, YYYY LT"
         },
+        meridiemParse: /[ap]\.t\.m/i,
+        isPM: function (input) {
+            return input.charAt(0).toLowerCase() === 'p';
+        },
         meridiem : function (hours, minutes, isLower) {
             if (hours > 11) {
                 return isLower ? 'p.t.m.' : 'P.T.M.';

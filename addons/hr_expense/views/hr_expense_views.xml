@@ -79,7 +79,7 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" widget="selection" class="oe_inline" groups="product.group_uom"/>
                             </div>
-                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user"/>
+                            <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user" domain="[('type_tax_use', '=', 'purchase')]"/>
                         </group><group>
                             <field name="date"/>
                             <field name="employee_id"/>
@@ -199,7 +199,7 @@
                         <filter string="Department" domain="[]" context="{'group_by': 'department_id'}" groups="hr.group_multi_departments"/>
                         <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
-                        <filter domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Analytic Account" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="Expenses Month" domain="[]" context="{'group_by': 'date'}" help="Expenses by Month"/>
                     </group>
                     <separator />
@@ -325,7 +325,7 @@
         </record>
 
         <record id="hr_expense_entry_action_server" model="ir.actions.server">
-            <field name="name">Generate Single Accounting Entry</field>
+            <field name="name">Generate Accounting Entries</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_expense"/>
             <field name="state">code</field>

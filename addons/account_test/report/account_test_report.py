@@ -38,6 +38,7 @@ class ReportAssertAccount(models.AbstractModel):
             'reconciled_inv': reconciled_inv,  # specific function used in different tests
             'result': None,  # used to store the result of the test
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
+            '_': _, #used for translation
         }
         eval(code_exec, localdict, mode="exec", nocopy=True)
         result = localdict['result']
@@ -53,7 +54,7 @@ class ReportAssertAccount(models.AbstractModel):
                     return ', '.join(["%s: %s" % (tup[0], tup[1]) for tup in order_columns(item, column_order)])
                 else:
                     return item
-            result = [_(_format(rec)) for rec in result]
+            result = [_format(rec) for rec in result]
 
         return result
 

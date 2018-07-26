@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-09-14 10:54+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2017-11-27 14:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -78,6 +78,11 @@ msgid "About The Author"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
+msgid "Action Needed"
+msgstr "Нужно е действие"
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr ""
@@ -144,7 +149,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_color
 msgid "Color Index"
-msgstr ""
+msgstr "Индекс на Цветовете."
 
 #. module: website_event_track
 #: selection:event.track,state:0
@@ -177,7 +182,7 @@ msgstr "Дата"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Дата на последното съобщение, публикувано на записа."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -208,7 +213,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -312,12 +317,12 @@ msgstr "Последователи"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Последователи (канали)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Последователи (партньори)"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -383,10 +388,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -394,19 +403,14 @@ msgid "Image"
 msgstr "Изображение"
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Important Messages"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
-msgstr ""
+msgstr "Въведение"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "е последовател"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
@@ -425,7 +429,7 @@ msgstr "Дата на последното съобщение"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location___last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Последно променено на"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_write_uid
@@ -463,7 +467,7 @@ msgstr "Нисък"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track31
 msgid "Lunch"
-msgstr ""
+msgstr "Обяд"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:81
@@ -512,26 +516,16 @@ msgstr "Съобщения"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_ids
 msgid "Messages and communication history"
-msgstr ""
+msgstr "История на събщенията и комуникациите"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "More"
-msgstr ""
+msgstr "Повече"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
 msgid "Morning break"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
-msgid "Need Action Counter"
 msgstr ""
 
 #. module: website_event_track
@@ -565,7 +559,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_show_blog
 #, python-format
 msgid "News"
-msgstr ""
+msgstr "Новини"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
@@ -573,14 +567,19 @@ msgid "No tracks found!"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Брой действия"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_needaction_counter
-msgid "Number of needaction messages"
-msgstr ""
+msgid "Number of messages which requires an action"
+msgstr "Брой съобщения, които изискват внимание"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Брой непрочетени съобщения"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
@@ -668,7 +667,7 @@ msgstr ""
 #. module: website_event_track
 #: selection:event.track,state:0
 msgid "Published"
-msgstr ""
+msgstr "Published"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -700,7 +699,7 @@ msgid "Responsible"
 msgstr "Отговорник"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8620
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8532
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Помещение"
@@ -793,6 +792,11 @@ msgid "Submit Proposal"
 msgstr ""
 
 #. module: website_event_track
+#: model:web.tip,description:website_event_track.event_track_tip_1
+msgid "Switch to the calendar view to see the availability of each room."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "Етикет"
@@ -800,7 +804,7 @@ msgstr "Етикет"
 #. module: website_event_track
 #: sql_constraint:event.track.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Етикет с това име вече съществува!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_ids
@@ -850,7 +854,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Пълният URL за достъп до документа през уебсайта."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track29
@@ -885,7 +889,7 @@ msgstr "Заглавие"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr ""
+msgstr "Проследи"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_date
@@ -943,13 +947,14 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Unread Messages"
 msgstr "Непрочетени съобщения"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Брой непрочетени съобщения"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
@@ -964,7 +969,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Видим в уеб сайта"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -996,7 +1001,7 @@ msgstr "Съобщения от уебсайта"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "URL на Уебсайта"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_website_message_ids
@@ -1006,27 +1011,27 @@ msgstr "История на комуникацията в уебсайта"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Website meta description"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Website meta keywords"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Website meta title"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Email"
-msgstr ""
+msgstr "Вашият имейл"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Name"
-msgstr ""
+msgstr "Вашето Име"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1052,12 +1057,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
-msgstr ""
+msgstr "часове"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "not published"
-msgstr ""
+msgstr "не е публикувана"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda

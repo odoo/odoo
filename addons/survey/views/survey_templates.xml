@@ -286,7 +286,7 @@
                             <h1><span t-field='survey.title'/></h1>
                             <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
                         </div>
-                        <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)">
+                        <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
                             <t t-foreach="survey.page_ids" t-as="page">
                                 <div class="page-header">
                                     <h1 t-field='page.title' />

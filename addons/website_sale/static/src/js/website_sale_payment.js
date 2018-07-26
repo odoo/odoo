@@ -6,9 +6,10 @@ var ajax = require('web.ajax');
 $(document).ready(function () {
     // If option is enable
     if ($("#checkbox_cgv").length) {
-      $("#checkbox_cgv").click(function() {
+      $("#checkbox_cgv").change(function() {
         $("div.oe_sale_acquirer_button").find('input, button').prop("disabled", !this.checked);
       });
+      $('#checkbox_cgv').trigger('change');
     }
 
     // When choosing an acquirer, display its Pay Now button
@@ -29,8 +30,9 @@ $(document).ready(function () {
       if (! acquirer_id) {
         return false;
       }
-      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function () {
-        $form.submit();
+      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+          $form.html(data);
+          $form.submit();
       });
    });
 

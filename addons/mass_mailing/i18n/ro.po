@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:47+0000\n"
+"POT-Creation-Date: 2016-01-13 15:46+0000\n"
+"PO-Revision-Date: 2017-12-17 16:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid ""
 "% <br/>\n"
 "                                            <strong>Clicks</strong>"
-msgstr ""
+msgstr "% <br/>\n                                            <strong>Clicuri</strong>"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
@@ -40,7 +40,7 @@ msgstr "%s (copie)"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -172,7 +172,7 @@ msgstr "Testare AB"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Intervenție necesară"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
@@ -206,7 +206,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
-msgstr ""
+msgstr "Arhivat"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -323,7 +323,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Clicks"
-msgstr ""
+msgstr "Clicuri"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_color
@@ -466,7 +466,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Dear ${object.name}"
-msgstr ""
+msgstr "Dragă ${object.name}"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -491,6 +491,7 @@ msgstr "Șterge"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Livrat"
 
@@ -545,8 +546,10 @@ msgid "Domain"
 msgstr "Domeniu"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "Ciornă"
 
@@ -666,13 +669,22 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid ""
 "Great stories have personality. Consider telling a great story that provides"
 " personality. Writing a story with personality for potential clients will "
 "assist with making a relationship connection. This shows up in small quirks "
 "like word choices or phrases. Write from your point of view, not from "
 "someone else's experience.<br/>"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
+msgid ""
+"Great stories have personality. Consider telling a great story that provides"
+" personality. Writing a story with personality for potential clients will "
+"assist with making a relationship connection. This shows up in small quirks "
+"like word choices or phrases. Write from your point of view, not from "
+"someone else's experience.<br>"
 msgstr ""
 
 #. module: mass_mailing
@@ -691,8 +703,10 @@ msgstr "Grupeaza dupa..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
-msgid "Help"
-msgstr "Ajutor"
+msgid ""
+"Here you can design your own template from scratch by selecting your "
+"favorite theme."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
@@ -724,7 +738,7 @@ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
@@ -734,14 +748,16 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "In Queue"
 msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Este urmăritor"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_keep_archives
@@ -1067,11 +1083,6 @@ msgid "Messages"
 msgstr "Mesaje"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_ids
-msgid "Messages and communication history"
-msgstr "Istoric mesaje și conversații"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
@@ -1108,7 +1119,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Număr de acțiuni"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_clicks_ratio
@@ -1128,12 +1139,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Număr de mesaje ce necesită intervenție"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Număr de mesaje necitite"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -1404,17 +1415,21 @@ msgid "Send to All"
 msgstr "Trimite la toți"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "Sending"
 msgstr ""
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "Trimis"
 
@@ -1545,7 +1560,7 @@ msgstr "Asistență"
 #. module: mass_mailing
 #: sql_constraint:mail.mass_mailing.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Numele ales exista deja"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_tag_ids
@@ -1602,15 +1617,16 @@ msgid "This mass mailing is scheduled to"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"This will send the email to all recipients. Do you still want to proceed ?"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
 msgstr "Total"
-
-#. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
-msgid "Tracked Link"
-msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -1631,7 +1647,7 @@ msgstr "Mesaje necitite"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contor mesaje necitite"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1670,11 +1686,6 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website Messages"
-msgstr "Mesaje Website"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
 msgid "Website Pop-up"
 msgstr ""
@@ -1690,11 +1701,6 @@ msgid "Website Popup Redirect URL"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website communication history"
-msgstr "Istoric comunicare website"
-
-#. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "You get a 20% discount for signing up!"
 msgstr ""
@@ -1702,7 +1708,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Your Logo"
-msgstr ""
+msgstr "Logo dvs."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets

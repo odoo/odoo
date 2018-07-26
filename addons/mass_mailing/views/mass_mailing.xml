@@ -363,7 +363,7 @@
             <field name="model">link.tracker</field>
             <field name="inherit_id" ref="link_tracker.view_link_tracker_filter"/>
             <field name="arch" type="xml">
-               <search string="Tracked Link">
+               <search>
                     <field name="mass_mailing_id"/>
                     <field name="mass_mailing_campaign_id"/>
                 </search>
@@ -384,7 +384,8 @@
                 <form string="Mass Mailing">
                     <header style="min-height:31px;">
                         <button name="action_test_mailing" type="object" class="oe_highlight" string="Test Mailing"/>
-                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"/>
+                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"
+                            confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="oe_highlight" string="Cancel"/>
                         <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 
@@ -571,7 +572,7 @@
                                                 </div>
                                             </div>
                                             <div class='o_kanban_primary_bottom'>
-                                                <field name="delivered" widget="progress" options="{'title': 'Delivered', 'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
+                                                <field name="delivered" widget="progress" title="Delivered" options="{'current_value': 'delivered', 'max_value': 'total', 'editable': false}"/>
                                             </div>
                                         </t>
                                     </div>
@@ -888,20 +889,6 @@
     Create a campaign to structure mass mailing and get analysis from email status.
   </p>
 </field>
-        </record>
-
-        <!-- Cron that process the mass mailing queue -->   
-         <record id="ir_cron_mass_mailing_queue" model="ir.cron">
-            <field name="name">Process Mass Mailing Queue</field>
-            <field eval="True" name="active" />
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">60</field>
-            <field name="interval_type">minutes</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
-            <field name="model">mail.mass_mailing</field>
-            <field name="function">_process_mass_mailing_queue</field>
-            <field name="args">()</field>
         </record>
 
         <menuitem name="Campaigns" id="menu_email_campaigns"

@@ -31,4 +31,9 @@
       </t>
     </xpath>
   </template>
+  <template id="report_picking_portal" inherit_id="stock.report_picking" groups="base.group_portal">
+    <xpath expr="//tr[@t-foreach='o.pack_operation_ids']" position="attributes">
+        <attribute name="t-foreach">o.pack_operation_ids.sudo()</attribute>
+    </xpath>
+  </template>
 </odoo>

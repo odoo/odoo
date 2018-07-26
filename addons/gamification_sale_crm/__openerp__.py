@@ -3,7 +3,7 @@
 {
     'name': 'CRM Gamification',
     'version': '1.0',
-    'category': 'hidden',
+    'category': 'Sales',
     'depends': ['gamification','sale_crm'],
     'website' : 'https://www.odoo.com/page/gamification',
     'description': """Example of goal definitions and challenges that can be used related to the usage of the CRM Sale module.""",

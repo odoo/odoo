@@ -16,7 +16,7 @@ class AuthorizeController(http.Controller):
     @http.route([
         '/payment/authorize/return/',
         '/payment/authorize/cancel/',
-    ], type='http', auth='public')
+    ], type='http', auth='public', csrf=False)
     def authorize_form_feedback(self, **post):
         _logger.info('Authorize: entering form_feedback with post data %s', pprint.pformat(post))
         return_url = '/'

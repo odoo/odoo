@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_ogone
+# 
+# Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2017-12-31 14:41+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:239
+#, python-format
+msgid "; multiple order found"
+msgstr ", βρέθηκαν πολλαπλές παραγγελίες"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:237
+#, python-format
+msgid "; no order found"
+msgstr ", δεν βρέθηκε παραγγελία"
+
+#. module: payment_ogone
+#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Άκυρο,</i> Η πληρωμή σας έχει ακυρωθεί.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Ολοκληρώθηκε,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Ευχαριστούμε για την παραγγελία σας.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Σφάλμα,</i> Έχετε υπ 'όψιν ότι παρουσιάστηκε κάποιο σφάλμα κατά τη διάρκεια της συναλλαγής. Η παραγγελία έχει επιβεβαιωθεί, αλλά δεν θα μπορεί να πληρωθεί. Μην διστάσετε να επικοινωνήσετε μαζί μας αν έχετε απορίες σχετικά με την κατάσταση της παραγγελίας σας.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Εν αναμονή,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Αλλά η παραγγελία σας δεν έχει επικυρωθεί ακόμη.</span>"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
+msgid "API User ID"
+msgstr "Κωδικός Πελάτη API"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_password
+msgid "API User Password"
+msgstr "Κωδικός Πρόσβασης χρήστη API"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_alias_usage
+msgid "Alias Usage"
+msgstr "Χρήση Ψευδώνυμου"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "CVC"
+msgstr "CVC"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Card number"
+msgstr "Αριθμός κάρτας"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Επιβεβαίωση <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Expires"
+msgstr "Λήξη"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+msgid "How to configure your Ogone account?"
+msgstr "Πως να ρυθμίσετε τον Ogone λογαριασμό σας;"
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
+msgid ""
+"If you want to use Ogone Aliases,\n"
+"                                                                this default Alias Usage will be presented to\n"
+"                                                                the customer as the reason you want to\n"
+"                                                                keep his payment data"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "MM / YY"
+msgstr "ΜΜ / ΕΕ"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Name"
+msgstr "Όνομα"
+
+#. module: payment_ogone
+#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:247
+#, python-format
+msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
+msgstr "Ogone: μη έγκυρη υπογραφή sha, λήφθηκε %s, υπολογισμένο %s, για τα δεδομένα %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:235
+#, python-format
+msgid "Ogone: received data for reference %s"
+msgstr "Ogone: λήφθηκαν δεδομένα αναφοράς %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:228
+#, python-format
+msgid ""
+"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
+"(%s)"
+msgstr "Ogone: λήφθηκαν δεδομένα αλλά λείπει η αναφοράς (%s) ή pay_id (%s) ή υπογραφή sha (%s)"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Αποδέκτης Πληρωμής"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Συναλλαγή Πληρωμής"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "SHA Key IN"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "SHA Key OUT"
+
+#. module: payment_ogone
+#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ogone website after clicking on the payment "
+"button."
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_method
+msgid "payment.method"
+msgstr ""

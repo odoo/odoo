@@ -30,7 +30,7 @@
         <div id="templates" class="o_not_editable o_css_editor hidden" t-if="enable_editor">
             <h1 class="page-header mt16 email_head panel-primary">
                 Select a theme 
-                <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can design your own template from scratch by selecting your favorite theme."></button>
+                <button type="button" class="btn btn-sm btn-default fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Here you can design your own template from scratch by selecting your favorite theme."></button>
             </h1>  
             <t t-call="mass_mailing.mass_mail_theme_list"/>
 

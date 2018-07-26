@@ -97,7 +97,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
-        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_read(read=True)
+        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
     @http.route(['/forum/<model("forum.forum"):forum>',
@@ -183,7 +183,7 @@ class WebsiteForum(http.Controller):
     def tags(self, forum, tag_char=None, **post):
         # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
         first_char_tag = forum.get_tags_first_char()
-        first_char_list = [(t, t.lower()) for t in first_char_tag]
+        first_char_list = [(t, t.lower()) for t in first_char_tag if t.isalnum()]
         first_char_list.insert(0, (_('All'), 'all'))
         # get active first char tag
         active_char_tag = first_char_list[1][1] if len(first_char_list) > 1 else 'all'
@@ -193,7 +193,7 @@ class WebsiteForum(http.Controller):
         domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
         order_by = 'name'
         if active_char_tag and active_char_tag != 'all':
-            domain.append(('name', '=ilike', active_char_tag+'%'))
+            domain.append(('name', '=ilike', tools.escape_psql(active_char_tag)+'%'))
             order_by = 'posts_count DESC'
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
@@ -204,7 +204,6 @@ class WebsiteForum(http.Controller):
             'active_char_tag': active_char_tag,
         })
         return request.website.render("website_forum.tag", values)
-
 
     @http.route('/forum/<model("forum.forum"):forum>/edit_welcome_message', auth="user", website=True)
     def edit_welcome_message(self, forum, **kw):
@@ -221,9 +220,8 @@ class WebsiteForum(http.Controller):
         except URLError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
-
         # Hide posts from abusers (negative karma), except for moderators
         if not question.can_view:
             raise werkzeug.exceptions.NotFound()
@@ -319,12 +317,15 @@ class WebsiteForum(http.Controller):
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        if post_type == 'question' and not post.get('post_name', '').strip():
+        if post_type == 'question' and not post.get('post_name', ''):
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+        if post.get('content', '') == '<p><br></p>':
+            return werkzeug.utils.redirect("/forum/%s/question/%s?nocontent=1" % (slug(forum), post_parent and slug(post_parent)))
+
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
-            'name': post.get('post_name', ''),
+            'name': post.get('post_name') or (post_parent and 'Re: %s' % (post_parent.name or '')) or '',
             'content': post.get('content', False),
             'content_link': post.get('content_link', False),
             'parent_id': post_parent and post_parent.id or False,
@@ -338,8 +339,9 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
+            body = tools.mail.plaintext2html(kwargs['comment'])
             post.with_context(mail_create_nosubscribe=True).message_post(
-                body=kwargs.get('comment'),
+                body=body,
                 message_type='comment',
                 subtype='mt_comment')
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
@@ -384,7 +386,7 @@ class WebsiteForum(http.Controller):
     def post_save(self, forum, post, **kwargs):
         if 'post_name' in kwargs and not kwargs.get('post_name').strip():
             return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),
@@ -562,7 +564,13 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
     def user_avatar(self, user_id=0, **post):
-        status, headers, content = binary_content(model='res.users', id=user_id, field='image', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+
+        if not content:
+            img_path = openerp.modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+            with open(img_path, 'rb') as f:
+                image = f.read()
+            content = image.encode('base64')
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
         image_base64 = base64.b64decode(content)
@@ -599,7 +607,7 @@ class WebsiteForum(http.Controller):
         if (user_id != request.session.uid and not
                 (user.website_published or
                     (count_user_questions and current_user.karma > forum.karma_unlink_all))):
-            return request.website.render("website_forum.private_profile", values)
+            return request.render("website_forum.private_profile", values, status=404)
 
         # limit length of visible posts by default for performance reasons, except for the high
         # karma users (not many of them, and they need it to properly moderate the forum)

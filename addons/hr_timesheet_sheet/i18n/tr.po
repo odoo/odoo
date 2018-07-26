@@ -3,13 +3,14 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
+# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-17 13:25+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-01-13 10:41+0000\n"
+"PO-Revision-Date: 2016-05-25 08:01+0000\n"
+"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +49,7 @@ msgstr "Toplam Mesai Kartı"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Zaman çizelgesi</span>"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -280,7 +281,7 @@ msgstr "Grupla"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "İK Bölümü"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -304,11 +305,6 @@ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-msgid "Important Messages"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -378,11 +374,6 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_ids
-msgid "Messages and communication history"
-msgstr "Mesajlar ve iletişim geçmişi"
-
-#. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
 msgid "Month"
 msgstr "Ay"
@@ -406,6 +397,12 @@ msgid ""
 msgstr "Eğer sisteme etkinliklerinizi kitap gibi olabilir ki benim Zaman Çizelgesi zaman çizelgesi açılır. Aynı formu, size katılmcı kayıt (Giriş / Çıkış Kayıt) ve farklı projeler üzerinde yapılan çalışma saatleri tanımlayabilirsiniz.Şirketce belirtilen süre sonunda, bir zaman çizelgesi, kullanıcı tarafından doğrulanır ve yönetici tarafından onaylanır. Gerekirse proje üzerinde tanımlanan, siz zaman çizelgesi göre faturalar oluşturabilir."
 
 #. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
+msgid "My Timesheets"
+msgstr "Zaman çizelgelerim"
+
+#. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
@@ -414,7 +411,7 @@ msgstr "Yeni"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "Onaylanacak yeni zaman çizelgesi."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -571,7 +568,7 @@ msgstr "Difference(hours) izin mesai kartı"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Timesheet approved"
-msgstr ""
+msgstr "Zaman çizelgesi onaylandı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -602,7 +599,7 @@ msgstr "Mesai kart aralığı"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
 msgid "Timesheet to Approve"
-msgstr ""
+msgstr "Onaylanacak Zaman çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
@@ -618,7 +615,7 @@ msgstr "Mesai Kartı"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
 msgid "Timesheets Approved"
-msgstr ""
+msgstr "Zaman çizelgeleri onaylandı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -628,10 +625,11 @@ msgstr "Döneme göre Mesai Kartı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
-msgstr ""
+msgstr "Zaman çizelgeleri, aynı zamanda, her projenin bağlı olduğu sözleşme yapılandırmasına\ngöre müşterilere faturalandılabilir."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -639,7 +637,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_confirmed
 msgid "Timesheets to Approve"
-msgstr ""
+msgstr "Onaylanacak Zaman çizelgeleri"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -685,6 +683,7 @@ msgstr "Toplam Mesai Kartı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_message_unread
+#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
@@ -783,7 +782,7 @@ msgid ""
 msgstr "Sen üst üste 2 mesai kartı oluşturamazsın!\nBu sorunu önlemek için menü'de 'Mevcut mesai kartı' kullanın."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:72
 #, python-format
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
@@ -791,36 +790,42 @@ msgid ""
 msgstr "Üst üste 2 mesai kartı olamaz! \nYou, bu sorunu önlemek için Menü 'mesai kartımı' kullanmalıdır."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "Doğrulanmış bir girdi mesai kartı'da değiştiremezsiniz"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:343
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:353
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Onaylamış mesai kart bir girişi değiştiremezsiniz."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid ""
 "You must record timesheets every day and confirm at the end\n"
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
-msgstr ""
+msgstr "Zaman çizelgelerini hergün kaydetmeli ve haftanın sonunda\nonaylamalısınız. Zaman çizelgesi onaylandığında bir\nyönetici tarafından doğrulanmalıdır."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
 #, python-format
 msgid "You will be able to register your working hours and activities."
-msgstr ""
+msgstr "Çalışma saatlerinizi ve etkinliklerinizi kayıt edebileceksiniz."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
 msgstr "hr.timesheet.current.open"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
+msgid "new timesheet."
+msgstr "yeni zaman çizelgesi."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -830,4 +835,4 @@ msgstr "to"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
-msgstr ""
+msgstr "onay bekliyor"

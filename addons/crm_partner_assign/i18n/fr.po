@@ -4,16 +4,18 @@
 # 
 # Translators:
 # Clo <clo@odoo.com>, 2015
-# Leo Schmitt <lschmitt@yziact.fr>, 2015
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
 # Loic <loic.richard2@gmail.com>, 2015
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015-2016
+# Micky Jault <micky037@hotmail.fr>, 2017
 # Nancy Bolognesi <nb@microcom.ca>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-10-31 17:42+0000\n"
-"Last-Translator: Clo <clo@odoo.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-06-23 23:29+0000\n"
+"Last-Translator: Micky Jault <micky037@hotmail.fr>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +58,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n            \n<p>Bonjour,</p>\n\n\n<p>Nous avons été contacté par ces prospects de votre région. Ainsi, les pistes suivantes ont été assignées à ${ctx['partner_id'].name} :</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Sujet indéfini'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Nom indéfini'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Pays indéfini' }, ${lead.lead_id.email_from or 'Courriel indéfini'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Veuillez vous connecter à votre <a href=\"${object.get_portal_url()}\">extranet</a> pour des détails. Sur chaque piste se trouvent deux boutons dans le coin en haut à gauche sur lequel vous devriez cliquer après avoir contacté la piste : \"Je suis intéressé\" et \"Je ne suis pas intéressé\".</p>\n% else:\n<p>\n    Vous n'avez pas encore accès à notre extranet. Veuillez contacter\n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'votre gestionnaire de compte %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'notre société'}.\n</p>\n% endif\n<p>La piste sera envoyée à un autre partenaire si vous ne contactez pas la piste dans les 20 prochains jours.</p>\n\n<p>Merci,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPS: On dirait que vous n'avez pas de gestionnaire de compte, veuillez nous contacter.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -78,14 +80,14 @@ msgstr "<p>Je suis intéressé par cette piste.</p>"
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:35
 #, python-format
 msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr "<p>Je ne suis pas intéressé par ce lead. J'ai contacté ce lead.</p>"
+msgstr "<p>Je ne suis pas intéressé par cette piste. J'ai contacté cette piste.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:37
 #, python-format
 msgid ""
 "<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr "<p>Je ne suis pas intéressé par ce lead. Je n'ai pas contacté ce lead.</p>"
+msgstr "<p>Je ne suis pas intéressé par cette piste. Je n'ai pas contacté cette piste.</p>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -131,7 +133,7 @@ msgstr "Mois d'attribution"
 #. module: crm_partner_assign
 #: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr "Attribue le commercial du partenaire attribué"
+msgstr "Attribue le vendeur du partenaire attribué"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_date_assign
@@ -177,7 +179,7 @@ msgstr "Probabilité moyenne"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Avg. of Probability"
-msgstr "Moyenne de Probabilité"
+msgstr "Moyenne de probabilité"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
@@ -405,13 +407,13 @@ msgstr "Élevé"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr "Je suis intéressé"
+msgstr "Je suis intéressé(e)"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr "Je ne suis pas intéressé"
+msgstr "Je ne suis pas intéressé(e)"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_id
@@ -437,12 +439,17 @@ msgstr "Implémenté par"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
 msgid "Interested by this lead"
-msgstr "Intéressé par cette piste"
+msgstr "Intéressé(e) par cette piste"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr "Date de facturation du compte"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr "Statistiques des factures"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
@@ -504,7 +511,7 @@ msgstr "Assignation de la piste"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr "Commentaire du lead"
+msgstr "Commentaire de la piste"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_location
@@ -597,7 +604,7 @@ msgstr "Nombre de jours pour ouvrir le cas"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr "Une fois que le prospect est traitée, il sera dans votre menu \"Opportunités\"."
+msgstr "Une fois que la piste est traitée, elle sera dans votre menu \"Opportunités\"."
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
@@ -705,7 +712,7 @@ msgstr "Date du partenariat"
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnerships"
-msgstr "Partenariat"
+msgstr "Partenariats"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_planned_revenue
@@ -764,13 +771,13 @@ msgstr "Séquence"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:84
 #, python-format
 msgid "Set an email address for the partner %s"
-msgstr "Définir une adresse e-mail pour le partenaire %s"
+msgstr "Définir une adresse courriel pour le partenaire %s"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr "Définir une adresse e-mail pour le partenaire(s): %s"
+msgstr "Définir une adresse courriel pour le(s) partenaire(s) : %s"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
@@ -793,13 +800,13 @@ msgstr "Le canal CRM \"Action intéressante\" est manquant"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:69
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr "Le modèle d'email transféré n'est pas dans la base de données"
+msgstr "Le modèle de courriel transféré n'est pas dans la base de données"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:73
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr "Le groupe du protail n'a pas été trouvé"
+msgstr "Le groupe du portail n'a pas été trouvé"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
@@ -856,12 +863,12 @@ msgstr "Pourquoi n'êtes-vous pas intéressé par ce lead?"
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:26
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr "Vous devez contacter le prospect avant de dire que vous êtes intéressé"
+msgstr "Vous devez contacter la piste avant de dire que vous êtes intéressé"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr "un seul partenaire: sélection manuelle de partenaire"
+msgstr "un seul partenaire : sélection manuelle du partenaire"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
@@ -881,7 +888,7 @@ msgstr "crm.lead.forward.to.partner"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr "par ex: Partenaire Gold"
+msgstr "par ex : Partenaire Or"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_res_partner_activation

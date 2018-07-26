@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <record id="project_issue.model_project_issue" model="ir.model">         
             <field name="website_form_default_field_id" ref="project_issue.field_project_issue_description" />
             <field name="website_form_access">True</field>
             <field name="website_form_label">Create an issue</field>
         </record>
-<!-- Template to blacklist field
-        <record id="project_issue.field_project_issue_{field_name}" model="ir.model.fields">
-            <field name="website_form_blacklisted">True</field>
-        </record>
--->
     </data>
 </openerp>

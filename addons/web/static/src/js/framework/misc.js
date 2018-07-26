@@ -93,12 +93,14 @@ function blockUI () {
     var throbber = new Throbber();
     throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
+    $('body').addClass('o_ui_blocked');
     return tmp;
 }
 
 function unblockUI () {
     _.invoke(throbbers, 'destroy');
     throbbers = [];
+    $('body').removeClass('o_ui_blocked');
     return $.unblockUI.apply($, arguments);
 }
 

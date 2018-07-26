@@ -20,6 +20,9 @@
             <field name="groups_id" eval="[(4, ref('base.group_portal'))]"/>
             <field name="arch" type="xml">
                 <data>
+                    <header position="replace">
+                        <field name="state" invisible="1"/>
+                    </header>
                     <xpath expr='//field[@name="order_line"]/form//field[@name="procurement_ids"]' position="replace"/>
                     <xpath expr='//field[@name="order_line"]/form//field[@name="product_id"]' position="replace"/>
                     <xpath expr='//field[@name="order_line"]/form//field[@name="qty_delivered_updateable"]' position="replace"/>
@@ -50,6 +53,21 @@
                     <xpath expr='//field[@name="order_line"]/kanban/templates/t/div//span/t' position="replace">
                         <t t-esc="record.name.value"/>
                     </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="invoice_form_portal" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="groups_id" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//div[contains(@attrs, "has_outstanding")]' position="replace"/>
+                    <field name="has_outstanding" position="replace"/>
+                    <field name="payments_widget" position="replace"/>
+                    <field name="outstanding_credits_debits_widget" position="replace"/>
                 </data>
             </field>
         </record>

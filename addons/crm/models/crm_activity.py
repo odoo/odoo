@@ -45,3 +45,12 @@ class CrmActivity(models.Model):
         if 'internal' not in values and 'default_internal' not in self._context:
             values['internal'] = True
         return super(CrmActivity, self).create(values)
+
+    @api.multi
+    def unlink(self):
+        for activity in self:
+            activities = self.search([('subtype_id', '=', activity.subtype_id.id)])
+            # to ensure that the subtype is only linked the current activity
+            if len(activities) == 1:
+                activity.subtype_id.unlink()
+        return super(CrmActivity, self).unlink()

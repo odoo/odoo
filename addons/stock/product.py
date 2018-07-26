@@ -151,7 +151,9 @@ class product_product(osv.osv):
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
         res = {}
-        for product in self.browse(cr, uid, ids, context=context):
+        ctx = context.copy()
+        ctx.update({'prefetch_fields': False})
+        for product in self.browse(cr, uid, ids, context=ctx):
             id = product.id
             qty_available = float_round(quants.get(id, 0.0), precision_rounding=product.uom_id.rounding)
             incoming_qty = float_round(moves_in.get(id, 0.0), precision_rounding=product.uom_id.rounding)
@@ -210,7 +212,7 @@ class product_product(osv.osv):
         return res
 
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
-        res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
+        res = {id : {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for id in ids}
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             res[data['product_id'][0]]['nbr_reordering_rules'] = int(data['product_id_count'])
@@ -340,6 +342,13 @@ class product_product(osv.osv):
             }}
         return {}
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
+        products = self.pool['product.product'].browse(cr, uid, ids, context=context)
+        if 'active' in vals and not vals['active'] and products.mapped('orderpoint_ids').filtered(lambda r: r.active):
+            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
+        return res
+
 
 class product_template(osv.osv):
     _name = 'product.template'
@@ -383,11 +392,11 @@ class product_template(osv.osv):
         return res
 
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
-        res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
+        res = {id : {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for id in ids}
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             product_tmpl_id = data['__domain'][1][2][0]
-            res[product_tmpl_id]['nbr_reordering_rules'] = int(data['product_id_count'])
+            res[product_tmpl_id]['nbr_reordering_rules'] = res[product_tmpl_id].get('nbr_reordering_rules', 0) + int(data['product_id_count'])
             res[product_tmpl_id]['reordering_min_qty'] = data['product_min_qty']
             res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         return res
@@ -395,7 +404,7 @@ class product_template(osv.osv):
     def _get_product_template_type(self, cr, uid, context=None):
         res = super(product_template, self)._get_product_template_type(cr, uid, context=context)
         if 'product' not in [item[0] for item in res]:
-            res.append(('product', 'Stockable Product'))
+            res.append(('product', _('Stockable Product')))
         return res
 
     _columns = {
@@ -435,7 +444,7 @@ class product_template(osv.osv):
             fnct_search=_search_product_quantity, type='float', string='Outgoing'),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
-        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
+        'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain=[('product_selectable', '=', True)],
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
         'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),
         'reordering_min_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
@@ -581,7 +590,7 @@ class product_category(osv.osv):
         return res
 
     _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain=[('product_categ_selectable', '=', True)]),
         'removal_strategy_id': fields.many2one('product.removal', 'Force Removal Strategy', help="Set a specific removal strategy that will be used regardless of the source location for this product category"),
         'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
     }

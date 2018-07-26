@@ -156,7 +156,7 @@
         <field name="name">mrp.production.workcenter.line.gantt</field>
         <field name="model">mrp.production.workcenter.line</field>
         <field name="arch" type="xml">
-            <gantt date_delay="hour" date_start="date_planned" string="Operations" default_group_by="production_id">
+            <gantt date_delay="hour" date_start="date_planned" date_stop="date_planned_end" string="Operations" default_group_by="production_id">
             </gantt>
         </field>
     </record>

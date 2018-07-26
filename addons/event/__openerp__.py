@@ -3,7 +3,7 @@
     'name': 'Events Organisation',
     'version': '0.1',
     'website': 'https://www.odoo.com/page/events',
-    'category': 'Tools',
+    'category': 'Marketing',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
     'description': """
 Organization and management of Events.
@@ -17,7 +17,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgements for any event registration
 """,
-    'depends': ['base_setup', 'mail', 'marketing', 'web_tip'],
+    'depends': ['base_setup', 'mail', 'marketing', 'report', 'web_tip'],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',

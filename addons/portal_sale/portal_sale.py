@@ -24,6 +24,8 @@ class sale_order(osv.Model):
 
     def action_confirm(self, cr, uid, ids, context=None):
         # fetch the partner's id and subscribe the partner to the sale order
+        if not isinstance(ids, (tuple, list)):
+            ids = [ids]
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
@@ -32,6 +34,8 @@ class sale_order(osv.Model):
         return super(sale_order, self).action_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
+        if not isinstance(ids, (tuple, list)):
+            ids = [ids]
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         contex_signup = dict(context, signup_valid=True)
@@ -41,7 +45,8 @@ class sale_order(osv.Model):
         )[document.partner_id.id]
 
     def get_formview_action(self, cr, uid, id, context=None):
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        context = context or {}
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
         if user.share:
             document = self.browse(cr, uid, id, context=context)
             action_xmlid = 'action_quotations_portal' if document.state in ('draft', 'sent') else 'action_orders_portal'
@@ -83,7 +88,8 @@ class account_invoice(osv.Model):
         )[document.partner_id.id]
 
     def get_formview_action(self, cr, uid, id, context=None):
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        context = context or {}
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
         if user.share:
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
         return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)

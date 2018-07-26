@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-10-01 09:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-07-06 07:28+0000\n"
+"PO-Revision-Date: 2018-05-14 07:49+0000\n"
+"Last-Translator: Tri Bui <tribd@trobz.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -228,6 +228,11 @@ msgstr "Thời gian chậm trễ trung bình tính theo ngày để sản xuất
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
 msgstr "Chờ nguyên liệu thô"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.action_report_bom_price
+msgid "BOM Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -558,6 +563,11 @@ msgid "Consumed for"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Cost Structure"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
 msgid "Cost per cycle"
 msgstr "Chi phí trên chu kỳ"
@@ -640,7 +650,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Tạo 1 lịch làm việc"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_description
@@ -681,12 +691,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_display_name
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
@@ -701,7 +712,7 @@ msgstr "Hoàn thành"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "Hiệu suất công việc"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_finished
@@ -750,14 +761,14 @@ msgstr "Người dõi theo"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_channel_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Người theo dõi (Các kênh)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Người theo dõi (Các đối tác)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -838,6 +849,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure_id
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
@@ -877,7 +889,7 @@ msgstr "Nếu bỏ chọn trường Hiệu lực, nó sẽ cho phép bạn ẩn 
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
+msgstr "Nếu bạn cho trường này không kích hoạt, nó sẽ cho phép bạn ẩn thông tin nfay đi mà không cần xóa nó."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
@@ -907,6 +919,12 @@ msgstr "Tham chiếu nội bộ"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_is_follower
 msgid "Is Follower"
+msgstr "Trở thành người theo dõi"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
 msgstr ""
 
 #. module: mrp
@@ -939,12 +957,13 @@ msgstr "Ngày thông điệp cuối cùng"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter___last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter___last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_bom_cost___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mrpbomstructure___last_update
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sửa lần cuối vào"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
@@ -1153,7 +1172,7 @@ msgstr "Đánh dấu là bắt đầu"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Master Data"
-msgstr ""
+msgstr "Dữ liệu Tổng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_ids
@@ -1218,7 +1237,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Không có biến thể trên sản phẩm"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1528,7 +1547,7 @@ msgstr ""
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Sản phẩm có thể có 1 vài thuộc tính, xác định theo các biến thể (Ví dụ: kích cỡ, màu sắc,...)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
@@ -1590,6 +1609,7 @@ msgstr "Nhóm thuộc tính"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_product_qty
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -1600,6 +1620,11 @@ msgstr "Số lượng"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
 msgstr "Số lượng (theo đơn vị đo lường mặc định)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Raw Materials"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1646,7 +1671,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Tài khoản liên quan của nhân viên dùng để truy cập hệ thống."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1972,6 +1997,16 @@ msgid "To Consume"
 msgstr "Để tiêu thụ"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Total Cost of Raw Materials"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Cycles"
@@ -1992,6 +2027,11 @@ msgstr "Tổng số lượng"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Type"
 msgstr "Loại"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
+msgid "Unit Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2018,7 +2058,7 @@ msgstr "Thông điệp chưa đọc"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_unread_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Số tin nhắn chưa đọc"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2259,6 +2299,14 @@ msgstr "Bạn có thể cấu hình sản phẩm phụ trong một Định mức
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number"
+" %s"
 msgstr ""
 
 #. module: mrp

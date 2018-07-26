@@ -39,16 +39,9 @@ class stock_production_lot(osv.osv):
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
-        newid = super(stock_production_lot, self).create(cr, uid, vals, context=context)
-        obj = self.browse(cr, uid, newid, context=context)
-        towrite = []
-        for f in ('life_date', 'use_date', 'removal_date', 'alert_date'):
-            if not getattr(obj, f):
-                towrite.append(f)
         context = dict(context or {})
-        context['product_id'] = obj.product_id.id
-        self.write(cr, uid, [obj.id], self.default_get(cr, uid, towrite, context=context))
-        return newid
+        context['product_id'] = vals.get('product_id', context.get('default_product_id') or context.get('product_id'))
+        return super(stock_production_lot, self).create(cr, uid, vals, context=context)
 
     _defaults = {
         'life_date': _get_date('life_time'),

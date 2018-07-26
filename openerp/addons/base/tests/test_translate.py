@@ -50,13 +50,6 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms, [source])
 
-    def test_translate_xml_text_entity_unescaped(self):
-        """ Test xml_translate() on plain text with HTML entities. """
-        terms = []
-        source = "Blah&nbsp;blah&nbsp;blah"
-        with self.assertRaises(XMLSyntaxError):
-            xml_translate(terms.append, source)
-
     def test_translate_xml_text_entity(self):
         """ Test xml_translate() on plain text with HTML escaped entities. """
         terms = []
@@ -126,7 +119,7 @@ class TranslationToolsTestCase(unittest.TestCase):
         terms = []
         source = """<div>
                         stuff before
-                        <div translation="off">Do not translate this</div>
+                        <div t-translation="off">Do not translate this</div>
                         stuff after
                     </div>"""
         result = xml_translate(terms.append, source)

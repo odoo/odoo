@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-09-20 15:11+0000\n"
+"PO-Revision-Date: 2017-07-04 09:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -31,13 +31,13 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Suma</strong>"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid ""
-"A cashmove can either be an expense or a payment.<br/>\n"
-"                An expense is automatically created at the order receipt.<br/>\n"
+"A cashmove can either be an expense or a payment.<br>\n"
+"                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
 
@@ -65,14 +65,14 @@ msgstr "Pridėti"
 #: code:addons/lunch/models/lunch.py:251
 #, python-format
 msgid "Alert"
-msgstr ""
+msgstr "Įspėjimas"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_alert_action
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_alerts
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
 msgid "Alerts"
-msgstr ""
+msgstr "Įspėjimai"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -89,7 +89,7 @@ msgstr "Suma"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_end_hour
 msgid "And"
-msgstr ""
+msgstr "Ir"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
@@ -99,7 +99,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
 msgid "Between"
-msgstr ""
+msgstr "Tarp"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -109,17 +109,17 @@ msgstr "Pagal darbuotoją"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
-msgstr ""
+msgstr "Pagal vartotoją"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr ""
+msgstr "Pagal tiekėją"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
 msgid "Can be an order or a payment"
-msgstr ""
+msgstr "Gali būti užsakymas arba mokėjimas"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
@@ -137,7 +137,7 @@ msgstr "Atšaukti"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Cancel meals"
-msgstr ""
+msgstr "Atšaukti maistą"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -181,12 +181,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Click to create a new payment."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti naują mokėjimą"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Click to create a payment."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti mokėjimą"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
@@ -275,7 +275,7 @@ msgstr "Vaizdavimas"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Vaizduojamas pavadinimas"
 
 #. module: lunch
 #. openerp-web
@@ -297,19 +297,19 @@ msgstr ""
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
 msgid "Every Day"
-msgstr ""
+msgstr "Kiekvieną dieną"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
 msgid "Every Week"
-msgstr ""
+msgstr "Kiekvieną savaitę"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid ""
-"Example: <br/>\n"
-"                - Recurency: Everyday<br/>\n"
-"                - Time interval: from 00h00 am to 11h59 pm<br/>\n"
+"Example: <br>\n"
+"                - Recurency: Everyday<br>\n"
+"                - Time interval: from 00h00 am to 11h59 pm<br>\n"
 "                - Message: \"You must order before 10h30 am\""
 msgstr ""
 
@@ -357,7 +357,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid ""
-"Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"Here you can see your cash moves.<br>A cash moves can be either an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
 
@@ -435,12 +435,12 @@ msgstr "Sąrašas"
 #: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
 msgid "Lunch"
-msgstr ""
+msgstr "Pietūs"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr ""
+msgstr "Pietų įspėjimas"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:223
@@ -455,7 +455,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #, python-format
 msgid "Lunch Order"
-msgstr ""
+msgstr "Pietų užsakymas"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -487,12 +487,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "Mano pietūs"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "My Orders"
-msgstr ""
+msgstr "Mano užsakymai"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -509,7 +509,7 @@ msgstr "Naujas"
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_form
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
-msgstr ""
+msgstr "Naujas užsakymas"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:37
@@ -730,7 +730,7 @@ msgstr "Sekmadienis"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_company_id
 msgid "The company this user is currently working for."
-msgstr ""
+msgstr "Įmonė, kurioje šiuo metu dirba šis vartotojas:"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:98
@@ -798,7 +798,7 @@ msgstr "Naudotojai"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendor"
-msgstr ""
+msgstr "Pardavėjas"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -828,7 +828,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_tree
 msgid "Your Orders"
-msgstr ""
+msgstr "Jūsų užsakymai"
 
 #. module: lunch
 #. openerp-web
@@ -898,7 +898,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid ""
-"to announce that the order is ordered <br/>\n"
+"to announce that the order is ordered <br>\n"
 "                - Click on the"
 msgstr ""
 
@@ -906,7 +906,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid ""
-"to announce that the order is received <br/>\n"
+"to announce that the order is received <br>\n"
 "                - Click on the"
 msgstr ""
 

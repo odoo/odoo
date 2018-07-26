@@ -8,7 +8,11 @@ except ImportError:
 
 from PIL import Image
 from PIL import ImageEnhance
-from random import randint
+from random import randrange
+
+# Preload PIL with the minimal subset of image formats we need
+Image.preinit()
+Image._initialized = 2
 
 # ----------------------------------------
 # Image resizing
@@ -71,7 +75,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
 
     if image.size != size:
         image = image_resize_and_sharpen(image, size)
-    if image.mode not in ["1", "L", "P", "RGB", "RGBA"]:
+    if image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (filetype == 'JPEG' and image.mode == 'RGBA'):
         image = image.convert("RGB")
 
     background_stream = StringIO.StringIO()
@@ -88,6 +92,7 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
         :param preserve_aspect_ratio: boolean (default: False)
         :param factor: Sharpen factor (default: 2.0)
     """
+    origin_mode = image.mode
     if image.mode != 'RGBA':
         image = image.convert('RGBA')
     image.thumbnail(size, Image.ANTIALIAS)
@@ -98,6 +103,8 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     # create a transparent image for background and paste the image on it
     image = Image.new('RGBA', size, (255, 255, 255, 0))
     image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
+    if image.mode != origin_mode:
+        image = image.convert(origin_mode)
     return image
 
 def image_save_for_web(image, fp=None, format=None):
@@ -213,8 +220,8 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     image = Image.new('RGB', original.size)
     # generate the background color, past it as background
     if randomize:
-        color = (randint(32, 224), randint(32, 224), randint(32, 224))
-    image.paste(color)
+        color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
+    image.paste(color, box=(0, 0) + original.size)
     image.paste(original, mask=original)
     # return the new image
     buffer = StringIO.StringIO()
@@ -255,6 +262,24 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
     if return_small:
         return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
     return return_dict
+
+def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small'):
+    """ Update ``vals`` with image fields resized as expected. """
+    if big_name in vals:
+        vals.update(image_get_resized_images(vals[big_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False))
+    elif medium_name in vals:
+        vals.update(image_get_resized_images(vals[medium_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False))
+    elif small_name in vals:
+        vals.update(image_get_resized_images(vals[small_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True))
 
 
 if __name__=="__main__":

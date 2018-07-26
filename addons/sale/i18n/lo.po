@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:50+0000\n"
+"POT-Creation-Date: 2016-09-22 13:44+0000\n"
+"PO-Revision-Date: 2017-08-10 10:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lao (http://www.transifex.com/odoo/odoo-9/language/lo/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
@@ -32,7 +32,7 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -43,11 +43,6 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
@@ -127,7 +122,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
@@ -135,11 +130,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "(update)"
 msgstr "(ຄິດໄລ່ມູນຄ່າໃໝ່)"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-msgstr "<span groups=\"sale.group_discount_per_so_line\">ສ່ວນຫຼຸດ.(%)</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -251,7 +241,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະ"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -322,7 +312,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_company_id
@@ -371,18 +361,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງ ໂດຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງ ເມື່ອ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_date
 msgid "Creation Date"
-msgstr ""
+msgstr "ວັນທີສ້າງ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_currency_id
@@ -507,6 +497,11 @@ msgid "Different prices per customer segment"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Disc.(%)"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
 msgid "Discount"
 msgstr ""
@@ -534,7 +529,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງອອກ"
 
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
@@ -606,7 +601,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "ຕົວກັ່ນຕອງທີ່ຂະຫຍາຍອອກ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -655,7 +650,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມ ໂດຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
@@ -663,7 +658,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_id
 msgid "ID"
-msgstr ""
+msgstr "ເລກລຳດັບ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -684,11 +679,6 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr ""
@@ -701,7 +691,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "​ໃບ​ເກັບ​ເງີນ"
 
 #. module: sale
 #: code:addons/sale/sale.py:785
@@ -727,7 +717,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "ລາຍການເກັບເງິນ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_invoice_lines
@@ -841,6 +831,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr ""
@@ -889,21 +880,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ເມື່ອ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -926,11 +917,6 @@ msgid "Messages"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_ids
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
 msgstr ""
@@ -944,6 +930,12 @@ msgstr ""
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
 msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:96
+#, python-format
+msgid "New"
+msgstr "ສ້າງໃໝ່"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1201,7 +1193,7 @@ msgstr "ໝວດສິນຄ້າ"
 #: model:ir.model,name:sale.model_product_template
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "ແບບ​ຟອມ​ສິນ​ຄ້າ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_variant
@@ -1310,6 +1302,7 @@ msgstr "ສົ່ງແລ້ວ"
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Quotations"
 msgstr "ໃບສະເໜີລາຄາ"
@@ -1395,7 +1388,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "ການຂາຍສໍາເລັດ"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1405,7 +1398,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
-msgstr ""
+msgstr "ຂໍ້ມູນການຂາຍ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1415,18 +1408,18 @@ msgstr ""
 #: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.report,state:0
 msgid "Sales Order"
-msgstr ""
+msgstr "ໃບສັ່ງຊື້"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "ລາຍການສິນຄ້າທີ່ສັ່ງຊື້"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "ລາຍການສິນຄ້າທີ່ສັ່ງຊື້"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1478,7 +1471,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr ""
+msgstr "ທິມງານຂາຍ"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
@@ -1500,7 +1493,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "ພະນັກງານຂາຍ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1527,7 +1520,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: sale
 #. openerp-web
@@ -1676,9 +1669,22 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
 msgstr "ປີນີ້"
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1722,25 +1728,25 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
-msgstr ""
+msgstr "ອອກໃບຮັບເງິນ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_total
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr ""
+msgstr "ລວມທັງໝົດ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_total
 msgid "Total Price"
-msgstr ""
+msgstr "ມູນຄ່າລວມ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr ""
+msgstr "ມູນຄ່າລວມພາສີ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
@@ -1752,14 +1758,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
-msgstr ""
+msgstr "ລາຄາຫົວໜວຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
@@ -1768,8 +1774,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມບໍ່ໄດ້ອ່ານ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread_counter
@@ -1779,6 +1786,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
 msgid "Untaxed Amount"
+msgstr "ມູນຄ່າບໍ່ລວມພາສີ"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
 msgstr ""
 
 #. module: sale
@@ -1793,6 +1805,13 @@ msgid "Upselling Opportunity"
 msgstr ""
 
 #. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
 msgstr ""
@@ -1800,7 +1819,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "ອາກອນ:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_website_message_ids
@@ -1875,7 +1894,7 @@ msgstr "ມື້"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting

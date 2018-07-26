@@ -3,7 +3,7 @@
 {
     'name': 'Accounting and Finance',
     'version': '1.1',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'sequence': 35,
     'summary': 'Financial and Analytic Accounting',
     'description': """

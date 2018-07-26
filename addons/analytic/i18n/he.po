@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-09-30 09:24+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-12-01 14:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,13 @@ msgstr "מטבע החשבון"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "נדרשת פעולה"
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
+msgstr "פעיל"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -61,13 +67,13 @@ msgstr ""
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "חשבונאות אנליטית"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr ""
+msgstr "חשבונות אנליטיים"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -75,7 +81,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
-msgstr ""
+msgstr "רשומות אנליטיים"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
@@ -85,12 +91,12 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "שורת אנליטית"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
-msgstr ""
+msgstr "שורות אנליטית"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
@@ -100,12 +106,12 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_tag
 msgid "Analytic Tags"
-msgstr ""
+msgstr "תגיות אנילטיות"
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
-msgstr ""
+msgid "Archived"
+msgstr "התווסף לארכיון"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -115,7 +121,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
-msgstr ""
+msgstr "מאזן"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -206,7 +212,7 @@ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
 msgid "Debit"
-msgstr ""
+msgstr "חובה"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
@@ -219,7 +225,7 @@ msgstr "תיאור"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "השם המוצג"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
@@ -290,7 +296,7 @@ msgstr "תאריך הודעה אחרונה"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "תאריך שינוי אחרון"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
@@ -314,11 +320,6 @@ msgid "Messages"
 msgstr "הודעות"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "היסטוריית הודעות ותקשורת"
-
-#. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
 msgstr ""
@@ -331,17 +332,17 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "מספר הפעולות"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "מספר ההודעות שדורשות פעולה"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "מספר ההודעות שלא נקראו"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -383,6 +384,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr "בחירת תקופה לניתוח"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr "מחוז"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids

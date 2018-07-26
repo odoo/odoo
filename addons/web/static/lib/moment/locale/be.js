@@ -113,8 +113,10 @@
             y : "год",
             yy : relativeTimeWithPlural
         },
-
-
+        meridiemParse: /ночы|раніцы|дня|вечара/,
+        isPM : function (input) {
+            return /^(дня|вечара)$/.test(input);
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 4) {
                 return "ночы";

@@ -7,9 +7,9 @@
             <field name="model">mail.channel</field>
             <field name="arch" type="xml">
                 <search string="Search history">
-                    <filter name="id" string="My sessions" domain="[('user_ids','in', uid)]"/>
+                    <field name="name"/>
                     <group expand="0" string="Group By...">
-                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <separator orientation="vertical" />
                         <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
                         <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
@@ -25,9 +25,8 @@
             <field name="model">mail.channel</field>
             <field name="arch" type="xml">
                 <tree string="History" create="false">
-                    <field name="id"/>
-                    <field name="name"/>
-                    <field name="create_date"/>
+                    <field name="create_date" string="Session Date"/>
+                    <field name="name" string="Attendees"/>
                 </tree>
             </field>
         </record>
@@ -39,12 +38,11 @@
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
                         <group>
-                            <group string="General">
-                                <field name="id"/>
-                                <field name="name" />
-                                <field name="create_date" readonly="1"/>
+                            <group>
+                                <field name="name" string="Attendees"/>
+                                <field name="create_date" readonly="1" string="Session Date"/>
                             </group>
-                            <group string="Feedback">
+                            <group>
                                 <field name="rating_ids" mode="kanban" nolabel="1">
                                     <kanban>
                                         <field name="rating"/>
@@ -67,9 +65,9 @@
                         </group>
                         <field name="message_ids" type="tree">
                             <tree string="History">
-                                <field name="create_date" />
-                                <field name="author_id" />
-                                <field name="body" />
+                                <field name="author_id"/>
+                                <field name="body"/>
+                                <field name="create_date" groups="base.group_no_one"/>
                             </tree>
                         </field>
                     </sheet>
@@ -82,10 +80,25 @@
             <field name="name">History</field>
             <field name="res_model">mail.channel</field>
             <field name="view_type">form</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="im_livechat.mail_channel_view_search"/>
             <field name="domain">[('livechat_channel_id', '!=', None)]</field>
-            <field name="context">{'group_by': ['livechat_channel_id', 'create_date:month']}</field>
+            <field name="context">{}</field>
         </record>
+        <record id="mail_channel_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action"/>
+        </record>
+
+        <record id="mail_channel_action_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action"/>
+        </record>
+
 
         <record id="mail_channel_action_from_livechat_channel" model="ir.actions.act_window">
             <field name="name">Sessions</field>

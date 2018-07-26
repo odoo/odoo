@@ -3,19 +3,21 @@
 # * account_voucher
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-10-08 14:35+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-09-23 21:31+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
@@ -35,7 +37,7 @@ msgstr "Konto"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "Data zaksięgowania"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -76,7 +78,7 @@ msgstr "Inofrmacja o rachunku"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Odnośnik rachunku"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -102,18 +104,24 @@ msgstr "Nie mozna usuwać racunków/płatności, które są otwarte lub zapłaco
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Kliknij aby stworzyć rachunek sprzedaży."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Kliknij, aby zarejestrować dowód zakupu."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
 msgid "Company"
 msgstr "Firma"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -296,11 +304,6 @@ msgid "Messages"
 msgstr "Wiadomosći"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_ids
-msgid "Messages and communication history"
-msgstr "Wiadomości i historia komunikacji"
-
-#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
 msgid "Notes"
 msgstr "Uwagi"
@@ -354,7 +357,7 @@ msgstr "Zapłać od razu"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Zapłać później"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -494,12 +497,12 @@ msgstr "Podatek"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Kwota podatku"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Korekta podatku"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -509,7 +512,7 @@ msgstr "Rachunek został zapłacony"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr "Konto dochodów i wydatków związane z wybranym produktem."
+msgstr "Konto przychodów i wydatków związane z wybranym produktem."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
@@ -568,7 +571,7 @@ msgstr "Dostawca"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Rachunek zakupu"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:28

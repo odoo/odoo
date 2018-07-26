@@ -87,7 +87,7 @@ var GraphView = View.extend({
                 }
             }
         });
-        this.measures.__count__ = {string: _t("Quantity"), type: "integer"};
+        this.measures.__count__ = {string: _t("Count"), type: "integer"};
     },
     do_search: function (domain, context, group_by) {
         if (!this.widget) {
@@ -99,6 +99,7 @@ var GraphView = View.extend({
                 groupbys: this.initial_groupbys,
                 context: context,
                 fields: this.fields,
+                stacked: this.fields_view.arch.attrs.stacked !== "False" 
             });
             // append widget
             this.widget.appendTo(this.$el);
@@ -128,6 +129,12 @@ var GraphView = View.extend({
             this.update_measure();
             this.widget.set_measure(this.active_measure);
         }
+    },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').off(); // remove jquery's tooltip() handlers
+        }
+        return this._super.apply(this, arguments);
     },
 });
 

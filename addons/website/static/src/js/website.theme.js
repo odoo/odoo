@@ -301,11 +301,15 @@ function theme_customize() {
 
 website.TopBar.include({
     start: function () {
-        this.$el.on('click', "#theme_customize a", theme_customize);
-        if ((window.location.hash || "").indexOf("theme=true") !== -1) {
-            theme_customize();
-            window.location.hash = "";
-        }
+        var self = this;
+        base.ready().then(function () {
+            self.$el.on('click', "#theme_customize a", theme_customize);
+            if ((window.location.hash || "").indexOf("theme=true") !== -1) {
+                theme_customize();
+                window.location.hash = "";
+            }
+        });
+
         return this._super();
     }
 });

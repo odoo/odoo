@@ -3,8 +3,7 @@
 import pytz
 
 from openerp import _, api, fields, models
-from openerp.exceptions import UserError
-
+from openerp.exceptions import AccessError, UserError
 
 class event_type(models.Model):
     """ Event Type """
@@ -56,7 +55,7 @@ class event_event(models.Model):
             'interval_unit': 'now',
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription')
-        })]
+        })] if self.user_has_groups('event.group_email_scheduling') else []
 
     # Seats and computation
     seats_max = fields.Integer(
@@ -186,7 +185,9 @@ class event_event(models.Model):
     def name_get(self):
         result = []
         for event in self:
-            dates = [dt.split(' ')[0] for dt in [event.date_begin, event.date_end] if dt]
+            date_begin = fields.Datetime.from_string(event.date_begin)
+            date_end = fields.Datetime.from_string(event.date_end)
+            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in [date_begin, date_end] if dt]
             dates = sorted(set(dates))
             result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
         return result
@@ -289,7 +290,7 @@ class event_registration(models.Model):
         string='Status', default='draft', readonly=True, copy=False, track_visibility='onchange')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
-    name = fields.Char(string='Attendee Name', select=True)
+    name = fields.Char(string='Attendee Name', index=True)
 
     @api.one
     @api.constrains('event_id', 'state')
@@ -371,11 +372,14 @@ class event_registration(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(event_registration, self).message_get_suggested_recipients()
-        for attendee in self:
-            if attendee.email:
-                attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
-            if attendee.partner_id:
-                attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
+        try:
+            for attendee in self:
+                if attendee.partner_id:
+                    attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
+                elif attendee.email:
+                    attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
+        except AccessError:     # no read access rights -> ignore suggested recipients
+            pass
         return recipients
 
     @api.multi

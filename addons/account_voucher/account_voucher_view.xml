@@ -83,7 +83,7 @@
                         <group>
                             <field name="account_id"/>
                             <field name="tax_ids" widget="many2many_tags"/>
-                            <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('state','not in',('close','cancelled'))]" groups="analytic.group_analytic_accounting"/>
+                            <field name="account_analytic_id" domain="[('account_type','=','normal'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -102,7 +102,7 @@
                         on_change="product_id_change(product_id, parent.partner_id, price_unit, company_id, parent.currency_id, parent.voucher_type)" />
                     <field name="name"/>
                     <field name="account_id"/>
-                    <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('state','not in',('close','cancelled'))]" groups="analytic.group_analytic_accounting"/>
+                    <field name="account_analytic_id" domain="[('account_type','=','normal'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>

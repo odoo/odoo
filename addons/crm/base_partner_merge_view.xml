@@ -2,16 +2,14 @@
 <openerp>
     <data>
 
-        <act_window id="action_partner_deduplicate"
-            res_model="base.partner.merge.automatic.wizard"
-            src_model="res.partner"
-            target="new"
-            multi="True"
-            key2="client_action_multi"
-            view_mode="form"
-            name="Deduplicate Contact"
-            context="{'default_state': 'option'}"
-        />
+        <record model="ir.actions.act_window" id="action_partner_deduplicate">
+            <field name="name">Deduplicate Contacts</field>
+            <field name="res_model">base.partner.merge.automatic.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'active_test': False}</field>
+        </record>
 
         <record model='ir.ui.view' id='base_partner_merge_automatic_wizard_form'>
             <field name='name'>base.partner.merge.automatic.wizard.form</field>

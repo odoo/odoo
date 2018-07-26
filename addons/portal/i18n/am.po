@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2017-12-21 12:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Amharic (http://www.transifex.com/odoo/odoo-9/language/am/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: am\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: portal
+#: model:mail.template,body_html:portal.mail_template_data_portal_welcome
+msgid ""
+"\n"
+"            \t<p>\n"
+"                    Dear ${object.user_id.name or ''},\n"
+"                </p>\n"
+"                <p>\n"
+"                    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"                </p>\n"
+"                <p>\n"
+"                    Your login account data is:\n"
+"                </p>\n"
+"                <ul>\n"
+"                    <li>Username: ${object.user_id.login or ''}</li>\n"
+"                </ul>\n"
+"                <ul>\n"
+"                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                </ul>\n"
+"                <ul>\n"
+"                \t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                </ul>\n"
+"                <p>\n"
+"                \tYou can set or change your password via the following url:\n"
+"                </p>\n"
+"                <ul>\n"
+"                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                </ul>\n"
+"                <p>\n"
+"                \t${object.wizard_id.welcome_message or ''}\n"
+"                </p>\n"
+"                <p>---<br />\n"
+"                    Odoo - Open Source Business Applications<br />\n"
+"                    http://www.odoo.com<br />\n"
+"                </p>\n"
+"            \n"
+"            "
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_groups
+msgid "Access Groups"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Apply"
+msgstr "ማመልከት"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Cancel"
+msgstr "መሰረዝ"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
+msgid "Contact"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_user_tree_view
+msgid "Contacts"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
+msgid "Created by"
+msgstr "ፈጣሪው"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
+msgid "Created on"
+msgstr "የተፈጠረበት"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
+msgid "Email"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
+msgid "ID"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_res_groups_is_portal
+msgid "If checked, this group is usable as a portal."
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
+msgid "In Portal"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
+msgid "Invitation Message"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
+msgid "Login User"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Non-Portal Groups"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
+#: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
+#: model:ir.ui.menu,name:portal.portal_menu
+msgid "Portal"
+msgstr ""
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Portal Access Management"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Portal Groups"
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_projects
+msgid "Projects"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid ""
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:114
+#, python-format
+msgid "Several contacts have the same email: "
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:111
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:117
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
+msgid "The portal that users can be added in or removed from."
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
+msgid "This text is included in the email sent to new users of the portal."
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:120
+#, python-format
+msgid ""
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr ""
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
+msgid "Users"
+msgstr "ተጠቃሚዎች"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:179
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr ""
+
+#. module: portal
+#: model:mail.template,subject:portal.mail_template_data_portal_welcome
+msgid "Your Odoo account at ${user.company_id.name|safe}"
+msgstr ""

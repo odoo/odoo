@@ -58,16 +58,4 @@
         </div>
     </t>
 </t>
-<t t-name="website.contentMenu.dialog.add" t-extend="web_editor.dialog.link">
-    <t t-jquery="t[t-set='title']" t-operation="inner">
-        <t t-if="!widget.update_mode">Add Menu Entry</t>
-        <t t-if="widget.update_mode">Edit Menu Entry</t>
-    </t>
-    <t t-jquery="form > div.form-horizontal" t-operation="replace"/>
-    <t t-jquery="form > div.list-group:first label" t-operation="replace">
-        <label for="link-new" class="control-label">
-            Menu Label
-        </label>
-    </t>
-</t>
 </templates>

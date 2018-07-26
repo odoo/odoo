@@ -3,19 +3,21 @@
 # * sale_order_dates
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-09-23 21:33+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
@@ -28,14 +30,14 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr ""
+msgstr "Data oczekiwana przez klienta.\nKiedy Zamówienie jest potwierdzone, to "
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr ""
+msgstr "Termin, w którym produkty zostaną na pewno dostarczone. Jest to data, którą możesz obiecać klientowi, w oparciu o Terminy Produktu."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
@@ -74,4 +76,4 @@ msgstr "Pozycja zamówienia sprzedaży"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
+msgstr "Żądana data jest wcześniejsza niż data dostawy. Możesz nie spełnić oczekiwań klienta."

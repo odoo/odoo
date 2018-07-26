@@ -5,7 +5,7 @@
 {
     'name': 'Partner Assignation & Geolocation',
     'version': '1.0',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales',
     'description': """
 This is the module used by OpenERP SA to redirect customers to its partners, based on geolocation.
 ======================================================================================================
@@ -32,7 +32,6 @@ to an appropriate local partner, based on the distance and the weight that was a
         'res_partner_demo.xml',
         'crm_lead_demo.xml'
     ],
-    'test': ['test/partner_assign.yml'],
     'installable': True,
     'auto_install': False,
 }

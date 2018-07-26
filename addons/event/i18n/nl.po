@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-10-02 09:32+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-20 14:05+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,8 +54,8 @@ msgstr "5 intensieve dagen"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
 msgstr "<em>(Chamber Works behoudt het recht om het evenement te annuleren,<br/>te hernoemen en te verplaatsen of de data te veranderen.)</em>"
 
 #. module: event
@@ -103,7 +104,7 @@ msgid ""
 "For any further information please contact our event department.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>Hallo ${object.name},</p>\n<p>Dit is een reminder voor ${object.event_id.name} waarvoor u zich heeft geregistreerd. Deze is bevestigd en wordt gehouden van ${object.event_id.date_begin_located} tot ${object.event_id.date_end_located}.\nVoor verdere informatie kan u ons departement altijd contacteren.</p>\n<p>Bedankt voor uw deelname!</p>\n<p>Met vriendelijke groeten,</p>"
+msgstr "<p>Hallo ${object.name},</p>\n<p>Dit is een reminder voor ${object.event_id.name} waarvoor u zich heeft geregistreerd. Deze is bevestigd en wordt gehouden van ${object.event_id.date_begin_located} tot ${object.event_id.date_end_located}.\nVoor verdere informatie kan u ons altijd contacteren.</p>\n<p>Bedankt voor uw deelname!</p>\n<p>Met vriendelijke groeten,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -247,7 +248,7 @@ msgstr "Alle evenementen zijn gratis"
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "Allow adding extra questions on subscriptions"
-msgstr "Sta bijkomende vragen toe bij registraties"
+msgstr "Stel extra vragen bij inschrijven"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
@@ -257,7 +258,7 @@ msgstr "Maak ticketverkoop mogelijk"
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "Allow tracks, agenda and dedicated menus/website per event"
-msgstr "Sta nummers, agenda's en toegewezen menu/website per evenement toe"
+msgstr "Sta sessies, agenda's en speciale menu/website per evenement toe"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -536,6 +537,13 @@ msgstr "Land"
 #: model:event.event,description:event.event_3
 msgid "Course Summary"
 msgstr "Cursussamenvatting"
+
+#. module: event
+#: model:web.tip,description:event.event_tip_1
+msgid ""
+"Create and manage registrations for this event, send emails to attendees and"
+" print identification badges."
+msgstr "Maak en beheer registraties van dit evenement. Verstuur e-mails naar de deelnemers en druk identificatie badges af."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -1022,12 +1030,6 @@ msgid "Immediately"
 msgstr "Direct"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
@@ -1208,7 +1210,7 @@ msgstr "Manager"
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
 msgid "Manually confirm every subscription"
-msgstr "Manueel elke inschrijving bevestigen"
+msgstr "Handmatig elke inschrijving bevestigen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
@@ -1231,12 +1233,6 @@ msgstr "Maximum aantal deelnemers"
 #: model:ir.model.fields,field_description:event.field_event_registration_message_ids
 msgid "Messages"
 msgstr "Berichten"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
@@ -1423,7 +1419,7 @@ msgstr "Projectbeheer, Human Resources en Contractbeheer."
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Aankoop, Verkoop &amp; Aankoopbeheer en Boekhouding."
+msgstr "Inkoop, Verkoop &amp; Inkoopbeheer en Boekhouding."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1763,6 +1759,8 @@ msgstr "Onbeperkt"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_unread
 #: model:ir.model.fields,field_description:event.field_event_registration_message_unread
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
@@ -1776,7 +1774,7 @@ msgstr "Teller ongelezen berichten"
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
 "Unselect this option to manually manage draft event and draft subscription"
-msgstr "Deselecteer deze optie om manueel concept evenementen en concept inschrijvingen te beheren"
+msgstr "Deselecteer deze optie om handmatig concept evenementen en concept inschrijvingen te beheren"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search

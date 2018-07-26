@@ -6,9 +6,13 @@ import urllib2
 import json
 
 import openerp
+from openerp import api
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
+
+from openerp.addons.base.res import res_users
+res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
 _logger = logging.getLogger(__name__)
 
@@ -38,11 +42,11 @@ class res_users(osv.Model):
     def _auth_oauth_validate(self, cr, uid, provider, access_token, context=None):
         """ return the validation data corresponding to the access token """
         p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
-        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
+        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token, context=context)
         if validation.get("error"):
             raise Exception(validation['error'])
         if p.data_endpoint:
-            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
+            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token, context=context)
             validation.update(data)
         return validation
 
@@ -98,7 +102,7 @@ class res_users(osv.Model):
         # else:
         #   continue with the process
         access_token = params.get('access_token')
-        validation = self._auth_oauth_validate(cr, uid, provider, access_token)
+        validation = self._auth_oauth_validate(cr, uid, provider, access_token, context=context)
         # required check
         if not validation.get('user_id'):
             # Workaround: facebook does not send 'user_id' in Open Graph Api
@@ -121,5 +125,9 @@ class res_users(osv.Model):
             res = self.search(cr, SUPERUSER_ID, [('id', '=', uid), ('oauth_access_token', '=', password)])
             if not res:
                 raise
+
+    @api.model
+    def _get_session_token_fields(self):
+        return super(res_users, self)._get_session_token_fields() | {'oauth_access_token'}
 
 #

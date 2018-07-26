@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-10-19 15:03+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-03-20 17:59+0000\n"
+"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,13 @@ msgstr "Валюта счета"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
 msgid "Action Needed"
-msgstr "Требуется реакция"
+msgstr "Требует внимания"
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
+msgstr "Активно"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -105,8 +112,8 @@ msgstr "Тэги аналитики"
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
-msgstr "Просмотр аналитики"
+msgid "Archived"
+msgstr "В архиве"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -132,7 +139,7 @@ msgstr "План аналитических счетов"
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Click to add an analytic account."
-msgstr "Нажмите для добавления аналитического счета"
+msgstr "Нажмите для добавления аккаунта аналитики."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
@@ -161,7 +168,7 @@ msgstr "Расходы и доходы"
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr "Расходы будут создаваться автоматически при регистрации\nпоставщика"
+msgstr "Расходы будут создаваться автоматически при регистрации\nинвойсов, расходов или табелей поставщика."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -259,12 +266,12 @@ msgstr "ID"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания."
+msgstr "Если отмечено, новые сообщения будут требовать вашего внимания."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
+msgstr "Если отмечено, новые сообщения будут требовать вашего внимания."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -313,11 +320,6 @@ msgstr "Последний раз обновлено"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
 msgid "Messages"
 msgstr "Сообщения"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -384,6 +386,11 @@ msgstr "Искать проводки аналитики"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
 msgstr "Выберите период для анализа"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
+msgstr "Состояние"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids

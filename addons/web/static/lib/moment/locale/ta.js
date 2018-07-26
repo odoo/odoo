@@ -89,6 +89,8 @@
 
         // refer http://ta.wikipedia.org/s/1er1
 
+        // TODO: This is pretty wrong (when hour is equal to 6 10, 14, 18, 20,
+        // 24 (0). Also it doesn't split at 12 (noon).
         meridiem : function (hour, minute, isLower) {
             if (hour >= 6 && hour <= 10) {
                 return " காலை";

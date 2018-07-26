@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:47+0000\n"
+"POT-Creation-Date: 2016-09-22 13:15+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ", if accounting or purchase is installed"
 msgstr ", indien boekhouding of inkoop is geïnstalleerd."
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+msgid "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -303,6 +308,22 @@ msgstr ""
 msgid ""
 "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
+msgstr ""
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_4
+msgid ""
+"<span><b>This is a business opportunity.</b> Drag and drop it to another "
+"column while you move forward in the sales cycle. Click to zoom in the "
+"opportunity.</span>"
+msgstr ""
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_6
+msgid ""
+"<span><strong>Click to register a new business opportunity</strong>. Once "
+"the opportunity is created, you will be able to drag and drop it in your "
+"sales pipeline.</span>"
 msgstr ""
 
 #. module: crm
@@ -894,8 +915,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Channel"
 msgstr "Kanaal"
 
@@ -952,6 +971,11 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
 msgid "Click to set a new stage in your lead/opportunity pipeline."
+msgstr ""
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_2
+msgid "Click to view the opportunities related to this customer."
 msgstr ""
 
 #. module: crm
@@ -1019,6 +1043,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
 msgstr ""
 
 #. module: crm
@@ -1263,7 +1292,7 @@ msgstr "Dagen tot afsluiten"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-msgid "Deduplicate Contact"
+msgid "Deduplicate Contacts"
 msgstr ""
 
 #. module: crm
@@ -1522,7 +1551,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "Verwachte afsluitdatum"
@@ -1855,13 +1883,6 @@ msgid "Import using the top left button in"
 msgstr "Importeer met de knop links bovenaan in"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Improve average revenue per salesperson"
 msgstr ""
@@ -2007,12 +2028,11 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:834 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:851 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: selection:crm.stage,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #, python-format
@@ -2029,6 +2049,14 @@ msgstr "Lead / klant"
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
 msgstr "Lead aangemaakt"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
+msgid "Lead Tags"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2061,7 +2089,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads"
 msgstr "Leads"
 
@@ -2179,7 +2206,6 @@ msgid "List of possible pain points by segment/profile"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2227,7 +2253,6 @@ msgid "Mark Lost"
 msgstr "Als verloren markeren"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
 msgstr "Als gewonnen markeren"
@@ -2250,6 +2275,8 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
 msgstr "Gemiddeld"
 
@@ -2386,11 +2413,6 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatiehistoriek"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
@@ -2434,8 +2456,12 @@ msgid "Motivation letter from the management"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Opportunities"
 msgstr "Mijn opportuniteiten"
@@ -2466,14 +2492,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
-#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action
 msgid "Next Action"
 msgstr "Volgende actie"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
-msgid "Next Action Date"
-msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -2531,11 +2551,6 @@ msgstr "Geen verkoper"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "Normaal"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_res_users_payment_next_action
-msgid "Note regarding the next action."
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2687,7 +2702,6 @@ msgstr "Het verkoopmenu openen"
 #: model:ir.ui.view,arch_db:crm.crm_case_pivot_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -2945,7 +2959,7 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 
 #. module: crm
@@ -3088,13 +3102,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Settings"
 msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
-#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
-#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
-msgid "Sales Tags"
-msgstr "Verkooplabels"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3396,6 +3403,13 @@ msgid "Subscription Management"
 msgstr ""
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_5
+msgid ""
+"Switch to the graph view to get a clear reporting on your opportunities "
+"pipeline."
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Systematic organization is what makes the difference\n"
@@ -3416,7 +3430,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
-#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Tags"
 msgstr "Labels"
 
@@ -3444,11 +3457,6 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
-msgstr ""
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_res_users_payment_next_action_date
-msgid "The date before which no action should be taken."
 msgstr ""
 
 #. module: crm
@@ -3680,6 +3688,9 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
@@ -3687,11 +3698,6 @@ msgstr "Ongelezen berichten"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Teller ongelezen berichten"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
-msgid "Unreconciled aml ids"
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
@@ -3960,6 +3966,12 @@ msgid ""
 "You can change the pricing method at anytime. We\n"
 "                            recommend you to select the easiest option that\n"
 "                            suits your needs for now on."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:309
+#, python-format
+msgid "You cannot merge a contact with one of his parent."
 msgstr ""
 
 #. module: crm
