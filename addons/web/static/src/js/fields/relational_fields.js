@@ -135,7 +135,7 @@ var FieldMany2One = AbstractField.extend({
         // List of autocomplete sources
         this._autocompleteSources = [];
         // Add default search method for M20 (name_search)
-        this._addAutocompleteSource(this._search, 'Loading...');
+        this._addAutocompleteSource(this._search, 'Loading...', 1);
     },
     start: function () {
         // booleean indicating that the content of the input isn't synchronized
@@ -197,17 +197,21 @@ var FieldMany2One = AbstractField.extend({
      * Add a source to the autocomplete results
      *
      * @param method : A function that returns a list of results. Can be async
-     * @param placeholder : Placeholder text while the result is loading
-     * @param validation : Validation function for the searched Term (ex: only for not empty search string)
+     * @param placeholder : placeholder text while the result is loading
+     * @param order : order of the result in the autocomplete list
+     * @param validation : validation function for the searched Term (ex: only for not empty search string)
      * @private
      */
-    _addAutocompleteSource: function (method, placeholder, validation) {
+    _addAutocompleteSource: function (method, placeholder, order, validation) {
         this._autocompleteSources.push({
             method: method,
             placeholder: (placeholder ? _t(placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
             validation: validation,
-            loading: false
-        })
+            loading: false,
+            order: order || 999
+        });
+
+        this._autocompleteSources = _.sortBy(this._autocompleteSources, 'order');
     },
 
     /**
@@ -242,7 +246,7 @@ var FieldMany2One = AbstractField.extend({
                     source.results = [];
 
                     // Check if this source should be used for the searched term
-                    if (!source.validation || source.validation(req.term)) {
+                    if (!source.validation || source.validation.call(self, req.term)) {
                         source.loading = true;
 
                         // Wrap the returned value of the source.method with $.when.

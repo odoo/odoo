@@ -283,7 +283,7 @@
                     <group>
                         <group>
                             <field string="Vendor" name="partner_id"
-                                widget="res_partner_vat_many2one"
+                                widget="res_partner_many2one"
                                 context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_is_company': True, 'show_vat': True}"
                                 domain="[('supplier', '=', True)]" required="1"/>
                             <field name="reference" string="Vendor Reference"/>
@@ -434,7 +434,7 @@
                     <group>
                         <group>
                             <field string="Customer" name="partner_id"
-                                widget="res_partner_vat_many2one"
+                                widget="res_partner_many2one"
                                 context="{'search_default_customer':1, 'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                 options='{"always_reload": True, "no_quick_create": True}'
                                 domain="[('customer', '=', True)]" required="1"/>
