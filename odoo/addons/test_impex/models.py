@@ -55,6 +55,10 @@ for name, field in MODELS:
             else:
                 return []
 
+        @api.model
+        def name_create(self, name):
+            return self.create({'value': name}).name_get()[0]
+
 
 class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
