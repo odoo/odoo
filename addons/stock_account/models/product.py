@@ -5,7 +5,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, pycompat
 from odoo.addons import decimal_precision as dp
-
+from odoo.addons.stock.models.product import OPERATORS
 
 
 class ProductTemplate(models.Model):
@@ -104,11 +104,18 @@ class ProductProduct(models.Model):
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
     qty_at_date = fields.Float(
-        'Quantity', compute='_compute_stock_value')
+        'Quantity', compute='_compute_stock_value', search="_search_qty_at_date")
     stock_fifo_real_time_aml_ids = fields.Many2many(
         'account.move.line', compute='_compute_stock_value')
     stock_fifo_manual_move_ids = fields.Many2many(
         'stock.move', compute='_compute_stock_value')
+
+    def _search_qty_at_date(self, operator, value):
+        ids = []
+        for product in self.with_context(prefetch_fields=False).search([]):
+            if OPERATORS[operator](product['qty_at_date'], value):
+                ids.append(product.id)
+        return [('id', 'in', ids)]
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
