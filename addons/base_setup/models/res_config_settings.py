@@ -39,8 +39,8 @@ class ResConfigSettings(models.TransientModel):
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
-    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper Format')
-    external_report_layout = fields.Selection(related="company_id.external_report_layout")
+    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
+    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id")
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
 
     @api.model
@@ -87,9 +87,9 @@ class ResConfigSettings(models.TransientModel):
 
     @api.multi
     def edit_external_header(self):
-        if not self.external_report_layout:
+        if not self.external_report_layout_id:
             return False
-        return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
+        return self._prepare_report_view_action(self.external_report_layout_id.key)
 
     @api.multi
     def change_report_template(self):

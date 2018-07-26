@@ -655,6 +655,4 @@ class QwebView(models.AbstractModel):
             _logger.warning("%s.%s must be a 'ir.ui.view' model." % (record, field_name))
             return None
 
-        view = view.with_context(object=record)
-
-        return pycompat.to_text(view.render(view._context, engine='ir.qweb'))
+        return pycompat.to_text(view.render(options.get('values', {}), engine='ir.qweb'))

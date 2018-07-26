@@ -55,7 +55,7 @@
               t-att-data-report-landscape="data_report_landscape"
               t-att-web-base-url="web_base_url">
             <head>
-                <meta charset="utf-8" />
+                <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
                 <title><t t-esc="title or 'Odoo Report'"/></title>
                 <t t-call-assets="web.assets_common" t-js="false"/>
@@ -179,8 +179,8 @@
         </div>
 
         <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-            <t t-call="web.address_layout" />
-            <t t-raw="0" />
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
         </div>
 
         <div class="footer o_background_footer">
@@ -219,8 +219,8 @@
         </div>
 
         <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-            <t t-call="web.address_layout" />
-            <t t-raw="0" />
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
         </div>
 
         <div class="footer o_boxed_footer">
@@ -258,8 +258,8 @@
         </div>
 
         <div class="article o_report_layout_clean" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-            <t t-call="web.address_layout" />
-            <t t-raw="0" />
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
         </div>
 
         <div class="footer o_clean_footer">
@@ -306,8 +306,8 @@
         </div>
 
         <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-            <t t-call="web.address_layout" />
-            <t t-raw="0" />
+            <t t-call="web.address_layout"/>
+            <t t-raw="0"/>
         </div>
 
         <div class="footer o_standard_footer">
@@ -333,32 +333,40 @@
     <!-- Public api: layout to t-call from reports -->
 
     <template id="external_layout">
-        <!-- Multicompany -->
-        <t t-if="not o and doc">
-            <t t-set="o" t-value="doc"/>
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
         </t>
 
-        <t t-if="o and 'company_id' in o">
-            <t t-set="company" t-value="o.company_id.sudo()"/>
-        </t>
-        <t t-if="not o or not 'company_id' in o">
-            <t t-set="company" t-value="res_company"/>
-        </t>
+        <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-raw="0"/></t>
+        <t t-else="else" t-raw="0"/>
 
-        <t t-call="web.external_layout_{{company.external_report_layout or 'standard'}}"><t t-raw="0"/></t>
     </template>
 
     <template id="internal_layout">
-        <!-- Multicompany -->
-        <t t-if="company_id">
-            <t t-set="company" t-value="company_id"/>
-            <t t-set="res_company" t-value="company_id"/>
-        </t>
-        <t t-if="not company_id">
-            <t t-set="company" t-value="res_company"/>
-        </t>
-        <t t-if="not o and doc">
-            <t t-set="o" t-value="doc"/>
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
         </t>
 
         <div class="header">
@@ -379,18 +387,16 @@
             </div>
         </div>
         <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-          <t t-raw="0" />
+          <t t-raw="0"/>
         </div>
     </template>
 
     <template id="basic_layout">
-        <t t-if="not o and doc">
-            <t t-set="o" t-value="doc"/>
-        </t>
+        <t t-if="not o" t-set="o" t-value="doc"/>
 
         <t t-call="web.html_container">
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
-                <t t-raw="0" />
+                <t t-raw="0"/>
             </div>
         </t>
     </template>
@@ -399,6 +405,7 @@
     <!-- Demo reports definition -->
     <template id="preview_internalreport">
         <t t-call="web.html_container">
+            <t t-set="o" t-value="res_company"/>
             <t t-call="web.internal_layout">
                 <div class="page">
                     <p>This is a sample of an internal report.</p>
@@ -408,6 +415,7 @@
     </template>
     <template id="preview_externalreport">
         <t t-call="web.html_container">
+            <t t-set="o" t-value="res_company"/>
             <t t-call="web.external_layout">
                 <div class="page">
                     <p>This is a sample of an external report.</p>
