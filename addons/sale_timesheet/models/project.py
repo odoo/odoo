@@ -56,11 +56,14 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
+    @api.model
     def _get_default_partner(self):
-        partner = super(ProjectTask, self)._get_default_partner()
+        partner = False
         if 'default_project_id' in self.env.context:  # partner from SO line is prior on one from project
             project = self.env['project.project'].browse(self.env.context['default_project_id'])
             partner = project.sale_line_id.order_partner_id
+        if not partner:
+            partner = super(ProjectTask, self)._get_default_partner()
         return partner
 
     @api.model
