@@ -88,9 +88,10 @@ class FleetVehicle(models.Model):
     def _get_car_atn(self, acquisition_date, car_value, fuel_type, co2):
         # Compute the correction coefficient from the age of the car
         now = Date.today()
-        start = Date.from_string(acquisition_date)
-        if start:
-            number_of_month = (now.year - start.year) * 12.0 + now.month - start.month + int(bool(now.day - start.day + 1))
+        if acquisition_date:
+            number_of_month = ((now.year - acquisition_date.year) * 12.0 + now.month -
+                               acquisition_date.month +
+                               int(bool(now.day - acquisition_date.day + 1)))
             if number_of_month <= 12:
                 age_coefficient = 1.00
             elif number_of_month <= 24:
