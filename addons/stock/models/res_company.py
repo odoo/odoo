@@ -28,8 +28,8 @@ class Company(models.Model):
             location.sudo().write({'company_id': company.id})
             company.write({'internal_transit_location_id': location.id})
 
-            warehouses = self.env['stock.warehouse'].search([('partner_id', '=', location.partner_id.id)])
-            warehouses.mapped('partner_id').with_context(force_company=location.id).write({
+            warehouses = self.env['stock.warehouse'].search([('partner_id', '=', company.partner_id.id)])
+            warehouses.mapped('partner_id').with_context(force_company=company.id).write({
                 'property_stock_customer': location.id,
                 'property_stock_supplier': location.id,
             })
