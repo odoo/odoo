@@ -5058,6 +5058,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     }
             """
             def __init__(self, model, dotnames):
+                super(PrefixTree, self).__init__()
                 if not dotnames:
                     return
                 # group dotnames by prefix
@@ -5102,6 +5103,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             """
             result = {}
             for name, subnames in tree.items():
+                if name == 'id':
+                    continue
                 if old and old[name] == new[name]:
                     continue
                 field = record._fields[name]
