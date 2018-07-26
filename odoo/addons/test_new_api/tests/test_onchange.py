@@ -153,6 +153,17 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
+        # ensure onchange changing one2many without subfield works
+        one_level_fields = {k: v for k, v in field_onchange.items() if k.count('.') < 1}
+        values = dict(values, name='{generate_dummy_message}')
+        result = self.Discussion.with_context(generate_dummy_message=True).onchange(values, 'name', one_level_fields)
+        self.assertEqual(result['value']['messages'], [
+            (5,),
+            (4, message.id),
+            (0, 0, {}),
+            (0, 0, {}),
+        ])
+
     def test_onchange_one2many_reference(self):
         """ test the effect of onchange() on one2many fields with line references """
         BODY = "What a beautiful day!"
@@ -249,6 +260,17 @@ class TestOnChange(common.TransactionCase):
         })
 
         # do it again, but this time with a new tag on the second line
+        expected_new_tag_result = {
+            'name': partner2.name,
+            'lines': [
+                (5,),
+                (1, line1.id, {'name': partner2.name,
+                               'partner': (partner2.id, partner2.name)}),
+                (0, 0, {'name': partner2.name,
+                        'partner': (partner2.id, partner2.name),
+                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
+            ],
+        }
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
@@ -260,17 +282,13 @@ class TestOnChange(common.TransactionCase):
         self.env.cache.invalidate()
 
         result = multi.onchange(values, 'partner', field_onchange)
-        self.assertEqual(result['value'], {
-            'name': partner2.name,
-            'lines': [
-                (5,),
-                (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
-                (0, 0, {'name': partner2.name,
-                        'partner': (partner2.id, partner2.name),
-                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
-            ],
-        })
+        self.assertEqual(result['value'], expected_new_tag_result)
+
+        # ensure ID is not returned when asked and a many2many record is set to be created
+        self.env.cache.invalidate()
+
+        result = multi.onchange(values, 'partner', dict(field_onchange, **{'lines.tags.id': None}))
+        self.assertEqual(result['value'], expected_new_tag_result)
 
     def test_onchange_specific(self):
         """ test the effect of field-specific onchange method """
