@@ -304,6 +304,10 @@ class AccountMove(models.Model):
         return self.write({'state': 'posted'})
 
     @api.multi
+    def action_post(self):
+        return self.post()
+
+    @api.multi
     def button_cancel(self):
         for move in self:
             if not move.journal_id.update_posted:
