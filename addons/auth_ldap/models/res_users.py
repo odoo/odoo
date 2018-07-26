@@ -22,10 +22,10 @@ class Users(models.Model):
 
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 Ldap = env['res.company.ldap']
-                for conf in Ldap.get_ldap_dicts():
-                    entry = Ldap.authenticate(conf, login, password)
+                for conf in Ldap._get_ldap_dicts():
+                    entry = Ldap._authenticate(conf, login, password)
                     if entry:
-                        return Ldap.get_or_create_user(conf, login, entry)
+                        return Ldap._get_or_create_user(conf, login, entry)
                 raise e
 
     def _check_credentials(self, password):
@@ -34,7 +34,7 @@ class Users(models.Model):
         except AccessDenied:
             if self.env.user.active:
                 Ldap = self.env['res.company.ldap']
-                for conf in Ldap.get_ldap_dicts():
-                    if Ldap.authenticate(conf, self.env.user.login, password):
+                for conf in Ldap._get_ldap_dicts():
+                    if Ldap._authenticate(conf, self.env.user.login, password):
                         return
             raise
