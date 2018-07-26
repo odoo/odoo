@@ -11,7 +11,7 @@ class StockLocationRoute(models.Model):
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line')
+    sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index=True)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
