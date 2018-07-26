@@ -24,7 +24,7 @@ class product_price_list(models.TransientModel):
         """
         if (not self.env.user.company_id.logo):
             raise UserError(_("You have to set a logo or a layout for your company."))
-        elif (not self.env.user.company_id.external_report_layout):
+        elif (not self.env.user.company_id.external_report_layout_id):
             raise UserError(_("You have to set your reports's header and footer layout."))
 
         datas = {'ids': self.env.context.get('active_ids', [])}

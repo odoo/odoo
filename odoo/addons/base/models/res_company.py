@@ -55,14 +55,8 @@ class Company(models.Model):
     website = fields.Char(related='partner_id.website')
     vat = fields.Char(related='partner_id.vat', string="Tax ID")
     company_registry = fields.Char()
-    paperformat_id = fields.Many2one('report.paperformat', 'Paper Format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
-    external_report_layout = fields.Selection([
-        ('background', 'Background'),
-        ('boxed', 'Boxed'),
-        ('clean', 'Clean'),
-        ('standard', 'Standard'),
-    ], string='Document Template')
-
+    paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
+    external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]

@@ -43,7 +43,6 @@ registry
     .add('percentage', basic_fields.FieldPercentage)
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
-    .add('image_selection', basic_fields.ImageSelection)
     .add('label_selection', basic_fields.LabelSelection)
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget)
@@ -81,5 +80,6 @@ registry
 
 // Special fields
 registry
-    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
+    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
+    .add('report_layout', special_fields.FieldReportLayout);
 });

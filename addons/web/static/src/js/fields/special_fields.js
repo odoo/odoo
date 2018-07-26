@@ -102,8 +102,75 @@ var FieldTimezoneMismatch = FieldSelection.extend({
     },
 });
 
+var FieldReportLayout = relational_fields.FieldMany2One.extend({
+    supportedFieldTypes: ['many2one', 'selection'],
+    events: _.extend({}, relational_fields.FieldMany2One.prototype.events, {
+        'click img': '_onImgClicked',
+    }),
+
+    willStart: function () {
+        var self = this;
+        this.previews = {};
+        return this._super()
+            .then(function () {
+                return self._rpc({
+                    model: 'report.layout',
+                    method: "search_read"
+                }).then(function (values) {
+                    self.previews = values;
+                });
+            });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        this.$el.empty();
+        var value = _.isObject(this.value) ? this.value.data.id : this.value;
+        _.each(this.previews, function (val) {
+            var $container = $('<div>').addClass('col-3 text-center');
+            var $img = $('<img>')
+                .addClass('img img-fluid img-thumbnail ml16')
+                .toggleClass('btn-info', val.view_id[0] === value)
+                .attr('src', val.image)
+                .data('key', val.view_id[0]);
+            $container.append($img);
+            if (val.pdf) {
+                var $previewLink = $('<a>')
+                    .text('Preview')
+                    .attr('href', val.pdf)
+                    .attr('target', '_blank');
+                $container.append($previewLink);
+            }
+            self.$el.append($container);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onImgClicked: function (event) {
+        this._setValue($(event.currentTarget).data('key'));
+    },
+});
+
+
 return {
     FieldTimezoneMismatch: FieldTimezoneMismatch,
+    FieldReportLayout: FieldReportLayout,
 };
 
 });

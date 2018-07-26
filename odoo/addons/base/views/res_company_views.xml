@@ -141,23 +141,9 @@
               <xpath expr="//sheet" position="inside">
                     <hr />
                     <div class="row mt16">
-                        <field style="margin-right: 40px;" name="external_report_layout" widget="image_selection" options="{
-                            'background': {
-                                'image_link': '/base/static/img/preview_background.png',
-                                'preview_link': '/base/static/pdf/preview_background.pdf'
-                            },
-                            'boxed': {
-                                'image_link': '/base/static/img/preview_boxed.png',
-                                'preview_link': '/base/static/pdf/preview_boxed.pdf'
-                            },
-                            'clean': {
-                                'image_link': '/base/static/img/preview_clean.png',
-                                'preview_link': '/base/static/pdf/preview_clean.pdf'
-                            },
-                            'standard': {
-                                'image_link': '/base/static/img/preview_standard.png',
-                                'preview_link': '/base/static/pdf/preview_standard.pdf'
-                            }
+                        <field style="margin-right: 40px;" name="external_report_layout_id" widget="report_layout" options="{
+                            'field_image': 'preview_image',
+                            'field_binary': 'preview_pdf'
                         }"/>
                     </div>
                     <footer>
@@ -188,31 +174,20 @@
             <field name="arch" type="xml">
                 <form class="o_company_document_layout">
                     <group>
+                        <label for="external_report_layout_id" string="Template" colspan="2" />
+                        <field name="external_report_layout_id" colspan="2" nolabel="1"
+                                class="report_layout_container"
+                                widget="report_layout" options="{
+                                    'field_image': 'preview_image',
+                                    'field_binary': 'preview_pdf'
+                                }"/>
+                    </group>
+                    <group>
                         <field name="logo" widget="image" />
-                        <field name="external_report_layout" string="Layout"
-                               class="image_selection_container"
-                               widget="image_selection" options="{
-                                    'background': {
-                                        'image_link': '/base/static/img/preview_background.png',
-                                        'preview_link': '/base/static/pdf/preview_background.pdf'
-                                    },
-                                    'boxed': {
-                                        'image_link': '/base/static/img/preview_boxed.png',
-                                        'preview_link': '/base/static/pdf/preview_boxed.pdf'
-                                    },
-                                    'clean': {
-                                        'image_link': '/base/static/img/preview_clean.png',
-                                        'preview_link': '/base/static/pdf/preview_clean.pdf'
-                                    },
-                                    'standard': {
-                                        'image_link': '/base/static/img/preview_standard.png',
-                                        'preview_link': '/base/static/pdf/preview_standard.pdf'
-                                    }
-                                }" />
                         <field name="report_header"  widget="char"
-                               placeholder="e.g. Global Business Solutions" />
+                            placeholder="e.g. Global Business Solutions" />
                         <field name="report_footer" string="Footer"
-                               placeholder="e.g. Opening hours, bank accounts (one per line)" />
+                            placeholder="e.g. Opening hours, bank accounts (one per line)" />
                         <field name="paperformat_id" widget="selection" />
                     </group>
                     <footer>
