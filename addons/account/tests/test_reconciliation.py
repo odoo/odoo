@@ -5,7 +5,7 @@ import time
 import unittest
 
 
-@tagged('post_install', '-at_install', 'fuck')
+@tagged('post_install', '-at_install')
 class TestReconciliation(AccountingTestCase):
 
     """Tests for reconciliation (account.tax)

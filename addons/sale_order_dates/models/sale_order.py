@@ -39,7 +39,7 @@ class SaleOrder(models.Model):
     def _compute_effective_date(self):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
-            dates_list = pickings.mapped('date_done')
+            dates_list = [date for date in pickings.mapped('date_done') if date]
             order.effective_date = dates_list and min(dates_list).date()
 
     @api.onchange('commitment_date')
