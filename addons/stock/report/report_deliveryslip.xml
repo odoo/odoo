@@ -46,7 +46,14 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="o.state!='done'">
+                    
+                    <!-- Checks if there is any lot or serial number to display, if not the column won't be displayed-->
+                    <t groups="stock.group_lot_on_delivery_slip" t-set="any_SN_LN" t-value="any([ml.lot_id for ml in o.move_line_ids])"/>
+                    <!-- Checks if there is any expiration date to display, if not the column won't be displayed-->
+                    <t groups="product_expiry.group_expiration_date_on_delivery_slip" t-set="any_expiration_date" t-value="any([env['stock.production.lot'].search([('id', '=', ml.lot_id.id)]).use_date for ml in o.move_line_ids])"/>
+
+                    <!-- of the following 3 tables, only one of them is displayed at a time  -->
+                    <table class="table table-condensed mt48" t-if="not o.move_line_ids and o.state!='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -64,10 +71,42 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state!='done'">
+                        <thead>
+                            <tr>
+                                <th><strong>Product</strong></th>
+                                <th groups="stock.group_lot_on_delivery_slip" t-if="any_SN_LN"><strong>Lot/Serial Number</strong></th>
+                                <th groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date"><strong>Expiration Date</strong></th>
+                                <th><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_line_ids.filtered(lambda x: x.product_uom_qty)" t-as="move_line">
+                                <td><span t-field="move_line.product_id"/></td>
+                                <td groups="stock.group_lot_on_delivery_slip" t-if="any_SN_LN">
+                                    <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
+                                    <span t-else="">N/A</span>
+                                </td>
+                                <td groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date">
+                                    <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
+                                    <span t-if="expiration_date" t-esc="expiration_date"/>
+                                    <span t-else="">N/A</span>
+                                </td>
+                                <td>
+                                    <span t-field="move_line.qty_done"/>
+                                    <span t-field="move_line.product_uom_id"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
                     <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state=='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
+                                <th groups="stock.group_lot_on_delivery_slip" t-if="any_SN_LN"><strong>Lot/Serial Number</strong></th>
+                                <th groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date"><strong>Expiration Date</strong></th>
                                 <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -82,6 +121,15 @@
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
+                                <td groups="stock.group_lot_on_delivery_slip" t-if="any_SN_LN">
+                                    <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
+                                    <span t-else="">N/A</span>
+                                </td>
+                                <td groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date">
+                                    <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
+                                    <span t-if="expiration_date" t-esc="expiration_date"/>
+                                    <span t-else="">N/A</span>
+                                </td>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
@@ -89,6 +137,7 @@
                             </tr>
                         </tbody>
                     </table>
+
                     <p>
                         <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
                             All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
