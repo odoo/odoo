@@ -160,7 +160,7 @@ class Website(models.Model):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery', 'invoice'])
+        addr = partner.address_get(['delivery'])
         if len(partner.sale_order_ids):  # first = me
             addr['delivery'] = partner.sale_order_ids[0].partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
@@ -169,7 +169,7 @@ class Website(models.Model):
             'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
             'team_id': self.salesteam_id.id,
-            'partner_invoice_id': addr['invoice'],
+            'partner_invoice_id': partner.id,
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
         }
@@ -254,6 +254,7 @@ class Website(models.Model):
                 # change the partner, and trigger the onchange
                 sale_order.write({'partner_id': partner.id})
                 sale_order.onchange_partner_id()
+                sale_order.write({'partner_invoice_id': partner.id})
                 sale_order.onchange_partner_shipping_id() # fiscal position
                 sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
 
