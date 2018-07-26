@@ -86,15 +86,9 @@ class ImLivechatChannel(models.Model):
         for record in self:
             record.nbr_channel = len(record.channel_ids)
 
-    @api.model
-    def create(self, vals):
+    @api.preupdate('image', 'image_medium', 'image_small')
+    def _preupdate_images_size(self, vals):
         tools.image_resize_images(vals)
-        return super(ImLivechatChannel, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(ImLivechatChannel, self).write(vals)
 
     # --------------------------
     # Action Methods

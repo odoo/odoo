@@ -202,18 +202,14 @@ class FleetVehicle(models.Model):
         else:
             self.image_medium = False
 
-    @api.model
-    def create(self, vals):
-        res = super(FleetVehicle, self).create(vals)
-        if 'driver_id' in vals and vals['driver_id']:
-            res.create_driver_history(vals['driver_id'])
-        return res
+    @api.postupdate('driver_id')
+    def _postupdate_driver_history(self, vals):
+        if vals['driver_id']:
+            self.create_driver_history(vals['driver_id'])
 
     @api.multi
     def write(self, vals):
         res = super(FleetVehicle, self).write(vals)
-        if 'driver_id' in vals and vals['driver_id']:
-            self.create_driver_history(vals['driver_id'])
         if 'active' in vals and not vals['active']:
             self.mapped('log_contracts').write({'active': False})
         return res
@@ -223,7 +219,7 @@ class FleetVehicle(models.Model):
             self.env['fleet.vehicle.assignation.log'].create({
                 'vehicle_id': vehicle.id,
                 'driver_id': driver_id,
-                'date_start': fields.Date.today(), 
+                'date_start': fields.Date.today(),
             })
 
     @api.model

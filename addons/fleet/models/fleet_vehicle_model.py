@@ -52,13 +52,6 @@ class FleetVehicleModelBrand(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            tools.image_resize_images(vals)
-        return super(FleetVehicleModelBrand, self).create(vals_list)
-
-    @api.multi
-    def write(self, vals):
+    @api.preupdate('image', 'image_medium', 'image_small')
+    def _preupdate_images_size(self, vals):
         tools.image_resize_images(vals)
-        return super(FleetVehicleModelBrand, self).write(vals)

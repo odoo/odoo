@@ -76,18 +76,10 @@ class Country(models.Model):
 
     name_search = location_name_search
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('code'):
-                vals['code'] = vals['code'].upper()
-        return super(Country, self).create(vals_list)
-
-    @api.multi
-    def write(self, vals):
-        if vals.get('code'):
+    @api.preupdate('code')
+    def _preupdate_code(self, vals):
+        if vals['code']:
             vals['code'] = vals['code'].upper()
-        return super(Country, self).write(vals)
 
     @api.multi
     def get_address_fields(self):

@@ -289,20 +289,16 @@ class EventEvent(models.Model):
             result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
         return result
 
+    @api.postupdate('organizer_id')
+    def _postupdate_organizer_id(self, vals):
+        if vals['organizer_id']:
+            self.message_subscribe([vals['organizer_id']])
+
     @api.model
     def create(self, vals):
         res = super(EventEvent, self).create(vals)
-        if res.organizer_id:
-            res.message_subscribe([res.organizer_id.id])
         if res.auto_confirm:
             res.button_confirm()
-        return res
-
-    @api.multi
-    def write(self, vals):
-        res = super(EventEvent, self).write(vals)
-        if vals.get('organizer_id'):
-            self.message_subscribe([vals['organizer_id']])
         return res
 
     @api.multi

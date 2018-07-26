@@ -26,17 +26,9 @@ class DecimalPrecision(models.Model):
         """ Deprecated, use `clear_caches` instead. """
         self.clear_caches()
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super(DecimalPrecision, self).create(vals_list)
+    @api.postupdate()
+    def _postupdate_caches(self, vals):
         self.clear_caches()
-        return res
-
-    @api.multi
-    def write(self, data):
-        res = super(DecimalPrecision, self).write(data)
-        self.clear_caches()
-        return res
 
     @api.multi
     def unlink(self):

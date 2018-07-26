@@ -165,15 +165,9 @@ class ProductPublicCategory(models.Model):
                                 "resized as a 64x64px image, with aspect ratio preserved. "
                                 "Use this field anywhere a small image is required.")
 
-    @api.model
-    def create(self, vals):
+    @api.preupdate('image', 'image_medium', 'image_small')
+    def _preupdate_images_size(self, vals):
         tools.image_resize_images(vals)
-        return super(ProductPublicCategory, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(ProductPublicCategory, self).write(vals)
 
     @api.constrains('parent_id')
     def check_parent_id(self):

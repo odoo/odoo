@@ -50,21 +50,11 @@ class TransferPaymentAcquirer(models.Model):
         }
         return post_msg
 
-    @api.model
-    def create(self, values):
-        """ Hook in create to create a default post_msg. This is done in create
-        to have access to the name and other creation values. If no post_msg
-        or a void post_msg is given at creation, generate a default one. """
-        if values.get('provider') == 'transfer' and not values.get('post_msg'):
-            values['post_msg'] = self._format_transfer_data()
-        return super(TransferPaymentAcquirer, self).create(values)
-
-    @api.multi
-    def write(self, values):
-        """ Hook in write to create a default post_msg. See create(). """
-        if all(not acquirer.post_msg and acquirer.provider != 'transfer' for acquirer in self) and values.get('provider') == 'transfer':
-            values['post_msg'] = self._format_transfer_data()
-        return super(TransferPaymentAcquirer, self).write(values)
+    @api.preupdate('provider', 'post_msg')
+    def _preupdate_post_msg(self, vals):
+        """ Hook in create and write to create a default post_msg."""
+        if vals.get('provider') == 'transfer' and not vals.get('post_msg'):
+            vals['post_msg'] = self._format_transfer_data()
 
 
 class TransferPaymentTransaction(models.Model):

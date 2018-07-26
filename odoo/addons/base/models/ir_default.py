@@ -22,16 +22,9 @@ class IrDefault(models.Model):
     condition = fields.Char('Condition', help="If set, applies the default upon condition.")
     json_value = fields.Char('Default Value (JSON format)', required=True)
 
-    @api.model_create_multi
-    def create(self, vals_list):
+    @api.preupdate()
+    def _preupdate_caches(self, vals):
         self.clear_caches()
-        return super(IrDefault, self).create(vals_list)
-
-    @api.multi
-    def write(self, vals):
-        if self:
-            self.clear_caches()
-        return super(IrDefault, self).write(vals)
 
     @api.multi
     def unlink(self):

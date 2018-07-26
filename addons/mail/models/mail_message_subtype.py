@@ -41,15 +41,9 @@ class MailMessageSubtype(models.Model):
     sequence = fields.Integer('Sequence', default=1, help="Used to order subtypes.")
     hidden = fields.Boolean('Hidden', help="Hide the subtype in the follower options")
 
-    @api.model
-    def create(self, vals):
+    @api.preupdate()
+    def _preupdate_caches(self, vals):
         self.clear_caches()
-        return super(MailMessageSubtype, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        self.clear_caches()
-        return super(MailMessageSubtype, self).write(vals)
 
     @api.multi
     def unlink(self):

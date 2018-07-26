@@ -154,28 +154,17 @@ class Challenge(models.Model):
 
         return template.id if template else False
 
-    @api.model
-    def create(self, vals):
-        """Overwrite the create method to add the user of groups"""
-
+    @api.preupdate('user_domain', 'user_ids')
+    def _preupdate_user_ids(self, vals):
         if vals.get('user_domain'):
             users = self._get_challenger_users(ustr(vals.get('user_domain')))
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
             vals['user_ids'].extend((4, user.id) for user in users)
-
-        return super(Challenge, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        if vals.get('user_domain'):
-            users = self._get_challenger_users(ustr(vals.get('user_domain')))
-
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'].extend((4, user.id) for user in users)
-
         write_res = super(Challenge, self).write(vals)
 
         if vals.get('report_message_frequency', 'never') != 'never':
@@ -363,7 +352,7 @@ class Challenge(models.Model):
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids
                 if user_squating_challenge_ids:
-                    # users that used to match the challenge 
+                    # users that used to match the challenge
                     Goals.search([
                         ('challenge_id', '=', challenge.id),
                         ('user_id', 'in', list(user_squating_challenge_ids))
@@ -451,7 +440,7 @@ class Challenge(models.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
             'completeness': <percentage>,
             'current': <current value>,
         }

@@ -85,17 +85,10 @@ class Rating(models.Model):
             else:
                 rating.rating_text = 'no_rating'
 
-    @api.model
-    def create(self, values):
-        if values.get('res_model_id') and values.get('res_id'):
-            values.update(self._find_parent_data(values))
-        return super(Rating, self).create(values)
-
-    @api.multi
-    def write(self, values):
-        if values.get('res_model_id') and values.get('res_id'):
-            values.update(self._find_parent_data(values))
-        return super(Rating, self).write(values)
+    @api.preupdate('res_model_id', 'res_id')
+    def _preupdate_parent_data(self, vals):
+        if vals.get('res_model_id') and vals.get('res_id'):
+            vals.update(self._find_parent_data(vals))
 
     def _find_parent_data(self, values):
         """ Determine the parent res_model/res_id, based on the values to create or write """

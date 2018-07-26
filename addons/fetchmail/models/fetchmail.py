@@ -80,17 +80,9 @@ class FetchmailServer(models.Model):
             openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
         """ % conf
 
-    @api.model
-    def create(self, values):
-        res = super(FetchmailServer, self).create(values)
+    @api.postupdate()
+    def _postupdate_cron(self, vals):
         self._update_cron()
-        return res
-
-    @api.multi
-    def write(self, values):
-        res = super(FetchmailServer, self).write(values)
-        self._update_cron()
-        return res
 
     @api.multi
     def unlink(self):
