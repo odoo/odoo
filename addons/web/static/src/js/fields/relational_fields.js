@@ -131,6 +131,11 @@ var FieldMany2One = AbstractField.extend({
         // coming by an onchange on another field)
         this.isDirty = false;
         this.lastChangeEvent = undefined;
+
+        // List of autocomplete sources
+        this._autocompleteSources = [];
+        // Add default search method for M20 (name_search)
+        this._addAutocompleteSource(this._search, 'Loading...');
     },
     start: function () {
         // booleean indicating that the content of the input isn't synchronized
@@ -189,14 +194,65 @@ var FieldMany2One = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Add a source to the autocomplete results
+     *
+     * @param method : A function that returns a list of results. Can be async
+     * @param placeholder : Placeholder text while the result is loading
+     * @param validation : Validation function for the searched Term (ex: only for not empty search string)
+     * @private
+     */
+    _addAutocompleteSource: function (method, placeholder, validation) {
+        this._autocompleteSources.push({
+            method: method,
+            placeholder: (placeholder ? _t(placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
+            validation: validation,
+            loading: false
+        })
+    },
+
+    /**
+     * Concatenate async results for autocomplete. The callback render the result after it loaded
+     *
+     * @param callback
+     * @private
+     */
+    _concatenateAutocompleteResults: function (callback) {
+        var results = [];
+        _.each(this._autocompleteSources, function (source) {
+            if (source.results && source.results.length) {
+                results = results.concat(source.results);
+            } else if (source.loading) {
+                results.push({
+                    label: source.placeholder
+                });
+            }
+        });
+        callback(results);
+    },
+
+    /**
      * @private
      */
     _bindAutoComplete: function () {
         var self = this;
         this.$input.autocomplete({
             source: function (req, resp) {
-                self._search(req.term).then(function (result) {
-                    resp(result);
+                _.each(self._autocompleteSources, function (source) {
+                    // Resets the results for this source
+                    source.results = [];
+
+                    // Check if this source should be used for the searched term
+                    if (!source.validation || source.validation(req.term)) {
+                        source.loading = true;
+
+                        // Wrap the returned value of the source.method with $.when.
+                        // So event if the returned value is not async, it will work
+                        $.when(source.method.call(self, req.term)).then(function (results) {
+                            source.results = results;
+                            source.loading = false;
+                            self._concatenateAutocompleteResults(resp);
+                        })
+                    }
                 });
             },
             select: function (event, ui) {
