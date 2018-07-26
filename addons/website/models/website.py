@@ -967,6 +967,14 @@ class Menu(models.Model):
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
+    @api.multi
+    def name_get(self):
+        res = []
+        for menu in self:
+            website_suffix = '%s - %s' % (menu.name, menu.website_id.name)
+            res.append((menu.id, website_suffix if menu.website_id and self.env.user.has_group('website.group_multi_website') else menu.name))
+        return res
+
     @api.model
     def create(self, vals):
         ''' In case a menu without a website_id is trying to be created, we duplicate
@@ -987,7 +995,7 @@ class Menu(models.Model):
                     'parent_id': website.menu_id.id,
                 })
                 res = super(Menu, self).create(vals)
-        return res  # create loop, what to return ? last created record ?
+        return res  # Only one record is returned but multiple could have been created
 
     @api.one
     def _compute_visible(self):
