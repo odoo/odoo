@@ -320,6 +320,63 @@
 </table>
         </template>
 
+        <!-- Discuss utility templates for notifications -->
+        <template id="message_user_assigned">
+<p style="margin: 0px;">
+    <span>Dear <t t-esc="object.user_id.name"/>,</span><br />
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</span>
+</p>
+<p style="margin-top: 24px; margin-bottom: 16px;">
+    <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+            View <t t-esc="object._description.lower()"/>
+    </a>
+</p>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
+        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
+        <span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <div t-field="activity.note" style="margin-left: 8px;"/>
+    <div t-if="activity.feedback" style="margin-top: 8px;">
+        <strong> Feedback</strong>
+    <div t-field="activity.feedback" style="margin-left: 8px;"></div>
+    </div>
+</div>
+        </template>
+
+        <template id="message_activity_assigned">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <span t-field="activity.create_user_id.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
+    <t t-if="activity.summary">(<span t-field="activity.summary"/>)</t>
+    on <span t-field="activity.res_name"/>
+    to close for <span t-field="activity.date_deadline"/>.<br />
+    <p style="margin: 16px 0px 16px 0px;">
+        <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (activity.res_model, activity.res_id)"
+            style="background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+            View <t t-esc="model_description or 'document'"/>
+        </a>
+    </p>
+    <div t-if="activity.note" style="margin-top: 8px;" t-field="activity.note"/>
+</div>
+        </template>
+
+        <!-- Mail gateway templates -->
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Hello <t t-esc="message['email_from']"/>,</p>
+    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
+    <p>Regards,</p>
+    <p>The <t t-esc="res_company.name"/> team.</p>
+</div>
+<blockquote><t t-esc="message['body']"/></blockquote>
+        </template>
+
         <!-- Channel and moderation related data -->
         <template id="mail_channel_notify_moderation">
 <div>
