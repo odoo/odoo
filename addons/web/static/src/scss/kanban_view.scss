@@ -1,27 +1,27 @@
 
 // ------- Kanban View Layout -------
 .o_kanban_view {
-    @include o-flex-display;
-    @include o-align-content(stretch);
+    display: flex;
+    align-content: stretch;
     overflow-x: visible;
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         padding: 0px!important;
         overflow-x: auto;
     }
 
     .o_kanban_record, .o_kanban_quick_create {
         padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
-        border: 1px solid $gray-lighter-dark;
+        border: 1px solid gray('300');
         background-color: white;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter-mobile;
         }
         &:focus, &:focus-within {
-            -webkit-box-shadow: 1px 1px 1px 0px $gray-light;
-            -moz-box-shadow: 1px 1px 1px 0px $gray-light;
-            box-shadow: 1px 1px 1px 0px $gray-light;
+            -webkit-box-shadow: 1px 1px 1px 0px gray('600');
+            -moz-box-shadow: 1px 1px 1px 0px gray('600');
+            box-shadow: 1px 1px 1px 0px gray('600');
             z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
             outline: none;
         }
@@ -43,7 +43,7 @@
     .o_kanban_record {
         position: relative;
         display: inline-block; // Force the creation of a block formatting context to clear float items
-        border-color: $gray-lighter-darker;
+        border-color: gray('400');
         min-width: 150px;
         margin: 0 0 -1px;
 
@@ -61,11 +61,11 @@
         }
 
         .o_kanban_record_top, .o_kanban_record_bottom  {
-            @include o-flex-display;
+            display: flex;
         }
 
         .o_kanban_record_top {
-            @include o-align-items(flex-start);
+            align-items: flex-start;
 
             .o_dropdown_kanban {
                 // For v11 layout, reset positioning to default to properly use
@@ -77,7 +77,7 @@
 
             .o_kanban_record_headings {
                 line-height: 1.2;
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 // Ensure long word doesn't break out of container
                 word-wrap: break-word;
                 overflow: hidden;
@@ -95,12 +95,12 @@
 
         .o_kanban_record_bottom {
             .oe_kanban_bottom_left, .oe_kanban_bottom_right {
-                @include o-flex-display;
-                @include o-align-items(center);
+                display: flex;
+                align-items: center;
                 height: 20px;
             }
             .oe_kanban_bottom_left {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
 
                 > * {
                     margin-right: 6px;
@@ -113,7 +113,7 @@
                 }
             }
             .oe_kanban_bottom_right{
-                @include o-flex(0, 1, auto);
+                flex: 0 1 auto;
 
                 .oe_kanban_avatar {
                     width: 20px;
@@ -122,9 +122,9 @@
                 }
             }
             .o_link_muted {
-                color: $text-color;
+                color: $body-color;
                 &:hover {
-                    color: $brand-primary;
+                    color: theme-color('primary');
                     text-decoration: underline;
                 }
             }
@@ -142,7 +142,7 @@
         .o_dropdown_kanban {
             @include o-position-absolute($o-kanban-inside-vgutter, $o-kanban-inside-hgutter);
             visibility: hidden;
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 visibility: visible;
             }
 
@@ -150,7 +150,7 @@
                 @include o-kanban-dropdown;
                 margin: (-$o-kanban-inside-vgutter - 1px) (-$o-kanban-inside-hgutter - 1px) 0 0;
             }
-            &.open .dropdown-toggle {
+            &.show .dropdown-toggle {
                 @include o-kanban-dropdown-open;
             }
             .dropdown-menu {
@@ -159,7 +159,7 @@
             }
         }
 
-        &:hover .o_dropdown_kanban, .o_dropdown_kanban.open {
+        &:hover .o_dropdown_kanban, .o_dropdown_kanban.show {
             visibility: visible;
         }
 
@@ -207,7 +207,7 @@
 
             > button, > a {
                 @include o-position-absolute($right: $o-kanban-record-margin, $bottom: $o-kanban-record-margin);
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     right: $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -219,9 +219,9 @@
         }
 
         &.ui-sortable-helper {
-            @include o-transform(rotate(-3deg));
+            transform: rotate(-3deg);
             box-shadow: 0 5px 25px -10px black;
-            @include transition(transform 0.6s, box-shadow 0.3s);
+            transition: transform 0.6s, box-shadow 0.3s;
         }
 
         .o_attachment_image > img {
@@ -230,18 +230,18 @@
         }
 
         .o_progressbar {
-            @include o-flex-display;
+            display: flex;
             height: $o-kanban-progressbar-height;
 
             .o_progressbar_title {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
             .o_progress {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 margin-top: 3px;
             }
             .o_progressbar_value {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 width: auto;
                 height: 100%;
                 text-align: right;
@@ -258,7 +258,7 @@
 
             + div {
                 padding-left: $o-kanban-image-width + $o-kanban-inside-hgutter;
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     padding-left:  $o-kanban-image-width + $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -270,7 +270,7 @@
                 margin-bottom: $o-kanban-inner-hmargin*0.5;;
                 padding-left: 0;
                 list-style: none;
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
 
                 li {
                     margin-bottom: 2px;
@@ -279,11 +279,11 @@
         }
 
         .o_kanban_footer {
-            @include o-flex-display;
-            @include o-justify-content(space-between);
-            @include o-align-items(center);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             > * {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
         }
 
@@ -305,7 +305,7 @@
     &.o_kanban_grouped {
         min-height: 100%;
         padding: 0;
-        background-color: $gray-lighter;
+        background-color: theme-color('light');
 
         .o_kanban_record, .o_kanban_quick_create {
             width: 100%;
@@ -320,14 +320,14 @@
 
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         padding: 0 $o-kanban-group-padding $o-kanban-group-padding $o-kanban-group-padding;
 
         .o_kanban_header > .o_kanban_header_title {
             @include o-kanban-header-title;
 
             .o_column_title {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 @include o-text-overflow;
                 font-size: 16px;
                 font-weight: 500;
@@ -342,7 +342,7 @@
                 margin-left: $o-kanban-inside-hgutter*2;
             }
 
-            &:hover .o_kanban_config, .o_kanban_config.open {
+            &:hover .o_kanban_config, .o_kanban_config.show {
                 visibility: visible;
                 margin-left: $o-kanban-inside-hgutter;
             }
@@ -430,7 +430,7 @@
             .o_kanban_add_column {
                 display: inline-block;
                 padding: 10px 14px;
-                background-color: $o-color-silver-dark;
+                background-color: gray('300');
             }
             .o_kanban_title {
                 margin-left: 10px;
@@ -443,7 +443,7 @@
             height: 100%;
             border: none;
             box-shadow: 0 0 20px -10px;
-            background-color: $gray-lighter;
+            background-color: theme-color('light');
 
             .o_kanban_header {
                 height: 50px;
@@ -453,18 +453,13 @@
                 }
 
                 input, input:focus, input:hover {
-                    margin-top: 3px;
                     font-size: 16px;
                     background: transparent;
-                }
-
-                .o_kanban_add {
-                    margin-left: 10px;
                 }
             }
 
             .o_kanban_muted_record {
-                background: $gray-lighter-dark;
+                background: gray('300');
                 height: 70px;
                 margin: 10px 0px;
             }
@@ -474,19 +469,19 @@
 
     // Kanban UN-grouped Layout
     &.o_kanban_ungrouped {
-        @include o-flex-flow(row, wrap);
-        @include o-justify-content(flex-start);
+        flex-flow: row wrap;
+        justify-content: flex-start;
 
         padding: $o-kanban-record-margin ($o-horizontal-padding - $o-kanban-record-margin);
 
         .o_kanban_record {
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             width: $o-kanban-default-record-width;
             margin: ($o-kanban-record-margin * 0.5) $o-kanban-record-margin;
 
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 margin: 0 0 -1px 0;
-                @include o-flex(1, 0, 100%);
+                flex: 1 0 100%;
             }
 
             &.o_kanban_ghost {

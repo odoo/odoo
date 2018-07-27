@@ -419,7 +419,14 @@ class AssetsBundle(object):
                         except psycopg2.Error:
                             pass
 
-        return '\n'.join(asset.minify() for asset in self.stylesheets)
+        css_content = '\n'.join(asset.minify() for asset in self.stylesheets)
+
+        # Post process the produced css to add required vendor prefixes here
+        css_content = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2flex\3; \1', css_content)  # For PhantomJS tests
+        css_content = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', css_content) # For PhantomJS tests
+        css_content = re.sub(r'(flex: (\d+ \d+ (?:\d+|auto));)', r'-webkit-flex: \2; \1', css_content)  # For PhantomJS tests
+
+        return css_content
 
     def compile_css(self, compiler, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
@@ -733,9 +740,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
     @property
     def bootstrap_path(self):
         return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
-    @property
-    def bootstrap_components_path(self):
-        return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+
     precision = 8
     output_style = 'expanded'
 
@@ -748,7 +753,6 @@ class ScssStylesheetAsset(PreprocessedCSS):
                 string=source,
                 include_paths=[
                     self.bootstrap_path,
-                    self.bootstrap_components_path,
                 ],
                 output_style=self.output_style,
                 precision=self.precision,
@@ -761,7 +765,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
             sassc = misc.find_in_path('sassc')
         except IOError:
             sassc = 'sassc'
-        return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '--load-path', self.bootstrap_components_path, '-t', self.output_style]
+        return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '-t', self.output_style]
 
 
 class LessStylesheetAsset(PreprocessedCSS):

@@ -13,7 +13,7 @@
 
         <t t-call="web._assets_frontend_helpers"/>
         <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fonts.scss" />
         <!-- Some helper classes (like mt- mb-) are required for survey templates  -->
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/scss/web_editor.common.scss"/>
@@ -98,8 +98,8 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="website.group_website_publisher" t-ignore="true" class="pull-right">
-            <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
+        <div groups="website.group_website_publisher" t-ignore="true" class="float-right">
+            <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-secondary">Back to Survey</a>
         </div>
     </template>
 
@@ -124,11 +124,11 @@
             </body>
             <xpath expr="//footer" position="replace">
                 <div class="container mt16 mb8">
-                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                    <div class="float-right" t-ignore="true" t-if="not editable">
                         Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
-                        <a target="_blank" class="label label-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
+                        <a target="_blank" class="badge badge-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
                     </div>
-                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                    <div class="float-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
                         Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
     <!-- A page -->
     <template id="page" name="Page">
         <div class="page-header">
-            <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
+            <p class="float-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
@@ -201,7 +201,7 @@
                 </div>
             </t>
             <div class="text-center mt16 mb16">
-                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-default" name="button_submit" value="previous">Previous page</button>
+                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
                 <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
                 <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
             </div>
@@ -244,7 +244,7 @@
 
     <template id="simple_choice" name="Simple choice">
         <div t-if="question.display_mode == 'dropdown' and token" class="js_drop row">
-            <div class="col-md-12">
+            <div class="col-lg-12">
                 <select class="form-control" t-att-name="prefix">
                     <option disabled="1" selected="1" value="">Choose...</option>
                     <t t-foreach='question.labels_ids' t-as='label'>
@@ -255,29 +255,29 @@
                     </t>
                 </select>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-md-6">
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12 mt16">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
                 <span t-field="question.comments_message"/>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
         </div>
         <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-md-12" >
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                 <label>
                     <input type="radio" t-att-name="prefix" value="-1"/>
                     <span t-field="question.comments_message" />
                 </label>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
@@ -286,20 +286,20 @@
 
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-md-12" >
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
                 <label>
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" />
                     <span t-field="question.comments_message" />
                 </label>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
@@ -353,7 +353,7 @@
                                         <h2>
                                             <span t-field='question.question' />
                                             <span t-if="question.constr_mandatory" class="text-danger">*</span>
-                                            <span t-if="quizz_correction" class="badge" t-att-data-score-question="question.id"></span>
+                                            <span t-if="quizz_correction" class="badge badge-pill" t-att-data-score-question="question.id"></span>
                                         </h2>
                                         <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
                                         <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>

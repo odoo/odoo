@@ -1,6 +1,6 @@
 .website_blog {
     .css_website_mail {
-        .has-error {
+        .o_has_error {
             border-color: red;
         }
         .css_nav_month {
@@ -43,7 +43,7 @@
             @include o-position-absolute(0, 0, 0, 0);
             display: none;
 
-            @include o-background-size(cover);
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
@@ -92,7 +92,7 @@
     }
 
     /* mobile preview: for blog h1,h2 font-size and cover-footer height of image overlapas */
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         .o_blog_cover_container {
             > .blog_title {
                 > h1 {
@@ -224,7 +224,7 @@
     .blog_post_year_collapse {
         cursor: pointer;
         > i {
-            color: $brand-primary;
+            color: theme-color('primary');
         }
     }
 

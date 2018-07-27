@@ -3,7 +3,7 @@
 
      <div t-name="mail.Composer" t-attf-class="o_thread_composer #{widget.extended ? 'o_thread_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
          <div class="o_composer_container">
-             <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar img-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
+             <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar rounded-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
              <div t-if="widget.extended" class="o_composer_subject">
                  <input tabindex="1" type="text" placeholder="Subject" class="o_input"/>
              </div>
@@ -11,18 +11,18 @@
                 <div class="o_composer_input">
                     <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
                     <div class="o_chatter_composer_tools">
-                        <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover" title="Emojis" aria-label="Emojis"/>
-                        <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
-                        <button t-if="widget.options.isMobile" tabindex="3" class="btn btn-sm btn-icon fa fa-paper-plane-o o_composer_button_send" type="button" title="Send" aria-label="Send"/>
+                        <button tabindex="4" class="btn btn-secondary fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover" title="Emojis" aria-label="Emojis"/>
+                        <button tabindex="5" class="btn btn-secondary fa fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
+                        <button t-if="widget.options.isMobile" tabindex="3" class="btn btn-secondary fa fa-paper-plane-o o_composer_button_send" type="button" title="Send" aria-label="Send"/>
                     </div>
                 </div>
              </div>
              <div class="o_composer_attachments_list"/>
          </div>
          <div class="o_composer_send">
-             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send hidden-xs" type="button"><t t-esc="widget.options.sendText"/></button>
+             <button tabindex="3" class="btn btn-primary o_composer_button_send d-none d-md-inline-block" type="button"><t t-esc="widget.options.sendText"/></button>
          </div>
-         <span class="hide">
+         <span class="d-none">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
@@ -47,17 +47,15 @@
         @param {boolean} [suggestions.divider=false]
     -->
     <t t-name="mail.MentionSuggestions">
-        <ul class="dropdown-menu" role="menu">
+        <div class="dropdown-menu" role="menu">
             <t t-foreach="suggestions" t-as="suggestion">
-                <li role="separator" t-if="suggestion.divider" class="divider"/>
-                <li t-if="!suggestion.divider" class="o_mention_proposition" t-att-data-id="suggestion.id">
-                    <a role="menuitem" href="#"/>
-                </li>
+                <div role="separator" t-if="suggestion.divider" class="dropdown-divider"/>
+                <a t-else="" href="#" class="dropdown-item o_mention_proposition" t-att-data-id="suggestion.id" role="menuitem"/>
             </t>
-        </ul>
+        </div>
     </t>
     <t t-name="mail.MentionSuggestions.Partner" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
             <t t-if="suggestion.email">
                 <span class="o_mention_info">(<t t-esc="suggestion.email"/>)</span>
@@ -65,18 +63,18 @@
         </t>
     </t>
     <t t-name="mail.MentionSuggestions.Channel" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
         </t>
     </t>
     <t t-name="mail.MentionSuggestions.CannedResponse" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.source"/></span>
             <span class="o_mention_info"><t t-esc="suggestion.substitution"/></span>
         </t>
     </t>
     <t t-name="mail.MentionSuggestions.Command" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name">/<t t-esc="suggestion.name"/></span>
             <span class="o_mention_info"><t t-esc="suggestion.help"/></span>
         </t>

@@ -27,7 +27,7 @@ $o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1) !default;
 // Editor
 $o-we-dropzone-size: 40px !default;
 $o-we-dropzone-border-width: 2px !default;
-$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-primary !default;
+$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
 
 $o-we-handle-edge-size: 1px !default;
 $o-we-handle-border-width: 1px !default;
@@ -49,7 +49,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
     padding: $padding;
     border-top: 1px solid black;
     border-bottom: 1px solid white;
-    @include o-linear-gradient(-150deg, $o-we-color-dark, $o-we-color-darker);
+    background-image: linear-gradient(-150deg, $o-we-color-dark, $o-we-color-darker);
 
     color:  $color-text;
 }
@@ -62,12 +62,12 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 }
 
 
-// ============    Preservetion mixins    ===============
+// ============    Preservation mixins    ===============
 // Used to preserve web_editor and website UI from themes customizations
 
 @mixin o-w-preserve-base {
     font-family: $o-we-font-family;
-    line-height: 1.42857143;
+    line-height: 1.5;
     color: $o-we-color-divider;
 
     .text-muted {
@@ -78,7 +78,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 @mixin o-w-preserve-headings {
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         font-family: $o-we-font-family;
-        line-height: 1.42857143;
+        line-height: 1.5;
         color: $o-we-color-dark;
         font-weight: bold;
     }
@@ -86,14 +86,14 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 
 @mixin o-w-preserve-links {
     a:not(.o_btn_preview) {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
 
         &:focus, &:active, &:focus:active {
             outline: none!important;
         }
     }
 
-    .label {
+    .badge {
         &:hover a, a {
             color: #fff;
         }
@@ -105,21 +105,21 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
         height: 34px;
         padding: 6px 12px;
         font-size: 14px;
-        line-height: 1.42857143;
+        line-height: 1.5;
         border: 1px solid $o-we-color-text-light;
         color: #555;
         background-color: #fff;
         border-radius: 0;
     }
 
-    .has-error {
-        .form-control {
-            border-color: $state-danger-text;
+    .was-validated {
+        .form-control:invalid {
+            border-color: $danger;
         }
     }
 
     select.form-control {
-        @include o-appearance(none);
+        appearance: none;
         background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1 sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyNCcgaGVpZ2 h0PScyNCcgdmlld0JveD0nMCAwIDI0IDI0Jz48cGF0aCBpZD0nc3ZnXzEnIGQ9J203LjQwNiw3L jgyOGw0LjU5NCw0LjU5NGw0LjU5NCwtNC41OTRsMC40MDYsMS40MDZsLTUsNC43NjZsLTUsLTQu NzY2bDAuNDA2LC0xLjQwNnonIGZpbGw9JyM4ODgnLz48L3N2Zz4=');
         background-position: 100% 65%;
         background-repeat: no-repeat;
@@ -144,14 +144,14 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 
 @mixin o-w-preserve-tabs {
     .nav-tabs {
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid gray('200');
 
         > li  {
             > a {
-                line-height: 1.42857143;
+                line-height: 1.5;
                 color: $o-we-color-light;
                 &:hover {
-                    border-color: $gray-lighter;
+                    border-color: gray('200');
                 }
             }
 
@@ -159,7 +159,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
                 &, &:hover, &:focus {
                     color: $o-we-color-normal;
                     background-color: $o-we-color-paper;
-                    border-color: $gray-lighter;
+                    border-color: gray('200');
                     border-bottom-color: transparent;
                 }
             }
@@ -169,61 +169,57 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 
 @mixin o-w-preserve-btn {
     .btn:not(.o_btn_preview) {
-        border-width: 1px;
         border-radius: 0;
         font-weight: normal;
-        @include button-size(6px, 12px, 14px, 1.42857143, 0);
+        @include button-size(.375rem, .75rem, 1rem, 1.5, 0);
 
         &.btn-primary {
-            @include button-variant(white, $o-brand-optional, darken($o-brand-optional,5%));
+            @include button-variant($o-brand-primary, $o-brand-primary);
         }
-        &.btn-default {
-            @include button-variant($o-we-color-normal, white, $o-we-color-text-light);
+        &.btn-secondary {
+            @include button-variant($o-we-color-paper, $o-we-color-paper);
+            color: $o-brand-primary;
         }
         &.btn-link {
-            @include button-variant($o-brand-optional, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+            @include button-variant($o-we-color-paper, $o-we-color-paper);
+            color: $o-brand-primary;
         }
         &.btn-success {
-            @include button-variant(white, $o-we-color-success, darken($o-we-color-success, 5%));
+            @include button-variant($o-we-color-success, $o-we-color-success);
         }
         &.btn-info {
-            @include button-variant(white, $o-we-color-info, darken($o-we-color-info, 5%));
+            @include button-variant($o-we-color-info, $o-we-color-info);
         }
         &.btn-warning {
-            @include button-variant(white, $o-we-color-warning, darken($o-we-color-warning, 5%));
+            @include button-variant($o-we-color-warning, $o-we-color-warning);
         }
         &.btn-danger {
-            @include button-variant(white, $o-we-color-danger, darken($o-we-color-danger, 5%));
+            @include button-variant($o-we-color-danger, $o-we-color-danger);
         }
 
         &.btn-lg {
-            @include button-size(10px, 16px, 18px, 1.3333333, 0);
+            @include button-size(.5rem, 1rem, 1.25rem, 1.5, 0);
         }
         &.btn-sm {
-            @include button-size(5px, 10px, 12px, 1.5, 0);
-        }
-        &.btn-xs {
-            @include button-size(1px, 5px, 12px, 1.5, 0);
+            @include button-size(.25rem, .5rem, .875rem, 1.5, 0);
         }
     }
 }
 
-@mixin o-w-preserve-wells {
-    .well {
+@mixin o-w-preserve-cards {
+    .card {
         padding: 19px;
         margin-bottom: 20px;
         background-color: $o-we-color-paper;
-        border: 1px solid darken($o-we-color-paper,5%);
+        border: 1px solid darken($o-we-color-paper, 5%);
         border-radius: 0;
-        @include box-shadow(none);
+        box-shadow: none;
     }
 }
 
 // Edition colors
 
 // Colors
-$gray-white: #fff !default;
-
 $color-alpha: #1cc1a9 !default;
 $color-beta: #875A7B !default;
 $color-gamma: #BA3C3D !default;
@@ -237,24 +233,6 @@ $color-black-75: rgba(black, 0.75) !default;
 $color-white-25: rgba(white, 0.25) !default;
 $color-white-50: rgba(white, 0.5) !default;
 $color-white-75: rgba(white, 0.75) !default;
-
-@mixin o-create-color-classes($name, $color, $complementary: o-get-most-contrast($color, $text-color, #FFF), $content-color: $color) {
-    .bg-#{$name} {
-        background-color: $color;
-        color: $complementary;
-        .text-muted {
-            color: rgba($complementary, 0.4);
-        }
-    }
-    body .text-#{$name} { // body to make the rules more important that bg-* ones
-        color: $content-color;
-    }
-}
-@mixin o-create-color-btn-classes($name, $color, $complementary: o-get-most-contrast($color, $text-color, #FFF), $border-color: darken($color, 5%)) {
-    .btn-#{$name} {
-        @include button-variant($complementary, $color, $border-color);
-    }
-}
 
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;

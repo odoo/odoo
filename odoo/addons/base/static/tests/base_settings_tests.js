@@ -47,7 +47,7 @@ QUnit.module('base_settings_tests', {
                             '<div class="notFound o_hidden">No Record Found</div>' +
                             '<div class="app_settings_block" string="CRM" data-key="crm">' +
                                 '<div class="row mt16 o_settings_container">'+
-                                    '<div class="col-xs-12 col-md-6 o_setting_box">'+
+                                    '<div class="col-12 col-lg-6 o_setting_box">'+
                                         '<div class="o_setting_left_pane">' +
                                             '<field name="bar"/>'+
                                         '</div>'+
@@ -58,7 +58,7 @@ QUnit.module('base_settings_tests', {
                                             '</div>'+
                                         '</div>' +
                                     '</div>'+
-                                    '<div class="col-xs-12 col-md-6 o_setting_box">'+
+                                    '<div class="col-12 col-lg-6 o_setting_box">'+
                                         '<div class="o_setting_left_pane">' +
                                             '<field name="foo"/>'+
                                         '</div>'+
@@ -126,7 +126,7 @@ QUnit.module('base_settings_tests', {
 
         actionManager.doAction(1);
         actionManager.$('button[name="4"]').click();
-        $('.o_control_panel .breadcrumb li a').click();
+        $('.o_control_panel .breadcrumb-item a').click();
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record

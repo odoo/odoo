@@ -66,6 +66,12 @@
     </xpath>
 </template>
 
+<template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.bootstrap.scss"/>
+    </xpath>
+</template>
+
 <template id="assets_backend" inherit_id="web.assets_backend" name="Web Editor Backend Assets (used in backend interface)">
     <xpath expr="link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
@@ -73,6 +79,12 @@
     </xpath>
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/src/js/backend/fields.js" />
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.bootstrap.scss"/>
     </xpath>
 </template>
 
@@ -149,11 +161,9 @@
         </div>
         <div class="o_colorpicker_section" data-name="grayscale" data-icon-class="fa fa-database">
             <button data-color="white">White</button>
-            <button data-color="gray-lighter">Gray Lighter</button>
-            <button data-color="gray-light">Gray Light</button>
-            <button data-color="gray">Gray</button>
-            <button data-color="gray-dark">Gray Dark</button>
-            <button data-color="gray-darker">Gray Darker</button>
+            <t t-foreach="[100, 200, 300, 400, 500, 600, 700, 800, 900]" t-as="gray">
+                <button t-att-data-color="gray">Gray <t t-esc="gray"/></button>
+            </t>
             <button data-color="black">Black</button>
         </div>
         <div class="o_colorpicker_section" data-name="ui" data-icon-class="fa fa-paint-brush">

@@ -58,7 +58,7 @@ var AccountAssetWidget = AbstractField.extend({
             type: 'button',
             title: title,
             disabled: disabled,
-        }).addClass('btn btn-sm btn-link fa fa-circle o_deprec_lines_toggler ' + className);
+        }).addClass('btn btn-link fa fa-circle o_deprec_lines_toggler ' + className);
         this.$el.html($button);
     },
 

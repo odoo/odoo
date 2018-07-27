@@ -10,7 +10,7 @@ var snippet_editor = require('web_editor.snippet.editor');
 
 weWidgets.MediaDialog.include({
     start: function () {
-        this.$('[href="#editor-media-video"]').addClass('hidden');
+        this.$('[href="#editor-media-video"]').addClass('d-none');
         return this._super.apply(this, arguments);
     },
 });

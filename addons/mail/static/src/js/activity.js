@@ -322,8 +322,10 @@ var Activity = AbstractActivityField.extend({
         var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
         if (!$popoverElement.data('bs.popover')) {
             $popoverElement.popover({
+                template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
+                container: $popoverElement.parent(), // FIXME Ugly and should probably be in the body as by default but form view should handle destroying popovers
                 title : _t("Feedback"),
-                html: 'true',
+                html: true,
                 trigger:'click',
                 content : function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', { 'previous_activity_type_id': previousActivityTypeID }));
@@ -344,12 +346,10 @@ var Activity = AbstractActivityField.extend({
                     });
                     return $popover;
                 },
-            }).on('show.bs.popover', function (e) {
-                var $popover = $(this).data('bs.popover').tip();
-                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
-                $('.o_mail_activity_feedback.popover').not(e.target).popover('hide');
             }).on('shown.bs.popover', function () {
-                var $popover = $(this).data('bs.popover').tip();
+                var $popover = $($(this).data("bs.popover").tip);
+                $(".o_mail_activity_feedback.popover").not($popover).popover("hide");
+                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
                 $popover.find('#activity_feedback').focus();
                 $popover.off('focusout');
                 $popover.focusout(function (e) {
@@ -371,7 +371,7 @@ var Activity = AbstractActivityField.extend({
 var KanbanActivity = AbstractActivityField.extend({
     template: 'mail.KanbanActivity',
     events: {
-        'click .o_activity_btn': '_onButtonClicked',
+        'show.bs.dropdown': '_onDropdownShow',
         'click .o_schedule_activity': '_onScheduleActivity',
         'click .o_mark_as_done': '_onMarkActivityDone',
     },
@@ -411,7 +411,7 @@ var KanbanActivity = AbstractActivityField.extend({
             }).join(' ');
         });
         $span.addClass('o_activity_color_' + (this.activityState || 'default'));
-        if (this.$el.hasClass('open')) {
+        if (this.$el.hasClass('show')) {
             // note: this part of the rendering might be asynchronous
             this._renderDropdown();
         }
@@ -455,13 +455,9 @@ var KanbanActivity = AbstractActivityField.extend({
 
     /**
      * @private
-     * @param {MouseEvent} ev
      */
-    _onButtonClicked: function (ev) {
-        ev.preventDefault();
-        if (!this.$el.hasClass('open')) {
-            this._renderDropdown();
-        }
+    _onDropdownShow: function () {
+        this._renderDropdown();
     },
     /**
      * @private

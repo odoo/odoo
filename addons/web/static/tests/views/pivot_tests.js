@@ -259,7 +259,7 @@ QUnit.module('Views', {
             }
         });
 
-        var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
+        var $countMeasure = pivot.$buttons.find('.dropdown-item[data-field=__count]:first');
         assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
         pivot.destroy();
     });
@@ -344,14 +344,15 @@ QUnit.module('Views', {
         // click on closed header to open dropdown
         pivot.$('tbody .o_pivot_header_cell_closed').click();
 
-        assert.strictEqual(pivot.$('ul.o_pivot_field_menu > li[data-field="date"]').length, 1,
+        assert.strictEqual(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first').length, 1,
             "should have the date field as proposition");
-        assert.strictEqual(pivot.$('.o_field_selection li[data-field="product_id"]').length, 1,
+        assert.strictEqual(pivot.$('.o_field_selection .dropdown-item[data-field="product_id"]:first').length, 1,
             "should have the product_id field as proposition");
-        assert.strictEqual(pivot.$('.o_field_selection li[data-field="non_stored_m2o"]').length, 0,
+        assert.strictEqual(pivot.$('.o_field_selection .dropdown-item[data-field="non_stored_m2o"]:first').length, 0,
             "should not have the non_stored_m2o field as proposition");
 
-        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a').click();
+
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"]:first').click();
 
         assert.strictEqual(pivot.$('tbody tr').length, 4,
             "should have 4 rows: one for header, 3 for data");
@@ -376,7 +377,7 @@ QUnit.module('Views', {
         // open dropdown to zoom into first row
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
         // click on date by day
-        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a[data-interval="day"]').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][data-interval="day"]').click();
 
         // open dropdown to zoom into second row
         pivot.$('tbody td.o_pivot_header_cell_closed:eq(1)').first().click();
@@ -437,22 +438,22 @@ QUnit.module('Views', {
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
             "should have 3 cells: 1 for the open header, and 2 for data");
-        assert.ok(!pivot.$buttons.find('li[data-field=__count]').hasClass('selected'),
+        assert.ok(!pivot.$buttons.find('.dropdown-item[data-field=__count]:first').hasClass('selected'),
             "the __count measure should not be selected");
 
         rpcCount = 0;
-        pivot.$buttons.find('li[data-field=__count] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=__count]:first').click();
 
-        assert.ok(pivot.$buttons.find('li[data-field=__count]').hasClass('selected'),
+        assert.ok(pivot.$buttons.find('.dropdown-item[data-field=__count]:first').hasClass('selected'),
             "the __count measure should be selected");
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 6,
             "should have 6 cells: 2 for the open header, and 4 for data");
         assert.strictEqual(rpcCount, 2,
             "should have done 2 rpcs to reload data");
 
-        pivot.$buttons.find('li[data-field=__count] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=__count]:first').click();
 
-        assert.ok(!pivot.$buttons.find('li[data-field=__count]').hasClass('selected'),
+        assert.ok(!pivot.$buttons.find('.dropdown-item[data-field=__count]:first').hasClass('selected'),
             "the __count measure should not be selected");
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
             "should have 3 cells: 1 for the open header, and 2 for data");
@@ -477,7 +478,7 @@ QUnit.module('Views', {
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
-        pivot.$buttons.find('li[data-field=__count] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=__count]:first').click();
 
         assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
@@ -553,7 +554,7 @@ QUnit.module('Views', {
         // tries to open a field selection menu, to make sure it was not
         // removed from the dom.
         pivot.$('.o_pivot_header_cell_closed').first().click();
-        assert.strictEqual(pivot.$('ul.o_pivot_field_menu').length, 1,
+        assert.strictEqual(pivot.$('.o_pivot_field_menu').length, 1,
             "the field selector menu exists");
         pivot.destroy();
     });
@@ -816,7 +817,7 @@ QUnit.module('Views', {
 
         // expand header on field customer
         pivot.$('thead .o_pivot_header_cell_closed:nth(1)').click();
-        pivot.$('ul.o_pivot_field_menu > li[data-field="customer"] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first').click();
         assert.deepEqual(pivot.getContext(), {
             pivot_column_groupby: ['date:day', 'customer'],
             pivot_measures: ['foo'],
@@ -825,7 +826,7 @@ QUnit.module('Views', {
 
         // expand row on field product_id
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
-        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first').click();
         assert.deepEqual(pivot.getContext(), {
             pivot_column_groupby: ['date:day', 'customer'],
             pivot_measures: ['foo'],
@@ -982,7 +983,7 @@ QUnit.module('Views', {
             },
         });
 
-        var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
+        var $countMeasure = pivot.$buttons.find('.dropdown-item[data-field=__count]:first');
         assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
 
         pivot.destroy();
@@ -1056,7 +1057,7 @@ QUnit.module('Views', {
         });
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
         // click on date by month
-        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a[data-interval="month"]').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="date"][data-interval="month"]').click();
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
             'should have loaded the proper data');
@@ -1078,7 +1079,7 @@ QUnit.module('Views', {
             },
         });
 
-        pivot.$buttons.find('li[data-field=product_id] a').click();
+        pivot.$buttons.find('.dropdown-item[data-field=product_id]:first').click();
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '421131',
             'should have loaded the proper data');
         pivot.destroy();
@@ -1098,7 +1099,7 @@ QUnit.module('Views', {
 
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
 
-        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first').click();
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '211',
             'should have loaded the proper data');
@@ -1119,11 +1120,11 @@ QUnit.module('Views', {
 
         // Set a column groupby
         pivot.$('thead .o_pivot_header_cell_closed').click();
-        pivot.$('.o_field_selection li[data-field=customer] a').click();
+        pivot.$('.o_field_selection .dropdown-item[data-field=customer]:first').click();
 
         // Set a Row groupby
         pivot.$('tbody .o_pivot_header_cell_closed').click();
-        pivot.$('.o_pivot_field_menu li[data-field=product_id] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first').click();
 
         // Set a domain
         pivot.update({domain: [['product_id', '=', 41]]});
@@ -1195,9 +1196,9 @@ QUnit.module('Views', {
                   '</pivot>',
         })
 
-        assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list li:first').data('field'), 'bouh',
+        assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:first').data('field'), 'bouh',
             "Bouh should be the first measure");
-        assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list li:last').data('field'), '__count',
+        assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:last').data('field'), '__count',
             "Count should be the last measure");
 
         pivot.destroy();

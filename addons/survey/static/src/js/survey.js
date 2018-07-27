@@ -30,7 +30,7 @@ if(!the_form.length) {
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
-        $(".js_surveyform .input-group-addon span.fa-calendar").css("pointer-events", "none");
+        $(".js_surveyform .input-group-text span.fa-calendar").css("pointer-events", "none");
         $('.js_surveyform :input').prop('disabled', true);
         print_mode = true;
     }
@@ -56,11 +56,11 @@ if(!the_form.length) {
     $('.js_drop select').change(function(){
         var other_val = $(this).find('.js_other_option').val();
         if($(this).val() === other_val){
-            $(this).parent().removeClass('col-md-12').addClass('col-md-6');
+            $(this).parent().removeClass('col-lg-12').addClass('col-lg-6');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').show().focus();
         }
         else{
-            $(this).parent().removeClass('col-md-6').addClass('col-md-12');
+            $(this).parent().removeClass('col-lg-6').addClass('col-lg-12');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').val("").hide();
         }
     });

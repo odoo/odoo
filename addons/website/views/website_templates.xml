@@ -67,25 +67,29 @@
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="
-        'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
-        ">
-        <a role="menuitem" t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+    <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" class="nav-item">
+        <a t-att-href="submenu.clean_url()"
+            t-attf-class="nav-link#{' active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
+            role="menuitem"
+            t-ignore="true"
+            t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
+    <li t-if="submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="#{('%s-item ' % submenu_type) if submenu_type else ''}dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
+        <a t-attf-class="#{('%s-link ' % submenu_type) if submenu_type else ''}dropdown-toggle" data-toggle="dropdown" href="#">
+            <span t-field="submenu.name"/>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <div class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
-                <t t-call="website.submenu"/>
+                <t t-call="website.submenu">
+                    <t t-set="submenu_type" t-value="'dropdown'"/>
+                </t>
             </t>
-        </ul>
+        </div>
     </li>
 </template>
 
@@ -184,7 +188,9 @@
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="before">
         <t t-foreach="website.menu_id.child_id" t-as="submenu">
-            <t t-call="website.submenu"/>
+            <t t-call="website.submenu">
+                <t t-set="submenu_type" t-value="'nav'"/>
+            </t>
         </t>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="after">
@@ -204,11 +210,11 @@
     <xpath expr="//footer" position="inside">
         <div class="container o_footer_copyright">
             <div class="row">
-                <div class="col-md-6 text-muted text-center-xs">
+                <div class="col-lg-6 text-muted text-center-xs">
                     <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
                     <t t-call="website.language_selector"/>
                 </div>
-                <div class="col-md-6 text-right o_not_editable" t-if="not editable">
+                <div class="col-lg-6 text-right o_not_editable" t-if="not editable">
                     <t t-call="website.brand_promotion"/>
                 </div>
             </div>
@@ -219,7 +225,7 @@
 <template id="brand_promotion" name="Brand Promotion">
     <div class="o_brand_promotion">
         Create a <a target="_blank" href="http://www.odoo.com/page/website-builder">free website</a> with
-        <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+        <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
     </div>
 </template>
 
@@ -262,13 +268,13 @@
             <section class="s_text_block pt16 pb8">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <h4>Our Products &amp; Services</h4>
                             <ul class="list-unstyled">
                                 <li><a href="/">Home</a></li>
                             </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <h4>Connect with us</h4>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
@@ -276,15 +282,15 @@
                                 <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
                             </ul>
                             <div class="btn-group">
-                                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-xs btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
-                                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-xs btn-link"><i class="fa fa-2x fa-twitter"/></a>
-                                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-xs btn-link"><i class="fa fa-2x fa-linkedin"/></a>
-                                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="btn btn-xs btn-link"><i class="fa fa-2x fa-youtube-play"/></a>
-                                <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="btn btn-xs btn-link" rel="publisher"><i class="fa fa-2x fa-google-plus-square"/></a>
-                                <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-xs btn-link"><i class="fa fa-2x fa-github"/></a>
+                                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-sm btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
+                                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-sm btn-link"><i class="fa fa-2x fa-twitter"/></a>
+                                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-sm btn-link"><i class="fa fa-2x fa-linkedin"/></a>
+                                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="btn btn-sm btn-link"><i class="fa fa-2x fa-youtube-play"/></a>
+                                <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="btn btn-sm btn-link" rel="publisher"><i class="fa fa-2x fa-google-plus-square"/></a>
+                                <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-sm btn-link"><i class="fa fa-2x fa-github"/></a>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <h4>
                                 <span t-field="res_company.name"/>
                                 <small> - <a href="/aboutus">About us</a></small>
@@ -308,24 +314,25 @@
 
 <template id="language_selector">
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
-        <li>
+        <li class="list-inline-item">
             <div class="dropup">
-                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
                     <span class="caret ml4"/>
                 </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li t-foreach="languages" t-as="lg">
+                <div class="dropdown-menu" role="menu">
+                    <t t-foreach="languages" t-as="lg">
                         <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                           class="dropdown-item js_change_lang"
                            t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
-                           t-att-data-lang="lg[0]" class="js_change_lang">
+                           t-att-data-lang="lg[0]">
                             <t t-esc="lg[1].split('/').pop()"/>
                         </a>
-                    </li>
-                </ul>
+                    </t>
+                </div>
             </div>
         </li>
-        <li groups="website.group_website_publisher">
+        <li groups="website.group_website_publisher" class="list-inline-item">
             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
             <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
                 <i class="fa fa-plus-circle"/>
@@ -337,27 +344,23 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="website.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_publisher" t-ignore="true" class="float-right css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
-            <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+            <button type="button" t-attf-class="btn btn-secondary dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
+            <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
-                <li t-if="publish_edit">
-                    <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
-                    title='Edit in backend'>Edit</a>
-                </li>
-            </ul>
+                <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
+                    title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
+            </div>
         </div>
     </div>
 </template>
 
 <template id="publish_short">
     <t groups="website.group_website_publisher" t-ignore="true">
-        <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+        <div t-attf-class="float-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
         </div>
@@ -437,7 +440,7 @@
                             <t t-call="#{ template }"></t>
                         </t>
                         <!-- pager -->
-                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered">
+                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered"><!-- FIXME -->
                             <ul>
                                 <li t-attf-class="prev #{'active' if obj['page'] == 1 else '' }">
                                     <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &gt; 1 and obj['page']-1 or 1)) ">Prev</a></li>
@@ -550,14 +553,14 @@
 <template id="default_less">
     <style type="text/less">
         div#wrap div &gt; h1 {
-            color: @o-brand-primary;
+            color: @o-brand-odoo;
         }
     </style>
 </template>
 <template id="default_scss">
     <style type="text/scss">
         div#wrap div &gt; h1 {
-            color: $o-brand-primary;
+            color: $o-brand-odoo;
         }
     </style>
 </template>
@@ -568,7 +571,7 @@
 <template id="page_404">
     <t t-call="website.404">
         <div class="container">
-            <div class="well mt32">
+            <div class="alert alert-info mt32">
                 <p>This page does not exist, but you can create it as you are administrator of this site.</p>
                 <a role="button" class="btn btn-primary js_disable_on_click" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
@@ -592,17 +595,13 @@
 </template>
 
 <template id="http_error_debug">
-    <div class="container panel-group mb32 mt32" id="debug_infos">
-        <div class="panel panel-default" t-if="exception">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
-                        Error
-                    </a>
-                </h4>
-            </div>
-            <div id="error_main" class="panel-collapse collapse in">
-                <div class="panel-body">
+    <div class="container accordion mb32 mt32" id="debug_infos">
+        <div class="card" t-if="exception">
+            <h4 class="card-header">
+                <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">Error</a>
+            </h4>
+            <div id="error_main" class="collapse in">
+                <div class="card-body">
                     <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
                     <p>
                         <strong>Error message:</strong>
@@ -611,16 +610,12 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" t-if="qweb_exception">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
-                        QWeb
-                    </a>
-                </h4>
-            </div>
-            <div id="error_qweb" class="panel-collapse collapse">
-                <div class="panel-body">
+        <div class="card" t-if="qweb_exception">
+            <h4 class="card-header">
+                <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">QWeb</a>
+            </h4>
+            <div id="error_qweb" class="collapse">
+                <div class="card-body">
                     <p t-if="exception.qweb.get('message')">
                         <strong>Error message:</strong>
                         <pre t-esc="exception.qweb.get('message')"/>
@@ -635,16 +630,12 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" t-if="traceback">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
-                        Traceback
-                    </a>
-                </h4>
-            </div>
-            <div id="error_traceback" class="panel-collapse collapse">
-                <div class="panel-body">
+        <div class="card" t-if="traceback">
+            <h4 class="card-header">
+                <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">Traceback</a>
+            </h4>
+            <div id="error_traceback" class="collapse">
+                <div class="card-body">
                     <pre id="exception_traceback" t-esc="traceback"/>
                 </div>
             </div>
@@ -733,19 +724,19 @@
         <body>
             <div role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
                 <div class="modal-dialog">
-                    <form class="form-horizontal" role="form">
+                    <form role="form">
                     <div class="modal-content">
                         <header class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             <h3 class="modal-title">Reset templates</h3>
                         </header>
                         <main class="modal-body">
-                            <div class="form-group mb0">
-                                <label for="page-name" class="col-sm-9">
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-9 col-form-label">
                                     <p>The selected templates will be reset to their factory settings.</p>
                                     <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
                                 </label>
-                                <div class="col-sm-3 mt16">
+                                <div class="col-md-3 mt16">
                                     <input type="text" class="form-control" required="required" placeholder="yes"/>
                                 </div>
                             </div>
@@ -761,12 +752,12 @@
 
             <div id="wrapwrap">
                 <header>
-                    <div class="navbar navbar-default navbar-static-top">
+                    <div class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav pull-right" id="top_menu">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="javascript: window.history.back()">Back</a></li>
+                                <ul class="navbar-nav ml-auto" id="top_menu">
+                                    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                                    <li class="nav-item"><a href="javascript: window.history.back()" class="nav-link">Back</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -846,25 +837,23 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </address>
     <t t-if="res_company.google_map_img()">
         <a t-att-href="res_company.google_map_link()" target="_BLANK">
-           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
+           <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
         </a>
     </t>
 </template>
 
 <template id="website_search_box" name="Website Searchbox">
     <div class="input-group">
-        <div class="oe_search">
-            <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
+        <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search"/>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-secondary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
         </div>
-        <span class="input-group-btn">
-           <button type="submit" class="btn btn-default oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
-        </span>
     </div>
 </template>
 
 <template id="index_management">
     <t groups="website.group_website_publisher" t-ignore="true">
-        <div t-attf-class="pull-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
+        <div t-attf-class="float-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
             <button class="btn btn-danger js_index_btn">Unindexed</button>
             <button class="btn btn-success js_index_btn">Indexed</button>
         </div>
@@ -875,22 +864,23 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   <t t-call="website.layout">
     <div id="wrap">
       <div class="container" id="edit_website_pages">
-          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages" method="get">
+          <form class="mt8 float-right" role="search" t-attf-action="/website/pages" method="get">
               <t t-call="website.website_search_box"/>
           </form>
-          <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
-              <button class="btn btn-default" type="button" data-toggle="dropdown">
+          <div t-if="searchbar_sortings" class="dropdown float-right mt8 mr8">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
                   <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
-                  <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                  <span class="caret" role="img" aria-label="Dropdown menu" title="Dropdown menu"></span>
+                  <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
               </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">
-                  <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                      <a role="menuitem" t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+              <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby" role="menu">
+                  <t t-foreach="searchbar_sortings" t-as="option">
+                      <a role="menuitem"
+                         t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"
+                         t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">
                           <span t-esc="searchbar_sortings[option].get('label')"/>
                       </a>
-                  </li>
-              </ul>
+                  </t>
+              </div>
           </div>
           <h3 class="mt16">Manage Your Pages</h3>
           <t t-if="not pages">
@@ -907,10 +897,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <tr class="active">
                       <th>Name</th>
                       <th>Url</th>
-                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
-                      <th class="col-sm-3 col-md-2"></th>
+                      <th class="col-lg-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="col-lg-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="col-lg-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
+                      <th class="col-md-3 col-lg-2"></th>
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">

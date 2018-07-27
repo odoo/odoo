@@ -101,7 +101,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
                                     </div>
-                                    <span class="badge"><t t-esc="record.type.value"/></span>
+                                    <span class="badge badge-pill"><t t-esc="record.type.value"/></span>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
@@ -239,16 +239,16 @@
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
-                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a role="menuitem" type="edit">Edit Survey</a></li>
-                                    <li t-if="widget.deletable"><a role="menuitem" type="delete">Delete</a></li>
-                                    <li role="separator" class="divider"/>
-                                    <li role="separator">Color</li>
-                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                    <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <div role="separator" class="dropdown-item-text">Color</div>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
                             <div class="o_kanban_record_top">
                                 <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
@@ -408,7 +408,7 @@
                                 <field name="type" widget="radio" />
                             </group>
                             <group>
-                                <div class="col-md-6 col-md-offset-3 o_preview_questions">
+                                <div class="col-lg-6 offset-lg-3 o_preview_questions">
                                     <!-- Multiple Lines Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
                                             <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
@@ -442,28 +442,28 @@
                                     <!-- Matrix -->
                                     <div attrs="{'invisible': [('type', '!=', 'matrix')]}">
                                         <div class="row o_matrix_head">
-                                            <div class="col-md-3"></div>
-                                            <div class="col-md-3">ans</div>
-                                            <div class="col-md-3">ans</div>
-                                            <div class="col-md-3">ans</div>
+                                            <div class="col-lg-3"></div>
+                                            <div class="col-lg-3">ans</div>
+                                            <div class="col-lg-3">ans</div>
+                                            <div class="col-lg-3">ans</div>
                                         </div>
                                         <div class="row o_matrix_row">
-                                            <div class="col-md-3">Row1</div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3">Row1</div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                         </div>
                                         <div class="row o_matrix_row">
-                                            <div class="col-md-3">Row2</div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-lg-3">Row2</div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
                                         </div>
                                         <div class="row o_matrix_row">
-                                            <div class="col-md-3">Row3</div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3">Row3</div>
+                                            <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                         </div>
                                     </div>
                                 </div>

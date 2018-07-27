@@ -83,7 +83,7 @@
                                             <t t-esc="record.name.value"/>
                                         </strong>
                                     </div>
-                                    <span class="badge" title="Number of bounced email.">
+                                    <span class="badge badge-pill" title="Number of bounced email.">
                                         <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
                                     </span>
                                 </div>
@@ -278,7 +278,7 @@
                     </group>
                     <footer>
                         <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                        <button string="Discard" class="btn-default" special="cancel"/>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -313,24 +313,20 @@
                                     </div>
                                     <div class="o_kanban_card_manage_pane">
                                         <div class="o_kanban_card_manage_section o_dropdown_kanban dropdown">
-                                            <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                                 <span class="fa fa-ellipsis-v"/>
                                             </a>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li t-if="widget.editable">
-                                                    <a role="menuitem" type="edit">Edit</a>
-                                                </li>
-                                                <li t-if="widget.deletable">
-                                                    <a role="menuitem" type="delete">Delete</a>
-                                                </li>
-                                            </ul>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="o_mailing_list_kanban_boxes">
                                     <a class="o_project_kanban_box" name="%(action_view_mass_mailing_contacts_from_list)d" type="action">
                                         <div>
-                                            <span class="badge">
+                                            <span class="badge badge-pill">
                                                 <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>
                                                 <t t-esc="record.contact_nbr.value"/>
                                             </span>
@@ -413,9 +409,9 @@
                     <header style="min-height:31px;">
                         <button name="put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send Now"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
-                        <button name="action_schedule_date" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-default" string="Schedule"/>
-                        <button name="action_test_mailing" type="object" class="btn-default" string="Test"/>
-                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-default" string="Cancel"/>
+                        <button name="action_schedule_date" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-secondary" string="Schedule"/>
+                        <button name="action_test_mailing" type="object" class="btn-secondary" string="Test"/>
+                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 
                         <field name="state" readonly="1" widget="statusbar"/>
@@ -566,15 +562,15 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown">
-                                    <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    <div class="dropdown-menu" role="menu">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         <t t-if="widget.deletable">
-                                            <li><a role="menuitem" type="delete">Delete</a></li>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
-                                    </ul>
+                                    </div>
                                 </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
@@ -589,31 +585,31 @@
                                     <div class="o_kanban_record_body" attrs="{'invisible': [('sent_date', '=', False)]}">
                                         <t t-if="record.sent_date">
                                             <div class="row">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_view_mail_mail_statistics_mailing)d"
                                                        context="{'search_default_filter_opened': True}"
                                                        type="action">Opened</a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="opened_ratio"/> %
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_view_mail_mail_statistics_mailing)d"
                                                        context="{'search_default_filter_replied': True}"
                                                        type="action">Replied</a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="replied_ratio"/> %
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_view_mass_mailing_links_statistics)d"
                                                        type="action">Clicks</a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="clicks_ratio"/> %
                                                 </div>
                                             </div>
@@ -920,20 +916,20 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing_campaign">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
+                                    <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.editable">
-                                            <li><a role="menuitem" type="edit">Settings</a></li>
+                                            <a role="menuitem" type="edit" class="dropdown-item">Settings</a>
                                         </t>
                                         <t t-if="widget.deletable">
-                                            <li><a role="menuitem" type="delete">Delete</a></li>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
-                                        <li role="separator" class="divider"/>
-                                        <li role="separator" class="dropdown-header">Colour</li>
-                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" role="menu" data-field="color"/></li>
-                                    </ul>
+                                        <div role="separator" class="dropdown-divider"/>
+                                        <div role="separator" class="dropdown-header">Colour</div>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top mb16">

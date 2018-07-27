@@ -233,12 +233,12 @@ QUnit.module('basic_fields', {
             "checkbox should now be unchecked");
 
         // check the checkbox by clicking on label
-        form.$('label').click();
+        form.$('label:first').click();
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,
             "checkbox should now be checked");
 
         // uncheck it back
-        form.$('label').click();
+        form.$('label:first').click();
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 0,
             "checkbox should now be unchecked");
 
@@ -273,52 +273,52 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="bar"/></tree>',
         });
 
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
             "should have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 4,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 4,
             "should have 4 checked input");
 
         // Edit a line
-        var $cell = list.$('tr.o_data_row:has(.o_checkbox input:checked) td:not(.o_list_record_selector)').first();
-        assert.ok($cell.find('.o_checkbox input:checked').prop('disabled'),
+        var $cell = list.$('tr.o_data_row:has(.custom-checkbox input:checked) td:not(.o_list_record_selector)').first();
+        assert.ok($cell.find('.custom-checkbox input:checked').prop('disabled'),
             "input should be disabled in readonly mode");
         $cell.click();
-        assert.ok(!$cell.find('.o_checkbox input:checked').prop('disabled'),
+        assert.ok(!$cell.find('.custom-checkbox input:checked').prop('disabled'),
             "input should not have the disabled property in edit mode");
-        $cell.find('.o_checkbox input:checked').click();
+        $cell.find('.custom-checkbox input:checked').click();
 
         // save
         list.$buttons.find('.o_list_button_save').click();
-        $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
-        assert.ok($cell.find('.o_checkbox input:not(:checked)').prop('disabled'),
+        $cell = list.$('tr.o_data_row:has(.custom-checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
+        assert.ok($cell.find('.custom-checkbox input:not(:checked)').prop('disabled'),
             "input should be disabled again");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
             "should still have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 3,
             "should now have only 3 checked input");
 
         // Re-Edit the line and fake-check the checkbox
         $cell.click();
-        $cell.find('.o_checkbox input').click(); // Change the checkbox
-        $cell.find('.o_checkbox input').click(); // Undo the change
+        $cell.find('.custom-checkbox input').click(); // Change the checkbox
+        $cell.find('.custom-checkbox input').click(); // Undo the change
 
         // Save
         list.$buttons.find('.o_list_button_save').click();
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
             "should still have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 3,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 3,
             "should still have only 3 checked input");
 
         // Re-Edit the line to check the checkbox back but this time click on
         // the checkbox directly in readonly mode !
-        $cell = list.$('tr.o_data_row:has(.o_checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
-        $cell.find('.o_checkbox span').click();
+        $cell = list.$('tr.o_data_row:has(.custom-checkbox input:not(:checked)) td:not(.o_list_record_selector)').first();
+        $cell.find('.custom-checkbox .custom-control-label').click();
 
         // save
         list.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input').length, 5,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input').length, 5,
             "should still have 5 checkboxes");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 4,
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 4,
             "should now have 4 checked input back");
         list.destroy();
     });
@@ -370,8 +370,8 @@ QUnit.module('basic_fields', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$(".o_checkbox.o_boolean_toggle").length, 1, "Boolean toggle widget applied to boolean field");
-        assert.strictEqual(form.$(".o_checkbox.o_boolean_toggle").find(".slider").length, 1, "Boolean toggle contains slider to toggle");
+        assert.strictEqual(form.$(".custom-checkbox.o_boolean_toggle").length, 1, "Boolean toggle widget applied to boolean field");
+        assert.strictEqual(form.$(".custom-checkbox.o_boolean_toggle").find(".slider").length, 1, "Boolean toggle contains slider to toggle");
         form.destroy();
     });
 
@@ -1828,7 +1828,7 @@ QUnit.module('basic_fields', {
             "the widget should have the correct class");
         assert.strictEqual(form.$('div[name="document"] > img').length, 1,
             "the widget should contain an image");
-        assert.ok(form.$('div[name="document"] > img').hasClass('img-responsive'),
+        assert.ok(form.$('div[name="document"] > img').hasClass('img-fluid'),
             "the image should have the correct class");
         assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
             "the image should correctly set its attributes");
@@ -2430,7 +2430,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('datetime field in form view', function (assert) {
+    QUnit.test('datetime field in form view 2', function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
@@ -2449,8 +2449,7 @@ QUnit.module('basic_fields', {
         });
         testUtils.patch(basicFields.FieldDate, {
             _setValue: function () {
-                throw "The time format of the language must be taken into account."
-                return this._super.apply(this, arguments);
+                throw "The time format of the language must be taken into account.";
             },
         });
         form.$buttons.find('.o_form_button_create').click();
@@ -3226,7 +3225,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: config.device.SIZES.XS,
+                    size_class: config.device.SIZES.VSM,
                 },
             },
         });
@@ -3270,7 +3269,7 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: config.device.SIZES.XS,
+                    size_class: config.device.SIZES.VSM,
                 },
             },
         });
@@ -3326,7 +3325,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: config.device.SIZES.SM,
+                    size_class: config.device.SIZES.MD,
                 },
             },
         });
@@ -3365,7 +3364,7 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: config.device.SIZES.SM,
+                    size_class: config.device.SIZES.MD,
                 },
             },
         });
@@ -3418,7 +3417,7 @@ QUnit.module('basic_fields', {
             },
             config: {
                 device: {
-                    size_class: config.device.SIZES.XS,
+                    size_class: config.device.SIZES.VSM,
                 },
             },
         });
@@ -3699,19 +3698,19 @@ QUnit.module('basic_fields', {
             "should have one red status since selection is the second, blocked state");
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_green').length, 0,
             "should not have one green status since selection is the second, blocked state");
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
         form.$('.o_field_widget.o_selection .o_status').first().click();
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 1,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 1,
             "there should be a dropdown");
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible li').length, 2,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible .dropdown-item').length, 2,
             "there should be two options in the dropdown");
 
         // Click on the first option, "Normal"
-        form.$('ul.dropdown-menu.state:visible li').first().click();
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 0,
+        form.$('.dropdown-menu.state:visible .dropdown-item').first().click();
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown anymore");
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_red').length, 0,
             "should not have one red status since selection is the first, normal state");
@@ -3722,7 +3721,7 @@ QUnit.module('basic_fields', {
 
         // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 0,
             "there should still not be a dropdown");
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_red').length, 0,
             "should still not have one red status since selection is the first, normal state");
@@ -3733,14 +3732,14 @@ QUnit.module('basic_fields', {
 
         // Click on the status button to make the dropdown appear
         form.$('.o_field_widget.o_selection .o_status').first().click();
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 1,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 1,
             "there should be a dropdown");
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible li').length, 2,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible .dropdown-item').length, 2,
             "there should be two options in the dropdown");
 
         // Click on the last option, "Done"
-        form.$('ul.dropdown-menu.state:visible li').last().click();
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 0,
+        form.$('.dropdown-menu.state:visible .dropdown-item').last().click();
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown anymore");
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_red').length, 0,
             "should not have one red status since selection is the third, done state");
@@ -3749,7 +3748,7 @@ QUnit.module('basic_fields', {
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(form.$('.dropdown-menu.state:visible').length, 0,
             "there should still not be a dropdown anymore");
         assert.strictEqual(form.$('.o_field_widget.o_selection > a span.o_status.o_status_red').length, 0,
             "should still not have one red status since selection is the third, done state");
@@ -3778,7 +3777,7 @@ QUnit.module('basic_fields', {
             "should have one red status");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_green').length, 1,
             "should have one green status");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
@@ -3786,20 +3785,20 @@ QUnit.module('basic_fields', {
         list.$('.o_state_selection_cell .o_selection > a span.o_status').first().click();
         assert.ok(!$cell.parent().hasClass('o_selected_row'),
             'should not be in edit mode since we clicked on the state selection widget');
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 1,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 1,
             "there should be a dropdown");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible li').length, 2,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible .dropdown-item').length, 2,
             "there should be two options in the dropdown");
 
         // Click on the first option, "Normal"
-        list.$('ul.dropdown-menu.state:visible li').first().click();
+        list.$('.dropdown-menu.state:visible .dropdown-item').first().click();
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status').length, 5,
             "should still have five status selection widgets");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_red').length, 0,
             "should now have no red status");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_green').length, 1,
             "should still have one green status");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
 
         // switch to edit mode and check the result
@@ -3813,21 +3812,21 @@ QUnit.module('basic_fields', {
             "should now have no red status");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_green').length, 1,
             "should still have one green status");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
 
         // Click on the status button to make the dropdown appear
         list.$('.o_state_selection_cell .o_selection > a span.o_status').first().click();
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 1,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 1,
             "there should be a dropdown");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible li').length, 2,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible .dropdown-item').length, 2,
             "there should be two options in the dropdown");
 
         // Click on another row
         var $firstCell = list.$('tbody td.o_state_selection_cell').first();
         var $lastCell = list.$('tbody td.o_state_selection_cell').last();
         $lastCell.click();
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown anymore");
         assert.ok(!$firstCell.parent().hasClass('o_selected_row'),
             'first row should not be in edit mode anymore');
@@ -3836,14 +3835,14 @@ QUnit.module('basic_fields', {
 
         // Click on the last status button to make the dropdown appear
         list.$('.o_state_selection_cell .o_selection > a span.o_status').last().click();
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 1,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 1,
             "there should be a dropdown");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible li').length, 2,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible .dropdown-item').length, 2,
             "there should be two options in the dropdown");
 
         // Click on the last option, "Done"
-        list.$('ul.dropdown-menu.state:visible li').last().click();
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        list.$('.dropdown-menu.state:visible .dropdown-item').last().click();
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown anymore");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status').length, 5,
             "should still have five status selection widgets");
@@ -3851,7 +3850,7 @@ QUnit.module('basic_fields', {
             "should still have no red status");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_green').length, 2,
             "should now have two green status");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
 
         // save
@@ -3862,7 +3861,7 @@ QUnit.module('basic_fields', {
             "should have no red status");
         assert.strictEqual(list.$('.o_state_selection_cell .o_selection > a span.o_status.o_status_green').length, 2,
             "should have two green status");
-        assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
+        assert.strictEqual(list.$('.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
 
         list.destroy();
@@ -4005,42 +4004,42 @@ QUnit.module('basic_fields', {
                     '<sheet>' +
                         '<group>' +
                             '<field name="selection" widget="label_selection" ' +
-                            ' options="{\'classes\': {\'normal\': \'default\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
+                            ' options="{\'classes\': {\'normal\': \'secondary\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have a warning status label since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-default').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-secondary').length, 0,
             "should not have a default status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-success').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-success').length, 0,
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         // // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have a warning status label since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-default').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-secondary').length, 0,
             "should not have a default status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-success').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-success').length, 0,
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have a warning status label since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-default').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-secondary').length, 0,
             "should not have a default status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-success').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-success').length, 0,
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         form.destroy();
@@ -4056,57 +4055,57 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom">' +
                     '<field name="foo"/>' +
                     '<field name="selection" widget="label_selection"' +
-                    ' options="{\'classes\': {\'normal\': \'default\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
+                    ' options="{\'classes\': {\'normal\': \'secondary\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
                   '</tree>',
         });
 
-        assert.strictEqual(list.$('.o_field_widget.label:not(:empty)').length, 3,
+        assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').length, 1,
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').length, 1,
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
             "the success label should read 'Done'");
 
         // switch to edit mode and check the result
         list.$('tbody td:not(.o_list_record_selector)').first().click();
-        assert.strictEqual(list.$('.o_field_widget.label:not(:empty)').length, 3,
+        assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').length, 1,
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').length, 1,
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
             "the success label should read 'Done'");
 
         // save and check the result
         list.$buttons.find('.o_list_button_save').click();
-        assert.strictEqual(list.$('.o_field_widget.label:not(:empty)').length, 3,
+        assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').length, 1,
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').length, 1,
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
             "the success label should read 'Done'");
 
         list.destroy();
@@ -4680,14 +4679,14 @@ QUnit.module('basic_fields', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.img.img-responsive').length, 2,
+        assert.strictEqual(form.$('.img.img-fluid').length, 2,
             "Two images should be rendered");
         assert.strictEqual(form.$('.img.btn-info').length, 0,
             "No image should be selected");
 
         // select first image
-        form.$(".img.img-responsive:first").click();
-        assert.ok(form.$(".img.img-responsive:first").hasClass('btn-info'),
+        form.$(".img.img-fluid:first").click();
+        assert.ok(form.$(".img.img-fluid:first").hasClass('btn-info'),
             "First image should be selected");
 
         form.destroy();

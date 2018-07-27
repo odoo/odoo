@@ -62,7 +62,7 @@
                 </header>
                 <sheet>
                     <div attrs="{'invisible': [('archive', '=', False)]}">
-                        <span class="label label-warning pull-right">Canceled</span>
+                        <span class="badge badge-warning float-right">Canceled</span>
                     </div>
                     <div class="oe_right">
                         <field name="kanban_state" class="oe_inline" widget="state_selection"/>
@@ -134,14 +134,14 @@
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit...</a></li></t>
-                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div class="o_kanban_record_top">
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -431,16 +431,16 @@
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit...</a></li></t>
-                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                    <li role="separator" class="divider"></li>
-                                    <li role="separator" class="dropdown-header">Record Colour</li>
-                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit...</a></t>
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <div role="separator" class="dropdown-header">Record Colour</div>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div class="o_kanban_record_top">
@@ -451,10 +451,10 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="label label-danger" t-if="record.maintenance_open_count.raw_value" >
+                                        <div class="badge badge-danger" t-if="record.maintenance_open_count.raw_value" >
                                             <t t-raw="record.maintenance_open_count.raw_value"/> Request
                                         </div>
-                                        <div class="label label-default" t-if="record.next_action_date.raw_value" >
+                                        <div class="badge badge-secondary" t-if="record.next_action_date.raw_value" >
                                             <t t-raw="moment(record.next_action_date.raw_value).format('MMMM Do')"/>
                                         </div>
                                     </div>
@@ -654,16 +654,16 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="mb4">
                                 <strong><field name="name"/></strong>
-                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                             </div>
                             <div class="row mt4">
-                                <div class="col-xs-6">
-                                    <span class="badge">
+                                <div class="col-6">
+                                    <span class="badge badge-pill">
                                         <strong>Equipments:</strong> <field name="equipment_count"/>
                                     </span>
                                 </div>
-                                <div class="col-xs-6 text-right">
-                                    <span class="badge">
+                                <div class="col-6 text-right">
+                                    <span class="badge badge-pill">
                                         <strong>Maintenance:</strong> <field name="maintenance_count"/>
                                     </span>
                                 </div>
@@ -830,43 +830,43 @@
                             </div>
                             <div class="container o_kanban_card_content">
                                 <div class="row">
-                                    <div class="col-xs-6 o_kanban_primary_left">
+                                    <div class="col-6 o_kanban_primary_left">
                                         <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
                                             <t t-esc="record.todo_request_count.value"/> To Do
                                         </button>
                                     </div>
-                                    <div class="col-xs-6 o_kanban_primary_right">
+                                    <div class="col-6 o_kanban_primary_right">
                                         <div class="row">
-                                            <div class="col-xs-9">
+                                            <div class="col-9">
                                                 <a name="%(hr_equipment_request_action_cal)d" type="action">
                                                     Scheduled
                                                 </a>
                                             </div>
-                                            <div class="col-xs-3">
+                                            <div class="col-3">
                                                 <t t-esc="record.todo_request_count_date.value"/>
                                             </div>
-                                            <div class="col-xs-9">
+                                            <div class="col-9">
                                                 <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_top_priority': 1}">
                                                     Top Priorities
                                                 </a>
                                             </div>
-                                            <div class="col-xs-3">
+                                            <div class="col-3">
                                                 <t t-esc="record.todo_request_count_high_priority.value"/>
                                             </div>
-                                            <div class="col-xs-9">
+                                            <div class="col-9">
                                                 <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
                                                     Blocked
                                                 </a>
                                             </div>
-                                            <div class="col-xs-3">
+                                            <div class="col-3">
                                                 <t t-esc="record.todo_request_count_block.value"/>
                                             </div>
-                                            <div class="col-xs-9">
+                                            <div class="col-9">
                                                 <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
                                                     Unscheduled
                                                 </a>
                                             </div>
-                                            <div class="col-xs-3">
+                                            <div class="col-3">
                                                 <t t-esc="record.todo_request_count_unscheduled.value"/>
                                             </div>
                                         </div>
@@ -874,7 +874,7 @@
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
-                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>View</span>
                                         </div>
@@ -899,7 +899,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </div>
@@ -911,10 +911,10 @@
                                     </div>
                                 </div>
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-xs-8" role="menuitem" aria-haspopup="true">
+                                    <div class="col-8" role="menuitem" aria-haspopup="true">
                                         <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
-                                    <div role="menuitem" class="col-xs-4 text-right">
+                                    <div role="menuitem" class="col-4 text-right">
                                         <a type="edit">Settings</a>
                                     </div>
                                 </div>

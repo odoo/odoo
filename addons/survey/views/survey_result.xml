@@ -7,20 +7,20 @@
             <div class="container js_surveyresult">
                 <t t-call="survey.back" />
                 <div class="jumbotron mt32">
-                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right " role="img" aria-label="Chart" title="Chart"/></h1>
+                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o float-right " role="img" aria-label="Chart" title="Chart"/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
                 </div>
-                <div class="panel panel-default hidden-print">
-                    <div class="panel-heading"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
-                    <div class="panel-body">
+                <div class="card d-print-none">
+                    <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
+                    <div class="card-body">
                         <span t-if="filter_finish == True">
-                            <span class="label label-default only_left_radius filter-all">All surveys</span><span class="label label-primary only_right_radius filter-finished">Finished surveys</span>
+                            <span class="badge badge-secondary only_left_radius filter-all">All surveys</span><span class="badge badge-primary only_right_radius filter-finished">Finished surveys</span>
                         </span>
                         <span t-if="filter_finish == False">
-                            <span class="label label-primary only_left_radius filter-all">All surveys</span><span class="label label-default only_right_radius filter-finished">Finished surveys</span>
+                            <span class="badge badge-primary only_left_radius filter-all">All surveys</span><span class="badge badge-secondary only_right_radius filter-finished">Finished surveys</span>
                         </span>
                         <span t-foreach="filter_display_data" t-as="filter_data">
-                            <span class="label label-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
+                            <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question_text']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
                         </span>
                     </div>
                 </div>
@@ -38,14 +38,14 @@
                             <b>Question </b>
                             <span t-field='question.question'></span>
                             <t t-if="question.type == 'matrix'">
-                                <small><span class="label label-default">Matrix: <span t-field='question.matrix_subtype'/></span></small>
+                                <small><span class="badge badge-secondary">Matrix: <span t-field='question.matrix_subtype'/></span></small>
                             </t>
                             <t t-if="question.type in ['simple_choice', 'multiple_choice']">
-                                <small><span t-field='question.type' class="label label-default"></span></small>
+                                <small><span t-field='question.type' class="badge badge-secondary"></span></small>
                             </t>
-                            <span class="pull-right">
-                                <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span>
-                                <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
+                            <span class="float-right">
+                                <span class="badge badge-success"><span t-esc="input_summary['answered']"></span> Answered</span>
+                                <span class="badge badge-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
                             </span>
                         </h4>
                         <t t-if="input_summary['answered'] != 0">
@@ -77,7 +77,7 @@
 
     <!-- Result for free_text,textbox and date -->
     <template id="result_text" name="Text Result">
-        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+        <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
             <thead>
                 <tr>
                     <th>#</th>
@@ -112,7 +112,7 @@
     <!-- Result for comments -->
     <template id="result_comments" name="Text Result">
         <!-- a 'comments' variable must be set an must contain a list of browse records of user input lines -->
-        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+        <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
             <thead>
                 <tr>
                     <th>#</th>
@@ -135,19 +135,19 @@
     <template id="result_choice" name="Choice Result">
         <div>
             <!-- Tabs -->
-            <ul class="nav nav-tabs hidden-print" role="tablist">
-                <li class="active" t-if="question.type != 'simple_choice'">
-                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
+            <ul class="nav nav-tabs d-print-none" role="tablist">
+                <li class="nav-item" t-if="question.type != 'simple_choice'">
+                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Graph
                     </a>
                 </li>
-                <li class="active" t-if="question.type == 'simple_choice'">
-                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
+                <li class="nav-item" t-if="question.type == 'simple_choice'">
+                    <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Pie Chart
                     </a>
                 </li>
-                <li>
-                    <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
+                <li class="nav-item">
+                    <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
                         <i class="fa fa-list-alt"></i> Data
                     </a>
                 </li>
@@ -162,7 +162,7 @@
                     <svg style="height:20em"></svg>
                 </div>
                 <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                    <table class="table table-hover table-condensed">
+                    <table class="table table-hover table-sm">
                         <thead>
                             <tr>
                                 <th>Answer Choices</th>
@@ -176,7 +176,7 @@
                                 </td>
                                 <td class="survey_answer">
                                     <span t-esc="round(user_input['count']*100.0/(input_summary['answered'] or 1),2)"></span> %
-                                    <span t-esc="user_input['count']" class="label label-primary">Vote</span>
+                                    <span t-esc="user_input['count']" class="badge badge-primary">Vote</span>
                                     <i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-answer_id="user_input['answer_id']" role="img" aria-label="Filter question" title="Filter question"/>
                                 </td>
                             </tr>
@@ -199,15 +199,15 @@
     <template id="result_matrix" name="Matrix Result">
         <t t-set="matrix_result" t-value="prepare_result"/>
         <!-- Tabs -->
-        <ul class="nav nav-tabs hidden-print" role="tablist">
-            <li class="active">
-                <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
+        <ul class="nav nav-tabs d-print-none" role="tablist">
+            <li class="nav-item">
+                <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                     <i class="fa fa-bar-chart"></i>
                     Graph
                 </a>
             </li>
-            <li>
-                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
+            <li class="nav-item">
+                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
                     <i class="fa fa-list-alt"></i>
                     Data
                 </a>
@@ -219,7 +219,7 @@
                 <svg style="height:20em"></svg>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                <table class="table table-hover table-condensed text-right">
+                <table class="table table-hover table-sm text-right">
                     <thead>
                         <tr>
                             <th></th>
@@ -235,7 +235,7 @@
                             </td>
                             <td class="survey_answer" t-foreach="matrix_result['answers']" t-as="answer_id">
                                 <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/(input_summary['answered'] or 1),2)"></span> %
-                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
+                                <span class="badge badge-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
                             </td>
                         </tr>
                     </tbody>
@@ -255,21 +255,21 @@
     <template id="result_number" name="Number Result">
         <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
-        <span class="pull-right mt8">
-            <span class="label label-default only_left_radius">Sum </span> <span class="label label-info only_right_radius" t-esc="number_result['sum']"></span>
-            <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
-            <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
-            <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
+        <span class="float-right mt8">
+            <span class="badge badge-secondary only_left_radius">Sum </span> <span class="badge badge-info only_right_radius" t-esc="number_result['sum']"></span>
+            <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="number_result['max']"></span>
+            <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="number_result['min']"></span>
+            <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="number_result['average']"></span>
         </span>
-        <ul class="nav nav-tabs hidden-print" role="tablist">
-            <li class="active">
-                <a t-att-href="'#most_common_%d' % question.id" t-att-aria-controls="'most_common_%d' % question.id" data-toggle="tab" role="tab">
+        <ul class="nav nav-tabs d-print-none" role="tablist">
+            <li class="nav-item">
+                <a t-att-href="'#most_common_%d' % question.id" t-att-aria-controls="'most_common_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                     <i class="fa fa-list-ol"></i>
                     Most Common <span t-esc="len(number_result['most_common'])"></span>
                 </a>
             </li>
-            <li>
-                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
+            <li class="nav-item">
+                <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" class="nav-link" data-toggle="tab" role="tab">
                     <i class="fa fa-list-alt"></i>
                     All Data
                 </a>
@@ -277,7 +277,7 @@
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_%d' % question.id">
-                <table class="table table-hover table-condensed">
+                <table class="table table-hover table-sm">
                      <thead>
                          <tr>
                              <th>User Responses</th>
@@ -297,7 +297,7 @@
                 </table>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+                <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -305,7 +305,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hidden" t-foreach="number_result['input_lines']" t-as="user_input">
+                        <tr class="d-none" t-foreach="number_result['input_lines']" t-as="user_input">
                             <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                             <td><span t-field="user_input.value_number"></span><br/></td>
                         </tr>
@@ -323,7 +323,7 @@
                 <div class="jumbotron mt32">
                     <h2 class="text-muted">
                         <span>
-                            <i style="font-size:1.8em" class="fa fa-users pull-right" role="img" aria-label="No answer" title="No answer"></i>
+                            <i style="font-size:1.8em" class="fa fa-users float-right" role="img" aria-label="No answer" title="No answer"></i>
                         </span>
                         Sorry, No one answered this survey yet
                     </h2>
@@ -336,8 +336,8 @@
         <t t-set="record_limit" t-value="10"/><!-- Change This record_limit to change number of record  per page-->
         <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="record_limit">
             <t t-if="len(text_result) > record_limit">
-                <li t-foreach="page_range(len(text_result), record_limit)" t-as="num">
-                    <a href="#" t-esc="num"></a>
+                <li t-foreach="page_range(len(text_result), record_limit)" t-as="num" class="page-item">
+                    <a href="#" class="page-link" t-esc="num"></a>
                 </li>
             </t>
         </ul>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="_assets_utils">
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_mixins.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_functions.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_mixins.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
     </template>
 
     <template id="_assets_primary_variables">
@@ -21,7 +23,7 @@
         <!-- Bootstrap variables should not be necessary, all pages come with bootstrap in at least one of their -->
         <!-- bundle and, ideally, these should be available in all assets... with their odoo override. This system -->
         <!-- however works for now as non-backend and non-frontend assets do not need overriden BS variables yet. -->
-        <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_variables.scss"/>
+        <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
     </template>
 
     <template id="_assets_backend_helpers">
@@ -34,12 +36,17 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
     </template>
 
+    <template id="_assets_bootstrap">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part1.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part2.scss"/>
+    </template>
+
     <template id="assets_common" name="Common Assets (used in backend interface and website)">
         <t t-call="web._assets_helpers"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap-datetimepicker/src/scss/_bootstrap-datetimepicker.scss"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
 
@@ -69,20 +76,22 @@
         <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
         <script type="text/javascript" src="/web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
 
-        <script src="/web/static/lib/bootstrap/js/affix.js"></script>
-        <script src="/web/static/lib/bootstrap/js/alert.js"></script>
-        <script src="/web/static/lib/bootstrap/js/button.js"></script>
-        <script src="/web/static/lib/bootstrap/js/carousel.js"></script>
-        <script src="/web/static/lib/bootstrap/js/collapse.js"></script>
-        <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
-        <script src="/web/static/lib/bootstrap/js/modal.js"></script>
-        <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
-        <script src="/web/static/lib/bootstrap/js/popover.js"></script>
-        <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
-        <script src="/web/static/lib/bootstrap/js/tab.js"></script>
-        <script src="/web/static/lib/bootstrap/js/transition.js"></script>
+        <script type="text/javascript" src="/web/static/lib/popper/popper.js"></script>
 
-        <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/index.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/alert.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/button.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/carousel.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/popover.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/tab.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/tempusdominus/tempusdominus.js"/>
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         <script type="text/javascript" src="/web/static/lib/clipboard/clipboard.js"></script>
 
@@ -126,7 +135,8 @@
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
         <t t-call="web._assets_backend_helpers"/>
 
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <t t-call="web._assets_bootstrap"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
@@ -159,7 +169,6 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web_calendar.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view_mobile.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_groupby_menu.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown_menu.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view_extra.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/data_export.scss"/>
@@ -292,7 +301,8 @@
     <template id="web.assets_frontend" name="Website Assets">
         <t t-call="web._assets_frontend_helpers"/>
 
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <t t-call="web._assets_bootstrap"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
     </template>
@@ -333,7 +343,7 @@
             <t t-set="body_classname" t-value="'container'"/>
 
             <div class="row">
-                <div class="col-md-6 col-md-offset-3 o_database_list">
+                <div class="col-lg-6 offset-lg-3 o_database_list">
                     <div class="text-center">
                         <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo"/>
                     </div>
@@ -355,22 +365,22 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
-                    <label for="db" class="control-label">Database</label>
+                    <label for="db" class="col-form-label">Database</label>
                     <div class="input-group">
                         <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
-                        <span class="input-group-btn">
-                          <a role="button" href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
+                        <span class="input-group-append">
+                            <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
                         </span>
                     </div>
                 </div>
 
                 <div class="form-group field-login">
-                    <label for="login" class="control-label">Email</label>
+                    <label for="login" class="col-form-label">Email</label>
                     <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
                 <div class="form-group field-password">
-                    <label for="password" class="control-label">Password</label>
+                    <label for="password" class="col-form-label">Password</label>
                     <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
@@ -390,18 +400,14 @@
     </template>
 
     <template id="web.menu">
-        <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;" role="menu">
-            <li t-foreach="menu_data['children']" t-as="menu">
+        <ul class="nav navbar-nav navbar-left d-none oe_application_menu_placeholder" role="menu">
+            <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
                 <t t-call="web.menu_link"/>
-            </li>
-            <li id="menu_more_container" class="dropdown" style="display: none;">
-                <a role="menuitem" aria-haspopup="true" href="#" class="dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More <b class="caret"></b></a>
-                <ul id="menu_more" class="dropdown-menu" role="menu"></ul>
             </li>
         </ul>
 
-        <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
-        <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
+        <ul class="nav navbar-nav flex-nowrap ml-auto oe_systray" style="display: none;"/>
+        <ul class="nav navbar-nav flex-nowrap oe_user_menu_placeholder" style="display: none;"/>
     </template>
     <template id="web.menu_secondary">
         <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
@@ -426,8 +432,8 @@
         </div>
     </template>
     <template id="web.menu_secondary_submenu">
-        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills nav-stacked">
-            <li t-foreach="menu['children']" t-as="menu">
+        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills flex-column">
+            <li t-foreach="menu['children']" t-as="menu" class="nav-item">
                 <t t-call="web.menu_link"/>
                 <t t-call="web.menu_secondary_submenu"/>
             </li>
@@ -437,7 +443,7 @@
         <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
         <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
             role="menuitem"
-            t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'"
+            t-attf-class="nav-link #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
             t-att-data-menu="menu['id']"
             t-att-data-menu-xmlid="menu.get('xmlid')"
             t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
@@ -698,14 +704,10 @@
             <t t-set="body_classname" t-value="'o_web_client'"/>
 
             <header id="oe_main_menu_navbar">
-                <nav class="navbar navbar-inverse" groups="base.group_user,base.group_portal">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
+                <nav class="navbar navbar-expand-md navbar-dark bg-dark" groups="base.group_user,base.group_portal">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="navbar-toggler-icon"/>
+                    </button>
                     <div class="navbar-collapse collapse">
                         <t t-call="web.menu"/>
                     </div>

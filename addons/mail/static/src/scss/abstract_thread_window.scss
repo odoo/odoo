@@ -1,8 +1,8 @@
 $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
 .o_thread_window {
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     position: fixed;
     width: $o-mail-thread-window-width;
     max-width: 100%;
@@ -14,7 +14,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     z-index: $o-mail-thread-window-zindex;
     box-shadow: -5px -5px 10px rgba(black, 0.18);
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         width: 100%;
         height: 100%!important;
         box-shadow: none;
@@ -28,16 +28,16 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     .o_thread_window_header {
-        @include o-flex-display;
-        @include o-flex(0, 0, auto);
+        display: flex;
+        flex: 0 0 auto;
         color: white;
         padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
         border-radius: 3px 3px 0 0;
-        border-bottom: 1px solid $gray-lighter-dark;
-        background-color: $o-brand-primary;
+        border-bottom: 1px solid gray('300');
+        background-color: $o-brand-odoo;
         padding: 8px;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             height: $o-mail-chat-header-height;
             padding-top: 12px;
             border-radius: 0px;
@@ -54,12 +54,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         .o_thread_window_title {
             cursor: pointer;
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             @include o-text-overflow;
         }
 
         .o_thread_window_buttons {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             .o_thread_window_close, .o_thread_window_expand {
                 color: white;
                 padding: 3px;
@@ -71,7 +71,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     .o_mail_thread {
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         overflow: auto;
         -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
         .o_thread_date_separator {
@@ -97,11 +97,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     width: auto;
     height: 28px;
     color: white;
-    background-color: $gray-dark;
+    background-color: gray('900');
     cursor: pointer;
     box-shadow: none;
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         display: none;
     }
 
@@ -114,12 +114,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         .o_total_unread_counter {
             @include o-position-absolute(-10px, 0, auto, auto);
-            background-color: $o-brand-optional;
+            background-color: $o-brand-primary;
             padding: 0 2px;
             font-size: smaller;
         }
     }
-    &.open .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
+    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
         display: none;
     }
 
@@ -134,7 +134,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 border-top: 1px solid white;
             }
             &:hover {
-                background-color: darken($o-brand-primary, 10%);
+                background-color: darken($o-brand-odoo, 10%);
             }
         }
     }

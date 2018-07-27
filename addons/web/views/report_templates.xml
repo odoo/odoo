@@ -5,7 +5,7 @@
     <template id="report_assets_common">
         <t t-call="web._assets_helpers"/>
 
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <t t-call="web._assets_bootstrap"/>
         <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
 
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/>
@@ -145,12 +145,12 @@
     <!-- External layouts styles -->
 
     <template id="address_layout">
-        <t t-set="colclass" t-value="'col-xs-5 col-xs-offset-7'"/>
+        <t t-set="colclass" t-value="'col-5 offset-7'"/>
         <t t-if="address">
             <div class="row">
                 <t t-if="information_block">
-                    <t t-set="colclass" t-value="'col-xs-5 col-xs-offset-1'"/>
-                    <div name="information_block" class="col-xs-6">
+                    <t t-set="colclass" t-value="'col-5 offset-1'"/>
+                    <div name="information_block" class="col-6">
                         <t t-raw="information_block"/>
                     </div>
                 </t>
@@ -163,11 +163,11 @@
 
     <template id="external_layout_background">
         <div class="header o_background_header">
-            <div class="pull-right">
+            <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
             </div>
-            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="pull-left" alt="Logo"/>
-            <div class="pull-left company_address">
+            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="float-left" alt="Logo"/>
+            <div class="float-left company_address">
                 <div>
                     <strong t-field="company.partner_id.name"/>
                 </div>
@@ -185,10 +185,10 @@
         <div class="footer o_background_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
-                    <li t-if="company.email"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
-                    <li t-if="company.website"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="not type_html" class="text-muted">
@@ -204,10 +204,10 @@
     <template id="external_layout_boxed">
         <div class="header o_boxed_header">
             <div class="row mb8">
-                <div class="col-xs-6">
+                <div class="col-6">
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" alt="Logo"/>
                 </div>
-                <div class="col-xs-6 text-right mb4">
+                <div class="col-6 text-right mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
                     <div name="company_address" class="mb4">
                         <span class="company_address" t-field="company.partner_id"
@@ -225,10 +225,10 @@
         <div class="footer o_boxed_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
-                    <li t-if="company.email">Mail: <span t-field="company.email"/></li>
-                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.phone" class="list-inline-item">Tel: <span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item">Mail: <span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="not type_html">
@@ -241,10 +241,10 @@
     <template id="external_layout_clean">
         <div class="header o_clean_header">
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-6">
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" alt="Logo"/>
                 </div>
-                <div class="col-xs-5 col-xs-offset-1" name="company_address">
+                <div class="col-5 offset-1" name="company_address">
                     <ul class="list-unstyled">
                         <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
                         <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
@@ -263,19 +263,19 @@
 
         <div class="footer o_clean_footer">
             <div class="row mt8">
-                <div class="col-xs-3">
+                <div class="col-3">
                     <span t-field="company.report_footer"/>
                 </div>
-                <div class="col-xs-4 text-right">
+                <div class="col-4 text-right">
                     <span class="company_address" t-field="company.partner_id"
                         t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-4">
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
-                <div class="col-xs-1">
-                    <ul t-if="not type_html" class="list-inline pagenumber pull-right text-center">
-                        <li><strong><span class="page"/></strong></li>
+                <div class="col-1">
+                    <ul t-if="not type_html" class="list-inline pagenumber float-right text-center">
+                        <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
             </div>
@@ -285,18 +285,18 @@
     <template id="external_layout_standard">
         <div class="header">
             <div class="row">
-                <div class="col-xs-3 mb4">
+                <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="max-height: 45px;" alt="Logo"/>
                 </div>
-                <div class="col-xs-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+                <div class="col-9 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
             </div>
             <div t-if="company.logo or company.report_header" class="row zero_min_height">
-                <div class="col-xs-12">
+                <div class="col-12">
                     <div style="border-bottom: 1px solid black;"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-6" name="company_address">
+                <div class="col-6" name="company_address">
                     <span t-field="company.partner_id"
                         t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
                         style="border-bottom: 1px solid black; display:inline-block;"/>
@@ -312,10 +312,10 @@
         <div class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
-                    <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
-                    <li t-if="company.email">Email: <span t-field="company.email"/></li>
-                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
 
                 <div name="financial_infos">
@@ -359,17 +359,17 @@
 
         <div class="header">
             <div class="row">
-                <div class="col-xs-3">
+                <div class="col-3">
                     <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
                 </div>
-                <div class="col-xs-2 col-xs-offset-2 text-center">
+                <div class="col-2 offset-2 text-center">
                     <span t-esc="company.name"/>
                 </div>
-                <div class="col-xs-2 col-xs-offset-3 text-right">
+                <div class="col-2 offset-3 text-right">
                     <ul class="list-inline">
-                        <li><span class="page"/></li>
-                        <li>/</li>
-                        <li><span class="topage"/></li>
+                        <li class="list-inline-item"><span class="page"/></li>
+                        <li class="list-inline-item">/</li>
+                        <li class="list-inline-item"><span class="topage"/></li>
                     </ul>
                 </div>
             </div>

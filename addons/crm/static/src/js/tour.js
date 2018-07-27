@@ -61,7 +61,7 @@ tour.register('crm_tour', {
     content: _t('<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class="mb0">Type <i>\'@\'</i> to mention people - it\'s like cc-ing on emails.</p>'),
     position: "bottom"
 }, {
-    trigger: ".breadcrumb li:not(.active):last",
+    trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: '.o_opportunity_form',
     content: _t("Use the breadcrumbs to <b>go back to your sales pipeline</b>."),
     position: "bottom"

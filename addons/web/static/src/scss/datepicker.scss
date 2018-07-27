@@ -27,24 +27,29 @@
     }
 }
 
-// Need to put datetimepicker widget above everything else
-// The '.dropdown-menu' part is needed to override default bootstrap rule as
+
+// The 'div.dropdown-menu' part is needed to override default bootstrap rule as
 // this file is unfortunately placed in common assets.
-.bootstrap-datetimepicker-widget.dropdown-menu {
+div.dropdown-menu.bootstrap-datetimepicker-widget{
+    // Need to put datetimepicker widget above everything else
     z-index: $zindex-modal + 1;
+
+    // Also fix the dropdown width
+    width: auto;
+    min-width: 15rem;
 }
 
 .datepicker {
-    .table-condensed {
+    .table-sm {
         > thead {
             color: white;
-            background-color: $o-brand-primary;
+            background-color: $o-brand-odoo;
 
             > tr {
                 &:first-child {
                     th:hover {
                         color: white;
-                        background-color: darken($o-brand-primary, 10%);
+                        background-color: darken($o-brand-odoo, 10%);
                     }
                 }
 
@@ -62,12 +67,12 @@
             > tr {
                 > td {
                     &.active, .active {
-                        background-color: $o-brand-optional;
+                        background-color: $o-brand-primary;
                         border-radius: 100px;
                     }
 
                     &.today:before {
-                        border-bottom-color: $o-brand-optional;
+                        border-bottom-color: $o-brand-primary;
                     }
                 }
             }

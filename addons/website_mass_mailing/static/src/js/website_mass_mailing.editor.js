@@ -44,7 +44,7 @@ var mass_mailing_common = options.Class.extend({
 
 options.registry.mailing_list_subscribe = mass_mailing_common.extend({
     cleanForSave: function () {
-        this.$target.addClass("hidden");
+        this.$target.addClass('d-none');
     },
 });
 

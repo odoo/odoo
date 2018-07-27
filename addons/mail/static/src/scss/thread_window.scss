@@ -1,18 +1,18 @@
 .o_thread_window {
     &.o_thread_less {
         .o_thread_search_input {
-            @include o-flex-display;
-            @include o-align-items(baseline);
+            display: flex;
+            align-items: baseline;
             padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
 
             > span {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
 
             > input {
                 margin-left: 5px;
                 padding: $o-mail-chatter-gap*0.5;
-                @include o-flex(1, 1, 100%);
+                flex: 1 1 100%;
             }
         }
 
@@ -33,7 +33,7 @@
                     padding: 10px;
                     font-size: 13px;
                 }
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     width: 70%;
                     > textarea {
                         padding: 15px 10px;
@@ -44,10 +44,10 @@
                 @include o-position-absolute($right: 0px, $top: 0px);
                 button {
                     padding: 10px;
-                    @media (max-width: $screen-xs-max) {
+                    @include media-breakpoint-down(sm) {
                         padding: 13px;
                     }
-                    &.btn-icon {
+                    &.btn.fa {
                         font-size: 1.3em;
                     }
                 }

@@ -8,7 +8,7 @@
 }
 .o_input {
     border: 1px solid $o-form-lightsecondary;
-    border-radius: $border-radius-base;
+    border-radius: $border-radius;
     padding: 2px 4px;
     color: #1f1f1f;
 
@@ -29,7 +29,7 @@ select {
     top: 0;
     right: 50%;
     padding: 4px 12px;
-    background-color: $o-color-pink;
+    background-color: $o-enterprise-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
     color: white;
     text-align: center;
     border-top: none;
@@ -43,9 +43,4 @@ select {
 #oe_main_menu_navbar .oe_user_menu_placeholder .o_user_menu .oe_topbar_name {
     @include o-text-overflow;
     max-width: 150px;
-}
-
-// Button
-.btn-icon {
-    @include button-variant($btn-default-color, $btn-default-bg, $btn-default-border);
 }

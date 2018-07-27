@@ -42,7 +42,7 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <div class="row mt16 o_settings_container">
-                      <div class="col-xs-12 col-md-6 o_setting_box">
+                      <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
                           <field name="module_pos_restaurant"/>
                         </div>
@@ -53,12 +53,12 @@
                       </div>
                     </div>
                     <div class="row mt16" id="company" groups="base.group_multi_company">
-                        <label for="company_id" class="col-md-2"/>
+                        <label for="company_id" class="col-lg-2"/>
                         <field name="company_id"/>
                     </div>
                     <h2 name="order">Order Interface</h2>
                     <div class="row mt16 o_settings_container">
-                        <div id="category_reference" class="col-xs-12 col-md-6 o_setting_box">
+                        <div id="category_reference" class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="iface_display_categ_images"/>
                             </div>
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" >
+                        <div class="col-12 col-lg-6 o_setting_box" >
                             <div class="o_setting_left_pane">
                                 <field name="start_category"/>
                             </div>
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Don't turn this option on if you take orders on smartphones or tablets. Such devices already benefit from a native keyboard.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Don't turn this option on if you take orders on smartphones or tablets. Such devices already benefit from a native keyboard.">
                             <div class="o_setting_left_pane">
                                 <field name="iface_vkeyboard"/>
                             </div>
@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" >
+                        <div class="col-12 col-lg-6 o_setting_box" >
                             <div class="o_setting_left_pane">
                                 <field name="iface_big_scrollbars"/>
                             </div>
@@ -111,7 +111,7 @@
                     </div>
                     <h2>PosBox / Hardware Proxy</h2>
                     <div class="row mt16 o_settings_container" id="posbox_reference">
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="is_posbox"/>
                             </div>
@@ -122,40 +122,40 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible' : [('is_posbox', '=', False)]}">
                                     <div class="row mt16">
-                                        <label string="IP Address" for="proxy_ip" class="col-md-3 o_light_label"/>
+                                        <label string="IP Address" for="proxy_ip" class="col-lg-3 o_light_label"/>
                                         <field name="proxy_ip"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-md-3 o_light_label"/>
+                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-3 o_light_label"/>
                                         <field name="iface_scan_via_proxy"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Electronic Scale" for="iface_electronic_scale" class="col-md-3 o_light_label"/>
+                                        <label string="Electronic Scale" for="iface_electronic_scale" class="col-lg-3 o_light_label"/>
                                         <field name="iface_electronic_scale"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-md-3 o_light_label"/>
+                                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
                                         <field name="iface_cashdrawer"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Receipt Printer" for="iface_print_via_proxy" class="col-md-3 o_light_label"/>
+                                        <label string="Receipt Printer" for="iface_print_via_proxy" class="col-lg-3 o_light_label"/>
                                         <field name="iface_print_via_proxy"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-md-3 o_light_label"/>
+                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-3 o_light_label"/>
                                         <field name="iface_customer_facing_display"/>
                                     </div>
                                     <field name="customer_facing_display_html" invisible="1"/>
                                     <div class="text-muted" attrs="{'invisible' : ['|', ('iface_customer_facing_display', '=', False), '&amp;', ('id', '!=', False), ('customer_facing_display_html', '!=', '')]}">Save this configuration to see and edit the customer display</div>
                                     <div class="row mt16 o_settings_container" attrs="{'invisible' : ['|', '|',('iface_customer_facing_display', '=', False), ('id', '=', False), ('customer_facing_display_html', '=', '')]}">
-                                        <div class="col-xs-12 col-md-6 o_setting_box">
+                                        <div class="col-12 col-lg-6 o_setting_box">
                                         <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div id="barcode_scanner" class="col-xs-12 col-md-6 o_setting_box">
+                        <div id="barcode_scanner" class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="barcode_scanner"/>
                             </div>
@@ -165,7 +165,7 @@
                                     Set barcodes to scan products, customer cards, etc.
                                 </div>
                                 <div class="content-group row mt16" attrs="{'invisible': [('barcode_scanner', '=', False)]}">
-                                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-md-3 o_light_label"/>
+                                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
                                     <field name="barcode_nomenclature_id" attrs="{'required': [('barcode_scanner', '=', True)]}"/>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                     </div>
                     <h2>Taxes</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Choose a specific tax regime at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Choose a specific tax regime at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
                             <div class="o_setting_left_pane">
                                 <field name="tax_regime_selection"/>
                             </div>
@@ -192,7 +192,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="tax_regime"/>
                             </div>
@@ -211,7 +211,7 @@
                     </div>
                     <h2>Pricing</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" >
+                        <div class="col-12 col-lg-6 o_setting_box" >
                             <div class="o_setting_left_pane">
                                 <field name="module_pos_discount"/>
                             </div>
@@ -227,7 +227,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="pricelist_setting" title="Choose a pricelist for the Point Of Sale" groups="product.group_sale_pricelist">
+                        <div class="col-12 col-lg-6 o_setting_box" id="pricelist_setting" title="Choose a pricelist for the Point Of Sale" groups="product.group_sale_pricelist">
                             <div class="o_setting_left_pane">
                                 <field name="use_pricelist"/>
                             </div>
@@ -238,11 +238,11 @@
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
                                     <div class="row mt16">
-                                        <label string="Available Pricelists" for="available_pricelist_ids" class="col-md-3 o_light_label"/>
+                                        <label string="Available Pricelists" for="available_pricelist_ids" class="col-lg-3 o_light_label"/>
                                         <field name="available_pricelist_ids" widget="many2many_tags"/>
                                     </div>
                                     <div class="row">
-                                        <label string="Default Pricelist" for="pricelist_id" class="col-md-3 o_light_label"/>
+                                        <label string="Default Pricelist" for="pricelist_id" class="col-lg-3 o_light_label"/>
                                         <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
                                     </div>
                                     <div>
@@ -251,7 +251,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="module_pos_loyalty" widget="upgrade_boolean" nolabel="1"/>
                             </div>
@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Only users with Manager access rights for PoS app can modify the product prices on orders.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Only users with Manager access rights for PoS app can modify the product prices on orders.">
                             <div class="o_setting_left_pane">
                                 <field name="restrict_price_control"/>
                             </div>
@@ -281,7 +281,7 @@
                     </div>
                     <h2>Payments</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="payment_methods">
+                        <div class="col-12 col-lg-6 o_setting_box" id="payment_methods">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Payment Methods</span>
                                 <div class="text-muted">
@@ -295,7 +295,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="cash_control"/>
                             </div>
@@ -306,7 +306,7 @@
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <div class="row mt16">
-                                        <label string="Default Opening" for="proxy_ip" class="col-md-3 o_light_label" />
+                                        <label string="Default Opening" for="proxy_ip" class="col-lg-3 o_light_label" />
                                         <field name="default_cashbox_lines_ids" widget="many2many_tags" context="{'show_coin_and_value': True}"/>
                                     </div>
                                     <div>
@@ -315,7 +315,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="iface_precompute_cash"/>
                             </div>
@@ -329,7 +329,7 @@
                     </div>
                     <h2>Bills &amp; Receipts</h2>
                     <div class="row mt16 o_settings_container" id="receipt">
-                        <div id="order_reference" class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                        <div id="order_reference" class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Order Reference</span>
                                 <div class="text-muted">
@@ -340,7 +340,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="is_header_or_footer"/>
                             </div>
@@ -351,17 +351,17 @@
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible' : [('is_header_or_footer', '=', False)]}">
                                     <div>
-                                        <label string="Header" for="receipt_header" class="col-md-2 o_light_label"/>
+                                        <label string="Header" for="receipt_header" class="col-lg-2 o_light_label"/>
                                         <field name="receipt_header" placeholder="e.g. Company Address, Website"/>
                                     </div>
                                     <div>
-                                        <label string="Footer" for="receipt_footer" class="col-md-2 o_light_label"/>
+                                        <label string="Footer" for="receipt_footer" class="col-lg-2 o_light_label"/>
                                         <field name="receipt_footer" placeholder="e.g. Return Policy, Thanks for shopping with us!"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="auto_printing" attrs="{'invisible': [('is_posbox', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box" id="auto_printing" attrs="{'invisible': [('is_posbox', '=', False)]}">
                             <div class="o_setting_left_pane">
                                 <field name="iface_print_auto"/>
                             </div>
@@ -377,7 +377,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
                             <div class="o_setting_left_pane">
                                 <field name='module_pos_reprint'/>
                             </div>
@@ -393,7 +393,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="iface_invoicing">
+                        <div class="col-12 col-lg-6 o_setting_box" id="iface_invoicing">
                             <div class="o_setting_left_pane">
                                 <field name="module_account_invoicing"/>
                             </div>
@@ -404,7 +404,7 @@
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('module_account_invoicing', '=', False)]}">
                                     <div class="row mt16">
-                                        <label string="Invoice Journal" for="invoice_journal_id" class="col-md-3 o_light_label"/>
+                                        <label string="Invoice Journal" for="invoice_journal_id" class="col-lg-3 o_light_label"/>
                                         <field name="invoice_journal_id"/>
                                     </div>
                                 </div>
@@ -413,7 +413,7 @@
                     </div>
                     <h2>Inventory</h2>
                     <div class="row mt16 o_settings_container" id="inventory_location">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Operation types show up in the Inventory dashboard.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Operation types show up in the Inventory dashboard.">
                             <div class="o_setting_right_pane">
                                 <label for="picking_type_id" string="Operation Type"/>
                                 <div class="text-muted">
@@ -424,7 +424,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" groups="stock.group_stock_multi_locations">
+                        <div class="col-12 col-lg-6 o_setting_box" groups="stock.group_stock_multi_locations">
                             <div class="o_setting_right_pane">
                                 <label for="stock_location_id"/>
                                 <div class="text-muted">
@@ -438,7 +438,7 @@
                     </div>
                     <h2>Accounting</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Journal Entries</span>
                                 <div class="text-muted">
@@ -446,11 +446,11 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
-                                        <label string="Sales Journal" for="journal_id" class="col-md-3 o_light_label" widget="selection"/>
+                                        <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" widget="selection"/>
                                         <field name="journal_id"/>
                                     </div>
                                     <div class="row" groups="account.group_account_user" title="Get one journal item per product rather than one journal item per receipt line. This works for any anonymous order. If the customer is set on the order, one journal item is created for each receipt line. This option is recommended for an easy review of your journal entries when managing lots of orders.">
-                                        <label string="Group Journal Items" for="group_by" class="col-md-3 o_light_label"/>
+                                        <label string="Group Journal Items" for="group_by" class="col-lg-3 o_light_label"/>
                                         <field name="group_by"/>
                                     </div>
                                 </div>

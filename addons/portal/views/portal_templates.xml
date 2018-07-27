@@ -24,47 +24,39 @@
 
             <div id="wrapwrap" t-att-class="pageName or ''">
                 <header>
-                    <div class="navbar navbar-default navbar-static-top">
+                    <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a href="/" class="navbar-brand logo">
-                                    <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
-                                </a>
-                            </div>
-                            <div class="collapse navbar-collapse navbar-top-collapse">
-                                <!-- Note: pull-right instead of navbar-right for two reasons: -->
-                                <!-- 1) We want menu to open to the right by default (except cases handled in JS) -->
-                                <!-- 2) navbar-right combined will navbar-static-top misaligns contained elements -->
-                                <ul class="nav navbar-nav pull-right" id="top_menu">
-                                    <li class="divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                                    <li class="dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="/" class="navbar-brand logo">
+                                <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                            </a>
+                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
+                                <span class="navbar-toggler-icon"/>
+                            </button>
+                            <div class="collapse navbar-collapse" id="top_menu_collapse">
+                                <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
+                                <ul class="nav navbar-nav ml-auto" id="top_menu">
+                                    <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
+                                    <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
+                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                             <b>
                                                 <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                                                <span class="caret"></span>
                                             </b>
                                         </a>
-                                        <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
-                                        </ul>
+                                        <div class="dropdown-menu js_usermenu" role="menu">
+                                            <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </nav>
                 </header>
                 <main>
                     <t t-raw="0"/>
                 </main>
                 <footer >
                     <div class="container mt16 mb16" id="footer">
-                        <div class="pull-right" t-ignore="true" t-if="not editable">
+                        <div class="float-right" t-ignore="true" t-if="not editable">
                             Powered by <a target="_blank" href="http://www.odoo.com">Odoo</a>
                         </div>
                     </div>
@@ -78,10 +70,10 @@
             <div class="container mt16 mb16 o_portal">
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
-                        <div t-attf-class="col-sm-12">
+                        <div t-attf-class="col-md-12">
                             <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
-                                <li><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-                                <li t-if="page_name == 'my_details'">Your Details</li>
+                                <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+                                <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
                             </ol>
                             <t t-call='portal.record_pager'/>
                         </div>
@@ -92,15 +84,15 @@
                 <div class="container mb64">
                     <t t-if="my_details">
                         <div class="row">
-                            <div t-attf-class="col-md-9 col-lg-8">
+                            <div t-attf-class="col-lg-9 col-xl-8">
                                 <t t-raw="0"/>
                             </div>
-                            <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                            <div id="o_my_sidebar" class="col-lg-3 offset-xl-1 o_my_sidebar">
                                 <div class="o_my_contact" t-if="sales_user">
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-sm">Change</a></h3>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
                                 <div class="o_my_archives" t-if="archive_groups">
@@ -119,9 +111,9 @@
 
     <template id="portal_show_sign_in" inherit_id="portal.frontend_layout" name="Show Sign In">
         <xpath expr="//ul[@id='top_menu']" position="inside">
-            <li class="divider" groups="base.group_public"/>
-            <li groups="base.group_public">
-                <a t-attf-href="/web/login">
+            <li class="nav-item divider" groups="base.group_public"/>
+            <li groups="base.group_public" class="nav-item">
+                <a t-attf-href="/web/login" class="nav-link">
                     <b>Sign in</b>
                 </a>
             </li>
@@ -137,7 +129,7 @@
                 <ul class="o_portal_docs list-group">
                 </ul>
             </div>
-            <div class="col-md-12 oe_structure"/>
+            <div class="col-lg-12 oe_structure"/>
         </t>
     </template>
 
@@ -157,7 +149,7 @@
         :param string filterby : name of the filter criteria
         :param default_url : the base url of the pages (like '/my/orders')
         :param boolean o_portal_search_panel : set to True to active the input search
-        :param html $0 : content of the t-call, <li class="pull-left">Link</li>
+        :param html $0 : content of the t-call, <li class="float-left">Link</li>
         :param title : bavbar title
         :param classes : navbar classes
     -->
@@ -165,79 +157,82 @@
         <nav t-attf-class="navbar o_portal_navbar {{classes if classes else 'o_portal_navbar_default'}}">
             <div class="container-fluid">
                 <!--  Navbar title only -->
-                <div class="navbar-header pull-left">
+                <div class="navbar-header float-left">
                     <t t-set="no_title">No title</t>
                     <h3 class="navbar-brand"><t t-esc="title or no_title"/></h3>
                 </div>
 
                 <!-- Non-collapsing menu item(s) -->
-                <div class="navbar-header navbar-right pull-right">
-                    <ul class="nav pull-left">
+                <div class="navbar-header navbar-right float-right">
+                    <ul class="nav float-left">
                         <t t-raw="0"/>
-                        <li t-if="searchbar_sortings" class="dropdown pull-left ml16">
-                            <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                        <li t-if="searchbar_sortings" class="dropdown float-left ml16">
+                            <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle navbar-btn">
                                 <span class="fa fa-sort"/>
-                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/></span>
-                                <span class="caret"/>
+                                <span class="d-none d-lg-inline"><t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/></span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
-                                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                            <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                                <t t-foreach="searchbar_sortings" t-as="option">
+                                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"
+                                       t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">
                                         <span t-esc="searchbar_sortings[option].get('label')"/>
                                     </a>
-                                </li>
-                            </ul>
+                                </t>
+                            </div>
                         </li>
-                        <li t-if="searchbar_filters" class="dropdown pull-left ml4">
-                            <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                        <li t-if="searchbar_filters" class="dropdown float-left ml4">
+                            <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle navbar-btn">
                                 <span class="fa fa-filter"/>
-                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_filters[filterby].get('label', 'All')"/></span>
-                                <span class="caret"/>
+                                <span class="d-none d-lg-inline"><t t-esc="searchbar_filters[filterby].get('label', 'All')"/></span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
-                                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
-                                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
+                            <div class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                                <t t-foreach="searchbar_filters" t-as="option">
+                                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)"
+                                       t-attf-class="dropdown-item#{filterby == option and ' active' or ''}">
                                         <span t-esc="searchbar_filters[option].get('label')"/>
                                     </a>
-                                </li>
-                            </ul>
+                                </t>
+                            </div>
                         </li>
-                        <li t-if="searchbar_groupby" class="dropdown pull-left ml4">
-                            <button id="portal_searchbar_groupby" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                        <li t-if="searchbar_groupby" class="dropdown float-left ml4">
+                            <button id="portal_searchbar_groupby" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle navbar-btn">
                                 <span class="fa fa-object-group"/>
-                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_groupby[groupby].get('label', 'None')"/></span>
-                                <span class="caret"/>
+                                <span class="d-none d-lg-inline"><t t-esc="searchbar_groupby[groupby].get('label', 'None')"/></span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
-                                <li t-foreach="searchbar_groupby" t-as="option" t-att-class="groupby == option and 'active'">
-                                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)">
+                            <div class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
+                                <t t-foreach="searchbar_groupby" t-as="option">
+                                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)"
+                                       t-attf-class="dropdown-item#{groupby == option and ' active' or ''}">
                                         <span t-esc="searchbar_groupby[option].get('label')"/>
                                     </a>
-                                </li>
-                            </ul>
+                                </t>
+                            </div>
                         </li>
                     </ul>
                     <button t-if='searchbar_inputs' type="button" class="navbar-toggle collapsed btn ml16" data-toggle="collapse" data-target="#o_portal_searchbar_collapse"><span class="fa fa-search"/></button>
                 </div>
-                <div t-if='searchbar_inputs' class="visible-xs-block clearfix"/>
+                <div t-if='searchbar_inputs' class="d-block d-md-none clearfix"/>
 
                 <!-- Collapsing content (searchbar_inputs) -->
                 <div t-if='searchbar_inputs' class="collapse navbar-collapse text-right" id="o_portal_searchbar_collapse">
                     <div class="navbar-form o_portal_search_panel">
                          <div class="input-group">
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span id="search_label" class="hidden-xs mr4">Search</span><span class="caret"></span>
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                                    <span id="search_label" class="d-none d-md-inline mr4">Search</span>
                                 </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
-                                        <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
-                                    </li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-foreach='searchbar_inputs' t-as='input'>
+                                        <a t-att-href="'#' + searchbar_inputs[input]['input']"
+                                           t-attf-class="dropdown-item#{search_in == searchbar_inputs[input]['input'] and ' active' or ''}">
+                                           <span t-raw="searchbar_inputs[input]['label']"/>
+                                        </a>
+                                    </t>
+                                </div>
                             </div>
                             <input type="text" class="form-control" t-att-value='search' name="search"/>
-                            <span class="input-group-btn">
-                                <button class="btn btn-default search-submit" type="button"><span class="fa fa-search hidden-xs"/><span class="fa fa-arrow-right visible-xs-inline-block"/></button>
+                            <span class="input-group-append">
+                                <button class="btn btn-secondary search-submit" type="button"><span class="fa fa-search d-none d-md-inline-block"/><span class="fa fa-arrow-right d-inline-block d-md-none"/></button>
                             </span>
                         </div>
                     </div>
@@ -256,16 +251,16 @@
 
     <template id="portal_archive_groups" name="Portal Archive Groups">
         <h3 class="page-header">Archives</h3>
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills flex-column">
             <t t-foreach="archive_groups" t-as="group">
                 <t t-if="group['date_begin'] == date">
-                    <li class="active">
-                        <a t-att-href="default_url" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    <li class="nav-item">
+                        <a t-att-href="default_url" class="nav-link active" t-ignore="True"><t t-esc="group['name']"/><span class="float-right badge badge-pill" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
                 <t t-if="group['date_begin'] != date">
-                    <li>
-                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    <li class="nav-item">
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}" class="nav-link"><t t-esc="group['name']"/><span class="float-right badge badge-pill" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
             </t>
@@ -279,53 +274,53 @@
             <form action="/my/account" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="row o_portal_details">
-                    <div class="col-md-8">
+                    <div class="col-lg-8">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                               <div t-if="error_message" class="alert alert-danger" role="alert">
                                   <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                               </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="name">Your Name</label>
-                                <input type="text" name="name" class="form-control" t-att-value="name or partner.name" />
+                            <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="name">Your Name</label>
+                                <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="name or partner.name" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="email">Email</label>
-                                <input type="email" name="email" class="form-control" t-att-value="email or partner.email" />
+                            <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="email">Email</label>
+                                <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="email or partner.email" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="phone">Phone</label>
-                                <input type="tel" name="phone" class="form-control" t-att-value="phone or partner.phone" />
-                            </div>
-
-                            <div class="clearfix" />
-                            <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label label-optional" for="company_name">Company Name</label>
-                                <p t-if="partner.commercial_partner_id.is_company" class="form-control" t-esc="partner.commercial_company_name"/>
-                                <input t-else="" type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'"/>
-                            </div>
-                            <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label label-optional" for="vat">VAT Number</label>
-                                <input type="text" name="vat" class="form-control" t-att-value="vat or partner.vat" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'" />
+                            <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="phone">Phone</label>
+                                <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="phone or partner.phone" />
                             </div>
 
                             <div class="clearfix" />
-                            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="street">Street</label>
-                                <input type="text" name="street" class="form-control" t-att-value="street or partner.street"/>
+                            <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label label-optional" for="company_name">Company Name</label>
+                                <p t-if="partner.commercial_partner_id.is_company" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-esc="partner.commercial_company_name"/>
+                                <input t-else="" type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="company_name or partner.company_name" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'"/>
                             </div>
-                            <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="city">City</label>
-                                <input type="text" name="city" class="form-control" t-att-value="city or partner.city" />
+                            <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label label-optional" for="vat">VAT Number</label>
+                                <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="vat or partner.vat" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="zipcode">Zip / Postal Code</label>
-                                <input type="text" name="zipcode" class="form-control" t-att-value="zipcode or partner.zip" />
+
+                            <div class="clearfix" />
+                            <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="street">Street</label>
+                                <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="street or partner.street"/>
                             </div>
-                            <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="country_id">Country</label>
-                                <select name="country_id" class="form-control">
+                            <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="city">City</label>
+                                <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="city or partner.city" />
+                            </div>
+                            <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="zipcode">Zip / Postal Code</label>
+                                <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="zipcode or partner.zip" />
+                            </div>
+                            <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label" for="country_id">Country</label>
+                                <select name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
                                         <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
@@ -334,9 +329,9 @@
                                     </t>
                                 </select>
                             </div>
-                            <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label label-optional" for="state_id">State / Province</label>
-                                <select name="state_id" class="form-control">
+                            <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-xl-6">
+                                <label class="col-form-label label-optional" for="state_id">State / Province</label>
+                                <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}">
                                     <option value="">select...</option>
                                     <t t-foreach="states or []" t-as="state">
                                         <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
@@ -348,7 +343,7 @@
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
                         </div>
                         <div class="clearfix">
-                            <button type="submit" class="btn btn-primary pull-right mb32 ">
+                            <button type="submit" class="btn btn-primary float-right mb32 ">
                                 Confirm
                                 <span class="fa fa-long-arrow-right" />
                             </button>
@@ -361,30 +356,30 @@
 
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
-          <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
-            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
-            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
+          <div class="ml8 record_pager btn-group btn-group-xs float-right" role="group">
+            <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
+            <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>
         </t>
     </template>
 
     <template id="pager" name="Pager">
-        <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
-            <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
-                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
+        <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination m-0 #{_classes}" t-att-style="style or None">
+            <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
+                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link">Prev</a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
-                <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+                <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" class="page-link" t-raw="page['num']"></a></li>
             </t>
-            <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
-                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
+            <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link">Next</a>
             </li>
         </ul>
     </template>
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.frontend_layout">
-        <xpath expr="//li[@id='o_logout']" position="before">
-            <li><a href="/my/home" role="menuitem">My Account</a></li>
+        <xpath expr="//a[@id='o_logout']" position="before">
+            <a href="/my/home" role="menuitem" class="dropdown-item">My Account</a>
         </xpath>
     </template>
 
@@ -399,7 +394,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="hidden-print o_portal_chatter o_not_editable"
+        <div id="discussion" class="d-print-none o_portal_chatter o_not_editable"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>

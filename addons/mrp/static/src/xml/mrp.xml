@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mrp.button">
-        <button type="button" class="btn btn-primary btn-sm o_mrp_bom_print">print</button>
-        <button type="button" class="btn btn-primary btn-sm ml8 o_mrp_bom_print_unfolded">print unfolded</button>
+        <button type="button" class="btn btn-primary o_mrp_bom_print">print</button>
+        <button type="button" class="btn btn-primary ml8 o_mrp_bom_print_unfolded">print unfolded</button>
     </t>
 
     <form class="form-inline" t-name="mrp.report_bom_search">
-        <div class="form-group col-md-4">
+        <div class="form-group col-lg-4">
             <label>Quantity:</label>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <input type="number" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty"/>
                 </div>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                     <t t-if="is_uom_applied" t-esc="bom_uom_name"/>
                 </div>
             </div>
         </div>
-        <div t-if="is_variant_applied" class="form-group col-md-4">
+        <div t-if="is_variant_applied" class="form-group col-lg-4">
             <label>Variant:</label>
             <select class="o_input o_mrp_bom_report_variants">
                 <option t-foreach="variants" t-as="variant" t-att-value="variant">
@@ -25,7 +25,7 @@
                 </option>
             </select>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-lg-4">
             <label>Report:</label>
             <select class="o_input o_mrp_bom_report_type">
                 <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>

@@ -1,145 +1,73 @@
-// Journal 3.3.7
+// Journal 4.1.3
 // Bootswatch
-// -----------------------------------------------------
+
+
+// Variables ===================================================================
 
 $web-font-path: "https://fonts.googleapis.com/css?family=News+Cycle:400,700" !default;
-@import url(#{$web-font-path});
+@import url($web-font-path);
 
-// Navbar =====================================================================
+// Navbar ======================================================================
 
-.navbar {
-  font-size: 18px;
-  font-family: $font-family-sans-serif;
-  font-weight: $headings-font-weight;
+.bg-dark {
+  background-color: #000 !important;
+}
 
-  &-default {
+.bg-light {
+  background-color: $white !important;
+  color: $black;
+  border: 1px solid $gray-200;
 
-    .badge {
-      background-color: #000;
-      color: #fff;
-    }
+  &.navbar-fixed-top {
+    border-width: 0 0 1px 0;
   }
 
-  &-inverse {
-
-    .badge {
-      background-color: #fff;
-      color: $navbar-inverse-bg;
-    }
+  &.navbar-fixed-bottom {
+    border-width: 1px 0 0 0;
   }
 }
 
+.navbar {
+  font-size: 18px;
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+}
+
 .navbar-brand {
+  padding-top: 0.5rem;
   font-size: inherit;
   font-weight: $headings-font-weight;
   text-transform: uppercase;
 }
 
-// Buttons ====================================================================
+// Buttons =====================================================================
 
-// Typography =================================================================
+.btn {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
 
-// Tables =====================================================================
-
-// Forms ======================================================================
-
-.has-warning {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-danger;
-  }
-
-  .form-control,
-  .form-control:focus {
-    border-color: $brand-danger;
+  &-secondary,
+  &-warning {
+    color: $white;
   }
 }
 
-.has-error {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-primary;
-  }
+// Typography ==================================================================
 
-  .form-control,
-  .form-control:focus {
-    border-color: $brand-primary;
+// Tables ======================================================================
+
+// Forms =======================================================================
+
+// Navs ========================================================================
+
+.pagination {
+  a:hover {
+    text-decoration: none;
   }
 }
 
-.has-success {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-success;
-  }
+// Indicators ==================================================================
 
-  .form-control,
-  .form-control:focus {
-    border-color: $brand-success;
-  }
-}
+// Progress bars ===============================================================
 
-// Navs =======================================================================
-
-// Indicators =================================================================
-
-.badge {
-  padding-bottom: 4px;
-  vertical-align: 3px;
-  font-size: 10px;
-}
-
-// Progress bars ==============================================================
-
-// Containers =================================================================
-
-.jumbotron {
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: $font-family-sans-serif;
-    font-weight: $headings-font-weight;
-    color: #000;
-  }
-}
-
-.panel {
-
-  &-primary,
-  &-success,
-  &-warning,
-  &-danger,
-  &-info {
-    .panel-title {
-      color: #fff;
-    }
-  }
-
-
-}
+// Containers ==================================================================

@@ -85,10 +85,6 @@ renderer.tplPopovers = function (lang, options) {
     var $linkPopover = $popover.find('.note-link-popover');
     var $airPopover = $popover.find('.note-air-popover');
 
-    if (window === window.top) {
-        $popover.children().addClass("hidden-xs");
-    }
-
     //////////////// image popover
 
     // add center button for images
@@ -104,11 +100,11 @@ renderer.tplPopovers = function (lang, options) {
     var $padding = $('<div class="btn-group"/>');
     $padding.insertBefore($imagePopover.find('.btn-group:first'));
     var dropdown_content = [
-        '<li><a data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
     $(tplIconButton('fa fa-plus-square-o', {
         title: _t('Padding'),
@@ -121,10 +117,10 @@ renderer.tplPopovers = function (lang, options) {
         title: _t('Shadow'),
         event: 'imageShape',
         value: 'shadow'
-    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="rounded-circle"]'));
 
     // add spin for fa
-    var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
+    var $spin = $('<div class="btn-group d-none only_fa"/>').insertAfter($button.parent());
     $(tplIconButton('fa fa-refresh', {
             title: _t('Spin'),
             event: 'imageShape',
@@ -132,7 +128,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($spin);
 
     // resize for fa
-    var $resizefa = $('<div class="btn-group hidden only_fa"/>')
+    var $resizefa = $('<div class="btn-group d-none only_fa"/>')
         .insertAfter($imagePopover.find('.btn-group:has([data-event="resize"])'));
     for (var size=1; size<=5; size++) {
         $(tplButton('<span class="note-fontsize-10">'+size+'x</span>', {
@@ -142,7 +138,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($resizefa);
     }
     var $colorfa = $airPopover.find('.note-color').clone();
-    $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
+    $colorfa.find(".dropdown-menu").css('min-width', '172px');
     $resizefa.after($colorfa);
 
     // show dialog box and delete
@@ -168,7 +164,7 @@ renderer.tplPopovers = function (lang, options) {
 
     var $alt = $('<div class="btn-group"/>');
     $alt.appendTo($imagePopover.find('.popover-content'));
-    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
+    $alt.append('<button class="btn btn-secondary" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
 
     //////////////// link popover
 
@@ -187,16 +183,16 @@ renderer.tplPopovers = function (lang, options) {
         while (node && (!node.tagName || (!node.tagName || formats.indexOf(node.tagName.toLowerCase()) === -1))) {
             node = node.parentNode;
         }
-        $format.parent().removeClass('active');
+        $format.removeClass('active');
         $format.filter('[data-value="'+(node ? node.tagName.toLowerCase() : "p")+'"]')
-            .parent().addClass("active");
+            .addClass("active");
     });
 
     //////////////// tooltip
 
     setTimeout(function () {
         $airPopover.add($linkPopover).add($imagePopover).find("button")
-            .tooltip('destroy')
+            .tooltip('dispose')
             .tooltip({
                 container: 'body',
                 trigger: 'hover',
@@ -220,22 +216,22 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
     fn_boutton_update.call(this, $container, oStyle);
 
-    $container.find('.note-color').removeClass("hidden");
+    $container.find('.note-color').removeClass('d-none');
 
     if (oStyle.image) {
-        $container.find('[data-event]').parent().removeClass("active");
+        $container.find('[data-event]').removeClass("active");
 
-        $container.find('a[data-event="padding"][data-value="small"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-small"));
-        $container.find('a[data-event="padding"][data-value="medium"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
-        $container.find('a[data-event="padding"][data-value="large"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-large"));
-        $container.find('a[data-event="padding"][data-value="xl"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
-        $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
+        $container.find('a[data-event="padding"][data-value="small"]').toggleClass("active", $(oStyle.image).hasClass("padding-small"));
+        $container.find('a[data-event="padding"][data-value="medium"]').toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
+        $container.find('a[data-event="padding"][data-value="large"]').toggleClass("active", $(oStyle.image).hasClass("padding-large"));
+        $container.find('a[data-event="padding"][data-value="xl"]').toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
+        $container.find('a[data-event="padding"][data-value=""]').toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
 
         $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
-            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
-            $container.find('.only_fa').removeClass("hidden");
+            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
+            $container.find('.only_fa').removeClass('d-none');
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
             $container.find('button[data-event="resizefa"][data-value="3"]').toggleClass("active", $(oStyle.image).hasClass("fa-3x"));
             $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
@@ -246,8 +242,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
         } else {
-            $container.find('.hidden:not(.only_fa)').removeClass("hidden");
-            $container.find('.only_fa').addClass("hidden");
+            $container.find('.d-none:not(.only_fa)').removeClass('d-none');
+            $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
                 width = width[2];
@@ -260,15 +256,15 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
             if (!$(oStyle.image).is("img")) {
-                $container.find('.btn-group:has(button[data-event="imageShape"])').addClass("hidden");
+                $container.find('.btn-group:has(button[data-event="imageShape"])').addClass('d-none');
             }
 
-            $container.find('.note-color').addClass("hidden");
+            $container.find('.note-color').addClass('d-none');
         }
 
-        $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));
-        $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("center-block"));
-        $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("pull-right"));
+        $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("float-left"));
+        $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("d-block mx-auto"));
+        $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("float-right"));
 
         $(oStyle.image).trigger('attributes_change');
     }
@@ -360,9 +356,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('center-block').removeClass('pull-right pull-left'); break;
-        case 'left': $target.toggleClass('pull-left').removeClass('pull-right center-block'); break;
-        case 'right': $target.toggleClass('pull-right').removeClass('pull-left center-block'); break;
+        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto'); break;
+        case 'right': $target.toggleClass('float-right').removeClass('float-left d-block mx-auto'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {
@@ -895,7 +891,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
                 if (!show_tooltip) return;
                 $target.tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
                 setTimeout(function () {
-                    $target.tooltip('destroy');
+                    $target.tooltip('dispose');
                 }, 800);
             }, 400);
         });

@@ -6,11 +6,11 @@
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             margin-top: 0px;
             margin-bottom: 15px;
         }
-        border-bottom: 1px solid $gray-lighter-darker;
+        border-bottom: 1px solid gray('400');
         text-align: center;
 
         .o_thread_date {
@@ -25,36 +25,36 @@
 
     .o_thread_new_messages_separator {
         margin-bottom: 15px;
-        border-bottom: solid lighten($o-brand-primary, 15%) 1px;
+        border-bottom: solid lighten($o-brand-odoo, 15%) 1px;
         text-align: right;
         .o_thread_separator_label {
             position: relative;
             top: 8px;
             padding: 0 10px;
             background: white;
-            color: lighten($o-brand-primary, 15%);
+            color: lighten($o-brand-odoo, 15%);
             font-size: smaller;
         }
     }
 
     .o_thread_message {
-        @include o-flex-display;
+        display: flex;
         padding: 4px $o-horizontal-padding;
         margin-bottom: 0px;
 
         &.o_mail_not_discussion {
-            background-color: rgba($gray-lighter-dark, 0.5);
-            border-bottom: 1px solid $gray-lighter-darker;
+            background-color: rgba(gray('300'), 0.5);
+            border-bottom: 1px solid gray('400');
         }
 
         .o_thread_message_sidebar {
-            @include o-flex(0, 0, $o-mail-thread-avatar-size);
+            flex: 0 0 $o-mail-thread-avatar-size;
             margin-right: 10px;
             margin-top: 2px;
             text-align: center;
             font-size: smaller;
 
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 margin-top: 4px;
                 font-size: x-small;
             }
@@ -99,7 +99,7 @@
         }
 
         .o_thread_message_core {
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;
@@ -181,9 +181,9 @@
 
                 .o_thread_tooltip_content {
                     top: 10px;
-                    background: $gray-lighter;
+                    background: theme-color('light');
                     padding: 4px;
-                    border: solid $gray-lighter 1px;
+                    border: solid theme-color('light') 1px;
                     border-radius: 5px;
                     color: gray;
                     width: 300px;

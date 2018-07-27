@@ -866,7 +866,7 @@ class TestViews(ViewCase):
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button" class="btn-primary"/>
-                        <button string="Skip" special="cancel" class="btn-default"/>
+                        <button string="Skip" special="cancel" class="btn-secondary"/>
                     </footer>
                 </form>
             """
@@ -991,7 +991,7 @@ class TestViews(ViewCase):
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button" class="btn-primary"/>
-                        <button string="Skip" special="cancel" class="btn-default"/>
+                        <button string="Skip" special="cancel" class="btn-secondary"/>
                     </footer>
                 </form>
             """

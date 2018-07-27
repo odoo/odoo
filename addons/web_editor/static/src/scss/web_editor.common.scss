@@ -32,7 +32,7 @@ html, body {
             min-width: 20px;
         }
     }
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         .table-responsive > table.table {
             table-layout: auto;
         }
@@ -71,7 +71,7 @@ img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
 .fa-10x {
     font-size: 10em;
 }
-.fa.center-block {
+.fa.d-block.mx-auto {
     text-align: center;
 }
 
@@ -121,12 +121,8 @@ html[data-browser^="msie"] div.media_iframe_video iframe {
     margin-left: 0;
 }
 
-@media (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
     img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
-        -webkit-transform: none !important;
-        -moz-transform: none !important;
-        -ms-transform: none !important;
-        -o-transform: none !important;
         transform: none !important;
     }
 }
@@ -233,40 +229,8 @@ a.o_underline {
     }
 }
 
-// Create classes for theme colors...
-@include o-create-color-classes(alpha, $color-alpha);
-@include o-create-color-classes(beta, $color-beta);
-@include o-create-color-classes(gamma, $color-gamma);
-@include o-create-color-classes(delta, $color-delta);
-@include o-create-color-classes(epsilon, $color-epsilon);
-
-// ... and button classes
-@include o-create-color-btn-classes(alpha, $color-alpha);
-@include o-create-color-btn-classes(beta, $color-beta);
-@include o-create-color-btn-classes(gamma, $color-gamma);
-@include o-create-color-btn-classes(delta, $color-delta);
-@include o-create-color-btn-classes(epsilon, $color-epsilon);
-
-// Create classes for UI colors
-@include o-create-color-classes(primary, $brand-primary);
-@include o-create-color-classes(success, $state-success-bg, $content-color: $state-success-text);
-@include o-create-color-classes(info, $state-info-bg, $content-color: $state-info-text);
-@include o-create-color-classes(warning, $state-warning-bg, $content-color: $state-warning-text);
-@include o-create-color-classes(danger, $state-danger-bg, $content-color: $state-danger-text);
-
-// Create classes for greyscale colors
-@include o-create-color-classes('black', $gray-base);
-@include o-create-color-classes('gray-darker', $gray-darker);
-@include o-create-color-classes('gray-dark', $gray-dark);
-@include o-create-color-classes('gray', $gray);
-@include o-create-color-classes('gray-light', $gray-light);
-@include o-create-color-classes('gray-lighter', $gray-lighter);
-@include o-create-color-classes('white', $gray-white);
-
-// Create classes for greyscale transparent colours
-@include o-create-color-classes('black-25', $color-black-25);
-@include o-create-color-classes('black-50', $color-black-50);
-@include o-create-color-classes('black-75', $color-black-75);
-@include o-create-color-classes('white-25', $color-white-25);
-@include o-create-color-classes('white-50', $color-white-50);
-@include o-create-color-classes('white-75', $color-white-75);
+// Extend bootstrap to create background and text utilities for gray colors too
+@each $color, $value in $grays {
+    @include bg-variant(".bg-#{$color}", $value);
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}

@@ -152,7 +152,6 @@ var BasicRenderer = AbstractRenderer.extend({
         // widget's $el
         $node = $node.length ? $node : widget.$el;
         $node.tooltip({
-            delay: { show: 1000, hide: 0 },
             title: function () {
                 return qweb.render('WidgetLabel.tooltip', {
                     debug: config.debug,

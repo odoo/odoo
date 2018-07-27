@@ -1,109 +1,125 @@
-// Spacelab 3.3.7
+// Spacelab 4.1.3
 // Bootswatch
-// -----------------------------------------------------
+
+
+// Variables ===================================================================
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" !default;
-@import url(#{$web-font-path});
+@import url($web-font-path);
 
 @mixin btn-shadow($color){
-  @include gradient-vertical-three-colors(lighten($color, 15%), $color, 50%, darken($color, 4%));
+  @include gradient-y-three-colors(lighten($color, 15%), $color, 50%, darken($color, 4%));
   filter: none;
   border: 1px solid darken($color, 10%);
 }
 
-// Navbar =====================================================================
+// Navbar ======================================================================
 
 .navbar {
 
-  @include btn-shadow($navbar-default-bg);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  .nav-link,
+  .navbar-brand {
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1);
+    transition: color ease-in-out .2s;
+  }
 
-  &-inverse {
-    @include btn-shadow($navbar-inverse-bg);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  &.bg-primary {
+    @include btn-shadow($primary);
+  }
 
-    .badge {
-      background-color: #fff;
-      color: $navbar-inverse-bg;
+  &.bg-dark {
+    @include btn-shadow($secondary);
+  }
+
+  &.bg-light {
+    @include btn-shadow($light);
+
+    .nav-link,
+    .navbar-brand {
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1);
     }
-  }
 
-  .badge {
-    text-shadow: none;
-  }
+    .navbar-brand {
+      color: $navbar-light-color;
 
-  &-nav > li > a,
-  &-nav > li > a:hover {
-    padding-top: ($navbar-padding-vertical + 2px);
-    padding-bottom: ($navbar-padding-vertical - 2px);
-    @include transition(color ease-in-out .2s);
-  }
-  
-  &-brand,
-  &-brand:hover {
-    @include transition(color ease-in-out .2s);
-  }
-
-  .caret,
-  .caret:hover {
-    @include transition(border-color ease-in-out .2s);
-  }
-
-  .dropdown-menu {
-    text-shadow: none;
+      &:hover {
+        color: $info;
+      }
+    }
   }
 }
 
-// Buttons ====================================================================
+// Buttons =====================================================================
 
 .btn {
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1);
 
-  &-default {
-    @include btn-shadow($btn-default-bg);
+  &-primary {
+    @include btn-shadow($primary);
 
-    &:hover {
-      @include btn-shadow(darken($btn-default-bg, 4%));
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($primary, 4%));
     }
   }
 
-  &-primary {
-    @include btn-shadow($btn-primary-bg);
+  &-secondary {
+    @include btn-shadow($secondary);
+    color: $white;
 
-    &:hover {
-      @include btn-shadow(darken($btn-primary-bg, 4%));
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($secondary, 4%));
     }
   }
 
   &-success {
-    @include btn-shadow($btn-success-bg);
+    @include btn-shadow($success);
 
-    &:hover {
-      @include btn-shadow(darken($btn-success-bg, 4%));
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($success, 4%));
     }
   }
 
   &-info {
-    @include btn-shadow($btn-info-bg);
+    @include btn-shadow($info);
 
-    &:hover {
-      @include btn-shadow(darken($btn-info-bg, 4%));
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($info, 4%));
     }
   }
 
   &-warning {
-    @include btn-shadow($btn-warning-bg);
+    @include btn-shadow($warning);
 
-    &:hover {
-      @include btn-shadow(darken($btn-warning-bg, 4%));
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($warning, 4%));
     }
   }
 
   &-danger {
-    @include btn-shadow($btn-danger-bg);
+    @include btn-shadow($danger);
 
-    &:hover {
-      @include btn-shadow(darken($btn-danger-bg, 4%));
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($danger, 4%));
+    }
+  }
+
+  &-dark {
+    @include btn-shadow($dark);
+
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($dark, 4%));
+    }
+  }
+
+  &-light {
+    @include btn-shadow($light);
+    color: $navbar-light-color;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.1);
+    transition: color ease-in-out .2s;
+
+    &:not(.disabled):hover {
+      @include btn-shadow(darken($light, 4%));
+      color: $info;
     }
   }
 
@@ -118,25 +134,34 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700
   }
 }
 
-// Typography =================================================================
+[class*="btn-outline-"] {
+  text-shadow: none;
+}
 
-// Tables =====================================================================
+// Typography ==================================================================
 
-// Forms ======================================================================
+// Tables ======================================================================
 
-// Navs =======================================================================
+// Forms =======================================================================
 
-// Indicators =================================================================
+// Navs ========================================================================
 
-// Progress bars ==============================================================
+// Indicators ==================================================================
 
-// Containers =================================================================
+.badge {
 
-.panel {
+  &-secondary {
+    color: $white;
+  }
+}
 
-  &-primary {
-    .panel-title {
-      color: #fff;
-    }
+// Progress bars ===============================================================
+
+// Containers ==================================================================
+
+.card,
+.list-group-item {
+  h1, h2, h3, h4, h5, h6 {
+    color: inherit;
   }
 }

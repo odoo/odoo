@@ -30,7 +30,7 @@
                     <div clas="row">
                         <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
                         <h4 class="text-center text-muted" style="margin-bottom: 32px;">Your rating has been submitted.</h4>
-                        <div class="pull-left">
+                        <div class="float-left">
                             <img t-attf-src='/rating/static/src/img/rating_#{rate}.png' t-att-alt="rate.name"/>
                         </div>
                         <div style="margin-left: 80px;">
@@ -42,7 +42,7 @@
                         <p style="margin-top:32px;">
                             Would be great if you can provide more information:
                         </p>
-                        <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
+                        <form t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
                             <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>

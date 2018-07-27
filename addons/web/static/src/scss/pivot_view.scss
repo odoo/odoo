@@ -5,7 +5,7 @@
     // items corresponding to the clicked cell
     &.o_enable_linking {
         .o_pivot_cell_value:hover {
-            color: $o-brand-optional;
+            color: $o-brand-primary;
             cursor: pointer;
         }
     }
@@ -23,7 +23,7 @@
             background-color: lighten($o-brand-secondary, 40%);
             cursor: pointer;
             white-space: nowrap;
-            @include user-select(none);
+            user-select: none;
             &:hover {
                 background-color: lighten($o-brand-secondary, 30%);
             }

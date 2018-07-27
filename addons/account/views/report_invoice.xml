@@ -21,8 +21,8 @@
                     </h2>
 
                     <!-- HTML Preview for mobile responsive -->
-                    <t t-set="o_grid_layout" t-value="'col-xs-2'"/>
-                    <t t-if="type_html" t-set="o_grid_layout" t-value="'col-sm-2 col-xs-6'"/>
+                    <t t-set="o_grid_layout" t-value="'col-2'"/>
+                    <t t-if="type_html" t-set="o_grid_layout" t-value="'col-6 col-md-2'"/>
                     <div class="row mt32 mb32">
                         <div t-att-class="o_grid_layout" t-if="o.name" name="description">
                             <strong>Description:</strong>
@@ -58,20 +58,20 @@
                     <t t-set="display_taxamount"
                        t-value="o.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
 
-                    <table t-attf-class="table table-condensed " name="invoice_line_table">
+                    <table t-attf-class="table table-sm" name="invoice_line_table">
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="6"/>
                                 <th>Description</th>
-                                <th class="hidden">Source Document</th>
+                                <th class="d-none">Source Document</th>
                                 <th class="text-right">Quantity</th>
-                                <th class="text-right hidden-xs">Unit Price</th>
-                                <th t-if="display_discount" class="text-right hidden-xs">
+                                <th class="text-right d-none d-md-table-cell">Unit Price</th>
+                                <th t-if="display_discount" class="text-right d-none d-md-table-cell">
                                     <span>Disc.(%)</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
-                                <th class="text-right hidden-xs">Taxes</th>
-                                <th t-if="display_taxamount and type_is_out" class="text-right hidden-xs">
+                                <th class="text-right d-none d-md-table-cell">Taxes</th>
+                                <th t-if="display_taxamount and type_is_out" class="text-right d-none d-md-table-cell">
                                     <span>Tax Amount</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
@@ -92,21 +92,21 @@
                                 <tr t-attf-class="{{ 'o_is_' + line.display_type if line.display_type else '' }}">
                                     <t t-if="not line.display_type" name="account_invoice_line_accountable">
                                         <td name="account_invoice_line_name"><span t-field="line.name"/></td>
-                                        <td class="hidden"><span t-field="line.origin"/></td>
+                                        <td class="d-none"><span t-field="line.origin"/></td>
                                         <td class="text-right">
                                             <span t-field="line.quantity"/>
                                             <span t-field="line.uom_id"  groups="uom.group_uom"/>
                                         </td>
-                                        <td class="text-right hidden-xs">
+                                        <td class="text-right d-none d-md-table-cell">
                                             <span t-field="line.price_unit"/>
                                         </td>
-                                        <td t-if="display_discount" class="text-right hidden-xs">
+                                        <td t-if="display_discount" class="text-right d-none d-md-table-cell">
                                             <span t-field="line.discount"/>
                                         </td>
-                                        <td class="text-right hidden-xs">
+                                        <td class="text-right d-none d-md-table-cell">
                                             <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.invoice_line_tax_ids))"/>
                                         </td>
-                                        <td t-if="display_taxamount and type_is_out" class="text-right hidden-xs">
+                                        <td t-if="display_taxamount and type_is_out" class="text-right d-none d-md-table-cell">
                                             <t t-set="taxes"
                                                t-value="line.invoice_line_tax_ids.compute_all(line.price_unit, line.currency_id, line.quantity)"/>
                                             <t t-set="tax_amount"
@@ -156,8 +156,8 @@
 
                     <div class="clearfix">
                         <div id="total" class="row">
-                            <div t-attf-class="col-sm-4 pull-right #{'col-xs-4' if not type_html else ''}">
-                                <table class="table table-condensed" style="min-width: 250px;max-width: 400px;">
+                            <div t-attf-class="col-md-4 float-right #{'col-4' if not type_html else ''}">
+                                <table class="table table-sm" style="min-width: 250px;max-width: 400px;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                         <td><strong>Subtotal</strong></td>
                                         <td class="text-right">

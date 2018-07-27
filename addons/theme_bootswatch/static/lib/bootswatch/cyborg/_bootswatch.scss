@@ -1,238 +1,230 @@
-// Cyborg 3.3.7
+// Cyborg 4.1.3
 // Bootswatch
-// -----------------------------------------------------
+
+
+// Variables ===================================================================
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:400,700" !default;
-@import url(#{$web-font-path});
+@import url($web-font-path);
 
-// Navbar =====================================================================
+// Navbar ======================================================================
 
-// Buttons ====================================================================
+.navbar {
 
-// Typography =================================================================
+  &.bg-primary {
+    border: 1px solid $gray-700;
+  }
 
-.text-primary,
-.text-primary:hover {
-  color: $brand-primary;
+  &.bg-dark {
+    background-color: $body-bg !important;
+    border: 1px solid $gray-700;
+  }
+
+  &.bg-light {
+    background-color: $gray-500 !important;
+  }
+
+  &.fixed-top {
+    border-width: 0 0 1px 0;
+  }
+
+  &.fixed-bottom {
+    border-width: 1px 0 0 0;
+  }
+
 }
 
-.text-success,
-.text-success:hover {
-  color: $brand-success;
+// Buttons =====================================================================
+
+.btn {
+
+  &-warning,
+  &-warning:hover {
+    color: $white;
+  }
 }
 
-.text-danger,
-.text-danger:hover {
-  color: $brand-danger;
-}
+// Typography ==================================================================
 
-.text-warning,
-.text-warning:hover {
-  color: $brand-warning;
-}
+// Tables ======================================================================
 
-.text-info,
-.text-info:hover {
-  color: $brand-info;
-}
-
-.bg-success,
-.bg-info,
-.bg-warning,
-.bg-danger {
+table {
   color: #fff;
 }
 
-// Tables =====================================================================
-
-table,
 .table {
-  color: #fff;
 
-  a:not(.btn) {
-    color: #fff;
-    text-decoration: underline;
+  .thead-dark th {
+    color: $white;
   }
 
-  .dropdown-menu a {
-    text-decoration: none;
+  &-success {
+    &, > th, > td {
+      background-color: $success;
+    }
   }
 
-  .text-muted {
-    color: $text-muted;
-  }
-}
-
-.table-responsive > .table {
-  background-color: $table-bg;
-}
-
-// Forms ======================================================================
-
-.has-warning {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-warning;
+  &-info {
+    &, > th, > td {
+      background-color: $info;
+    }
   }
 
-  .form-control,
-  .form-control:focus,
-  .input-group-addon {
-    border-color: $brand-warning;
-  }
-}
-
-.has-error {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-danger;
+  &-danger {
+    &, > th, > td {
+      background-color: $danger;
+    }
   }
 
-  .form-control,
-  .form-control:focus,
-  .input-group-addon {
-    border-color: $brand-danger;
+  &-warning {
+    &, > th, > td {
+      background-color: $warning;
+    }
+  }
+
+  &-hover {
+
+    .table-success:hover {
+      &, > th, > td {
+        background-color: darken($success, 5%);
+      }
+    }
+
+    .table-info:hover {
+      &, > th, > td {
+        background-color: darken($info, 5%);
+      }
+    }
+
+    .table-danger:hover {
+      &, > th, > td {
+        background-color: darken($danger, 5%);
+      }
+    }
+
+    .table-warning:hover {
+      &, > th, > td {
+        background-color: darken($warning, 5%);
+      }
+    }
+
   }
 }
 
-.has-success {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-success;
-  }
-
-  .form-control,
-  .form-control:focus,
-  .input-group-addon {
-    border-color: $brand-success;
-  }
-}
+// Forms =======================================================================
 
 legend {
   color: #fff;
 }
 
-// Navs =======================================================================
+// Navs ========================================================================
 
 .nav-tabs,
-.nav-pills,
-.breadcrumb,
-.pager {
+.nav-pills {
+  .nav-link {
+    color: #fff;
 
+    &:hover {
+      background-color: $gray-700;
+    }
+
+    &.disabled,
+    &.disabled:hover {
+      background-color: transparent;
+      color: $nav-link-disabled-color;
+    }
+
+    &.active {
+      background-color: $primary;
+    }
+  }
+}
+
+.breadcrumb {
   a {
     color: #fff;
   }
 }
 
-// Indicators =================================================================
-
-.alert {
-
-  .alert-link,
-  a {
-    color: $alert-warning-text;
-    text-decoration: underline;
-  }
-
-  .close {
+.pagination {
+  a:hover {
     text-decoration: none;
   }
 }
 
-.close {
-  color: #fff;
-  text-decoration: none;
-  opacity: 0.4;
+// Indicators ==================================================================
 
-  &:hover,
-  &:focus {
+.alert {
+  border: none;
+  color: $white;
+
+  a,
+  .alert-link {
     color: #fff;
+    text-decoration: underline;
+  }
+
+  @each $color, $value in $theme-colors {
+    &-#{$color} {
+      background-color: $value;
+    }
+  }
+
+  &-light {
+    &,
+    & a,
+    & .alert-link {
+      color: $body-bg;
+    }
+  }
+}
+
+.badge {
+  &-warning {
+    color: $white;
+  }
+}
+
+.close {
+  opacity: 0.6;
+
+  &:hover {
     opacity: 1;
   }
 }
 
-// Progress bars ==============================================================
+// Progress bars ===============================================================
 
-// Containers =================================================================
+// Containers ==================================================================
 
-a.thumbnail:hover,
-a.thumbnail:focus,
-a.thumbnail.active {
-  border-color: $thumbnail-border;
-}
-
-a.list-group-item {
-
-  &.active,
-  &.active:hover,
-  &.active:focus {
-    border-color: $list-group-border;
-  }
-
-  &-success {
-    &.active {
-      background-color: $state-success-bg;
-    }
-
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-success-bg, 5%);
-    }
-  }
-
-  &-warning {
-    &.active {
-      background-color: $state-warning-bg;
-    }
-    
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-warning-bg, 5%);
-    }
-  }
-
-  &-danger {
-    &.active {
-      background-color: $state-danger-bg;
-    }
-    
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-danger-bg, 5%);
-    }
-  }
-}
-
-.jumbotron {
-
-  h1, h2, h3, h4, h5, h6 {
+.list-group-item {
+  &:hover {
+    background-color: $gray-700;
     color: #fff;
+  }
+
+  &-action {
+    color: $gray-500;
+
+    .list-group-item-heading {
+      color: $gray-500;
+    }
+  }
+
+  &:hover .list-group-item-heading {
+    color: #fff;
+  }
+}
+
+.card,
+.list-group-item {
+  h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+  }
+}
+
+.popover {
+  &-title {
+    border-bottom: none;
   }
 }

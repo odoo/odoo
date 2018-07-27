@@ -112,11 +112,11 @@ table.table_desc tr td {
     overflow: auto;
 }
 
-.s_comparisons .panel .list-group-item:not(.active) {
+.s_comparisons .card .list-group-item:not(.active) {
     color: #666;
 }
 .s_comparisons {
-    .panel small {
+    .card small {
         color: inherit;
     }
     .text-muted {
@@ -124,13 +124,13 @@ table.table_desc tr td {
     }
 }
 
-.s_faq_collapse .container .panel {
+.s_faq_collapse .container .card {
     background-color: inherit;
     border : 1px solid rgba(0, 0, 0, 0.15);
-    .panel-body {
+    .card-body {
         border-top: none;
-        border-bottom-left-radius: ($panel-border-radius - 1);
-        border-bottom-right-radius: ($panel-border-radius - 1);
+        border-bottom-left-radius: ($card-border-radius - 1);
+        border-bottom-right-radius: ($card-border-radius - 1);
     }
 }
 
@@ -149,37 +149,37 @@ table.table_desc tr td {
     &.o_margin_s {
         margin-bottom: 4px;
     }
-    &.o_margin_s.pull-right {
+    &.o_margin_s.float-right {
         margin-left: 8px;
     }
-    &.o_margin_s.pull-left {
+    &.o_margin_s.float-left {
         margin-right: 8px;
     }
     &.o_margin_m {
         margin-bottom: 8px;
     }
-    &.o_margin_m.pull-right {
+    &.o_margin_m.float-right {
         margin-left: 12px;
     }
-    &.o_margin_m.pull-left {
+    &.o_margin_m.float-left {
         margin-right: 12px;
     }
     &.o_margin_l {
         margin-bottom: 12px;
     }
-    &.o_margin_l.pull-right {
+    &.o_margin_l.float-right {
         margin-left: 16px;
     }
-    &.o_margin_l.pull-left {
+    &.o_margin_l.float-left {
         margin-right: 16px;
     }
     &.o_margin_xl {
         margin-bottom: 24px;
     }
-    &.o_margin_xl.pull-right {
+    &.o_margin_xl.float-right {
         margin-left: 32px;
     }
-    &.o_margin_xl.pull-left {
+    &.o_margin_xl.float-left {
         margin-right: 32px;
     }
 }
@@ -493,7 +493,7 @@ div.carousel {
 
 // Company Team
 .s_company_team {
-    @media (max-width: $screen-sm-max) {
+    @include media-breakpoint-down(md) {
         img {
             max-width: 50%;
         }
@@ -504,11 +504,10 @@ div.carousel {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 20;
-    background: $navbar-default-bg;
-    border-bottom: $navbar-default-border;
+    background: $light;
 
     margin-top: -200px;
-    @include o-transition(margin-top, 500ms);
+    transition: margin-top 500ms ease 0s;
 
     &.affixed {
         margin-top: 0px;
@@ -518,13 +517,13 @@ div.carousel {
     top: $o-navbar-height;
 }
 
-.navbar .o_extra_menu_items.open > ul {
+.navbar .o_extra_menu_items.show > ul {
     > li {
         + li {
-            border-top: 1px solid $gray-lighter;
+            border-top: 1px solid gray('200');
         }
         > a.dropdown-toggle {
-            background-color: $gray-lighter;
+            background-color: gray('200');
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }
@@ -547,9 +546,9 @@ div.carousel {
     .js_language_selector {
         display: inline-block;
     }
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         .row {
-            @include o-flex-display;
+            display: flex;
             > div {
                 margin: auto 0;
             }

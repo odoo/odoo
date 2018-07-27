@@ -1,129 +1,195 @@
-// Slate 3.3.7
+// Slate 4.1.3
 // Bootswatch
-// -----------------------------------------------------
+
+
+// Variables ===================================================================
 
 @mixin btn-shadow($color){
-  @include gradient-vertical-three-colors(lighten($color, 6%), $color, 60%, darken($color, 4%));
+  @include gradient-y-three-colors(lighten($color, 6%), $color, 60%, darken($color, 4%));
   filter: none;
 }
 
 @mixin btn-shadow-inverse($color){
-  @include gradient-vertical-three-colors(darken($color, 24%), darken($color, 18%), 40%, darken($color, 16%));
+  @include gradient-y-three-colors(darken($color, 18%), darken($color, 15%), 40%, darken($color, 13%));
   filter: none;
 }
 
-// Navbar =====================================================================
+// Navbar ======================================================================
 
 .navbar {
-  &-default,
-  &-inverse {
-    border: 1px solid rgba(0, 0, 0, 0.6);
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 
-    @media (min-width: $grid-float-breakpoint) {
-      .navbar-nav > li > a {
-        border-right: 1px solid rgba(0, 0, 0, 0.2);
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
+  .container {
+    padding: 0;
+  }
 
-        &:hover {
-          border-left-color: transparent;
-        }
-      }
+  .navbar-toggler {
+    border-color: rgba(0, 0, 0, 0.6);
+  }
 
-      .nav .open > a {
-        border-color: transparent;
-      }
+  &-fixed-top {
+    border-width: 0 0 1px 0;
+  }
 
-      .navbar-nav > li.active > a {
-        border-left-color: transparent;
-      }
+  &-fixed-bottom {
+    border-width: 1px 0 0 0;
+  }
 
-      .navbar-form {
-        margin-left: 5px;
-        margin-right: 5px;
-      }
+  .nav-link {
+    padding: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+
+    &:hover,
+    &:focus {
+      @include btn-shadow-inverse($gray-800);
+      border-left: 1px solid rgba(0, 0, 0, 0.2);
     }
   }
 
-  &-default {
-    @include btn-shadow($navbar-default-bg);
-
-    .navbar-nav > li > a {
-      &:hover {
-        @include btn-shadow-inverse($navbar-default-bg);
-      }
-    }
+  &-brand {
+    padding: 0.75rem 1rem calc(54px - 0.75rem - 30px);
+    margin-right: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
   }
 
-  &-inverse {
-    @include btn-shadow($navbar-inverse-bg);
+  .nav-item.active .nav-link {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+  }
 
-    .badge {
-      background-color: $navbar-inverse-link-active-bg;
-    }
+  &-nav .nav-item + .nav-item {
+    margin-left: 0;
+  }
 
-    .navbar-nav > li > a {
+  &.bg-light {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 
-      &:hover {
-        @include btn-shadow-inverse($navbar-inverse-bg);
+    .nav-link {
+      &:hover,
+      &:focus {
+        @include btn-shadow-inverse($gray-600);
+        border-left: 1px solid rgba(0, 0, 0, 0.2);
       }
     }
   }
 }
 
-// Buttons ====================================================================
+@media (max-width: 576px) {
+  .navbar-expand-sm {
+    .navbar-brand,
+    .nav-link {
+      border: none !important;
+    }
+  }
+}
 
-.btn,
-.btn:hover {
+@media (max-width: 768px) {
+  .navbar-expand-md {
+    .navbar-brand,
+    .nav-link {
+      border: none !important;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar-expand-lg {
+    .navbar-brand,
+    .nav-link {
+      border: none !important;
+    }
+  }
+}
+
+// Buttons =====================================================================
+
+.btn {
   border-color: rgba(0, 0, 0, 0.6);
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-}
 
-.btn-default {
-  @include btn-shadow($btn-default-bg);
+  &:not([disabled]):not(.disabled).active,
+  &.disabled {
+    border-color: rgba(0, 0, 0, 0.6);
+    box-shadow: none;
+  }
 
-  &:hover {
-    @include btn-shadow-inverse($btn-default-bg);
+  &:hover,
+  &:focus,
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled):active:hover,
+  &:not([disabled]):not(.disabled).active:hover {
+    border-color: rgba(0, 0, 0, 0.6);
   }
 }
 
 .btn-primary {
-  @include btn-shadow($btn-primary-bg);
+  @include btn-shadow($primary);
 
-  &:hover {
-    @include btn-shadow-inverse($btn-primary-bg);
+  &:not([disabled]):not(.disabled):hover,
+  &:not([disabled]):not(.disabled):focus,
+  &:not([disabled]):not(.disabled):active:hover,
+  &:not([disabled]):not(.disabled).active:hover {
+    @include btn-shadow-inverse($primary);
+  }
+}
+
+.btn-secondary {
+  @include btn-shadow($secondary);
+
+  &:not([disabled]):not(.disabled):hover,
+  &:not([disabled]):not(.disabled):focus,
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled).active {
+    @include btn-shadow-inverse($secondary);
   }
 }
 
 .btn-success {
-  @include btn-shadow($btn-success-bg);
+  @include btn-shadow($success);
+  color: $white;
 
-  &:hover {
-    @include btn-shadow-inverse($btn-success-bg);
+  &:not([disabled]):not(.disabled):hover,
+  &:not([disabled]):not(.disabled):focus,
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled).active {
+    @include btn-shadow-inverse($success);
   }
 }
 
 .btn-info {
-  @include btn-shadow($btn-info-bg);
+  @include btn-shadow($info);
+  color: $white;
 
-  &:hover {
-    @include btn-shadow-inverse($btn-info-bg);
+  &:not([disabled]):not(.disabled):hover,
+  &:not([disabled]):not(.disabled):focus,
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled).active {
+    @include btn-shadow-inverse($info);
   }
 }
 
 .btn-warning {
-  @include btn-shadow($btn-warning-bg);
+  @include btn-shadow($warning);
+  color: $white;
 
-  &:hover {
-    @include btn-shadow-inverse($btn-warning-bg);
+  &:not([disabled]):not(.disabled):hover,
+  &:not([disabled]):not(.disabled):focus,
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled).active {
+    @include btn-shadow-inverse($warning);
   }
 }
 
 .btn-danger {
-  @include btn-shadow($btn-danger-bg);
+  @include btn-shadow($danger);
 
-  &:hover {
-    @include btn-shadow-inverse($btn-danger-bg);
+  &:not([disabled]):not(.disabled):hover,
+  &:not([disabled]):not(.disabled):focus,
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled).active {
+    @include btn-shadow-inverse($danger);
   }
 }
 
@@ -132,255 +198,176 @@
   border-color: transparent;
 }
 
-// Typography =================================================================
+.btn-group,
+.btn-group-vertical {
+
+  .btn.active {
+    border-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+// Typography ==================================================================
 
 h1, h2, h3, h4, h5, h6 {
   text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
 
-.text-primary,
-.text-primary:hover {
-  color: $brand-primary;
-}
+// Tables ======================================================================
 
-.text-success,
-.text-success:hover {
-  color: $brand-success;
+.table {
+  &-success,
+  &-info,
+  &-warning,
+  &-danger {
+    color: #fff;
+  }
 }
-
-.text-danger,
-.text-danger:hover {
-  color: $brand-danger;
-}
-
-.text-warning,
-.text-warning:hover {
-  color: $brand-warning;
-}
-
-.text-info,
-.text-info:hover {
-  color: $brand-info;
-}
-
-// Tables =====================================================================
 
 .table {
 
-  .success,
-  .warning,
-  .danger,
-  .info {
-    color: #fff;
+  .thead-dark th {
+    color: $white;
   }
 
-  &-bordered tbody {
-
-    tr.success,
-    tr.warning,
-    tr.danger {
-
-      td,
-      &:hover td {
-        border-color: $table-border-color;
-      }
+  &-success {
+    &, > th, > td {
+      background-color: $success;
     }
   }
-}
 
-.table-responsive > .table {
-  background-color: $table-bg;
-}
-
-// Forms ======================================================================
-
-input,
-textarea {
-  color: $input-color;
-}
-
-.has-warning {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-warning;
+  &-info {
+    &, > th, > td {
+      background-color: $info;
+    }
   }
 
-  .form-control,
-  .form-control:focus {
-    border-color: $brand-warning;
+  &-danger {
+    &, > th, > td {
+      background-color: $danger;
+    }
   }
 
-  .input-group-addon {
-    border-color: $input-group-addon-border-color;
-  }
-}
-
-.has-error {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-danger;
+  &-warning {
+    &, > th, > td {
+      background-color: $warning;
+    }
   }
 
-  .form-control,
-  .form-control:focus {
-    border-color: $brand-danger;
-  }
+  &-hover {
 
-  .input-group-addon {
-    border-color: $input-group-addon-border-color;
+    .table-success:hover {
+      &, > th, > td {
+        background-color: darken($success, 5%);
+      }
+    }
+
+    .table-info:hover {
+      &, > th, > td {
+        background-color: darken($info, 5%);
+      }
+    }
+
+    .table-danger:hover {
+      &, > th, > td {
+        background-color: darken($danger, 5%);
+      }
+    }
+
+    .table-warning:hover {
+      &, > th, > td {
+        background-color: darken($warning, 5%);
+      }
+    }
+
   }
 }
 
-.has-success {
-  .help-block,
-  .control-label,
-  .radio,
-  .checkbox,
-  .radio-inline,
-  .checkbox-inline,
-  &.radio label,
-  &.checkbox label,
-  &.radio-inline label,
-  &.checkbox-inline label,
-  .form-control-feedback {
-    color: $brand-success;
-  }
-
-  .form-control,
-  .form-control:focus {
-    border-color: $brand-success;
-  }
-
-  .input-group-addon {
-    border-color: $input-group-addon-border-color;
-  }
-}
+// Forms =======================================================================
 
 legend {
   color: #fff;
 }
 
 .input-group-addon {
-  @include btn-shadow($btn-default-bg);
+  @include btn-shadow($secondary);
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  color: $btn-default-color;
+  color: $white;
 }
 
-// Navs =======================================================================
+// Navs ========================================================================
 
-.nav {
+.nav-tabs {
 
-  .open > a,
-  .open > a:hover,
-  .open > a:focus {
-    border-color: rgba(0, 0, 0, 0.6);
+  .nav-link,
+  .nav-link:hover {
+    color: #fff;
   }
-
 }
 
 .nav-pills {
 
-  & > li > a {
-    @include btn-shadow($btn-default-bg);
+  .nav-link {
+    @include btn-shadow($gray-800);
     border: 1px solid rgba(0, 0, 0, 0.6);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    color: #fff;
 
     &:hover {
-      @include btn-shadow-inverse($btn-default-bg);
+      @include btn-shadow-inverse($gray-800);
       border: 1px solid rgba(0, 0, 0, 0.6);
     }
   }
 
-  & > li.active > a,
-  & > li.active > a:hover {
-    background-color: none;
-    @include btn-shadow-inverse($btn-default-bg);
+  .nav-link.active,
+  .nav-link:hover {
+    background-color: transparent;
+    @include btn-shadow-inverse($gray-800);
     border: 1px solid rgba(0, 0, 0, 0.6);
   }
 
-  & > li.disabled > a,
-  & > li.disabled > a:hover {
-    @include btn-shadow($btn-default-bg);
+  .nav-link.disabled,
+  .nav-link.disabled:hover {
+    @include btn-shadow($gray-800);
+    color: $nav-link-disabled-color;
   }
 }
 
 .pagination {
 
-  & > li > a,
-  & > li > span {
+  .page-link {
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-    @include btn-shadow($btn-default-bg);
+    @include btn-shadow($gray-800);
 
     &:hover {
-      @include btn-shadow-inverse($btn-default-bg);
+      @include btn-shadow-inverse($gray-800);
+      text-decoration: none;
     }
   }
 
-  & > li.active > a,
-  & > li.active > span {
-    @include btn-shadow-inverse($btn-default-bg);
+  .page-item.active .page-link {
+    @include btn-shadow-inverse($gray-800);
   }
 
-  & > li.disabled > a,
-  & > li.disabled > a:hover,
-  & > li.disabled > span,
-  & > li.disabled > span:hover {
-    background-color: transparent;
-    @include btn-shadow($btn-default-bg);
-  }
-}
-
-.pager {
-
-  & > li > a {
-    @include btn-shadow($btn-default-bg);
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-
-    &:hover {
-      @include btn-shadow-inverse($btn-default-bg);
-    }
-  }
-
-  & > li.disabled > a,
-  & > li.disabled > a:hover {
-    background-color: transparent;
-    @include btn-shadow($btn-default-bg);
+  .page-item.disabled .page-link {
+    @include btn-shadow($gray-800);
   }
 }
 
 .breadcrumb {
   border: 1px solid rgba(0, 0, 0, 0.6);
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  @include btn-shadow($btn-default-bg);
+  background-color: transparent;
+  @include btn-shadow($gray-800);
+
+  a,
+  a:hover {
+    color: #fff;
+  }
 }
 
-// Indicators =================================================================
+// Indicators ==================================================================
 
 .alert {
-
-  .alert-link,
-  a {
-    color: #fff;
-    text-decoration: underline;
-  }
 
   .close {
     color: $close-color;
@@ -388,69 +375,51 @@ legend {
   }
 }
 
-// Progress bars ==============================================================
+.alert {
+  border: none;
+  color: $white;
 
-// Containers =================================================================
-
-a.thumbnail:hover,
-a.thumbnail:focus,
-a.thumbnail.active {
-  border-color: $thumbnail-border;
-}
-
-a.list-group-item {
-
-  &.active,
-  &.active:hover,
-  &.active:focus {
-    border-color: $list-group-border;
+  a,
+  .alert-link {
+    color: #fff;
+    text-decoration: underline;
   }
 
-  &-success {
-    &.active {
-      background-color: $state-success-bg;
-    }
-
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-success-bg, 5%);
+  @each $color, $value in $theme-colors {
+    &-#{$color} {
+      background-color: $value;
     }
   }
 
-  &-warning {
-    &.active {
-      background-color: $state-warning-bg;
-    }
-    
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-warning-bg, 5%);
-    }
-  }
-
-  &-danger {
-    &.active {
-      background-color: $state-danger-bg;
-    }
-    
-    &.active:hover,
-    &.active:focus {
-      background-color: darken($state-danger-bg, 5%);
+  &-light {
+    &,
+    & a:not(.btn),
+    & .alert-link {
+      color: $body-bg;
     }
   }
 }
+
+.badge {
+
+  &-success,
+  &-warning,
+  &-info {
+    color: $white;
+  }
+}
+
+// Progress bars ===============================================================
+
+// Containers ==================================================================
 
 .jumbotron {
   border: 1px solid rgba(0, 0, 0, 0.6);
 }
 
-.panel-primary,
-.panel-success,
-.panel-danger,
-.panel-warning,
-.panel-info {
+.list-group {
 
-  .panel-heading {
-    border-color: #000;
+  &-item:hover {
+    background-color: darken($gray-900, 5%);
   }
 }

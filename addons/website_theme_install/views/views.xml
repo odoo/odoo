@@ -21,20 +21,20 @@
 
                         <div class="o_theme_preview_top bg-white mb4">
                             <div class="o_browser_bar"/>
-                            <i states="installed" class="text-center bg-white text-success img-circle fa fa-check-circle" role="img" aria-label="Installed" title="Installed"/>
+                            <i states="installed" class="text-center bg-white text-success rounded-circle fa fa-check-circle" role="img" aria-label="Installed" title="Installed"/>
                             <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
                             <div states="uninstalled" class="o_button_area">
                                 <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
                                 <hr t-if="record.url.value"/>
-                                <a role="button" t-if="record.url.value" class="btn btn-default" t-att-href="record.url.value" target="_blank">Live Preview</a>
+                                <a role="button" t-if="record.url.value" class="btn btn-secondary" t-att-href="record.url.value" target="_blank">Live Preview</a>
                             </div>
                         </div>
                         <div class="o_theme_preview_bottom clearfix">
-                            <h5 t-if="record.display_name.value" class="text-uppercase pull-left">
-                                <img class="pull-left mr4"  t-att-src="record.icon.value" height="16" width="16" alt="Theme preview"/>
+                            <h5 t-if="record.display_name.value" class="text-uppercase float-left">
+                                <img class="float-left mr4"  t-att-src="record.icon.value" height="16" width="16" alt="Theme preview"/>
                                 <b><t t-esc="record.display_name.value.replace(('Theme'), '').replace(('theme'), '')"/></b>
                             </h5>
-                            <h6 t-if="record.category_id.value" class="text-muted pull-right">
+                            <h6 t-if="record.category_id.value" class="text-muted float-right">
                                 <b><t t-esc="record.category_id.value"/></b>
                             </h6>
                         </div>

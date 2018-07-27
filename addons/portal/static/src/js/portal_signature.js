@@ -61,8 +61,8 @@ odoo.define('portal.signature_form', function (require){
             var signature = self.$("#o_portal_signature").jSignature('getData', 'image');
             var is_empty = signature ? this.empty_sign[1] === signature[1] : true;
 
-            this.$('#o_portal_sign_name').parent().toggleClass('has-error', !partner_name);
-            this.$('#o_portal_sign_draw').toggleClass('panel-danger', is_empty).toggleClass('panel-default', !is_empty);
+            this.$('#o_portal_sign_name').parent().toggleClass('o_has_error', !partner_name).find('.form-control, .custom-select').toggleClass('is-invalid', !partner_name);
+            this.$('#o_portal_sign_draw').toggleClass('bg-danger text-white', is_empty);
             if (is_empty || ! partner_name) {
                 return false;
             }

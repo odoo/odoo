@@ -188,7 +188,7 @@ options.registry.carousel = options.Class.extend({
         var cycle = this.$inner.find('.item').length;
         var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
         var index = $active.index();
-        this.$('.carousel-control, .carousel-indicators').removeClass('hidden');
+        this.$('.carousel-control, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
         var $clone = this.$('.item:first').clone(true);
         $clone.removeClass('active').insertAfter($active);
@@ -223,7 +223,7 @@ options.registry.carousel = options.Class.extend({
                 self._rebindEvents();
                 self.remove_process = false;
                 if (cycle === 1) {
-                    self.$target.find('.carousel-control, .carousel-indicators').addClass('hidden');
+                    self.$target.find('.carousel-control, .carousel-indicators').addClass('d-none');
                 }
             });
             _.defer(function () {
@@ -248,8 +248,8 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     _setActive: function () {
-        this.$el.find('li[data-interval]').removeClass('active')
-            .filter('li[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
+        this.$el.find('[data-interval]').removeClass('active')
+            .filter('[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
     },
     /**
      * Rebinds carousel events on indicators.
@@ -279,7 +279,7 @@ options.registry.sizing_x = options.registry.sizing.extend({
         // Below condition is added to remove offset of target element only
         // and not its children to avoid design alteration of a container/block.
         if (options.isCurrent) {
-            var _class = this.$target.attr('class').replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
+            var _class = this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-)([0-9-]+)/g, '');
             this.$target.attr('class', _class);
         }
     },
@@ -296,8 +296,8 @@ options.registry.sizing_x = options.registry.sizing.extend({
         var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         this.grid = {
-            e: [_.map(gridE, function (v) { return 'col-md-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
-            w: [_.map(gridW, function (v) { return 'col-md-offset-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
+            e: [_.map(gridE, function (v) { return 'col-lg-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
+            w: [_.map(gridW, function (v) { return 'offset-lg-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
         };
         return this.grid;
     },
@@ -307,9 +307,9 @@ options.registry.sizing_x = options.registry.sizing.extend({
     _onResize: function (compass, beginClass, current) {
         if (compass === 'w') {
             // don't change the right border position when we change the offset (replace col size)
-            var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
+            var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
+            var beginOffset = Number(beginClass.match(/offset-lg-([0-9-]+)|$/)[1] || beginClass.match(/offset-xl-([0-9-]+)|$/)[1] || 0);
+            var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
             if (offset < 0) {
                 offset = 0;
             }
@@ -318,11 +318,11 @@ options.registry.sizing_x = options.registry.sizing.extend({
                 colSize = 1;
                 offset = beginOffset + beginCol - 1;
             }
-            this.$target.attr('class',this.$target.attr('class').replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
+            this.$target.attr('class',this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
 
-            this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
+            this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
             if (offset > 0) {
-                this.$target.addClass('col-md-offset-' + offset);
+                this.$target.addClass('offset-lg-' + offset);
             }
         }
         this._super.apply(this, arguments);
@@ -340,7 +340,7 @@ options.registry.layout_column = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    selectCount: function (previewMode, value, $li) {
+    selectCount: function (previewMode, value, $opt) {
         this._updateColumnCount(value - this.$target.children().length);
     },
 
@@ -387,14 +387,14 @@ options.registry.layout_column = options.Class.extend({
         var colsLength = $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
-        var colClass = 'col-md-' + colSize;
+        var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\bcol-md-(offset-)?\d+\b/g, ''));
+            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
             $column.addClass(colClass);
         });
         if (colOffset) {
-            $columns.first().addClass('col-md-offset-' + colOffset);
+            $columns.first().addClass('offset-lg-' + colOffset);
         }
     },
     /**
@@ -402,8 +402,8 @@ options.registry.layout_column = options.Class.extend({
      */
     _setActive: function () {
         this._super.apply(this, arguments);
-        this.$el.find('li[data-select-count]').removeClass('active')
-            .filter('li[data-select-count=' + this.$target.children().length + ']').addClass('active');
+        this.$el.find('[data-select-count]').removeClass('active')
+            .filter('[data-select-count=' + this.$target.children().length + ']').addClass('active');
     },
 });
 
@@ -555,7 +555,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
         this.trigger_up('animation_stop_demand', {
             $target: this.$previewPage,
         });
-        this.$('.facebook_page_warning').toggleClass('hidden', toggle);
+        this.$('.facebook_page_warning').toggleClass('d-none', toggle);
         this.$footer.find('.btn-primary').prop('disabled', !toggle);
     },
 
@@ -758,7 +758,7 @@ options.registry.collapse = options.Class.extend({
      */
     onClone: function () {
         this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.panel-collapse').removeAttr('id');
+        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -766,9 +766,9 @@ options.registry.collapse = options.Class.extend({
      */
     onMove: function () {
         this._createIDs();
-        var $panel = this.$target.find('.panel-collapse').removeData('bs.collapse');
+        var $panel = this.$target.find('.collapse').removeData('bs.collapse');
         if ($panel.attr('aria-expanded') === 'true') {
-            $panel.closest('.panel-group').find('.panel-collapse[aria-expanded="true"]')
+            $panel.closest('.accordion').find('.collapse[aria-expanded="true"]')
                 .filter(function () {return this !== $panel[0];})
                 .collapse('hide')
                 .one('hidden.bs.collapse', function () {
@@ -791,7 +791,7 @@ options.registry.collapse = options.Class.extend({
         var $tab = this.$target.find('[data-toggle="collapse"]');
 
         // link to the parent group
-        var $tablist = this.$target.closest('.panel-group');
+        var $tablist = this.$target.closest('.accordion');
         var tablist_id = $tablist.attr('id');
         if (!tablist_id) {
             tablist_id = 'myCollapse' + time;
@@ -878,7 +878,7 @@ options.registry.gallery = options.Class.extend({
         dialog.on('save', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 $('<img/>', {
-                    class: 'img img-responsive',
+                    class: 'img img-fluid',
                     src: attachments[i].src,
                     'data-index': ++index,
                 }).appendTo($container);
@@ -907,7 +907,7 @@ options.registry.gallery = options.Class.extend({
         var imgs = this._getImages();
         var $row = $('<div/>', {class: 'row'});
         var columns = this._getColumns();
-        var colClass = 'col-md-' + (12 / columns);
+        var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
         _.each(imgs, function (img, index) {
@@ -934,7 +934,7 @@ options.registry.gallery = options.Class.extend({
     masonry: function () {
         var imgs = this._getImages();
         var columns = this._getColumns();
-        var colClass = 'col-md-' + (12 / columns);
+        var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
 
         var $row = $('<div/>', {class: 'row'});
@@ -968,7 +968,7 @@ options.registry.gallery = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    mode: function (previewMode, value, $li) {
+    mode: function (previewMode, value, $opt) {
         this.$target.css('height', '');
         this[value]();
         this.$target
@@ -985,9 +985,9 @@ options.registry.gallery = options.Class.extend({
         this._replaceContent($row);
 
         _.each(imgs, function (img) {
-            var wrapClass = 'col-md-3';
+            var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
-                wrapClass = 'col-md-6';
+                wrapClass = 'col-lg-6';
             }
             var $wrap = $('<div/>', {class: wrapClass}).append(img);
             $row.append($wrap);
@@ -1017,7 +1017,7 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with a "slideshow" layout.
      */
     slideshow: function () {
-        var imgStyle = this.$el.find('li.active[data-styling]').data('styling') || '';
+        var imgStyle = this.$el.find('.active[data-styling]').data('styling') || '';
         var urls = _.map(this._getImages(), function (img) {
             return $(img).attr('src');
         });
@@ -1050,8 +1050,8 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     styling: function (previewMode, value) {
-        var classes = _.map(this.$el.find('li[data-styling]'), function (li) {
-            return $(li).data('styling');
+        var classes = _.map(this.$el.find('[data-styling]'), function (el) {
+            return $(el).data('styling');
         }).join(' ');
         this.$('img').removeClass(classes).addClass(value);
     },
@@ -1163,8 +1163,8 @@ options.registry.gallery = options.Class.extend({
             .removeClass('active')
             .filter('[data-styling="' + classes.join('"], [data-styling="') + '"]').addClass('active');
 
-        this.$el.find('li[data-interval]').removeClass('active')
-            .filter('li[data-interval='+this.$target.find('.carousel:first').attr('data-interval')+']')
+        this.$el.find('[data-interval]').removeClass('active')
+            .filter('[data-interval='+this.$target.find('.carousel:first').attr('data-interval')+']')
             .addClass('active');
 
         var interval = this.$target.find('.carousel:first').attr('data-interval');

@@ -43,7 +43,7 @@ if (!_.contains(urlHistory, page)) {
 }
 
 var LivechatButton = Widget.extend({
-    className:'openerp o_livechat_button hidden-print',
+    className:'openerp o_livechat_button d-print-none',
     events: {
         'click': '_openChat'
     },

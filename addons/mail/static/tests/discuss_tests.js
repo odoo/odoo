@@ -211,7 +211,7 @@ QUnit.test('@ mention in channel', function (assert) {
         fetchListenersDef
             .then(concurrency.delay.bind(concurrency, 0))
             .then(function () {
-                assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.open').length, 1,
+                assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.show').length, 1,
                 "dropup menu for partner mentions should be open");
 
                 var $mentionPropositions = discuss.$('.o_mention_proposition');

@@ -10,7 +10,7 @@
                 <!--
                 Show the automatic invoices setting in sales settings.
                 -->
-                <div class="col-xs-12 col-md-6 o_setting_box"
+                <div class="col-12 col-lg-6 o_setting_box"
                      attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), '&amp;', ('portal_confirmation_pay', '=', False), ('module_website_quote', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="automatic_invoice" nolabel="1"/>
@@ -26,7 +26,7 @@
             <div id="webmaster_settings" position="after">
                 <h2>Product Catalog</h2>
                 <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="product_attributes_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="product_attributes_setting">
                         <div class="o_setting_left_pane">
                             <field name="group_product_variant"/>
                         </div>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="digital_content_setting" title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through. To do so, attach some files to a product using the new Files button and publish them.">
+                    <div class="col-12 col-lg-6 o_setting_box" id="digital_content_setting" title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through. To do so, attach some files to a product using the new Files button and publish them.">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_digital"/>
                         </div>
@@ -57,7 +57,7 @@
 
                 <h2>Customer Experience</h2>
                 <div class="row mt16 o_settings_container" id="sale_customer_experience_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="whishlist_option_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="whishlist_option_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_wishlist"/>
                         </div>
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="comparator_option_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="comparator_option_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_comparison"/>
                         </div>
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="sale_option_setting" title="Select optional products from the configuration form of your main products (in Sales tab).">
+                    <div class="col-12 col-lg-6 o_setting_box" id="sale_option_setting" title="Select optional products from the configuration form of your main products (in Sales tab).">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_options"/>
                         </div>
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="product_availability_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="product_availability_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_stock"/>
                         </div>
@@ -106,7 +106,7 @@
                 <h2>Taxes</h2>
                 <field name="company_id" invisible="1"/>
                 <div class="row mt16 o_settings_container" id="website_taxes_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" title="This tax is applied to any new product created in the catalog.">
+                    <div class="col-12 col-lg-6 o_setting_box" title="This tax is applied to any new product created in the catalog.">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Default Sales Tax</span>
                             <div class="text-muted">
@@ -122,7 +122,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="website_tax_inclusion_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="website_tax_inclusion_setting">
                         <div class="o_setting_right_pane">
                             <label string="Product Prices" for="show_line_subtotals_tax_selection"/>
                             <div class="text-muted">
@@ -137,7 +137,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="website_rounding_method" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
+                    <div class="col-12 col-lg-6 o_setting_box" id="website_rounding_method" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Rounding Method</span>
                             <div class="text-muted">
@@ -148,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="website_eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
+                    <div class="col-12 col-lg-6 o_setting_box" id="website_eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
                         <div class="o_setting_left_pane">
                             <field name="module_l10n_eu_service"/>
                         </div>
@@ -163,7 +163,7 @@
 
                 <h2>Pricing</h2>
                 <div class="row mt16 o_settings_container" id="sale_pricing_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="pricelists_setting"  title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists.">
+                    <div class="col-12 col-lg-6 o_setting_box" id="pricelists_setting"  title="With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists.">
                         <div class="o_setting_left_pane">
                             <field name="multi_sales_price"/>
                         </div>
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="discount_setting" title="Once activated, discounted prices can be applied from Pricelists setup form (Discount policy field).">
+                    <div class="col-12 col-lg-6 o_setting_box" id="discount_setting" title="Once activated, discounted prices can be applied from Pricelists setup form (Discount policy field).">
                         <div class="o_setting_left_pane">
                             <field name="group_discount_per_so_line"/>
                         </div>
@@ -194,7 +194,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="multicurrencies_setting" title="This adds the choice of a currency on pricelists.">
+                    <div class="col-12 col-lg-6 o_setting_box" id="multicurrencies_setting" title="This adds the choice of a currency on pricelists.">
                         <div class="o_setting_left_pane">
                             <field name="group_multi_currency"/>
                         </div>
@@ -210,7 +210,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
+                    <div class="col-12 col-lg-6 o_setting_box" title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
                         <div class="o_setting_left_pane">
                             <field name="module_sale_coupon" widget="upgrade_boolean"/>
                         </div>
@@ -225,7 +225,7 @@
 
                 <h2>Shipping</h2>
                 <div class="row mt16 o_settings_container" id="sale_shipping_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_address_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_address_setting">
                         <div class="o_setting_left_pane">
                             <field name="group_delivery_invoice_address"/>
                         </div>
@@ -236,7 +236,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="delivery_method_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="delivery_method_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_delivery"/>
                         </div>
@@ -247,7 +247,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="ups_provider_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="ups_provider_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_delivery_ups" widget="upgrade_boolean"/>
                         </div>
@@ -258,7 +258,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_provider_dhl_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_dhl_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_delivery_dhl" widget="upgrade_boolean"/>
                         </div>
@@ -269,7 +269,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_provider_fedex_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_fedex_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_delivery_fedex" widget="upgrade_boolean"/>
                         </div>
@@ -280,7 +280,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_provider_usps_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_usps_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_delivery_usps" widget="upgrade_boolean"/>
                         </div>
@@ -291,7 +291,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_provider_bpost_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_bpost_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_delivery_bpost" widget="upgrade_boolean"/>
                         </div>
@@ -302,7 +302,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_provider_easypost_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipping_provider_easypost_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_delivery_easypost" widget="upgrade_boolean"/>
                         </div>
@@ -319,7 +319,7 @@
                 <div attrs="{'invisible': [('module_account_invoicing', '=', False)]}">
                     <h2>Invoicing</h2>
                     <div class="row mt16 o_settings_container" id="sale_invoicing_settings">
-                       <div class="col-xs-12 col-md-6 o_setting_box" id="invoicing_policy_setting" title="The mode selected here applies as invoicing policy of any new product created but not of products already existing.">
+                       <div class="col-12 col-lg-6 o_setting_box" id="invoicing_policy_setting" title="The mode selected here applies as invoicing policy of any new product created but not of products already existing.">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Invoicing Policy</span>
                                 <div class="text-muted">
@@ -332,7 +332,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('default_invoice_policy', '=', 'delivery')]}">
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('default_invoice_policy', '=', 'delivery')]}">
                             <div class="o_setting_left_pane">
                                 <field name="automatic_invoice" nolabel="1"/>
                             </div>
@@ -348,7 +348,7 @@
 
                 <h2>Orders</h2>
                 <div class="row mt16 o_settings_container" id="sale_checkout_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="abandoned_carts_setting" title="Send a recovery email to authenticated shoppers">
+                    <div class="col-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Send a recovery email to authenticated shoppers">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Email for Abandoned carts</span>
@@ -357,19 +357,19 @@
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-md-3 o_light_label"/>
+                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-3 o_light_label"/>
                                     <field name="cart_recovery_mail_template" class="oe_inline"/>
                                 </div>
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                  <label for="cart_abandoned_delay" string="Cart are considered abandoned after" class="col-md-6 o_light_label"/>
-                                  <span class="col-md-3"><field name="cart_abandoned_delay"/>hours</span>
+                                  <label for="cart_abandoned_delay" string="Cart are considered abandoned after" class="col-lg-6 o_light_label"/>
+                                  <span class="col-lg-3"><field name="cart_abandoned_delay"/>hours</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="checkout_assignation_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="checkout_assignation_setting">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Assignation</span>
                             <div class="text-muted">
@@ -377,11 +377,11 @@
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <label class="o_light_label col-md-3" string="Sales Team" for="salesteam_id"/>
+                                    <label class="o_light_label col-lg-3" string="Sales Team" for="salesteam_id"/>
                                     <field name="salesteam_id" context="{'default_team_type': 'website'}"/>
                                 </div>
                                 <div class="row">
-                                    <label class="o_light_label col-md-3" for="salesperson_id"/>
+                                    <label class="o_light_label col-lg-3" for="salesperson_id"/>
                                     <field name="salesperson_id"/>
                                 </div>
                             </div>

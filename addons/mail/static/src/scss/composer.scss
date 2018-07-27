@@ -14,11 +14,11 @@
 
 .o_thread_composer {
     position: relative;
-    @include o-flex(0, 0, auto);
-    @include o-flex-display;
+    flex: 0 0 auto;
+    display: flex;
     margin: 1px 0;
     border-top: none;
-    background: $gray-lighter;
+    background: theme-color('light');
 
     .o_composer, .o_composer_subject {
         position: relative;
@@ -30,11 +30,11 @@
     }
 
     .o_composer_subject {
-        @include o-flex-display;
+        display: flex;
         padding-bottom: 5px;
 
         > input {
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             padding: 5px;
             margin-right: 30px;
         }
@@ -45,7 +45,7 @@
             width: 100%;
             resize: none;
         }
-        .o_composer_mention_dropdown .o_mention_proposition > a {
+        .o_composer_mention_dropdown .o_mention_proposition {
             @include o-text-overflow;
             width: 100%;
             padding: 3px 15px;
@@ -60,24 +60,24 @@
         textarea {
             resize: none;
         }
-        .btn-icon {
+        .btn.fa {
             @include o-hover-opacity($default-opacity: 0.8, $hover-opacity: 1);
             border: none;
         }
         .o_composer_button_full_composer {
             @include o-position-absolute(auto, 0);
         }
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             .o_composer_button_send {
-                color: $o-brand-optional;
+                color: $o-brand-primary;
             }
         }
 
         .o_mail_emoji_container {
             padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
-            border: 1px solid $gray-lighter-dark;
+            border: 1px solid gray('300');
             border-width: 1px 0 0 0;
-            background-color: $gray-lighter;
+            background-color: theme-color('light');
 
             .o_mail_emoji {
                 margin: $o-mail-chatter-gap 0 0 $o-mail-chatter-gap;
@@ -92,7 +92,7 @@
     &:not(.o_chat_mini_composer) {
         padding:  $o-mail-thread-avatar-size*0.5;
         padding-left: $grid-gutter-width*0.5 + $o-mail-thread-avatar-size + $o-mail-chatter-gap;
-        border: 1px solid $gray-lighter-dark;
+        border: 1px solid gray('300');
         border-top: none;
 
         .o_chatter_avatar {
@@ -100,7 +100,7 @@
         }
 
         .o_chatter_composer_info, .o_composer_suggested_partners {
-            @include o-flex(0, 0, 100%);
+            flex: 0 0 100%;
             margin-bottom: $o-mail-chatter-gap*0.5;
         }
 
@@ -120,7 +120,7 @@
         }
 
         .o_composer, .o_composer_subject {
-            border: 1px solid $gray-lighter-dark;
+            border: 1px solid gray('300');
 
             textarea, input {
                 padding: 0 0 $o-mail-chatter-gap;
@@ -133,14 +133,14 @@
         }
 
         .o_chatter_composer_tools {
-            border-top: 1px solid $gray-lighter-dark;
+            border-top: 1px solid gray('300');
         }
 
         &:not(.o_chat_inline_composer) {
-            @include o-flex-flow(row, wrap);
+            flex-flow: row wrap;
 
             .o_composer_container, .o_composer_button_send {
-                @include o-flex(1, 0, 100%);
+                flex: 1 0 100%;
             }
             .o_composer, .o_composer_subject {
                 padding: $o-mail-chatter-gap $o-mail-chatter-gap 0;
@@ -152,7 +152,7 @@
 
         &.o_chat_inline_composer {
             .o_composer_container {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
             }
             .o_composer {
                 padding: $o-mail-chatter-gap $o-mail-chatter-gap 0 $o-mail-chatter-gap;
@@ -165,33 +165,33 @@
                 }
             }
             .o_composer_input {
-                @include o-flex-display();
-                @include o-flex-flow(row, wrap);
+                display: flex;
+                flex-flow: row wrap;
             }
             .o_composer_text_field {
-                @include o-flex(1, 1, 50%);
+                flex: 1 1 50%;
                 margin: 0;
                 padding: 0;
             }
             .o_chatter_composer_tools {
-                @include o-flex(0, 1, auto);
+                flex: 0 1 auto;
             }
             .o_composer_attachments_list {
-                @include o-flex(1, 0, 100%);
+                flex: 1 0 100%;
             }
 
             .o_chatter_composer_tools {
                 border: none;
-                border-left: 1px solid $gray-lighter-dark;
+                border-left: 1px solid gray('300');
                 padding-left: $o-mail-chatter-gap*0.5;
-                @include o-transform(translateY(-$o-mail-chatter-gap*0.5));
+                transform: translateY(-$o-mail-chatter-gap*0.5);
             }
 
             .o_composer_button_send {
                 border-radius: 0 3px 3px 0;
                 // Make the button appear as the same size as the subject input
-                padding: 10px $padding-base-horizontal;
-                border: 1px solid darken($o-brand-optional, 5%);
+                padding: 10px $input-btn-padding-x;
+                border: 1px solid darken($o-brand-primary, 5%);
                 border-left-width: 0;
             }
         }
@@ -200,7 +200,7 @@
     // Mini-composer enabled
     &.o_chat_mini_composer {
         .o_composer_container {
-            border-top: 1px solid $gray-lighter-dark;
+            border-top: 1px solid gray('300');
             width: 100%;
         }
         .o_composer {
@@ -210,17 +210,17 @@
             }
         }
         .o_composer_input {
-            @include o-flex-display();
-            @include o-flex-flow(row, nowrap);
+            display: flex;
+            flex-flow: row nowrap;
 
             textarea.o_composer_text_field {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
             }
 
             .o_chatter_composer_tools {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 .o_composer_button_send {
                     display: inline-block;
                 }
@@ -255,8 +255,8 @@ $o-mail-attachment-margin: 5px;
 
 .o_attachments_list, .o_attachments_previews {
     margin: 0 (-$o-mail-attachment-margin) 0;
-    @include o-flex-display;
-    @include o-flex-flow(row, wrap);
+    display: flex;
+    flex-flow: row wrap;
 }
 
 .o_attachment {
@@ -264,10 +264,10 @@ $o-mail-attachment-margin: 5px;
     width: 100%;
     padding: $o-mail-attachment-margin;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width: 50%;
     }
-    @media (min-width: $screen-md-min) {
+    @include media-breakpoint-up(lg) {
         width: 25%;
     }
 
@@ -311,22 +311,22 @@ $o-mail-attachment-margin: 5px;
 
     .o_attachment_uploaded, .o_attachment_delete {
         @include o-position-absolute(0, 0, 0, $left: auto);
-        @include o-flex-display();
-        @include o-align-items(center);
-        @include o-justify-content(center);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 45px;
     }
 
     .o_attachment_delete {
-        background: desaturate($brand-primary, 50%);
+        background: desaturate(theme-color('primary'), 50%);
         color: white;
         cursor: pointer;
         font-size: 20px;
-        @include o-transform(translateX(100%));
-        @include o-transition(all, 0.3s);
+        transform: translateX(100%);
+        transition: all 0.3s ease 0s;
 
         &:hover {
-            background: $brand-primary;
+            background: theme-color('primary');
         }
     }
 
@@ -349,8 +349,8 @@ $o-mail-attachment-margin: 5px;
     }
 
     &:hover .o_attachment_delete {
-        @include o-transition(all, 0.1s);
-        @include o-transform(translateX(0));
+        transition: all 0.1s ease 0s;
+        transform: translateX(0);
     }
 }
 
@@ -358,20 +358,20 @@ $o-mail-attachment-margin: 5px;
     > .o_attachment {
         width: 50%;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             width: percentage(1/3);
         }
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             width: percentage(1/4);
         }
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             width: percentage(1/6);
         }
 
         .o_attachment_wrap {
             padding: 0;
             border-radius: 2px;
-            border: 1px solid $gray-lighter-darker;
+            border: 1px solid gray('400');
         }
 
         .o_image_box {
@@ -382,27 +382,27 @@ $o-mail-attachment-margin: 5px;
                 @include o-position-absolute(0, 0, 0, 0);
                 background-size: cover;
                 background-position: center;
-                @include o-transform(scale(1.05));
-                @include o-transition(all, 0.3s);
+                transform: scale(1.05);
+                transition: all 0.3s ease 0s;
             }
 
             &:hover .o_attachment_image {
-                @include o-transform(scale(1));
+                transform: scale(1);
             }
         }
 
         .o_image_overlay {
             @include o-position-absolute($top: 0, $left: 0, $right:0, $bottom:0);
             @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
-            @include o-linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
-            @include o-transition(all, 0.3s);
+            background-image: linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
+            transition: all 0.3s ease 0s;
             padding: 10px;
 
             .o_attachment_title {
                 @include o-position-absolute($bottom: 7px);
                 width: 80%;
                 @include o-text-overflow(inline-block);
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
             }
 
             .o_attachment_download {
@@ -415,7 +415,7 @@ $o-mail-attachment-margin: 5px;
 
 @mixin o-viewer-black-btn {
     background-color: rgba(black, 0.4);
-    color: rgba($gray-lighter, 0.7);
+    color: rgba(theme-color('light'), 0.7);
 
     &:hover {
         background-color: rgba(black, 0.6);
@@ -423,7 +423,7 @@ $o-mail-attachment-margin: 5px;
     }
 
     &.disabled {
-        color: $gray-light;
+        color: gray('600');
         background: none;
     }
 }
@@ -444,12 +444,12 @@ $o-mail-attachment-margin: 5px;
             color: #FFFFFF;
 
             a {
-                @include o-hover-text-color(rgba($gray-lighter, 0.6), white);
+                @include o-hover-text-color(rgba(theme-color('light'), 0.6), white);
             }
 
             .o_close_btn {
                 @include o-position-absolute(-1px, $grid-gutter-width*0.5);
-                font-size: $font-size-h1;
+                font-size: $h1-font-size;
                 font-weight: 300;
             }
         }
@@ -468,9 +468,9 @@ $o-mail-attachment-margin: 5px;
             .o_viewer_zoomer {
                 width: 100%;
                 height: 100%;
-                @include o-flex-display;
-                @include o-justify-content(center);
-                @include o-align-items(center);
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 45px 0;
 
                 img {
@@ -500,7 +500,7 @@ $o-mail-attachment-margin: 5px;
 
         .o_viewer_toolbar {
             @include o-position-absolute($left: 50%, $bottom: $grid-gutter-width*0.5);
-            @include o-transform(translate(-50%, -50%));
+            transform: translate(-50%, -50%);
             overflow: hidden;
             border-radius: 4px;
             background-color: rgba(black, 0.4);

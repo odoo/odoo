@@ -3,6 +3,7 @@ odoo.define('web.WebClient', function (require) {
 
 var AbstractWebClient = require('web.AbstractWebClient');
 var config = require('web.config');
+var core = require('web.core');
 var data_manager = require('web.data_manager');
 var dom = require('web.dom');
 var framework = require('web.framework');
@@ -48,6 +49,9 @@ return AbstractWebClient.extend({
         return $.when(systray_menu_loaded, user_menu_loaded).then(function() {
             self.menu.start();
             self.bind_hashchange();
+            setTimeout(function () {
+                self.menu.$el.removeClass('d-none');
+            }, 200)
         });
 
     },
@@ -165,7 +169,7 @@ return AbstractWebClient.extend({
     toggle_fullscreen: function(fullscreen) {
         this._super(fullscreen);
         if (!fullscreen) {
-            this.menu.reflow();
+            core.bus.trigger('resize');
         }
     },
 

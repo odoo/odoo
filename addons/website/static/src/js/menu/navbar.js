@@ -11,7 +11,7 @@ var websiteNavbarRegistry = new rootWidget.RootWidgetRegistry();
 var WebsiteNavbar = rootWidget.RootWidget.extend({
     events: _.extend({}, rootWidget.RootWidget.prototype.events || {}, {
         'click [data-action]': '_onActionMenuClick',
-        'mouseover > ul > li.dropdown:not(.open)': '_onMenuHovered',
+        'mouseover > ul > li.dropdown:not(.show)': '_onMenuHovered',
         'click .o_mobile_menu_toggle': '_onMobileMenuToggleClick',
     }),
     custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
@@ -121,10 +121,10 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      * @param {Event} ev
      */
     _onMenuHovered: function (ev) {
-        var $opened = this.$('> ul > li.dropdown.open');
+        var $opened = this.$('> ul > li.dropdown.show');
         if ($opened.length) {
-            $opened.removeClass('open');
-            $(ev.currentTarget).find('.dropdown-toggle').mousedown().focus().mouseup().click();
+            $opened.find('.dropdown-toggle').dropdown('toggle');
+            $(ev.currentTarget).find('.dropdown-toggle').dropdown('toggle');
         }
     },
     /**

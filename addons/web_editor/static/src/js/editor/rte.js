@@ -316,7 +316,7 @@ var RTEWidget = Widget.extend({
 
         $('body').addClass('editor_enable');
 
-        $(document)
+        $(document.body)
             .tooltip({
                 selector: '[data-oe-readonly]',
                 container: 'body',
@@ -364,7 +364,7 @@ var RTEWidget = Widget.extend({
 
         $(document).off('click.rte keyup.rte mousedown.rte activate.rte mouseup.rte');
         $(document).off('content_changed').removeClass('o_is_inline_editable').removeData('rte');
-        $(document).tooltip('destroy');
+        $(document).tooltip('dispose');
         $('body').removeClass('editor_enable');
         this.trigger('rte:stop');
     },

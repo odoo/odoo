@@ -27,21 +27,21 @@
             <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
 
             <div class="row mt32 mb32">
-                <div t-if="o.name" class="col-xs-3">
+                <div t-if="o.name" class="col-3">
                     <strong>Our Order Reference:</strong>
                     <p t-field="o.name"/>
                 </div>
-                <div t-if="o.partner_ref" class="col-xs-3">
+                <div t-if="o.partner_ref" class="col-3">
                     <strong>Your Order Reference:</strong>
                     <p t-field="o.partner_ref"/>
                 </div>
-                <div t-if="o.date_order" class="col-xs-3">
+                <div t-if="o.date_order" class="col-3">
                     <strong>Order Date:</strong>
                     <p t-field="o.date_order"/>
                 </div>
             </div>
 
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <thead>
                     <tr>
                         <th><strong>Description</strong></th>
@@ -79,8 +79,8 @@
             </table>
 
             <div class="row">
-                <div class="col-xs-4 pull-right">
-                    <table class="table table-condensed">
+                <div class="col-4 float-right">
+                    <table class="table table-sm">
                         <tr class="border-black">
                             <td><strong>Subtotal</strong></td>
                             <td class="text-right">

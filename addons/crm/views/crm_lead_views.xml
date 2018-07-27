@@ -52,7 +52,7 @@
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                    <div class="badge badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
@@ -196,7 +196,7 @@
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +248,7 @@
                         <footer>
                             <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
                             <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
-                            <button string="Discard" class="btn-default" special="cancel"/>
+                            <button string="Discard" class="btn-secondary" special="cancel"/>
                         </footer>
                         <field name="partner_name" invisible="1"/>
                         <field name="contact_name" invisible="1"/>
@@ -324,16 +324,16 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit</a></li></t>
-                                        <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                        <li t-if="! record.active.value"><a role="menuitem" name="action_set_active" type="object">Restore</a></li>
-                                        <li t-if="record.active.value"><a role="menuitem" name="action_set_unactive" type="object">Archive</a></li>
-                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <a t-if="! record.active.value"  role="menuitem" name="action_set_active" type="object" class="dropdown-item">Restore</a>
+                                        <a t-if="record.active.value" role="menuitem" name="action_set_unactive" type="object" class="dropdown-item">Archive</a>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>
@@ -461,8 +461,8 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <div class="label label-danger pull-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
-                        <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                        <div class="badge badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                        <div class="badge badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>

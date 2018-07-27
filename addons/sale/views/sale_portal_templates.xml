@@ -20,11 +20,11 @@
     <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="quotation_count" class="list-group-item">
-                <span class="badge" t-esc="quotation_count"/>
+                <span class="badge badge-pill" t-esc="quotation_count"/>
                 <a href="/my/quotes">Quotations</a>
             </li>
             <li t-if="order_count" class="list-group-item">
-                <span class="badge" t-esc="order_count"/>
+                <span class="badge badge-pill" t-esc="order_count"/>
                 <a href="/my/orders">Sales Orders</a>
             </li>
         </xpath>
@@ -38,7 +38,7 @@
         <t t-if="not quotations">
             <p>There are currently no quotations for your account.</p>
         </t>
-        <div t-if="quotations" class="panel panel-default">
+        <div t-if="quotations" class="card">
             <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                 <thead>
                   <tr class="active">
@@ -58,10 +58,10 @@
                         <td><span t-field="quotation.validity_date"/></td>
                         <td>
                           <t t-if="quotation.state == 'cancel'">
-                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                            <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                           </t>
                           <t t-if="quotation.is_expired">
-                            <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
+                            <span class="badge badge-secondary"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                           </t>
                         </td>
                         <td><span t-field="quotation.amount_total" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
@@ -84,13 +84,13 @@
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
         </t>
-        <div t-if="orders" class="panel panel-default">
+        <div t-if="orders" class="card">
             <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                 <thead>
                   <tr class="active">
                     <th>
-                      <span class='hidden-xs'>Sales Order #</span>
-                      <span class='visible-xs'>Ref.</span>
+                      <span class='d-none d-md-inline'>Sales Order #</span>
+                      <span class='d-block d-md-none'>Ref.</span>
                     </th>
                     <th>Order Date</th>
                     <th ></th>
@@ -104,11 +104,11 @@
                         </td>
                         <td>
                           <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                          <span class='hidden-xs' t-field="order.date_order" t-options="{'time_only': True}"/>
+                          <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
                         <td>
                             <t t-if="order.state == 'done'">
-                                <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="hidden-xs"> Done</span></span>
+                                <span class="badge badge-success d-none d-md-inline-block"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span></span>
                             </t>
                         </td>
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
@@ -129,41 +129,41 @@
         <t t-set="invoices_amount" t-value="sum(i.amount_total for i in invoices)"/>
         <div id="optional_placeholder"></div>
         <div class="container">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header">
               <div class="row">
-                <div class="col-md-6 col-xs-9 col-sm-9">
+                <div class="col-lg-6 col-9 col-md-9">
                     <h4>
                         <t t-if="order.state in ('sent', 'cancel')">Quotation</t>
                         <t t-else="">Order</t>
                         <span t-esc="order.name"/>
                         <t t-if="order.state == 'cancel'">
-                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                            <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                         </t>
                         <t t-if="order.state == 'done'">
-                            <span class="label label-success"><i class="fa fa-fw fa-check" /> Done</span>
+                            <span class="badge badge-success"><i class="fa fa-fw fa-check" /> Done</span>
                         </t>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-3 col-xs-3 hidden-print" id="o_portal_order_actions">
+                <div class="col-lg-6 col-md-3 col-3 d-print-none" id="o_portal_order_actions">
                     <t t-if="order.state == 'sent' and portal_confirmation == 'sign'" name="portal_confirmation_sign">
-                        <a role="button" class="btn btn-primary ml8 pull-right" href="#portal_sign">
+                        <a role="button" class="btn btn-primary ml8 float-right" href="#portal_sign">
                             <i class="fa fa-arrow-circle-right"/> Accept &amp; Sign
                         </a>
                     </t>
                     <t t-if="order.state == 'sale' and portal_confirmation == 'sign'">
-                        <a role="button" class="btn btn-success ml8 pull-right" disabled="disabled"
+                        <a role="button" class="btn btn-success ml8 float-right" disabled="disabled"
                             t-attf-title="Order signed on #{order.confirmation_date} by #{order.partner_id.name}">
                             <i class="fa fa-check-circle"/> Signed
                         </a>
                     </t>
-                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right mt4 mr8" title="Download">
+                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 float-right mt4 mr8" title="Download">
                         <i class="fa fa-download fa-2x" role="img" aria-label="Download"/>
                     </a>
                 </div>
               </div>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <t t-if="error or warning" t-call="sale.portal_order_error"/>
               <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
               <div class="mb8">
@@ -173,7 +173,7 @@
                   <strong>Expiration Date:</strong> <span t-field="order.validity_date" t-options='{"widget": "date"}'/>
               </div>
               <div class='row'>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                   <div>
                     <strong>Invoicing Address</strong>
                   </div>
@@ -192,17 +192,17 @@
                           <a t-att-href="report_url"><span t-esc="i.number"/></a>
                           <span class="text-muted" t-field="i.date_invoice"/>
                           <t t-if="i.state == 'paid'">
-                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
+                            <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
                           </t>
                           <t t-if="i.state != 'paid'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
                           </t>
                         </div>
                       </t>
                     </div>
                   </t>
                 </div>
-                <div id="shipping_address" class="col-md-6" groups="sale.group_delivery_invoice_address">
+                <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
                   <div>
                     <strong>Shipping Address</strong>
                   </div>
@@ -217,22 +217,22 @@
 
               <t t-set="display_discount" t-value="any([l.discount for l in order.order_line])"/>
               <div class="row">
-                <div t-att-class="'col-lg-4 col-sm-4 col-xs-5' if display_discount else 'col-lg-5 col-sm-5 col-xs-6'">
+                <div t-att-class="'col-xl-4 col-md-4 col-5' if display_discount else 'col-md-5 col-6'">
                   <strong>Product</strong>
                 </div>
-                <div class="col-sm-3 hidden-xs text-right">
+                <div class="col-md-3 d-none d-md-block text-right">
                   <strong>Unit Price</strong>
                 </div>
-                <div t-if="display_discount" class="col-xs-1 text-right" >
+                <div t-if="display_discount" class="col-1 text-right" >
                   <strong>Discount</strong>
                 </div>
-                <div class="hidden-xs col-sm-2 text-right">
+                <div class="d-none d-md-block col-md-2 text-right">
                   <strong>Quantity</strong>
                 </div>
-                <div class="col-xs-2 hidden-sm hidden-md hidden-lg text-right">
+                <div class="col-2 d-md-none text-right">
                   <strong>Qty.</strong>
                 </div>
-                <div class="col-sm-2 col-xs-4 text-right">
+                <div class="col-md-2 col-4 text-right">
                   <strong>Subtotal</strong>
                 </div>
               </div>
@@ -246,22 +246,22 @@
 
                 <div t-attf-class="row orders_vertical_align {{ 'o_is_' + line.display_type if line.display_type else '' }} pt8 pb8">
                   <t t-if="not line.display_type">
-                      <div class="visible-lg col-lg-1 text-center">
-                        <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
+                      <div class="d-none d-xl-block col-xl-1 text-center">
+                        <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'rounded', 'style':'width: 48px;height:48px'}" />
                       </div>
-                      <div id='product_name' t-att-class="'col-lg-3 col-sm-4 col-xs-5' if display_discount else 'col-lg-4 col-sm-5 col-xs-6'">
+                      <div id='product_name' t-att-class="'col-xl-3 col-md-4 col-5' if display_discount else 'col-xl-4 col-md-5 col-6'">
                         <span t-field="line.product_id.name"/>
                       </div>
-                    <div class="col-sm-3 hidden-xs text-right">
+                    <div class="col-md-3 d-none d-md-block text-right">
                       <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                     </div>
-                    <div t-if="display_discount" class="col-xs-1 text-right" style='white-space: nowrap'>
+                    <div t-if="display_discount" class="col-1 text-right" style='white-space: nowrap'>
                         <span t-field="line.discount"/> %
                     </div>
-                    <div class="col-xs-2 text-right">
+                    <div class="col-2 text-right">
                       <span t-field="line.product_uom_qty"/>
                     </div>
-                    <div class="col-sm-2 col-xs-4 text-right">
+                    <div class="col-md-2 col-4 text-right">
                       <span
                         t-field="line.price_subtotal"
                         t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'
@@ -275,14 +275,14 @@
                     </div>
                   </t>
                   <t t-elif="line.display_type == 'line_note'">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                       <span t-field="line.name"/>
                     </div>
                   </t>
                   <t t-elif="line.display_type == 'line_section'">
                     <t t-set="current_section" t-value="line"/>
                     <t t-set="current_subtotal" t-value="0"/>
-                    <div class="col-xs-12">
+                    <div class="col-12">
                       <span t-field="line.name"/>
                     </div>
                   </t>
@@ -293,7 +293,7 @@
                 -->
                 <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type == 'line_section')">
                   <div t-attf-class="row orders_vertical_align is-subtotal pt8 pb8">
-                    <div class="col-xs-12 text-right">
+                    <div class="col-12 text-right">
                       <strong>Subtotal:</strong> <span
                         t-esc="current_subtotal"
                         t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'
@@ -306,19 +306,19 @@
               <hr/>
 
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-lg-6">
                   <div>
                     <strong>Contact</strong>
                   </div>
                   <div t-field="order.user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
                   <br/>
                 </div>
-                <div class="col-md-6">
+                <div class="col-lg-6">
                   <div class="row mb4">
-                      <div class="col-md-9 col-xs-8 text-right">
+                      <div class="col-lg-9 col-8 text-right">
                         <strong>Subtotal</strong>
                       </div>
-                      <div class="col-md-3 col-xs-4 text-right">
+                      <div class="col-lg-3 col-4 text-right">
                         <strong>
                             <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                         </strong>
@@ -328,18 +328,18 @@
                     <t t-set="tax_groups" t-value="order._get_tax_amount_by_group()"/>
                     <t t-foreach="tax_groups" t-as="amount_by_group">
                         <t t-if="len(tax_groups) == 1 and order.amount_untaxed == amount_by_group[2]">
-                            <div class="col-md-9 col-xs-8 text-right"><span t-esc="amount_by_group[0]"/></div>
-                            <div class="col-md-3 col-xs-4 text-right">
+                            <div class="col-lg-9 col-8 text-right"><span t-esc="amount_by_group[0]"/></div>
+                            <div class="col-lg-3 col-4 text-right">
                                 <span t-esc="amount_by_group[1]"
                                     t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                         </t>
                         <t t-else ="">
-                            <div class="col-md-9 col-xs-8 text-right">
+                            <div class="col-lg-9 col-8 text-right">
                                 <span t-esc="amount_by_group[0]"/>
                                 <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></span>
                             </div>
-                            <div class="col-md-3 col-xs-4 text-right">
+                            <div class="col-lg-3 col-4 text-right">
                                 <span t-esc="amount_by_group[1]"
                                     t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
@@ -347,19 +347,19 @@
                     </t>
                   </div>
                   <div class="row">
-                    <div class="col-md-9 col-xs-8 text-right">
+                    <div class="col-lg-9 col-8 text-right">
                       <strong>Total</strong>
                     </div>
-                    <div class="col-md-3 col-xs-4 text-right">
+                    <div class="col-lg-3 col-4 text-right">
                       <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></strong>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="row" t-if="order.state == 'sent' and portal_confirmation == 'sign'" id="portal_sign">
-                    <div class="col-md-offset-3 col-md-6">
+                    <div class="offset-lg-3 col-lg-6">
                         <h4>Accept &amp; Sign</h4>
                         <t t-call="portal.portal_signature">
                             <t t-set="object" t-value="order"/>
@@ -379,7 +379,7 @@
 
     <template id="portal_order_error" name="Order error/warning display">
         <div class="row mr16">
-            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
+            <div t-attf-class="'col-lg-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
                 <t t-if="error == 'generic'" name="generic">
                     There was an error processing this page.
@@ -390,7 +390,7 @@
 
     <template id="portal_order_success" name="Order success display">
         <div class="row mr16">
-            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
+            <div class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             </div>
         </div>

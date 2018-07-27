@@ -46,7 +46,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 $group.removeClass('mb0');
 
                 var $add = $('<div/>', {'class': 'form-group mb0'})
-                            .append($('<span/>', {'class': 'col-sm-offset-3 col-sm-9 text-left'})
+                            .append($('<span/>', {'class': 'offset-md-3 col-md-9 text-left'})
                                     .append(qweb.render('web_editor.components.switch', {id: 'switch_addTo_menu', label: _t("Add page in menu")})));
                 $add.find('input').prop('checked', true);
                 $group.after($add);

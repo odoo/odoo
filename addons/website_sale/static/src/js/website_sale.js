@@ -158,7 +158,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 }
                 var $q = $(".my_cart_quantity");
                 if (data.cart_quantity) {
-                    $q.parents('li:first').removeClass("hidden");
+                    $q.parents('li:first').removeClass('d-none');
                 }
                 else {
                     window.location = '/shop/cart';
@@ -194,7 +194,7 @@ odoo.define('website_sale.website_sale', function (require) {
         $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
             ev.preventDefault();
             var $link = $(ev.currentTarget);
-            var $input = $link.parent().find("input");
+            var $input = $link.closest('.input-group').find("input");
             var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
             var min = parseFloat($input.data("min") || 0);
             var max = parseFloat($input.data("max") || Infinity);
@@ -321,10 +321,10 @@ odoo.define('website_sale.website_sale', function (require) {
                     if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
                         $default_price.closest('.oe_website_sale').addClass("discount");
                         $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
-                        $default_price.parent().removeClass('hidden');
+                        $default_price.parent().removeClass('d-none');
                     } else {
                         $optional_price.closest('.oe_optional').hide();
-                        $default_price.parent().addClass('hidden');
+                        $default_price.parent().addClass('d-none');
                     }
                     product_id = variant_ids[k][0];
                     update_product_image(this, product_id);
@@ -371,16 +371,16 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $('.oe_website_sale').on('click', '.show_coupon', function(e) {
             $(e.currentTarget).hide();
-            $('.coupon_form').removeClass('hidden');
+            $('.coupon_form').removeClass('d-none');
         });
         $('.oe_cart').on('click', '.js_change_shipping', function() {
           if (!$('body.editor_enable').length) { //allow to edit button text with editor
-            var $old = $('.all_shipping').find('.panel.border_primary');
+            var $old = $('.all_shipping').find('.card.border_primary');
             $old.find('.btn-ship').toggle();
             $old.addClass('js_change_shipping');
             $old.removeClass('border_primary');
 
-            var $new = $(this).parent('div.one_kanban').find('.panel');
+            var $new = $(this).parent('div.one_kanban').find('.card');
             $new.find('.btn-ship').toggle();
             $new.removeClass('js_change_shipping');
             $new.addClass('border_primary');
@@ -472,13 +472,13 @@ odoo.define('website_sale.website_sale', function (require) {
     });
 
     $('.toggle_summary').on('click', function(e) {
-        $('.toggle_summary_div').toggleClass('hidden');
-        $('.toggle_summary_div').removeClass('visible-lg');
+        $('.toggle_summary_div').toggleClass('d-none');
+        $('.toggle_summary_div').removeClass('d-none d-xl-block');
     });
 
     core.bus.on('resize', this, function() {
-        if (config.device.size_class === config.device.SIZES.LG) {
-            $('.toggle_summary_div').addClass('visible-lg');
+        if (config.device.size_class === config.device.SIZES.XL) {
+            $('.toggle_summary_div').addClass('d-none d-xl-block');
         }
     });
 

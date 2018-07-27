@@ -701,8 +701,8 @@ var FieldBoolean = AbstractField.extend({
         // The formatValue of boolean fields renders HTML elements similar to
         // the one rendered by the widget itself. Even though the event might
         // have been fired on the non-widget version of this field, we can still
-        // test the presence of its o_checkbox class.
-        if (activated && options && options.event && $(options.event.target).parents('.o_checkbox').length) {
+        // test the presence of its custom class.
+        if (activated && options && options.event && $(options.event.target).closest('.custom-control.custom-checkbox').length) {
             this._setValue(!this.value);  // Toggle the checkbox
         }
         return activated;
@@ -736,6 +736,15 @@ var FieldBoolean = AbstractField.extend({
             this.activate();
         }
         return rendered;
+    },
+    /**
+     * Associates the 'for' attribute of the internal label.
+     *
+     * @override
+     */
+    setIDForLabel: function (id) {
+        this._super.apply(this, arguments);
+        this.$('.custom-control-label').attr('for', id);
     },
 
     //--------------------------------------------------------------------------
@@ -1612,10 +1621,7 @@ var AttachmentImage = AbstractField.extend({
 var StateSelectionWidget = AbstractField.extend({
     template: 'FormSelection',
     events: {
-        'click a': function (e) {
-            e.preventDefault();
-        },
-        'click li': '_setSelection'
+        'click .dropdown-item': '_setSelection',
     },
     supportedFieldTypes: ['selection'],
 
@@ -1696,13 +1702,12 @@ var StateSelectionWidget = AbstractField.extend({
      * @param {MouseEvent} ev
      */
     _setSelection: function (ev) {
-        var li = $(ev.target).closest('li');
-        if (li.length) {
-            var value = String(li.data('value'));
-            this._setValue(value);
-            if (this.mode === 'edit') {
-                this._render();
-            }
+        ev.preventDefault();
+        var $item = $(ev.currentTarget);
+        var value = String($item.data('value'));
+        this._setValue(value);
+        if (this.mode === 'edit') {
+            this._render();
         }
     },
 });
@@ -1778,7 +1783,7 @@ var LabelSelection = AbstractField.extend({
     _render: function () {
         this.classes = this.nodeOptions && this.nodeOptions.classes || {};
         var labelClass = this.classes[this.value] || 'primary';
-        this.$el.addClass('label label-' + labelClass).text(this._formatValue(this.value));
+        this.$el.addClass('badge badge-' + labelClass).text(this._formatValue(this.value));
     },
 });
 
@@ -2693,9 +2698,9 @@ var ImageSelection = AbstractField.extend({
         var self = this;
         this.$el.empty();
         _.each(this.nodeOptions, function (val, key) {
-            var $container = $('<div>').addClass('col-xs-3 text-center');
+            var $container = $('<div>').addClass('col-3 text-center');
             var $img = $('<img>')
-                .addClass('img img-responsive img-thumbnail ml16')
+                .addClass('img img-fluid img-thumbnail ml16')
                 .toggleClass('btn-info', key === self.value)
                 .attr('src', val.image_link)
                 .data('key', key);

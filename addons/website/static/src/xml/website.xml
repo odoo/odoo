@@ -9,12 +9,12 @@
                         <h3 class="modal-title"><t t-esc="window_title"/></h3>
                     </header>
                     <main class="modal-body">
-                        <form class="form-horizontal" role="form" t-att-id="id">
-                            <div class="form-group mb0">
-                                <label for="page-name" class="col-sm-3 control-label">
+                        <form role="form" t-att-id="id">
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-3 col-form-label">
                                     <t t-esc="field_name"/>:
                                 </label>
-                                <div class="col-sm-8">
+                                <div class="col-md-8">
                                     <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
                                     <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
                                     <select t-if="field_type == 'select'" class="form-control"></select>
@@ -23,8 +23,8 @@
                         </form>
                     </main>
                     <footer class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary btn-continue">Continue</button>
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-continue">Continue</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Cancel</button>
                     </footer>
                 </div>
             </div>
@@ -62,15 +62,17 @@
     </div>
 
     <div t-name="website.rename_page">
-        <div class="well">
-            <form class="form-horizontal">
-                <div class="form-group mb0">
-                    <label for="new_name" class="control-label col-sm-4">Rename Page To:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="form-group row mb0">
+                        <label for="new_name" class="col-form-label col-md-4">Rename Page To:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         <t t-call="website.dependencies"/>
     </div>

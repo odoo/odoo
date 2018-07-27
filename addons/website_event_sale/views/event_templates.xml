@@ -10,8 +10,8 @@
 <template id="index" inherit_id="website_event.index" name="Event's Ticket">
     <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
         <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
-            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="label label-danger pull-right">Sold Out</span>
-            <span t-if="event.seats_availability ==  'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="label pull-right label-info">
+            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="badge badge-danger float-right">Sold Out</span>
+            <span t-if="event.seats_availability ==  'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="badge float-right badge-info">
                 Only <t t-esc="event.seats_available"/> Remaining
             </span>
         </t>
@@ -61,7 +61,7 @@
                     <t t-if="not ticket.price and not editable">
                         <span>Free</span>
                     </t>
-                    <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="badge" itemprop="availability" content="http://schema.org/LimitedAvailability">
+                    <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="badge badge-pill" itemprop="availability" content="http://schema.org/LimitedAvailability">
                         <t t-esc="ticket.seats_max - ticket.seats_reserved"/>
                         <span>left</span>
                     </span>
@@ -92,7 +92,7 @@
         </attribute>
     </xpath>
     <xpath expr="//del" position="attributes">
-        <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
+        <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
     </xpath>
 </template>
 </odoo>

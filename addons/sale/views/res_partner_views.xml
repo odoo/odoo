@@ -28,7 +28,7 @@
                     <field name="sale_order_count"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span t-if="record.sale_order_count.value>0" class="badge"><i class="fa fa-fw fa-usd" role="img" aria-label="Sale orders" title="Sales orders"/><t t-esc="record.sale_order_count.value"/></span>
+                    <span t-if="record.sale_order_count.value>0" class="badge badge-pill"><i class="fa fa-fw fa-usd" role="img" aria-label="Sale orders" title="Sales orders"/><t t-esc="record.sale_order_count.value"/></span>
                 </xpath>
             </field>
         </record>
@@ -46,13 +46,13 @@
                         attrs="{'invisible': [('customer', '=', False)]}"
                         icon="fa-usd">
                         <field string="Sales" name="sale_order_count" widget="statinfo"/>
-                    </button>     
+                    </button>
                 </button>
                 <page name="internal_notes" position="inside">
                     <group colspan="2" col="2" groups="sale.group_warning_sale">
                         <separator string="Warning on the Sales Order" colspan="4" />
                             <field name="sale_warn" nolabel="1" />
-                            <field name="sale_warn_msg" colspan="3" nolabel="1" 
+                            <field name="sale_warn_msg" colspan="3" nolabel="1"
                                     attrs="{'required':[('sale_warn', '!=', False), ('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
                     </group>
                 </page>

@@ -45,7 +45,7 @@ body.o_connected_user {
             }
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
-                @include button-variant(white, $o-brand-optional, $o-brand-optional);
+                @include button-variant($o-brand-primary, $o-brand-primary);
             }
 
             > .fa-plus, > .fa-pencil {
@@ -58,7 +58,7 @@ body.o_connected_user {
             font-size: 20px;
         }
     }
-    @media only screen and (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         #oe_applications {
             position: inherit;
             z-index: 1002;
@@ -71,7 +71,8 @@ body.o_connected_user {
     position: relative;
     display: inline-block;
     opacity: $opacity;
-    @include square($size);
+    width: $size;
+    height: $size;
 
     &:hover, &:focus {
         outline: none;
@@ -88,11 +89,11 @@ body.o_connected_user {
         background: $color;
         @include size(100%, $thickness);
         @include o-position-absolute(50%, $left:0);
-        @include o-transform(rotate(45deg));
+        transform: rotate(45deg);
     }
 
     &:after {
-        @include o-transform(rotate(-45deg));
+        transform: rotate(-45deg);
     }
 }
 
@@ -104,14 +105,9 @@ body .modal {
         @include o-w-preserve-forms;
         @include o-w-preserve-links;
         @include o-w-preserve-btn;
-        @include o-w-preserve-wells;
+        @include o-w-preserve-cards;
         @include o-w-preserve-modals;
         @include o-w-preserve-tabs;
-
-        &:not(.oe_mobile_preview) button.close {
-            @include o-w-close-icon(12px);
-            margin-right: -2px;
-        }
     }
 
     // MOBILE PREVIEW
@@ -121,13 +117,6 @@ body .modal {
         .modal-dialog {
             display: inline-block;
             width: auto;
-
-            .close {
-                color: lightgray;
-                opacity: 1;
-                font-size: 25px;
-                font-weight: normal;
-            }
 
             .modal-content {
                 background-color: black!important;
@@ -158,10 +147,10 @@ body .modal {
                     $mobile-preview-width: 320px;
                     $mobile-preview-height: 530px;
 
-                    @include o-flex-display;
+                    display: flex;
                     width: $mobile-preview-width + 15;
                     height: $mobile-preview-height;
-                    @include o-transition(all, 400ms);
+                    transition: all 400ms ease 0s;
 
                     &.o_invert_orientation {
                         width: $mobile-preview-height + 15;
@@ -233,7 +222,7 @@ body .modal {
                         text-align: right;
                         background-color: $o-we-color-paper;
 
-                        @media screen and (min-width: $screen-md-min) {
+                        @include media-breakpoint-up(lg) {
                             width: 38%;
                         }
                     }
@@ -243,7 +232,7 @@ body .modal {
                         visibility: visible;
                         padding-left: 15px;
 
-                        @media screen and (min-width: $screen-md-min) {
+                        @include media-breakpoint-up(lg) {
                             padding-left: 50px;
                         }
                     }
@@ -252,7 +241,7 @@ body .modal {
                 tbody {
                     td {
                         padding: 5px;
-                        @include o-transition(padding, .3s);
+                        transition: padding .3s ease 0s;
 
                         &:first-child {
                             border-width: 0 1px;
@@ -265,7 +254,7 @@ body .modal {
                                 font-weight: normal;
 
                                 .oe_remove {
-                                    @include o-w-close-icon(10px, white, $o-we-color-danger, 2px);
+                                    @include o-w-close-icon(10px, white, $o-we-color-danger, 2px); // FIXME
                                     @include o-position-absolute(5px, 5px);
                                 }
                             }
@@ -287,7 +276,7 @@ body .modal {
                     }
 
                     tr {
-                        @include o-animation(fadeInDownSmall, .3s);
+                        animation: fadeInDownSmall .3s ease 0s 1 normal none running;
 
                         &:first-child {
                             td:first-child {
@@ -354,9 +343,9 @@ body .modal {
 #o_new_content_menu_choices {
     @include o-position-absolute($o-navbar-height, 0, 0, 0);
     position: fixed;
-    @include o-flex-display;
-    @include o-justify-content(center);
-    @include o-align-items(center);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: $o-we-font-family;
 
     &::before {
@@ -369,9 +358,9 @@ body .modal {
     }
 
     > ul {
-        @include o-flex-display;
-        @include o-flex-flow(row, wrap);
-        @include o-justify-content(space-around);
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
         width: auto;
         max-width: 60%;
         max-height: 100%;
@@ -382,7 +371,7 @@ body .modal {
         li {
             display: block;
             opacity: 0;
-            @include animation(fadeInDownSmall 1s forwards);
+            animation: fadeInDownSmall 1s forwards;
             margin: 2em 32px;
             padding: 0 15px;
 
@@ -401,7 +390,7 @@ body .modal {
                     background-color: #2C2C36;
                     color: white;
 
-                    @include o-transition(all, 0.5s, cubic-bezier(0.19, 1, 0.22, 1));
+                    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0s;
                 }
                 p {
                     color: white;
@@ -523,15 +512,14 @@ body .modal {
 }
 #edit_website_pages {
     th {
-        background-color: $o-brand-primary;
+        background-color: $o-brand-odoo;
         color: white;
     }
     td > a.fa {
         margin-left: 5px;
-        color: $o-brand-primary;
+        color: $o-brand-odoo;
     }
     .fa-check, .fa-eye-slash {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
     }
 }
-

@@ -48,8 +48,8 @@ ActivityMenu.include({
         if (noteDateTime) {
             params = _.extend(params, {'date_deadline': noteDateTime});
         }
-        this.$('.o_note_show').removeClass('hidden');
-        this.$('.o_note').addClass('hidden');
+        this.$('.o_note_show').removeClass('d-none');
+        this.$('.o_note').addClass('d-none');
         this._rpc({
             route: '/note/new',
             params: params,
@@ -91,7 +91,7 @@ ActivityMenu.include({
         }
         this.noteDateTimeWidget.appendTo(this.$('.o_note_datetime'));
         this.noteDateTimeWidget.$input.attr('placeholder', _t("Today"));
-        this.$('.o_note_show, .o_note').toggleClass('hidden');
+        this.$('.o_note_show, .o_note').toggleClass('d-none');
         this.$('.o_note_input').val('').focus();
     },
     /**

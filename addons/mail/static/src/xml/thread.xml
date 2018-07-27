@@ -42,7 +42,7 @@
                     <t t-esc="widget.activeAttachment.name"/>
                     <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </span>
-                <a role="button" class="o_close_btn pull-right" href="#" aria-label="Close" title="Close">×</a>
+                <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
@@ -183,13 +183,13 @@
                         t-att-src="message.getAvatarSource()"
                         data-oe-model="res.partner"
                         t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                        t-attf-class="o_thread_message_avatar img-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
                 </t>
                 <t t-else="">
                     <img t-if="displayAuthorMessages[message.getID()]"
                         alt=""
                         t-att-src="message.getAvatarSource()"
-                        class="o_thread_message_avatar img-circle"/>
+                        class="o_thread_message_avatar rounded-circle"/>
                 </t>
                 <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
                     <t t-esc="message.getDate().format('hh:mm')"/>
@@ -395,7 +395,7 @@
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
-                <div t-attf-class="o_image_box pull-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
+                <div t-attf-class="o_image_box float-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
                     <div t-if="has_preview"
                          class="o_image o_hover"
                          t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
@@ -420,7 +420,7 @@
                 <div t-if="!editable" class="caption small">
                     <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
                     <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download pull-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
+                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
                 </div>
                 <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
                 <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
@@ -438,7 +438,7 @@
                 <span><i class="fa fa-spinner fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
             </t>
             <t t-else="">
-                <button class="btn btn-sm btn-link">-------- Show older messages --------</button>
+                <button class="btn btn-link">-------- Show older messages --------</button>
             </t>
         </div>
     </t>

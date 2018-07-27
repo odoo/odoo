@@ -45,7 +45,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Upload an image from your local library."),
         position: "bottom",
         run: function (actions) {
-            actions.auto(".modal-footer .btn-default");
+            actions.auto(".modal-footer .btn-secondary");
         },
     }, {
         trigger: "#snippet_structure .oe_snippet:eq(8) .oe_snippet_thumbnail",
@@ -63,7 +63,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Click on this button so your customers can see it."),
         position: "bottom",
     }, {
-        trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown.full",
+        trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown-toggle",
         content: _t("Let's now take a look at your administration dashboard to get your eCommerce website ready in no time."),
         position: "bottom",
     }, {

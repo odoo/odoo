@@ -40,24 +40,24 @@ QUnit.test('note activity menu widget: create note from activity menu', function
 
     // toggle quick create for note
     activityMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass("hidden"), false, 'ActivityMenu should have Add new note CTA');
+    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), false, 'ActivityMenu should have Add new note CTA');
     activityMenu.$('.o_note_show').click();
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass("hidden"), true, 'ActivityMenu should hide CTA when entering a new note');
-    assert.strictEqual(activityMenu.$('.o_note').hasClass("hidden"), false, 'ActivityMenu should display input for new note');
+    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), true, 'ActivityMenu should hide CTA when entering a new note');
+    assert.strictEqual(activityMenu.$('.o_note').hasClass('d-none'), false, 'ActivityMenu should display input for new note');
 
     // creating quick note without date
     activityMenu.$("input.o_note_input").val("New Note");
     activityMenu.$(".o_note_save").click();
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass("hidden"), false, 'ActivityMenu add note button should be displayed');
-    assert.strictEqual(activityMenu.$('.o_note').hasClass("hidden"), true, 'ActivityMenu add note input should be hidden');
+    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), false, 'ActivityMenu add note button should be displayed');
+    assert.strictEqual(activityMenu.$('.o_note').hasClass('d-none'), true, 'ActivityMenu add note input should be hidden');
 
     // creating quick note with date
     activityMenu.$('.o_note_show').click();
     activityMenu.$('input.o_note_input').val("New Note");
     activityMenu.$('.o_note_set_datetime').click();
     activityMenu.$(".o_note_save").click();
-    assert.strictEqual(activityMenu.$('.o_note_show').hasClass("hidden"), false, 'ActivityMenu add note button should be displayed');
-    assert.strictEqual(activityMenu.$('.o_note').hasClass("hidden"), true, 'ActivityMenu add note input should be hidden');
+    assert.strictEqual(activityMenu.$('.o_note_show').hasClass('d-none'), false, 'ActivityMenu add note button should be displayed');
+    assert.strictEqual(activityMenu.$('.o_note').hasClass('d-none'), true, 'ActivityMenu add note input should be hidden');
     activityMenu.destroy();
 });
 });

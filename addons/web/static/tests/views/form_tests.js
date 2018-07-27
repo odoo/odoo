@@ -165,7 +165,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('div.o_field_one2many table').length, 1,
                         "should render a one2many relation");
 
-        assert.strictEqual(form.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 1,
+        assert.strictEqual(form.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 1,
                         "1 checkboxes should be checked");
 
         assert.strictEqual(form.get('title'), "second record",
@@ -504,20 +504,20 @@ QUnit.module('Views', {
         });
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.ok(form.$('.o_notebook .nav li:first()').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
             'first tab should be active');
-        assert.ok(!form.$('.o_notebook .nav li:first()').hasClass('o_invisible_modifier'),
+        assert.ok(!form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
             'first tab should be visible');
 
         // set a value on the m2o
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
         $dropdown.find('li:first()').click();
-        assert.ok(!form.$('.o_notebook .nav li:first()').hasClass('active'),
+        assert.ok(!form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
             'first tab should not be active');
-        assert.ok(form.$('.o_notebook .nav li:first()').hasClass('o_invisible_modifier'),
+        assert.ok(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
             'first tab should be invisible');
-        assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav .nav-link:nth(1)').hasClass('active'),
             'second tab should be active');
         assert.ok(form.$('.o_notebook .tab-content .tab-pane:nth(1)').hasClass('active'),
             'second page should be active');
@@ -547,9 +547,9 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.notOk(form.$('.o_notebook .nav li:first()').is(':visible'),
+        assert.notOk(form.$('.o_notebook .nav .nav-item:first()').is(':visible'),
             'first tab should be invisible');
-        assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav .nav-link:nth(1)').hasClass('active'),
             'second tab should be active');
 
         form.destroy();
@@ -578,9 +578,9 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.notOk(form.$('.o_notebook .nav li:first()').hasClass('active'),
+        assert.notOk(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
             'first tab should not active');
-        assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav .nav-link:nth(1)').hasClass('active'),
             'second tab should be active');
 
         form.destroy();
@@ -1077,7 +1077,7 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.strictEqual(form.$('button.btn.btn-sm i.fa.fa-check').length, 1,
+        assert.strictEqual(form.$('button.btn i.fa.fa-check').length, 1,
                         "should contain a button with correct content");
 
         assert.strictEqual(form.$('.o_form_statusbar button').length, 2,
@@ -1122,7 +1122,7 @@ QUnit.module('Views', {
                         '<button name="0"/>' +
                         '<button name="1" class="btn-primary"/>' +
                         '<button name="2" class="oe_highlight"/>' +
-                        '<button name="3" class="btn-default"/>' +
+                        '<button name="3" class="btn-secondary"/>' +
                         '<button name="4" class="btn-link"/>' +
                         '<button name="5" class="oe_link"/>' +
                         '<button name="6" class="btn-success"/>' +
@@ -1132,7 +1132,7 @@ QUnit.module('Views', {
                         '<button name="8"/>' +
                         '<button name="9" class="btn-primary"/>' +
                         '<button name="10" class="oe_highlight"/>' +
-                        '<button name="11" class="btn-default"/>' +
+                        '<button name="11" class="btn-secondary"/>' +
                         '<button name="12" class="btn-link"/>' +
                         '<button name="13" class="oe_link"/>' +
                         '<button name="14" class="btn-success"/>' +
@@ -1142,37 +1142,37 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-secondary',
             "header buttons without any class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="1"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="1"]').attr('class'), 'btn btn-primary',
             "header buttons with bootstrap primary class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="2"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="2"]').attr('class'), 'btn btn-primary',
             "header buttons with oe_highlight class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-secondary',
             "header buttons with bootstrap default class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="4"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="4"]').attr('class'), 'btn btn-link',
             "header buttons with bootstrap link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="5"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="5"]').attr('class'), 'btn btn-link',
             "header buttons with oe_link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="6"]').attr('class'), 'btn btn-sm btn-success',
+        assert.strictEqual(form.$('button[name="6"]').attr('class'), 'btn btn-success',
             "header buttons with bootstrap state class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn btn-sm o_this_is_a_button btn-default',
+        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn o_this_is_a_button btn-secondary',
             "header buttons with custom classes should receive the correct classes");
-        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-secondary',
             "sheet header buttons without any class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="9"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="9"]').attr('class'), 'btn btn-primary',
             "sheet buttons with bootstrap primary class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="10"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="10"]').attr('class'), 'btn btn-primary',
             "sheet buttons with oe_highlight class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-secondary',
             "sheet buttons with bootstrap default class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="12"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="12"]').attr('class'), 'btn btn-link',
             "sheet buttons with bootstrap link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="13"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="13"]').attr('class'), 'btn btn-link',
             "sheet buttons with oe_link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="14"]').attr('class'), 'btn btn-sm btn-success',
+        assert.strictEqual(form.$('button[name="14"]').attr('class'), 'btn btn-success',
             "sheet buttons with bootstrap state class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="15"]').attr('class'), 'btn btn-sm o_this_is_a_button',
+        assert.strictEqual(form.$('button[name="15"]').attr('class'), 'btn o_this_is_a_button',
             "sheet buttons with custom classes should receive the correct classes");
 
         form.destroy();
@@ -1996,7 +1996,7 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                         '<field name="foo"/>' +
                         '<button string="Do something" class="btn-primary" name="abc" type="object"/>' +
-                        '<button string="Discard" class="btn-default" special="cancel"/>' +
+                        '<button string="Discard" class="btn-secondary" special="cancel"/>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
@@ -2102,10 +2102,10 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$("label").length, 2, "should have rendered only two label");
-        assert.strictEqual(form.$("label").first().text(), "Product",
+        assert.strictEqual(form.$("label.o_form_label").length, 2, "should have rendered only two label");
+        assert.strictEqual(form.$("label.o_form_label").first().text(), "Product",
             "one should be the one for the product field");
-        assert.strictEqual(form.$("label").eq(1).text(), "Bar",
+        assert.strictEqual(form.$("label.o_form_label").eq(1).text(), "Bar",
             "one should be the one for the bar field");
 
         assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), undefined,
@@ -2246,7 +2246,7 @@ QUnit.module('Views', {
         // click on discard and cancel the confirm request
         form.$buttons.find('.o_form_button_cancel').click();
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // click on cancel
+        $('.modal-footer .btn-secondary').click(); // click on cancel
         assert.strictEqual(form.$('input').val(), 'new value', 'input should still contain new value');
 
         // click on discard and confirm
@@ -2482,7 +2482,7 @@ QUnit.module('Views', {
         // click on the pager to switch to the next record and cancel the confirm request
         form.pager.$('.o_pager_next').click(); // click on next
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // click on cancel
+        $('.modal-footer .btn-secondary').click(); // click on cancel
         assert.strictEqual(form.$('input').val(), 'new value', 'input should still contain new value');
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should still be 1');
 
@@ -2583,19 +2583,19 @@ QUnit.module('Views', {
         });
 
         // click on second page tab
-        form.$('.o_notebook li:eq(1) a').click();
+        form.$('.o_notebook .nav-link:eq(1)').click();
 
-        assert.notOk(form.$('.o_notebook li:eq(0)').hasClass('active'),
+        assert.notOk(form.$('.o_notebook .nav-link:eq(0)').hasClass('active'),
             "first tab should not be active");
-        assert.ok(form.$('.o_notebook li:eq(1)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav-link:eq(1)').hasClass('active'),
             "second tab should be active");
 
         // click on the pager to switch to the next record
         form.pager.$('.o_pager_next').click();
 
-        assert.notOk(form.$('.o_notebook li:eq(0)').hasClass('active'),
+        assert.notOk(form.$('.o_notebook .nav-link:eq(0)').hasClass('active'),
             "first tab should not be active");
-        assert.ok(form.$('.o_notebook li:eq(1)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav-link:eq(1)').hasClass('active'),
             "second tab should be active");
         form.destroy();
     });
@@ -4265,9 +4265,9 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.oe_button_box').children().length, 2,
             "button box should contain two children");
-        assert.strictEqual(form.$('.oe_button_box .oe_stat_button').length, 1,
+        assert.strictEqual(form.$('.oe_button_box > .oe_stat_button').length, 1,
             "button box should only contain one button");
-        assert.strictEqual(form.$('.oe_button_box label').length, 1,
+        assert.strictEqual(form.$('.oe_button_box > label').length, 1,
             "button box should only contain one label");
 
         form.destroy();
@@ -5003,8 +5003,8 @@ QUnit.module('Views', {
         }
         assert.strictEqual($actions.length, 3,
             "there should be 3 actions");
-        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu li a')[2];
-        assert.strictEqual($customAction.text.trim(), 'Action partner',
+        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu:last .dropdown-item:nth(2)');
+        assert.strictEqual($customAction.text().trim(), 'Action partner',
             "the custom action should have 'Action partner' as name");
         testUtils.intercept(form, 'do_action', function (event) {
             var context = event.data.action.context.__contexts[1];
@@ -5152,23 +5152,23 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('.o_notebook ul li:not(.o_invisible_modifier)').length, 2,
+        assert.strictEqual(form.$('.o_notebook .nav-item:not(.o_invisible_modifier)').length, 2,
             "both tabs should be visible");
-        assert.ok(form.$('.o_notebook ul li:first').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav-link:first').hasClass('active'),
             "first tab should be active");
 
         // click on the pager to switch to the next record
         form.pager.$('.o_pager_next').click();
-        assert.strictEqual(form.$('.o_notebook ul li:not(.o_invisible_modifier)').length, 1,
+        assert.strictEqual(form.$('.o_notebook .nav-item:not(.o_invisible_modifier)').length, 1,
             "only the second tab should be visible");
-        assert.ok(form.$('.o_notebook ul li:not(.o_invisible_modifier)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav-item:not(.o_invisible_modifier) .nav-link').hasClass('active'),
             "the visible tab should be active");
 
         // click on the pager to switch back to the previous record
         form.pager.$('.o_pager_previous').click();
-        assert.strictEqual(form.$('.o_notebook ul li:not(.o_invisible_modifier)').length, 2,
+        assert.strictEqual(form.$('.o_notebook .nav-item:not(.o_invisible_modifier)').length, 2,
             "both tabs should be visible again");
-        assert.ok(form.$('.o_notebook ul li:nth(1)').hasClass('active'),
+        assert.ok(form.$('.o_notebook .nav-link:nth(1)').hasClass('active'),
             "second tab should be active");
 
         form.destroy();
@@ -5861,7 +5861,7 @@ QUnit.module('Views', {
         form.$('.o_statusbar_buttons button').click();
         assert.ok(form.$('.o_statusbar_buttons button').prop('disabled'),
             'button should be disabled');
-        $('.modal-footer button.btn-default').click();
+        $('.modal-footer button.btn-secondary').click();
         assert.ok(!form.$('.o_statusbar_buttons button').prop('disabled'),
             'button should no longer be disabled');
 
@@ -6519,7 +6519,7 @@ QUnit.module('Views', {
             }
         });
 
-        form.$('.o_form_statusbar .btn-default').click();
+        form.$('.o_form_statusbar .btn-secondary').click();
         form.destroy();
     });
 
@@ -6547,7 +6547,7 @@ QUnit.module('Views', {
                 '</form>',
         });
 
-        assert.strictEqual(form.$el.text(), '{"foo":"My little Foo Value","bar":false}',
+        assert.strictEqual(form.$('.o_widget').text(), '{"foo":"My little Foo Value","bar":false}',
             "widget should have been instantiated");
 
         form.destroy();

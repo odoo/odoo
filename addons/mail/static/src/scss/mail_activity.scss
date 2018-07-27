@@ -16,7 +16,7 @@
 
             &.collapsed {
                 margin-bottom: 0;
-                @include o-transition(margin, 0.8s);
+                transition: margin 0.8s ease 0s;
 
                 .o_chatter_planned_activities_summary {
                     display: inline-block;
@@ -44,12 +44,14 @@
                     margin-bottom: 8px;
 
                     img {
-                        @include square(31px);
+                        width: 31px;
+                        height: 31px;
                     }
 
                     .o_avatar_icon {
                         @include o-position-absolute($right: -5px, $bottom: -5px);
-                        @include square(25px);
+                        width: 25px;
+                        height: 25px;
                         padding: 6px 5px;
                         text-align: center;
                         line-height: 1.2;
@@ -64,7 +66,7 @@
                 .o_activity_info {
                     vertical-align: baseline;
                     padding: 4px 6px;
-                    background: $gray-lighter;
+                    background: theme-color('light');
                     border-radius: 2px 2px 0 0;
                     @include o-hover-opacity(1, 1);
 
@@ -75,7 +77,7 @@
                 }
             }
 
-            .o_thread_message_collapse .dl-horizontal.well {
+            .o_thread_message_collapse .dl-horizontal.card {
                 display: inline-block;
                 margin-bottom: 0;
 
@@ -97,7 +99,7 @@
 
             .o_thread_message_tools {
                 .o_activity_link {
-                    padding: 0 $padding-base-horizontal;
+                    padding: 0 $input-btn-padding-x;
                 }
                 .o_activity_done {
                     padding-left: 0;
@@ -111,13 +113,13 @@
     }
 
     .o_activity_color_planned {
-        color: $brand-success;
+        color: theme-color('success');
     }
     .o_activity_color_overdue {
-        color: $brand-danger;
+        color: theme-color('danger');
     }
     .o_activity_color_today {
-        color: $brand-warning;
+        color: theme-color('warning');
     }
 }
 
@@ -155,13 +157,13 @@
 
             & > li:last-child {
                 background-color: $o-brand-lightsecondary;
-                color: $gray-dark;
+                color: gray('900');
                 line-height: 3em;
             }
             li > ul.o_activity_log {
                 max-height: 300px;
                 overflow-y: auto;
-                color: $text-color;
+                color: $body-color;
 
                 li {
                     width: 100%;
@@ -177,7 +179,7 @@
                         padding: 8px 10px 8px 0px;
                         vertical-align: middle;
                         &:hover {
-                            background-color: $gray-lighter;
+                            background-color: theme-color('light');
                             .o_activity_link_kanban {
                                 visibility: visible;
                             }

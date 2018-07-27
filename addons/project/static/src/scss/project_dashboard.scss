@@ -1,7 +1,7 @@
 .o_kanban_view.o_kanban_dashboard.o_project_kanban {
     .o_project_kanban_boxes {
-        @include o-flex-display;
-        @include o-flex-flow(row, nowrap);
+        display: flex;
+        flex-flow: row nowrap;
 
         .o_project_kanban_box {
             position: relative;
@@ -66,7 +66,7 @@
         outline: 2px solid transparent;
         box-shadow: 0px 0px 1px 1px #ccc;
         &.o_selected {
-            outline-color: $o-brand-optional;
+            outline-color: $o-brand-primary;
         }
         > img {
             @include o-position-absolute($top: 0, $left: 0, $right: 0, $bottom: 0);

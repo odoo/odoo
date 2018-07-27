@@ -1,17 +1,17 @@
 .o_kanban_examples_dialog {
-    @include o-flex-display;
+    display: flex;
     padding: 0px;
-    background: $o-color-silver;
+    background: theme-color('light');
 
     // sidebar
     .o_kanban_examples_dialog_nav {
-        @include o-flex(0, 0, auto);
-        border-right: 1px solid $gray-lighter-dark;
+        flex: 0 0 auto;
+        border-right: 1px solid gray('300');
         background: white;
 
         > ul > li {
             margin: 0;
-            border-bottom: 1px solid $gray-lighter-dark;
+            border-bottom: 1px solid gray('300');
 
             > a {
                 padding: 12px 15px;
@@ -23,7 +23,7 @@
             }
             &.active > a {
                 color: $headings-color;
-                border-left-color: $o-brand-optional;
+                border-left-color: $o-brand-primary;
                 font-weight: bold;
             }
         }
@@ -31,28 +31,28 @@
 
     // content
     .o_kanban_examples_dialog_content {
-        @include o-flex(1, 1, 100%);
+        flex: 1 1 100%;
 
         .o_kanban_examples_description {
             padding: 16px 16px 0;
             text-align: justify;
         }
         .o_kanban_examples {
-            @include o-flex-display;
+            display: flex;
             padding: 0 6px;
 
             .o_kanban_examples_group {
-                @include o-flex(1, 1, 100%);
+                flex: 1 1 100%;
                 margin: 10px;
 
                 .o_kanban_examples_ghost {
                     padding: 5px;
                     margin-top: -1px;
-                    border: thin solid $gray-lighter-dark;
+                    border: thin solid gray('300');
                     background-color: white;
                     .o_ghost_content {
                         height: 12px;
-                        background: $gray-lighter-dark;
+                        background: gray('300');
                         &.o_ghost_tag {
                             display: inline-block;
                             width: 40%;

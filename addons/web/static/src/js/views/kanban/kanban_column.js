@@ -153,7 +153,7 @@ var KanbanColumn = Widget.extend({
         this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
         var tooltip = this.data.count + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
-        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
+        this.$header.find('.o_kanban_header_title').tooltip({}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {

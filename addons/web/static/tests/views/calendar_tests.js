@@ -193,7 +193,7 @@ QUnit.module('Views', {
 
             // filters which has no value should show with string "Undefined" and should show at the last
             assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
-            assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last > span').text(), "Undefined", "filters having false value should display 'Undefined' string");
+            assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last span').text(), "Undefined", "filters having false value should display 'Undefined' string");
 
             var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
             assert.ok($attendeesFilter.length, "should display 'attendees' filter");
@@ -202,9 +202,9 @@ QUnit.module('Views', {
 
             assert.strictEqual(calendar.$('.fc-event').length, 7,
                 "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
-            calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
+            calendar.$('.o_calendar_filter .custom-checkbox input').first().click();  // Disable first filter
             assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
-            calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
+            calendar.$('.o_calendar_filter .custom-checkbox input').eq(1).click();  // Disable second filter
             assert.strictEqual(calendar.$('.fc-event').length, 0, "should not display any event anymore");
 
             // test search bar in filter
@@ -253,17 +253,17 @@ QUnit.module('Views', {
         actionManager.doAction(1);
 
         // displays month mode by default
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
             'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
 
         // switch to day mode
         actionManager.controlPanel.$('.o_calendar_button_day').click();
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
             'Meetings Test (December 12, 2016)', "should display the current day");
 
         // switch to month mode
         actionManager.controlPanel.$('.o_calendar_button_month').click();
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
 
         actionManager.destroy();
@@ -549,7 +549,7 @@ QUnit.module('Views', {
         // delete record
 
         $newevent.trigger('click');
-        $('.modal button.btn-default:contains(Delete)').trigger('click');
+        $('.modal button.btn-secondary:contains(Delete)').trigger('click');
         $('.modal button.btn-primary:contains(Ok)').trigger('click');
         assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
 
@@ -798,7 +798,7 @@ QUnit.module('Views', {
         // delete record
 
         $newevent.trigger('click');
-        $('.modal button.btn-default:contains(Delete)').trigger('click');
+        $('.modal button.btn-secondary:contains(Delete)').trigger('click');
         $('.modal button.btn-primary:contains(Ok)').trigger('click');
         assert.strictEqual(calendar.$('.fc-content').length, 0, "should delete the record");
 

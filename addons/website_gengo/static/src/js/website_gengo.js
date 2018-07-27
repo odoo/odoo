@@ -41,8 +41,8 @@ translate.Class.include({
     translation_gengo_display: function () {
         var self = this;
         if ($('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').length === 0){
-            self.$el.find('.gengo_post').addClass("hidden");
-            self.$el.find('.gengo_inprogress').removeClass("hidden");
+            self.$el.find('.gengo_post').addClass('d-none');
+            self.$el.find('.gengo_inprogress').removeClass('d-none');
         }
     },
     translation_gengo_post: function () {
@@ -60,8 +60,8 @@ translate.Class.include({
                 dialog.on('service_level', this, function () {
                     var gengo_service_level = dialog.$el.find(".form-control").val();
                     dialog.$el.modal('hide');
-                    self.$el.find('.gengo_post').addClass("hidden");
-                    self.$el.find('.gengo_wait').removeClass("hidden");
+                    self.$el.find('.gengo_post').addClass('d-none');
+                    self.$el.find('.gengo_wait').removeClass('d-none');
                     var trans = [];
                     $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
                         var $node = $(this);
@@ -172,16 +172,16 @@ var GengoApiConfigDialog = Widget.extend({
        var pub_el = this.$el.find(".gengo_group_public")[0];
        var pri_el = this.$el.find(".gengo_group_private")[0];
        if (! public_key){
-           $(pub_el).addClass("has-error");
+           $(pub_el).addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
        }
        else {
-           $(pub_el).removeClass("has-error");
+           $(pub_el).removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
        }
        if (! private_key){
-           $(pri_el).addClass("has-error");
+           $(pri_el).addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
        }
        else {
-           $(pri_el).removeClass("has-error");
+           $(pri_el).removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
        }
        if (public_key && private_key){
            ajax.jsonRpc('/website/set_gengo_config', 'call', {

@@ -161,7 +161,7 @@ var DomainNode = Widget.extend({
 var DomainTree = DomainNode.extend({
     template: "DomainTree",
     events: _.extend({}, DomainNode.prototype.events, {
-        "click .o_domain_tree_operator_selector > ul > li > a": "_onOperatorChange",
+        "click .o_domain_tree_operator_selector .dropdown-item": "_onOperatorChange",
     }),
     custom_events: {
         // If a domain child sends a request to add a child or remove one, call

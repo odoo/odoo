@@ -33,7 +33,7 @@
                     </a>
                 </div>
                 <div class="row">
-                    <div class="col-xs-1 mb16">
+                    <div class="col-1 mb16">
                         <field name="paypal_checked" nolabel="1" />
                     </div>
                     <div>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="row">
                     <div attrs="{'invisible': [('paypal_checked', '=', False)]}"
-                         class="col-xs-offset-1">
+                         class="offset-1">
                         <a href="https://www.paypal.com" target="_blank">PayPal</a>
                         is the easiest way to accept payments. It's easy to configure and it offers
                         <a href="https://www.paypal.com/us/webapps/mpp/merchant-fees"
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-1 mb16">
+                    <div class="col-1 mb16">
                         <field name="stripe_checked" nolabel="1" />
                     </div>
                     <div>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="row">
                     <div attrs="{'invisible': [('stripe_checked', '=', False)]}"
-                         class="col-xs-offset-1">
+                         class="offset-1">
                         <a href="https://stripe.com" target="_blank">Stripe</a>
                         is a payment provider with
                         <a href="https://stripe.com/pricing" target="_blank">
@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-1">
+                    <div class="col-1">
                         <field name="manual_checked" nolabel="1" />
                     </div>
                     <div>
@@ -99,7 +99,7 @@
                 </div>
                 <div class="row">
                     <div attrs="{'invisible': [('manual_checked', '=', False)]}"
-                         class="col-xs-offset-1">
+                         class="offset-1">
                         Provide customers with instructions to pay outside of your platform (wire
                         transfer, cash on delivery, etc.).
                         <group>

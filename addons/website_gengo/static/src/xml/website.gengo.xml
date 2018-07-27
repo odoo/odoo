@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 <t t-name="website.ButtonGengoTranslator">
     <a role="button" class="btn btn-danger gengo_post" data-action="translation_gengo_post" href="#">Auto Translate</a>
-    <a role="button" class="btn btn-danger hidden gengo_wait disabled"  href="#"><i class="fa fa-spinner fa-spin"></i> Wait</a>
-    <a role="button" class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
+    <a role="button" class="btn btn-danger d-none gengo_wait disabled"  href="#"><i class="fa fa-spinner fa-spin"></i> Wait</a>
+    <a role="button" class="btn btn-danger d-none gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
     <a role="button" class="btn btn-link gengo_info" data-action="translation_gengo_info">Count Words</a>
 </t>
 <t t-name="web_editor.TranslatorInfoDialog">
@@ -45,7 +45,7 @@
                     </div>
                     <div>
                         <button type="button" data-action="activate" class="btn btn-primary">Ok</button>
-                        <button type="button" class="btn btn-default" data-action="discard" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-action="discard" data-dismiss="modal">Cancel</button>
                     </div>
                 </footer>
             </div>
@@ -73,7 +73,7 @@
                 </main>
                 <footer class="modal-footer">
                     <button type="button" data-action="service_level" class="btn btn-primary">Post</button>
-                    <button type="button" class="btn btn-default" data-action="discard" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-action="discard" data-dismiss="modal">Cancel</button>
                 </footer>
             </div>
         </div>
@@ -91,7 +91,7 @@
                 <main class="modal-body">
                     <b>
                         <div class="text-muted mb16"> <i class="fa fa-search-plus"></i> <t t-esc="widget.new_words"></t> new words found on this page.</div>
-                        <h4><i class="fa fa-tachometer"></i> Gengo Statistics <a href="https://gengo.com/c/dashboard" class="pull-right" target="new">Gengo Dashboard</a></h4>
+                        <h4><i class="fa fa-tachometer"></i> Gengo Statistics <a href="https://gengo.com/c/dashboard" class="float-right" target="new">Gengo Dashboard</a></h4>
                         <hr class="mt8"/>
                         <div class="text-info mb8"> <i class="fa fa-align-left"></i> Words posted for translate <t t-esc="widget.total"></t></div>
                         <div class="text-warning mb8"> <i class="fa fa-cogs"></i> Words in progress <t t-esc="widget.inprogess"></t></div>
@@ -120,14 +120,14 @@
                         <ul class="list-group">
                             <li class="list-group-item form-group gengo_group_public">
                                 <h4 class="list-group-item-heading">
-                                    <label  class="control-label">Public key</label>
+                                    <label  class="col-form-label">Public key</label>
                                 </h4>
                                 <input type="text" class="form-control url url-source" id="gengo_public_key" placeholder="Paste public key here"/>
 
                             </li>
                             <li class="list-group-item form-group gengo_group_private">
                                 <h4 class="list-group-item-heading">
-                                    <label for="link-external" class="control-label">Private key</label>
+                                    <label for="link-external" class="col-form-label">Private key</label>
                                 </h4>
                                 <input type="text" class="form-control url url-source" id="gengo_private_key" placeholder="Paste private key here"/>
                             </li>
@@ -150,7 +150,7 @@
                 </main>
                 <footer class="modal-footer">
                     <button type="button" data-action="set_config" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-default" data-action="discard" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-action="discard" data-dismiss="modal">Close</button>
                 </footer>
             </div>
         </div>

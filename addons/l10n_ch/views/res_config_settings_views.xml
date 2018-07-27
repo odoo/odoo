@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@id='accounting_reports']" position="inside">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="l10n_ch-isr_print_bank">
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_ch-isr_print_bank">
                         <div class="o_setting_left_pane">
                             <field name="l10n_ch_isr_print_bank_location"/>
                         </div>
@@ -19,17 +19,17 @@
                             </div>
                             <div class="content-group" attrs="{'invisible': [('l10n_ch_isr_print_bank_location', '=', False)]}">
                                 <div class="row mt16">
-                                    <label for="l10n_ch_isr_preprinted_bank" class="col-md-4 o_light_label"/>
+                                    <label for="l10n_ch_isr_preprinted_bank" class="col-lg-4 o_light_label"/>
                                     <field name="l10n_ch_isr_preprinted_bank"/>
                                 </div>
                                 <div class="row">
-                                    <label for="l10n_ch_isr_preprinted_account" class="col-md-4 o_light_label"/>
+                                    <label for="l10n_ch_isr_preprinted_account" class="col-lg-4 o_light_label"/>
                                     <field name="l10n_ch_isr_preprinted_account"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="l10n_ch-isr_print_scanline_offset">
+                    <div class="col-12 col-lg-6 o_setting_box" id="l10n_ch-isr_print_scanline_offset">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">ISR scan line offset</span>
@@ -38,11 +38,11 @@
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <label for="l10n_ch_isr_scan_line_top" class="col-md-4 o_light_label"/>
+                                    <label for="l10n_ch_isr_scan_line_top" class="col-lg-4 o_light_label"/>
                                     <field name="l10n_ch_isr_scan_line_top"/>
                                 </div>
                                 <div class="row">
-                                    <label for="l10n_ch_isr_scan_line_left" class="col-md-4 o_light_label"/>
+                                    <label for="l10n_ch_isr_scan_line_left" class="col-lg-4 o_light_label"/>
                                     <field name="l10n_ch_isr_scan_line_left"/>
                                 </div>
                             </div>

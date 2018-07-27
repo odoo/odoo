@@ -49,7 +49,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             buttons.push({
                 text: _t("Go To Page"),
                 icon: 'fa-globe',
-                classes: 'btn-link pull-right',
+                classes: 'btn-link float-right',
                 click: function (e) {
                     window.location.href = '/' + self.page.url;
                 },
@@ -58,7 +58,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         buttons.push({
             text: _t("Delete Page"),
             icon: 'fa-trash',
-            classes: 'btn-link pull-right',
+            classes: 'btn-link float-right',
             click: function (e) {
                 _deletePage.call(this, self.page_id, options.fromPageManagement);
             },
@@ -105,9 +105,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
 
         var defs = [this._super.apply(this, arguments)];
 
-        this.$('.ask_for_redirect').addClass('hidden');
-        this.$('.redirect_type').addClass('hidden');
-        this.$('.warn_about_call').addClass('hidden');
+        this.$('.ask_for_redirect').addClass('d-none');
+        this.$('.redirect_type').addClass('d-none');
+        this.$('.warn_about_call').addClass('d-none');
 
         defs.push(this._getPageDependencies(this.page_id, context)
         .then(function (dependencies) {
@@ -192,12 +192,12 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         var url = this.$('#page_url').val();
 
         var $date_publish = this.$("#date_publish");
-        $date_publish.closest(".form-group").removeClass('has-error');
+        $date_publish.closest(".form-group").removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         var date_publish = $date_publish.val();
         if (date_publish !== "") {
             date_publish = this._parse_date(date_publish);
             if (!date_publish) {
-                $date_publish.closest(".form-group").addClass('has-error');
+                $date_publish.closest(".form-group").addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 return;
             }
         }
@@ -326,7 +326,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onUrlChanged: function () {
         var url = this.$('input#page_url').val();
-        this.$('.ask_for_redirect').toggleClass('hidden', url === this.page.url);
+        this.$('.ask_for_redirect').toggleClass('d-none', url === this.page.url);
     },
     /**
      * @private
@@ -338,7 +338,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         // check only for url and not key
         var ext = '.' + this.page.name.split('.').pop();
         if (ext in this.supportedMimetype && ext !== '.html') {
-            this.$('.warn_about_call').toggleClass('hidden', name === this.page.name);
+            this.$('.warn_about_call').toggleClass('d-none', name === this.page.name);
         }
     },
     /**
@@ -346,7 +346,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onCreateRedirectChanged: function () {
         var createRedirect = this.$('input#create_redirect').prop('checked');
-        this.$('.redirect_type').toggleClass('hidden', !createRedirect);
+        this.$('.redirect_type').toggleClass('d-none', !createRedirect);
     },
 });
 
@@ -374,7 +374,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
         this.$('.o_link_dialog_preview').remove();
         this.$('input[name="is_new_window"], .link-style').closest('.form-group').remove();
         this.$modal.find('.modal-lg').removeClass('modal-lg')
-                   .find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
+                   .find('.col-lg-8').removeClass('col-lg-8').addClass('col-12');
 
         // Adapt URL label
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
@@ -394,7 +394,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     save: function () {
         var $e = this.$('#o_link_dialog_label_input');
         if (!$e.val() || !$e[0].checkValidity()) {
-            $e.closest('.form-group').addClass('has-error');
+            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
             $e.focus();
             return;
         }
