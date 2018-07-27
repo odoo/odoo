@@ -5,8 +5,6 @@ from datetime import date, datetime, timedelta
 import pytz
 
 from odoo import api, exceptions, fields, models, _
-from odoo.osv import expression
-from odoo.tools import pycompat
 
 
 class MailActivityType(models.Model):
@@ -231,6 +229,8 @@ class MailActivity(models.Model):
         # check target user has rights on document otherwise we have to prevent activity creation
         if activity_user.user_id != self.env.user:
             activity_user._check_access_assignation()
+            if not self.env.context.get('mail_activity_quick_update', False):
+                activity_user.action_notify()
 
         self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
         if activity.date_deadline <= fields.Date.today():
@@ -249,6 +249,8 @@ class MailActivity(models.Model):
         if values.get('user_id'):
             if values['user_id'] != self.env.uid:
                 self._check_access_assignation()
+                if not self.env.context.get('mail_activity_quick_update', False):
+                    self.action_notify()
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
                 if activity.date_deadline <= fields.Date.today():
@@ -272,6 +274,25 @@ class MailActivity(models.Model):
                     (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self.sudo()).unlink()
+
+    @api.multi
+    def action_notify(self):
+        body_template = self.env.ref('mail.message_activity_assigned')
+        for activity in self:
+            model_description = self.env[activity.res_model]._description.lower()
+            body = body_template.render(
+                dict(activity=activity, model_description=model_description),
+                engine='ir.qweb',
+                minimal_qcontext=True
+            )
+            self.env['mail.thread'].message_notify(
+                partner_ids=activity.user_id.partner_id.ids,
+                body=body,
+                subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
+                record_name=activity.res_name,
+                model_description=model_description,
+                notif_layout='mail.mail_notification_light'
+            )
 
     @api.multi
     def action_done(self):

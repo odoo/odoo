@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from json import dumps, loads
 
 import json
 
@@ -43,23 +42,23 @@ class BaseFunctionalTest(common.SavepointCase):
     def assertNotifications(self, **counters):
         """ Counters: 'partner_attribute': 'inbox' or 'email' """
         try:
-            init_messages = self.test_record.message_ids
             init = {}
             partners = self.env['res.partner']
             for partner_attribute in counters.keys():
-                partner = getattr(self, partner_attribute)
-                partners |= partner
+                partners |= getattr(self, partner_attribute)
+            init_notifs = self.env['mail.notification'].sudo().search([('res_partner_id', 'in', partners.ids)])
+            for partner in partners:
                 if partner.user_ids:
                     init[partner] = {
-                        'na_counter': self.test_record.sudo(partner.user_ids[0]).message_needaction_counter,
+                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner]),
                     }
             yield
         finally:
-            new_messages = self.test_record.sudo().message_ids - init_messages
-            new_notifications = self.env['mail.notification'].search([
+            new_notifications = self.env['mail.notification'].sudo().search([
                 ('res_partner_id', 'in', partners.ids),
-                ('mail_message_id', 'in', new_messages.ids)
+                ('id', 'not in', init_notifs.ids)
             ])
+            new_messages = new_notifications.mapped('mail_message_id')
 
             for partner_attribute in counters.keys():
                 counter, notif_type, notif_read = counters[partner_attribute]
@@ -70,9 +69,12 @@ class BaseFunctionalTest(common.SavepointCase):
 
                 if partner.user_ids:
                     expected = init[partner]['na_counter'] + counter if notif_read == 'unread' else init[partner]['na_counter']
-                    self.assertEqual(expected, self.test_record.sudo(partner.user_ids[0]).message_needaction_counter,
-                                     'Invalid number of notification for %s: %s instead of %s' %
-                                     (partner.name, expected, self.test_record.sudo(partner.user_ids[0]).message_needaction_counter))
+                    real = self.env['mail.notification'].sudo().search_count([
+                        ('res_partner_id', '=', partner.id),
+                        ('is_read', '=', False)
+                    ])
+                    self.assertEqual(expected, real, 'Invalid number of notification for %s: %s instead of %s' %
+                                                     (partner.name, real, expected))
                 if partner_notif:
                     self.assertTrue(all(n.is_email == (notif_type == 'email') for n in partner_notif))
                     self.assertTrue(all(n.is_read == (notif_read == 'read') for n in partner_notif),
