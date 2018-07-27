@@ -205,7 +205,8 @@ var DataImport = Widget.extend(ControlPanelMixin, {
     },
     create_model: function() {
         return this.Import.call('create', [{
-                'res_model': this.res_model
+                'res_model': this.res_model,
+                'kwargs': {context: session.user_context},
             }]);
     },
     render_buttons: function() {
@@ -346,7 +347,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             'oe_import_noheaders',
             !this.$('input.oe_import_has_header').prop('checked'));
         this.Import.call(
-            'parse_preview', [this.id, this.import_options()])
+            'parse_preview', [this.id, this.import_options()],{context: session.user_context})
             .done(function (result) {
                 var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                 self[signal](result);
