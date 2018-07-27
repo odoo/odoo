@@ -94,19 +94,14 @@ class Project(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
 
-    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", related='project_id.analytic_account_id', readonly=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", compute='_compute_allow_timesheets', help="Timesheets can be logged on this task.")
+    analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
+    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.")
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', inverse='_inverse_remaining_hours', help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
-
-    @api.depends('project_id.allow_timesheets', 'project_id.analytic_account_id')
-    def _compute_allow_timesheets(self):
-        for task in self:
-            task.allow_timesheets = task.project_id.allow_timesheets and task.project_id.analytic_account_id.active
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
