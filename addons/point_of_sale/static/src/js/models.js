@@ -294,7 +294,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
-        fields: ['name', 'display_name'],
+        fields: ['name', 'display_name', 'discount_policy'],
         domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
@@ -1306,6 +1306,9 @@ exports.Product = Backbone.Model.extend({
         // because it would cause inconsistencies with the backend for
         // pricelist that have base == 'pricelist'.
         return price;
+    }, 
+    get_discount_policy: function(pricelist){
+        return pricelist.discount_policy;
     },
 });
 
@@ -1779,6 +1782,12 @@ exports.Orderline = Backbone.Model.extend({
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
+    },
+    display_discount_policy: function(){
+        return this.product.get_discount_policy(this.order.pricelist);
+    },
+    get_list_price: function(){
+        return this.product.list_price;
     },
 });
 
@@ -2450,7 +2459,9 @@ exports.Order = Backbone.Model.extend({
     },
     get_total_discount: function() {
         return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-            return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            sum += ((orderLine.get_list_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
+            return sum
         }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {
