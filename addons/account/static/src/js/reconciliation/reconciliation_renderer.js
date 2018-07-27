@@ -468,6 +468,14 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                             if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
                                 field.reset(record);
                             }
+                            if (fieldName === 'tax_id') {
+                                if (state.createForm[fieldName]) {
+                                    $('.create_force_tax_included').removeClass('hidden');
+                                }
+                                else {
+                                    $('.create_force_tax_included').addClass('hidden');
+                                }
+                            } 
                         });
                     });
                 });
