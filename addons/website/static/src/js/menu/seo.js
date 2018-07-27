@@ -18,16 +18,16 @@ var WORD_SEPARATORS_REGEX = '([\\u2000-\\u206F\\u2E00-\\u2E7F\'!"#\\$%&\\(\\)\\*
 
 function analyzeKeyword(htmlPage, keyword) {
     return  htmlPage.isInTitle(keyword) ? {
-                title: 'label label-success',
+                title: 'badge badge-success',
                 description: "This keyword is used in the page title",
             } : htmlPage.isInDescription(keyword) ? {
-                title: 'label label-primary',
+                title: 'badge badge-primary',
                 description: "This keyword is used in the page description",
             } : htmlPage.isInBody(keyword) ? {
-                title: 'label label-info',
+                title: 'badge badge-info',
                 description: "This keyword is used in the page content."
             } : {
-                title: 'label label-default',
+                title: 'badge badge-secondary',
                 description: "This keyword is not used anywhere on the page."
             };
 }

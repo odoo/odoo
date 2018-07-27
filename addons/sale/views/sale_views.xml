@@ -454,23 +454,23 @@
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                                 <t t-if="!record.display_type.raw_value">
                                                     <div class="row">
-                                                        <div class="col-xs-8">
+                                                        <div class="col-8">
                                                             <strong>
                                                                 <span>
                                                                     <t t-esc="record.product_id.value"/>
                                                                 </span>
                                                             </strong>
                                                         </div>
-                                                        <div class="col-xs-4">
+                                                        <div class="col-4">
                                                             <strong>
-                                                                <span class="pull-right text-right">
+                                                                <span class="float-right text-right">
                                                                     <t t-esc="record.price_subtotal.value"/>
                                                                 </span>
                                                             </strong>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 text-muted">
+                                                        <div class="col-12 text-muted">
                                                             <span>
                                                                 Quantity:
                                                                 <t t-esc="record.product_uom_qty.value"/>
@@ -479,7 +479,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12 text-muted">
+                                                        <div class="col-12 text-muted">
                                                             <span>
                                                                 Unit Price:
                                                                 <t t-esc="record.price_unit.value"/>
@@ -489,7 +489,7 @@
                                                 </t>
                                                 <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
                                                     <div class="row">
-                                                        <div class="col-xs-12">
+                                                        <div class="col-12">
                                                             <span>
                                                                 <t t-esc="record.name.value"/>
                                                             </span>

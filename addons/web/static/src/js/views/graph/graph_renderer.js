@@ -243,7 +243,7 @@ return AbstractRenderer.extend({
 
         svg.transition().duration(100);
 
-        var legend_right = config.device.size_class > config.device.SIZES.XS;
+        var legend_right = config.device.size_class > config.device.SIZES.VSM;
 
         var chart = nv.models.pieChart().labelType('percent');
         chart.options({

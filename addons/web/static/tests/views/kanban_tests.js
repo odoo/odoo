@@ -184,7 +184,7 @@ QUnit.module('Views', {
         envIDs = [4];
         kanban.$('.o_kanban_group:last .o_column_archive_records').click(); // Click on 'Archive All'
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // Click on 'Cancel'
+        $('.modal-footer .btn-secondary').click(); // Click on 'Cancel'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3, "still last column should contain 3 records");
         kanban.$('.o_kanban_group:last .o_column_archive_records').click();
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
@@ -738,7 +738,7 @@ QUnit.module('Views', {
 
         // Select state in kanban
         kanban.$('.o_status').first().click();
-        kanban.$('.o_selection ul:first li:first').click();
+        kanban.$('.o_selection .dropdown-item:first').click();
         assert.ok(kanban.$('.o_status').first().hasClass('o_status_green'),
             "Kanban state should be done (Green)");
         kanban.destroy();
@@ -1795,7 +1795,7 @@ QUnit.module('Views', {
         // delete second column (first cancel the confirm request, then confirm)
         kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal-footer .btn-default').click(); // click on cancel
+        $('.modal-footer .btn-secondary').click(); // click on cancel
         assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 5,
             'column [5, "xmo"] should still be there');
         kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
@@ -1928,7 +1928,7 @@ QUnit.module('Views', {
         kanban.$('.o_kanban_group[data-id=5] .o_column_edit').click(); // click on 'Edit'
         $('.modal .o_form_editable input').val('ged').trigger('input'); // change the value
         nbRPCs = 0;
-        $('.modal-footer .btn-default').click(); // click on discard
+        $('.modal-footer .btn-secondary').click(); // click on discard
         assert.ok(!$('.modal').length, 'the modal should be closed');
         assert.strictEqual(kanban.$('.o_kanban_group[data-id=5] .o_column_title').text(), 'xmo',
             'title of the column should still be "xmo"');
@@ -2760,7 +2760,7 @@ QUnit.module('Views', {
                         '<t t-name="kanban-box">' +
                             '<div>' +
                                 '<field name="foo"/>' +
-                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary pull-right btn-sm" name="channel_join_and_get_info">Join</button>' +
+                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary float-right" name="channel_join_and_get_info">Join</button>' +
                             '</div>' +
                         '</t>' +
                     '</templates>' +
@@ -2789,10 +2789,10 @@ QUnit.module('Views', {
                         '<t t-name="kanban-box">' +
                             '<div color="color">' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
                                             '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
-                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
+                                    '<ul class="dropdown-menu" role="menu">' +
                                         '<li>' +
                                             '<ul class="oe_kanban_colorpicker"/>' +
                                         '</li>' +

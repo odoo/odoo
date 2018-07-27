@@ -343,9 +343,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     update: function (state) {
         var self = this;
         // isValid
-        this.$('caption .o_buttons button.o_validate').toggleClass('hidden', !!state.balance.type);
-        this.$('caption .o_buttons button.o_reconcile').toggleClass('hidden', state.balance.type <= 0);
-        this.$('caption .o_buttons .o_no_valid').toggleClass('hidden', state.balance.type >= 0);
+        this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type);
+        this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0);
+        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
 
         // partner_id
         this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name).then(function (recordID) {
@@ -485,7 +485,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _destroyPopover: function ($el) {
         var popover = $el.data('bs.popover');
         if (popover) {
-            popover.destroy();
+            popover.dispose();
         }
     },
     /**
@@ -775,7 +775,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _onTogglePartialReconcile: function (e) {
         e.stopPropagation();
         var popover = $(e.target).data('bs.popover');
-        popover && popover.destroy();
+        popover && popover.dispose();
         this.trigger_up('toggle_partial_reconcile');
     }
 });

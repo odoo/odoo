@@ -9,19 +9,19 @@
     &.o_no_notification > a {
         opacity: 0.5;
         > i {
-            @include o-transform(translateY(0px));
+            transform: translateY(0px);
         }
         .o_notification_counter {
             display: none;
         }
     }
-    &.open .o_mail_systray_dropdown {
-        @include o-flex-display;
-        @include o-flex-flow(column, nowrap);
+    &.show .o_mail_systray_dropdown {
+        display: flex;
+        flex-flow: column nowrap;
     }
     .o_notification_counter {
         @include o-position-absolute($top: 20%, $right: 1px);
-        background: $o-brand-optional;
+        background: $o-brand-primary;
         color: white;
         padding: 0em 0.3em;
         font-size: 0.7em;
@@ -31,26 +31,26 @@
         padding: 0;
 
         .o_spinner {
-            @include o-flex-display;
-            @include o-align-items(center);
-            @include o-justify-content(center);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: $o-main-text-color;
             height: 50px;
         }
 
         .o_mail_systray_dropdown_top {
-            @include o-flex-display;
-            @include o-flex(0, 0, auto);
+            display: flex;
+            flex: 0 0 auto;
             justify-content: space-between;
-            border-bottom: 1px solid $gray-lighter-darker;
-            box-shadow: 0 0 2px $gray-lighter-darker;
+            border-bottom: 1px solid gray('400');
+            box-shadow: 0 0 2px gray('400');
             .o_filter_button, .o_new_message {
                 padding: 5px;
             }
             .o_filter_button {
                 color: $o-main-color-muted;
                 &:hover, &.active {
-                    color: $o-brand-optional;
+                    color: $o-brand-primary;
                 }
                 &.active {
                     cursor: default;
@@ -60,12 +60,12 @@
         }
 
         .o_mail_systray_dropdown_items {
-            @include o-flex(0, 1, auto);
+            flex: 0 1 auto;
             max-height: 400px;
             min-height: 50px;
             overflow-y: auto;
 
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 .o_mail_preview {
                     min-height: 50px;
                     padding: 5px;
@@ -91,7 +91,7 @@
         }
         .o_no_activity {
             cursor: initial;
-            @include o-align-items(center);
+            align-items: center;
             color: grey;
             opacity: 0.5;
             padding: 3px;
@@ -105,7 +105,7 @@
 
 // Mobile rules
 // Goal: mock the design of Discuss in mobile
-@media (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
     .o_mail_systray_item {
         .o_notification_counter {
             top: 10%;
@@ -119,7 +119,7 @@
                 padding: 5px;
                 height: 44px;
                 border-bottom: 1px solid #ebebeb;
-                box-shadow: 0 0 2px $gray-lighter-darker;
+                box-shadow: 0 0 2px gray('400');
             }
             .o_mail_systray_dropdown_items {
                 max-height: none;

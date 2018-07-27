@@ -59,10 +59,10 @@
                         </div>
                         <div class="oe_kanban_details">
                             <div id="textbox">
-                                <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                                <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
                                     <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                                 </div>
-                                <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                                <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
                                     <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
                                 </div>
                                 <strong>
@@ -92,10 +92,10 @@
             </templates>
             <field name="name" position="replace">
                 <div>
-                    <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                    <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_in'">
                         <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                     </div>
-                    <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                    <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
                         <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
                     </div>
                     <strong>

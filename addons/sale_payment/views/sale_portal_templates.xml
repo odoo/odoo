@@ -3,12 +3,12 @@
         <xpath expr="//t[@name='portal_confirmation_sign']" position="after">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <t t-if="order.amount_total and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and payment_tx_id.state != 'done'" name="portal_confirmation_pay">
-                <a class="btn btn-primary ml8 pull-right" href="#portal_pay" role="button">
+                <a class="btn btn-primary ml8 float-right" href="#portal_pay" role="button">
                     <i class="fa fa-arrow-circle-right"/> Pay Now
                 </a>
             </t>
             <t t-if="invoices and order.state in ('sale', 'done') and portal_confirmation == 'pay'">
-                <a role="button" class="btn btn-primary ml8 pull-right" disabled="disabled">
+                <a role="button" class="btn btn-primary ml8 float-right" disabled="disabled">
                     <i class="fa fa-check-circle"/> Done
                 </a>
             </t>
@@ -21,8 +21,8 @@
         </xpath>
         <xpath expr="//div[@id='portal_sign']" position="after">
             <div class="row" t-if="order.amount_total and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and order.get_portal_last_transaction().state != 'done'" id="portal_pay">
-                <div class="col-md-offset-3 col-md-6">
-                    <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
+                <div class="offset-lg-3 col-lg-6">
+                    <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left">
                         <h4 class="mb24">Pay with</h4>
                         <t t-call="payment.payment_tokens_list">
                             <t t-set="mode" t-value="'payment'"/>
@@ -38,8 +38,8 @@
                         </t>
                     </div>
                 </div>
-                <div class="panel-body" t-if="existing_token">
-                    <div class="col-md-offset-3 col-md-6">
+                <div class="panel-body" t-if="existing_token"><!-- FIXME -->
+                    <div class="offset-lg-3 col-lg-6">
                         <i class="fa fa-info"></i> You have credits card registered, you can log-in to be able to use them.
                     </div>
                 </div>
@@ -57,10 +57,10 @@
                         <span t-esc="tx.reference"/>
                         <span class="text-muted" t-field="tx.create_date"/>
                         <t t-if="tx.state == 'done'">
-                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
+                            <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
                         </t>
                         <t t-if="tx.state != 'done'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
                             <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>

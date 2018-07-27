@@ -5,24 +5,24 @@
     <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} media">
         <t t-set="is_self" t-value="employee_type == 'self'"/>
 
-        <div class="media-left">
+        <div>
             <!-- NOTE: Since by the default on not squared images odoo add white borders,
                 use bg-images to get a clean and centred images -->
             <a t-if="! is_self"
-                class="media-object img-circle o_employee_redirect"
+                class="rounded-circle o_employee_redirect"
                 t-att-style="'background-image:url(\'/web/image/hr.employee/' + employee.id + '/image/\')'"
                 t-att-alt="employee.name"
                 t-att-data-employee-id="employee.id"
                 t-att-href="employee.link"/>
             <div t-if="is_self"
-                class="media-object img-circle"
+                class="rounded-circle"
                 t-att-style="'background-image:url(\'/web/image/hr.employee/' + employee.id + '/image/\')'"/>
         </div>
 
         <div class="media-body">
             <span
                     t-if="employee.indirect_sub_count &gt; 0"
-                    class="badge"
+                    class="badge badge-pill"
                     tabindex="0"
                     data-trigger="focus"
                     t-att-data-emp-name="employee.name"
@@ -35,12 +35,12 @@
 
             <t t-if="!is_self">
                 <a t-att-href="employee.link" class="o_employee_redirect" t-att-data-employee-id="employee.id">
-                    <h5 class="media-heading"><b><t t-esc="employee.name"/></b></h5>
+                    <h5><b><t t-esc="employee.name"/></b></h5>
                     <strong><t t-esc="employee.job_name"/></strong>
                 </a>
             </t>
             <t t-if="is_self">
-                <h5 class="media-heading"><b><t t-esc="employee.name"/></b></h5>
+                <h5><b><t t-esc="employee.name"/></b></h5>
                 <strong><t t-esc="employee.job_name"/></strong>
             </t>
         </div>
@@ -59,13 +59,11 @@
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up">
         <t t-if='managers_more'>
             <div class="o_org_chart_entry o_org_chart_more media">
-                <div class="media-left">
-                    <a class="well media-object text-center o_employee_redirect"
-                            t-att-href="managers[0].link"
-                            t-att-data-employee-id="managers[0].id">
-                        <i t-attf-class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
-                    </a>
-                </div>
+                <a class="text-center o_employee_redirect"
+                        t-att-href="managers[0].link"
+                        t-att-data-employee-id="managers[0].id">
+                    <i t-attf-class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
+                </a>
             </div>
         </t>
 
@@ -102,11 +100,9 @@
 
         <t t-if="(children.length + managers.length) &gt; 7">
             <div class="o_org_chart_entry o_org_chart_more media">
-                <div class="media-left">
-                    <a href="#"
-                        t-att-data-employee-id="self.id"
-                        class="well o_org_chart_show_more media-object text-center o_employee_sub_redirect">&#8230;</a>
-                </div>
+                <a href="#"
+                    t-att-data-employee-id="self.id"
+                    class="o_org_chart_show_more text-center o_employee_sub_redirect">&#8230;</a>
             </div>
         </t>
     </div>
@@ -117,7 +113,7 @@
 </t>
 
 <t t-name="hr_orgchart_emp_popover_content">
-    <table class="table table-condensed">
+    <table class="table table-sm">
         <thead>
             <td class="text-right"><t t-esc="employee.direct_sub_count"/></td>
             <td>
@@ -152,7 +148,7 @@
 <t t-name="hr_orgchart_emp_popover_title">
     <div>
         <span t-att-style='"background-image:url(\"/web/image/hr.employee/" + employee.id + "/image/\")"'/>
-        <a href="#" class="pull-right o_employee_redirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
+        <a href="#" class="float-right o_employee_redirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
         <b><t t-esc="employee.name"/></b>
     </div>
 </t>

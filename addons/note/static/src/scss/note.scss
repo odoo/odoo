@@ -8,7 +8,7 @@
         margin-bottom: 0;
     }
     .oe_form_field.oe_memo {
-        margin: 0 ($padding-large-horizontal * -1);
+        margin: 0 ($input-btn-padding-x-lg * -1);
         padding: 0;
         min-height: 200px;
 
@@ -18,8 +18,8 @@
     }
     &.o_form_readonly {
         .oe_memo {
-            padding: $padding-large-horizontal;
-            border-bottom: 1px solid $legend-border-color;
+            padding: $input-btn-padding-x-lg;
+            border-bottom: 1px solid gray('900');
         }
     }
 }
@@ -30,13 +30,13 @@
     .o_preview_info {
         .o_preview_title {
             .o_preview_name {
-                @include o-flex(1, 1, 100%);
+                flex: 1 1 100%;
             }
         }
         .o_note_input_box {
-            @include o-flex-display;
+            display: flex;
             p {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
             }
         }
         .o_note_save {

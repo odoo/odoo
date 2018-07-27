@@ -170,7 +170,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-bars').prev().click();
-        $('li.o_menu_item a').click();
+        $('.o_menu_item a').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'candle',
             'should have a facet with candle name');
         actionManager.destroy();
@@ -187,7 +187,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-bars').prev().click();
-        $('li.o_menu_item a').click();
+        $('.o_menu_item a').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'candle',
             'should have a facet with candle name');
         $('.o_facet_remove:first').click();
@@ -304,7 +304,7 @@ QUnit.module('Search View', {
         // // no groupby is applied
         assert.strictEqual($('div.o_facet_values span').length, 0);
         // // open 'Add custom Groupby' menu
-        $('.o_group_by_menu .o_add_custom_group a').click();
+        $('.o_group_by_menu .o_add_custom_group').click();
         // // click on 'Apply' button
         $('.o_group_by_menu .o_generator_menu button').click();
         // // data should be grouped by the field 'Birthday' using the interval 'month'
@@ -364,7 +364,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-filter').click();
-        $('li.o_add_custom_filter').click();
+        $('.o_add_custom_filter').click();
         $('.o_apply_filter').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'ID is \"0\"',
             'should have a facet with candle name');
@@ -382,9 +382,9 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-filter').click();
-        $('li.o_add_custom_filter').click();
+        $('.o_add_custom_filter').click();
         $('.o_apply_filter').click();
-        $('li.o_menu_item').click();
+        $('.o_menu_item').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
             'no facet should be in the search view');
         actionManager.destroy();
@@ -455,20 +455,20 @@ QUnit.module('Search View', {
         // open menu 'Filter'
         $('.o_search_options .fa-filter').click();
         // open menu options
-        $('li.o_menu_item').click();
-        $('li.o_menu_item .o_item_option[data-option_id="today"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_week"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_month"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_quarter"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_year"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="yesterday"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_week"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_month"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_quarter"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_year"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_7_days"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_30_days"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_365_days"]').click();
+        $('.o_menu_item').click();
+        $('.o_menu_item .o_item_option[data-option_id="today"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_week"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_month"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_quarter"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_year"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="yesterday"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_week"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_month"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_quarter"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_year"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_7_days"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_30_days"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_365_days"]').click();
 
         actionManager.destroy();
         window.Date = RealDate;
@@ -498,7 +498,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(6);
         $('span.fa-filter').click();
-        $('.o_filters_menu li.o_menu_item a').click();
+        $('.o_filters_menu .o_menu_item a').click();
         $('.o_item_option:first').click();
         $('span.fa-star').click();
         $('.o_favorites_menu .o_save_search a').click();

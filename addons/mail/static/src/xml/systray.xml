@@ -6,25 +6,25 @@
     -->
     <t t-name="mail.systray.MessagingMenu">
         <li class="o_mail_systray_item">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
-                <i class="fa fa-comments" role="img" aria-label="Messages"/> <span class="o_notification_counter badge"/>
+            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
+                <i class="fa fa-comments" role="img" aria-label="Messages"/> <span class="o_notification_counter badge badge-pill"/>
             </a>
-            <ul class="o_mail_systray_dropdown dropdown-menu" role="menu">
-                <li role="menuitem" t-if="widget.isMobile()">
+            <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
+                <t t-if="widget.isMobile()">
                     <div class="o_mail_systray_mobile_header">
-                        <button type="button" class="btn btn-default btn-sm o_new_message"> New message </button>
+                        <button type="button" class="btn btn-secondary o_new_message"> New message </button>
                     </div>
-                </li>
-                <li role="menuitem" t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
+                </t>
+                <div t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
                     <div>
-                        <button type="button" class="btn btn-sm btn-link o_filter_button active"> All </button>
-                        <button type="button" class="btn btn-sm btn-link o_filter_button" data-filter='chat'> Chat </button>
-                        <button type="button" class="btn btn-sm btn-link o_filter_button" data-filter='channels'> Channels </button>
+                        <button type="button" class="btn btn-link o_filter_button active"> All </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='chat'> Chat </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='channels'> Channels </button>
                     </div>
-                    <button type="button" class="btn btn-sm btn-link o_new_message"> New message </button>
-                </li>
-                <li role="menuitem" class="o_mail_systray_dropdown_items"/>
-                <li role="menuitem" t-if="widget.isMobile()">
+                    <button type="button" class="btn btn-link o_new_message"> New message </button>
+                </div>
+                <div class="o_mail_systray_dropdown_items"/>
+                <t t-if="widget.isMobile()">
                     <div class="o_mail_mobile_tabs">
                         <div class="o_mail_mobile_tab o_filter_button active">
                             <span class="fa fa-envelope"/>
@@ -39,8 +39,8 @@
                             <span class="o_tab_title">Channels</span>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </t>
+            </div>
         </li>
     </t>
 
@@ -64,9 +64,9 @@
     -->
     <t t-name="mail.systray.ActivityMenu.Previews">
         <t t-if="_.isEmpty(activities)">
-            <li class="text-center o_no_activity">
+            <div class="dropdown-item-text text-center o_no_activity">
                 <span>No activities planned.</span>
-            </li>
+            </div>
         </t>
         <t t-foreach="activities" t-as="activity">
             <div class="o_mail_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
@@ -84,8 +84,8 @@
                         <span t-if="!activity.overdue_count" class="o_no_activity mr16">0 Late </span>
                         <button t-if="activity.today_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='today'> <t t-esc="activity.today_count"/> Today </button>
                         <span t-if="!activity.today_count" class="o_no_activity mr16">0 Today </span>
-                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button pull-right" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
-                        <span t-if="!activity.planned_count" class="o_no_activity pull-right">0 Future</span>
+                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button float-right" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
+                        <span t-if="!activity.planned_count" class="o_no_activity float-right">0 Future</span>
                     </div>
                 </div>
             </div>
@@ -94,12 +94,12 @@
 
     <t t-name="mail.systray.ActivityMenu">
         <li class="o_mail_systray_item">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
-                <i class="fa fa-clock-o" role="img" aria-label="Activities"/> <span class="o_notification_counter badge"/>
+            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
+                <i class="fa fa-clock-o" role="img" aria-label="Activities"/> <span class="o_notification_counter badge badge-pill"/>
             </a>
-            <ul class="o_mail_systray_dropdown dropdown-menu" role="menu">
-                <li role="menuitem" class="o_mail_systray_dropdown_items"/>
-            </ul>
+            <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
+                <div class="o_mail_systray_dropdown_items"/>
+            </div>
         </li>
     </t>
 </templates>

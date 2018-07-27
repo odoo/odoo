@@ -41,8 +41,8 @@
                         <field name="standard_price"
                             attrs="{'readonly':[('valuation','=','real_time')]}"
                             widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"
-                            class="pull-left"/>
-                        <div name="update_cost_price" class="col-md-2">
+                            class="float-left"/>
+                        <div name="update_cost_price" class="col-lg-2">
                             <button string="Update Cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
@@ -77,8 +77,8 @@
                             <label for="standard_price"/>
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
-                                widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="pull-left"/>
-                            <div name="update_cost_price" class="col-md-2">
+                                widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="float-left"/>
+                            <div name="update_cost_price" class="col-lg-2">
                                 <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"
                                 attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"

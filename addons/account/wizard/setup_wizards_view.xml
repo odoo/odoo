@@ -28,23 +28,23 @@
             <field name="arch" type="xml">
                 <form>
                     <div class="row">
-                        <div class="col-xs-4">
+                        <div class="col-4">
                             <label for="opening_date"/>
                         </div>
-                        <div class="col-xs-8">
+                        <div class="col-8">
                             <field name="opening_move_posted" invisible="1"/>
                             <field name="opening_date" attrs="{'readonly': [('opening_move_posted', '=', True)]}"/>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-xs-4">
+                        <div class="col-4">
                             <strong>Fiscal Year End</strong>
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-4">
                             <field name="fiscalyear_last_day"/>
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-4">
                             <field name="fiscalyear_last_month"/>
                         </div>
                     </div>

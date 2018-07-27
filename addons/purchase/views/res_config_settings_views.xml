@@ -14,7 +14,7 @@
                     <field name="po_lock" invisible="1"/>
                     <h2>Orders</h2>
                     <div class="row mt16 o_settings_container" name="purchase_setting_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="po_order_approval"/>
                             </div>
@@ -26,13 +26,13 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('po_order_approval', '=', False)]}">
                                     <div class="row mt16">
-                                        <label for="po_double_validation_amount" class="col-md-4 o_light_label"/>
+                                        <label for="po_double_validation_amount" class="col-lg-4 o_light_label"/>
                                         <field name="po_double_validation_amount"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="lock_confirmed_po"/>
                             </div>
@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="group_warning_purchase"/>
                             </div>
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
                             <div class="o_setting_left_pane">
                                 <field name="module_purchase_requisition"/>
                             </div>
@@ -71,7 +71,7 @@
                     </div>
                     <h2>Invoicing</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="This default value is applied to any new product created. This can be changed in the product detail form.">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="default_purchase_method"/>
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice.">
                             <div class="o_setting_left_pane">
                                 <field name="module_account_3way_match" string="3-way matching" widget="upgrade_boolean"/>
                             </div>
@@ -99,7 +99,7 @@
                     </div>
                     <h2>Products</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="By default, vendor prices can be set manually in the product detail form. If your vendors provide you with pricelist files, this option allows you to easily import them into the system from ‘Purchase > Vendor Pricelists’ menu.">
+                        <div class="col-12 col-lg-6 o_setting_box" title="By default, vendor prices can be set manually in the product detail form. If your vendors provide you with pricelist files, this option allows you to easily import them into the system from ‘Purchase > Vendor Pricelists’ menu.">
                             <div class="o_setting_left_pane">
                                 <field name="group_manage_vendor_price"/>
                             </div>

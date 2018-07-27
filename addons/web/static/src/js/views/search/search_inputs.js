@@ -503,8 +503,13 @@ var ManyToOneField = CharField.extend({
 
 var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
     template: 'SearchView.filters',
+    events: {
+        click: 'toggle_filter',
+    },
+
     icon: "fa-filter",
     completion_label: _lt("Filter on: %s"),
+
     /**
      * Inclusive group of filters, creates a continuous "button" with clickable
      * sections (the normal display for filters is to be a self-contained button)
@@ -536,7 +541,6 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
         this.searchview.query.on('add remove change reset', this.proxy('search_change'));
     },
     start: function () {
-        this.$el.on('click', 'a', this.proxy('toggle_filter'));
         return $.when(null);
     },
     /**
@@ -684,7 +688,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
     toggle_filter: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        this.toggle(this.filters[Number($(e.target).parent().data('index'))]);
+        this.toggle(this.filters[Number($(e.currentTarget).data('index'))]);
     },
     toggle: function (filter, options) {
         this.searchview.query.toggle(this.make_facet([this.make_value(filter)]), options);

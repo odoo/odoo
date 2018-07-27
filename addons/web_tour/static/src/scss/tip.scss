@@ -26,7 +26,7 @@
 }
 
 .o_tooltip {
-    $o-tip-color: $o-brand-primary;
+    $o-tip-color: $o-brand-odoo;
     $o-tip-size: 24px;
     $o-tip-border-width: 2px;
     $o-tip-arrow-length: 10px;
@@ -72,9 +72,9 @@
         border-radius $o-tip-border-radius-duration-out ease $o-tip-border-radius-delay-out;
 
     &.o_animated {
-        @include o-animation(move-bottom-top, 500ms, ease-in, 0ms, infinite, alternate);
+        animation: move-bottom-top 500ms ease-in 0ms infinite alternate;
         &.right, &.left {
-            @include animation-name(move-left-right);
+            animation-name: move-left-right;
         }
     }
 

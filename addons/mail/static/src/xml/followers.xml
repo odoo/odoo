@@ -7,25 +7,25 @@
     <t t-name="mail.Followers">
         <div class="o_followers">
             <div class="o_followers_title_box">
-                <button class="btn btn-sm btn-link dropdown-toggle" title="Dropdown menu - Followers"
+                <button class="btn btn-link dropdown-toggle" title="Dropdown menu - Followers"
                         data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-user" role="img" aria-label="Dropdown menu - Followers"></i>
                     <span class="o_followers_count"/>
                 </button>
-                <ul class="dropdown-menu o_followers_list" role="menu"></ul>
+                <div class="dropdown-menu o_followers_list" role="menu"/>
             </div>
             <div class="o_followers_actions">
-                <div class="btn-group btn-group-sm o_subtypes_list">
-                    <button class="btn btn-sm btn-link o_followers_follow_button o_followers_notfollow">
+                <div class="btn-group o_subtypes_list">
+                    <button class="btn btn-link o_followers_follow_button o_followers_notfollow">
                         <span class="o_follow">Follow</span>
                         <span class="fa fa-times o_followers_unfollow"/>
                         <span class="o_followers_unfollow"> Unfollow</span>
                         <span class="fa fa-check o_followers_following"/>
                         <span class="o_followers_following"> Following</span>
-                    </button><button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    </button><button class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <span class="fa fa-bell" role="img" aria-label="Alarm menu" title="Alarm menu"/>
                     </button>
-                    <ul class="dropdown-menu" role="menu"/>
+                    <div class="dropdown-menu" role="menu"/>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
                t-att-title="record.name"
                t-att-data-oe-model="record.res_model"
                t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
-            <i t-if="record.is_editable" class="fa fa-pencil o_edit_subtype hide"
+            <i t-if="record.is_editable" class="fa fa-pencil o_edit_subtype d-none"
                title="Edit subscription"
                aria-label="Edit subscription" role="img"
                t-att-data-follower-id="record.id"
@@ -59,13 +59,9 @@
     -->
     <t t-name="mail.Followers.add_more">
         <t t-if="widget.isEditable">
-            <li role="menuitem" class="o_add_follower">
-                <a href="#"> Add Followers </a>
-            </li>
-            <li role="menuitem" class="o_add_follower_channel">
-                <a href="#"> Add Channels </a>
-            </li>
-            <li role="separator" t-if="widget.followers.length > 0" class="divider"/>
+            <a href="#" role="menuitem" class="dropdown-item o_add_follower">Add Followers</a>
+            <a href="#" role="menuitem" class="dropdown-item o_add_follower_channel">Add Channels</a>
+            <div role="separator" t-if="widget.followers.length > 0" class="dropdown-divider"/>
         </t>
     </t>
 
@@ -73,18 +69,21 @@
         Message subtypes of a follower subscription
     -->
     <t t-name="mail.Followers.subtype">
-        <li role="menuitem" class="o_subtype">
-            <div class="o_checkbox">
-                <input type="checkbox" t-att-checked="record.followed"
-                       t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
-                       t-att-data-id="record.id" t-att-name="record.name" class="o_subtype_checkbox"/>
-                <span/>
+        <div role="menuitem" class="o_subtype dropdown-item">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox"
+                    t-attf-id="input_mail_followers_subtype_#{record.id + (dialog ? '_in_dialog': '')}"
+                    t-att-name="record.name"
+                    class="custom-control-input o_subtype_checkbox"
+                    t-att-checked="record.followed"
+                    t-att-data-id="record.id"/>
+                <label t-attf-for="input_mail_followers_subtype_#{record.id + (dialog ? '_in_dialog': '')}"
+                    class="custom-control-label">
+                    <t t-esc="record.name"/>
+                </label>
             </div>
-            <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
-                <t t-esc="record.name"/>
-            </span>
             <i t-if="display_warning" class="fa fa-warning text-warning" role="img" aria-label="Warning" title="Warning"/>
-        </li>
+        </div>
     </t>
     <t t-name="mail.Followers.subtypes.warning">
         <span class="text-warning">

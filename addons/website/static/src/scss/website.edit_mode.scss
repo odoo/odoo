@@ -5,8 +5,8 @@
     font-family: Roboto, $font-family-sans-serif;
 
     .o_tooltip_container {
-        @include o-inline-flex-display;
-        @include o-align-items(center);
+        display: inline-flex;
+        align-items: center;
 
         > .o_tooltip {
             @include o-position-absolute;
@@ -22,7 +22,7 @@
 .o_editable {
     &:not(:empty), &[data-oe-type] {
         &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
-            box-shadow: $o-brand-primary 0 0 5px 2px inset;
+            box-shadow: $o-brand-odoo 0 0 5px 2px inset;
         }
     }
     &:focus, &[data-oe-type] {
@@ -33,7 +33,7 @@
         display: inline-block;
     }
     .btn, &.btn {
-        @include user-select(auto);
+        user-select: auto;
         cursor: text!important;
     }
     /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
@@ -44,14 +44,14 @@
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
         &:empty {
-            border: 2px dashed $gray-lighter-darker;
+            border: 2px dashed gray('400');
             margin: 20px;
             padding: 112px 0px;
             text-align: center;
             &:before {
                 content: attr(data-editor-message);
                 font-size: 20px;
-                color: $gray-lighter-darker;
+                color: gray('400');
             }
         }
         > p:empty:only-child {
@@ -65,7 +65,7 @@
 
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
-    @include user-select(none);
+    user-select: none;
 }
 
 .oe_editable:focus,
@@ -105,7 +105,7 @@ table.editorbar-panel {
             margin: 0 5px;
         }
     }
-    .col-sm-2 > * {
+    .col-md-2 > * {
         line-height: 2em;
     }
 }

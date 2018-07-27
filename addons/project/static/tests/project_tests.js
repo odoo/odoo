@@ -82,14 +82,12 @@ QUnit.module('project', {
                             '<div>' +
                                 '<field name="name"/>' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
                                         '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
-                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
-                                        '<li>' +
-                                            '<a type="set_cover">Set Cover Image</a>'+
-                                        '</li>' +
-                                    '</ul>' +
+                                    '<div class="dropdown-menu" role="menu">' +
+                                        '<a type="set_cover" class="dropdown-item">Set Cover Image</a>'+
+                                    '</div>' +
                                 '</div>' +
                                 '<div>'+
                                     '<field name="displayed_image_id" widget="attachment_image"/>'+

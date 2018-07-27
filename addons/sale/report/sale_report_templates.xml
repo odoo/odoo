@@ -38,27 +38,27 @@
             </h2>
 
             <div class="row mt32 mb32" id="informations">
-                <div t-if="doc.client_order_ref" class="col-xs-3">
+                <div t-if="doc.client_order_ref" class="col-3">
                     <strong>Your Reference:</strong>
                     <p t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-xs-3">
+                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-3">
                     <strong>Date Ordered:</strong>
                     <p t-field="doc.confirmation_date"/>
                 </div>
-                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-xs-3">
+                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-3">
                     <strong>Quotation Date:</strong>
                     <p t-field="doc.date_order"/>
                 </div>
-                <div t-if="doc.user_id.name" class="col-xs-3">
+                <div t-if="doc.user_id.name" class="col-3">
                     <strong>Salesperson:</strong>
                     <p t-field="doc.user_id"/>
                 </div>
-                <div name="payment_term" t-if="doc.payment_term_id" class="col-xs-3">
+                <div name="payment_term" t-if="doc.payment_term_id" class="col-3">
                     <strong>Payment Terms:</strong>
                     <p t-field="doc.payment_term_id"/>
                 </div>
-                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-xs-3">
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-3">
                     <strong>Expiration Date:</strong>
                     <p t-field="doc.validity_date"/>
                 </div>
@@ -70,7 +70,7 @@
             <t t-set="display_taxamount"
                 t-value="doc.company_id.tax_calculation_rounding_method == 'round_per_line'"
             />
-            <table class="table table-condensed">
+            <table class="table table-sm">
                 <thead>
                     <tr>
                         <t t-set="colspan" t-value="5"/>
@@ -166,8 +166,8 @@
 
             <div class="clearfix">
                 <div class="row" name="total">
-                    <div class="col-xs-4 pull-right">
-                        <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                    <div class="col-4 float-right">
+                        <table class="table table-sm" style="min-width: 200px;max-width: 350px;">
                             <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                 <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
@@ -220,13 +220,13 @@
             </p>
 
             <div t-if="doc.signature" class="row mt32" name="signature">
-                <div class="col-xs-offset-8 col-xs-4">
+                <div class="offset-8 col-4">
                     <strong>Signature</strong>
                 </div>
-                <div class="col-xs-offset-8 col-xs-4">
+                <div class="offset-8 col-4">
                     <img t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                 </div>
-                <div class="col-xs-offset-8 col-xs-4 text-center">
+                <div class="offset-8 col-4 text-center">
                     <p t-field="doc.signed_by"/>
                 </div>
             </div>

@@ -20,6 +20,7 @@ odoo.define('web.dom', function (require) {
  * something happens in the DOM.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 
 /**
@@ -208,11 +209,10 @@ return {
      * @param {Object} options
      * @param {Object} [options.attrs] - Attributes to put on the button element
      * @param {string} [options.attrs.type='button']
-     * @param {string} [options.attrs.class='btn-default']
+     * @param {string} [options.attrs.class='btn-secondary']
      *        Note: automatically completed with "btn btn-X"
      *        (@see options.size for the value of X)
-     * @param {string} [options.size='sm'] - @see options.attrs.class
-     *        Note: use 'md' for no sizing class
+     * @param {string} [options.size] - @see options.attrs.class
      * @param {string} [options.icon]
      *        The specific fa icon class (for example "fa-home") or an URL for
      *        an image to use as icon.
@@ -235,10 +235,10 @@ return {
         }
 
         jQueryParams.class = 'btn';
-        if (options.size !== 'md') {
-            jQueryParams.class += (' btn-' + (options.size || 'sm'));
+        if (options.size) {
+            jQueryParams.class += (' btn-' + options.size);
         }
-        jQueryParams.class += (' ' + (extraClasses || 'btn-default'));
+        jQueryParams.class += (' ' + (extraClasses || 'btn-secondary'));
 
         var $button = $('<button/>', jQueryParams);
 
@@ -262,33 +262,41 @@ return {
         return $button;
     },
     /**
-     * Renders a checkbox with standard odoo template. This does not use any xml
-     * template to avoid forcing the frontend part to lazy load a xml file for
-     * each widget which might want to create a simple checkbox.
+     * Renders a checkbox with standard odoo/BS template. This does not use any
+     * xml template to avoid forcing the frontend part to lazy load a xml file
+     * for each widget which might want to create a simple checkbox.
      *
      * @param {Object} [options]
      * @param {Object} [options.prop]
      *        Allows to set the input properties (disabled and checked states).
      * @param {string} [options.text]
      *        The checkbox's associated text. If none is given then a simple
-     *        checkbox without label structure is rendered.
+     *        checkbox is rendered.
      * @returns {jQuery}
      */
     renderCheckbox: function (options) {
-        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
+        var id = _.uniqueId('checkbox-');
+        var $container = $('<div/>', {
+            class: 'custom-control custom-checkbox',
+        });
+        var $input = $('<input/>', {
+            type: 'checkbox',
+            id: id,
+            class: 'custom-control-input',
+        });
+        var $label = $('<label/>', {
+            for: id,
+            class: 'custom-control-label',
+            text: options && options.text || '',
+        });
+        if (!options || !options.text) {
+            $label.html('&#8203;'); // BS checkboxes need some label content (so
+                                // add a zero-width space when there is no text)
+        }
         if (options && options.prop) {
-            $container.children('input').prop(options.prop);
+            $input.prop(options.prop);
         }
-        if (options && options.text) {
-            $container = $('<label/>').append(
-                $container,
-                $('<span/>', {
-                    class: 'ml8',
-                    text: options.text,
-                })
-            );
-        }
-        return $container;
+        return $container.append($input, $label);
     },
     /**
      * Sets the selection range of a given input or textarea
@@ -306,6 +314,118 @@ return {
                 .moveEnd('character', range.start)
                 .moveStart('character', range.end)
                 .select();
+        }
+    },
+    /**
+     * Creates an automatic 'more' dropdown-menu for a set of navbar items.
+     *
+     * @param {jQuery} $el
+     * @param {Object} [options]
+     * @param {string} [options.unfoldable='none']
+     * @param {function} [options.maxWidth]
+     * @param {string} [options.sizeClass='SM']
+     */
+    initAutoMoreMenu: function ($el, options) {
+        options = _.extend({
+            unfoldable: 'none',
+            maxWidth: false,
+            sizeClass: 'SM',
+        }, options || {});
+
+        var $extraItemsToggle = null;
+
+        var debouncedAdapt = _.debounce(_adapt, 250);
+        core.bus.on('resize', null, debouncedAdapt);
+        _adapt();
+
+        $el.data('dom:autoMoreMenu:destroy', function () {
+            _restore();
+            core.bus.off('resize', null, debouncedAdapt);
+            $el.removeData('dom:autoMoreMenu:destroy');
+        });
+
+        function _restore() {
+            if ($extraItemsToggle === null) {
+                return;
+            }
+            var $items = $extraItemsToggle.children('.dropdown-menu').children();
+            $items.addClass('nav-item');
+            $items.children().removeClass('dropdown-item').addClass('nav-link');
+            $items.insertBefore($extraItemsToggle);
+            $extraItemsToggle.remove();
+            $extraItemsToggle = null;
+        }
+
+        function _adapt() {
+            if (!$el.is(':visible')) {
+                return;
+            }
+
+            _restore();
+            if (config.device.size_class <= config.device.SIZES[options.sizeClass]) {
+                return;
+            }
+
+            var $allItems = $el.children();
+            var $unfoldableItems = $allItems.filter(options.unfoldable);
+            var $items = $allItems.not($unfoldableItems);
+
+            var maxWidth = 0;
+            if (options.maxWidth) {
+                maxWidth = options.maxWidth();
+            } else {
+                var rect = $el[0].getBoundingClientRect();
+                var style = window.getComputedStyle($el[0]);
+                maxWidth = (rect.right - rect.left);
+                maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
+                maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
+                    return sum + computeFloatOuterWidthWithMargins(el);
+                }, 0);
+            }
+
+            var nbItems = $items.length;
+            var menuItemsWidth = _.reduce($items, function (sum, el) {
+                return sum + computeFloatOuterWidthWithMargins(el);
+            }, 0);
+
+            if (maxWidth - menuItemsWidth >= -0.001) {
+                return
+            }
+
+            var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
+            $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
+                .append($('<a/>', {href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown'})
+                    .append($('<i/>', {class: 'fa fa-plus'})))
+                .append($dropdownMenu);
+            $extraItemsToggle.insertAfter($items.last());
+
+            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
+            do {
+                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
+            } while (menuItemsWidth > maxWidth);
+
+            var $extraItems = $items.slice(nbItems).detach();
+            $extraItems.removeClass('nav-item');
+            $extraItems.children().removeClass('nav-link').addClass('dropdown-item');
+            $dropdownMenu.append($extraItems);
+            $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
+        }
+
+        function computeFloatOuterWidthWithMargins(el) {
+            var rect = el.getBoundingClientRect();
+            var style = window.getComputedStyle(el);
+            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+        }
+    },
+    /**
+     * Cleans what has been done by `initAutoMoreMenu'.
+     *
+     * @param {jQuery} $el
+     */
+    destroyAutoMoreMenu: function ($el) {
+        var destroyFunc = $el.data('dom:autoMoreMenu:destroy');
+        if (destroyFunc) {
+            destroyFunc.call(null);
         }
     },
 };

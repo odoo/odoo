@@ -42,11 +42,11 @@
                     <field name="purchase_order_count"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span t-if="record.purchase_order_count.value>0" class="badge"><i class="fa fa-fw fa-shopping-cart" role="img" aria-label="Shopping cart" title="Shopping cart"/><t t-esc="record.purchase_order_count.value"/></span>
+                    <span t-if="record.purchase_order_count.value>0" class="badge badge-pill"><i class="fa fa-fw fa-shopping-cart" role="img" aria-label="Shopping cart" title="Shopping cart"/><t t-esc="record.purchase_order_count.value"/></span>
                 </xpath>
             </field>
         </record>
-        
+
     <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
@@ -84,13 +84,13 @@
                     <group colspan="2" col="2" groups="purchase.group_warning_purchase">
                         <separator string="Warning on the Purchase Order" colspan="4"/>
                         <field name="purchase_warn" nolabel="1" />
-                        <field name="purchase_warn_msg" colspan="3" nolabel="1" 
+                        <field name="purchase_warn_msg" colspan="3" nolabel="1"
                                 attrs="{'required':[('purchase_warn', '!=', False), ('purchase_warn','!=','no-message')],'readonly':[('purchase_warn','=','no-message')]}"/>
                     </group>
                 </page>
             </field>
         </record>
-        
+
         <record id="res_partner_view_purchase_account_buttons" model="ir.ui.view">
             <field name="name">res.partner.view.purchase.account.buttons</field>
             <field name="model">res.partner</field>

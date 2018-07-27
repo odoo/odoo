@@ -175,9 +175,9 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('text.nv-legend-text:contains(Count)').length,
                 "should have used the correct measure");
-            assert.ok(graph.$buttons.find('li[data-field="foo"]').length,
+            assert.ok(graph.$buttons.find('.dropdown-item[data-field="foo"]').length,
                 "should have foo in the list of measures");
-            graph.$buttons.find('li[data-field="foo"] a').click();
+            graph.$buttons.find('.dropdown-item[data-field="foo"]').click();
 
             return concurrency.delay(0);
         }).then(function () {
@@ -268,7 +268,7 @@ QUnit.module('Views', {
                 graph_intervalMapping: {},
             }, "context should be correct");
 
-            graph.$buttons.find('li[data-field="foo"] a').click(); // change measure
+            graph.$buttons.find('.dropdown-item[data-field="foo"]').click(); // change measure
 
             return concurrency.delay(0);
         }).then(function () {
@@ -552,7 +552,7 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             // need to set the measure this way because it cannot be set in the
             // arch.
-            graph.$buttons.find('li[data-field="product_id"] a').click();
+            graph.$buttons.find('.dropdown-item[data-field="product_id"]').click();
 
             assert.strictEqual(graph.model.chart.data[0].value, 1,
                 "should have first datapoint with value 1");
@@ -639,9 +639,9 @@ QUnit.module('Views', {
                   '</graph>',
         })
 
-        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list li:first').data('field'), 'bouh',
+        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:first').data('field'), 'bouh',
             "Bouh should be the first measure");
-        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list li:last').data('field'), '__count__',
+        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list .dropdown-item:last').data('field'), '__count__',
             "Count should be the last measure");
 
         graph.destroy();

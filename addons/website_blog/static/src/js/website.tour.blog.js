@@ -21,7 +21,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
         run: "text",
     }, {
-        trigger: "#oe_manipulators .oe_overlay.oe_active a.btn.btn-primary.btn-sm",
+        trigger: "#oe_manipulators .oe_overlay.oe_active a.btn.btn-primary",
         extra_trigger: "#wrap h1[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "bottom",

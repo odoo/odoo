@@ -27,7 +27,6 @@
                 <div class="page">
                     <div class="oe_structure"/>
 
-
                     <h2>
                         <span t-if="o.state != 'draft'">Repair Order #:</span>
                         <span t-if="o.state == 'draft'">Repair Quotation #:</span>
@@ -35,27 +34,27 @@
                     </h2>
 
                     <div class="row mt32 mb32">
-                        <div t-if="o.product_id.name" class="col-xs-3">
+                        <div t-if="o.product_id.name" class="col-3">
                             <strong>Product to Repair:</strong>
                             <p t-field="o.product_id.name"/>
                         </div>
-                        <div class="col-xs-3" groups="stock.group_production_lot">
+                        <div class="col-3" groups="stock.group_production_lot">
                             <strong>Lot/Serial Number:</strong>
                             <t t-if="o.lot_id">
                                 <span t-field="o.lot_id.name"/>
                             </t>
                         </div>
-                        <div t-if="o.guarantee_limit" class="col-xs-3">
+                        <div t-if="o.guarantee_limit" class="col-3">
                             <strong>Warranty:</strong>
                             <p t-field="o.guarantee_limit"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Printing Date:</strong>
                             <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}"/>
                         </div>
                     </div>
 
-                    <table class="table table-condensed">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Description</th>
@@ -120,8 +119,8 @@
                     </table>
 
                     <div class="row">
-                        <div class="col-xs-4 pull-right">
-                            <table class="table table-condensed">
+                        <div class="col-4 float-right">
+                            <table class="table table-sm">
                                 <t t-if="o.invoice_method !='none'">
                                     <tr class="border-black">
                                         <td><strong>Total Without Taxes</strong></td>

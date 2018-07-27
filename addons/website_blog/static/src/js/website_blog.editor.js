@@ -170,8 +170,8 @@ options.registry.blog_cover = options.Class.extend({
         this._super.apply(this, arguments);
         var self = this;
 
-        this.$el.filter(":not([data-change])").toggleClass("hidden", !this.$target.hasClass("cover"));
-        this.$el.filter("li:has(li[data-select-class])").toggleClass("hidden", this.$target.hasClass("o_list_cover"));
+        this.$el.filter(":not([data-change])").toggleClass('d-none', !this.$target.hasClass("cover"));
+        this.$el.filter("li:has(li[data-select-class])").toggleClass('d-none', this.$target.hasClass("o_list_cover"));
 
         this.$filter_value_options.removeClass("active");
         this.$filter_color_options.removeClass("active");

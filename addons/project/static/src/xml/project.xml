@@ -9,7 +9,7 @@
             </t>
         </div>
         <div t-if="attachment_ids.length == 0">There is no available image to be set as cover.</div>
-        <span class="hide">
+        <span class="d-none">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.imageUploadID" />
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>

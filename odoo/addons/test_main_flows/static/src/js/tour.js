@@ -45,15 +45,15 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Manufacture")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Manufacture")',
     content: _t('Check Manufacture'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Buy")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Buy")',
     content: _t('Uncheck Buy'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Make To Order")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
     content: _t('Uncheck  Make To Order'),
     position: 'right',
 }, {
@@ -109,7 +109,7 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Make To Order")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
     content: _t('Check Make To Order'),
     position: 'right',
 }, {
@@ -205,7 +205,7 @@ tour.register('main_flow_tour', {
     content: _t('Save the bom.'),
     position: 'bottom',
 }, {
-    trigger: ".breadcrumb li:first",
+    trigger: ".breadcrumb-item:first",
     extra_trigger: ".o_form_readonly", // FIXME: this is required due to an issue in tour_manager (see [*])
     content: _t("Use the breadcrumbs to <b>go back to products</b>."),
     position: "bottom"
@@ -476,7 +476,7 @@ tour.register('main_flow_tour', {
     content: _t("Apply"),
     position: "bottom",
 }, {
-    trigger: ".o_back_button a, .breadcrumb li:not('.active'):last",
+    trigger: ".o_back_button a, .breadcrumb-item:not('.active'):last",
     content: _t('go back to the purchase order'),
     position: 'bottom',
  }, {
@@ -608,7 +608,7 @@ tour.register('main_flow_tour', {
     content: _t('Save'),
     position: 'bottom',
 }, {
-    trigger: '.breadcrumb li:nth-child(2) a',
+    trigger: '.breadcrumb-item:nth-child(2) a',
     extra_trigger: '.o_list_button_add', // Waiting save
     content: _t('Back to the sale order'),
     position: 'bottom',

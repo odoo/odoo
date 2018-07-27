@@ -12,7 +12,7 @@
                         </u>
                     To  <u><span t-field="o.date_to" />
                         </u> </p>
-                    <table class="table table-condensed table-bordered">
+                    <table class="table table-sm table-bordered">
                         <tr>
                             <td><strong>Employee Code</strong></td>
                             <td>
@@ -69,7 +69,7 @@
                             </td>
                         </tr>
                     </table>
-                    <table class="table table-condensed">
+                    <table class="table table-sm">
                         <thead>
                             <tr t-foreach="get_periods(data['form'])" t-as="months">
                             <span t-esc="get_employee_detail(data['form'], employee)"/>

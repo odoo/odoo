@@ -45,7 +45,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
     destroy: function () {
         if (this.$buttons) {
             // remove jquery's tooltip() handlers
-            this.$buttons.find('button').off().tooltip('destroy');
+            this.$buttons.find('button').off().tooltip('dispose');
         }
         this._super.apply(this, arguments);
     },
@@ -161,8 +161,9 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
         this.$buttons
             .find('.o_graph_button[data-mode="' + state.mode + '"]')
             .addClass('active');
-        this.$measureList.find('li').each(function (index, li) {
-            $(li).toggleClass('selected', $(li).data('field') === state.measure);
+        _.each(this.$measureList.find('.dropdown-item'), function (item) {
+            var $item = $(item);
+            $item.toggleClass('selected', $item.data('field') === state.measure);
         });
     },
 
@@ -185,8 +186,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
         } else if ($target.parents('.o_graph_measures_list').length) {
             event.preventDefault();
             event.stopPropagation();
-            parent = $target.parent();
-            field = parent.data('field');
+            field = $target.data('field');
             this._setMeasure(field);
         }
     },

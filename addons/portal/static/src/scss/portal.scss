@@ -3,10 +3,10 @@
 /// rules.
 ///
 
-// Resize and vertically align navbar’s items relative to $navbar-height
-@mixin o-w-fill-navbar($ratio: 0.8) {
-    height: round($navbar-height * $ratio);
-    margin-top: round($navbar-height * (1 - $ratio) / 2);
+// Resize and vertically align navbar’s items relative to navbar
+@mixin o-w-fill-navbar($ratio: 1) {
+    height: round($nav-link-height * $ratio * 100) / 100;
+    margin-top: round($nav-link-height * (1 - $ratio) / 2 * 100) / 100;
 }
 
 // Frontend general
@@ -26,21 +26,27 @@
 }
 
 header {
-    a.navbar-brand.logo {
-        padding: 0 15px;
+    .navbar-brand.logo {
+        padding-top: 0;
+        padding-bottom: 0;
 
         img {
             @include o-w-fill-navbar;
+            width: auto;
+            max-width: none;
         }
     }
+    .nav-link {
+        white-space: nowrap;
+    }
 }
-.navbar.navbar-static-top {
+.navbar {
     margin-bottom: 0;
     ul.nav > li {
         &.divider {
             @include o-w-fill-navbar;
-            border-right: 1px solid $navbar-default-link-disabled-color;
-            @media (max-width: $screen-xs-max) {
+            border-right: 1px solid $nav-divider-color;
+            @include media-breakpoint-down(sm) {
                 display: none;
             }
         }
@@ -49,13 +55,13 @@ header {
             visibility: hidden;
         }
     }
-    .nav.navbar-nav.pull-right {
-        @media (max-width: $screen-xs-max) {
+    .nav.navbar-nav.float-right {
+        @include media-breakpoint-down(sm) {
             float: none!important;
         }
     }
 }
-ul.nav-stacked > li > a {
+ul.flex-column > li > a {
     padding: 2px 15px;
 }
 
@@ -119,29 +125,41 @@ hr {
 }
 
 // Bootstrap hacks
-.container {
-    max-width: 100%;
-}
-.container .container {
-    padding-left: 0;
+%o-double-container-no-padding {
     padding-right: 0;
-    width: auto;
+    padding-left: 0;
 }
-[class^="col-md-"] {
+.container {
+    .container, .container-fluid {
+        @extend %o-double-container-no-padding;
+    }
+}
+.container-fluid .container-fluid {
+    @extend %o-double-container-no-padding;
+}
+[class^="col-lg-"] {
     min-height: 24px;
+}
+.input-group {
+    flex-flow: row nowrap;
+}
+
+// Force table to their minimum width for fitting their col-*-auto parent
+.table.o_table_column_fit {
+    width: 1px;
 }
 
 // Images spacing
 img, .media_iframe_video, .o_image {
-    &.pull-right {
+    &.float-right {
         margin-left: $grid-gutter-width / 2;
     }
-    &.pull-left {
+    &.float-left {
         margin-right: $grid-gutter-width / 2;
     }
 }
 img.o_we_custom_image {
-    // Images added with the editor are .img-responsive by default but should
+    // Images added with the editor are .img-fluid by default but should
     // still behave like inline content.
     display: inline-block;
 }
@@ -287,8 +305,8 @@ img.o_we_custom_image {
         .navbar-brand {
             margin: 0;
 
-            @media (min-width: $grid-float-breakpoint) {
-                padding: $navbar-padding-vertical $navbar-padding-horizontal 0 0;
+            @include media-breakpoint-up(md) {
+                padding: $navbar-padding-y $navbar-padding-x 0 0;
             }
         }
 
@@ -297,7 +315,7 @@ img.o_we_custom_image {
             margin-bottom: 8px;
 
             .navbar-brand {
-                padding: $navbar-padding-vertical $navbar-padding-horizontal 0 0;
+                padding: $navbar-padding-y $navbar-padding-x 0 0;
             }
 
             .navbar-header .dropdown-menu {
@@ -308,9 +326,8 @@ img.o_we_custom_image {
             .navbar-toggle {
                 margin-right: 0;
                 margin-bottom: 0;
-                background-color: $table-bg-active;
-                padding: 6px 10px $navbar-padding-vertical;
-                border: 1px solid $btn-default-border;
+                background-color: $table-active-bg;
+                padding: 6px 10px $navbar-padding-y;
                 border-width: 1px 1px 0 1px;
                 border-bottom-left-radius: 0;
                 border-bottom-right-radius: 0;
@@ -319,19 +336,18 @@ img.o_we_custom_image {
                 &.collapsed {
                     padding:6px 10px;
                     border-width: 1px;
-                    border-radius: $btn-border-radius-base;
+                    border-radius: $btn-border-radius;
                     background-color: transparent;
                 }
             }
 
-            @media (max-width: $grid-float-breakpoint) {
+            @include media-breakpoint-down(sm) {
                 .navbar-collapse {
                     z-index: 0;
-                    box-shadow: inset 0 0 0 1px $btn-default-border;
-                    background-color: $table-bg-active;
-                    border-radius: $btn-border-radius-base;
+                    background-color: $table-active-bg;
+                    border-radius: $btn-border-radius;
                     border-top-right-radius: 0;
-                    @include o-transform(translateY(-2px));
+                    transform: translateY(-2px);
 
                     &.in {
                         overflow: visible;
@@ -339,7 +355,7 @@ img.o_we_custom_image {
                 }
             }
 
-            @media (min-width: $grid-float-breakpoint) {
+            @include media-breakpoint-up(md) {
                 > .container-fluid {
                     padding: 0;
 
@@ -395,7 +411,7 @@ img.o_we_custom_image {
 }
 
 .o_portal_signature_form .o_portal_sign_error_msg {
-    color: $brand-danger;
+    color: $danger;
 }
 
 .label-optional {
@@ -407,14 +423,14 @@ img.o_we_custom_image {
         position: relative;
         width: 100%;
         border-radius: 5px;
-        background-color: $navbar-default-bg;
+        background-color: $light;
     }
     .o_portal_contact_img {
         width: 3.7em;
         height: 3.7em;
     }
     .o_portal_html_view {
-        border: 1px solid $gray-lighter-dark;
+        border: 1px solid gray('300');
         border-radius: 5px;
         padding-right: 1px;
     }

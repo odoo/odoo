@@ -26,7 +26,7 @@ $(document).ready(function () {
     });
 
     $(".oe_website_sale form[action='/shop/confirm_order'] a.a-submit").on('click', function(o) {
-        if ($("#top_menu > li > a[href='/web/login']").length){
+        if ($("#top_menu [href='/web/login']").length){
             vpv("/stats/ecom/customer_signup");
         }
         vpv("/stats/ecom/order_checkout");

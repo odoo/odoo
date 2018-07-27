@@ -200,7 +200,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
 
             $analytics_components.empty();
             // 1. Authorize component
-            var $analytics_auth = $('<div>').addClass('col-md-12');
+            var $analytics_auth = $('<div>').addClass('col-lg-12');
             window.onOriginError = function () {
                 $analytics_components.find('.js_unauthorized_message').remove();
                 self.display_unauthorized_message($analytics_components, 'not_initialized');
@@ -350,7 +350,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         $analytics_users.appendTo($analytics_components);
 
         // 3. View Selector
-        var $analytics_view_selector = $('<div>').addClass('col-md-12 o_properties_selection');
+        var $analytics_view_selector = $('<div>').addClass('col-lg-12 o_properties_selection');
         var viewSelector = new gapi.analytics.ViewSelector({
             container: $analytics_view_selector[0],
         });
@@ -364,7 +364,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         } else if (this.date_range === 'year') {
             start_date = '365daysAgo';
         }
-        var $analytics_chart_2 = $('<div>').addClass('col-md-6 col-xs-12');
+        var $analytics_chart_2 = $('<div>').addClass('col-lg-6 col-12');
         var breakdownChart = new gapi.analytics.googleCharts.DataChart({
             query: {
                 'dimensions': 'ga:date',
@@ -384,7 +384,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         $analytics_chart_2.appendTo($analytics_components);
 
         // 5. Chart table
-        var $analytics_chart_1 = $('<div>').addClass('col-md-6 col-xs-12');
+        var $analytics_chart_1 = $('<div>').addClass('col-lg-6 col-12');
         var mainChart = new gapi.analytics.googleCharts.DataChart({
             query: {
                 'dimensions': 'ga:medium',

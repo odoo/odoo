@@ -285,7 +285,7 @@ class Web_Editor(http.Controller):
         if get_scss:
             # Compile regex outside of the loop
             # This will used to exclude library scss files from the result
-            excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.scss)$")
+            excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
             # Load already customized scss files attachments
             custom_attachments = request.env["ir.attachment"].search([("url", "=like", self._make_custom_scss_file_url("%%.%%", "%%"))])

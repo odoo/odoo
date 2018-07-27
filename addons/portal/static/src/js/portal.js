@@ -23,21 +23,21 @@ odoo.define('portal.portal', function (require) {
     if ($('.o_portal_search_panel').length) {
         $('.o_portal_search_panel .search-submit').click(function () {
             var search = $.deparam(window.location.search.substring(1));
-            search.search_in = $(".o_portal_search_panel li.active a").attr("href").replace("#","");
+            search.search_in = $(".o_portal_search_panel .dropdown-item.active").attr("href").replace("#","");
             search.search = $(".o_portal_search_panel input[name='search']").val();
             window.location.search = $.param(search);
         });
 
-        $('.o_portal_search_panel .dropdown-menu').find('a').click(function (e) {
+        $('.o_portal_search_panel .dropdown-menu').find('.dropdown-item').click(function (e) {
             e.preventDefault();
-            $(this).parents('.dropdown-menu').find('li').removeClass('active');
-            $(this).parent('li').addClass('active');
+            $(this).parents('.dropdown-menu').find('.dropdown-item').removeClass('active');
+            $(this).closest('.dropdown-item').addClass('active');
             var label = $(this).clone();
             label.find('span.nolabel').remove();
             $(".o_portal_search_panel span#search_label").text(label.text());
         });
         // init search label
-        $('.o_portal_search_panel .dropdown-menu').find('li.active a').trigger('click');
+        $('.o_portal_search_panel .dropdown-menu').find('.dropdown-item.active').trigger('click');
 
         $(".o_portal_search_panel input[name='search']").on('keyup', function (e) {
             if (e.keyCode === 13) {

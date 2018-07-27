@@ -507,7 +507,7 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
             "should have two buttons in the footer of the dialog");
         assert.strictEqual($('.modal-footer button.btn-primary').text(), "Ok",
             "should have a confirm button in the dialog for discard");
-        assert.strictEqual($('.modal-footer button.btn-default').text(), "Cancel",
+        assert.strictEqual($('.modal-footer button.btn-secondary').text(), "Cancel",
             "should have a cancel button in the dialog for discard");
 
         // discard mesage

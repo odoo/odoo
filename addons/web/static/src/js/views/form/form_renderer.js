@@ -35,7 +35,7 @@ var FormRenderer = BasicRenderer.extend({
      * @override
      */
     start: function () {
-        if (config.device.size_class <= config.device.SIZES.XXS) {
+        if (config.device.size_class <= config.device.SIZES.XS) {
             this.$el.addClass('o_xxs_form_view');
         }
         return this._super.apply(this, arguments);
@@ -159,9 +159,9 @@ var FormRenderer = BasicRenderer.extend({
             .removeAttr('disabled');
     },
     /**
-     * Put the focus on the last activated widget. 
+     * Put the focus on the last activated widget.
      * This function is used when closing a dialog to give the focus back to the
-     * form that has opened it and ensures that the focus is in the correct 
+     * form that has opened it and ensures that the focus is in the correct
      * field.
      */
     focusLastActivatedWidget: function () {
@@ -181,7 +181,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             var index = -1;
-            $notebook.find('li').each(function (i) {
+            $notebook.find('.nav-link').each(function (i) {
                 if ($(this).hasClass('active')) {
                     index = i;
                 }
@@ -265,7 +265,6 @@ var FormRenderer = BasicRenderer.extend({
     _addButtonTooltip: function (node, $button) {
         var self = this;
         $button.tooltip({
-            delay: { show: 1000, hide: 0 },
             title: function () {
                 return qweb.render('WidgetButton.tooltip', {
                     debug: config.debug,
@@ -364,11 +363,11 @@ var FormRenderer = BasicRenderer.extend({
                 text: _t("More"),
             }));
 
-            var $ul = $("<ul>", {'class': "dropdown-menu o_dropdown_more", role: "menu"});
+            var $dropdown = $("<div>", {'class': "dropdown-menu o_dropdown_more", role: "menu"});
             _.each(folded_buttons, function ($button) {
-                $('<li>').appendTo($ul).append($button);
+                $button.addClass('dropdown-item').appendTo($dropdown);
             });
-            $ul.appendTo($result);
+            $dropdown.appendTo($result);
         }
 
         this._handleAttributes($result, node);
@@ -397,12 +396,13 @@ var FormRenderer = BasicRenderer.extend({
 
         // Current API of odoo for rendering buttons is "if classes are given
         // use those on top of the 'btn' and 'btn-{size}' classes, otherwise act
-        // as if 'btn-default' class was given". The problem is that, for header
-        // buttons only, we allowed users to only indicate their custom classes
-        // without having to explicitely ask for the 'btn-default' class to be
-        // added. We force it so here when no bootstrap btn type class is found.
-        if ($button.not('.btn-primary, .btn-default, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
-            $button.addClass('btn-default');
+        // as if 'btn-secondary' class was given". The problem is that, for
+        // header buttons only, we allowed users to only indicate their custom
+        // classes without having to explicitely ask for the 'btn-secondary'
+        // class to be added. We force it so here when no bootstrap btn type
+        // class is found.
+        if ($button.not('.btn-primary, .btn-secondary, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
+            $button.addClass('btn-secondary');
         }
 
         this._addOnClickAction($button, node);
@@ -612,10 +612,11 @@ var FormRenderer = BasicRenderer.extend({
             'data-toggle': 'tab',
             disable_anchor: 'true',
             href: '#' + page_id,
+            class: 'nav-link',
             role: 'tab',
             text: page.attrs.string,
         });
-        return $('<li>').append($a);
+        return $('<li>', {class: 'nav-item'}).append($a);
     },
     /**
      * @private
@@ -761,7 +762,7 @@ var FormRenderer = BasicRenderer.extend({
     _renderTagNotebook: function (node) {
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
-        var $pages = $('<div class="tab-content nav nav-tabs">');
+        var $pages = $('<div class="tab-content">');
         var autofocusTab = -1;
         // renderedTabs is used to aggregate the generated $headers and $pages
         // alongside their node, so that their modifiers can be registered once
@@ -785,7 +786,7 @@ var FormRenderer = BasicRenderer.extend({
         });
         if (renderedTabs.length) {
             var tabToFocus = renderedTabs[Math.max(0, autofocusTab)];
-            tabToFocus.$header.addClass('active');
+            tabToFocus.$header.find('.nav-link').addClass('active');
             tabToFocus.$page.addClass('active');
         }
         // register the modifiers for each tab
@@ -793,12 +794,13 @@ var FormRenderer = BasicRenderer.extend({
             self._registerModifiers(tab.node, self.state, tab.$header, {
                 callback: function (element, modifiers) {
                     // if the active tab is invisible, activate the first visible tab instead
-                    if (modifiers.invisible && element.$el.hasClass('active')) {
-                        element.$el.removeClass('active');
+                    var $link = element.$el.find('.nav-link');
+                    if (modifiers.invisible && $link.hasClass('active')) {
+                        $link.removeClass('active');
                         tab.$page.removeClass('active');
-                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first()');
+                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first() > a');
                         $firstVisibleTab.addClass('active');
-                        $pages.find($firstVisibleTab.find('a').attr('href')).addClass('active');
+                        $pages.find($firstVisibleTab.attr('href')).addClass('active');
                     }
                 },
             });
@@ -859,7 +861,7 @@ var FormRenderer = BasicRenderer.extend({
         this.defs = defs;
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
-        
+
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
         }, function () {
@@ -867,7 +869,7 @@ var FormRenderer = BasicRenderer.extend({
         }).then(function(){
             if (self.lastActivatedFieldIndex >= 0) {
                 self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
-            } 
+            }
         });
     },
     /**
@@ -900,7 +902,7 @@ var FormRenderer = BasicRenderer.extend({
             // enterprise label will be displayed as many times as the field
             // exists on settings.
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
-            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
+            var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
             if (config.debug || widget.attrs.help || widget.field.help) {
                 self._addFieldTooltip(widget, $label);
@@ -920,7 +922,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {idForLabel} string
      */
     _setIDForLabel: function (widget, idForLabel) {
-        widget.getFocusableElement().attr('id', idForLabel);
+        widget.setIDForLabel(idForLabel);
     },
 
     //--------------------------------------------------------------------------

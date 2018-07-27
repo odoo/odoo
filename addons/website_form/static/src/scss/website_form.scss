@@ -5,16 +5,16 @@
 }
 
 .o_website_form_flex_item {
-    // col-md-4
+    // col-lg-4
     flex-basis: 33%;
 
-    // col-sm-6
-    @media (max-width: $screen-sm-max) {
+    // col-md-6
+    @include media-breakpoint-down(md) {
         flex-basis: 50%;
     }
 
-    // col-xs-12
-    @media (max-width: $screen-xs-max) {
+    // col-12
+    @include media-breakpoint-down(sm) {
         flex-basis: 100%;
     }
 }
@@ -37,7 +37,7 @@
 
 // Required fields have a star which is not part of the field label
 .o_website_form_required, .o_website_form_required_custom {
-    .control-label:after {
+    .col-form-label:after {
         content: ' *';
     }
 }

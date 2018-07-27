@@ -22,7 +22,7 @@
     z-index: $zindex-modal - 9;
 
     background-color: rgba(0,0,0,0);
-    @include o-transition(background-color, 400ms, $o-we-md-ease);
+    transition: background-color 400ms $o-we-md-ease 0s;
     font-family: $o-we-font-family;
 
     form.navbar-form {
@@ -31,7 +31,7 @@
         margin: 0;
         padding: 0;
         @include o-position-absolute($right: -$o-we-sidebar-width);
-        @include o-transition(right, 0.4s, $o-we-md-ease);
+        transition: right 0.4s $o-we-md-ease 0s;
         border-left: 1px solid $o-we-color-divider;
         background-color: inherit;
 
@@ -47,7 +47,7 @@
             font-size: 13px;
             font-family: $o-we-font-family;
 
-            @include o-transition(all, 0.3s);
+            transition: all 0.3s ease 0s;
             border: none;
             border-radius: 0;
 
@@ -59,10 +59,10 @@
             }
 
             &.btn-primary {
-                @include button-variant(white, $o-brand-primary, $o-brand-primary);
+                @include button-variant($o-brand-odoo, $o-brand-odoo);
             }
-            &.btn-default {
-                @include button-variant(white, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+            &.btn-secondary {
+                @include button-variant(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
 
                 &:hover {
                     background: rgba(black, 0.5);
@@ -100,8 +100,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 #oe_snippets {
     @include o-w-preserve-btn;
 
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     @include o-position-absolute(0, auto, 0, -$o-we-sidebar-width);
     position: fixed;
     width: $o-we-sidebar-width;
@@ -109,12 +109,12 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
     font-family: Roboto, $font-family-sans-serif;
     border-right: 1px solid $o-we-color-divider;
-    @include o-transition(left, 400ms, $o-we-md-ease);
-    @include o-linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
+    transition: left 400ms $o-we-md-ease 0s;
+    background-image: linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
     box-shadow: 0px 10px 10px -10px black inset;
 
     #snippets_menu {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         height: $o-navbar-height;
         line-height: $o-navbar-height;
         margin: 0;
@@ -133,9 +133,9 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
         .o_panel_header {
             color: #999999;
-            @include o-flex-display;
-            @include o-align-items(center);
-            @include o-justify-content(center);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 3%;
             color: white;
             margin-bottom: 3%;
@@ -157,7 +157,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 margin: 0 0 6% 3%;
                 box-shadow: none;
                 background-color: transparent;
-                @include user-select(none);
+                user-select: none;
 
                 cursor: pointer;
                 cursor: copy;
@@ -173,8 +173,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
 
                     &:hover .oe_snippet_thumbnail_img {
-                        @include o-transition(transform, 200ms, ease);
-                        @include scale(1.05);
+                        transition: transform 200ms ease 0s;
+                        transform: scale(1.05);
                     }
                 }
 
@@ -251,12 +251,12 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 // DROPZONES
 @keyframes dropZoneInsert {
     to {
-        background-color: rgba($o-brand-primary, 0.2);
+        background-color: rgba($o-brand-odoo, 0.2);
     }
 }
 #wrapwrap .oe_drop_zone {
-    background-color: rgba($o-brand-primary, 0.05);
-    @include o-animation(dropZoneInsert, 1s, linear, 0s, infinite, alternate);
+    background-color: rgba($o-brand-odoo, 0.05);
+    animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
         z-index: 999;
@@ -270,7 +270,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         height: $o-we-dropzone-size;
         margin: (-$o-we-dropzone-size/2) 0;
 
-        @include o-transition(margin, 400ms, linear);
+        transition: margin 400ms linear 0s;
 
         &:after {
             content: "";
@@ -282,7 +282,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         &.oe_vertical {
-            border: 2px dashed $o-brand-primary;
+            border: 2px dashed $o-brand-odoo;
             border-left: none;
             border-right: none;
 
@@ -312,7 +312,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         height: 0;
         background: transparent;
         text-align: center;
-        @include o-transition(opacity, 400ms, linear);
+        transition: opacity 400ms linear 0s;
         &.o_keypress {
             opacity: 0;
         }
@@ -341,7 +341,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     border-radius: 0;
                     font-weight: normal;
 
-                    @include o-transition(all, 400ms);
+                    transition: all 400ms ease 0s;
                     color: $o-we-color-text-light;
                     background-color: $o-we-color-light;
                     &:hover {
@@ -367,7 +367,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                         }
                     }
                     &.oe_snippet_parent > i {
-                        @include scaleX(-1);
+                        transform: scaleX(-1);
                         font-size: 12px;
                     }
 
@@ -397,19 +397,19 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                             height: 2px;
                             background-color: $o-we-color-text-light;
                             @include o-position-absolute(46%);
-                            @include o-transition(all, 0.3s);
+                            transition: all 0.3s ease 0s;
                         }
                         &:before {
                             right: 9px;
-                            @include rotate(45deg);
+                            transform: rotate(45deg);
                         }
                         &:after {
                             right: 5px;
-                            @include rotate(-45deg);
+                            transform: rotate(-45deg);
                         }
                     }
                     // Open menu
-                    &.open .btn {
+                    &.show .btn {
                         background-color: $o-we-color-light;
                         &:before, &:after {
                             width: 9px;
@@ -419,7 +419,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                             transform: translateX(5px) rotate(-45deg);
                         }
                         &:after {
-                            @include rotate(45deg);
+                            transform: rotate(45deg);
                         }
                     }
 
@@ -430,99 +430,97 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                         border: 1px solid $o-we-color-dark;
                         border-radius: 0;
                         background-color: $o-we-color-light;
-                        a {
+
+                        .dropdown-item {
+                            position: relative;
                             color: $o-we-color-text-light;
                             font-weight: normal;
                             font-size: 12px;
                             padding: 5px 35px 5px 20px;
-                        }
 
-                        > li {
-                            position: relative;
                             &:hover {
                                 background-color: fade-out($o-we-color-dark, 0.5);
-                                > a {
-                                    color: white;
-                                    background: transparent;
-                                    cursor: pointer;
-                                }
-                                > .dropdown-menu {
-                                    display: block;
-                                    left: 100%;
-                                    top: 0;
-
-                                    &.o_open_to_left {
-                                        left: auto;
-                                        right: 100%;
-                                    }
-                                }
+                                color: white;
+                                background: transparent;
+                                cursor: pointer;
                             }
-                            &.dropdown-submenu:before {
-                                @include o-position-absolute($top: 10px, $right: 10px);
-                                @include o-caret-right(3px);
-                                border-left-color: $o-we-color-text-light;
-                            }
-                            &.divider {
-                                background-color: $o-we-color-divider;
-                                margin: 0 8px;
-                            }
-                            &.active > a {
+                            &.active {
                                 color: white;
                                 background-color: fade-out($o-we-color-dark, 0.5);
                                 &:before {
                                     @include o-position-absolute($top: 5px, $left: 5px);
                                     content: "\f00c";
                                     font-family: "FontAwesome";
-                                    color: $o-brand-optional;
-                                }
-                            }
-                            &.dropdown-header {
-                                color: white;
-                                font-weight: bold;
-                                font-size: 12px;
-                                margin-top: 2px;
-
-                                &:hover {
-                                    background-color: initial;
-                                }
-
-                                &.o_main_header {
-                                    padding-left: 8px;
-                                }
-                                &.o_parent_editor_header {
-                                    color: wheat;
-                                    font-weight: 400;
-                                    font-size: 10px;
-                                    margin: 7px 0 4px 4px;
-                                    &::before {
-                                        content: "\f148";
-                                        @include o-position-absolute($top: 2px, $left: 8px);
-                                        font-family: FontAwesome;
-                                        @include scaleX(-1);
-                                    }
-                                    ~ li:not(.dropdown-header) {
-                                        a {
-                                            font-size: 11px;
-                                            padding: 4px 35px 4px 20px;
-                                            opacity: 0.8;
-                                            &:hover {
-                                                opacity: 1;
-                                            }
-                                        }
-                                    }
+                                    color: $o-brand-primary;
                                 }
                             }
 
-                            &.separator {
-                                display: block;
-                                margin: 4px 35px 4px 20px;
-                                height: 1px;
-                                background: rgba($o-we-color-text-light, 0.1);
-                            }
-
-                            > a > i {
+                            > i {
                                 width: 16px;
                                 margin-right: 8px;
+                            }
+                        }
+
+                        .dropdown-submenu {
+                            position: relative;
+
+                            &::before {
+                                @include o-position-absolute($top: 10px, $right: 10px);
+                                @include o-caret-right(3px);
+                                border-left-color: $o-we-color-text-light;
+                            }
+
+                            &:hover > .dropdown-menu {
+                                display: block;
+                                left: 100%;
+                                top: 0;
+
+                                &.o_open_to_left {
+                                    left: auto;
+                                    right: 100%;
+                                }
+                            }
+                        }
+
+                        .dropdown-divider {
+                            display: block;
+                            height: 1px;
+                            background: rgba($o-we-color-text-light, 0.1);
+                            margin: 0 8px;
+                        }
+
+                        .dropdown-header {
+                            color: white;
+                            font-weight: bold;
+                            font-size: 12px;
+                            margin-top: 2px;
+
+                            &:hover {
+                                background-color: initial;
+                            }
+
+                            &.o_main_header {
+                                padding-left: 8px;
+                            }
+                            &.o_parent_editor_header {
+                                color: wheat;
+                                font-weight: 400;
+                                font-size: 10px;
+                                margin: 7px 0 4px 4px;
+                                &::before {
+                                    content: "\f148";
+                                    @include o-position-absolute($top: 2px, $left: 8px);
+                                    font-family: FontAwesome;
+                                    transform: scaleX(-1);
+                                }
+                                ~ .dropdown-item {
+                                    font-size: 11px;
+                                    padding: 4px 35px 4px 20px;
+                                    opacity: 0.8;
+                                    &:hover {
+                                        opacity: 1;
+                                    }
+                                }
                             }
                         }
                     }
@@ -548,7 +546,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
                 position: relative;
                 border: 0 solid $o-we-handles-accent-color;
-                @include o-transition(background, 300ms);
+                transition: background 300ms ease 0s;
 
                 &:hover, &.o_active {
                     background-color: rgba($o-we-handles-accent-color, 0.2);
@@ -711,11 +709,11 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             height: $o-navbar-height;
             border: none;
             border-radius: 0;
-            padding: $padding-base-vertical $padding-base-horizontal; // force this because of themes
+            padding: $btn-padding-y $btn-padding-y; // force this because of themes
             background-color: $o-we-color-dark;
             color: $o-we-color-text-normal;
             border-top: 2px solid transparent;
-            @include o-transition(all, 0.3s);
+            transition: all 0.3s ease 0s;
 
             > .fa {
                 color: $o-we-color-text-normal;
@@ -749,7 +747,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         > .btn-group {
             margin-top: -2px;
 
-            &.open, .btn-group.open {
+            &.show, .btn-group.show {
                 .dropdown-toggle {
                     border-top: 2px solid white;
                     background-color: $o-we-color-darker;
@@ -767,7 +765,9 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             border-radius: 0;
             background-color: $o-we-color-darker;
             color: $o-we-color-text-normal;
-            > li > a {
+            white-space: normal;
+
+            .dropdown-item {
                 width: 100%;
                 color: $o-we-color-text-light;
 
@@ -831,7 +831,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
 .note-popover .popover, .note-editor {
     .dropdown-menu {
-        > li > a {
+        .dropdown-item {
             > i {
                 visibility: hidden;
             }
@@ -910,14 +910,13 @@ table.colorpicker {
                     &:focus, &:active, &:focus:active {
                         outline: none;
                     }
-                }
-                &:hover, &.active {
-                    > a {
+                    &.active {
+                        background-color: $o-we-tab-active-bg!important;
                         color: white;
                     }
                 }
-                &.active > a {
-                    background-color: $o-we-tab-active-bg!important;
+                &:hover > a {
+                    color: white;
                 }
             }
         }
@@ -972,7 +971,7 @@ table.colorpicker {
             &.selected:after {
                 content: "\f00c";
                 font-family: "FontAwesome";
-                color: $brand-success;
+                color: theme-color('success');
             }
 
             &[data-event="foreColor"] {
@@ -1030,7 +1029,7 @@ body.editor_enable {
     }
 
     &.editor_has_snippets {
-        @include o-transition(padding-left, 400ms, $o-we-md-ease);
+        transition: padding-left 400ms $o-we-md-ease 0s;
         padding-left: $o-we-sidebar-width!important;
 
         #oe_snippets {
@@ -1069,11 +1068,11 @@ body.editor_enable {
 @keyframes fadeInDownSmall {
     0% {
         opacity: 0;
-        @include translate(0, -5px);
+        transform: translate(0, -5px);
     }
     100% {
         opacity: 1;
-        @include translate(0, 0);
+        transform: translate(0, 0);
     }
 }
 @keyframes fadeInOut {
@@ -1091,14 +1090,14 @@ body.editor_enable {
     }
 }
 @keyframes inputHighlighter {
-    from { background: $o-brand-optional; }
+    from { background: $o-brand-primary; }
     to   { width: 0; background: transparent; }
 }
 
 // INPUTS
 .o_switch {
-    @include o-flex-display;
-    @include o-align-items(center);
+    display: flex;
+    align-items: center;
     font-weight: normal;
     cursor: pointer;
 
@@ -1113,7 +1112,7 @@ body.editor_enable {
             width: $o-we-switch-size * 1.8;
             margin-right: 0.5em;
             display: inline-block;
-            @include transition(all 0.3s $o-we-md-ease);
+            transition: all 0.3s $o-we-md-ease;
 
             &:after {
                 content: "";
@@ -1124,14 +1123,14 @@ body.editor_enable {
                 margin-top: 0.1ex;
                 margin-left: 0.1ex;
                 border-radius: 100rem;
-                @include transition(all 0.3s $o-we-md-ease);
+                transition: all 0.3s $o-we-md-ease;
                 box-shadow: 0 1px 1px darken($o-we-switch-inactive-color,35%), inset 0 0 0 1px lighten($o-we-switch-inactive-color,10%);
             }
         }
 
         &:checked + span {
             box-shadow: none;
-            @include o-linear-gradient(0deg, $o-we-color-success, darken($o-we-color-success, 10%));
+            background-image: linear-gradient(0deg, $o-we-color-success, darken($o-we-color-success, 10%));
 
             &:after {
                 margin-left: ($o-we-switch-size*1.8 - $o-we-switch-size) + 0.1;
@@ -1142,7 +1141,7 @@ body.editor_enable {
         > input {
             &:not(:checked) + span {
                 box-shadow: none;
-                @include o-linear-gradient(0deg, lighten($brand-danger, 5%), darken($brand-danger, 5%));
+                background-image: linear-gradient(0deg, lighten(theme-color('danger'), 5%), darken(theme-color('danger'), 5%));
             }
         }
     }
@@ -1174,7 +1173,7 @@ body.editor_enable {
         font-weight: normal;
         @include o-position-absolute($top: 10px, $left: 5px);
         pointer-events: none;
-        @include transition(0.2s ease all);
+        transition: 0.2s ease all;
     }
 
     /* active state */
@@ -1193,7 +1192,7 @@ body.editor_enable {
         bottom: 1px;
         @include o-position-absolute;
         background: #5264AE;
-        @include transition(0.2s ease all);
+        transition: 0.2s ease all;
     }
     .bar:before {
         left: 50%;
@@ -1218,28 +1217,28 @@ body.editor_enable {
 
     /* active state */
     input:focus ~ .highlight {
-        @include animation(inputHighlighter 0.3s ease);
+        animation: inputHighlighter 0.3s ease;
     }
 }
 
 // DRAG&DROP ANIMATIONS
 .oe_snippet_body {
     opacity: 0;
-    @include o-animation(fadeInDownSmall, 700ms, $fill-mode: forwards);
+    animation: fadeInDownSmall 700ms forwards;
 }
 
 // ACE EDITOR
 .o_ace_view_editor {
     background: $o-we-ace-color;
     color: white;
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     opacity: 0.97;
 
     .o_ace_view_editor_title {
-        @include o-flex(0, 0, auto);
-        @include o-flex-display;
-        @include o-align-items(center);
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
         padding: $grid-gutter-width/4;
 
         > .o_ace_type_switcher > button::after {
@@ -1248,27 +1247,27 @@ body.editor_enable {
         }
 
         > * {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             margin: 0 $grid-gutter-width/4;
 
             &.o_include_option {
-                @include o-flex-display;
-                @include o-align-items(center);
+                display: flex;
+                align-items: center;
                 font-size: 11px;
 
-                > .o_checkbox {
+                > .custom-control {
                     margin-right: $grid-gutter-width/4;
                 }
             }
 
             &.o_res_list {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 min-width: 60px;
             }
         }
     }
     #ace-view-id {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         padding: $grid-gutter-width/4 $grid-gutter-width/2;
         background-color: lighten($o-we-ace-color, 10%);
     }
@@ -1277,13 +1276,13 @@ body.editor_enable {
             content: "";
             z-index: 1000;
             display: block;
-            background-color: $brand-danger;
+            background-color: theme-color('danger');
             opacity: 0.5;
             pointer-events: none;
         }
 
         height: 70%; // in case flex is not supported
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         .ace_gutter {
             cursor: ew-resize;
 
@@ -1334,7 +1333,7 @@ body.editor_enable {
 body .modal {
     // SELECT MEDIA
     .o_select_media_dialog {
-        width: 80%;
+        max-width: 80%;
 
         .modal-body {
             .nav-tabs .active > a[href="#editor-media-icon"] {
@@ -1342,9 +1341,6 @@ body .modal {
             }
 
             li.search {
-                ul.pager li:last-child{
-                    margin-left: 2px;
-                }
                 .form-group {
                     position: relative;
                     margin: 0 10px 0 0;
@@ -1358,9 +1354,11 @@ body .modal {
                 }
             }
 
-            .well {
-                border-color: $gray-lighter;
+            .card {
+                border-color: gray('200');
                 border-top-width: 0;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
             }
 
             .o_existing_attachment_cell {
@@ -1383,7 +1381,7 @@ body .modal {
                 .o_image {
                     border: $o-border-image solid transparent;
                     cursor: pointer;
-                    @include o-transition(opacity, 400ms);
+                    transition: opacity 400ms ease 0s;
 
                     &.o_webimage {
                         width: 100%;
@@ -1396,7 +1394,7 @@ body .modal {
                     }
                 }
                 &.o_selected .o_image {
-                    border-color: $o-brand-primary;
+                    border-color: $o-brand-odoo;
                     box-shadow: 0px 0px 2px 2px $o-brand-secondary;
                 }
                 &:hover .o_existing_attachment_remove {
@@ -1424,7 +1422,7 @@ body .modal {
             }
 
             #editor-media-image, #editor-media-document {
-                .well {
+                .card {
                     label {
                         margin: auto 10px;
                     }
@@ -1436,13 +1434,13 @@ body .modal {
             }
 
             // VIDEO TAB
-            #editor-media-video .well {
+            #editor-media-video .card {
                 padding: 0;
-                @include o-flex-display;
-                @include o-flex-flow(row, wrap);
+                display: flex;
+                flex-flow: row wrap;
 
                 .o_video_dialog_form {
-                    @include o-flex(1, 1, auto);
+                    flex: 1 1 auto;
                     min-width: 0;
                     padding: 20px;
 
@@ -1464,10 +1462,10 @@ body .modal {
                                 display: none;
                             }
                         }
-                        &.has-error > .o_validate_feedback > .fa-exclamation-triangle {
+                        &.o_has_error > .o_validate_feedback > .fa-exclamation-triangle {
                             display: block;
                         }
-                        &.has-success > .o_validate_feedback > .fa-check {
+                        &.o_has_success > .o_validate_feedback > .fa-check {
                             display: block;
                         }
                     }
@@ -1475,10 +1473,10 @@ body .modal {
 
                 #video-preview {
                     position: relative;
-                    @include o-flex(1, 0, 50%);
-                    @include o-flex-display;
-                    @include o-flex-flow(column, nowrap);
-                    @include o-justify-content(center);
+                    flex: 1 0 50%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: center;
 
                     @include o-we-preview-box(0 19px);
                     border: none;
@@ -1493,7 +1491,7 @@ body .modal {
                         max-height: 100%;
 
                         &.alert {
-                            @include o-animation(fadeInDownSmall, 700ms, $fill-mode: forwards);
+                            animation: fadeInDownSmall 700ms forwards;
                             margin: 0 auto;
                         }
                     }
@@ -1523,7 +1521,7 @@ body .modal {
                     border: 1px dotted #888787;
                     background-image: url(/web/image);
                     background-position: center center;
-                    @include o-background-size(cover);
+                    background-size: cover;
                 }
                 .el {
                     @include o-position-absolute(10px, 0, 10px, 0);
@@ -1566,7 +1564,7 @@ body .modal {
                 }
             }
             .o_bg_img_opt_ui_info {
-                @include animation(fadeInOut 2s ease forwards);
+                animation: fadeInOut 2s ease forwards;
                 @include o-position-absolute($bottom: 1px, $right: 0);
                 display: block;
                 padding: 3px 13px;
@@ -1587,7 +1585,7 @@ body .modal {
                 display: block;
                 width: 100%;
                 height: 1px;
-                background: fade-out(lighten($o-brand-optional, 30%), 0.5);
+                background: fade-out(lighten($o-brand-primary, 30%), 0.5);
                 pointer-events: none;
                 &.grid-2 {
                     top: 66.66%
@@ -1616,7 +1614,7 @@ body .modal {
                 box-shadow: 0 0 1px #333;
                 pointer-events: none;
                 &.o_with_transition {
-                    @include o-transition(all, 0.2s);
+                    transition: all 0.2s ease 0s;
                 }
                 &:before {
                     pointer-events: none;
@@ -1631,7 +1629,7 @@ body .modal {
                     border-radius: 100em;
                     opacity: 1;
                     box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.33);
-                    @include o-transition(opacity, 0.2s);
+                    transition: opacity 0.2s ease 0s;
                 }
             }
         }
@@ -1661,7 +1659,7 @@ body .modal {
             }
         }
         .o_link_dialog_preview {
-            border-left: 1px solid $gray-lighter;
+            border-left: 1px solid gray('200');
         }
     }
     // Crop Dialog
@@ -1669,13 +1667,13 @@ body .modal {
         height: 350px;
         .cropper-point {
             background-color: white;
-            @include o-transition(all, 400ms, $o-we-md-ease);
-            @include o-transform(scale(1.5, 1.5));
+            transition: all 400ms $o-we-md-ease 0s;
+            transform: scale(1.5, 1.5);
             border-radius: 10px;
             box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
             opacity: 1;
             &:hover {
-                @include o-transform(scale(2.5, 2.5));
+                transform: scale(2.5, 2.5);
             }
         }
         .cropper-line {

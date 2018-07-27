@@ -6,38 +6,38 @@
         background: none;
         margin: 0 0 $grid-gutter-width*0.2;
         padding: $o-mail-attachment-margin;
-        @include o-flex(0, 1, 50%);
+        flex: 0 1 50%;
 
-        @media (min-width: $screen-sm-min) {
-            @include o-flex(0, 0, percentage(1/3));
+        @include media-breakpoint-up(md) {
+            flex: 0 0 percentage(1/3);
         }
 
-        @media (min-width: $screen-md-min) {
-            @include o-flex(0, 0, percentage(1/5));
+        @include media-breakpoint-up(lg) {
+            flex: 0 0 percentage(1/5);
         }
 
-        @media (min-width: $screen-lg-min){
-            @include o-flex(0, 0, percentage(1/6));
+        @include media-breakpoint-up(xl) {
+            flex: 0 0 percentage(1/6);
         }
 
         .o_image_box {
             padding-top: 50%;
 
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 padding-top: 75%;
             }
         }
 
         .o_image_overlay {
             bottom: 16%;
-            background: rgba($gray-darker, 0.2);
+            background: rgba(gray('900'), 0.2);
         }
 
         .o_website_sale_image_card_title {
             @include o-text-overflow(block);
             padding:6px;
             position: relative;
-            background: $gray-lighter;
+            background: gray('200');
             color:$headings-color;
         }
 
@@ -51,11 +51,11 @@
             right: auto;
             border-radius: 0 0 2px;
             font-weight: normal;
-            font-size: $font-size-small - 1;
+            font-size: $font-size-sm - 1;
 
             &.label-normal {
-                background-color: $gray-lighter;
-                color: $text-color;
+                background-color: gray('200');
+                color: $body-color;
             }
         }
     }
@@ -63,14 +63,14 @@
 
 .o_website_sale_image_modal {
     .o_website_sale_image_modal_container {
-        border-left: 1px solid $gray-lighter-darker;
+        border-left: 1px solid gray('400');
 
         .o_field_image {
             margin-bottom: 0;
-            box-shadow: 0 2px 10px $gray-lighter-dark;
+            box-shadow: 0 2px 10px gray('300');
 
             > img {
-                border: 1px solid $gray-lighter-darker;
+                border: 1px solid gray('400');
                 min-height: 200px;
                 max-height: 350px; // Fallback for browsers that dosn't support responsive units
                 max-height: 50vh;
