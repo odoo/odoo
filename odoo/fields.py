@@ -1585,7 +1585,8 @@ class Datetime(Field):
         """ Return the current day and time in the format expected by the ORM.
             This function may be used to compute default values.
         """
-        return datetime.now()
+        # microseconds must be annihilated as they don't comply with the server datetime format
+        return datetime.now().replace(microsecond=0)
 
     @staticmethod
     def context_timestamp(record, timestamp):

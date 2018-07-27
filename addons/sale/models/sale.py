@@ -165,7 +165,7 @@ class SaleOrder(models.Model):
     def _compute_is_expired(self):
         now = datetime.now()
         for order in self:
-            if order.validity_date and fields.Datetime.from_string(order.validity_date) < now:
+            if order.validity_date and order.validity_date < now:
                 order.is_expired = True
             else:
                 order.is_expired = False
