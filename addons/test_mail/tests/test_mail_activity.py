@@ -144,6 +144,19 @@ class TestMailActivity(BaseFunctionalTest):
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
 
+    def test_activity_mixin_archive(self):
+        rec = self.test_record.sudo(self.user_employee)
+        new_act = rec.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_admin.id)
+        self.assertEqual(rec.activity_ids, new_act)
+        rec.toggle_active()
+        self.assertEqual(rec.active, False)
+        self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+        rec.toggle_active()
+        self.assertEqual(rec.active, True)
+        self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+
     def test_activity_notify_other_user(self):
         self.user_admin.notification_type = 'email'
         rec = self.test_record.sudo(self.user_employee)

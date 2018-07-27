@@ -453,6 +453,20 @@ class MailActivityMixin(models.AbstractModel):
         ).unlink()
         return result
 
+    @api.multi
+    def toggle_active(self):
+        """ Before archiving the record we should also remove its ongoing
+        activities. Otherwise they stay in the systray and concerning archived
+        records it makes no sense. """
+        record_to_deactivate = self.filtered(lambda rec: rec.active)
+        if record_to_deactivate:
+            # use a sudo to bypass every access rights; all activities should be removed
+            self.env['mail.activity'].sudo().search([
+                ('res_model', '=', self._name),
+                ('res_id', 'in', record_to_deactivate.ids)
+            ]).unlink()
+        return super(MailActivityMixin, self).toggle_active()
+
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
         """ Schedule an activity on each record of the current record set.
         This method allow to provide as parameter act_type_xmlid. This is an
