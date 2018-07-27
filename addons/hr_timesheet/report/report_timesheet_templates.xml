@@ -44,7 +44,7 @@
                                                 <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="'%s:%02.0f' % tuple(int(round(x)) for x in divmod(l.unit_amount*60,60))"/>
+                                                <span t-field="l.unit_amount" t-options="{'widget': 'float_time'}"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -53,7 +53,9 @@
                                         <td />
                                         <td t-if="show_task"/>
                                         <td class="text-right"><strong>Total</strong></td>
-                                        <td class="text-right"><strong t-esc="'%s:%02.0f' % tuple(int(round(x)) for x in divmod(sum(docs.mapped('unit_amount'))*60,60))"/></td>
+                                        <t t-set="total_value" t-value="sum(docs.mapped('unit_amount'))" />
+                                        <t t-set="sign" t-value="'-' if total_value &lt; 0 else ''"/>
+                                        <td class="text-right"><strong t-esc="sign + '%s:%02.0f' % tuple(int(round(x)) for x in divmod(abs(total_value)*60,60))"/></td>
                                     </tr>
                                 </tbody>
                             </table>

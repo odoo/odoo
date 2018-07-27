@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from PIL import Image
 import babel
 from lxml import etree
+import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
 
@@ -367,8 +368,9 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        hours, minutes = divmod(value * 60, 60)
-        return '%02d:%02d' % (hours, minutes)
+        sign = math.copysign(1.0, value)
+        hours, minutes = divmod(abs(value) * 60, 60)
+        return '%02d:%02d' % (sign * hours, minutes)
 
 
 class DurationConverter(models.AbstractModel):
