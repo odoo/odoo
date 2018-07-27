@@ -337,12 +337,12 @@ class Warehouse(models.Model):
             else:
                 crossdock_route = self.env['stock.location.route'].create(warehouse._get_crossdock_route_values())
                 # note: fixed cross-dock is logically mto
-                routings = routes_data[warehouse.id]['crossdock']
-                pull_list = warehouse._get_rule_values(
-                    routings,
-                    values={'procure_method': 'make_to_order', 'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', 'route_id': crossdock_route.id})
-                for rule_vals in pull_list:
-                    self.env['stock.rule'].create(rule_vals)
+            routings = routes_data[warehouse.id]['crossdock']
+            pull_list = warehouse._get_rule_values(
+                routings,
+                values={'procure_method': 'make_to_order', 'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', 'route_id': crossdock_route.id})
+            for rule_vals in pull_list:
+                self.env['stock.rule'].create(rule_vals)
         return crossdock_route
 
     def create_resupply_routes(self, supplier_warehouses):
