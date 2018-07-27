@@ -414,10 +414,11 @@ function dragAndDrop($el, $to, options) {
     var toOffset = $to.offset();
     toOffset.top += $to.outerHeight()/2;
     toOffset.left += $to.outerWidth()/2;
+    var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
     if (position === 'top') {
-        toOffset.top -= $to.outerHeight()/2;
+        toOffset.top -= $to.outerHeight()/2 + vertical_offset;
     } else if (position === 'bottom') {
-        toOffset.top += $to.outerHeight()/2;
+        toOffset.top += $to.outerHeight()/2 - vertical_offset;
     } else if (position === 'left') {
         toOffset.left -= $to.outerWidth()/2;
     } else if (position === 'right') {
