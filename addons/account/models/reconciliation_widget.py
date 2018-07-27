@@ -27,14 +27,9 @@ class AccountReconciliation(models.AbstractModel):
         """
         st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
         automatic_reconciliation_entries = self.env['account.bank.statement.line']
-        unreconciled = self.env['account.bank.statement.line']
-
-        for stl in st_lines:
-            res = stl.auto_reconcile()
-            if res:
-                automatic_reconciliation_entries += stl
-            else:
-                unreconciled += stl
+        reconciled_st_lines = st_lines.auto_reconcile()
+        automatic_reconciliation_entries += reconciled_st_lines
+        unreconciled = st_lines - reconciled_st_lines
 
         # Collect various information for the reconciliation widget
         notifications = []
@@ -133,15 +128,15 @@ class AccountReconciliation(models.AbstractModel):
         excluded_ids = excluded_ids or []
         ret = []
         st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
+        matching_amls = st_lines._get_matching_amls(excluded_ids=excluded_ids)
 
-        for st_line in st_lines:
-            aml_recs = self._get_statement_line_reconciliation_proposition(st_line, excluded_ids=excluded_ids)
-            target_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.journal_id.company_id.currency_id
-            rp = self._prepare_move_lines(aml_recs, target_currency=target_currency, target_date=st_line.date)
-            excluded_ids += [move_line['id'] for move_line in rp]
+        # Iterate on st_lines to keep the same order in the results list.
+        for line in st_lines:
+            aml_ids = matching_amls[line.id]['aml_ids']
+            amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
             ret.append({
-                'st_line': self._get_statement_line(st_line),
-                'reconciliation_proposition': rp
+                'st_line': self._get_statement_line(line),
+                'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
             })
         return ret
 
@@ -640,62 +635,6 @@ class AccountReconciliation(models.AbstractModel):
                 data['open_balance_account_id'] = st_line.partner_id.property_account_payable_id.id
 
         return data
-
-    @api.model
-    def _get_statement_line_reconciliation_proposition(self, st_line, excluded_ids=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line
-            Note: it only looks for move lines in the same currency as the statement line.
-        """
-        Account_move_line = self.env['account.move.line']
-
-        if not excluded_ids:
-            excluded_ids = []
-        amount = st_line.amount_currency or st_line.amount
-        company_currency = st_line.journal_id.company_id.currency_id
-        st_line_currency = st_line.currency_id or st_line.journal_id.currency_id
-        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
-        precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
-
-        params = {'company_id': st_line.company_id.id,
-                    'account_payable_receivable': (st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id),
-                    'amount': float_repr(float_round(amount, precision_digits=precision), precision_digits=precision),
-                    'partner_id': st_line.partner_id.id,
-                    'excluded_ids': tuple(excluded_ids),
-                    'ref': st_line.name,
-                    'bank_rec_threshold': st_line.journal_id.company_id.account_bank_reconciliation_start,
-                    }
-
-        # Look for structured communication match
-        if st_line.name:
-            add_to_select = ", CASE WHEN aml.ref = %(ref)s THEN 1 ELSE 2 END as temp_field_order "
-            add_to_from = " JOIN account_move m ON m.id = aml.move_id "
-            select_clause, from_clause, where_clause = st_line._get_common_sql_query(overlook_partner=True, excluded_ids=excluded_ids, split=True)
-            sql_query = select_clause + add_to_select + from_clause + add_to_from + where_clause
-
-            if params['bank_rec_threshold']:
-                sql_query += "AND aml.date > %(bank_rec_threshold)s"
-            sql_query += " AND (aml.ref= %(ref)s or m.name = %(ref)s) \
-                    ORDER BY temp_field_order, date_maturity desc, aml.id desc"
-            self.env.cr.execute(sql_query, params)
-            results = self.env.cr.fetchone()
-            if results:
-                return Account_move_line.browse(results[0])
-
-        # Look for a single move line with the same amount
-        field = currency and 'amount_residual_currency' or 'amount_residual'
-        liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
-        liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
-        sql_query = st_line._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + "))"
-        if params['bank_rec_threshold']:
-            sql_query += "AND aml.date > %(bank_rec_threshold)s "
-        sql_query += "ORDER BY date_maturity desc, aml.id desc LIMIT 1"
-        self.env.cr.execute(sql_query, params)
-        results = self.env.cr.fetchone()
-        if results:
-            return Account_move_line.browse(results[0])
-
-        return Account_move_line
 
     @api.model
     def _get_move_line_reconciliation_proposition(self, account_id, partner_id=None):

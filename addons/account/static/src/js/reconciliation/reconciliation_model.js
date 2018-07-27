@@ -130,7 +130,35 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
         this._addProposition(line, prop);
+<<<<<<< HEAD
         line.limit_override = (line.offset + 1) * this.limitMoveLines;
+=======
+
+        // Check whether we have some propositions left
+        // If we don't, it means we are on an empty page
+        // so let's go back to the previous page
+        // Through the offset
+        var propLineIds = _.map(line.reconciliation_proposition, function(prop) {
+                return prop.id;
+            });
+        var leftOversProps = _.filter(line.mv_lines, function(mv_line) {
+            return propLineIds.indexOf(mv_line.id) === -1;
+        });
+        if (line.offset && !leftOversProps.length) {
+            line.offset -= line.limitMoveLines;
+        }
+
+        // Onchange the partner if not already set on the statement line.
+        if(!line.st_line.partner_id && line.reconciliation_proposition
+            && line.reconciliation_proposition.length == 1 && prop.partner_id){
+            return $.when(
+                this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name})).then(
+                this._computeLine(line),
+                this._performMoveLine(handle)
+            );
+        }
+
+>>>>>>> [IMP] account[_bank_statement_import]: improve reconciliation
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
@@ -248,7 +276,14 @@ var StatementModel = BasicModel.extend({
         line.st_line.partner_name = partner && partner.display_name || '';
         return $.when(partner && this._changePartner(handle, partner.id))
                 .then(function() {
-                    line.reconciliation_proposition = [];
+                    if(line.st_line.partner_id){
+                        _.each(line.reconciliation_proposition, function(prop){
+                            if(prop.partner_id != line.st_line.partner_id){
+                                line.reconciliation_proposition = [];
+                                return false;
+                            }
+                        })
+                    }
                     self._computeLine(line);
                     return self.changeMode(handle, 'match');
                 })
@@ -977,6 +1012,22 @@ var StatementModel = BasicModel.extend({
             self._formatLineProposition(line, line.reconciliation_proposition);
             if (!line.reconciliation_proposition.length) {
                 delete line.reconciliation_proposition;
+            }else{
+                // loop state propositions
+                var debit_props = _.filter(line.reconciliation_proposition, function(p){
+                    return p.amount > 0 && line.st_line.amount;
+                });
+                var credit_props = _.filter(line.reconciliation_proposition, function(p){
+                    return p.amount < 0 && line.st_line.amount < 0;
+                });
+                var sum_debit_props = debit_props.length > 0 ? debit_props.map(function(p){return p.amount}).reduce(function(p1, p2){return p1 + p2}) : 0;
+                var sum_credit_props = credit_props.length > 0 ? credit_props.map(function(p){return p.amount}).reduce(function(p1, p2){return p1 + p2}) : 0;
+
+                // Want to display the triangle for partial reconciliation or not.
+                if(line.st_line.amount_currency > 0 && line.st_line.amount_currency < sum_debit_props && debit_props.length == 1)
+                    debit_props[0].display_triangle = true;
+                else if(line.st_line.amount_currency < 0 && line.st_line.amount_currency > sum_credit_props && credit_props.length == 1)
+                    credit_props[0].display_triangle = true;
             }
             defs.push(self._computeLine(line));
         });

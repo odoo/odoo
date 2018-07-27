@@ -5,6 +5,7 @@ import base64
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.tools import float_is_zero
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -200,18 +201,16 @@ class AccountBankStatementImport(models.TransientModel):
 
     def _create_bank_statements(self, stmts_vals):
         """ Create new bank statements from imported values, filtering out already imported transactions, and returns data used by the reconciliation widget """
-        BankStatement = self.env['account.bank.statement']
-        BankStatementLine = self.env['account.bank.statement.line']
-
         # Filter out already imported transactions and create statements
-        statement_ids = []
+        bank_statements = self.env['account.bank.statement']
+
         ignored_statement_lines_import_ids = []
         for st_vals in stmts_vals:
             filtered_st_lines = []
             for line_vals in st_vals['transactions']:
                 if 'unique_import_id' not in line_vals \
                    or not line_vals['unique_import_id'] \
-                   or not bool(BankStatementLine.sudo().search([('unique_import_id', '=', line_vals['unique_import_id'])], limit=1)):
+                   or not bool(self.env['account.bank.statement.line'].sudo().search([('unique_import_id', '=', line_vals['unique_import_id'])], limit=1)):
                     filtered_st_lines.append(line_vals)
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])
@@ -223,21 +222,24 @@ class AccountBankStatementImport(models.TransientModel):
                 st_vals.pop('transactions', None)
                 # Create the statement
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
-                statement_ids.append(BankStatement.create(st_vals).id)
-        if len(statement_ids) == 0:
+                bank_statements += bank_statements.create(st_vals)
+        if len(bank_statements) == 0:
             raise UserError(_('You already have imported that file.'))
+
+        bank_statement_lines = bank_statements.mapped('line_ids')
 
         # Prepare import feedback
         notifications = []
         num_ignored = len(ignored_statement_lines_import_ids)
         if num_ignored > 0:
+            lines = bank_statement_lines.filtered(lambda r: r.unique_import_id in ignored_statement_lines_import_ids)
             notifications += [{
                 'type': 'warning',
                 'message': _("%d transactions had already been imported and were ignored.") % num_ignored if num_ignored > 1 else _("1 transaction had already been imported and was ignored."),
                 'details': {
                     'name': _('Already imported items'),
                     'model': 'account.bank.statement.line',
-                    'ids': BankStatementLine.search([('unique_import_id', 'in', ignored_statement_lines_import_ids)]).ids
+                    'ids': lines.ids
                 }
             }]
-        return statement_ids, notifications
+        return bank_statements.ids, notifications

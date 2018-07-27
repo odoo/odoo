@@ -39,13 +39,7 @@ Tour.register('bank_statement_reconciliation', {
 
         {
             content: "open the last line in match mode to test the reconcile button",
-            extra_trigger: '.o_reconciliation_line:last .o_reconcile:visible',
-            trigger: '.o_reconciliation_line:last .accounting_view thead .cell_label:contains("/002")',
-        },
-        {
-            content: "deselect the proposed line",
-            extra_trigger: '.o_reconciliation_line:last[data-mode="match"]',
-            trigger: '.o_reconciliation_line:last .accounting_view .cell_label:contains("/0002")'
+            trigger: '.toggle_match:last',
         },
         {
             content: "re-select the line",
