@@ -139,12 +139,7 @@ class IrHttp(models.AbstractModel):
                 return werkzeug.utils.redirect(name, 301)
 
             response = werkzeug.wrappers.Response()
-            server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(wdate, server_format)
+            response.last_modified = wdate
 
             response.set_etag(checksum)
             response.make_conditional(request.httprequest)

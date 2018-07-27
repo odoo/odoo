@@ -539,7 +539,7 @@ class WebAsset(object):
             if self._filename:
                 return datetime.fromtimestamp(os.path.getmtime(self._filename))
             elif self._ir_attach:
-                last_update = self._ir_attach['__last_update']
+                return self._ir_attach['__last_update']
         except Exception:
             pass
         return datetime(1970, 1, 1)
