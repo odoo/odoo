@@ -248,7 +248,7 @@ var InputField = DebouncedField.extend({
         var inputVal;
         if (this.nodeOptions.isPassword) {
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
-            inputVal = this.value;
+            inputVal = this.value || '';
         } else {
             inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete });
             inputVal = this._formatValue(this.value);
