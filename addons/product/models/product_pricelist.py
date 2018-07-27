@@ -37,6 +37,11 @@ class Pricelist(models.Model):
     country_group_ids = fields.Many2many('res.country.group', 'res_country_group_pricelist_rel',
                                          'pricelist_id', 'res_country_group_id', string='Country Groups')
 
+    discount_policy = fields.Selection([
+        ('with_discount', 'Discount included in the price'),
+        ('without_discount', 'Show public price & discount to the customer')],
+        default='with_discount')
+
     @api.multi
     def name_get(self):
         return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]

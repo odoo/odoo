@@ -1284,7 +1284,16 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
+                        <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp; 
+                            line.get_unit_display_price() != line.get_list_price()">
+                            <strike>
+                                <t t-esc="widget.format_currency(line.get_list_price(),'Product List Price')" />
+                            </strike> 
+                            <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
+                        </t>
+                        <t t-else="">
+                            <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
+                        </t>
                         /
                         <t t-esc="line.get_unit().name" />
                     </li>
@@ -1472,6 +1481,16 @@
                 <tr t-foreach="orderlines" t-as="orderline">
                     <td>
                         <t t-esc="orderline.get_product().display_name"/>
+                        <t t-if="orderline.display_discount_policy() == 'without_discount' &amp;&amp; 
+                            orderline.get_unit_display_price() != orderline.get_list_price()">
+                            <div class="pos-disc-font">
+                                <strike>
+                                    <t t-esc="widget.format_currency(orderline.get_list_price(),'Product List Price')"/>
+                                </strike>
+                                   -> 
+                                <t t-esc="widget.format_currency(orderline.get_unit_display_price(),'Product Price')"/>
+                            </div>
+                        </t>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
