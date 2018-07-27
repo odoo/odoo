@@ -554,8 +554,9 @@ MailManager.include({
      * @private
      * @param {Array} notifs
      */
-    _onNotification: function (notifs) {
+    _onNotification: function (ev) {
         var self = this;
+        var notifs = ev.data ? ev.data : ev;
         notifs = this._filterNotificationsOnUnsubscribe(notifs);
         _.each(notifs, function (notif) {
             var model = notif[0][1];
