@@ -406,7 +406,7 @@ var FieldMany2One = AbstractField.extend({
                                         name: search_val,
                                         args: domain,
                                         operator: "ilike",
-                                        limit: 160,
+                                        limit: false,
                                         context: context,
                                     },
                                 })
