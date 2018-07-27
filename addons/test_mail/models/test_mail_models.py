@@ -37,6 +37,7 @@ class MailTestActivity(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
+    active = fields.Boolean(default=True)
 
     def action_start(self, action_summary):
         self.activity_schedule(
