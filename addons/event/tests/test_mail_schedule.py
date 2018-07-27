@@ -13,7 +13,7 @@ class TestMailSchedule(TestEventCommon):
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
-        now = fields.datetime.now()
+        now = fields.Datetime.now()
         event_date_begin = now + relativedelta(days=1)
         event_date_end = now + relativedelta(days=3)
 
@@ -56,7 +56,7 @@ class TestMailSchedule(TestEventCommon):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(schedulers[0].mail_registration_ids), 2, 'event: incorrect number of mail scheduled date')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', fields.Datetime.to_string(now))], order='date DESC', limit=3)
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', now)], order='date DESC', limit=3)
         self.assertEqual(len(mails), 2, 'event: wrong number of registration mail sent')
 
         for registration in schedulers[0].mail_registration_ids:
