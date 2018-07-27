@@ -466,6 +466,12 @@ class AccountMoveLine(models.Model):
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
+    @api.constrains('analytic_account_id', 'name')
+    def _check_analytic_account(self):
+        if self.env['account.analytic.line']._fields.get('name').required and\
+           any(self.mapped(lambda line: line.analytic_account_id and not line.name)):
+            raise ValidationError(_("Please define a label on all the journal items using an analytic account."))
+
     @api.model
     def default_get(self, fields):
         rec = super(AccountMoveLine, self).default_get(fields)
