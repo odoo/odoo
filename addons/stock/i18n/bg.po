@@ -6,11 +6,11 @@
 # Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # kalatchev, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Todor Mladenov <tmladenov@dir.bg>, 2016
 # Radina <radis.choice@gmail.com>, 2016
 # Anton Vassilev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2017
@@ -628,6 +628,10 @@ msgid ""
 "delivery</strong>, assign a lot number or different lot numbers or serial "
 "numbers to a product by clicking on the <span class=\"fa fa-list\"/> icon"
 msgstr ""
+"<strong>Когато обработвате входяща пратка, вътрешно прехвърляне или "
+"доставка</strong>, определете партиден номер или различни партидни номера "
+"или серийни номера на даден продукт, като кликнете върху <span class=\"fa "
+"fa-list\"/> иконата."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:102
@@ -893,12 +897,12 @@ msgstr "Запитване за нови продукти"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Owner"
-msgstr "Назначи собственик"
+msgstr "Определете собственик"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr "Назначи премествания"
+msgstr "Определете движения"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -1243,7 +1247,7 @@ msgstr "Кликнете, за да добавите партиден номер
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
 msgid "Click to add a reordering rule."
-msgstr "Кликнете, за да добавите правило за презареждане."
+msgstr "Натиснете бутона, за да добавите правило за повторни поръчки."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -3109,8 +3113,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "It is time to make your initial Inventory. In order to do so:"
 msgstr ""
-"Време е да създадете вашият първоначален инвентар от стоки. За да направите "
-"това:"
+"Време е да създадете Вашия първоначален инвентар. За да направите това:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
@@ -4152,13 +4155,13 @@ msgstr "Дата на поръчка"
 #. module: stock
 #: model:stock.location,name:stock.location_order
 msgid "Order Processing"
-msgstr "Обработка на нареждане"
+msgstr "Обработка на поръчка"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_ordered_qty
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_ordered_qty
 msgid "Ordered Quantity"
-msgstr "Поръчано Количество"
+msgstr "Поръчано количество"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5246,7 +5249,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "Правила за Повторна Поръчка"
+msgstr "Правила за повторна поръчка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
@@ -5263,7 +5266,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "Повторна поръчка на минимално количество"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -6992,7 +6995,7 @@ msgstr ""
 #: code:addons/stock/models/barcode.py:11
 #, python-format
 msgid "Weighted Product"
-msgstr ""
+msgstr "Претеглен продукт"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7369,7 +7372,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

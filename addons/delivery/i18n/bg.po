@@ -185,7 +185,7 @@ msgstr "Наличен"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available_in_pos
 msgid "Available in the Point of Sale"
-msgstr "Видим в ПОС"
+msgstr "Наличен в Център за продажби"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
@@ -193,6 +193,9 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Средно забавяне в дни за производството на този продукт. В случай на "
+"многостепенна фактура за покупка на материали, ще бъдат добавени и сроковете"
+" за производство на компонентите."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
@@ -307,7 +310,8 @@ msgstr "Отбележи, ако продукта трябва да бъде п�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Изберете, ако искате продукта да се вижда в ПОС"
+msgstr ""
+"Отметнете, ако искате този продукт да се появява в Центъра за продажби"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1014,7 +1018,7 @@ msgstr "Няма превозвач."
 #: code:addons/delivery/models/sale_order.py:72
 #, python-format
 msgid "No carrier set for this order."
-msgstr "Няма превозвач за тази поръчка."
+msgstr "Няма назначен превозвач за тази поръчка."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
@@ -1124,7 +1128,7 @@ msgstr "Физически Пакети"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
 msgid "Point of Sale Category"
-msgstr "ПОС Категория"
+msgstr "Категория 'Център на продажби'"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1306,7 +1310,7 @@ msgstr "Касов бон"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr "Правила за Повторна Поръчка"
+msgstr "Правила за повторна поръчка"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
@@ -1316,7 +1320,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "Повторна поръчка на минимално количество"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1361,7 +1365,7 @@ msgstr "Поръчка за продажба"
 #: model:ir.model,name:delivery.model_sale_order_line
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
 msgid "Sales Order Line"
-msgstr "Ред от нареждане за продажба"
+msgstr "Ред от поръчка за продажба"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -1568,8 +1572,8 @@ msgstr ""
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
-"Състоянието на поръчката трябва да бъде в проект за да може да се добавят "
-"редове за доставка"
+"Етапът на поръчката трябва да е 'чернова', за да може да се добавят редове "
+"за доставка"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_lst_price
@@ -1676,7 +1680,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "Тези категории се използват за групиране на продукти в ПОС."
+msgstr ""
+"Тези категории се използват за групиране на продукти в Център за продажби."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
