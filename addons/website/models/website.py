@@ -790,7 +790,6 @@ class Page(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.ensure_one()
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
         result = super(Page, self).write(vals)
