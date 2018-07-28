@@ -169,6 +169,7 @@ class Module(models.Model):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
                 output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
                 module.description_html = tools.html_sanitize(output)
