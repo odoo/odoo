@@ -6,9 +6,9 @@
 # Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # kalatchev, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Radina <radis.choice@gmail.com>, 2016
 # Любо Енев, 2016
-# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Anton Vassilev, 2016
 # Todor Mladenov <tmladenov@dir.bg>, 2016
 # Vihren Kanev <vihren.kanev@gmail.com>, 2016
@@ -849,9 +849,9 @@ msgid ""
 "Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
 msgstr ""
-"Фиксирана Цена: всички цени се определят от продажната цена на продукта..\n"
-"Различни цени по Клиент: можете да сложите цена при закупуване на минимално количество в таб продажби на продукт..\n"
-"Сложно ценообразуване базирано на формула: Можете да имате всички права върху Ценова Листа"
+"Фиксирана цена: всички цени се определят от продажната цена на продуктите.\n"
+"Различни цени за клиент: можете да определите цена при закупуване на минимално количество в маркера продажби на продукти.\n"
+"Сложно ценообразуване базирано на формула: Можете да имате всички права върху ценовата листа."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1210,7 +1210,7 @@ msgstr "Мои поръчки"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Моите редове на поръчки за продажби"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
@@ -1221,7 +1221,7 @@ msgstr "Име"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sales order"
-msgstr ""
+msgstr "Никога не подволявайте да се променя потвърдена поръчка за продажби."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:110 code:addons/sale/models/sale.py:261
@@ -1249,7 +1249,8 @@ msgstr "Без съобщение"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr "Без отстъпка на редовете, само глобална отстъпка"
+msgstr ""
+"Без отстъпки по редовете за поръчки на продажби, само цялостна отстъпка"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1327,7 +1328,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
-msgstr "Ред"
+msgstr "Поръчка"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1349,36 +1350,36 @@ msgstr "Редове от поръчка"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Month"
-msgstr "Месец на Поръчка"
+msgstr "Месец на поръчка"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
-msgstr "Номер на Поръчка"
+msgstr "Номер на поръчка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
-msgstr "Отпратка към поръчка"
+msgstr "Референция към поръчка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
 msgid "Order Status"
-msgstr "Статус на Поръчка"
+msgstr "Етап на поръчка"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr "Поръчано к-во"
+msgstr "Поръчано количество"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:713
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
-msgstr "Поръчано Количество"
+msgstr "Поръчано количество"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1502,7 +1503,7 @@ msgstr "Ценоразпис"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_pricelist_id
 msgid "Pricelist for current sales order."
-msgstr "Ценова листа за настоящото нареждане за продажба"
+msgstr "Ценова листа за текущата поръчка за продажба"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_action2
@@ -1709,6 +1710,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
 msgstr ""
+"Референция към документа, който създаде това запитване за поръчка за "
+"продажби."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_configuration_action
@@ -1794,7 +1797,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
-msgstr ""
+msgstr "Информация за продажбите"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1820,7 +1823,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn
 msgid "Sales Order Line"
-msgstr "Ред от нареждане за продажба"
+msgstr "Ред от поръчка за продажба"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1854,7 +1857,7 @@ msgstr "Поръчки за продажби"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Статистика на нареждани за продажби"
+msgstr "Статистика на поръчки за продажби"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
@@ -1905,7 +1908,7 @@ msgstr "Търси Име"
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr "Търсене на нареждания за продажби"
+msgstr "Потърсете поръчки за продажби"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
@@ -2120,7 +2123,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
 #: model:ir.model.fields,help:sale.field_sale_order_related_project_id
 msgid "The analytic account related to a sales order."
-msgstr "Аналитичната сметкта свързана с нареждания за продажби"
+msgstr "Аналитичната сметкта, свързана с поръчка за продажби"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:709

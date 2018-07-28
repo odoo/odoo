@@ -866,7 +866,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr ""
+msgstr "<strong>Partneři:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1077,6 +1077,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
+"Účetní deníky obsahují několik položek  v záznamech\n"
+"                což je buď debetní nebo kreditní transakce."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1119,13 +1121,13 @@ msgstr "Sladění musí zahrnovat nejméně 2 pohyby."
 #: code:addons/account/models/account_bank_statement.py:870
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "Vybraný řádek byl již vyrovnán, spárován."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:883
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr ""
+msgstr "Vybraný řádek dokladu byl již vyrovnán pohybem účtu."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1185,7 +1187,7 @@ msgstr "Účet"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "Účetní zpráva hospodaření  přes období"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1195,12 +1197,12 @@ msgstr "Zůstatky účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr ""
+msgstr "Účetní výpis z účtu Pokladní doklady"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
 msgid "Account Bank Statement closing balance"
-msgstr ""
+msgstr "Účetní závěrka účtu závěrečný zůstatek"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -1263,7 +1265,7 @@ msgstr "Mapování účtů"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Account Move Reversal"
-msgstr ""
+msgstr "Účet Změna pohybu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
@@ -1339,7 +1341,7 @@ msgstr "Účetní statistiky"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr ""
+msgstr "Tag účtu"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -1365,7 +1367,7 @@ msgstr "Šablona účtu"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr ""
+msgstr "Šablona účtu pro oceňování akcií"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
@@ -1397,6 +1399,9 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
 msgstr ""
+"Typ účtu se používá pro informační účely, generuje oficiální zprávy, "
+"specifické pro jednotlivé země a nastavuje pravidla pro uzavření fiskálního "
+"roku a generování položek otevírání."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -1407,7 +1412,7 @@ msgstr "Typy účtů"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr ""
+msgstr "Povolené typy účtů"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -1422,23 +1427,23 @@ msgstr "Vyrovnání řádku pohybu účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr ""
+msgstr "Vyrovnání řádku pohybu účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account move reversal"
-msgstr ""
+msgstr "Účet Změna pohybu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
 msgid "Account on Product"
-msgstr ""
+msgstr "Účet na produktu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tag_ids
 msgid "Account tag"
-msgstr ""
+msgstr "Tag účtu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1447,6 +1452,8 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
+"Účet, který bude nastaven na fakturačních daňových řádcích pro kreditní "
+"poznámky. Ponechte prázdné pro použití účtu výdajů."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_refund_account_id
@@ -1455,11 +1462,13 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
+"Účet, který bude nastaven na fakturačních daňových řádcích pro vratky. "
+"Ponechte prázdné pro použití účtu výdajů."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
 msgid "Account to Use Instead"
-msgstr ""
+msgstr "Účet, který chcete použít místo toho"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_account_type
@@ -1491,18 +1500,18 @@ msgstr "Nastavení účetní aplikace"
 #. module: account
 #: model:web.planner,tooltip_planner:account.planner_account
 msgid "Accounting Configuration: a step-by-step guide."
-msgstr ""
+msgstr "Konfigurace účetnictví: Příručka krok za krokem."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr ""
+msgstr "Dashboard účetnictví"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Datum účtování"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1522,7 +1531,7 @@ msgstr "Výkaz účetnictví"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Accounting Settings"
-msgstr ""
+msgstr "Nastavení účetnictví"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form

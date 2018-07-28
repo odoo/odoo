@@ -9,7 +9,7 @@
 # Radina <radis.choice@gmail.com>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
-# Vassil Toubev <vassy@mail.bg>, 2016
+# Vassil Toumbev <vassy@mail.bg>, 2016
 # Anton Vassilev, 2016
 # Antoan Georgiev <expocarbg@gmail.com>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2016
@@ -62,10 +62,10 @@ msgstr ""
 "\n"
 "=======================\n"
 "\n"
-"Този модул добавя няколко функции за ресторанти към Point of Sale:\n"
-"- Печат фактура за покупка: Позволява да напечатате сметката преди поръчката да е платена\n"
+"Този модул добавя няколко функции за ресторанти към Център за продажби:\n"
+"- Печат фактура за покупка: Позволява да отпечатате сметката преди поръчката да е платена\n"
 "- Разделяне фактура за покупка: Позволява да разделите една поръчка на няколко различни поръчки\n"
-"- Печат бележка към кухня: позволява да напечатате новите поръчки на принтера в кухнята или бара.\n"
+"- Разпечатване на поръчки за куфнята: позволява да разпечатате актуализираните поръчки на принтера в кухнята или бара.\n"
 "\n"
 
 #. module: base
@@ -99,6 +99,14 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"=======================\n"
+"\n"
+"Този модул Ви позволява да определите програма за лоялност в\n"
+"Центъра за продажби, където клиентите набират точки за роялност\n"
+"и получават награди.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -418,7 +426,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Общи данни за продажбите на напитки в пунктовете"
+"Общи данни за напитки в центровете за продажба"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -552,6 +560,9 @@ msgid ""
 "        This module is used for Online bank synchronization. It provides basic methods to synchronize bank statement.\n"
 "    "
 msgstr ""
+"\n"
+"        Този модул се използва за онлайн банкова синхронизация. Той предоставя базисни методи за синхронизиране на банково извлечение.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -576,6 +587,8 @@ msgid ""
 "\n"
 "        Use Plaid.com to retrieve bank statements"
 msgstr ""
+"\n"
+"        Използвайте Plaid.com, за да обработвате банкови извлечения"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_plaid
@@ -584,6 +597,9 @@ msgid ""
 "        Use Plaid.com to retrieve bank statements.\n"
 "    "
 msgstr ""
+"\n"
+"        Използвайте Plaid.com, за да обработвате банкови извлечения.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -725,6 +741,12 @@ msgid ""
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
+"\n"
+"Права за достъп до счетоводство\n"
+"========================\n"
+"Това дава на администратора потребителски достъп до всички счетоводни характеристики като статии в журнал и сметкоплан.\n"
+"\n"
+"То определя мениджър и правомощия за потребителски достъп на администратора за счетоводното приложение и само потребителски правомощия на демо патребителя.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_contract_dashboard
@@ -953,6 +975,17 @@ msgid ""
 "You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"Добавете цялата информация във формуляра на служителя, за да управлявате договори.\n"
+"=============================================================\n"
+"\n"
+"    * Договор\n"
+"    * Месторождение,\n"
+"    * Дата на медицински преглед\n"
+"    * Транспортно средство на компанията\n"
+"\n"
+"Можете да определите няколко договора за служител.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -1207,6 +1240,14 @@ msgid ""
 "point of sale module. \n"
 "\n"
 msgstr ""
+"\n"
+"Хардуеърен драйвър за баркодов скенер\n"
+"================================\n"
+"\n"
+"Този модул позволява на уеб клиента да има достъп до дистанционно инсталиран баркодов \n"
+"скентер и се използва от posbox, за да предоставя поддръжка на баркодов скенер към\n"
+"модула 'Център за продажба'. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -1317,6 +1358,24 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Регистриран белгийски касов апарат\n"
+"================================\n"
+"\n"
+"Този модул превръща модула 'Център за продажби' в сертифициран белгийски касов апарат.\n"
+"\n"
+"Допълнителна информация:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Законен\n"
+"-----\n"
+"**Употребата на източниците на pos_blackbox_be е сертифицирана единствено  в платформата odoo.com SaaS\n"
+"за версия 9.0.**\n"
+"Объркана и сертифицирана версия на pos_blackbox_be може да бъде предоставена по\n"
+"предварителна заявка на инсталации.\n"
+"Нито една променена версия не е сертифицирана и поддържана от Odoo SA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -1633,6 +1692,14 @@ msgid ""
 "that would need such functionality.\n"
 "\n"
 msgstr ""
+"\n"
+"ESC/POS Хардуеърен драйвър\n"
+"=======================\n"
+"\n"
+"Този модул позволява отварящо устройство, което да принтира с ESC/POS съвместими принтери и\n"
+"tда отваря ESC/POS ковтролирани касови чекмеджета в Центъра за продажби и други модули,\n"
+"които ще имат нужда от подобна функционалност.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -1751,6 +1818,16 @@ msgid ""
 "Belgian cash register. It allows the communication on with a certified Fiscal\n"
 "Data Module but will not modify the behaviour of the Point of Sale.\n"
 msgstr ""
+"\n"
+"Хардуеърен драйвър на модула за фискални данни\n"
+"==================================\n"
+"\n"
+"Този модул позволява на клиента от Центъра за продажби да комуникира със\n"
+"свързания белгийски модул за фискални данни.\n"
+"\n"
+"Този модул **не** превръща модула на Центъра за продажби в Odoo в сертифициран\n"
+"белгийски касов апарат. Той позволява комуникацията със сертифициран модул за фискални\n"
+"данни, но няма да промени поведението на Центъра за продажби.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -1791,6 +1868,17 @@ msgid ""
 "\n"
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+"Процес на игровизация\n"
+"====================\n"
+"Модулът \"Игровизация\" предлага начини за оценяване и мотивиране на потребителите на Odoo.\n"
+"\n"
+"Потребителите могат да бъдат оценени с помощта на множество цели за постигане.\n"
+"**Целите** се определят чрез **предизвикателства** с цел оценяване и съпоставяне един на друг членове на екип, както и на база време.\n"
+"\n"
+"За не-числени постижения, на потребителите могат да се раздават **значки**. От едно обикновено \"благодаря\" до изкбучително постижение една значка се явява лесен начин да изразите благодарност към потребителя за добре свършената от него работа.\n"
+"\n"
+"Както целите, така и значките са лесно приспособими и могат да се адаптират към широк спектър модули и действия. Когато вече е инсталиран, този модул създава лесни цели, за да помага на новите потребители да открият Odoo и да конфигурират потребителския им профил.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -1892,6 +1980,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Хелпдеск - Приложение за управление на тикети\n"
+"================================\n"
+"\n"
+"Характеристики:\n"
+"\n"
+"    - Придвижвайте тикети в различни фази, за да ги разрешите.\n"
+"    - Добавете предимства, видове, описания и маркировки, за да определите тикетите си.\n"
+"    - Възползвайте се от комуникацията, за да споделите допълнителна информация и да се свържете в мрежата със сътрудници/колеги по тикети.\n"
+"    - Възползвайте се от адаптираното табло за управление и лесния за използване изглед на системата Канбан, за да боравите с Вашите тикети.\n"
+"    - Проведете задълбочен анализ на тикетите си чрез централния изглед в менюто със справките.\n"
+"    - Създайте екип и определете неговите членове; ако желаете, използвайте метода за автоматично разпределяне.\n"
+"    - Използвайте подставена поща, за да създавате тикети автоматично и да общувате с клиентите си.\n"
+"    - Добавете автоматично срокове за Споразумение за нивото на обслужване към Вашите тикети.\n"
+"    - Поддържайте обратна връзка с клиентите си, като използвате рейтеинги/класификации.\n"
+"    - Инсталирайте допълнителни характеристики, използвайки лесно изгледа на   екипа си.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_sheet_timesheet_grid
@@ -2436,6 +2542,52 @@ msgid ""
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 msgstr ""
+"\n"
+" Модул за въвеждане на банкови извлечения CODA.\n"
+"======================================\n"
+"\n"
+"Поддържани са плоски файлове CODA във формат V2 от белгийски банкови сметки.\n"
+"----------------------------------------------------------------------\n"
+"    * поддръжка CODA v1.\n"
+"    * поддръжка CODA v2.2.\n"
+"    * Поддръжка на чуждестранна валута.\n"
+"    * Поддръжка за всички видове запис на данни (0, 1, 2, 3, 4, 8, 9).\n"
+"    * Разработване и регистриране на всички кодове за транзакции и комуникации със структуриран\n"
+"      формат.\n"
+"    * Автоматично определяне на финансов журнал чрез конфигурационните параметри на CODA.\n"
+"    * Поддръжка на множество журнали по номер на банкова сметка.\n"
+"    * Паддръжка на множество извлечениа от различни банкови сметки в един\n"
+"      файл CODA.\n"
+"    * Поддръжка на банкови сметки CODA на ниво 'само разработка' (дефинирани като type='info' в\n"
+"      конфигурационните данни за банковата сметка на CODA).\n"
+"    * Многоезикова разработка на CODA, анализ на конфигурационните данни, предоставени за английски\n"
+"      нидерландски, френски.\n"
+"\n"
+"The machine readable CODA Files are parsed and stored in human readable format in\n"
+"CODA Bank Statements. Also Bank Statements are generated containing a subset of\n"
+"the CODA information (only those transaction lines that are required for the\n"
+"creation of the Financial Accounting records). The CODA Bank Statement is a\n"
+"'read-only' object, hence remaining a reliable representation of the original\n"
+"CODA file whereas the Bank Statement will get modified as required by accounting\n"
+"business processes.\n"
+"\n"
+"CODA Bank Accounts configured as type 'Info' will only generate CODA Bank Statements.\n"
+"\n"
+"A removal of one object in the CODA processing results in the removal of the\n"
+"associated objects. The removal of a CODA File containing multiple Bank\n"
+"Statements will also remove those associated statements.\n"
+"\n"
+"Instead of a manual adjustment of the generated Bank Statements, you can also\n"
+"re-import the CODA after updating the OpenERP database with the information that\n"
+"was missing to allow automatic reconciliation.\n"
+"\n"
+"Remark on CODA V1 support:\n"
+"~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+"In some cases a transaction code, transaction category or structured\n"
+"communication code has been given a new or clearer description in CODA V2.The\n"
+"description provided by the CODA configuration tables is based upon the CODA\n"
+"V2.2 specifications.\n"
+"If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_csv
@@ -2867,6 +3019,22 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
+"\n"
+"Периодично оценяване на служителите\n"
+"==============================================\n"
+"\n"
+"By using this application you can maintain the motivational process by doing periodical appraisals of your employees performance. The regular assessment of human resources can benefit your people as well your organization.\n"
+"\n"
+"На всеки служител може да бъде определен план за оценка. These plans define the frequency and the way you manage your periodic personal appraisal.\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Ability to create employee's appraisal(s).\n"
+"* An appraisal can be created by an employee's manager or automatically based on schedule which is defined in the employee form.\n"
+"* The appraisal is done according to a plan in which various surveys can be created. Each survey can be answered by a particular level in the employees hierarchy. The final review and appraisal is done by the manager.\n"
+"* Manager, colleague, collaborator, and employee himself/herself receives email to perform a periodical appraisal.\n"
+"* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
+"* Meeting Requests are created manually according to employees appraisals.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -2950,6 +3118,10 @@ msgid ""
 "==========================\n"
 "        "
 msgstr ""
+"\n"
+"Публикувайте и определете партньор\n"
+"==========================\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_ebay
@@ -3073,6 +3245,35 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Retrieve incoming email on POP/IMAP servers.\n"
+"============================================\n"
+"\n"
+"Enter the parameters of your POP/IMAP account(s), and any incoming emails on\n"
+"these accounts will be automatically downloaded into your Odoo system. All\n"
+"POP3/IMAP-compatible servers are supported, included those that require an\n"
+"encrypted SSL/TLS connection.\n"
+"\n"
+"This can be used to easily create email-based workflows for many email-enabled Odoo documents, such as:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"    * CRM Leads/Opportunities\n"
+"    * CRM Claims\n"
+"    * Project Issues\n"
+"    * Project Tasks\n"
+"    * Human Resource Recruitments (Applicants)\n"
+"\n"
+"Просто инсталирайте съответното приложение и можете да определите който и да е от тези видове \n"
+"документи\n"
+"(лийдове, грешки в проекта) към постъпващите Ви по имейл сметки. New emails will\n"
+"automatically spawn new documents of the chosen type, so it's a snap to create a\n"
+"mailbox-to-Odoo integration. Even better: these documents directly act as mini\n"
+"conversations synchronized by email. You can reply from within Odoo, and the\n"
+"answers will automatically be collected when they come back, and attached to the\n"
+"same *conversation* document.\n"
+"\n"
+"За по-специфични нужди, можете да определите и дефинирани по поръчка действия\n"
+"(технически: действия на сървъра), които да се отключват при всеки постъпващ имейл.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_screen
@@ -3336,6 +3537,25 @@ msgid ""
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
 msgstr ""
+"\n"
+"The generic Odoo Customer Relationship Management\n"
+"====================================================\n"
+"\n"
+"This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and activities.\n"
+"\n"
+"It manages key tasks such as communication, identification, prioritization, разпределение, resolution and notification.\n"
+"\n"
+"Odoo ensures that all cases are successfully tracked by users, customers and vendors. It can automatically send reminders, trigger specific methods and many other actions based on your own enterprise rules.\n"
+"\n"
+"The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and Odoo. That way, users can just send emails to the request tracker.\n"
+"\n"
+"Odoo will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.\n"
+"\n"
+"\n"
+"Dashboard for CRM will include:\n"
+"-------------------------------\n"
+"* Planned Revenue by Stage and User (graph)\n"
+"* Opportunities by Stage (graph)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -3595,6 +3815,27 @@ msgid ""
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
 msgstr ""
+"\n"
+"This is the module for computing Procurements.\n"
+"==============================================\n"
+"\n"
+"This procurement module only depends on the product module and is not useful\n"
+"on itself.  Procurements represent needs that need to be solved by a procurement\n"
+"rule.  When a procurement is created, it is confirmed.  When a rule is found,\n"
+"it will be put in running state.  After, it will check if what needed to be done\n"
+"for the rule has been executed.  Then it will go to the done state.  A procurement\n"
+"can also go into exception, for example when it can not find a rule and it can be cancelled.\n"
+"\n"
+"The mechanism will be extended by several modules.  The procurement rule of stock will\n"
+"create a move and the procurement will be fulfilled when the move is done.\n"
+"The procurement rule of sale_service will create a task.  Those of purchase or\n"
+"mrp will create a purchase order or a manufacturing order.\n"
+"\n"
+"The scheduler will check дали може да определи правило за потвърдени придобивки and if\n"
+"it can put running procurements to done.\n"
+"\n"
+"Procurements in exception should be checked manually and can be re-run.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -4558,6 +4799,13 @@ msgid ""
 "such as the Mettler Toledo Ariva.\n"
 "\n"
 msgstr ""
+"\n"
+"Хардуеърен драйвър за мерителни везни\n"
+"================================\n"
+"\n"
+"Този модул позволява на Центъра за продажби да се свърже с везна, използваща USB HSM интерфейс за серийна везна\n"
+"като Mettler Toledo Ariva.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -5172,7 +5420,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
-msgstr ""
+msgstr "Въвеждане извлечение на банкова сметка"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
@@ -6327,7 +6575,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Белгия - въведете CODA банкови извлечения"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -7080,7 +7328,7 @@ msgstr "Търговско вписване"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
-msgstr ""
+msgstr "Общи данни на напитките за центровете за продажба"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -7571,6 +7819,11 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"Създайте и управлявайте потребители, които ще се свържат със системата. "
+"Потребителите могат да се деактивират, стига да има период от време, по "
+"време на който няма/не трябва да се свързват със системата. Можете да им "
+"определите групи, за да им предоставите специфичен достъп до приложенията, "
+"които ще са им нужни, за да използват системата."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -7776,7 +8029,7 @@ msgstr "Кредитен лимит"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr ""
+msgstr "Поддръжка на кредитна карта за Център за продажби."
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -7987,7 +8240,7 @@ msgstr "База данни"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_anonymization
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Привеждане в режим 'анонимност' на базата данни"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_db_datas
@@ -8053,7 +8306,7 @@ msgstr "Дата час"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr "Дати на поръчки"
+msgstr "Дати на поръчки за продажби"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -9596,6 +9849,8 @@ msgid ""
 "Generic Wizard to Import Bank Statements. Includes the import of files in "
 ".OFX format"
 msgstr ""
+"Общ помощник за въвиждане на банкови извлечения. Влючва въвеждането на "
+"файлове в .OFX формат"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -9939,6 +10194,9 @@ msgid ""
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
+"Помага Ви да извлечете максималното от центровете си за продажба с бързо "
+"кодиране на продажбите, кодиране на опростен режим на плащане, автоматично "
+"създаване на списъци и т.н."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -10502,22 +10760,22 @@ msgstr "Внос / Износ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
 msgid "Import CAMT Bank Statement"
-msgstr ""
+msgstr "Въведете CAMT банково извлечение"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
 msgid "Import CSV Bank Statement"
-msgstr ""
+msgstr "Въведете CSV банково извлечение"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
-msgstr ""
+msgstr "Въведете OFX банково извлечение"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_qif
 msgid "Import QIF Bank Statement"
-msgstr ""
+msgstr "Въведете QIF банково извлечение"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -11684,7 +11942,7 @@ msgstr "Програма за лоялност"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_loyalty
 msgid "Loyalty Program for the Point of Sale "
-msgstr ""
+msgstr "Програма за лоялност за Центъра за продажби"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_lunch
@@ -11913,7 +12171,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr ""
+msgstr "Маржове в поръчките за продажби"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
@@ -13550,17 +13808,17 @@ msgstr "Център за продажби"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
 msgid "Point of Sale Common Data Drinks"
-msgstr ""
+msgstr "Общи данни за напитките на център за продажби"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr ""
+msgstr "Отстъпки на център за продажби"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_reprint
 msgid "Point of Sale Receipt Reprinting"
-msgstr ""
+msgstr "Повторно разпечатване на квитанции на център за продажби."
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -13988,13 +14246,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr ""
-"Запитване за ..., Поръчки за продажба, доставка и контрол на фактурирането"
+msgstr "Оферта, поръчки за продажба, контрол на доставките и фактурирането"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr "Оферти, Поръчки за доставка, Фактуриране"
+msgstr "Оферти, поръчки за продажба, фактуриране"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:307
@@ -14405,7 +14662,7 @@ msgstr "Ресторант"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr ""
+msgstr "Разширения на ресторанти за Центъра за продажби"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -15125,7 +15382,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr ""
+msgstr "Опростени отстъпки в Центъра за продажби"
 
 #. module: base
 #: model:res.country,name:base.sg
@@ -17865,7 +18122,7 @@ msgstr "Работни дни"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planing, Stock Reports."
-msgstr "Работни поръчки, Планиране, отчети за наличностите."
+msgstr "Работни поръчки, планиране, отчети за наличностите."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_wkf_id
@@ -18304,7 +18561,7 @@ msgstr "напр. Директор продажби"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr "напр. Промяна на бройката"
+msgstr "напр. актуализирайте количествоно поръчки"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language
