@@ -37,6 +37,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe factuur aan het ingeven is.\n"
+"* De 'Open' status wordt gebruikt wanneer de gebruiker een factuur aanmaakt, een factuurnummer wordt gegenereerd. De factuur blijft open tot deze betaald is. \n"
+"* De 'Betaald' status wordt automatisch ingesteld wanneer de factuur betaald is. \n"
+"* De 'Geannuleerd' status wordt gebruikt wanneer de gebruiker de factuur annuleert."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -1727,12 +1731,12 @@ msgstr "Toepasbaarheid"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Toegepast op debet boeking"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Toegepast op debet post"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -11239,7 +11243,7 @@ msgstr "account.reconcile.model.template"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "account.reconciliation.widget"
-msgstr ""
+msgstr "account.reconciliation.widget"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group

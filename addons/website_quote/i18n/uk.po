@@ -208,6 +208,8 @@ msgid ""
 "<span>I agree that by signing this proposal, I\n"
 "                                    accept it on the behalf of </span>"
 msgstr ""
+"<span>Я погоджуюсь, що, підписавши цю пропозицію, я\n"
+"                                     приймаю її від імені</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -316,7 +318,7 @@ msgstr "Назад"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Back to Sales Order"
-msgstr ""
+msgstr "Повернутися до замовлення а продаж"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -336,6 +338,10 @@ msgid ""
 "can either request a digital signature or an upfront payment. With a digital"
 " signature, you can request the payment when issuing the invoice."
 msgstr ""
+"Виберіть спосіб підтвердження замовлення для запуску процесу доставки. Ви "
+"можете або запитати цифровий підпис, або авансовий платіж. За допомогою "
+"цифрового підпису ви можете подати запит на оплату при видачі рахунку-"
+"фактури."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -351,7 +357,7 @@ msgstr "Налаштування пошти"
 #: model:ir.model.fields,field_description:website_quote.field_sale_order__require_payment
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template__require_payment
 msgid "Confirmation Mode"
-msgstr ""
+msgstr "Режим підтвердження"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -387,7 +393,7 @@ msgstr "Клієнт:"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_res_config_settings__default_template_id
 msgid "Default Template"
-msgstr ""
+msgstr "Шаблон за замовчуванням"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order__website_description
@@ -512,6 +518,8 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Якщо цей параметр не буде позначено, він дозволить вам сховати шаблон "
+"комерційної пропозиції, не видаливши його."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:194
@@ -589,7 +597,7 @@ msgstr "Платіж онлайн"
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Signature"
-msgstr ""
+msgstr "Онлайн-підпис"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option__website_description
@@ -642,7 +650,7 @@ msgstr "Платіжні еквайєри"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Payment Terms:"
-msgstr ""
+msgstr "Термін оплати:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -757,7 +765,7 @@ msgstr "Замовлення переглянуто"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "Комерційна пропозиція закінчується після"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:52
@@ -800,7 +808,7 @@ msgstr "Рядок замовлення"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Посилання на замовлення на продаж"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -811,7 +819,7 @@ msgstr "Рядки шаблону пропозиції"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "Пошук шаблону комерційної пропозиції"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option__layout_category_id
@@ -874,6 +882,9 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"Адміністратор може встановити Терміни та умови за замовчуванням в "
+"налаштуваннях продажів. Умови, встановлені тут, відображатимуться, якщо ви "
+"виберете цей шаблон комерційної пропозиції."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template__mail_template_id
@@ -987,7 +998,7 @@ msgstr "Опис для вебсайту"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "You can"
-msgstr ""
+msgstr "Ви можете"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1086,21 +1097,23 @@ msgid ""
 "for\n"
 "                          any questions."
 msgstr ""
+"для\n"
+"                          будь-яких запитань."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been cancelled!"
-msgstr ""
+msgstr "вже було завершено!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been validated!"
-msgstr ""
+msgstr "вже було підтверджено!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has not yet been sent!"
-msgstr ""
+msgstr "ще не відправлено!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
