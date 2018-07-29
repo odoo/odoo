@@ -1259,7 +1259,10 @@ class AssetsBundle(object):
 
     def get_attachments(self, type, inc=None):
         ira = self.registry['ir.attachment']
-        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
+        domain = [
+            ('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type)),
+            ('create_uid', '=', openerp.SUPERUSER_ID),
+        ]
         attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, order='name asc', context=self.context)
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
 
