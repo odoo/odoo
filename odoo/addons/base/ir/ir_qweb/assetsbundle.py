@@ -8,7 +8,7 @@ import textwrap
 import uuid
 from datetime import datetime
 from subprocess import Popen, PIPE
-from odoo import fields, tools
+from odoo import fields, tools, SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
@@ -191,10 +191,11 @@ class AssetsBundle(object):
         self.env.cr.execute("""
              SELECT max(id)
                FROM ir_attachment
-              WHERE url like %s
+              WHERE create_uid = %s
+                AND url like %s
            GROUP BY datas_fname
            ORDER BY datas_fname
-         """, [url_pattern])
+         """, [SUPERUSER_ID, url_pattern])
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
