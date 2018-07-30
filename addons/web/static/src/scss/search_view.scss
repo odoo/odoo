@@ -179,8 +179,7 @@
         @include o-search-options-dropdown-custom-item;
     }
     .o_submenu_switcher {
-        position: absolute;
-        right: 0px;
+        @include o-position-absolute($right: $dropdown-item-padding-x * 0.5);
     }
 }
 
