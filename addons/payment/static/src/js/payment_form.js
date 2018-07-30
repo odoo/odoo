@@ -125,7 +125,7 @@ odoo.define('payment.payment_form', function (require) {
                         $(button).attr('disabled', false);
                         $(button).children('.fa').addClass('fa-plus-circle')
                         $(button).find('span.o_loader').remove();
-                    }).fail(function (message, data) {
+                    }).fail(function (data, event) {
                         // if the rpc fails, pretty obvious
                         $(button).attr('disabled', false);
                         $(button).children('.fa').addClass('fa-plus-circle')
@@ -176,7 +176,7 @@ odoo.define('payment.payment_form', function (require) {
                                     _t("We are not able to redirect you to the payment form.")
                                 );
                             }
-                        }).fail(function (message, data) {
+                        }).fail(function (data, event) {
                             self.displayError(
                                 _t('Server Error'),
                                 _t("We are not able to redirect you to the payment form. ") +
@@ -292,7 +292,7 @@ odoo.define('payment.payment_form', function (require) {
                     $(button).attr('disabled', false);
                     $(button).children('.fa').addClass('fa-plus-circle')
                     $(button).find('span.o_loader').remove();
-                }).fail(function (message, data) {
+                }).fail(function (data, event) {
                     // if the rpc fails, pretty obvious
                     $(button).attr('disabled', false);
                     $(button).children('.fa').addClass('fa-plus-circle')
@@ -364,7 +364,7 @@ odoo.define('payment.payment_form', function (require) {
                     // if there's no records linked to this payment method, then we delete it
                     tokenDelete();
                 }
-            }, function (type, err) {
+            }, function (err, event) {
                 self.displayError(
                     _t('Server Error'),
                     _t("We are not able to delete your payment method at the moment.") + err.data.message
