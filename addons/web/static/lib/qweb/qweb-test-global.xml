@@ -18,7 +18,7 @@
             </t>
         </t>
         <t t-call="_callee-asc-toto"/>
-        <t t-set="toto"><t t-set="truc" t-value="'bbb'"/><i t-att-notruc="not truc" t-att-truc="bool(truc)">i</i></t>
+        <t t-set="toto"><t t-set="truc" t-value="'bbb'"/><i t-att-notruc="not truc or None" t-att-truc="bool(truc)">i</i></t>
         <t t-call="_callee-asc-toto"/>
     </t>
 

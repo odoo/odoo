@@ -186,7 +186,7 @@ QUnit.module('Services', {
         var $notification = $('body .o_notification_manager .o_notification');
         assert.strictEqual($notification.eq(0).find('.o_close').length, 1, "should display the close button in notification");
         assert.strictEqual(_.str.trim($notification.eq(0).html().replace(/\s+/g, ' ')),
-            "<a aria-label=\"Close\" class=\"fa fa-times o_close\" href=\"#\" title=\"Close\"></a> <div class=\"o_notification_title\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"o_icon fa fa-3x fa-question-circle-o\" title=\"Notification undefined\"></span> a0 </div> <div class=\"o_notification_content\">b0</div> <div class=\"o_buttons\"> <button type=\"button\" class=\"btn btn-primary\"> <span>accept0</span> </button><button type=\"button\" class=\"btn btn-secondary\"> <span>refuse0</span> </button> </div>",
+            "<a aria-label=\"Close\" class=\"fa fa-times o_close\" href=\"#\" title=\"Close\"></a> <div class=\"o_notification_title\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"o_icon fa fa-3x fa-question-circle-o\" title=\"Notification undefined\"></span> a0 </div> <div class=\"o_notification_content\">b0</div> <div class=\"o_buttons\"> <button class=\"btn btn-primary\" type=\"button\"> <span>accept0</span> </button><button class=\"btn btn-secondary\" type=\"button\"> <span>refuse0</span> </button> </div>",
             "should display notification");
 
         $notification.find('.o_buttons button:contains(accept0)').click();
