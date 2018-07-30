@@ -122,19 +122,29 @@ var SnippetEditor = Widget.extend({
     /**
      * Makes the editor overlay cover the associated snippet.
      */
-    cover: function () {
+    cover: function (retryCount) {
+        if (typeof retryCount === "undefined") retryCount = 0;
         var mt = parseInt(this.$target.css('margin-top') || 0);
         var offset = this.$target.offset();
         var manipulatorOffset = this.$el.parent().offset();
-        offset.top -= (manipulatorOffset.top + mt);
-        offset.left -= manipulatorOffset.left;
-        this.$el.css({
-            width: this.$target.outerWidth(),
-            left: offset.left,
-            top: offset.top,
-        });
-        this.$('.oe_handles').css('height', this.$target.outerHeight(true));
-        this.$el.toggleClass('o_top_cover', offset.top < 15);
+        if (typeof manipulatorOffset !== "undefined") {
+            offset.top -= (manipulatorOffset.top + mt);
+            offset.left -= manipulatorOffset.left;
+            this.$el.css({
+                width: this.$target.outerWidth(),
+                left: offset.left,
+                top: offset.top,
+            });
+            this.$('.oe_handles').css('height', this.$target.outerHeight(true));
+            this.$el.toggleClass('o_top_cover', offset.top < 15);
+        } else if (retryCount < 5) {
+            /*
+                manipulator offset could not be found
+                (most likely the parent is still not displayed in the DOM, see http://api.jquery.com/offset/)
+                we try again in 10 milliseconds (for up to 5 times)
+              */
+            window.setTimeout(this.cover.bind(this, retryCount + 1), 10);
+        }
     },
     /**
      * Displays/Hides the editor overlay and notifies the associated snippet
