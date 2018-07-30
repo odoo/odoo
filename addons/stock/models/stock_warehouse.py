@@ -532,7 +532,7 @@ class Warehouse(models.Model):
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
-            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id) for location in rules.mapped('location_id')]
+            routings = [self.Routing(self.lot_stock_id, location, self.out_type_id, 'pull') for location in rules.mapped('location_id')]
             mto_rule_vals = self._get_rule_values(routings)
             for mto_rule_val in mto_rule_vals:
                 Rule.create(mto_rule_val)
