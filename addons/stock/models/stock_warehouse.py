@@ -695,11 +695,31 @@ class Warehouse(models.Model):
 
     def _get_sequence_values(self):
         return {
-            'in_type_id': {'name': self.name + ' ' + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
-            'out_type_id': {'name': self.name + ' ' + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
-            'pack_type_id': {'name': self.name + ' ' + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
-            'pick_type_id': {'name': self.name + ' ' + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
-            'int_type_id': {'name': self.name + ' ' + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
+            'in_type_id': {
+                'name': self.name + ' ' + _('Sequence in'),
+                'prefix': self.code + '/IN/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'out_type_id': {
+                'name': self.name + ' ' + _('Sequence out'),
+                'prefix': self.code + '/OUT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'pack_type_id': {
+                'name': self.name + ' ' + _('Sequence packing'),
+                'prefix': self.code + '/PACK/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'pick_type_id': {
+                'name': self.name + ' ' + _('Sequence picking'),
+                'prefix': self.code + '/PICK/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'int_type_id': {
+                'name': self.name + ' ' + _('Sequence internal'),
+                'prefix': self.code + '/INT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
         }
 
     def _format_rulename(self, from_loc, dest_loc, suffix):

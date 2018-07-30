@@ -4982,28 +4982,114 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not all(name in self._fields for name in names):
             return {}
 
-        # filter out keys in field_onchange that do not refer to actual fields
-        dotnames = []
-        for dotname in field_onchange:
-            try:
-                model = self.browse()
-                for name in dotname.split('.'):
-                    model = model[name]
-                dotnames.append(dotname)
-            except Exception:
-                pass
+        class PrefixTree(OrderedDict):
+            """ A prefix tree for sequences of field names. The tree is a
+                dictionary that associates each given field name to its
+                corresponding subtree (in fields order)::
+
+                    # tree corresponding to dotnames
+                    # ['name', 'line_ids.product_id', 'line_ids.tags_ids.name']
+                    {
+                        'name': {},
+                        'line_ids': {
+                            'product_id': {},
+                            'tags_ids': {
+                                'name': {},
+                            },
+                        },
+                    }
+            """
+            def __init__(self, model, dotnames):
+                super(PrefixTree, self).__init__()
+                if not dotnames:
+                    return
+                # group dotnames by prefix
+                suffixes = defaultdict(list)
+                for dotname in dotnames:
+                    names = dotname.split('.', 1)
+                    name_suffixes = suffixes[names[0]]
+                    if len(names) > 1:
+                        name_suffixes.append(names[1])
+                # fill in self in fields order
+                for name in model._fields:
+                    if name in suffixes:
+                        self[name] = PrefixTree(model[name], suffixes[name])
+
+            def dotnames(self):
+                """ Iterate over the sequences of field names. """
+                for name, subnames in self.items():
+                    yield name
+                    for dotname in subnames.dotnames():
+                        yield "%s.%s" % (name, dotname)
+
+        nametree = PrefixTree(self.browse(), field_onchange)
+        dotnames = list(nametree.dotnames())
+
+        def snapshot(record, tree=nametree):
+            """ Return a dict with the values of record, following nametree. """
+            vals = {}
+            for name, subnames in tree.items():
+                if subnames:
+                    # x2many fields as {line: snapshot(line), ...}
+                    vals[name] = OrderedDict(
+                        (line, snapshot(line, subnames))
+                        for line in record[name]
+                    )
+                else:
+                    vals[name] = record[name]
+            return vals
+
+        def diff(record, old, new, tree=nametree):
+            """ Return the values that differ between snapshots.
+                The snapshot ``old`` may be empty (for new records).
+            """
+            result = {}
+            for name, subnames in tree.items():
+                if name == 'id':
+                    continue
+                if old and old[name] == new[name]:
+                    continue
+                field = record._fields[name]
+                if not subnames:
+                    result[name] = field.convert_to_onchange(new[name], record, {})
+                    continue
+                # x2many fields: serialize value as commands
+                result[name] = commands = [(5,)]
+                old_val = old.get(name) or {}
+                for line, vals in new[name].items():
+                    vals0 = (old_val.get(line) or snapshot(line, subnames)) if line.id else {}
+                    line_diff = diff(line, vals0, vals, subnames)
+                    if not line.id:
+                        commands.append((0, line.id.ref or 0, line_diff))
+                    elif line_diff:
+                        commands.append((1, line.id, line_diff))
+                    else:
+                        commands.append((4, line.id))
+            return result
+
+        # prefetch x2many lines without data (for the initial snapshot)
+        for name, subnames in nametree.items():
+            if subnames and values.get(name):
+                # retrieve all ids in commands, and read the expected fields
+                line_ids = []
+                for cmd in values[name]:
+                    if cmd[0] in (1, 4):
+                        line_ids.append(cmd[1])
+                    elif cmd[0] == 6:
+                        line_ids.extend(cmd[2])
+                lines = self.browse()[name].browse(line_ids)
+                lines.read(list(subnames), load='_classic_write')
 
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
-            values = {name: record[name] for name in record._cache}
+            values = {name: record[name] for name in nametree}
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
-        # load fields on secondary records, to avoid false changes
+        # make a snapshot based on the initial values of record
         with env.do_in_onchange():
-            for dotname in dotnames:
-                record.mapped(dotname)
+            before = snapshot(record)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
@@ -5022,7 +5108,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 record[name] = value
 
         result = {}
-        dirty = set()
 
         # process names in order (or the keys of values if no name given)
         while todo:
@@ -5048,22 +5133,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         field.type in ('one2many', 'many2many') and newval._is_dirty()
                     ):
                         todo.append(name)
-                        dirty.add(name)
 
-        # determine subfields for field.convert_to_onchange() below
-        Tree = lambda: defaultdict(Tree)
-        subnames = Tree()
-        for dotname in dotnames:
-            subtree = subnames
-            for name in dotname.split('.'):
-                subtree = subtree[name]
-
-        # collect values from dirty fields
+        # make a snapshot based on the final values of record
         with env.do_in_onchange():
-            result['value'] = {
-                name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
-                for name in dirty
-            }
+            after = snapshot(record)
+
+        # determine values that have changed by comparing snapshots
+        self.invalidate_cache()
+        result['value'] = diff(record, before, after)
 
         return result
 

@@ -113,6 +113,10 @@ Running the server
 
     runs tests after installing modules
 
+.. option:: --test-tags 'tag_1,tag_2,...,-tag_n'
+
+    select the tests to run by using tags.
+
 .. option:: --dev <feature,feature,...,feature>
 
     * ``all``: all the features below are activated
@@ -305,6 +309,13 @@ customize the amount of logging output
     enables `log rotation <https://docs.python.org/2/library/logging.handlers.html#timedrotatingfilehandler>`_
     daily, keeping 30 backups. Log rotation frequency and number of backups is
     not configurable.
+    
+    .. danger:: 
+    
+        Built-in log rotation is not reliable in multi-workers scenarios
+        and may incur significant data loss. It is *strongly recommended* to 
+        use an external log rotation utility or use system loggers (--syslog) 
+        instead.
 
 .. option:: --syslog
 
