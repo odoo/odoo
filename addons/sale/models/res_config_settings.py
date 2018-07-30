@@ -14,6 +14,8 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='sale.use_sale_note')
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
+    quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)")
+    use_quotation_validity_days = fields.Boolean("Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
     group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
     portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Digital Signature')
     portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Electronic Payment')
@@ -109,6 +111,24 @@ class ResConfigSettings(models.TransientModel):
                 'group_sale_pricelist': False,
                 'group_pricelist_item': False,
             })
+
+    @api.onchange('portal_confirmation_pay')
+    def _onchange_portal_confirmation_pay(self):
+        if self.portal_confirmation_pay:
+            self.module_sale_payment = True
+
+    @api.onchange('use_quotation_validity_days')
+    def _onchange_use_quotation_validity_days(self):
+        if self.quotation_validity_days <= 0:
+            self.quotation_validity_days = self.env['res.company'].default_get(['quotation_validity_days'])['quotation_validity_days']
+
+    @api.onchange('quotation_validity_days')
+    def _onchange_quotation_validity_days(self):
+        if self.quotation_validity_days <= 0:
+            self.quotation_validity_days = self.env['res.company'].default_get(['quotation_validity_days'])['quotation_validity_days']
+            return {
+                'warning': {'title': "Warning", 'message': "Quotation Validity is required and must be greater than 0."},
+            }
 
     @api.model
     def get_values(self):
