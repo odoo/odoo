@@ -710,13 +710,13 @@ QUnit.module('Views', {
         var $groupHeader2 = list.$('.o_group_header').filter(function (index, el) {
             return $(el).data('group').res_id === 2;
         });
-        assert.strictEqual($groupHeader1.find('td:nth(1)').text(), "23", "first group total should be 23");
-        assert.strictEqual($groupHeader2.find('td:nth(1)').text(), "9", "second group total should be 9");
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "32", "total should be 32");
+        assert.strictEqual($groupHeader1.find('td:last()').text(), "23", "first group total should be 23");
+        assert.strictEqual($groupHeader2.find('td:last()').text(), "9", "second group total should be 9");
+        assert.strictEqual(list.$('tfoot td:last()').text(), "32", "total should be 32");
 
         $groupHeader1.click();
         list.$('tbody .o_list_record_selector input').first().click();
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "10",
+        assert.strictEqual(list.$('tfoot td:last()').text(), "10",
                         "total should be 10 as first record of first group is selected");
         list.destroy();
     });
@@ -779,17 +779,17 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('tbody .o_list_number').text(), '10517',
             "initial order should be 10, 5, 17");
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should be 32");
+        assert.strictEqual(list.$('tfoot td:last()').text(), '32', "total should be 32");
 
         list.$('.o_column_sortable').click(); // sort (int_field ASC)
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+        assert.strictEqual(list.$('tfoot td:last()').text(), '32', "total should still be 32");
         assert.strictEqual(list.$('tbody .o_list_number').text(), '51017',
             "order should be 5, 10, 17");
 
         list.$('.o_column_sortable').click(); // sort (int_field DESC)
         assert.strictEqual(list.$('tbody .o_list_number').text(), '17105',
             "initial order should be 17, 10, 5");
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32', "total should still be 32");
+        assert.strictEqual(list.$('tfoot td:last()').text(), '32', "total should still be 32");
 
         assert.verifySteps(['default order', 'int_field ASC', 'int_field DESC']);
 

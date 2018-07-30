@@ -30,6 +30,8 @@ var FIELD_CLASSES = {
     text: 'o_list_text',
 };
 
+var HEADING_COLUMNS_TO_SKIP_IN_GROUPS = 2;
+
 var ListRenderer = BasicRenderer.extend({
     events: {
         'click tbody tr': '_onRowClicked',
@@ -205,11 +207,17 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @private
      * @param {any} aggregateValues
+     * @param {Boolean} isHeader indicates wheter the groups rendered are on the header or on the footer
      * @returns {jQueryElement[]} a list of <td> with the aggregate values
      */
-    _renderAggregateCells: function (aggregateValues) {
+    _renderAggregateCells: function (aggregateValues, isHeader) {
         var self = this;
-        return _.map(this.columns, function (column) {
+
+        return _.map(this.columns, function (column, index) {
+            if (isHeader && index < HEADING_COLUMNS_TO_SKIP_IN_GROUPS-1 &&
+                self.columns.length > HEADING_COLUMNS_TO_SKIP_IN_GROUPS) {
+                return;
+            }
             var $cell = $('<td>');
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
@@ -361,21 +369,16 @@ var ListRenderer = BasicRenderer.extend({
      * aggregates, if applicable.
      *
      * @private
-     * @param {boolean} isGrouped if the view is grouped, we have to add an
-     *   extra <td>
      * @returns {jQueryElement} a <tfoot> element
      */
-    _renderFooter: function (isGrouped) {
+    _renderFooter: function () {
         var aggregates = {};
         _.each(this.columns, function (column) {
             if ('aggregate' in column) {
                 aggregates[column.attrs.name] = column.aggregate;
             }
         });
-        var $cells = this._renderAggregateCells(aggregates);
-        if (isGrouped) {
-            $cells.unshift($('<td>'));
-        }
+        var $cells = this._renderAggregateCells(aggregates, false);
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }
@@ -423,10 +426,7 @@ var ListRenderer = BasicRenderer.extend({
         var aggregateValues = _.mapObject(group.aggregateValues, function (value) {
             return { value: value };
         });
-        var $cells = this._renderAggregateCells(aggregateValues);
-        if (this.hasSelectors) {
-            $cells.unshift($('<td>'));
-        }
+        var $cells = this._renderAggregateCells(aggregateValues, true);
         var name = group.value === undefined ? _t('Undefined') : group.value;
         var groupBy = this.state.groupedBy[groupLevel];
         if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
@@ -435,6 +435,9 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
+        if (this.columns.length >= HEADING_COLUMNS_TO_SKIP_IN_GROUPS) {
+            $th.attr('colspan',HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
+        }
         var $arrow = $('<span>')
                             .css('padding-left', (groupLevel * 20) + 'px')
                             .css('padding-right', '5px')
@@ -488,7 +491,7 @@ var ListRenderer = BasicRenderer.extend({
                 } else {
                     // the opened group contains records
                     var $records = _.map(group.data, function (record) {
-                        return self._renderRow(record).prepend($('<td>'));
+                        return self._renderRow(record);
                     });
                     result.push($('<tbody>').append($records));
                 }
@@ -513,9 +516,6 @@ var ListRenderer = BasicRenderer.extend({
                 .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('th'));
-        }
-        if (isGrouped) {
-            $tr.prepend($('<th>').html('&nbsp;'));
         }
         return $('<thead>').append($tr);
     },
@@ -665,7 +665,7 @@ var ListRenderer = BasicRenderer.extend({
             $table
                 .append(this._renderHeader(true))
                 .append(this._renderGroups(this.state.data))
-                .append(this._renderFooter(true));
+                .append(this._renderFooter());
         } else {
             $table
                 .append(this._renderHeader())
@@ -707,7 +707,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _updateFooter: function () {
         this._computeAggregates();
-        this.$('tfoot').replaceWith(this._renderFooter(!!this.state.groupedBy.length));
+        this.$('tfoot').replaceWith(this._renderFooter());
     },
     /**
      * Whenever we change the state of the selected rows, we need to call this
@@ -731,9 +731,9 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to 
+     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
-     * 
+     *
      * @private
      * @param {KeyboardEvent} e
      */
@@ -747,8 +747,8 @@ var ListRenderer = BasicRenderer.extend({
                 case $.ui.keyCode.UP:
                     $(e.currentTarget).prev().find('input').focus();
                     e.preventDefault();
-                    break; 
-                case $.ui.keyCode.ENTER: 
+                    break;
+                case $.ui.keyCode.ENTER:
                     e.preventDefault();
                     var id = $(e.currentTarget).data('id');
                     if (id) {
