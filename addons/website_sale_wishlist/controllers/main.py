@@ -37,7 +37,11 @@ class WebsiteSaleWishlist(WebsiteSale):
 
         if not len(values):
             return request.redirect("/shop")
-
+        compute_currency, pricelist_context, pl = self._get_compute_currency_and_context()
+        if values and values[0].pricelist_id != pl:
+            for val in values:
+                val.pricelist_id = pl
+                val.price = val.price_new
         return request.render("website_sale_wishlist.product_wishlist", dict(wishes=values))
 
     @http.route(['/shop/wishlist/remove/<model("product.wishlist"):wish>'], type='json', auth="public", website=True)
