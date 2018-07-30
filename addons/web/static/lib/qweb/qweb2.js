@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,esc,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,tag,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -542,7 +542,7 @@ QWeb2.Element = (function() {
         this.engine = engine;
         this.node = node;
         this.tag = node.tagName;
-        this.actions = {};
+        this.actions = {tag: this.tag};
         this.actions_done = [];
         this.attributes = {};
         this.children = [];
@@ -568,7 +568,11 @@ QWeb2.Element = (function() {
                     if (name === 'name') {
                         continue;
                     }
-                    this.actions[name] = attr.value;
+                    if (name.match(/^attf?(-.*)?/)) {
+                        this.attributes[m[0]] = attr.value;
+                    } else {
+                        this.actions[name] = attr.value;
+                    }
                 } else {
                     this.attributes[name] = attr.value;
                 }
@@ -736,26 +740,25 @@ QWeb2.Element = (function() {
                     }
                 }
             }
+        },
+        compile_action_tag : function() {
             if (this.tag.toLowerCase() !== this.engine.prefix) {
-                var tag = "<" + this.tag;
+                this.top_string("<" + this.tag);
                 for (var a in this.attributes) {
-                    tag += this.engine.tools.gen_attribute([a, this.attributes[a]]);
-                }
-                this.top_string(tag);
-                if (this.actions.att) {
-                    this.top("r.push(context.engine.tools.gen_attribute(" + (this.format_expression(this.actions.att)) + "));");
-                }
-                for (var a in this.actions) {
-                    var v = this.actions[a];
-                    var m = a.match(/att-(.+)/);
-                    if (m) {
-                        this.top("r.push(context.engine.tools.gen_attribute(['" + m[1] + "', (" + (this.format_expression(v)) + ")]));");
-                    }
-                    var m = a.match(/attf-(.+)/);
-                    if (m) {
-                        this.top("r.push(context.engine.tools.gen_attribute(['" + m[1] + "', (" + (this.string_interpolation(v)) + ")]));");
+                    var v = this.attributes[a];
+                    var d = a.split('-');
+                    if (d[0] === this.engine.prefix && d.length > 1) {
+                        if (d.length === 2) {
+                            this.top("r.push(context.engine.tools.gen_attribute(" + (this.format_expression(v)) + "));");
+                        } else {
+                            this.top("r.push(context.engine.tools.gen_attribute(['" + d.slice(2).join('-') + "', (" +
+                                (d[1] === 'att' ? this.format_expression(v) : this.string_interpolation(v)) + ")]));");
+                        }
+                    } else {
+                        this.top_string(this.engine.tools.gen_attribute([a, v]));
                     }
                 }
+
                 if (this.actions.opentag === 'true' || (!this.children.length && this.is_void_element)) {
                     // We do not enforce empty content on void elements
                     // because QWeb rendering is not necessarily html.
@@ -823,12 +826,18 @@ QWeb2.Element = (function() {
             }
         },
         compile_action_esc : function(value) {
-            this.top("r.push(context.engine.tools.html_escape("
-                    + this.format_expression(value)
-                    + "));");
+            this.top("var t = " + this.format_str(value) + ";");
+            this.top("if (t != null) r.push(context.engine.tools.html_escape(t));");
+            this.top("else {");
+            this.bottom("}");
+            this.indent();
         },
         compile_action_raw : function(value) {
-            this.top("r.push(" + (this.format_str(value)) + ");");
+            this.top("var t = " + this.format_str(value) + ";");
+            this.top("if (t != null) r.push(t);");
+            this.top("else {");
+            this.bottom("}");
+            this.indent();
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");
