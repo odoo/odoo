@@ -159,7 +159,7 @@ class Partner(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user that is in charge of communicating with this contact if any.')
-    vat = fields.Char(string='TIN', help="Tax Identification Number. "
+    vat = fields.Char(string='Tax ID', help="Tax Identification Number. "
                                          "Fill it if the company is subjected to taxes. "
                                          "Used by the some of the legal statements.")
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')

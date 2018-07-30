@@ -53,7 +53,7 @@ class Company(models.Model):
     email = fields.Char(related='partner_id.email', store=True)
     phone = fields.Char(related='partner_id.phone', store=True)
     website = fields.Char(related='partner_id.website')
-    vat = fields.Char(related='partner_id.vat', string="TIN")
+    vat = fields.Char(related='partner_id.vat', string="Tax ID")
     company_registry = fields.Char()
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout = fields.Selection([
