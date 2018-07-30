@@ -32,7 +32,7 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
     module_website_sale_stock = fields.Boolean("Inventory", help='Installs the "Website Delivery Information" application')
 
-    module_account_invoicing = fields.Boolean("Invoicing")
+    module_account = fields.Boolean("Invoicing")
 
     automatic_invoice = fields.Boolean("Automatic Invoice",
                                        help="The invoice is generated automatically and available in the customer portal "
@@ -65,7 +65,7 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        value = self.module_account_invoicing and self.default_invoice_policy == 'order' and self.automatic_invoice
+        value = self.module_account and self.default_invoice_policy == 'order' and self.automatic_invoice
         self.env['ir.config_parameter'].sudo().set_param('website_sale.automatic_invoice', value)
 
     @api.onchange('sale_delivery_settings')

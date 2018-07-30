@@ -1,22 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Invoicing',
+    'name' : 'Invoicing Management',
     'version' : '1.1',
     'summary': 'Send Invoices and Track Payments',
     'sequence': 30,
     'description': """
-Core mechanisms for the accounting modules. To display the menuitems, install the module account_invoicing.
+Invoicing & Payments
+====================
+The specific and easy-to-use Invoicing system in Odoo allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your vendors and customers.
+
+You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.
     """,
-    'category': 'Accounting',
+    'category': 'Invoicing Management',
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'portal'],
+    'depends' : ['base_setup', 'product', 'analytic', 'portal', 'digest'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'data/data_account_type.xml',
         'data/account_data.xml',
+        'data/digest_data.xml',
         'views/account_menuitem.xml',
         'views/account_payment_view.xml',
         'wizard/account_reconcile_view.xml',
@@ -72,6 +77,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/account_incoterms_view.xml',
         'data/account_incoterms_data.xml',
         'views/res_company_view.xml',
+        'views/digest_views.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -83,7 +89,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         "static/src/xml/account_dashboard_setup_bar.xml",
     ],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'post_init_hook': '_auto_install_l10n',
 }

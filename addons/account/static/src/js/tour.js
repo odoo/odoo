@@ -1,4 +1,4 @@
-odoo.define('account_invoicing.tour', function(require) {
+odoo.define('account.tour', function(require) {
 "use strict";
 
 var core = require('web.core');
@@ -6,7 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('account_invoicing_tour', {
+tour.register('account_tour', {
     'skip_enabled': true,
 }, [{
     trigger: ".o_form_readonly .o_invoice_validate",

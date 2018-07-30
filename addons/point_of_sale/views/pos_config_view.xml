@@ -395,14 +395,14 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="iface_invoicing">
                             <div class="o_setting_left_pane">
-                                <field name="module_account_invoicing"/>
+                                <field name="module_account"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="module_account_invoicing"/>
+                                <label for="module_account"/>
                                 <div class="text-muted" id="invoice_journal">
                                    Print invoices on customer request
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible': [('module_account_invoicing', '=', False)]}">
+                                <div class="content-group mt16" attrs="{'invisible': [('module_account', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-lg-3 o_light_label"/>
                                         <field name="invoice_journal_id"/>
