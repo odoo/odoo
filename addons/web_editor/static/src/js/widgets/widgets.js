@@ -1528,7 +1528,7 @@ var LinkDialog = Dialog.extend({
             + ((size && size.length) ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
 
-        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0) {
+        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
         }
         return {
