@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -10,6 +11,7 @@ class ResCompany(models.Model):
     sale_note = fields.Text(string='Default Terms and Conditions', translate=True)
     portal_confirmation_sign = fields.Boolean(string='Digital Signature', default=True)
     portal_confirmation_pay = fields.Boolean(string='Electronic Payment')
+    quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
 
     @api.depends('portal_confirmation_sign')
     def _get_sale_onboarding_signature_radio(self):
@@ -41,6 +43,12 @@ class ResCompany(models.Model):
     sale_onboarding_signature_done = fields.Boolean("Sale onboarding signature step done",
         default=False)
 
+    @api.constrains('quotation_validity_days')
+    def _check_quotation_validity_days(self):
+        for record in self:
+            if self.quotation_validity_days <= 0:
+                raise ValidationError("Quotation Validity is required and must be greater than 0.")
+
     @api.model
     def action_toggle_fold_sale_quotation_onboarding(self):
         """ Toggle the onboarding panel `folded` state. """
@@ -68,3 +76,5 @@ class ResCompany(models.Model):
     @api.multi
     def action_save_onboarding_signature(self):
         self.sale_onboarding_signature_done = True
+
+    _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]
