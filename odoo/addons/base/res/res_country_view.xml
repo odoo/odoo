@@ -33,11 +33,31 @@
                         </group>
                     </group>
                     <label for="state_ids"/>
-                    <field name="state_ids">
+                    <field name="state_ids" mode="tree,kanban">
                         <tree editable="bottom">
                             <field name="name"/>
                             <field name="code"/>
                         </tree>
+                        <!--Codigo modificado por TRESCLOUD-->
+                        <kanban class="o_kanban_mobile">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <strong><span><t t-esc="record.code.value or ''"/></span></strong>
+                                            </div>
+                                            <div class="col-xs-8 text-muted">
+                                                 <span><t t-esc="record.name.value"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <!--Fin del Codigo modificado por TRESCLOUD-->
                     </field>
                 </form>
             </field>

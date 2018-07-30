@@ -36,7 +36,7 @@
                     <notebook>
                         <page name="tax_mapping" string="Tax Mapping">
                         <group>
-                            <field name="tax_ids" widget="one2many_list" nolabel="1">
+                            <field name="tax_ids" widget="one2many_list" nolabel="1" mode="tree,kanban">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
                                     <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
@@ -47,12 +47,32 @@
                                         <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
                                     </group>
                                 </form>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                        <strong><span><t t-esc="record.tax_src_id.value or ''"/></span></strong>
+                                                    </div>
+                                                    <div class="col-xs-12 text-muted">
+                                                        <strong><span><t t-esc="record.tax_dest_id.value or ''"/></span></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                         </group>
                         </page>
                         <page name="account_mapping" string="Account Mapping">
                         <group>
-                            <field name="account_ids" widget="one2many_list" nolabel="1">
+                            <field name="account_ids" widget="one2many_list" nolabel="1" mode="tree,kanban">
                                 <tree string="Account Mapping" editable="bottom">
                                     <field name="account_src_id"/>
                                     <field name="account_dest_id"/>
@@ -61,6 +81,26 @@
                                     <field name="account_src_id"/>
                                     <field name="account_dest_id"/>
                                 </form>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="account_src_id"/>
+                                    <field name="account_dest_id"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                        <strong><span><t t-esc="record.account_src_id.value or ''"/></span></strong>
+                                                    </div>
+                                                    <div class="col-xs-12 text-muted">
+                                                        <strong><span><t t-esc="record.account_dest_id.value or ''"/></span></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                         </group>
                         </page>

@@ -42,11 +42,23 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    #HOOK AGREGADO POR TRESCLOUD
+    def _get_anglo_saxon_price_unit_helper(self):
+        '''Hook
+        En notas de credito debería ser el precio utilizado en el reingreso del stock
+        para que se netee la cuenta de bienes recibidos no facturados
+        '''
+        price = self.product_id.standard_price
+        return price
+        
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        if not self.product_id:
-            return self.price_unit
-        return self.product_id._get_anglo_saxon_price_unit(uom=self.uom_id)
+        #TRESCLOUD - Hook para usar los costos de los stock.move cuando existen
+        price = self._get_anglo_saxon_price_unit_helper()
+        if not self.uom_id or self.product_id.uom_id == self.uom_id:
+            return price
+        else:
+            return self.product_id.uom_id._compute_price(price, self.uom_id)
 
     def _get_price(self, company_currency, price_unit):
         if self.invoice_id.currency_id.id != company_currency.id:

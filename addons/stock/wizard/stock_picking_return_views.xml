@@ -16,11 +16,33 @@
                     </div>
                 </group>
                 <group>
-                    <field name="product_return_moves" nolabel="1">
+                    <field name="product_return_moves" nolabel="1" mode="tree,kanban">
                         <tree editable="top" create="0">
                             <field name="product_id" readonly="1"/>
                             <field name="quantity"/>
                         </tree>
+                        <!--Codigo modificado por TRESCLOUD-->
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <strong><span><t t-esc="record.product_id.value or ''"/></span></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 text-muted">
+                                                 <span><t t-esc='record.quantity.string'/>: <t t-esc="record.quantity.value"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <!--Fin del Codigo modificado por TRESCLOUD-->
                     </field>
                 </group>
                 <group>

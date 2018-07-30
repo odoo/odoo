@@ -208,7 +208,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="order_line" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
+                            <field name="order_line" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"  mode="tree,kanban">
                                  <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
@@ -258,6 +258,33 @@
                                         </notebook>
                                     </sheet>
                                 </form>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"/>
+                                    <field name="price_subtotal" widget="monetary"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <span><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -270,9 +297,9 @@
                             <field name="notes" class="oe_inline" placeholder="An administrator can set up default Terms and conditions in your Company settings."/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Deliveries &amp; Invoices">
+                        <page name="deliveries" string="Deliveries &amp; Invoices">
                             <group>
-                                <group>
+                                <group name="plan_deliveries">
                                     <label for="date_planned"/>
                                     <div>
                                         <field name="date_planned" required="1" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
