@@ -13,13 +13,13 @@ class SaleReport(models.Model):
                                             ('pos_done', 'Posted'),
                                             ('invoiced', 'Invoiced')], string='Status', readonly=True)
 
-    def _query(self, with_clause='', fields={}, groupby=''):
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
         with_clause += ''', pol_tax AS (SELECT line_tax.pos_order_line_id AS pol_id,sum(tax.amount/100) AS amount
                        FROM account_tax_pos_order_line_rel line_tax
                          JOIN account_tax tax ON line_tax.account_tax_id = tax.id
                       GROUP BY line_tax.pos_order_line_id)'''
 
-        res = super(SaleReport, self)._query(with_clause, fields, groupby)
+        res = super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
 
         select_ = '''
             MIN(l.id) AS id,
