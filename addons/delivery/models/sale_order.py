@@ -111,6 +111,15 @@ class SaleOrder(models.Model):
         sol = SaleOrderLine.sudo().create(values)
         return sol
 
+    @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
+                 'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')
+    def _get_invoiced(self):
+        super(SaleOrder, self)._get_invoiced()
+        for order in self:
+            order_line = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment)
+            if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_line):
+                order.update({'invoice_status': 'no'})
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
