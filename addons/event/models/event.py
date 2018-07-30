@@ -468,6 +468,17 @@ class EventRegistration(models.Model):
         return super(EventRegistration, self)._message_post_after_hook(message)
 
     @api.multi
+    def message_get_default_recipients(self):
+        # Prioritize registration email over partner_id, which may be shared when a single
+        # partner booked multiple seats
+        return {
+            r.id: {'partner_ids': [],
+                   'email_to': r.email,
+                   'email_cc': False}
+            for r in self
+        }
+
+    @api.multi
     def action_send_badge_email(self):
         """ Open a window to compose an email, with the template - 'event_badge'
             message loaded by default
