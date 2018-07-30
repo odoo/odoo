@@ -357,11 +357,12 @@ return AbstractRenderer.extend({
 
         var chart = nv.models.lineChart();
         chart.options({
-          margin: {left: 80, bottom: 100, top: 80, right: 0},
+          margin: {left: 80, bottom: 100, top: 80, right: 80},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
+          wrapLabels: true,
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
