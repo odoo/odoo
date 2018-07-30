@@ -154,7 +154,7 @@ class PosConfig(models.Model):
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     barcode_scanner = fields.Boolean("Barcode Scanner")
     start_category = fields.Boolean("Set Start Category")
-    module_account_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
+    module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
@@ -253,9 +253,9 @@ class PosConfig(models.Model):
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
 
-    @api.onchange('module_account_invoicing')
-    def _onchange_module_account_invoicing(self):
-        if self.module_account_invoicing:
+    @api.onchange('module_account')
+    def _onchange_module_account(self):
+        if self.module_account:
             self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
 
     @api.onchange('picking_type_id')
