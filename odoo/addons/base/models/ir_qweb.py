@@ -106,6 +106,10 @@ class IrQWeb(models.AbstractModel, QWeb):
         tools.ormcache('id_or_xml_id', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
     def compile(self, id_or_xml_id, options):
+        try:
+            id_or_xml_id = int(id_or_xml_id)
+        except:
+            pass
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
 
     def load(self, name, options):
