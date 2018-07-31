@@ -932,7 +932,12 @@ class Message(models.Model):
         tracking_values_cmd = values.pop('tracking_value_ids', False)
         message = super(Message, self).create(values)
         if tracking_values_cmd:
-            message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+            vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
+            other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
+            if vals_lst:
+                self.env['mail.tracking.value'].sudo().create(vals_lst)
+            if other_cmd:
+                message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
         if values.get('model') and values.get('res_id'):
             message._invalidate_documents()
