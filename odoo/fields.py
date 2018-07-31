@@ -1599,7 +1599,7 @@ class Datetime(Field):
             midnight (bool): Will return the current date at midnight instead of now.
         """
         # microseconds must be annihilated as they don't comply with the server datetime format
-        base = datetime.now(*args).replace(microsecond=0)
+        base = datetime.now().replace(microsecond=0)
         return base if not midnight else datetime.combine(base, time.min)
 
     @staticmethod
