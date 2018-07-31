@@ -66,6 +66,8 @@ class ResConfigSettings(models.TransientModel):
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
+    default_template_id = fields.Many2one('sale.quote.template', default_model='sale.order', string='Default Template')
+
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if not self.group_discount_per_so_line:

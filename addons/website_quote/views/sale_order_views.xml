@@ -5,36 +5,15 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//header/button[@name='action_confirm'][1]" position="after">
-                <button name="open_quotation" type="object" 
-                    class="o_open_quotation" string="Preview"
-                    attrs="{'invisible': [('template_id', '=', False)]}"/>
-            </xpath>
+
             <xpath expr="//page/field[@name='options']/tree" position="inside">
                 <field name="website_description" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='partner_shipping_id']" position="after">
-                <label for="template_id"/>
-                <div>
-                    <field name="template_id" context="{'company_id': company_id}"
-                        options="{'no_create': True, 'no_open': True}"/>
-                </div>
-            </xpath>
+
             <xpath expr="//field[@name='client_order_ref']" position="after">
-                <field name="require_signature" attrs="{'invisible': [('template_id', '=', False)]}"/>
-                <field name="require_payment" attrs="{'invisible': [('template_id', '=', False)]}"/>
                 <field name="website_description" invisible="1"/>
             </xpath>
-        </field>
-    </record>
 
-    <record id="sale.action_quotations" model="ir.actions.act_window">
-        <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Create a new quotation, the first step of a new sale!
-          </p><p>
-            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
-          </p>
         </field>
     </record>
 </odoo>

@@ -173,6 +173,15 @@
                                 <div class="text-muted" id="sale_config_website_quote">
                                     Design standardized offers
                                 </div>
+                                <div class="content-group" attrs="{'invisible': [('module_website_quote','=',False)]}">
+                                    <div class="mt16">
+                                        <label for="default_template_id" class="o_light_label"/>
+                                        <field name="default_template_id" class="oe_inline"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(sale.action_sale_quotation_template)d" icon="fa-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>
+                                    </div>
+                                 </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box">

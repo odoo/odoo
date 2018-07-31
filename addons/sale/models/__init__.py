@@ -13,3 +13,7 @@ from . import res_config_settings
 from . import sales_team
 from . import res_users
 from . import sale_order_option
+
+from . import sale_quote_template
+from . import sale_quote_line
+from . import sale_quote_option
