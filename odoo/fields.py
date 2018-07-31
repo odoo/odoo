@@ -1549,10 +1549,21 @@ class Date(Field):
 
     @staticmethod
     def from_string(value):
-        """ Convert an ORM ``value`` into a :class:`date` value. """
+        """
+        Convert an ORM ``value`` into a :class:`date` value.
+
+        Despite its name, this function can take as input different kinds of types:
+            * A falsy object, in which case None will be returned.
+            * A string representing a date or datetime.
+            * A date object, in which case the object will be returned as-is.
+            * A datetime object, in which case it will be converted to a date object and all
+                datetime-specific information will be lost (HMS, TZ).
+        """
         if not value:
             return None
-        if isinstance(value, date) and not isinstance(value, datetime):
+        if isinstance(value, date):
+            if isinstance(value, datetime):
+                return value.date()
             return value
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
@@ -1581,12 +1592,15 @@ class Datetime(Field):
     column_cast_from = ('date',)
 
     @staticmethod
-    def now(*args):
+    def now(*args, midnight=False):
         """ Return the current day and time in the format expected by the ORM.
             This function may be used to compute default values.
+
+            midnight (bool): Will return the current date at midnight instead of now.
         """
         # microseconds must be annihilated as they don't comply with the server datetime format
-        return datetime.now().replace(microsecond=0)
+        base = datetime.now(*args).replace(microsecond=0)
+        return base if not midnight else datetime.combine(base, time.min)
 
     @staticmethod
     def context_timestamp(record, timestamp):
@@ -1617,11 +1631,21 @@ class Datetime(Field):
 
     @staticmethod
     def from_string(value):
-        """ Convert an ORM ``value`` into a :class:`datetime` value. """
+        """
+        Convert an ORM ``value`` into a :class:`datetime` value.
+
+        Despite its name, this function can take as input different kinds of types:
+            * A falsy object, in which case None will be returned.
+            * A string representing a date or datetime.
+            * A datetime object, in which case the object will be returned as-is.
+            * A date object, in which case it will be converted to a datetime object.
+        """
         if not value:
             return None
-        if isinstance(value, datetime):
-            return value
+        if isinstance(value, date):
+            if isinstance(value, datetime):
+                return value
+            return datetime.combine(value, time.min)
         try:
             return datetime.strptime(value[:DATETIME_LENGTH], DATETIME_FORMAT)
         except ValueError:
