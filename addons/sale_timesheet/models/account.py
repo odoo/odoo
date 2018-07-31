@@ -40,7 +40,7 @@ class AccountAnalyticLine(models.Model):
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
-            if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'so_line', 'amount', 'date']]):
+            if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']]):
                 raise UserError(_('You can not modify already invoiced timesheets (linked to a Sales order items invoiced on Time and material).'))
         result = super(AccountAnalyticLine, self).write(values)
         return result
