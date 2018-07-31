@@ -358,8 +358,8 @@
                            <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <p>
@@ -381,8 +381,8 @@
 
                         <div class="modal-dialog modal-content" t-if="not (quotation.has_to_be_signed() and not quotation.signature) and (quotation.has_to_be_paid() or need_payment)">
                           <header class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             <h4 class="modal-title">Validate Order</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                           </header>
                           <main class="modal-body" id="sign-dialog">
                             <p>
@@ -414,8 +414,8 @@
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Reject This Quote</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             </header>
                             <main class="modal-body">
                               <p>

@@ -99,8 +99,8 @@ define([
                  '<div class="modal-content">' +
                    (title ?
                    '<header class="modal-header">' +
-                     '<button type="button" class="close" aria-hidden="true" tabindex="-1">&times;</button>' +
                      '<h4 class="modal-title">' + title + '</h4>' +
+                     '<button type="button" class="close" aria-hidden="true" tabindex="-1">&times;</button>' +
                    '</header>' : ''
                    ) +
                    '<main class="modal-body">' + body + '</main>' +
