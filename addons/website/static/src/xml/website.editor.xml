@@ -23,13 +23,13 @@
     </div>
     <!-- listing multi choice -->
     <li t-name="website.multi_choice_content" t-att-class="liclass">
-        <label class="center-block relative o_multi_choice_label">
+        <label class="mx-auto relative o_multi_choice_label">
             <input t-att-name="name" type="radio" t-att-data-xmlid="xmlid"/>
         </label>
     </li>
     <!-- Theme colors list -->
     <li t-name="website.theme_color_picker" class="o_theme_list mr0 ml0 mt0 mb8">
-      <label class="center-block">
+      <label class="mx-auto">
           <div class="o_color_theme_list"></div>
           <input name="themecolorvar" type="radio" t-att-data-xmlid="xmlid"/>
       </label>
@@ -46,7 +46,7 @@
     </div>
     <!-- font list -->
     <li t-name="website.list_fonts"> <!-- class="o_theme_list" -->
-      <label class="center-block">
+      <label class="mx-auto">
           <div t-att-style="fontstyle" class="pt4 pb4"><t t-esc="fontname"/></div>
           <input t-att-name="name" type="radio" t-att-data-xmlid="xmlid"/>
       </label>

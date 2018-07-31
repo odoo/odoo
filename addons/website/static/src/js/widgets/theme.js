@@ -269,6 +269,11 @@ var ThemeCustomizeDialog = Dialog.extend({
                 $(this).addClass('o_hover_select');
             }
         });
+        var $moreBtn = this.$('.o_more_btn');
+
+        $moreBtn.click(function() {
+            $(this).parents('.tab-pane').find('.o_more_font_list').removeClass('o_hover_select');
+        });
 
         $(document).on('keydown', this.keydown_escape);
         return this.load_xml_data().then(function () {
@@ -451,27 +456,13 @@ var ThemeCustomizeDialog = Dialog.extend({
         if (this.flag && $option.data('reload') && document.location.href.match(new RegExp( $option.data('reload') ))) {
             this.reload = true;
         }
+        var $selectMoreList = this.$('.o_more_font_list');
 
-        var $inputCollapse = this.$('.o_more_btn').parent().children('.o_initial_list');
-        var $inputContent = this.$('.o_more_btn').parent().children('#o_more_font');
+        console.log($selectMoreList.find('label'));
 
-        console.log($inputCollapse.find('input').filter(':checked'));
-        console.log($inputCollapse.find('input').prop('checked'));
-
-        // if($inputCollapse.find('input').filter(':checked').lenght >= 1) {
-        //     console.log('true');
-        // } else {
-        //     console.log('false');
-        // }
-
-        // if($inputCollapse.find('input').prop('checked') == true){
-        //     $inputContent.find('input').prop('checked', false);
-        //     console.log('1');
-        // } else if($inputContent.find('input').lenght >= 1) {
-        //     $inputCollapse.find('input').prop('checked', false);
-        //     console.log('2');
-        // }
-
+        if($selectMoreList.find('label').hasClass('checked')) {
+            $(this).parents('li').addClass('d-block');
+        }
         //Au click ça recharge la page pour charger les css
         clearTimeout(this.timer);
         if (this.flag) {
