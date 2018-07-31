@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
             action = self.env.ref('project.action_view_task').read()[0]
             action['context'] = {}  # erase default context to avoid default filter
             if len(self.tasks_ids) > 1:  # cross project kanban task
-                action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']]
+                action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
             elif len(self.tasks_ids) == 1:  # single task -> form view
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
