@@ -56,28 +56,32 @@ odoo.define('base.res_partner_vat_many2one_backend', function (require) {
          * @private
          */
         _searchViesExtraChoices: function (search_val) {
-            var self = this;
+            if (navigator && navigator.onLine) {
+                var self = this;
 
-            return self._searchViesVat(search_val).then(function (company_data) {
-                var choices = [];
+                return self._searchViesVat(search_val).then(function (company_data) {
+                    var choices = [];
 
-                if (company_data) {
-                    choices.push({
-                        label: _t('Create and Edit from VIES-VAT :'),
-                    });
+                    if (company_data) {
+                        choices.push({
+                            label: _t('Create and Edit from VIES-VAT :'),
+                        });
 
-                    choices.push({
-                        label: company_data.name + ' ' + company_data.vat,
-                        value: company_data.vat,
-                        action: function () {
-                            self._createPartnerFromVies.call(self, company_data);
-                        },
-                        classname: 'o_m2o_dropdown_option'
-                    });
-                }
+                        choices.push({
+                            label: company_data.name + ' - ' + company_data.vat,
+                            value: company_data.vat,
+                            action: function () {
+                                self._createPartnerFromVies.call(self, company_data);
+                            },
+                            classname: 'o_m2o_dropdown_option'
+                        });
+                    }
 
-                return choices;
-            });
+                    return choices;
+                });
+            } else {
+                return false;
+            }
         },
 
         /**

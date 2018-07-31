@@ -58,10 +58,10 @@ class ResPartner(models.Model):
             return False
 
         if result['name'] != '---':
-            partner = {}
-
-            partner['name'] = result['name']
-            partner['vat'] = result['countryCode'] + result['vatNumber']
+            partner = {
+                'name': result['name'],
+                'vat': result['countryCode'] + result['vatNumber']
+            }
 
             lines = [x for x in result['address'].split("\n") if x]
             if len(lines) == 1:
@@ -69,7 +69,22 @@ class ResPartner(models.Model):
             if len(lines) == 1:
                 lines = [x.strip() for x in lines[0].split('   ') if x]
 
-            partner['street'] = lines.pop(0).title()
+            # if Extend addresses module is installed, try to find street number
+            # if found, append it at the beginning of address
+            if self._fields.get('street_number'):
+                street = lines.pop(0).title()
+                split_street = street.split(' ')
+
+                # if last part matches number+chars
+                if re.match('^\d+[a-zA-Z]*$', split_street[-1]):
+                    street_number = split_street.pop(-1)
+                    split_street.insert(0, street_number)
+                    partner['street'] = ' '.join(split_street)
+                else:  # not sure of the format, so put the address in street2
+                    partner['street2'] = street
+
+            else:
+                partner['street'] = lines.pop(0).title()
 
             if len(lines) > 0:
                 res = _check_city(lines, result['countryCode'])
