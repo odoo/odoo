@@ -25,6 +25,7 @@ from os.path import join as opj
 from zlib import adler32
 
 import babel.core
+from datetime import date
 import passlib.utils
 import psycopg2
 import json
