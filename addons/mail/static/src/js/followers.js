@@ -19,7 +19,7 @@ var Followers = AbstractField.extend({
         // click on '(Un)Follow' button, that toggles the follow for uid
         'click .o_followers_follow_button': '_onFollowButtonClicked',
         // click on a subtype, that (un)subscribes for this subtype
-        'click .o_subtypes_list input': '_onSubtypeClicked',
+        'click .o_subtypes_list .custom-checkbox': '_onSubtypeClicked',
         // click on 'invite' button, that opens the invite wizard
         'click .o_add_follower': '_onAddFollower',
         'click .o_add_follower_channel': '_onAddChannel',
@@ -286,7 +286,7 @@ var Followers = AbstractField.extend({
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
             this._unfollow(ids).fail(function () {
-                $(event.target).prop('checked', true);
+                $(event.currentTarget).find('input').addBack('input').prop('checked', true);
             });
         } else {
             var kwargs = _.extend({}, ids);
