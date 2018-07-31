@@ -420,7 +420,8 @@ img.o_we_custom_image {
 
 .o_portal_sidebar {
     .bs-sidebar {
-        position: relative;
+        @extend .sticky-top;
+        top: 7rem;
         width: 100%;
         border-radius: 5px;
         background-color: $light;
