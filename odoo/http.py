@@ -25,7 +25,7 @@ from os.path import join as opj
 from zlib import adler32
 
 import babel.core
-from datetime import date
+from datetime import datetime, date
 import passlib.utils
 import psycopg2
 import json
@@ -45,6 +45,7 @@ except ImportError:
     psutil = None
 
 import odoo
+from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
@@ -621,7 +622,9 @@ class JsonRequest(WebRequest):
 
         def json_default(obj):
             if isinstance(obj, date):
-                return obj.to_string()
+                if isinstance(obj, datetime):
+                    return fields.Datetime.to_string(obj)
+                return fields.Date.to_string(obj)
             return ustr(obj)
 
         response = {
