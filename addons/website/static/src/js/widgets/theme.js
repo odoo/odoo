@@ -61,13 +61,13 @@ var ThemeCustomizeDialog = Dialog.extend({
 
             // Build the nav of the panel (nav_modal)
             $navLink.append($('<li/>', {
-                class: 'mb4',
+                class: 'mb4 nav-item col-12',
             })
             .append($('<a/>', {
                 text: $content.data('string'),
                 href: '#' + $content.data('id'),
                 'data-toggle': 'tab',
-                class: 'pt8 pb8 pr8 pl8 show',
+                class: 'd-block nav-link',
             })))
 
             // Build the main of the panel
@@ -98,7 +98,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                     $initialList.append($multiChoiceLabel);
                     if ($item.is('opt')) {
                         $multiChoiceLabel.find('.o_multi_choice_label').prepend($('<div/>', {
-                            class: $item.data('class') + ' ' + 'text-center',
+                            class: $item.data('class') + ' ' + 'text-center pt8 pb4',
                             text: $item.data('string'),
                         }))
                     } else if ($item.is('font')) {
@@ -135,7 +135,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                             // var $colorThemeContainer = $initialList.find('.o_color_theme_list');
                             var $appendColorContainer = $($('<span/>',{
                                 style: 'background-color: #' + $themeChild.data('color') + ';',
-                                class: 'show',
+                                class: 'd-block',
                             }));
                             $colorThemeContainer.append($appendColorContainer);
                         }
@@ -146,7 +146,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                     var $more = $content.children('more');
 
                     $navContent.append($('<button/>', {
-                        class: 'o_more_font o_more_btn center-block mb16 mt32',
+                        class: 'o_more_font o_more_btn mx-auto d-block mb16 mt32',
                         'data-toggle': 'collapse',
                         'data-target': "#" + $item.data('id'),
                         text: $item.data('btnstring'),
@@ -203,13 +203,13 @@ var ThemeCustomizeDialog = Dialog.extend({
                             .append($('<a/>',{
                                 'data-toggle': 'tab',
                                 text: $itemChild.data('name'),
-                                class: 'show',
+                                class: 'd-block',
                                 href: '#' + $itemChild.data('link'),
                             })))
 
                             $CustomColorContent.append($('<div/>',{
                                 id: $itemChild.data('link'),
-                                class: 'o_content_palet tab-pane fade in',
+                                class: 'o_content_palet tab-pane in',
                             }))
 
                             var $paletCustomTheme = $customChoiceContainer.find('.o_content_palet');
@@ -230,24 +230,23 @@ var ThemeCustomizeDialog = Dialog.extend({
                 self.close();
             }
         };
-        // click on the more button and remove the check of the imput of the brother list
-        var $btnMore = this.$('.o_more_btn');
-        $btnMore.click(function() {
-            var $labelBrotherList = $(this).parent().find('.o_initial_list').find('label');
-            var $inputBrotherList = $labelBrotherList.find('input');
-            var $moreSelectLabel = $(this).parent().find('.o_more_font_list').find('label');
-            var $moreSelectInput = $moreSelectLabel.find('input');
+        // click remove the checked and data of brother if more button
+        var $inputContainer = this.$('.o_more_btn').parents('.tab-pane').find('.o_initial_list');
+        var $moreSelectInput = this.$('.o_more_btn').parents('.tab-pane').find('#o_more_font');
+        var $collapseDiv = this.$('.o_more_btn').parents('.tab-pane').find('.collapse');
 
-            if($(this).attr('aria-expanded') == 'false' || $(this).attr('aria-expanded') == undefined){
-                $labelBrotherList.removeClass('checked');
-                $inputBrotherList.prop('checked', false).change();
-            } else {
-                $moreSelectLabel.removeClass('checked');
-                $moreSelectInput.prop('checked', false).change();
-            }
+        $inputContainer.find('input').click(function() {
+            $moreSelectInput.find('label').removeClass('active');
+            $moreSelectInput.find('input').prop('checked', false).change();
+            $collapseDiv.removeClass('show');
         });
+        $moreSelectInput.find('input').click(function() {
+            $inputContainer.find('label').removeClass('active');
+            $inputContainer.find('input').prop('checked', false).change();
+        });
+
         // put the first element of content and nav visible (active)
-        var $navFirstChild = this.$('.o_el_nav_modal').children('li').first();
+        var $navFirstChild = this.$('.o_el_nav_modal').children('li').first().find('a');
         var $containerFirstChild = this.$('.o_container_right').children('div').first();
         $navFirstChild.addClass('active');
         $containerFirstChild.addClass('active');
@@ -258,6 +257,18 @@ var ThemeCustomizeDialog = Dialog.extend({
         if($containerInputContent.length == 0) {
             $containerInputContent.prop('checked', true).change();
         }
+
+        var $listMore = this.$('.o_more_font_list');
+
+        $listMore.click(function(){
+            var $brotherListMore = self.$el.find('.o_container_select').find('ul');
+            if($(this).hasClass('o_hover_select')){
+                $brotherListMore.removeClass('o_hover_select');
+            } else {
+                $brotherListMore.removeClass('o_hover_select');
+                $(this).addClass('o_hover_select');
+            }
+        });
 
         $(document).on('keydown', this.keydown_escape);
         return this.load_xml_data().then(function () {
@@ -303,6 +314,13 @@ var ThemeCustomizeDialog = Dialog.extend({
                 xml_ids = xml_ids.concat($(this).data('xmlid').split(/\s*,\s*/));
             }
         });
+
+        var $moreFontsSelect = this.$('.o_container_select').find('input').filter(':checked');
+
+        if($moreFontsSelect.length >= 1){
+            var $moreFonts = this.$('#o_more_font');
+            $moreFonts.addClass('show');
+        }
         return xml_ids;
     },
     update_style: function (enable, disable, reload) {
@@ -433,6 +451,27 @@ var ThemeCustomizeDialog = Dialog.extend({
         if (this.flag && $option.data('reload') && document.location.href.match(new RegExp( $option.data('reload') ))) {
             this.reload = true;
         }
+
+        var $inputCollapse = this.$('.o_more_btn').parent().children('.o_initial_list');
+        var $inputContent = this.$('.o_more_btn').parent().children('#o_more_font');
+
+        console.log($inputCollapse.find('input').filter(':checked'));
+        console.log($inputCollapse.find('input').prop('checked'));
+
+        // if($inputCollapse.find('input').filter(':checked').lenght >= 1) {
+        //     console.log('true');
+        // } else {
+        //     console.log('false');
+        // }
+
+        // if($inputCollapse.find('input').prop('checked') == true){
+        //     $inputContent.find('input').prop('checked', false);
+        //     console.log('1');
+        // } else if($inputContent.find('input').lenght >= 1) {
+        //     $inputCollapse.find('input').prop('checked', false);
+        //     console.log('2');
+        // }
+
         //Au click ça recharge la page pour charger les css
         clearTimeout(this.timer);
         if (this.flag) {

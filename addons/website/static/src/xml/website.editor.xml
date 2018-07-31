@@ -11,10 +11,10 @@
     </div>
     <!-- All modal Content-->
     <div t-name="website.modal_custom_theme">
-    	  <div class='o_nav_modal col-xs-2'>
-            <ul class="o_el_nav_modal"></ul>
+    	  <div class='o_nav_modal col-2'>
+            <ul class="o_el_nav_modal nav nav-tab"></ul>
         </div>
-        <div class="tab-content o_container_right col-xs-10"></div>
+        <div class="tab-content o_container_right col-10"></div>
     </div>
     <!-- Multi Choice -->
     <div t-name="website.multi_choice" t-att-id="id" t-att-class="class">
@@ -35,19 +35,19 @@
       </label>
     </li>
     <!-- more list -->
-    <div t-name="website.more_list" class="o_container_select pull-left col-xs-6">
+    <div t-name="website.more_list" class="o_container_select pull-left col-6">
         <h6><t t-esc="title"/></h6>
-        <div class="o_choose_list_font show">
-            <ul class="o_more_font_list show">
-                <li class="o_parent_caret show"><span class="caret mr8 mt16 show"></span></li>
-                <li class="default-select selected show"><t t-esc="selecttitle"/></li>
+        <div class="o_choose_list_font d-block">
+            <ul class="o_more_font_list d-block">
+                <li class="o_parent_caret d-block .dropdown-toggle"><span class="caret mr8 d-block">&#9660;</span></li>
+                <li class="default-select selected d-block"><t t-esc="selecttitle"/></li>
             </ul>
         </div>
     </div>
     <!-- font list -->
     <li t-name="website.list_fonts"> <!-- class="o_theme_list" -->
       <label class="center-block">
-          <div t-att-style="fontstyle"><t t-esc="fontname"/></div>
+          <div t-att-style="fontstyle" class="pt4 pb4"><t t-esc="fontname"/></div>
           <input t-att-name="name" type="radio" t-att-data-xmlid="xmlid"/>
       </label>
     </li>

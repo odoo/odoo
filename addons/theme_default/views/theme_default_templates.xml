@@ -19,7 +19,7 @@
 
 <template id="customize_modal" inherit_id="website.theme_customize" name="theme_default modal">
     <xpath expr="div" position="replace">
-        <div role="dialog" id="theme_customize_modal" class="modal fade">
+        <div role="dialog" id="theme_customize_modal" class="modal">
             <content data-string="Format" data-id="format" data-class="o_multi_choice" data-title="Choose your layout">
                 <opt data-string="Full" data-xmlid="theme_default.option_layout_full" data-class="full" data-liclass="relative" data-name="layoutvar"></opt>
                 <opt data-string="Boxed" data-xmlid="theme_default.option_layout_boxed" data-class="o_boxed" data-liclass="relative o_add_color_choice" data-name="layoutvar"></opt>
@@ -36,7 +36,7 @@
                 <font data-fontname="Baskerville" data-style="'Libre Baskerville', serif;" data-xmlid="theme_default.option_font_baskerville" data-xmlid0="theme_default.option_font_title_baskerville" data-xmlid1="theme_default.option_font_body_baskerville" data-name="fontvar"></font>
                 <font data-fontname="PlayFair" data-style="'Playfair Display', serif;" data-xmlid="theme_default.option_font_playfair" data-xmlid0="theme_default.option_font_title_playfair" data-xmlid1="theme_default.option_font_body_playfair" data-name="fontvar"></font>
                 <!-- Create a more button and a section, to display the section when we click on the more button -->
-                <more data-btnstring="More" data-id="o_more_font">
+                <more data-btnstring="Custom" data-id="o_more_font">
                     <listchoice data-title="Title" data-class="o_choose_title_font" data-choice="Choose a title font"></listchoice>
                     <listchoice data-title="Body" data-class="o_choose_body_font" data-choice="Choose a body font"></listchoice>
                 </more>

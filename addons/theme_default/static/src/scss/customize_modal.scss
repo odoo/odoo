@@ -7,7 +7,7 @@ body{
             color: #666666;
             .modal-dialog {
                 width:95%;
-                max-width: 500px;
+                max-width: 550px;
                 position: fixed;
                 top: 0;
                 right: 20px;
@@ -17,8 +17,12 @@ body{
             }
             .modal-header {
                 background-color: #875A7B;
+                border-radius:0;
                 h4 {
                     color: #ffffff;
+                }
+                button{
+                    color: white;
                 }
             }
             #theme_customize_modal {
@@ -28,21 +32,23 @@ body{
                     padding: 0;
                     border-right: 1px solid #d9d7d7;
                     vertical-align: top;
+                    float: left;
                     ul {
                         li {
                             text-align: center;
                             background-color: #eeeeee;
-                            &.active {
-                                background-color: white;
-                                border: 1px solid #d9d7d7;
-                                border-right: 1px solid white;
-                                border-left: 1px solid #333333;
-                                a{
-                                    font-weight: bold;
-                                }
-                            }
+                            padding: 0;
                             a {
                                 color: #666666;
+                                padding: 8px 0;
+                                &.active {
+                                    font-weight: bold;
+                                    background-color: white;
+                                    border: 1px solid #d9d7d7;
+                                    border-right: 1px solid white;
+                                    border-left: 1px solid #333333;
+
+                                }
                                 &:hover, &:focus{
                                     text-decoration:none;
                                 }
@@ -97,7 +103,7 @@ body{
                                 div {
                                     border:none;
                                     margin:0 auto;
-                                    line-height: 40px;
+                                    line-height: 24px;
                                 }
                             }
                         }
@@ -107,7 +113,6 @@ body{
                             flex-grow: 5;
                             border-bottom: 1px solid #d9d7d7;
                             li {
-                                /*text-align: center;*/
                                 border-left: 1px solid white;
                                 border-right: 1px solid white;
                                 &:nth-child(odd) {
@@ -312,6 +317,9 @@ body{
                                     &:first-child {
                                         color:#aaaaaa;
                                     }
+                                    &:nth-child(2){
+                                        font-size: 14px;
+                                    }
                                     &.selected {
                                         background: none;
                                         margin: 0;
@@ -332,7 +340,7 @@ body{
                                 &:hover {
                                     cursor: pointer;
                                 }
-                                &:hover {
+                                &.o_hover_select {
                                     border: none;
                                     box-shadow: 0 0 40px 0 rgba(0,0,0, .05);
                                     padding:0 10px 7px;
@@ -340,6 +348,9 @@ body{
                                         display: block;
                                         &.o_parent_caret {
                                             margin: 0 0 2px 0;
+                                        }
+                                        & .caret{
+                                            transform: rotate(180deg);
                                         }
                                     }
                                 }
