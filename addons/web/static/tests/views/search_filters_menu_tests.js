@@ -163,10 +163,10 @@ QUnit.module('FiltersMenu', {
             "there should be a sub menu item list");
 
         // click on This Quarter option
-        assert.notOk(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"]').hasClass('selected'),
+        assert.notOk(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"] .dropdown-item').hasClass('selected'),
             "menu item should not be selected");
         filterMenu.$('.o_menu_item li[data-option_id="this_quarter"] a').click();
-        assert.ok(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"]').hasClass('selected'),
+        assert.ok(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"] .dropdown-item').hasClass('selected'),
             "menu item should be selected");
 
         filterMenu.destroy();

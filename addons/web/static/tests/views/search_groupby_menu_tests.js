@@ -89,7 +89,7 @@ QUnit.module('GroupByMenu', {
         assert.strictEqual(groupByMenu.$('select').val(), 'fieldName',
             'the select value should be "fieldName"');
         groupByMenu.$('button.o_apply_group').click();
-        assert.strictEqual(groupByMenu.$('.o_menu_item.selected').length, 1, 'there should be a groupby selected');
+        assert.strictEqual(groupByMenu.$('.o_menu_item > .dropdown-item.selected').length, 1, 'there should be a groupby selected');
         groupByMenu.destroy();
     });
 
@@ -114,9 +114,9 @@ QUnit.module('GroupByMenu', {
             },
         });
         groupByMenu.$('button:first').click();
-        assert.ok(!groupByMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(!groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         groupByMenu.$('.o_menu_item a').first().click();
-        assert.ok(groupByMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         assert.ok(groupByMenu.$('.o_menu_item:first').is(':visible'),
             'group by filter should still be visible');
         groupByMenu.destroy();
@@ -128,9 +128,9 @@ QUnit.module('GroupByMenu', {
         var groupByMenu = createGroupByMenu(this.groupbys,
             {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}});
         groupByMenu.$('button:first').click();
-        assert.ok(!groupByMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(!groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         groupByMenu.$('.o_menu_item a').first().click();
-        assert.ok(!groupByMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(!groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         assert.ok(groupByMenu.$('.o_menu_item:first').is(':visible'),
             'group by filter should still be visible');
         assert.ok(groupByMenu.$('.o_item_option').length, 5);

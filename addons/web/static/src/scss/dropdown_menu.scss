@@ -9,6 +9,7 @@
 
     .o_menu_item {
         position: relative;
+
         > .dropdown-item {
             color: $o-main-text-color;
 
@@ -16,28 +17,8 @@
                 color: darken($o-main-text-color, 10%);
             }
         }
-        &.selected {
-            > .dropdown-item {
-                color: darken($o-main-text-color, 10%);
-                font-weight: bold;
-                &:before {
-                    font-family: FontAwesome;
-                    position: absolute;
-                    left: 4px;
-                    content: "\f00c";
-                }
-            }
-        }
         .dropdown-divider:first-child {
             display: none;
-        }
-        .o_item_option {
-            color: $o-main-text-color;
-            padding-left: 20px;
-            &:hover {
-                color: darken($o-main-text-color, 10%);
-                background-color: $dropdown-link-hover-bg;
-            }
         }
     }
 }
