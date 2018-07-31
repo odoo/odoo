@@ -35,6 +35,7 @@ var MrpBomReport = stock_report_generic.extend({
             self.$el.html(self.data.lines);
             self.renderSearch();
             self.update_cp();
+            self.$searchView.parent('.o_search_options').addClass('o_mrp_bom_search_options');
         });
     },
     render_html: function(event, $el, result){
