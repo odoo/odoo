@@ -13,7 +13,7 @@
             <xpath expr="//page/field[@name='order_line']/.." position="after">
                 <page string="Suggested Products">
                     <field name="quote_viewed" invisible="1"/>
-                    <field name="options">
+                    <field name="options" mode="tree,kanban">
                         <tree string="Sales Quotation Template Lines" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
@@ -26,6 +26,32 @@
                                 <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
                                 <field name="website_description" invisible="1"/>
                         </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-xs-12 text-muted">
+                                                <strong><field name="product_id"/></strong>
+                                            </div>
+                                            <div class="col-xs-12 text-muted">
+                                                <field name="name"/>
+                                            </div>
+                                            <div class="col-xs-6 text-muted">
+                                                <field name="quantity"/>
+                                            </div>
+                                            <div class="col-xs-6 text-muted">
+                                                <field name="price_unit"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                 </page>
             </xpath>
