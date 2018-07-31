@@ -338,7 +338,8 @@
                             <page name="bank_account" string="Bank Account" attrs="{'invisible': [('type', '!=', 'bank')]}">
                                 <group>
                                     <group>
-                                        <field name="bank_account_id"/>
+                                        <field name="company_partner_id" invisible="1"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': company_partner_id, 'form_view_ref': 'view_company_partner_bank_form'}"/>
                                         <field name="bank_id"/>
                                     </group>
                                     <group >
@@ -349,6 +350,18 @@
                         </notebook>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_company_partner_bank_form" model="ir.ui.view">
+            <field name="name">company.res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -1551,7 +1564,7 @@
                             <group>
                                 <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
                                 <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
-                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>    
+                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>
                             </group>
                         </page>
                     </notebook>
