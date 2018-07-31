@@ -6,7 +6,6 @@ import json
 from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
-from odoo.tools.func import monkey_patch
 
 
 def get_month(date):
@@ -118,9 +117,3 @@ def end_of(self, value, granularity):
         raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
 
     return datetime.combine(result, time.max) if is_datetime else result
-
-@monkey_patch(json.JSONEncoder)
-def default(self, o):
-    if isinstance(o, date):
-        return str(o)
-    return default.super(self, o)

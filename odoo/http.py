@@ -617,6 +617,12 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
+
+        def json_default(obj):
+            if isinstance(obj, date):
+                return obj.to_string()
+            return ustr(obj)
+
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
@@ -632,10 +638,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=ustr),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=json_default))
         else:
             mime = 'application/json'
-            body = json.dumps(response, default=ustr)
+            body = json.dumps(response, default=json_default)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
