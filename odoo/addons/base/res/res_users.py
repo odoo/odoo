@@ -679,7 +679,7 @@ class UsersImplied(models.Model):
             for user in self.with_context({}):
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
-                super(UsersImplied, self).write(vals)
+                super(UsersImplied, user).write(vals)
         return res
 
 #
