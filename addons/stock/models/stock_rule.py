@@ -326,7 +326,7 @@ class ProcurementGroup(models.Model):
             product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
             if product_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res:
+        if not res and warehouse_id:
             warehouse_routes = warehouse_id.route_ids
             if warehouse_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
