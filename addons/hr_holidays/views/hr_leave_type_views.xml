@@ -54,6 +54,12 @@
                             <field name="validity_start"/>
                             <field name="validity_stop"/>
                         </group>
+                        <group name="notification" string="Notification">
+                            <field name="mail_message_subtype_id"
+                                   domain="['|',('res_model','=','hr.leave'),('res_model','=','hr.leave.allocation')]"
+                                   options="{'no_create_edit': true}"
+                            />
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -104,9 +110,10 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="limit"/>
-                <field name="validation_type" />
-                <field name="validity_start" />
-                <field name="validity_stop" />
+                <field name="validation_type"/>
+                <field name="validity_start"/>
+                <field name="validity_stop"/>
+                <field name="mail_message_subtype_id"/>
             </tree>
         </field>
     </record>

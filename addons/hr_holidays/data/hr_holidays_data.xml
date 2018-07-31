@@ -9,6 +9,15 @@
             <field name="color_name">black</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+            <field name="mail_message_subtype_id" eval="ref('mt_leave')"/>
+        </record>
+
+        <!-- Home working -->
+        <record id="holiday_status_hw" model="hr.leave.type">
+            <field name="name">Home Workings</field>
+            <field name="limit" eval="False"/>
+            <field name="color_name">lightgreen</field>
+            <field name="mail_message_subtype_id" eval="ref('mt_leave_home_working')"/>
         </record>
 
         <!-- Sick leave -->
@@ -16,6 +25,7 @@
             <field name="name">Sick Leaves</field>
             <field name="limit" eval="True"/>
             <field name="color_name">red</field>
+            <field name="mail_message_subtype_id" eval="ref('mt_leave_sick')"/>
         </record>
 
         <!-- Compensatory Days -->
@@ -25,6 +35,7 @@
             <field name="color_name">lavender</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+            <field name="mail_message_subtype_id" eval="ref('mt_leave')"/>
         </record>
 
         <!--Unpaid Leave -->
@@ -32,6 +43,7 @@
             <field name="name">Unpaid</field>
             <field name="color_name">brown</field>
             <field name="unpaid" eval="True"/>
+            <field name="mail_message_subtype_id" eval="ref('mt_leave_unpaid')"/>
         </record>
     </data>
 </odoo>
