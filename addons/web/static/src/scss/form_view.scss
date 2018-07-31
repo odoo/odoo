@@ -399,6 +399,7 @@
         margin: 0 $o-form-spacing-unit 0 0;
         font-size: $font-size-base; // The label muse have the same size whatever their position
         line-height: $line-height-base;
+        font-weight: bold;
     }
 
     // Form fields
@@ -661,10 +662,6 @@
     margin-right: 4px;
 }
 
-// Light labels (not in bold) for settings forms
-label.o_light_label, .o_light_label label {
-    font-weight: normal;
-}
 
 // XXS form view specific rules
 @mixin form-break-table {
@@ -721,6 +718,10 @@ label.o_light_label, .o_light_label label {
     display: flex;
     flex: 0 1 auto;
     flex-flow: row wrap;
+
+    .o_form_label.o_light_label, .o_light_label .o_form_label {
+        font-weight: normal;
+    }
     .o_setting_box:visible:nth-child(odd) {
         clear: left;
     }
