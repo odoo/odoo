@@ -82,10 +82,15 @@ class IrActionsReport(models.Model):
     binding_type = fields.Selection(default='report')
     model = fields.Char(required=True)
 
-    report_type = fields.Selection([('qweb-html', 'HTML'), ('qweb-pdf', 'PDF')], required=True, default='qweb-pdf',
-                                   help='The type of the report that will be rendered, each one having its own rendering method.'
-                                        'HTML means the report will be opened directly in your browser'
-                                        'PDF means the report will be rendered using Wkhtmltopdf and downloaded by the user.')
+    report_type = fields.Selection([
+        ('qweb-html', 'HTML'),
+        ('qweb-pdf', 'PDF'),
+        ('qweb-text', 'Text'),
+    ], required=True, default='qweb-pdf',
+    help='The type of the report that will be rendered, each one having its own'
+        ' rendering method. HTML means the report will be opened directly in your'
+        ' browser PDF means the report will be rendered using Wkhtmltopdf and'
+        ' downloaded by the user.')
     report_name = fields.Char(string='Template Name', required=True,
                               help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name.")
     report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
@@ -419,8 +424,7 @@ class IrActionsReport(models.Model):
         the field report_name.
         """
         report_obj = self.env['ir.actions.report']
-        qwebtypes = ['qweb-pdf', 'qweb-html']
-        conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
+        conditions = [('report_name', '=', report_name)]
         context = self.env['res.users'].context_get()
         return report_obj.with_context(context).search(conditions, limit=1)
 
@@ -649,9 +653,19 @@ class IrActionsReport(models.Model):
         return pdf_content, 'pdf'
 
     @api.model
+    def render_qweb_text(self, docids, data=None):
+        data = self._get_rendering_context(docids, data)
+        return self.render_template(self.report_name, data), 'text'
+
+    @api.model
     def render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
         """
+        data = self._get_rendering_context(docids, data)
+        return self.render_template(self.report_name, data), 'html'
+
+    @api.model
+    def _get_rendering_context(self, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
         report_model_name = 'report.%s' % self.report_name
@@ -666,7 +680,7 @@ class IrActionsReport(models.Model):
                 'doc_model': self.model,
                 'docs': docs,
             }
-        return self.render_template(self.report_name, data), 'html'
+        return data
 
     @api.multi
     def render(self, res_ids, data=None):
