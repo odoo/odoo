@@ -47,7 +47,7 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link#{widget.noImages ? ' d-none' : ''}">Image</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link active#{widget.noImages ? ' d-none' : ''}">Image</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
@@ -66,7 +66,7 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade" id="editor-media-image"/>
+            <div role="tabpanel" class="tab-pane fade active show" id="editor-media-image"/>
             <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
             <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
             <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
@@ -84,7 +84,7 @@
             <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
             <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
-            <div class="card">
+            <div class="card w-100">
                 <div class="card-body">
                     <div class="form-inline">
                         <input type="file" class="d-none" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
