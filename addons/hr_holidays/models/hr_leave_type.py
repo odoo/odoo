@@ -93,6 +93,8 @@ class HolidaysType(models.Model):
 
     balance_limit = fields.Float('Max Balance Limit', default=0, help="The maximum quantity of allocated days on this allocation, zero meaning infinite amount")
 
+    mail_message_subtype_id = fields.Many2one('mail.message.subtype', string='Notification subtype')
+
     _sql_constraints = [
         ('no_negative_balance_limit', "CHECK(balance_limit >= 0)", "The max balance limit cannot be negative"),
         ('no_accrual_unpaid', 'CHECK(NOT (accrual AND unpaid))', "A leave type cannot be accrual and considered as unpaid leaves")
