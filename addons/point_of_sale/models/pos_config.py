@@ -233,6 +233,10 @@ class PosConfig(models.Model):
     def _check_currencies(self):
         if self.pricelist_id not in self.available_pricelist_ids:
             raise ValidationError(_("The default pricelist must be included in the available pricelists."))
+        if any(self.journal_ids.mapped(lambda journal: journal.currency_id != self.currency_id)):
+            raise ValidationError(_("All available payment methods must be in the same currency as the company or"
+                                    " as the Sales Journal set on this point of sale if you use"
+                                    " the Accounting application."))
         if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
             raise ValidationError(_("All available pricelists must be in the same currency as the company or"
                                     " as the Sales Journal set on this point of sale if you use"
