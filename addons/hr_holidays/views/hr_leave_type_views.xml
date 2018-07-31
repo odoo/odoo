@@ -36,8 +36,8 @@
                             options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <div class="oe_title">  
-                        <h1><field name="name"/></h1>   
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
                     </div>
                     <group>
                         <group name="description" string="Options">
@@ -60,6 +60,20 @@
                             <field name="categ_id"/>
                             <field name="color_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="notification" string="Notification" colspan="2">
+                            <group attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
+                                <field name="leave_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave'}"
+                                />
+                            </group>
+                            <group attrs="{'invisible': [('employee_applicability', '=', 'leave')]}">
+                                <field name="allocation_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave.allocation')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave.allocation'}"
+                                />
+                            </group>
                         </group>
                     </group>
                 </sheet>

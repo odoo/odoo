@@ -84,6 +84,9 @@ class HolidaysType(models.Model):
         default='day', string='Take Leaves in', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
 
+    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Leave Notification Subtype')
+    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype')
+
     @api.multi
     @api.constrains('validity_start', 'validity_stop')
     def _check_validity_dates(self):

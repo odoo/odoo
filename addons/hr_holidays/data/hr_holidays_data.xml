@@ -8,6 +8,17 @@
             <field name="color_name">black</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+            <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
+            <field name="allocation_notif_subtype_id" eval="ref('mt_leave_allocation')"/>
+        </record>
+
+        <!-- Home working -->
+        <record id="holiday_status_hw" model="hr.leave.type">
+            <field name="name">Home Workings</field>
+            <field name="limit" eval="False"/>
+            <field name="employee_applicability">leave</field>
+            <field name="color_name">lightgreen</field>
+            <field name="leave_notif_subtype_id" eval="ref('mt_leave_home_working')"/>
         </record>
 
         <!-- Sick leave -->
@@ -16,6 +27,7 @@
             <field name="allocation_type">no</field>
             <field name="color_name">red</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="leave_notif_subtype_id" eval="ref('mt_leave_sick')"/>
         </record>
 
         <!-- Compensatory Days -->
@@ -23,9 +35,11 @@
             <field name="name">Compensatory Days</field>
             <field name="allocation_type">fixed_allocation</field>
             <field name="request_unit">hour</field>
+            <field name="employee_applicability">leave</field>
             <field name="color_name">lavender</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+            <field name="leave_notif_subtype_id" eval="ref('mt_leave')"/>
         </record>
 
         <!--Unpaid Leave -->
@@ -36,6 +50,8 @@
             <field name="color_name">brown</field>
             <field name="unpaid" eval="True"/>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="employee_applicability">leave</field>
+            <field name="leave_notif_subtype_id" eval="ref('mt_leave_unpaid')"/>
         </record>
     </data>
 </odoo>

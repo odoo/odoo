@@ -26,63 +26,26 @@
         </record>
 
         <!-- Holidays-related subtypes for messaging / Chatter -->
-        <record id="mt_leave_approved" model="mail.message.subtype">
-            <field name="name">Approved</field>
+        <record id="mt_leave" model="mail.message.subtype">
+            <field name="name">Leave</field>
             <field name="res_model">hr.leave</field>
-            <field name="description">Request approved</field>
         </record>
-        <record id="mt_leave_refused" model="mail.message.subtype">
-            <field name="name">Refused</field>
+        <record id="mt_leave_home_working" model="mail.message.subtype">
+            <field name="name">Home Working</field>
             <field name="res_model">hr.leave</field>
-            <field name="default" eval="False"/>
-            <field name="description">Request refused</field>
+        </record>
+        <record id="mt_leave_sick" model="mail.message.subtype">
+            <field name="name">Sick Leave</field>
+            <field name="res_model">hr.leave</field>
+        </record>
+        <record id="mt_leave_unpaid" model="mail.message.subtype">
+            <field name="name">Unpaid Leave</field>
+            <field name="res_model">hr.leave</field>
         </record>
 
-        <!-- Allocation-related subtypes for messaging / Chatter -->
-        <record id="mt_leave_allocation_approved" model="mail.message.subtype">
-            <field name="name">Approved</field>
+        <record id="mt_leave_allocation" model="mail.message.subtype">
+            <field name="name">Allocation</field>
             <field name="res_model">hr.leave.allocation</field>
-            <field name="description">Request approved</field>
-        </record>
-        <record id="mt_leave_allocation_refused" model="mail.message.subtype">
-            <field name="name">Refused</field>
-            <field name="res_model">hr.leave.allocation</field>
-            <field name="default" eval="False"/>
-            <field name="description">Request refused</field>
-        </record>
-
-        <!-- Department related subtypes for messaging / Chatter -->
-        <record id="mt_department_leave_approved" model="mail.message.subtype">
-            <field name="name">Leaves Approved</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_approved')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-        <record id="mt_department_leave_refused" model="mail.message.subtype">
-            <field name="name">Leaves Refused</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_refused')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="9"/>
-        </record>
-        <record id="mt_department_leave_allocation_approved" model="mail.message.subtype">
-            <field name="name">Allocation Approved</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_allocation_approved')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-        <record id="mt_department_leave_allocation_refused" model="mail.message.subtype">
-            <field name="name">Allocation Refused</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_allocation_refused')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="9"/>
         </record>
     </data>
 </odoo>
