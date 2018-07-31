@@ -125,7 +125,7 @@ class account_abstract_payment(models.AbstractModel):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
         won't be displayed but some modules might change that, depending on the payment type."""
         for payment in self:
-            payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
+            payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account() and not self.multi
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
