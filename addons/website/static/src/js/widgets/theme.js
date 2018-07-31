@@ -456,14 +456,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         if (this.flag && $option.data('reload') && document.location.href.match(new RegExp( $option.data('reload') ))) {
             this.reload = true;
         }
-        var $selectMoreList = this.$('.o_more_font_list');
-
-        console.log($selectMoreList.find('label'));
-
-        if($selectMoreList.find('label').hasClass('checked')) {
-            $(this).parents('li').addClass('d-block');
-        }
-        //Au click ça recharge la page pour charger les css
+        //Reload the page  with a click to apply scss
         clearTimeout(this.timer);
         if (this.flag) {
             this.timer = _.defer(function () {

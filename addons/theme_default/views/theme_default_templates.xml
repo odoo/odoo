@@ -27,14 +27,14 @@
             <!-- Create a section to fonts choices -->
             <content data-string="Fonts" data-id="fonts" data-class="" data-title="Choose your fonts">
               <!-- Put the name of the font and the template will create example and select list -->
-                <font data-fontname="Times" data-xmlid="theme_default.option_font_times" data-xmlid0="theme_default.option_font_title_times" data-xmlid1="theme_default.option_font_body_times" data-name="fontvar"></font>
-                <font data-fontname="OpenSans" data-style="'Open Sans', sans-serif;" data-xmlid="theme_default.option_font_openSans" data-xmlid0="theme_default.option_font_title_openSans" data-xmlid1="theme_default.option_font_body_openSans" data-name="fontvar"></font>
-                <font data-fontname="Merienda" data-style="'Merienda', cursive;" data-xmlid="theme_default.option_font_merienda" data-xmlid0="theme_default.option_font_title_merienda" data-xmlid1="theme_default.option_font_body_merienda" data-name="fontvar"></font>
-                <font data-fontname="RobotoSlab" data-style="'Roboto Slab', serif;" data-xmlid="theme_default.option_font_roboto_slab" data-xmlid0="theme_default.option_font_title_roboto_slab" data-xmlid1="theme_default.option_font_body_roboto_slab" data-name="fontvar"></font>
-                <font data-fontname="Raleway" data-style="'Raleway', sans-serif;" data-xmlid="theme_default.option_font_raleway" data-xmlid0="theme_default.option_font_title_raleway" data-xmlid1="theme_default.option_font_body_raleway" data-name="fontvar"></font>
-                <font data-fontname="Quicksand" data-style="'Quicksand', sans-serif;" data-xmlid="theme_default.option_font_quicksand" data-xmlid0="theme_default.option_font_title_quicksand" data-xmlid1="theme_default.option_font_body_quicksand" data-name="fontvar"></font>
-                <font data-fontname="Baskerville" data-style="'Libre Baskerville', serif;" data-xmlid="theme_default.option_font_baskerville" data-xmlid0="theme_default.option_font_title_baskerville" data-xmlid1="theme_default.option_font_body_baskerville" data-name="fontvar"></font>
-                <font data-fontname="PlayFair" data-style="'Playfair Display', serif;" data-xmlid="theme_default.option_font_playfair" data-xmlid0="theme_default.option_font_title_playfair" data-xmlid1="theme_default.option_font_body_playfair" data-name="fontvar"></font>
+                <font data-fontname="Times" data-xmlid="theme_default.option_font_title_times, theme_default.option_font_body_times" data-xmlid0="theme_default.option_font_title_times" data-xmlid1="theme_default.option_font_body_times" data-name="fontvar"></font>
+                <font data-fontname="OpenSans" data-style="'Open Sans', sans-serif;" data-xmlid="theme_default.option_font_title_openSans, theme_default.option_font_body_openSans" data-xmlid0="theme_default.option_font_title_openSans" data-xmlid1="theme_default.option_font_body_openSans" data-name="fontvar"></font>
+                <font data-fontname="Merienda" data-style="'Merienda', cursive;" data-xmlid="theme_default.option_font_title_merienda, theme_default.option_font_body_merienda" data-xmlid0="theme_default.option_font_title_merienda" data-xmlid1="theme_default.option_font_body_merienda" data-name="fontvar"></font>
+                <font data-fontname="RobotoSlab" data-style="'Roboto Slab', serif;" data-xmlid="theme_default.option_font_title_roboto_slab, theme_default.option_font_body_roboto_slab" data-xmlid0="theme_default.option_font_title_roboto_slab" data-xmlid1="theme_default.option_font_body_roboto_slab" data-name="fontvar"></font>
+                <font data-fontname="Raleway" data-style="'Raleway', sans-serif;" data-xmlid="theme_default.option_font_title_raleway, theme_default.option_font_body_raleway" data-xmlid0="theme_default.option_font_title_raleway" data-xmlid1="theme_default.option_font_body_raleway" data-name="fontvar"></font>
+                <font data-fontname="Quicksand" data-style="'Quicksand', sans-serif;" data-xmlid="theme_default.option_font_title_quicksand, theme_default.option_font_body_quicksand" data-xmlid0="theme_default.option_font_title_quicksand" data-xmlid1="theme_default.option_font_body_quicksand" data-name="fontvar"></font>
+                <font data-fontname="Baskerville" data-style="'Libre Baskerville', serif;" data-xmlid="theme_default.option_font_title_baskerville, theme_default.option_font_body_baskerville" data-xmlid0="theme_default.option_font_title_baskerville" data-xmlid1="theme_default.option_font_body_baskerville" data-name="fontvar"></font>
+                <font data-fontname="PlayFair" data-style="'Playfair Display', serif;" data-xmlid="theme_default.option_font_title_playfair, theme_default.option_font_body_playfair" data-xmlid0="theme_default.option_font_title_playfair" data-xmlid1="theme_default.option_font_body_playfair" data-name="fontvar"></font>
                 <!-- Create a more button and a section, to display the section when we click on the more button -->
                 <more data-btnstring="Custom" data-id="o_more_font">
                     <listchoice data-title="Title" data-class="o_choose_title_font" data-choice="Choose a title font"></listchoice>
@@ -100,47 +100,6 @@
 <template id="option_layout_boxed" inherit_id="theme_default.assets_frontend" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_layout_boxed.scss"/>
-    </xpath>
-</template>
-<!-- Option font -->
-<template id="option_font_times" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_times.scss"/>
-    </xpath>
-</template>
-<template id="option_font_openSans" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_openSans.scss"/>
-    </xpath>
-</template>
-<template id="option_font_merienda" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_merienda.scss"/>
-    </xpath>
-</template>
-<template id="option_font_roboto_slab" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_roboto_slab.scss"/>
-    </xpath>
-</template>
-<template id="option_font_raleway" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_raleway.scss"/>
-    </xpath>
-</template>
-<template id="option_font_quicksand" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_quicksand.scss"/>
-    </xpath>
-</template>
-<template id="option_font_baskerville" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_baskerville.scss"/>
-    </xpath>
-</template>
-<template id="option_font_playfair" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_playfair.scss"/>
     </xpath>
 </template>
 <!-- Option font title -->
