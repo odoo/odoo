@@ -4,7 +4,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools
-from odoo.fields import Datetime as Dt
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
@@ -191,7 +190,7 @@ class EventMailRegistration(models.Model):
     def _compute_scheduled_date(self):
         if self.registration_id:
             date_open = self.registration_id.date_open
-            date_open_datetime = date_open or fields.datetime.now()
+            date_open_datetime = date_open or fields.Datetime.now()
             self.scheduled_date = date_open_datetime + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
         else:
             self.scheduled_date = False

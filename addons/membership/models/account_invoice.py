@@ -65,7 +65,6 @@ class AccountInvoiceLine(models.Model):
             # Product line is a membership product
             date_from = invoice_line.product_id.membership_date_from
             date_to = invoice_line.product_id.membership_date_to
-            # use unix epoch 0 as sentinel value
             if (date_from and
                     date_from <
                     (invoice_line.invoice_id.date_invoice or date.min) <

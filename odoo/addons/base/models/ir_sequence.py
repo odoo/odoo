@@ -196,9 +196,9 @@ class IrSequence(models.Model):
         def _interpolation_dict():
             now = range_date = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
             if self._context.get('ir_sequence_date'):
-                effective_date = self._context.get('ir_sequence_date')
+                effective_date = fields.Datetime.from_string(self._context.get('ir_sequence_date'))
             if self._context.get('ir_sequence_date_range'):
-                range_date = self._context.get('ir_sequence_date_range')
+                range_date = fields.Datetime.from_string(self._context.get('ir_sequence_date_range'))
 
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',

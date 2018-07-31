@@ -323,7 +323,7 @@ class AccountAssetAsset(models.Model):
 
                 # Create a new depr. line with the residual amount and post it
                 sequence = len(asset.depreciation_line_ids) - len(unposted_depreciation_line_ids) + 1
-                today = datetime.today()
+                today = fields.Datetime.today()
                 vals = {
                     'amount': asset.value_residual,
                     'asset_id': asset.id,

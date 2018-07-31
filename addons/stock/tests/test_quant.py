@@ -774,7 +774,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 1)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        self.assertAlmostEqual(quant.in_date, in_date1, delta=timedelta(seconds=1))
+        self.assertEqual(quant.in_date, in_date1, delta=timedelta(seconds=1))
 
         in_date2 = Datetime.now() - timedelta(days=5)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date2)
@@ -786,4 +786,4 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        self.assertAlmostEqual(quant.in_date, in_date2, delta=timedelta(seconds=1))
+        self.assertEqual(quant.in_date, in_date2, delta=timedelta(seconds=1))
