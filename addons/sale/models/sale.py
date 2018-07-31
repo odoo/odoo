@@ -170,6 +170,12 @@ class SaleOrder(models.Model):
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
 
+    # TODO SEB rename this field to something better option_line_ids or whatever
+    options = fields.One2many(
+        'sale.order.option', 'order_id', 'Optional Products Lines',
+        copy=True, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+
     def _compute_portal_url(self):
         super(SaleOrder, self)._compute_portal_url()
         for order in self:
@@ -966,6 +972,9 @@ class SaleOrderLine(models.Model):
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+
+    # TODO SEB ? rename to option_line_ids?
+    option_line_id = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
     @api.multi
     @api.depends('state', 'is_expense')

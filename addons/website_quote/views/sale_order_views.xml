@@ -10,23 +10,8 @@
                     class="o_open_quotation" string="Preview"
                     attrs="{'invisible': [('template_id', '=', False)]}"/>
             </xpath>
-            <xpath expr="//page/field[@name='order_line']/.." position="after">
-                <page string="Suggested Products">
-                    <field name="quote_viewed" invisible="1"/>
-                    <field name="options">
-                        <tree string="Sales Quotation Template Lines" editable="bottom">
-                                <field name="sequence" widget="handle"/>
-                                <field name="product_id"/>
-                                <field name="name"/>
-                                <field name="quantity"/>
-                                <field name="uom_id" groups="uom.group_uom"/>
-                                <field name="price_unit"/>
-                                <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
-                                <field name="website_description" invisible="1"/>
-                        </tree>
-                    </field>
-                </page>
+            <xpath expr="//page/field[@name='options']/tree" position="inside">
+                <field name="website_description" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='partner_shipping_id']" position="after">
                 <label for="template_id"/>

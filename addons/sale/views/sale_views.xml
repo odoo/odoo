@@ -512,6 +512,20 @@
                             <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
                             <div class="oe_clear"/>
                         </page>
+                        <page string="Suggested Products">
+                            <field name="options">
+                                <tree string="Sales Quotation Template Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Other Information">
                             <group>
                                 <group string="Sales Information" name="sales_person">

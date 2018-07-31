@@ -135,30 +135,6 @@ class sale_quote(http.Controller):
         values = {'template': quote}
         return request.render('website_quote.so_template', values)
 
-    @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
-    def add(self, option_id, order_id, token, **post):
-        Order = request.env['sale.order'].sudo().browse(order_id)
-        if token != Order.access_token:
-            return request.render('website.404')
-        if Order.state not in ['draft', 'sent']:
-            return request.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
-        Option = request.env['sale.order.option'].sudo().browse(option_id)
-        vals = {
-            'price_unit': Option.price_unit,
-            'website_description': Option.website_description,
-            'name': Option.name,
-            'order_id': Order.id,
-            'product_id': Option.product_id.id,
-            'product_uom_qty': Option.quantity,
-            'product_uom': Option.uom_id.id,
-            'discount': Option.discount,
-        }
-
-        OrderLine = request.env['sale.order.line'].sudo().create(vals)
-        OrderLine._compute_tax_id()
-        Option.write({'line_id': OrderLine.id})
-        return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (Order.id, token))
-
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/'], type='json', auth="public", website=True)
     def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None, **kwargs):
