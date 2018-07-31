@@ -1,9 +1,12 @@
 odoo.define('web.datepicker', function (require) {
 "use strict";
 
+var core = require('web.core');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 var Widget = require('web.Widget');
+
+var _t = core._t;
 
 var DateWidget = Widget.extend({
     template: "web.datepicker",
@@ -95,6 +98,9 @@ var DateWidget = Widget.extend({
             if (hasChanged) {
                 // The condition is strangely written; this is because the
                 // values can be false/undefined
+                if (this.options.warn_future) {
+                    this._warnFuture(newValue);
+                }
                 this.trigger("datetime_changed");
             }
         }
@@ -137,6 +143,25 @@ var DateWidget = Widget.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * add a warning to communicate that a date in the future has been set
+     *
+     * @private
+     * @param {Moment} currentDate
+     */
+    _warnFuture: function(currentDate) {
+        if (!this.$warning) {
+            this.$warning = $('<span class="fa fa-exclamation-triangle o_tz_warning o_datepicker_warning"/>')
+            this.$warning.attr('title', _t("This date is on the future. Make sure it is what you expected."))
+            this.$input.after(this.$warning)
+        }
+        if (currentDate.isAfter(moment())) {
+            this.$warning.show()
+        } else {
+            this.$warning.hide()
+        }
+    },
 
     /**
      * @private
