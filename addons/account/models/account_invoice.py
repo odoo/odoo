@@ -508,6 +508,15 @@ class AccountInvoice(models.Model):
 
         return invoice
 
+    @api.constrains('partner_id', 'partner_bank_id')
+    def validate_partner_bank_id(self):
+        for record in self:
+            if record.partner_bank_id:
+                if record.type in ('in_invoice', 'out_refund') and record.partner_bank_id.partner_id != record.partner_id.commercial_partner_id:
+                    raise ValidationError(_("Commercial partner and vendor account owners must be identical."))
+                elif record.type in ('out_invoice', 'in_refund') and not record.company_id in record.partner_bank_id.partner_id.ref_company_ids:
+                    raise ValidationError(_("The account selected for payment does not belong to the same company as this invoice."))
+
     @api.multi
     def _write(self, vals):
         pre_not_reconciled = self.filtered(lambda invoice: not invoice.reconciled)
@@ -526,7 +535,7 @@ class AccountInvoice(models.Model):
         """
         res = super(AccountInvoice, self).default_get(default_fields)
 
-        if not res.get('type', False) == 'out_invoice' or not 'company_id' in res:
+        if res.get('type', False) not in ('out_invoice', 'in_refund') or not 'company_id' in res:
             return res
 
         company = self.env['res.company'].browse(res['company_id'])
@@ -874,7 +883,7 @@ class AccountInvoice(models.Model):
     def action_invoice_open(self):
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
-        for inv in to_open_invoices.filtered(lambda inv: not inv.partner_id):
+        if to_open_invoices.filtered(lambda inv: not inv.partner_id):
             raise UserError(_("The field Vendor is required, please complete it to validate the Vendor Bill."))
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
@@ -882,6 +891,9 @@ class AccountInvoice(models.Model):
             raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead."))
         if to_open_invoices.filtered(lambda inv: not inv.account_id):
             raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
+        for record in to_open_invoices:
+            if record.company_id.account_sanitize_invoice_ref and record.reference:
+                record.reference = self.env['account.payment']._sanitize_communication(record.reference)
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         return to_open_invoices.invoice_validate()
