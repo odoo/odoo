@@ -69,13 +69,13 @@ QUnit.module('Web', {
             },
         });
         dropdownMenu.$('button:first').click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         dropdownMenu.$('.o_menu_item a').first().click();
-        assert.ok(dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         assert.ok(dropdownMenu.$('.o_menu_item:first').is(':visible'),
             'item should still be visible');
         dropdownMenu.$('.o_menu_item a').first().click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
         assert.ok(dropdownMenu.$('.o_menu_item:first').is(':visible'),
             'item should still be visible');
 
@@ -167,21 +167,21 @@ QUnit.module('Web', {
         dropdownMenu.$('span.fa-caret-right').click();
         assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
         // Don't forget there is a hidden li.divider element at first place among children
-        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
         dropdownMenu.$('.o_item_option:first').click();
-        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
-        assert.ok(dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
         dropdownMenu.$('.o_item_option:nth-child(3)').click();
-        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
-        assert.ok(dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
         dropdownMenu.$('.o_item_option:nth-child(3)').click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
         dropdownMenu.destroy();
     });
 

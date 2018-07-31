@@ -253,11 +253,11 @@ QUnit.module('Search View', {
         actionManager.doAction(4);
         $('.o_graph_buttons div.o_graph_groupbys_menu > button').click();
         $('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item').click();
-        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item').hasClass('selected'),
+        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item > .dropdown-item').hasClass('selected'),
             'groupby should be unselected');
         $('.o_search_options button span.fa-filter').click();
         $('.o_filters_menu .o_menu_item a').click();
-        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item').hasClass('selected'),
+        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item > .dropdown-item').hasClass('selected'),
             'groupby should be still unselected');
         actionManager.destroy();
     });
@@ -339,15 +339,15 @@ QUnit.module('Search View', {
         // activate the second groupby
         $('.o_group_by_menu .o_menu_item > a').eq(1).click();
         assert.strictEqual($('.o_group_by_menu .o_menu_item').length, 2);
-        assert.ok($('.o_group_by_menu .o_menu_item').hasClass('selected'));
+        assert.ok($('.o_group_by_menu .o_menu_item > .dropdown-item').hasClass('selected'));
         // deactivate second groupby
         $('.o_group_by_menu .o_menu_item > a').eq(1).click();
-        assert.ok($('.o_group_by_menu .o_menu_item').eq(0).hasClass('selected'));
-        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(1).hasClass('selected'));
+        assert.ok($('.o_group_by_menu .o_menu_item > .dropdown-item').eq(0).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item > .dropdown-item').eq(1).hasClass('selected'));
         // remove facet
         $('.o_facet_remove').click();
-        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(0).hasClass('selected'));
-        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(1).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item > .dropdown-item').eq(0).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item > .dropdown-item').eq(1).hasClass('selected'));
         actionManager.destroy();
     });
 
