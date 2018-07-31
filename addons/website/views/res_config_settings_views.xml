@@ -35,11 +35,11 @@
                                         </div>
                                         <div class="content-group">
                                             <div class="row mt16">
-                                                <label class="col-lg-3 o_light_label" string="Name" for="website_name"/>
+                                                <label class="col-3 col-lg-3 o_light_label" string="Name" for="website_name"/>
                                                 <field name="website_name"/>
                                             </div>
                                             <div class="row">
-                                                <label class="col-lg-3 o_light_label" for="favicon" />
+                                                <label class="col-3 col-lg-3 o_light_label" for="favicon" />
                                                 <field name="favicon" widget="image" class="float-left oe_avatar"/>
                                             </div>
                                         </div>
@@ -127,7 +127,7 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
+                                                <label class="col-3 col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
                                                 <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
                                                     attrs="{'required': [('google_management_client_id', '!=', False)]}"/>
                                             </div>
@@ -153,11 +153,11 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
+                                                <label class="col-3 col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
                                                 <field name="google_management_client_id"/>
                                             </div>
                                             <div class="row">
-                                                <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
+                                                <label class="col-3 col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
                                                 <field name="google_management_client_secret"/>
                                             </div>
                                         </div>
@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
+                                                <label class="col-3 col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
                                                 <field name="google_maps_api_key"/>
                                             </div>
                                         </div>
@@ -282,14 +282,14 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-lg-3 o_light_label" for="cdn_url"/>
+                                                <label class="col-3 col-lg-3 o_light_label" for="cdn_url"/>
                                                 <field name="cdn_url"
                                                        attrs="{'required': [('cdn_activated', '=', True)]}"
                                                        placeholder="//mycompany.mycdn.com/"
                                                        t-translation="off"/>
                                             </div>
                                             <div class="row" >
-                                                <label class="col-lg-3 o_light_label" for="cdn_filters"/>
+                                                <label class="col-3 col-lg-3 o_light_label" for="cdn_filters"/>
                                                 <field name="cdn_filters" class="oe_inline"
                                                        attrs="{'required': [('cdn_activated', '=', True)]}"/>
                                             </div>
