@@ -188,7 +188,7 @@ options.registry.carousel = options.Class.extend({
         var cycle = this.$inner.find('.item').length;
         var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
         var index = $active.index();
-        this.$('.carousel-control, .carousel-indicators').removeClass('d-none');
+        this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
         var $clone = this.$('.item:first').clone(true);
         $clone.removeClass('active').insertAfter($active);
@@ -223,7 +223,7 @@ options.registry.carousel = options.Class.extend({
                 self._rebindEvents();
                 self.remove_process = false;
                 if (cycle === 1) {
-                    self.$target.find('.carousel-control, .carousel-indicators').addClass('d-none');
+                    self.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators').addClass('d-none');
                 }
             });
             _.defer(function () {
@@ -258,7 +258,7 @@ options.registry.carousel = options.Class.extend({
      */
     _rebindEvents: function () {
         var self = this;
-        this.$target.find('.carousel-control').off('click').on('click', function () {
+        this.$target.find('.carousel-control-prev, .carousel-control-next').off('click').on('click', function () {
             self.$target.carousel($(this).data('slide'));
         });
         this.$target.find('.carousel-indicators [data-slide-to]').off('click').on('click', function () {

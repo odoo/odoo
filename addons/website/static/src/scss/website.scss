@@ -190,7 +190,7 @@ table.table_desc tr td {
     .item {
         height: 100%;
     }
-    .carousel-control {
+    .carousel-control-prev, .carousel-control-next {
         cursor: pointer;
         span {
             top: 50%;
@@ -199,8 +199,8 @@ table.table_desc tr td {
         }
     }
 }
-.carousel .carousel-control {
-    &.left {
+.carousel {
+    .carousel-control-prev {
         left: -10px;
         * {
             position: absolute;
@@ -209,7 +209,7 @@ table.table_desc tr td {
             right: 50%;
         }
     }
-    &.right {
+    .carousel-control-next {
         right: -10px;
         * {
             position: absolute;
@@ -439,11 +439,9 @@ div.carousel .container {
                 }
             }
 
-            .carousel-control {
-                &.right, &.left {
-                    background-image: none;
-                    background-color: transparent;
-                }
+            .carousel-control-next, .carousel-control-prev {
+                background-image: none;
+                background-color: transparent;
             }
         }
     }
@@ -461,7 +459,7 @@ div.carousel {
         max-height: 95%;
         padding: 10px;
     }
-    .carousel-control {
+    .carousel-control-prev, .carousel-control-next {
         cursor: pointer;
     }
 }
