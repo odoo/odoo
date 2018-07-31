@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
+    @api.one
     def action_confirm(self):
         self.ensure_one()
         res = super(SaleOrder, self).action_confirm()
