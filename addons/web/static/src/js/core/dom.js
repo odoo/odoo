@@ -406,7 +406,7 @@ return {
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');
-            $extraItems.children().removeClass('nav-link').addClass('dropdown-item');
+            $extraItems.children('a').removeClass('nav-link').addClass('dropdown-item');
             $dropdownMenu.append($extraItems);
             $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
         }
