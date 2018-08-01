@@ -47,7 +47,7 @@ class TestPayment(AccountingTestCase):
             'name': type,
             'account_id': self.account_receivable.id,
             'type': type,
-            'date_invoice': time.strftime('%Y') + '-06-26',
+            'date_invoice': time.strftime('%Y-%m-%d'),
         })
         self.invoice_line_model.create({
             'product_id': self.product.id,

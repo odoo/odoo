@@ -2,6 +2,7 @@ from odoo import api
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 import time
 import unittest
+from datetime import datetime, timedelta
 
 
 class TestReconciliation(AccountingTestCase):
@@ -20,6 +21,9 @@ class TestReconciliation(AccountingTestCase):
         self.acc_bank_stmt_line_model = self.env['account.bank.statement.line']
         self.res_currency_model = self.registry('res.currency')
         self.res_currency_rate_model = self.registry('res.currency.rate')
+        self.invoice_date = (datetime.today() - timedelta(days=3)).strftime('%Y-%m-%d')
+        # we need at least one day between invoice and payment for test_aged_report_future_payment
+        self.payment_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
 
         partner_agrolait = self.env.ref("base.res_partner_2")
         self.partner_agrolait_id = partner_agrolait.id
@@ -55,7 +59,7 @@ class TestReconciliation(AccountingTestCase):
             'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
             'account_id': self.account_rcv.id,
             'type': type,
-            'date_invoice': time.strftime('%Y') + '-07-01',
+            'date_invoice': self.invoice_date,
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
             'quantity': 1,
@@ -72,7 +76,7 @@ class TestReconciliation(AccountingTestCase):
     def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None):
         bank_stmt = self.acc_bank_stmt_model.create({
             'journal_id': bank_journal.id,
-            'date': time.strftime('%Y') + '-07-15',
+            'date': self.payment_date,
             'name': 'payment' + invoice_record.number
         })
 
@@ -82,7 +86,7 @@ class TestReconciliation(AccountingTestCase):
             'amount': amount,
             'amount_currency': amount_currency,
             'currency_id': currency_id,
-            'date': time.strftime('%Y') + '-07-15',})
+            'date': self.payment_date, })
 
         #reconcile the payment with the invoice
         for l in invoice_record.move_id.line_ids:
@@ -505,18 +509,23 @@ class TestReconciliation(AccountingTestCase):
                                       'default_credit_account_id': self.account_rsa.id})
         dest_journal_id.write({'default_debit_account_id': self.account_rsa.id,
                                'default_credit_account_id': self.account_rsa.id})
+
+        date_a = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+        date_b = (datetime.today() - timedelta(days=15)).strftime('%Y-%m-%d')
+        date_c = datetime.today().strftime('%Y-%m-%d')
+
         # Setting up rates for USD (main_company is in EUR)
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '07' + '-01',
+        self.env['res.currency.rate'].create({'name': date_a,
             'rate': 0.5,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
 
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '08' + '-01', 
+        self.env['res.currency.rate'].create({'name': date_b,
             'rate': 0.75,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
 
-        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '09' + '-01', 
+        self.env['res.currency.rate'].create({'name': date_c,
             'rate': 0.80,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id})
@@ -528,7 +537,7 @@ class TestReconciliation(AccountingTestCase):
             'name': 'invoice to vendor',
             'account_id': self.account_rsa.id,
             'type': 'in_invoice',
-            'date_invoice': time.strftime('%Y') + '-' + '07' + '-01',
+            'date_invoice': date_a,
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
             'quantity': 1,
@@ -544,7 +553,7 @@ class TestReconciliation(AccountingTestCase):
             'name': 'invoice to vendor',
             'account_id': self.account_rsa.id,
             'type': 'in_invoice',
-            'date_invoice': time.strftime('%Y') + '-' + '08' + '-01',
+            'date_invoice': date_b,
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
             'quantity': 1,
@@ -564,7 +573,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_euro.id,
             'company_id': self.env.ref('base.main_company').id,
-            'payment_date': time.strftime('%Y') + '-' + '07' + '-01',
+            'payment_date': invoice_a.date_invoice,
             'partner_id': self.partner_agrolait_id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
             'destination_journal_id': dest_journal_id.id,
@@ -576,7 +585,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_euro.id,
             'company_id': self.env.ref('base.main_company').id,
-            'payment_date': time.strftime('%Y') + '-' + '08' + '-01',
+            'payment_date': invoice_b.date_invoice,
             'partner_id': self.partner_agrolait_id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
             'destination_journal_id': dest_journal_id.id,
@@ -588,7 +597,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_euro.id,
             'company_id': self.env.ref('base.main_company').id,
-            'payment_date': time.strftime('%Y') + '-' + '09' + '-01',
+            'payment_date': time.strftime('%Y-%m-%d'),
             'partner_id': self.partner_agrolait_id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
             'destination_journal_id': dest_journal_id.id,
@@ -675,14 +684,17 @@ class TestReconciliation(AccountingTestCase):
         # - Register a payment on 2018-02-02 of 111 USD
         # - Unreconcile the payment
 
+        date_for_old_exchange_rate = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+        future_payment_date = (datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d')
+
         self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y') + '-07-01',
+            'name': date_for_old_exchange_rate,
             'rate': 1.0,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id
         })
         self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y') + '-08-01',
+            'name': future_payment_date,
             'rate': 0.5,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id
@@ -696,7 +708,7 @@ class TestReconciliation(AccountingTestCase):
             'amount': 111,
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_usd.id,
-            'payment_date': time.strftime('%Y') + '-08-01',
+            'payment_date': future_payment_date,
         })
         payment.post()
         credit_aml = payment.move_line_ids.filtered('credit')
@@ -714,13 +726,16 @@ class TestReconciliation(AccountingTestCase):
         self.assertAlmostEquals(inv.residual, 111)
 
     def test_revert_payment_and_reconcile(self):
+
+        old_payment_date = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
+
         payment = self.env['account.payment'].create({
             'payment_method_id': self.inbound_payment_method.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
             'partner_id': self.partner_agrolait_id,
             'journal_id': self.bank_journal_usd.id,
-            'payment_date': '2018-06-04',
+            'payment_date': old_payment_date,
             'amount': 666,
         })
         payment.post()
@@ -738,7 +753,7 @@ class TestReconciliation(AccountingTestCase):
         move = bank_line.move_id
 
         # Reversing the payment's move
-        reversed_move_list = move.reverse_moves('2018-06-04')
+        reversed_move_list = move.reverse_moves(old_payment_date)
         self.assertEqual(len(reversed_move_list), 1)
         reversed_move = self.env['account.move'].browse(reversed_move_list[0])
 
@@ -764,7 +779,7 @@ class TestReconciliation(AccountingTestCase):
             'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
             'account_id': self.account_rcv.id,
             'type': type,
-            'date_invoice': time.strftime('%Y') + '-07-01',
+            'date_invoice': self.invoice_date,
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
             'quantity': 1,
@@ -781,7 +796,7 @@ class TestReconciliation(AccountingTestCase):
     def test_aged_report(self):
         AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
         account_type = ['receivable']
-        report_date_to = time.strftime('%Y') + '-07-16'
+        report_date_to = time.strftime('%Y-%m-%d')
         partner = self.env['res.partner'].create({'name': 'AgedPartner'})
         currency = self.env.user.company_id.currency_id
 
@@ -802,7 +817,7 @@ class TestReconciliation(AccountingTestCase):
 
         partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
         self.assertEqual(partner_lines, [], 'The aged receivable shouldn\'t have lines at this point')
-        self.assertFalse(amls.get(partner.id, False), 'The aged receivable should not have amls either')
+        self.assertFalse(partner.id in amls, 'The aged receivable should not have amls either')
 
         # Case 2: The invoice and payment are not reconciled: we should have one line on the report
         # and 2 amls
@@ -845,14 +860,17 @@ class TestReconciliation(AccountingTestCase):
                 self.assertTrue(move_lines[1].full_reconcile_id.exists())
                 self.assertEqual(move_lines[1].full_reconcile_id.id, revert_lines[0].full_reconcile_id.id)
 
+        date_for_old_exchange_rate = (datetime.today() - timedelta(days=31)).strftime('%Y-%m-%d')
+        future_payment_date = (datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d')
+
         self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y') + '-07-01',
+            'name': date_for_old_exchange_rate,
             'rate': 1.0,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id
         })
         self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y') + '-08-01',
+            'name': future_payment_date,
             'rate': 0.5,
             'currency_id': self.currency_usd_id,
             'company_id': self.env.ref('base.main_company').id
@@ -866,7 +884,7 @@ class TestReconciliation(AccountingTestCase):
             'amount': 111,
             'currency_id': self.currency_usd_id,
             'journal_id': self.bank_journal_usd.id,
-            'payment_date': time.strftime('%Y') + '-08-01',
+            'payment_date': future_payment_date,
         })
         payment.post()
 
@@ -878,7 +896,7 @@ class TestReconciliation(AccountingTestCase):
         exchange_move = exchange_reconcile.exchange_move_id
         payment_move = payment.move_line_ids[0].move_id
 
-        reverted_payment_move = self.env['account.move'].browse(payment_move.reverse_moves(time.strftime('%Y') + '-08-01'))
+        reverted_payment_move = self.env['account.move'].browse(payment_move.reverse_moves(future_payment_date))
 
         # After reversal of payment, the invoice should be open
         self.assertTrue(inv.state == 'open', 'The invoice should be open again')
@@ -934,7 +952,7 @@ class TestReconciliation(AccountingTestCase):
         # Case 2: report date between invoice date and payment date
         # There should be an entry for the partner
         # And the amount has shifted to '1-30 due'
-        report_date_to = time.strftime('%Y') + '-07-08'
+        report_date_to = (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d')
         report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
 
         partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
@@ -958,7 +976,7 @@ class TestReconciliation(AccountingTestCase):
 
         # Case 2: report date on payment date
         # There should not be an entry for the partner
-        report_date_to = time.strftime('%Y') + '-07-15'
+        report_date_to = self.payment_date
         report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
 
         partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
