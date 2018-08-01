@@ -146,6 +146,7 @@ var AbstractActivityField = AbstractField.extend({
             context: this.record.getContext(),
         }).then(
             function(rslt_action) {
+                console.log(rslt_action);
                 self.do_action(rslt_action, {
                     on_close: function () {
                         self.trigger_up('reload');

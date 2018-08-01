@@ -45,6 +45,7 @@
     'application': True,
     'qweb': [
         'static/src/xml/activity.xml',
+        'static/src/xml/activity_view.xml',
         'static/src/xml/composer.xml',
         'static/src/xml/chatter.xml',
         'static/src/xml/discuss.xml',
