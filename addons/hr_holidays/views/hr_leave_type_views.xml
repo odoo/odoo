@@ -54,11 +54,20 @@
                             <field name="validity_start"/>
                             <field name="validity_stop"/>
                         </group>
-                        <group name="notification" string="Notification">
-                            <field name="mail_message_subtype_id"
-                                   domain="['|',('res_model','=','hr.leave'),('res_model','=','hr.leave.allocation')]"
-                                   options="{'no_create_edit': true}"
-                            />
+                        <group name="notification" string="Notification" colspan="2">
+                            <group attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
+                                <field name="leave_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave'}"
+                                />
+                            </group>
+                            <group attrs="{'invisible': [('employee_applicability', '=', 'leave')]}">
+                                <field name="allocation_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave.allocation')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave.allocation'}"
+                                />
+                            </group>
+
                         </group>
                     </group>
                 </sheet>
@@ -113,7 +122,6 @@
                 <field name="validation_type"/>
                 <field name="validity_start"/>
                 <field name="validity_stop"/>
-                <field name="mail_message_subtype_id"/>
             </tree>
         </field>
     </record>
