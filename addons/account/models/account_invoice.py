@@ -1250,6 +1250,8 @@ class AccountInvoice(models.Model):
                     values[name] = line[name]
                 elif name == 'invoice_line_tax_ids':
                     values[name] = [(6, 0, line[name].ids)]
+                elif name == 'analytic_tag_ids':
+                    values[name] = [(6, 0, line[name].ids)]
             result.append((0, 0, values))
         return result
 

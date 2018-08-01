@@ -4001,6 +4001,40 @@ QUnit.module('basic_fields', {
 
     QUnit.module('StatInfo');
 
+    QUnit.test('statinfo widget formats decimal precision', function (assert) {
+        // sometimes the round method can return numbers such as 14.000001
+        // when asked to round a number to 2 decimals, as such is the behaviour of floats.
+        // we check that even in that eventuality, only two decimals are displayed
+        assert.expect(2);
+
+        this.data.partner.fields.monetary = {string: "Monetary", type: 'monetary'};
+        this.data.partner.records[0].monetary = 9.999999;
+        this.data.partner.records[0].currency_id = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<button class="oe_stat_button" name="items" icon="fa-gear">' +
+                            '<field name="qux" widget="statinfo"/>' +
+                        '</button>' +
+                        '<button class="oe_stat_button" name="money" icon="fa-money">' +
+                            '<field name="monetary" widget="statinfo"/>' +
+                        '</button>' +
+                  '</form>',
+            res_id: 1,
+        });
+
+        // formatFloat renders according to this.field.digits
+        assert.strictEqual(form.$('.oe_stat_button .o_field_widget.o_stat_info .o_stat_value').eq(0).text(),
+            '0.4', "Default precision should be [16,1]");
+        assert.strictEqual(form.$('.oe_stat_button .o_field_widget.o_stat_info .o_stat_value').eq(1).text(),
+            '10.00', "Currency decimal precision should be 2");
+
+        form.destroy();
+    });
+
     QUnit.test('statinfo widget in form view', function (assert) {
         assert.expect(9);
 

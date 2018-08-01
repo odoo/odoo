@@ -2873,6 +2873,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Ma zastosowanie tylko wtedy, gdy widok ten dziedziczy z innego (inherit_id nie ma wartości False/Null).\n"
+"\n"
+"* jeśli rozszerzenie (domyślnie), jeśli ten widok jest wymagany, przeglądany jest najbliższy podstawowy\n"
+"widok (przez parametr inherit_id), wtedy wszystkie widoki dziedziczące z niego z tym\n"
+"modelem widoku są zastosowane\n"
+"* jeśli podstawowy, najbliższy główny widok jest w pełni rozdzielony (nawet jeśli używa\n"
+"innego modelu niż ten), to stosowane są specyfikacje dziedziczenia tego widoku\n"
+"(<xpath/>), a wynik jest używany tak, jakby był rzeczywistym\n"
+"modelem tego widoku.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -4003,7 +4012,7 @@ msgstr "Tryb dziedziczenia widoku"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Widoki, które odziedziczą po tym"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_published

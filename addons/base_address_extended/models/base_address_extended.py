@@ -81,6 +81,47 @@ class Partner(models.Model):
             #invalidate the cache for the field we manually set
             self.invalidate_cache(['street'], [partner.id])
 
+    def _split_street_with_params(self, street_raw, street_format):
+        street_fields = self.get_street_fields()
+        vals = {}
+        previous_pos = 0
+        field_name = None
+        # iter on fields in street_format, detected as '%(<field_name>)s'
+        for re_match in re.finditer(r'%\(\w+\)s', street_format):
+            field_pos = re_match.start()
+            if not field_name:
+                #first iteration: remove the heading chars
+                street_raw = street_raw[field_pos:]
+
+            # get the substring between 2 fields, to be used as separator
+            separator = street_format[previous_pos:field_pos]
+            field_value = None
+            if separator and field_name:
+                #maxsplit set to 1 to unpack only the first element and let the rest untouched
+                tmp = street_raw.split(separator, 1)
+                if len(tmp) == 2:
+                    field_value, street_raw = tmp
+                    vals[field_name] = field_value
+            if field_value or not field_name:
+                # select next field to find (first pass OR field found)
+                # [2:-2] is used to remove the extra chars '%(' and ')s'
+                field_name = re_match.group()[2:-2]
+            else:
+                # value not found: keep looking for the same field
+                pass
+            if field_name not in street_fields:
+                raise UserError(_("Unrecognized field %s in street format.") % field_name)
+            previous_pos = re_match.end()
+
+        # last field value is what remains in street_raw minus trailing chars in street_format
+        trailing_chars = street_format[previous_pos:]
+        if trailing_chars and street_raw.endswith(trailing_chars):
+            vals[field_name] = street_raw[:-len(trailing_chars)]
+        else:
+            vals[field_name] = street_raw
+        return vals
+
+
     @api.multi
     @api.depends('street')
     def _split_street(self):
@@ -95,47 +136,18 @@ class Partner(models.Model):
 
             street_format = (partner.country_id.street_format or
                 '%(street_number)s/%(street_number2)s %(street_name)s')
-            vals = {}
-            previous_pos = 0
             street_raw = partner.street
-            field_name = None
-            # iter on fields in street_format, detected as '%(<field_name>)s'
-            for re_match in re.finditer(r'%\(\w+\)s', street_format):
-                field_pos = re_match.start()
-                if not field_name:
-                    #first iteration: remove the heading chars
-                    street_raw = street_raw[field_pos:]
-
-                # get the substring between 2 fields, to be used as separator
-                separator = street_format[previous_pos:field_pos]
-                field_value = None
-                if separator and field_name:
-                    #maxsplit set to 1 to unpack only the first element and let the rest untouched
-                    tmp = street_raw.split(separator, 1)
-                    if len(tmp) == 2:
-                        field_value, street_raw = tmp
-                        vals[field_name] = field_value
-                if field_value or not field_name:
-                    # select next field to find (first pass OR field found)
-                    # [2:-2] is used to remove the extra chars '%(' and ')s'
-                    field_name = re_match.group()[2:-2]
-                else:
-                    # value not found: keep looking for the same field
-                    pass
-                if field_name not in street_fields:
-                    raise UserError(_("Unrecognized field %s in street format.") % field_name)
-                previous_pos = re_match.end()
-
-            # last field value is what remains in street_raw minus trailing chars in street_format
-            trailing_chars = street_format[previous_pos:]
-            if trailing_chars and street_raw.endswith(trailing_chars):
-                vals[field_name] = street_raw[:-len(trailing_chars)]
-            else:
-                vals[field_name] = street_raw
+            vals = self._split_street_with_params(street_raw, street_format)
             # assign the values to the fields
             # /!\ Note that a write(vals) would cause a recursion since it would bypass the cache
             for k, v in vals.items():
                 partner[k] = v
+
+    def write(self, vals):
+        res = super(Partner, self).write(vals)
+        if 'country_id' in vals:
+            self._set_street()
+        return res
 
 
 class Company(models.Model):

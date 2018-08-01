@@ -40,6 +40,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* При създаването на фиша за заплата, етапът е 'Чернова'\n"
+"                \n"
+"* Ако фишът за заплата очаква потвърждение, етапът е 'Изчакващ'.\n"
+"                \n"
+"* Ако фишът за заплата е потвърден, тогава етапът е зададен като 'Приключен'.\n"
+"                \n"
+"* Когато потребителя отмени фиша за заплата, етапът е 'Отхвърлен'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -732,6 +739,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Ако е отметнато, посочва, че всички фишове за заплати, създадени от тук, се "
+"явяват кредитни фишове."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -749,7 +758,7 @@ msgstr "Индийски ТРЗ"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "Посочва, че този фиш за заплата притежава кредитно известие на друг"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -863,7 +872,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
 msgid "Made Payment Order ? "
-msgstr ""
+msgstr "Направено платежно нареждане ? "
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
@@ -914,7 +923,7 @@ msgstr "Име"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.NET
 msgid "Net"
-msgstr ""
+msgstr "Нето, чиста печалба"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net

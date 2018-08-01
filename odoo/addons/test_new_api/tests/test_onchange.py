@@ -157,6 +157,17 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
+        # ensure onchange changing one2many without subfield works
+        one_level_fields = {k: v for k, v in field_onchange.items() if k.count('.') < 1}
+        values = dict(values, name='{generate_dummy_message}')
+        result = self.Discussion.with_context(generate_dummy_message=True).onchange(values, 'name', one_level_fields)
+        self.assertEqual(result['value']['messages'], [
+            (5,),
+            (4, message.id),
+            (0, 0, {}),
+            (0, 0, {}),
+        ])
+
     def test_onchange_one2many_reference(self):
         """ test the effect of onchange() on one2many fields with line references """
         BODY = "What a beautiful day!"

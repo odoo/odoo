@@ -475,8 +475,11 @@ class AccountMoveLine(models.Model):
         #compute the default credit/debit of the next line in case of a manual entry
         balance = 0
         for line in self._context['line_ids']:
-            if line[2]:
+            if line[2]:  # in case of command 0: add a record with values
                 balance += line[2].get('debit', 0) - line[2].get('credit', 0)
+            elif line[0] == 2:  # line has been deleted
+                line_obj = self.browse(line[1])
+                balance -= line_obj.debit - line_obj.credit
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:
@@ -1728,15 +1731,15 @@ class AccountPartialReconcile(models.Model):
                                 'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                                 'partner_id': line.partner_id.id,
                             })
-            if newly_created_move:
-                if move_date > (self.company_id.period_lock_date or '0000-00-00') and newly_created_move.date != move_date:
-                    # The move date should be the maximum date between payment and invoice (in case
-                    # of payment in advance). However, we should make sure the move date is not
-                    # recorded before the period lock date as the tax statement for this period is
-                    # probably already sent to the estate.
-                    newly_created_move.write({'date': move_date})
-                # post move
-                newly_created_move.post()
+        if newly_created_move:
+            if move_date > (self.company_id.period_lock_date or '0000-00-00') and newly_created_move.date != move_date:
+                # The move date should be the maximum date between payment and invoice (in case
+                # of payment in advance). However, we should make sure the move date is not
+                # recorded before the period lock date as the tax statement for this period is
+                # probably already sent to the estate.
+                newly_created_move.write({'date': move_date})
+            # post move
+            newly_created_move.post()
 
     def _create_tax_basis_move(self):
         # Check if company_journal for cash basis is set if not, raise exception
