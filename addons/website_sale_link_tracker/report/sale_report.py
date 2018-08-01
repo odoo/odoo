@@ -11,16 +11,14 @@ class SaleReport(models.Model):
     medium_id = fields.Many2one('utm.medium', 'Medium')
     source_id = fields.Many2one('utm.source', 'Source')
 
-    def _select(self):
-        select_terms = """, s.campaign_id as campaign_id
-        , s.medium_id as medium_id
-        , s.source_id as source_id
-        """
-        return super(SaleReport, self)._select() + select_terms
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+        fields['campaign_id'] = ', s.campaign_id as campaign_id'
+        fields['medium_id'] = ', s.medium_id as medium_id'
+        fields['source_id'] = ', s.source_id as source_id'
 
-    def _group_by(self):
-        group_by_terms = """, s.campaign_id
+        groupby += """, s.campaign_id
         , s.medium_id
         , s.source_id
         """
-        return super(SaleReport, self)._group_by() + group_by_terms
+
+        return super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
