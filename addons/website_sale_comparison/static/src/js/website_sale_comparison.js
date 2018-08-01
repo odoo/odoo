@@ -46,7 +46,7 @@ var ProductComparison = Widget.extend({
             },
             container: '.o_product_feature_panel',
             placement: 'top',
-            template: '<div style="width:600px;" class="popover comparator-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+            template: '<div style="width:600px;" class="popover comparator-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
             content: function() {
                 return $('#comparelist .o_product_panel_content').html();
             }

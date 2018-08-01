@@ -16,7 +16,7 @@ odoo.define('website_sale.cart', function (require) {
         },
         container: 'body',
         placement: 'auto',
-        template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+        template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
     }).on("mouseenter",function () {
         var self = this;
         clearTimeout(shopping_cart_link_counter);
