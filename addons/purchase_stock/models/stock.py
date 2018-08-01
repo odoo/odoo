@@ -212,15 +212,6 @@ class Orderpoint(models.Model):
         return result
 
 
-class PushedFlow(models.Model):
-    _inherit = "stock.location.path"
-
-    def _prepare_move_copy_values(self, move_to_copy, new_date):
-        res = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
-        res['purchase_line_id'] = None
-        return res
-
-
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
