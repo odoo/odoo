@@ -7,7 +7,7 @@
 		<field name="priority" eval="25"/>
 		<field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
 		<field name="arch" type="xml">
-			<xpath expr="//div[hasclass('app_settings_block')]" position="inside">
+			<xpath expr="//div[@data-key='purchase']" position="inside">
 				<field name="is_installed_sale" invisible="1"/>
 				<h2 attrs="{'invisible': [('is_installed_sale', '=', False)]}">Logistics</h2>
 				<div class="row mt16 o_settings_container">

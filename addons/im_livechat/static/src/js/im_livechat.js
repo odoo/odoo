@@ -2,7 +2,7 @@ odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
 var bus = require('bus.bus').bus;
-
+var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
@@ -347,6 +347,7 @@ var Feedback = Widget.extend({
         this._livechat = livechat;
         this.server_origin = session.origin;
         this.rating = undefined;
+        this.dp = new concurrency.DropPrevious();
     },
 
     //--------------------------------------------------------------------------
@@ -364,7 +365,7 @@ var Feedback = Widget.extend({
             rate: this.rating,
             reason : options.reason
         };
-        return session.rpc('/im_livechat/feedback', args).then(function () {
+        this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function () {
             if (options.close) {
                 var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
                 var content = _.str.sprintf(_t("Rating: %s"), emoji);

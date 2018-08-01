@@ -75,28 +75,14 @@
                             <field name="type_request_unit" invisible="1"/>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <label for="number_of_days_temp" string="Duration" attrs="{'invisible': [('type_request_unit', '=', 'hour'),('accrual', '=', True)]}"/>
-                            <label for="number_of_hours" string="Duration" attrs="{'invisible': [('type_request_unit', '!=', 'hour'),('accrual', '=', True)]}"/>
-                            <div>
-                                <div attrs="{'invisible': ['|', ('type_request_unit', '=', 'hour'), ('accrual', '=', True)]}">
-                                    <field name="number_of_days_temp" class="oe_inline" attrs="{'readonly': [('state', '=', 'validate')]}"/> days
-                                </div>
-                                <div attrs="{'invisible': ['|', ('type_request_unit', '!=', 'hour'), ('accrual', '=', True)]}">
-                                    <field name="number_of_hours" class="oe_inline" attrs="{'readonly': [('state', '=', 'validate')]}"/> hours
-                                </div>
-                            </div>
+                            <field name="number_of_days_temp" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('type_request_unit', '=', 'hour'),('accrual', '=', True)]}"/>
+                            <field name="number_of_hours" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('type_request_unit', '!=', 'hour'),('accrual', '=', True)]}"/>
                         </group>
                         <group>
                             <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','!=','employee')]}" groups="hr_holidays.group_hr_holidays_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','!=','category')]}"/>
                             <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'invisible':[('holiday_type','=','category')]}"/>
-                        </group>
-                        <group attrs="{'invisible': [('accrual', '=', True)]}">
-                            <label for="number_of_days_temp" string="Duration"/>
-                            <div class="o_row">
-                                <field name="number_of_days_temp"/> days
-                            </div>
                         </group>
                         <group attrs="{'invisible': [('accrual', '=', False)]}">
                             <field name="date_to" string="Run Until" help="If no value set, runs indefinitely" class="oe_inline"/>

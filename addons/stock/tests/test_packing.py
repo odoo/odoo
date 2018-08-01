@@ -94,7 +94,6 @@ class TestPacking(TransactionCase):
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
-            'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
         })
         self.assertEquals(package_level.state, 'draft',
@@ -133,3 +132,51 @@ class TestPacking(TransactionCase):
                           'The quant package must be in the destination location')
         self.assertEquals(pack.quant_ids[0].location_id.id, picking.location_dest_id.id,
                           'The quant must be in the destination location')
+
+    def test_multi_pack_reservation(self):
+        """ When we move entire packages, it is possible to have a multiple times
+            the same package in package level list, we make sure that only one is reserved,
+            and that the location_id of the package is the one where the package is once it
+            is reserved.
+        """
+        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, shelf1_location, 20.0, package_id=pack)
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        picking.action_confirm()
+        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [self.stock_location.id],
+                         'The package levels should still in the same location after confirmation.')
+        picking.action_assign()
+        package_level_reserved = picking.package_level_ids.filtered(lambda pl: pl.state == 'assigned')
+        package_level_confirmed = picking.package_level_ids.filtered(lambda pl: pl.state == 'confirmed')
+        self.assertEqual(package_level_reserved.location_id.id, shelf1_location.id, 'The reserved package level must be reserved in shelf1')
+        self.assertEqual(package_level_confirmed.location_id.id, self.stock_location.id, 'The not reserved package should keep its location')
+        picking.do_unreserve()
+        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [self.stock_location.id],
+                         'The package levels should have back the original location.')
+        picking.package_level_ids.write({'is_done': True})
+        picking.action_assign()
+        package_level_reserved = picking.package_level_ids.filtered(lambda pl: pl.state == 'assigned')
+        package_level_confirmed = picking.package_level_ids.filtered(lambda pl: pl.state == 'confirmed')
+        self.assertEqual(package_level_reserved.location_id.id, shelf1_location.id, 'The reserved package level must be reserved in shelf1')
+        self.assertEqual(package_level_confirmed.location_id.id, self.stock_location.id, 'The not reserved package should keep its location')
+        self.assertEqual(picking.package_level_ids.mapped('is_done'), [True, True], 'Both package should still done')

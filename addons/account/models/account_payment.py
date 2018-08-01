@@ -291,6 +291,7 @@ class account_register_payments(models.TransientModel):
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'partner_bank_account_id': self.partner_bank_account_id.id,
+            'multi': False,
         }
 
     @api.multi

@@ -130,6 +130,20 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
         this._addProposition(line, prop);
+
+        // Check whether we have some propositions left
+        // If we don't, it means we are on an empty page
+        // so let's go back to the previous page
+        // Through the offset
+        var propLineIds = _.map(line.reconciliation_proposition, function(prop) {
+                return prop.id;
+            });
+        var leftOversProps = _.filter(line.mv_lines, function(mv_line) {
+            return propLineIds.indexOf(mv_line.id) === -1;
+        });
+        if (line.offset && !leftOversProps.length) {
+            line.offset -= line.limitMoveLines;
+        }
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
@@ -665,7 +679,7 @@ var StatementModel = BasicModel.extend({
                     return !isNaN(prop.id) && prop.already_paid;
                 }), 'id'),
                 "new_aml_dicts": _.map(_.filter(props, function (prop) {
-                    return isNaN(prop.id);
+                    return isNaN(prop.id) && prop.display;
                 }), self._formatToProcessReconciliation.bind(self, line)),
             };
 
@@ -1262,7 +1276,7 @@ var ManualModel = StatementModel.extend({
                 });
             } else {
                 var mv_line_ids = _.pluck(_.filter(props, function (prop) {return !isNaN(prop.id);}), 'id');
-                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id);}), self._formatToProcessReconciliation.bind(self, line));
+                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display;}), self._formatToProcessReconciliation.bind(self, line));
                 process_reconciliations.push({
                     id: null,
                     type: null,
