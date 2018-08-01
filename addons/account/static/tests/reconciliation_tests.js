@@ -1737,14 +1737,14 @@ QUnit.module('account', {
         testUtils.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
-                if (args.method === 'process_reconciliations') {
+                if (args.method === 'process_move_lines') {
                     assert.deepEqual(args.args,
                         [
                             [{id: null, type: null,
                               mv_line_ids: [399, 402],
                               new_mv_line_dicts: []}
                             ]
-                        ], "should call process_reconciliations without the new mv line dict");
+                        ], "should call process_move_lines without the new mv line dict");
                 }
 
                 return this._super(route, args);
