@@ -83,13 +83,13 @@
         <a t-attf-class="#{('%s-link ' % submenu_type) if submenu_type else ''}dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
-        <div class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
                     <t t-set="submenu_type" t-value="'dropdown'"/>
                 </t>
             </t>
-        </div>
+        </ul>
     </li>
 </template>
 
