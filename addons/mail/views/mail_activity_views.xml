@@ -24,15 +24,17 @@
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
-                            <label for="days"/>
+                            <label for="delay_count"/>
                             <div>
-                                <field name="days" class="oe_inline"/>
-                                <span class="oe_inline ml4">days</span>
+                                <field name="delay_count" class="oe_inline"/>&amp;nbsp;
+                                <field name="delay_unit" class="oe_inline"/>&amp;nbsp;
+                                <field name="delay_from" class="oe_inline"/>
                             </div>
                         </group>
                         <group>
                             <field name="next_type_ids" widget="many2many_tags"
                                 context="{'default_res_model_id': res_model_id}"/>
+                            <field name="default_next_type_id" context="{'default_res_model_id': res_model_id}"/>
                             <field name="mail_template_ids" widget="many2many_tags"
                                 domain="[('model_id', '=', res_model_id)]"
                                 attrs="{'invisible': [('res_model_id', '=', False)]}"
@@ -64,7 +66,9 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
-                <field name="days" string="Planned in (days)"/>
+                <field name="delay_count" string="Planned in"/>
+                <field name="delay_unit" string="Unit"/>
+                <field name="delay_from" string="Type"/>
                 <field name="res_model_id" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>
             </tree>
