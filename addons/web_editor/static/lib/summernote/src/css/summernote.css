@@ -112,7 +112,7 @@
 .note-popover .popover {
   max-width: none;
 }
-.note-popover .popover .popover-content a {
+.note-popover .popover .popover-body a {
   display: inline-block;
   max-width: 200px;
   overflow: hidden;
@@ -127,29 +127,29 @@
 }
 /* Popover and Toolbar (Button container)
 ------------------------------------------*/
-.note-popover .popover .popover-content,
+.note-popover .popover .popover-body,
 .panel-heading.note-toolbar {
   margin: 0;
   padding: 0 0 5px 5px;
   /* dropdown-menu for toolbar and popover */
   /* color palette for toolbar and popover */
 }
-.note-popover .popover .popover-content > .btn-group,
+.note-popover .popover .popover-body > .btn-group,
 .panel-heading.note-toolbar > .btn-group {
   margin-top: 5px;
   margin-left: 0;
   margin-right: 5px;
 }
-.note-popover .popover .popover-content .btn-group .note-table,
+.note-popover .popover .popover-body .btn-group .note-table,
 .panel-heading.note-toolbar .btn-group .note-table {
   min-width: 0;
   padding: 5px;
 }
-.note-popover .popover .popover-content .btn-group .note-table .note-dimension-picker,
+.note-popover .popover .popover-body .btn-group .note-table .note-dimension-picker,
 .panel-heading.note-toolbar .btn-group .note-table .note-dimension-picker {
   font-size: 18px;
 }
-.note-popover .popover .popover-content .btn-group .note-table .note-dimension-picker .note-dimension-picker-mousecatcher,
+.note-popover .popover .popover-body .btn-group .note-table .note-dimension-picker .note-dimension-picker-mousecatcher,
 .panel-heading.note-toolbar .btn-group .note-table .note-dimension-picker .note-dimension-picker-mousecatcher {
   position: absolute !important;
   z-index: 3;
@@ -157,7 +157,7 @@
   height: 10em;
   cursor: pointer;
 }
-.note-popover .popover .popover-content .btn-group .note-table .note-dimension-picker .note-dimension-picker-unhighlighted,
+.note-popover .popover .popover-body .btn-group .note-table .note-dimension-picker .note-dimension-picker-unhighlighted,
 .panel-heading.note-toolbar .btn-group .note-table .note-dimension-picker .note-dimension-picker-unhighlighted {
   position: relative !important;
   z-index: 1;
@@ -165,7 +165,7 @@
   height: 5em;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIj4+Pjp6ekKlAqjAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKhmnaJzPAAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC') repeat;
 }
-.note-popover .popover .popover-content .btn-group .note-table .note-dimension-picker .note-dimension-picker-highlighted,
+.note-popover .popover .popover-body .btn-group .note-table .note-dimension-picker .note-dimension-picker-highlighted,
 .panel-heading.note-toolbar .btn-group .note-table .note-dimension-picker .note-dimension-picker-highlighted {
   position: absolute !important;
   z-index: 2;
@@ -173,47 +173,47 @@
   height: 1em;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIjd6vvD2f9LKLW+AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKwNDEVT0AAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC') repeat;
 }
-.note-popover .popover .popover-content .note-style h1,
+.note-popover .popover .popover-body .note-style h1,
 .panel-heading.note-toolbar .note-style h1,
-.note-popover .popover .popover-content .note-style h2,
+.note-popover .popover .popover-body .note-style h2,
 .panel-heading.note-toolbar .note-style h2,
-.note-popover .popover .popover-content .note-style h3,
+.note-popover .popover .popover-body .note-style h3,
 .panel-heading.note-toolbar .note-style h3,
-.note-popover .popover .popover-content .note-style h4,
+.note-popover .popover .popover-body .note-style h4,
 .panel-heading.note-toolbar .note-style h4,
-.note-popover .popover .popover-content .note-style h5,
+.note-popover .popover .popover-body .note-style h5,
 .panel-heading.note-toolbar .note-style h5,
-.note-popover .popover .popover-content .note-style h6,
+.note-popover .popover .popover-body .note-style h6,
 .panel-heading.note-toolbar .note-style h6,
-.note-popover .popover .popover-content .note-style blockquote,
+.note-popover .popover .popover-body .note-style blockquote,
 .panel-heading.note-toolbar .note-style blockquote {
   margin: 0;
 }
-.note-popover .popover .popover-content .note-color .dropdown-toggle,
+.note-popover .popover .popover-body .note-color .dropdown-toggle,
 .panel-heading.note-toolbar .note-color .dropdown-toggle {
   width: 20px;
   padding-left: 5px;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu,
+.note-popover .popover .popover-body .note-color .dropdown-menu,
 .panel-heading.note-toolbar .note-color .dropdown-menu {
   min-width: 340px;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu .btn-group,
+.note-popover .popover .popover-body .note-color .dropdown-menu .btn-group,
 .panel-heading.note-toolbar .note-color .dropdown-menu .btn-group {
   margin: 0;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu .btn-group:first-child,
+.note-popover .popover .popover-body .note-color .dropdown-menu .btn-group:first-child,
 .panel-heading.note-toolbar .note-color .dropdown-menu .btn-group:first-child {
   margin: 0 5px;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu .btn-group .note-palette-title,
+.note-popover .popover .popover-body .note-color .dropdown-menu .btn-group .note-palette-title,
 .panel-heading.note-toolbar .note-color .dropdown-menu .btn-group .note-palette-title {
   font-size: 12px;
   margin: 2px 7px;
   text-align: center;
   border-bottom: 1px solid #eee;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu .btn-group .note-color-reset,
+.note-popover .popover .popover-body .note-color .dropdown-menu .btn-group .note-color-reset,
 .panel-heading.note-toolbar .note-color .dropdown-menu .btn-group .note-color-reset {
   font-size: 11px;
   margin: 3px;
@@ -221,63 +221,63 @@
   cursor: pointer;
   border-radius: 5px;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu .btn-group .note-color-row,
+.note-popover .popover .popover-body .note-color .dropdown-menu .btn-group .note-color-row,
 .panel-heading.note-toolbar .note-color .dropdown-menu .btn-group .note-color-row {
   height: 20px;
 }
-.note-popover .popover .popover-content .note-color .dropdown-menu .btn-group .note-color-reset:hover,
+.note-popover .popover .popover-body .note-color .dropdown-menu .btn-group .note-color-reset:hover,
 .panel-heading.note-toolbar .note-color .dropdown-menu .btn-group .note-color-reset:hover {
   background: #eee;
 }
-.note-popover .popover .popover-content .note-para .dropdown-menu,
+.note-popover .popover .popover-body .note-para .dropdown-menu,
 .panel-heading.note-toolbar .note-para .dropdown-menu {
   min-width: 216px;
   padding: 5px;
 }
-.note-popover .popover .popover-content .note-para .dropdown-menu > div:first-child,
+.note-popover .popover .popover-body .note-para .dropdown-menu > div:first-child,
 .panel-heading.note-toolbar .note-para .dropdown-menu > div:first-child {
   margin-right: 5px;
 }
-.note-popover .popover .popover-content .dropdown-menu,
+.note-popover .popover .popover-body .dropdown-menu,
 .panel-heading.note-toolbar .dropdown-menu {
   min-width: 90px;
   /* dropdown-menu right position */
   /* http://forrst.com/posts/Bootstrap_right_positioned_dropdown-2KB */
   /* dropdown-menu for selectbox */
 }
-.note-popover .popover .popover-content .dropdown-menu.right,
+.note-popover .popover .popover-body .dropdown-menu.right,
 .panel-heading.note-toolbar .dropdown-menu.right {
   right: 0;
   left: auto;
 }
-.note-popover .popover .popover-content .dropdown-menu.right::before,
+.note-popover .popover .popover-body .dropdown-menu.right::before,
 .panel-heading.note-toolbar .dropdown-menu.right::before {
   right: 9px;
   left: auto !important;
 }
-.note-popover .popover .popover-content .dropdown-menu.right::after,
+.note-popover .popover .popover-body .dropdown-menu.right::after,
 .panel-heading.note-toolbar .dropdown-menu.right::after {
   right: 10px;
   left: auto !important;
 }
-.note-popover .popover .popover-content .dropdown-menu.note-check li a i,
+.note-popover .popover .popover-body .dropdown-menu.note-check li a i,
 .panel-heading.note-toolbar .dropdown-menu.note-check li a i {
   color: deepskyblue;
   visibility: hidden;
 }
-.note-popover .popover .popover-content .dropdown-menu.note-check li a.checked i,
+.note-popover .popover .popover-body .dropdown-menu.note-check li a.checked i,
 .panel-heading.note-toolbar .dropdown-menu.note-check li a.checked i {
   visibility: visible;
 }
-.note-popover .popover .popover-content .note-fontsize-10,
+.note-popover .popover .popover-body .note-fontsize-10,
 .panel-heading.note-toolbar .note-fontsize-10 {
   font-size: 10px;
 }
-.note-popover .popover .popover-content .note-color-palette,
+.note-popover .popover .popover-body .note-color-palette,
 .panel-heading.note-toolbar .note-color-palette {
   line-height: 1;
 }
-.note-popover .popover .popover-content .note-color-palette div .note-color-btn,
+.note-popover .popover .popover-body .note-color-palette div .note-color-btn,
 .panel-heading.note-toolbar .note-color-palette div .note-color-btn {
   width: 20px;
   height: 20px;
@@ -285,7 +285,7 @@
   margin: 0;
   border: 1px solid #fff;
 }
-.note-popover .popover .popover-content .note-color-palette div .note-color-btn:hover,
+.note-popover .popover .popover-body .note-color-palette div .note-color-btn:hover,
 .panel-heading.note-toolbar .note-color-palette div .note-color-btn:hover {
   border: 1px solid #000;
 }

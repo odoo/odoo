@@ -77,11 +77,11 @@ define([
     var tplPopover = function (className, content) {
       var $popover = $('<div class="' + className + ' popover bottom in" style="display: none;">' +
                '<div class="arrow"></div>' +
-               '<div class="popover-content">' +
+               '<div class="popover-body">' +
                '</div>' +
              '</div>');
 
-      $popover.find('.popover-content').append(content);
+      $popover.find('.popover-body').append(content);
       return $popover;
     };
 

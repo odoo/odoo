@@ -143,7 +143,7 @@ renderer.tplPopovers = function (lang, options) {
 
     // show dialog box and delete
     var $imageprop = $('<div class="btn-group"/>');
-    $imageprop.appendTo($imagePopover.find('.popover-content'));
+    $imageprop.appendTo($imagePopover.find('.popover-body'));
     $(tplIconButton('fa fa-file-image-o', {
             title: _t('Edit'),
             event: 'showImageDialog'
@@ -158,17 +158,17 @@ renderer.tplPopovers = function (lang, options) {
         event: 'cropImage',
     })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-thumbnail"]'));
 
-    $imagePopover.find('.popover-content').append($airPopover.find(".note-history").clone());
+    $imagePopover.find('.popover-body').append($airPopover.find(".note-history").clone());
 
     $imagePopover.find('[data-event="showImageDialog"]').before($airPopover.find('[data-event="showLinkDialog"]').clone());
 
     var $alt = $('<div class="btn-group"/>');
-    $alt.appendTo($imagePopover.find('.popover-content'));
+    $alt.appendTo($imagePopover.find('.popover-body'));
     $alt.append('<button class="btn btn-secondary" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
 
     //////////////// link popover
 
-    $linkPopover.find('.popover-content').append($airPopover.find(".note-history").clone());
+    $linkPopover.find('.popover-body').append($airPopover.find(".note-history").clone());
 
     $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fa fa-link");
     $linkPopover.find('button[data-event="unlink"]').before($airPopover.find('button[data-event="showImageDialog"]').clone());
