@@ -4,12 +4,15 @@ odoo.define('mail.chatter_tests', function (require) {
 var mailTestUtils = require('mail.testUtils');
 
 var concurrency = require('web.concurrency');
+var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 
 var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
+
+var _t = core._t;
 
 QUnit.module('mail', {}, function () {
 
@@ -1044,7 +1047,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (args.method === 'read' && args.model === 'mail.activity') {
+            if (args.method === 'activity_format' && args.model === 'mail.activity') {
                 nbReads++;
             }
             return this._super.apply(this, arguments);
@@ -1206,6 +1209,74 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    form.destroy();
+});
+
+QUnit.test('form activity widget: clic mail template', function (assert) {
+    assert.expect(4);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'activity_format') {
+                return this._super.apply(this, arguments).then(function (res) {
+                    res[0].mail_template_ids = [{ id: 100, name: 'Temp1' }];
+                    return res;
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            do_action: function (ev) {
+                assert.deepEqual(ev.data.action, {
+                        name: _t('Compose Email'),
+                        type: 'ir.actions.act_window',
+                        res_model: 'mail.compose.message',
+                        views: [[false, 'form']],
+                        target: 'new',
+                        context: {
+                            default_res_id: 2,
+                            default_model: 'partner',
+                            default_use_template: true,
+                            default_template_id: 100,
+                            force_email: true,
+                        },
+                    },
+                    "should do a do_action with correct parameters");
+                    ev.data.options.on_close();
+            },
+        },
+    });
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "we should have one activity");
+    assert.strictEqual(form.$('.o_mail_template').length, 1,
+        "Activity should contains two mail templates");
+    form.$('.o_mail_template[data-template-id=100]').click();
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "activity should still be there");
     form.destroy();
 });
 
