@@ -5,8 +5,10 @@ import calendar
 from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
-from odoo import fields
 from . import ustr
+
+import odoo
+from odoo import fields
 
 
 def get_month(date):
