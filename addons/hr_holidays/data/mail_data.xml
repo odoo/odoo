@@ -47,48 +47,5 @@
             <field name="name">Allocation</field>
             <field name="res_model">hr.leave.allocation</field>
         </record>
-
-
-        <!-- Department related subtypes for messaging / Chatter -->
-        <record id="mt_department_leave" model="mail.message.subtype">
-            <field name="name">Leave</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-        <record id="mt_department_leave_home_working" model="mail.message.subtype">
-            <field name="name">Home Working</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_home_working')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-        <record id="mt_department_leave_sick" model="mail.message.subtype">
-            <field name="name">Sick Leave</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_sick')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-        <record id="mt_department_leave_unpaid" model="mail.message.subtype">
-            <field name="name">Unpaid Leave</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_unpaid')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
-        <record id="mt_department_leave_allocation" model="mail.message.subtype">
-            <field name="name">Allocation</field>
-            <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_leave_allocation')"/>
-            <field name="relation_field">department_id</field>
-            <field name="sequence" eval="8"/>
-        </record>
     </data>
 </odoo>
