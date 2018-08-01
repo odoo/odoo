@@ -447,7 +447,7 @@ QUnit.test('kanban activity widget popover test', function (assert) {
                     '</t></templates>' +
                 '</kanban>',
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
+            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
                 rpcCount++;
 
                 var current_ids = this.data.partner.records[0].activity_ids;
@@ -1195,7 +1195,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
 });
 
 QUnit.test('form activity widget: schedule next activity', function (assert) {
-    assert.expect(5);
+    assert.expect(4);
     this.data.partner.records[0].activity_ids = [1];
     this.data.partner.records[0].activity_state = 'today';
     this.data['mail.activity'].records = [{
@@ -1208,7 +1208,6 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         activity_type_id: 2,
     }];
 
-    var checkReadArgs = false;
     var form = createView({
         View: FormView,
         model: 'partner',
@@ -1225,35 +1224,17 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
-                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_feedback' for id 1");
+            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
+                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_done_schedule_next' for id 1");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
-                return $.when();
-            }
-            if (args.method === 'read' && args.model === 'partner' && checkReadArgs) {
-                assert.deepEqual(args.args[1], ['activity_ids', 'message_ids', 'display_name'],
-                    "should only read the mail fields");
+                return $.when('test_result');
             }
             return this._super.apply(this, arguments);
         },
         intercepts: {
             do_action: function (event) {
-                assert.deepEqual(event.data.action, {
-                    context: {
-                        default_res_id: 2,
-                        default_res_model: "partner",
-                        default_previous_activity_type_id: 2,
-                    },
-                    res_id: false,
-                    res_model: 'mail.activity',
-                    type: 'ir.actions.act_window',
-                    target: "new",
-                    view_mode: "form",
-                    view_type: "form",
-                    views: [[false, "form"]],
-                }, "should do a do_action with correct parameters");
-                checkReadArgs = true; // should re-read the activities when closing the dialog
+                assert.strictEqual(event.data.action,'test_result' , "should do a do_action with correct parameters");
                 event.data.options.on_close();
             },
         },
