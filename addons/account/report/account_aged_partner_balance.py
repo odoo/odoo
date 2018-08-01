@@ -77,7 +77,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
         lines = dict((partner['partner_id'] or False, []) for partner in partners)
         if not partner_ids:
-            return [], [], []
+            return [], [], {}
 
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}

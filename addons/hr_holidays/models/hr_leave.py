@@ -88,12 +88,12 @@ class HolidaysRequest(models.Model):
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float(
-        'Allocation', copy=False, readonly=True,
+        'Duration (Days)', copy=False, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
     number_of_hours = fields.Float(
-        'Hours Allocation', copy=False, readonly=True, compute='_compute_number_of_hours',
+        'Duration (Hours)', copy=False, readonly=True, compute='_compute_number_of_hours',
         help='Number of hours of the leave request according to your working schedule.')
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
 

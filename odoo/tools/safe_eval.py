@@ -107,8 +107,8 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
-    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY', 'RAISE_VARARGS',
-    'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
+    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'SETUP_FINALLY', 'END_FINALLY',
+    'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL', # Only allows access to restricted globals
 ] if x in opmap))

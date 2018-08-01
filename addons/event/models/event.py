@@ -459,6 +459,17 @@ class EventRegistration(models.Model):
             pass
         return recipients
 
+    @api.multi
+    def message_get_default_recipients(self):
+        # Prioritize registration email over partner_id, which may be shared when a single
+        # partner booked multiple seats
+        return {
+            r.id: {'partner_ids': [],
+                   'email_to': r.email,
+                   'email_cc': False}
+            for r in self
+        }
+
     def _message_post_after_hook(self, message, *args, **kwargs):
         if self.email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)

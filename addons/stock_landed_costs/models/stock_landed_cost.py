@@ -107,7 +107,7 @@ class LandedCost(models.Model):
                     'landed_cost_value': new_landed_cost_value,
                     'value': line.move_id.value + cost_to_add,
                     'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
+                    'price_unit': (line.move_id.value + cost_to_add) / line.move_id.product_qty,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.

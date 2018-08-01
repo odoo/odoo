@@ -77,11 +77,11 @@ class HolidaysAllocation(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float(
-        'Allocation', copy=False, readonly=True,
+        'Duration (days)', copy=False, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
-    number_of_hours = fields.Float('Number of Hours', help="Number of hours of the leave allocation according to your working schedule.")
+    number_of_hours = fields.Float('Duration (hours)', help="Number of hours of the leave allocation according to your working schedule.")
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
@@ -258,9 +258,9 @@ class HolidaysAllocation(models.Model):
             else:
                 self.unit_per_interval = 'days'
         else:
-            self.interval_number = 0
+            self.interval_number = 1
             self.interval_unit = 'weeks'
-            self.number_per_interval = 0
+            self.number_per_interval = 1
             self.unit_per_interval = 'hours'
 
     ####################################################

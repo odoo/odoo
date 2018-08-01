@@ -540,7 +540,7 @@ class Picking(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft')._generate_moves()
+        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
         self.mapped('move_lines')\
             .filtered(lambda move: move.state == 'draft')\
@@ -561,7 +561,12 @@ class Picking(models.Model):
         moves = self.mapped('move_lines').filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
+        # If a package level is done when confirmed its location can be different than where it will be reserved.
+        # So we remove the move lines created when confirmed to set quantity done to the new reserved ones.
+        package_level_done = self.mapped('package_level_ids').filtered(lambda pl: pl.is_done and pl.state == 'confirmed')
+        package_level_done.write({'is_done': False})
         moves._action_assign()
+        package_level_done.write({'is_done': True})
         return True
 
     @api.multi
@@ -647,9 +652,9 @@ class Picking(models.Model):
             origin_packages = picking.move_line_ids.mapped("package_id")
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
-                    package_level = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
+                    package_level_ids = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
                     move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack)
-                    if not package_level:
+                    if not package_level_ids:
                         self.env['stock.package_level'].create({
                             'picking_id': picking.id,
                             'package_id': pack.id,
@@ -657,13 +662,20 @@ class Picking(models.Model):
                             'location_dest_id': picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).mapped('location_dest_id')[:1].id,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
                         })
-                        picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({
+                        move_lines_to_pack.write({
                             'result_package_id': pack.id,
                         })
                     else:
-                        picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({
+                        move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
+                        move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
+                        for ml in move_lines_in_package_level:
+                            ml.write({
+                                'result_package_id': pack.id,
+                                'package_level_id': ml.move_id.package_level_id.id,
+                            })
+                        move_lines_without_package_level.write({
                             'result_package_id': pack.id,
-                            'package_level_id': package_level.id,
+                            'package_level_id': package_level_ids[0].id,
                         })
 
     @api.multi
