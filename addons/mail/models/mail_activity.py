@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, timedelta
+from collections import defaultdict
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 import pytz
 
 from odoo import api, exceptions, fields, models, _
@@ -29,9 +31,16 @@ class MailActivityType(models.Model):
     summary = fields.Char('Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True)
-    days = fields.Integer(
-        'Planned in', default=0,
-        help='Number of days before executing the action. It allows to plan the action deadline.')
+    delay_count = fields.Integer(
+        'After', default=0, oldname='days',
+        help='Number of days/week/month before executing the action. It allows to plan the action deadline.')
+    delay_unit = fields.Selection([
+        ('days', 'days'),
+        ('weeks', 'weeks'),
+        ('months', 'months')], string="Delay units", help="Unit of delay", required=True, default='days')
+    delay_from = fields.Selection([
+        ('current_date', 'after validation date'),
+        ('previous_activity', 'after previous activity deadline')], string="Delay Type", help="Type of delay", required=True, default='previous_activity')
     icon = fields.Char('Icon', help="Font awesome icon e.g. fa-tasks")
     decoration_type = fields.Selection([
         ('warning', 'Alert'),
@@ -42,6 +51,8 @@ class MailActivityType(models.Model):
         domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
+    default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
@@ -141,6 +152,13 @@ class MailActivity(models.Model):
     def _compute_has_recommended_activities(self):
         for record in self:
             record.has_recommended_activities = bool(record.previous_activity_type_id.next_type_ids)
+    
+    @api.multi
+    @api.onchange('previous_activity_type_id')
+    def _onchange_previous_activity_type_id(self):
+        for record in self:
+            if record.previous_activity_type_id.default_next_type_id:
+                record.activity_type_id = record.previous_activity_type_id.default_next_type_id
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
@@ -174,7 +192,10 @@ class MailActivity(models.Model):
             self.summary = self.activity_type_id.summary
             # Date.context_today is correct because date_deadline is a Date and is meant to be
             # expressed in user TZ
-            self.date_deadline = fields.Date.context_today(self) + timedelta(days=self.activity_type_id.days)
+            base = fields.Date.context_today(self)
+            if self.activity_type_id.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
+                base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
+                self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -336,10 +357,11 @@ class MailActivity(models.Model):
         return message.ids and message.ids[0] or False
 
     @api.multi
-    def action_done_schedule_next(self):
+    def action_done_schedule_next(self, feedback=False):
         wizard_ctx = dict(
             self.env.context,
             default_previous_activity_type_id=self.activity_type_id.id,
+            activity_previous_deadline=self.date_deadline,
             default_res_id=self.res_id,
             default_res_model=self.res_model,
         )
