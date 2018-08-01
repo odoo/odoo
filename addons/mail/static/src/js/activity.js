@@ -132,16 +132,27 @@ var AbstractActivityField = AbstractField.extend({
      * @private
      * @param {Object} params
      * @param {integer} params.activityID
-     * @param {integer} params.activityTypeID
      * @param {string} params.feedback
      */
     _markActivityDoneAndScheduleNext: function(params) {
         var activityID = params.activityID;
-        var activityTypeID = params.activityTypeID;
         var feedback = params.feedback;
-
-        this._sendActivityFeedback(activityID, feedback)
-            .then(this.scheduleActivity.bind(this, activityTypeID));
+        var self = this;
+        this._rpc({
+            model: 'mail.activity',
+            method: 'action_done_schedule_next',
+            args: [[activityID]],
+            kwargs: {feedback: feedback},
+            context: this.record.getContext(),
+        }).then(
+            function(rslt_action) {
+                self.do_action(rslt_action, {
+                    on_close: function () {
+                        self.trigger_up('reload');
+                    },
+                });
+            }
+        );
     },
     /**
      * @private
@@ -410,7 +421,6 @@ var Activity = AbstractActivityField.extend({
                     $popover.on('click', '.o_activity_popover_done_next', function () {
                         self._markActivityDoneAndScheduleNext({
                             activityID: activityID,
-                            activityTypeID: $popoverElement.data('previous-activity-type-id'),
                             feedback: _.escape($popover.find('#activity_feedback').val()),
                         });
                     });
@@ -583,7 +593,6 @@ var KanbanActivity = AbstractActivityField.extend({
                         ev.stopPropagation();
                         self._markActivityDoneAndScheduleNext({
                             activityID: activityID,
-                            activityTypeID: $popoverElement.data('previous-activity-type-id'),
                             feedback: _.escape($popover.find('#activity_feedback').val()),
                         });
                     });
