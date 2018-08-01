@@ -20,23 +20,23 @@
             print_report_name="'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
         />
         <report
-            string="Inventory" 
-            id="action_report_inventory" 
-            model="stock.inventory" 
+            string="Inventory"
+            id="action_report_inventory"
+            model="stock.inventory"
             report_type="qweb-pdf"
-            name="stock.report_inventory" 
+            name="stock.report_inventory"
             file="stock.report_inventory"
             print_report_name="'Inventory - %s' % (object.name)"
         />
         <report
-            string="Package Barcode with Contents"
+            string="Package Barcode with Content"
             id="action_report_quant_package_barcode"
             model="stock.quant.package"
             report_type="qweb-pdf"
             name="stock.report_package_barcode"
             file="stock.report_package_barcode"/>
         <report
-            string="Package Barcode"
+            string="Package Barcode (PDF)"
             id="action_report_quant_package_barcode_small"
             model="stock.quant.package"
             report_type="qweb-pdf"
@@ -47,17 +47,17 @@
             id="action_report_location_barcode"
             model="stock.location"
             report_type="qweb-pdf"
-            name="stock.report_location_barcode" 
+            name="stock.report_location_barcode"
             file="stock.report_location_barcode"
             print_report_name="'Location - %s' % object.name"
         />
         <report
-            string="Lot Barcode"
-            id="action_report_lot_barcode"
+            string="Lot/Serial Number (PDF)"
+            id="action_report_lot_label"
             model="stock.production.lot"
             report_type="qweb-pdf"
-            name="stock.report_lot_barcode"
-            file="stock.report_lot_barcode"
+            name="stock.report_lot_label"
+            file="stock.report_lot_label"
             print_report_name="'Lot-Serial - %s' % object.name"
         />
     </data>
