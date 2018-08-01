@@ -1,5 +1,4 @@
 .o_dropdown_menu {
-
     > .dropdown-divider:first-child {
         display: none;
     }
@@ -19,6 +18,27 @@
         }
         .dropdown-divider:first-child {
             display: none;
+        }
+    }
+}
+
+.dropdown-item {
+    position: relative;
+    color: $o-main-text-color;
+
+    &:hover {
+        color: darken($o-main-text-color, 10%);
+    }
+
+    &.selected { // TODO why not using standard BS4 "active" class ?
+        color: darken($o-main-text-color, 10%);
+        font-weight: bold;
+
+        &:before {
+            font-family: FontAwesome;
+            position: absolute;
+            left: 4px;
+            content: "\f00c";
         }
     }
 }

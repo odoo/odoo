@@ -106,30 +106,6 @@
 }
 
 // ------------------------------------------------------------------
-// Dropdowns
-// ------------------------------------------------------------------
-@mixin o-selected-li { // FIXME use active ?
-    .dropdown-item {
-        position: relative;
-        color: $o-main-text-color;
-        &:hover {
-            color: darken($o-main-text-color, 10%);
-        }
-
-        &.selected {
-            color: darken($o-main-text-color, 10%);
-            font-weight: bold;
-            &:before {
-                font-family: FontAwesome;
-                position: absolute;
-                left: 4px;
-                content: "\f00c";
-            }
-        }
-    }
-}
-
-// ------------------------------------------------------------------
 // Hovering effects
 // ------------------------------------------------------------------
 @mixin o-hover-text-color($default-color: $body-color, $hover-color: $link-color) {
