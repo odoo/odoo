@@ -105,7 +105,6 @@
 
                         <field name="number_of_days_temp" attrs="{'invisible': [('leave_type_request_unit', '=', 'hour')]}"/>
                         <field name="number_of_hours" attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}"/>
-                        <label string="" invisible="1"/>
                         <div>
                             <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
                             <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
