@@ -802,7 +802,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 background-color: rgba(0, 0, 0, 0.25);
             }
         }
-        .note-color-palette .note-color-row, .note-custom-color-palette .note-color-row {
+        .note-color-palette .note-color-row {
             height: auto!important;
 
             &::after {
@@ -845,24 +845,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             &.checked > i {
                 visibility: visible;
             }
-        }
-    }
-
-    .note-custom-color-palette .note-color-btn {
-        height: 20px;
-        width: 20px;
-        border: 1px solid white;
-    }
-    .note-custom-color {
-        margin: 5px 0px;
-        padding: 5px 0px;
-        border-radius: 10px;
-        font-weight: bold;
-        font-size: 12px;
-        cursor: pointer;
-        &:hover {
-            background: $gray-light;
-            color: $gray-darker;
         }
     }
 

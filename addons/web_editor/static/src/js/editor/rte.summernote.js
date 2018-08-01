@@ -31,15 +31,6 @@ var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
-// convert rgb color to hex color code
-function rgbToHex(rgb) {
-    if (rgb.indexOf("#") !== -1) {
-        return rgb;
-    }
-    rgb = rgb.replace(/[^\d,]/g,"").split(",");
-    return ("#" + ((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)).toUpperCase();
-}
-
 // Update and change the popovers content, and add history button
 var fn_createPalette = renderer.createPalette;
 renderer.createPalette = function ($container, options) {
@@ -85,41 +76,6 @@ renderer.createPalette = function ($container, options) {
         $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
     });
 
-    // Create custom color palette
-    var $customColorPalettes = $container.find('.note-custom-color-palette');
-    $customColorPalettes.append($("<div/>", {"class": "note-color-row"}));
-
-    // Find the custom color from page which are used and add them to custon color palettes.
-    var rteWidget = new rte.Class();
-    var $customColors = rteWidget.editable().find('font, span');
-    var colors = [];
-    $customColors.each(function () {
-        if (this.style.color) { // find font color
-            colors.push(this.style.color);
-        }
-        if (this.style.backgroundColor){ // find background color
-            colors.push(this.style.backgroundColor);
-        }
-    });
-    var buttonForecolor = [];
-    var buttonBackcolor = [];
-    _.each(_.uniq(colors), function (color) {
-        var hexColor = rgbToHex(color);
-        //Check if color is in common color palettes then ignore other wise add them into custom color palettes
-        if (_.indexOf(_.flatten(options.colors), hexColor) === -1) {
-            // Create button of used custom color for backcolor and forecolor both and add them into palette
-            buttonBackcolor.push('<button type="button" class="note-color-btn" style="background-color:' +
-                color + ';" data-event="backColor" data-value="'+ color + '" title="' + color
-                + '" data-toggle="button" tabindex="-1"></button>');
-
-            buttonForecolor.push('<button type="button" class="note-color-btn" style="background-color:' +
-                color + ';" data-event="foreColor" data-value="'+ color + '" title="' + color
-                + '" data-toggle="button" tabindex="-1"></button>');
-        }
-    });
-    $customColorPalettes.filter(':even').find('.note-color-row').append(buttonBackcolor);
-    $customColorPalettes.filter(':odd').find('.note-color-row').append(buttonForecolor);
-
     // Toggle Text Color and Highlight Color on click
     var $color = $container.find('.note-color');
     var $colorSection = $color.find('.dropdown-menu li .btn-group');
@@ -130,30 +86,6 @@ renderer.createPalette = function ($container, options) {
         $color.find('[data-event="highlightColor"]').toggleClass('active', !isTextColor);
         $colorSection.filter(':even').toggleClass('d-none', isTextColor);
         $colorSection.filter(':odd').toggleClass('d-none', !isTextColor);
-    });
-
-    // Apply custom color on selected range when color is picked from picker
-    $container.find('.note-custom-color').on('change', function (event) {
-        var eventName = $(this).data('value');
-        var customColor = event.target.value;
-        $container.find('input[type="color"]').val(customColor);
-
-        var buttonBackcolor = ['<button type="button" class="note-color-btn" style="background-color:' +
-            customColor + ';" data-event="backColor" data-value="'+ customColor + '" title="' + customColor
-            + '" data-toggle="button" tabindex="-1"></button>'];
-
-        var buttonForecolor = ['<button type="button" class="note-color-btn" style="background-color:' +
-            customColor + ';" data-event="foreColor" data-value="'+ customColor + '" title="' + customColor
-            + '" data-toggle="button" tabindex="-1"></button>'];
-
-        var $foreColorRow = $customColorPalettes.filter(":odd").find(".note-color-row").append(buttonForecolor);
-        var $bgColorRow = $customColorPalettes.filter(":even").find(".note-color-row").append(buttonBackcolor);
-
-        if (eventName === "foreColor") {
-            $foreColorRow.find(":last-child").click();
-        } else {
-            $bgColorRow.find(":last-child").click();
-        }
     });
 };
 

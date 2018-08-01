@@ -989,16 +989,10 @@ renderer.tplButtonInfo.color = function (lang, options) {
         '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
         lang.color.setTransparent + '</div>',
         '<div class="note-color-palette" data-target-event="backColor"></div>',
-        '<div class="note-custom-color" data-event="customColor" data-value="backColor" title="' + lang.color.custom + '">',
-        lang.color.custom + '<input type="color" class="hidden"/></div>',
-        '<div class="note-custom-color-palette" data-target-event="backColor"></div>',
         '</div><div class="btn-group flex-column">',
         '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
         lang.color.resetToDefault + '</div>',
         '<div class="note-color-palette" data-target-event="foreColor"></div>',
-        '<div class="note-custom-color" data-event="customColor" data-value="foreColor" title="' + lang.color.custom + '">',
-        lang.color.custom + '<input type="color" class="hidden"/></div>',
-        '<div class="note-custom-color-palette" data-target-event="foreColor"></div>',
         '</div></li>'
     ];
     var colorButton = renderer.getTemplate().button(colorButtonLabel, {
@@ -2228,10 +2222,6 @@ $.summernote.pluginEvents.foreColor = function (event, editor, layoutInfo, foreC
   var $editable = layoutInfo.editable();
   $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, foreColor, null, null);
   editor.afterCommand($editable);
-};
-$.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, customColor) {
-  event.stopPropagation();
-  $(event.target).find('input').click();
 };
 $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backColor) {
   var $editable = layoutInfo.editable();
