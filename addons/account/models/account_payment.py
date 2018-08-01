@@ -166,12 +166,20 @@ class account_abstract_payment(models.AbstractModel):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        if self.partner_id and len(self.partner_id.bank_ids) > 0:
-            self.partner_bank_account_id = self.partner_id.bank_ids[0]
-        elif self.partner_id and len(self.partner_id.commercial_partner_id.bank_ids) > 0:
-            self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
-        else:
-            self.partner_bank_account_id = False
+        if not self.multi and self.invoice_ids and self.invoice_ids[0].partner_bank_id:
+            self.partner_bank_account_id = self.invoice_ids[0].partner_bank_id
+        elif self.partner_id != self.partner_bank_account_id.partner_id:#TODO OCO pas sûr
+            # This condition ensures we use the default value provided into
+            # context for partner_bank_account_id properly when provided with a
+            # default partner_id. Without it, the onchange recomputes the bank account
+            # uselessly and might assign a different value to it.
+
+            if self.partner_id and len(self.partner_id.bank_ids) > 0:
+                self.partner_bank_account_id = self.partner_id.bank_ids[0]
+            elif self.partner_id and len(self.partner_id.commercial_partner_id.bank_ids) > 0:
+                self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
+            else:
+                self.partner_bank_account_id = False
         return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
 
     def _compute_journal_domain_and_types(self):
@@ -264,7 +272,8 @@ class account_register_payments(models.TransientModel):
             partner_id = inv.commercial_partner_id.id
             account_id = inv.account_id.id
             invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
-            key = (partner_id, account_id, invoice_type)
+            recipient_account =  inv.partner_bank_id
+            key = (partner_id, account_id, invoice_type, recipient_account)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
@@ -279,6 +288,7 @@ class account_register_payments(models.TransientModel):
         '''
         amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
+        bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
         return {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
@@ -290,7 +300,7 @@ class account_register_payments(models.TransientModel):
             'currency_id': self.currency_id.id,
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'partner_bank_account_id': self.partner_bank_account_id.id,
+            'partner_bank_account_id': bank_account.id,
             'multi': False,
         }
 

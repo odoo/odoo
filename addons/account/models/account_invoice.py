@@ -507,6 +507,15 @@ class AccountInvoice(models.Model):
 
         return invoice
 
+    @api.constrains('partner_id', 'partner_bank_id')
+    def validate_partner_bank_id(self):
+        for record in self:
+            if record.partner_bank_id:
+                if record.type in ('in_invoice', 'in_refund') and record.partner_bank_id.partner_id != record.partner_id.commercial_partner_id:
+                    raise ValidationError(_("Commercial partner and vendor account owners must be identical."))
+                elif record.type in ('out_invoice', 'out_refund') and not record.company_id in record.partner_bank_id.partner_id.ref_company_ids:
+                    raise ValidationError(_("The account selected for payment does not belong to the same company as this invoice."))
+
     @api.multi
     def _write(self, vals):
         pre_not_reconciled = self.filtered(lambda invoice: not invoice.reconciled)

@@ -286,6 +286,8 @@
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_company_type': 'company'}"
                               domain="[('supplier', '=', True)]" required="1"/>
                             <field name="reference" string="Vendor Reference"/>
+                            <field name="commercial_partner_id" invisible="1"/>
+                            <field domain="[('partner_id', '=', commercial_partner_id)]" name="partner_bank_id" string="Vendor Account" context="{'default_partner_id': commercial_partner_id}"/>
                             <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
                               domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','paid')), ('type','=','in_invoice')]"
                               string="Auto-Complete" placeholder="Select an old vendor bill"
@@ -366,7 +368,6 @@
                                 <group>
                                     <field name="journal_id" groups="account.group_account_user" options="{'no_create': True}"
                                         attrs="{'readonly':[('move_name','!=',False)]}"/>
-                                    <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" invisible="1"/>
                                     <field name="user_id" string="Purchase Representative"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_user"/>
