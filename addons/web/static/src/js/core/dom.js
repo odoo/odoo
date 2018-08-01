@@ -350,7 +350,7 @@ return {
             }
             var $items = $extraItemsToggle.children('.dropdown-menu').children();
             $items.addClass('nav-item');
-            $items.children().removeClass('dropdown-item').addClass('nav-link');
+            $items.children('.dropdown-item, a').removeClass('dropdown-item').addClass('nav-link');
             $items.insertBefore($extraItemsToggle);
             $extraItemsToggle.remove();
             $extraItemsToggle = null;
@@ -406,7 +406,7 @@ return {
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');
-            $extraItems.children().removeClass('nav-link').addClass('dropdown-item');
+            $extraItems.children('.nav-link, a').removeClass('nav-link').addClass('dropdown-item');
             $dropdownMenu.append($extraItems);
             $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
         }
