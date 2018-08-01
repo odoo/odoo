@@ -643,18 +643,12 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def _track_subtype(self, init_values):
-        subtype = self.env['ir.model.data'].search([
-            ['model', '=', 'mail.message.subtype'],
-            ['res_id', '=', self.holiday_status_id.mail_message_subtype_id.id],
-        ])
+        if 'state' in init_values:
+            if self.holiday_status_id.leave_notif_subtype_id:
+                return self.holiday_status_id.leave_notif_subtype_id.id
+            else:
+                return 'hr_holidays.mt_leave'
 
-        if subtype:
-            return 'hr_holidays.' + subtype.name
-
-        # if 'state' in init_values and self.state == 'validate':
-        #     return 'hr_holidays.mt_leave_approved'
-        # elif 'state' in init_values and self.state == 'refuse':
-        #     return 'hr_holidays.mt_leave_refused'
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
     @api.multi
