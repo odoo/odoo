@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-06-11 06:16+0000\n"
-"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
+"PO-Revision-Date: 2018-07-25 11:29+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1462,10 +1462,17 @@ msgstr "Permet utilitzar la comptabilitat analítica"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
 msgstr "Import"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr "Divisa de l'import"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1490,6 +1497,11 @@ msgstr "Import implicat en aquest aparellament. S'assumeix sempre positiu"
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount currency"
 msgstr "Import divisa"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_tree
+msgid "Amount due"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
@@ -4745,6 +4757,11 @@ msgid "Invoices to validate"
 msgstr "Factures a validar"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_finance
+msgid "Invoicing"
+msgstr "Facturació"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Invoicing & Payments"
 msgstr "Facturació i pagaments"
@@ -5820,8 +5837,8 @@ msgstr "Octubre"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Odoo Accounting has many free extra-features:"
-msgstr "La comptabilitat en Odoo tenen moltes característiques extra gratuïtes:"
+msgid "Odoo Accounting has many extra-features:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -8077,6 +8094,12 @@ msgid ""
 msgstr "El tipus de càlcul de l'última línia hauria de ser \"Balanç\" per assegurar que s'assignarà la quantitat per complet."
 
 #. module: account
+#: code:addons/account/models/company.py:81
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr "La data de bloqueig dels assessors és irreversible i no és pot eliminar."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
 msgstr "El moviment d'aquesta línia de l'assentament."
@@ -8093,6 +8116,13 @@ msgstr "L'opció multidivisa li permet enviar o rebre factures en diferents divi
 #: model:ir.model.fields,help:account.field_account_invoice_name
 msgid "The name that will be used on account move lines"
 msgstr "El nom que s'utilitzarà en els apunts comptables."
+
+#. module: account
+#: code:addons/account/models/company.py:85
+#, python-format
+msgid ""
+"The new lock date for advisors must be set after the previous lock date."
+msgstr "La nova data de bloqueig per als assessors s'ha de configurar després de la data de bloqueig anterior."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
@@ -8554,7 +8584,12 @@ msgid ""
 msgstr "Per administrar les taxes aplicades en facturar una companyia, Odoo utilitza el concepte de posició fiscal: automàticament s'estableix la taxa i/o compte adequat en funció de l'estat i país del client."
 
 #. module: account
-#: code:addons/account/models/account_move.py:776
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+msgid "To pay"
+msgstr "A pagar"
+
+#. module: account
+#: code:addons/account/models/account_move.py:895
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
 msgstr "Per conciliar els apunts, la companyia ha de ser la mateixa per a tots els apunts!"
