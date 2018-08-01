@@ -699,10 +699,12 @@ if record:
             sequence="5"/>
 
         <!-- Lead Menu -->
+        <!--Codigo modificado por TRESCLOUD-->
+        <!--Se adiciona la vista kanban a la accion-->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,graph,pivot,calendar,form</field>
+            <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
@@ -725,6 +727,7 @@ if record:
                 </p>
             </field>
         </record>
+        <!--Fin del codigo modificado por TRESCLOUD-->
 
         <menuitem
             id="menu_crm_leads"
