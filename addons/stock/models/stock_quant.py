@@ -89,6 +89,12 @@ class Quant(models.Model):
                 quant = quant.with_context(force_company=quant.company_id.id)
             quant.inventory_value = quant.product_id.standard_price * quant.qty
 
+    @api.constrains('qty')
+    def check_quantity(self):
+        for quant in self:
+            if float_compare(quant.qty, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
+                raise ValidationError(_('A serial number should only be linked to a single product.'))
+
     @api.model_cr
     def init(self):
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('stock_quant_product_location_index',))
