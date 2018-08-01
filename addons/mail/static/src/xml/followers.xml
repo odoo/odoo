@@ -35,9 +35,9 @@
         Partner or channel following the record
     -->
     <t t-name="mail.Followers.partner">
-        <li role="menuitem" class='o_partner'>
+        <div role="menuitem" class="o_partner">
             <img t-att-src="record.avatar_url" alt="Avatar"/>
-            <a class="o_mail_redirect"
+            <a class="dropdown-item o_mail_redirect"
                href="#"
                t-att-title="record.name"
                t-att-data-oe-model="record.res_model"
@@ -51,7 +51,7 @@
             <i t-if="widget.isEditable" class="fa fa-remove o_remove_follower"
                aria-label="Remove this follower" role="img"
                title="Remove this follower"/>
-        </li>
+        </div>
     </t>
 
     <!--
