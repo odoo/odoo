@@ -11,19 +11,12 @@ from odoo.http import request
 
 
 class PortalAccount(CustomerPortal):
-    
-    def _get_account_invoice_domain(self):
-        partner = request.env.user.partner_id
-        domain = [
-            ('type', 'in', ['out_invoice', 'out_refund']),
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancel'])
-        ]
-        return domain
 
     def _prepare_portal_layout_values(self):
         values = super(PortalAccount, self)._prepare_portal_layout_values()
-        invoice_count = request.env['account.invoice'].search_count(self._get_account_invoice_domain())
+        invoice_count = request.env['account.invoice'].search_count([
+            ('type', 'in', ['out_invoice', 'out_refund'])
+        ])
         values['invoice_count'] = invoice_count
         return values
 
@@ -45,7 +38,7 @@ class PortalAccount(CustomerPortal):
         partner = request.env.user.partner_id
         AccountInvoice = request.env['account.invoice']
 
-        domain = self._get_account_invoice_domain()
+        domain = []
 
         searchbar_sortings = {
             'date': {'label': _('Invoice Date'), 'order': 'date_invoice desc'},
