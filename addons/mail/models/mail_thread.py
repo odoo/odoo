@@ -635,17 +635,20 @@ class MailThread(models.AbstractModel):
                 continue
 
             # find subtypes and post messages or log if no subtype found
-            subtype_xmlid = False
+            subtype_id = False
             # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
             if not self._context.get('mail_track_log_only'):
-                subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
+                subtype_id = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
 
-            if subtype_xmlid:
-                subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
-                if not (subtype_rec and subtype_rec.exists()):
-                    _logger.debug('subtype %s not found' % subtype_xmlid)
-                    continue
-                record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
+            if subtype_id:
+                if isinstance(subtype_id, int):
+                    record.message_post(subtype_id=subtype_id, tracking_value_ids=tracking_value_ids)
+                else:
+                    subtype_rec = self.env.ref(subtype_id)  # TDE FIXME check for raise if not found
+                    if not (subtype_rec and subtype_rec.exists()):
+                        _logger.debug('subtype %s not found' % subtype_id)
+                        continue
+                    record.message_post(subtype=subtype_id, tracking_value_ids=tracking_value_ids)
             elif tracking_value_ids:
                 record._message_log(tracking_value_ids=tracking_value_ids)
 
