@@ -10,7 +10,7 @@ import time
 import odoo
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.date_utils import json_default
+from odoo.tools import date_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ TIMEOUT = 50
 # Bus
 #----------------------------------------------------------
 def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=json_default)
+    return json.dumps(v, separators=(',', ':'), default=date_utils.json_default)
 
 def hashable(key):
     if isinstance(key, list):

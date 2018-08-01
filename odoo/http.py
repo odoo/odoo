@@ -48,9 +48,8 @@ import odoo
 from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
-from .tools.date_utils import json_default
 from .tools.func import lazy_property
-from .tools import ustr, consteq, frozendict, pycompat, unique
+from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 
 from .modules.module import module_manifest
 
@@ -636,7 +635,7 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=json_default))
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=date_utils.json_default))
         else:
             mime = 'application/json'
             body = json.dumps(response, default=json_default)
