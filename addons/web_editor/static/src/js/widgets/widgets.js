@@ -1741,14 +1741,11 @@ var CropImageDialog = Dialog.extend({
      * @param {MouseEvent} ev
      */
     _onCropOptionClick: function (ev) {
-        ev.preventDefault();
         var $option = $(ev.currentTarget);
         var opt = $option.data('event');
         var value = $option.data('value');
         switch (opt) {
             case 'ratio':
-                $option.siblings().removeClass('active');
-                $option.addClass('active');
                 this.$cropperImage.cropper('reset');
                 this.imageData.aspectRatio = $option.data('label');
                 this.$cropperImage.cropper('setAspectRatio', value);
