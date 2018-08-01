@@ -7,3 +7,4 @@ from . import hr_leave
 from . import hr_leave_allocation
 from . import hr_leave_type
 from . import res_users
+from . import mail_message_subtype
