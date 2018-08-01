@@ -15,12 +15,7 @@ class CustomerPortal(CustomerPortal):
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        values['purchase_count'] = request.env['purchase.order'].sudo().search_count([
-            '|',
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['purchase', 'done', 'cancel'])
-        ])
+        values['purchase_count'] = request.env['purchase.order'].search_count([])
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
@@ -35,11 +30,7 @@ class CustomerPortal(CustomerPortal):
         partner = request.env.user.partner_id
         PurchaseOrder = request.env['purchase.order']
 
-        domain = [
-            '|',
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
-        ]
+        domain = []
 
         archive_groups = self._get_archive_groups('purchase.order', domain)
         if date_begin and date_end:
