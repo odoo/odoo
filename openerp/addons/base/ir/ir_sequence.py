@@ -102,7 +102,14 @@ class ir_sequence(models.Model):
             else:
                 # get number from postgres sequence. Cannot use currval, because that might give an error when
                 # not having used nextval before.
-                query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d" % element.id
+                query = """SELECT last_value,
+                                  (SELECT increment_by
+                                   FROM pg_sequences
+                                   WHERE sequencename = 'ir_sequence_%(seq_id)s'),
+                                  is_called
+                           FROM ir_sequence_%03d""" % element.id
+                if self.env.cr._cnx.server_version < 100000:
+                    query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%03d" % element.id
                 self.env.cr.execute(query)
                 (last_value, increment_by, is_called) = self.env.cr.fetchone()
                 if is_called:
