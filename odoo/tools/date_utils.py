@@ -2,12 +2,11 @@
 
 import math
 import calendar
-import json
 from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
 from odoo import fields
-from odoo.tools import ustr
+from . import ustr
 
 
 def get_month(date):
