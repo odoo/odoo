@@ -7,9 +7,6 @@ from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from . import ustr
 
-import odoo
-from odoo import fields
-
 
 def get_month(date):
     ''' Compute the month dates range on which the 'date' parameter belongs to.
@@ -127,6 +124,7 @@ def json_default(obj):
     """
     Properly serializes date and datetime objects.
     """
+    from odoo import fields
     if isinstance(obj, date):
         if isinstance(obj, datetime):
             return fields.Datetime.to_string(obj)
