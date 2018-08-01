@@ -25,7 +25,7 @@
                 </option>
             </select>
         </div>
-        <div class="form-group col-md-4">
+        <div t-attf-class="form-group #{is_variant_applied ? 'col-md-4' : 'col-md-8'}">
             <label>Report:</label>
             <select class="o_input o_mrp_bom_report_type">
                 <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
