@@ -198,3 +198,8 @@ class StockRule(models.Model):
         if group:
             domain += (('group_id', '=', group.id),)
         return domain
+
+    def _push_prepare_move_copy_values(self, move_to_copy, new_date):
+        res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
+        res['purchase_line_id'] = None
+        return res
