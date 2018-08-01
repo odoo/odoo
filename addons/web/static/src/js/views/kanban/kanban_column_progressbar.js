@@ -133,6 +133,7 @@ var KanbanColumnProgressBar = Widget.extend({
 
         // Display and animate the progress bars
         var barNumber = 0;
+        var barMinWidth = 6; // In %
         _.each(self.colors, function (val, key) {
             var $bar = self.$bars[val];
             var count = self.subgroupCounts && self.subgroupCounts[key] || 0;
@@ -159,16 +160,15 @@ var KanbanColumnProgressBar = Widget.extend({
                 $bar.addClass('o_bar_has_records');
                 // Make sure every bar that has records has some space
                 // and that everything adds up to 100%
-                var minWidth = 6*barNumber;
-                var maxWidth = 100 - minWidth;
+                var maxWidth = 100 - barMinWidth * barNumber;
                 self.$('.progress-bar.o_bar_has_records').css('max-width', maxWidth + '%');
-                self.$('.progress-bar.o_bar_has_records').css('min-width', minWidth + '%');
                 $bar.css('width', (count * 100 / self.groupCount) + '%');
                 barNumber++;
             } else {
                 $bar.css('width', '');
             }
         });
+        this.$('.progress-bar.o_bar_has_records').css('min-width', barMinWidth + '%');
 
         // Display and animate the counter number
         var start = this.prevTotalCounterValue;
