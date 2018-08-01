@@ -10,8 +10,8 @@
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 # Mekan Bash <tmbashimov@gmail.com>, 2016
 # Roman lol <lyasko.roman@gmail.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2015-2016
+# Sergey Vilizhanin, 2016
+# Sergey Vilizhanin, 2015-2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2015
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
 # Алексей Кулагин <alekseik120988.kulagin@yandex.ru>, 2016
@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-06-01 00:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-07-25 11:29+0000\n"
+"Last-Translator: Максим Дронь <dronmax@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1471,10 +1471,17 @@ msgstr "Позволяет использовать аналитический �
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.ui.view,arch_db:account.report_invoice_document
+#: model:ir.ui.view,arch_db:account.view_account_payment_tree
+#: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
 msgstr "Количество"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr "Сумма в валюте"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1499,6 +1506,11 @@ msgstr "Сумма, участвующая в данной связке. Пре�
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount currency"
 msgstr "Сумма в валюте"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_tree
+msgid "Amount due"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
@@ -4754,6 +4766,11 @@ msgid "Invoices to validate"
 msgstr "Счета на утверждение"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_finance
+msgid "Invoicing"
+msgstr "Выставление счёта"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Invoicing & Payments"
 msgstr "Выставление счетов и Платежи"
@@ -5829,8 +5846,8 @@ msgstr "Октябрь"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Odoo Accounting has many free extra-features:"
-msgstr "Odoo учет имеет множество бесплатных дополнительных возможностей:"
+msgid "Odoo Accounting has many extra-features:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -8086,6 +8103,12 @@ msgid ""
 msgstr "Тип вычисления последней строки должен быть \"Баланс\", чтобы гарантировать, что вся сумма будет выделена."
 
 #. module: account
+#: code:addons/account/models/company.py:81
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
 msgstr "Движение этой строки проводки."
@@ -8102,6 +8125,13 @@ msgstr "Опция мультивалютный позволяет Вам пос
 #: model:ir.model.fields,help:account.field_account_invoice_name
 msgid "The name that will be used on account move lines"
 msgstr "Наименование которое будет использоваться в строках движения по счету"
+
+#. module: account
+#: code:addons/account/models/company.py:85
+#, python-format
+msgid ""
+"The new lock date for advisors must be set after the previous lock date."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
@@ -8563,7 +8593,12 @@ msgid ""
 msgstr "Чтобы управлять налогом который применяется при выставлении счета-фактуры Компании, Odoo использует понятие Фискальной Позиции: оно служит для того, чтобы автоматически установить правильный налог и/или счет, в зависимости от страны заказчика."
 
 #. module: account
-#: code:addons/account/models/account_move.py:776
+#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
+msgid "To pay"
+msgstr "Оплатить"
+
+#. module: account
+#: code:addons/account/models/account_move.py:895
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
 msgstr "Для сверки проводок, компания должна быть одна и та же для всех проводок."

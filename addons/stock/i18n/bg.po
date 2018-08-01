@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2018-06-28 07:37+0000\n"
+"PO-Revision-Date: 2018-07-31 16:44+0000\n"
 "Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -591,7 +591,7 @@ msgid ""
 "<strong>When you process an incoming shipment, internal transfer or "
 "delivery</strong>, assign a lot number or different lot numbers or serial "
 "numbers to a product by clicking on the <span class=\"fa fa-list\"/> icon"
-msgstr ""
+msgstr "<strong>Когато обработвате входяща пратка, вътрешно прехвърляне или доставка</strong>, определете партиден номер или различни партидни номера или серийни номера на даден продукт, като кликнете върху <span class=\"fa fa-list\"/> иконата."
 
 #. module: stock
 #: code:addons/stock/stock.py:2881
@@ -4187,7 +4187,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr ""
+msgstr "Вид пикинг"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
@@ -4218,7 +4218,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
 msgid "Picking Waves"
-msgstr ""
+msgstr "Пикинг вълни"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.vpicktree
@@ -4228,7 +4228,7 @@ msgstr "Избирателен списък"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view_herited
 msgid "Pickings"
-msgstr ""
+msgstr "Пикинги"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5274,7 +5274,7 @@ msgstr "Shipping Connectors"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_code
 msgid "Short Name"
-msgstr ""
+msgstr "Кратко име"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_code
@@ -5716,7 +5716,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "Типът пикинг определя пикинг изгледа"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -5725,7 +5725,7 @@ msgid ""
 "                operation a specific type which will alter its views accordingly.\n"
 "                On the picking type you could e.g. specify if packing is needed by default,\n"
 "                if it should show the customer."
-msgstr ""
+msgstr "The picking type system Ви позволява да разпределяте към всяка складова\n                операция специфичен тип, който съответно ще промени нейните изгледи.\n                On the picking type можете примерно да уточните дали packing е необходим по подразбиране,\n                в случай че трябва да показва на клиента."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_qty_multiple
@@ -5834,7 +5834,7 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr ""
+msgstr "Това Ви позволява да разпределите партида (или сериен номер) към pickings и движенията.  Това Ви дава възможност да сте наясно коя производствена партида е била изпратена до конкретен клиент, ..."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_calendar
@@ -5915,7 +5915,7 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr ""
+msgstr "Това е количеството продукти от инвентарна гледна точка. За движения в етап 'done - приключен' това е количеството продукти, които действително са били придвижени. За други движения това е количеството продукти, планирано за придвижване. Намаляването на това количество не води до закъснение или неизпълнение на поръчка. Промяната на това количество по разпределени движения засяга резервацията на продукта и трябва да се извършва с повишено внимание."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -6635,7 +6635,7 @@ msgid ""
 "                    your warehouses and that define the flows of your products. These\n"
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order."
-msgstr ""
+msgstr "Тук можете да определите основните маршрути, преминаващи през\n                    складовете Ви, което определя потоците на продуктите Ви. Тези\n                    маршрути могат да се разпределят към продукт, продуктова категория или да бъдат фиксирани\n                    към доставка или поръчка за продажба."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -6780,7 +6780,7 @@ msgstr ""
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
 "numbers by doing an inventory.  "
-msgstr ""
+msgstr "Разполагате с продукти на склад, които не притежават партиден номер. Можете да им назначите серийни номера, като създадете инвентар.  "
 
 #. module: stock
 #: constraint:stock.warehouse.orderpoint:0
@@ -6887,7 +6887,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7010,7 +7010,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "stock.return.picking.line"
-msgstr ""
+msgstr "stock.return.picking.line"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
