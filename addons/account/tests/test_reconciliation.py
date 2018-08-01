@@ -800,7 +800,6 @@ class TestReconciliation(AccountingTestCase):
             {'date': report_date_to + ' 00:00:00',
              'partial_id': statement_partial_id.id})
 
-        report_date_to = fields.Date.from_string(report_date_to)
         # Case 1: The invoice and payment are reconciled: Nothing should appear
         report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
 

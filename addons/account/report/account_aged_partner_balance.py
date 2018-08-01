@@ -19,6 +19,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # The context key allow it to appear
         ctx = self._context
         periods = {}
+        date_from = fields.Date.from_string(date_from)
         start = date_from - relativedelta(days=1)
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
