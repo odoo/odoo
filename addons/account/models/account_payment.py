@@ -466,6 +466,20 @@ class account_payment(models.Model):
             rec['amount'] = invoice['residual']
         return rec
 
+    @api.model
+    def create(self, vals):
+        rslt = super(account_payment, self).create(vals)
+
+        # When a payment is created by the multi payments wizard in 'multi' mode,
+        # its partner_bank_account_id will never be displayed, and hence stay empty,
+        # even if the payment method requires it. This condition ensures we set
+        # the first (and thus more prioritary) account of the partner in this field
+        # in that situation.
+        if not rslt.partner_bank_account_id and rslt.show_partner_bank_account and rslt.partner_id.bank_ids:
+            rslt.partner_bank_account_id = rslt.partner_id.bank_ids[0]
+
+        return rslt
+
     @api.multi
     def button_journal_entries(self):
         return {
