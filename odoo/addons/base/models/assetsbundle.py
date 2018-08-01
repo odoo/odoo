@@ -419,16 +419,7 @@ class AssetsBundle(object):
                         except psycopg2.Error:
                             pass
 
-        css_content = '\n'.join(asset.minify() for asset in self.stylesheets)
-
-        # Post process the produced css to add required vendor prefixes here
-        css_content = re.sub(r'(appearance: (\w+);)', r'-webkit-appearance: \2; -moz-appearance: \2; \1', css_content);
-
-        css_content = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2flex\3; \1', css_content)  # For PhantomJS tests
-        css_content = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', css_content) # For PhantomJS tests
-        css_content = re.sub(r'(flex: (\d+ \d+ (?:\d+|auto));)', r'-webkit-flex: \2; \1', css_content)  # For PhantomJS tests
-
-        return css_content
+        return '\n'.join(asset.minify() for asset in self.stylesheets)
 
     def compile_css(self, compiler, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
@@ -450,11 +441,22 @@ class AssetsBundle(object):
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
+        compiled = ''
         try:
             compiled = compiler(source)
-            return compiled.strip()
         except CompileError as e:
             return handle_compile_error(e, source=source)
+
+        compiled = compiled.strip()
+
+        # Post process the produced css to add required vendor prefixes here
+        compiled = re.sub(r'(appearance: (\w+);)', r'-webkit-appearance: \2; -moz-appearance: \2; \1', compiled);
+
+        compiled = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2flex\3; \1', compiled)  # For PhantomJS tests
+        compiled = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', compiled) # For PhantomJS tests
+        compiled = re.sub(r'(flex: (\d+ \d+ (?:\d+|auto));)', r'-webkit-flex: \2; \1', compiled)  # For PhantomJS tests
+
+        return compiled
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
