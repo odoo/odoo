@@ -10,7 +10,8 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import email_re, email_split, email_escape_char, float_is_zero, float_compare, pycompat
+from odoo.tools import email_re, email_split, email_escape_char, float_is_zero, float_compare, \
+    pycompat, date_utils
 from odoo.tools.misc import formatLang
 
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
@@ -213,7 +214,7 @@ class AccountInvoice(models.Model):
     @api.one
     @api.depends('payment_move_line_ids.amount_residual')
     def _get_payment_info_JSON(self):
-        self.payments_widget = json.dumps(False)
+        self.payments_widget = json.dumps(False, default=date_utils.json_default)
         if self.payment_move_line_ids:
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': self._get_payments_vals()}
             self.payments_widget = json.dumps(info)
