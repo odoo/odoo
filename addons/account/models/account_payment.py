@@ -259,6 +259,7 @@ class account_register_payments(models.TransientModel):
             'currency_id': self.currency_id.id,
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'multi': False,
         }
 
     @api.multi

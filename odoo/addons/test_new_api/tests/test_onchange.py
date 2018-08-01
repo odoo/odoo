@@ -139,10 +139,14 @@ class TestOnChange(common.TransactionCase):
         self.env.cache.invalidate()
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
-        self.assertEqual(result['value']['messages'], [
+        self.assertItemsEqual(result['value']['messages'], [
             (5,),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
+                'body': message.body,
+                'author': message.author.name_get()[0],
+                'size': message.size,
+                'important': message.important,
             }),
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
@@ -252,7 +256,8 @@ class TestOnChange(common.TransactionCase):
             'lines': [
                 (5,),
                 (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
+                               'partner': (partner2.id, partner2.name),
+                               'tags': [(5,)]}),
                 (0, 0, {'name': partner2.name,
                         'partner': (partner2.id, partner2.name),
                         'tags': [(5,)]}),
@@ -260,17 +265,6 @@ class TestOnChange(common.TransactionCase):
         })
 
         # do it again, but this time with a new tag on the second line
-        expected_new_tag_result = {
-            'name': partner2.name,
-            'lines': [
-                (5,),
-                (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
-                (0, 0, {'name': partner2.name,
-                        'partner': (partner2.id, partner2.name),
-                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
-            ],
-        }
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed
@@ -282,13 +276,18 @@ class TestOnChange(common.TransactionCase):
         self.env.cache.invalidate()
 
         result = multi.onchange(values, 'partner', field_onchange)
-        self.assertEqual(result['value'], expected_new_tag_result)
-
-        # ensure ID is not returned when asked and a many2many record is set to be created
-        self.env.cache.invalidate()
-
-        result = multi.onchange(values, 'partner', dict(field_onchange, **{'lines.tags.id': None}))
-        self.assertEqual(result['value'], expected_new_tag_result)
+        self.assertEqual(result['value'], {
+            'name': partner2.name,
+            'lines': [
+                (5,),
+                (1, line1.id, {'name': partner2.name,
+                               'partner': (partner2.id, partner2.name),
+                               'tags': [(5,)]}),
+                (0, 0, {'name': partner2.name,
+                        'partner': (partner2.id, partner2.name),
+                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
+            ],
+        })
 
     def test_onchange_specific(self):
         """ test the effect of field-specific onchange method """
@@ -320,7 +319,8 @@ class TestOnChange(common.TransactionCase):
         self.assertIn('participants', result['value'])
         self.assertItemsEqual(
             result['value']['participants'],
-            [(5,)] + [(4, user.id) for user in discussion.participants + demo],
+            [(5,)] + [(1, user.id, {'display_name': user.display_name})
+                      for user in discussion.participants + demo],
         )
 
     def test_onchange_default(self):
@@ -356,8 +356,6 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(len(discussion.messages), 3)
         messages = [(4, msg.id) for msg in discussion.messages]
         messages[0] = (1, messages[0][1], {'body': 'test onchange'})
-        lines = ["%s:%s" % (m.name, m.body) for m in discussion.messages]
-        lines[0] = "%s:%s" % (discussion.messages[0].name, 'test onchange')
         values = {
             'name': discussion.name,
             'moderator': demo.id,
@@ -368,7 +366,8 @@ class TestOnChange(common.TransactionCase):
         }
         result = discussion.onchange(values, 'messages', field_onchange)
         self.assertIn('message_concat', result['value'])
-        self.assertEqual(result['value']['message_concat'], "\n".join(lines))
+        self.assertEqual(result['value']['message_concat'],
+                         "\n".join(["%s:%s" % (m.name, m.body) for m in discussion.messages]))
 
     def test_onchange_one2many_with_domain_on_related_field(self):
         """ test the value of the one2many field when defined with a domain on a related field"""
@@ -414,15 +413,28 @@ class TestOnChange(common.TransactionCase):
             'categories': [(4, cat.id) for cat in discussion.categories],
             'messages': [(4, msg.id) for msg in discussion.messages],
             'participants': [(4, usr.id) for usr in discussion.participants],
+            'message_changes': 0,
             'important_messages': [(4, msg.id) for msg in discussion.important_messages],
             'important_emails': [(4, eml.id) for eml in discussion.important_emails],
         }
-        self.env.cache.invalidate()
         result = discussion.onchange(values, 'name', field_onchange)
 
+        # When one2many domain contains non-computed field, things are ok
+        self.assertEqual(result['value']['important_messages'],
+                         [(5,)] + [(4, msg.id) for msg in discussion.important_messages])
+
+        # But here with commit 5676d81, we get value of: [(2, email.id)]
         self.assertEqual(
             result['value']['important_emails'],
-            [(5,), (1, email.id, {'name': u'[Foo Bar] %s' % USER.name})],
+            [(5,),
+             (1, email.id, {
+                 'name': u'[Foo Bar] %s' % USER.name,
+                 'body': email.body,
+                 'author': USER.name_get()[0],
+                 'important': True,
+                 'email_to': demo.email,
+                 'size': email.size,
+             })]
         )
 
     def test_onchange_related(self):
