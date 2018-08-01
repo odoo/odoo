@@ -48,6 +48,7 @@ import odoo
 from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
+from .tools.date_utils import json_default
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique
 
@@ -619,13 +620,6 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
-
-        def json_default(obj):
-            if isinstance(obj, date):
-                if isinstance(obj, datetime):
-                    return fields.Datetime.to_string(obj)
-                return fields.Date.to_string(obj)
-            return ustr(obj)
 
         response = {
             'jsonrpc': '2.0',

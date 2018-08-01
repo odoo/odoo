@@ -6,6 +6,8 @@ import json
 from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
+from odoo import fields
+from odoo.tools import ustr
 
 
 def get_month(date):
@@ -92,6 +94,7 @@ def start_of(self, value, granularity):
 
     return datetime.combine(result, time.min) if is_datetime else result
 
+
 def end_of(self, value, granularity):
     """
     Get end of a time period from a date or a datetime.
@@ -117,3 +120,14 @@ def end_of(self, value, granularity):
         raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
 
     return datetime.combine(result, time.max) if is_datetime else result
+
+
+def json_default(obj):
+    """
+    Properly serializes date and datetime objects.
+    """
+    if isinstance(obj, date):
+        if isinstance(obj, datetime):
+            return fields.Datetime.to_string(obj)
+        return fields.Date.to_string(obj)
+    return ustr(obj)
