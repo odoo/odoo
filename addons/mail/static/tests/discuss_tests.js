@@ -146,7 +146,7 @@ QUnit.test('@ mention in channel', function (assert) {
     assert.expect(34);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
     var fetchListenersDef = $.Deferred();
     var receiveMessageDef = $.Deferred();
 
@@ -432,7 +432,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
     assert.expect(2);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
     var messageData = [];
     _.each(_.range(1, 41), function (num) {
         messageData.push({
@@ -624,7 +624,7 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
     assert.expect(2);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
     var receiveMessageDef = $.Deferred();
 
     this.data.initMessaging = {

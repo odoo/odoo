@@ -149,7 +149,7 @@ QUnit.test('messaging menu widget: messaging menu with 1 record', function (asse
 QUnit.test('messaging menu widget: no crash when clicking on inbox notification not associated to a document', function (assert) {
     assert.expect(3);
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
 
     var messagingMenu = new MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {

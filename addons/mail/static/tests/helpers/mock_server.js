@@ -21,11 +21,8 @@ MockServer.include({
             this.initMessagingData = data.initMessaging;
             delete data.initMessaging;
         }
-        var BusService = _.find(options.services, function (Service) {
-            return Service.prototype.name === 'bus_service';
-        });
-        if (BusService) {
-            this.busBus = BusService.prototype.bus;
+        if (options.services && options.services.bus_service) {
+            this.busBus = options.services.bus_service.prototype.bus;
         }
 
         this._super.apply(this, arguments);

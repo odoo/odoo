@@ -20,12 +20,18 @@ var ServiceProviderMixin = {
 
         // add already registered services from the service registry
         _.each(core.serviceRegistry.map, function (Service, serviceName) {
+            if (serviceName in self.UndeployedServices) {
+                throw new Error('Service "' + serviceName + '" is already loaded.');
+            }
             self.UndeployedServices[serviceName] = Service;
         });
         this._deployServices();
 
         // listen on newly added services
         core.serviceRegistry.onAdd(function (serviceName, Service) {
+            if (serviceName in self.services || serviceName in self.UndeployedServices) {
+                throw new Error('Service "' + serviceName + '" is already loaded.');
+            }
             self.UndeployedServices[serviceName] = Service;
             self._deployServices();
         });
@@ -42,16 +48,16 @@ var ServiceProviderMixin = {
         var self = this;
         var done = false;
         while (!done) {
-            var Service = _.find(this.UndeployedServices, function (Service) {
+            var serviceName = _.findKey(this.UndeployedServices, function (Service) {
                 // no missing dependency
                 return !_.some(Service.prototype.dependencies, function (depName) {
                     return !self.services[depName];
                 });
             });
-            if (Service) {
-                var service = new Service(this);
-                this.services[Service.prototype.name] = service;
-                delete this.UndeployedServices[Service.prototype.name];
+            if (serviceName) {
+                var service = new this.UndeployedServices[serviceName](this);
+                this.services[serviceName] = service;
+                delete this.UndeployedServices[serviceName];
                 service.start();
             } else {
                 done = true;

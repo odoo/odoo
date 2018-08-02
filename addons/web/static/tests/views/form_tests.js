@@ -2850,17 +2850,19 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                         '<group><field name="foo"/></group>' +
                 '</form>',
-            services: [NotificationService.extend({
-                notify: function (params) {
-                    if (params.type !== 'warning') {
-                        return;
+            services: {
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        if (params.type !== 'warning') {
+                            return;
+                        }
+                        assert.strictEqual(params.title, 'The following fields are invalid:',
+                            "should have a warning with correct title");
+                        assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
+                            "should have a warning with correct message");
                     }
-                    assert.strictEqual(params.title, 'The following fields are invalid:',
-                        "should have a warning with correct title");
-                    assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
-                        "should have a warning with correct message");
-                }
-            })],
+                }),
+            },
         });
 
         form.$buttons.find('.o_form_button_save').click();
@@ -4934,11 +4936,13 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: [NotificationService.extend({
-                notify: function (params) {
-                    assert.step(params.type);
-                }
-            })],
+            services: {
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type);
+                    }
+                }),
+            },
         });
 
         form.$buttons.find('.o_form_button_edit').click();

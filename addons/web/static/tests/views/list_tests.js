@@ -2154,13 +2154,15 @@ QUnit.module('Views', {
                     '<field name="foo" required="1"/>' +
                     '<field name="bar"/>' +
                 '</tree>',
-            services: [NotificationService.extend({
-                notify: function (params) {
-                    if (params.type === 'warning') {
-                        warnings++;
+            services: {
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        if (params.type === 'warning') {
+                            warnings++;
+                        }
                     }
-                }
-            })],
+                }),
+            },
         });
 
         // Start first line edition

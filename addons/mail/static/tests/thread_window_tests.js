@@ -28,30 +28,26 @@ QUnit.module('mail', {
             },
         };
         this.services = mailTestUtils.getMailServices();
-
-        // backup original thread window append to selector
-        this.MailService = _.find(this.services, function (Service) {
-            return Service.prototype.name === 'mail_service';
-        });
-        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.MailService.prototype.THREAD_WINDOW_APPENDTO;
+        this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
         this.createParent = function (params) {
             var widget = new Widget();
 
             // in non-debug mode, append thread windows in qunit-fixture
             if (params.debug) {
-                self.MailService.prototype.THREAD_WINDOW_APPENDTO = 'body';
+                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
             } else {
-                self.MailService.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
+                self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
+            params.services = _.clone(params.services);
             testUtils.addMockEnvironment(widget, params);
             return widget;
         };
     },
     afterEach: function () {
         // reset thread window append to body
-        this.MailService.prototype.THREAD_WINDOW_APPENDTO = 'body';
+        this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
     },
 }, function () {
 

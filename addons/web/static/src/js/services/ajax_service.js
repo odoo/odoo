@@ -6,7 +6,6 @@ var core = require('web.core');
 var session = require('web.session');
 
 var AjaxService = AbstractService.extend({
-    name: 'ajax',
     rpc: function (route, args, options, target) {
         return $.Deferred(function (def) {
             session.rpc(route, args, options).then(function () {

@@ -25,7 +25,9 @@ QUnit.module('Services', {
                 },
             },
             model: 'fake_model',
-            services: [NotificationService],
+            services: {
+                notification: NotificationService,
+            },
         };
     },
     afterEach: function () {

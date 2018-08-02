@@ -1044,7 +1044,6 @@ QUnit.module('ActionManager', {
         assert.expect(14);
 
         var RamStorageService = AbstractStorageService.extend({
-            name: 'session_storage',
             storage: new RamStorage(),
         });
 
@@ -1052,7 +1051,9 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [RamStorageService],
+            services: {
+                session_storage: RamStorageService,
+            },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
@@ -1821,7 +1822,9 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService],
+            services: {
+                report: ReportService,
+            },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1862,11 +1865,14 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService, NotificationService.extend({
-                notify: function (params) {
-                    assert.step(params.type || 'notification');
-                }
-            })],
+            services: {
+                report: ReportService,
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type || 'notification');
+                    }
+                }),
+            },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1916,11 +1922,14 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService, NotificationService.extend({
-                notify: function (params) {
-                    assert.step(params.type || 'notification');
-                }
-            })],
+            services: {
+                report: ReportService,
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type || 'notification');
+                    }
+                })
+            },
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -2979,12 +2988,14 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [SessionStorageService.extend({
-                setItem: function (key, value) {
-                    assert.strictEqual(value, JSON.stringify(expectedAction),
-                        "should store the executed action in the sessionStorage");
-                },
-            })],
+            services: {
+                session_storage: SessionStorageService.extend({
+                    setItem: function (key, value) {
+                        assert.strictEqual(value, JSON.stringify(expectedAction),
+                            "should store the executed action in the sessionStorage");
+                    },
+                }),
+            },
         });
 
         actionManager.doAction(3);
@@ -3010,14 +3021,16 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [SessionStorageService.extend({
-                setItem: function (key, value) {
-                    if (checkSessionStorage) {
-                        assert.strictEqual(value, JSON.stringify(expectedAction),
-                            "should correctly store the executed action in the sessionStorage");
-                    }
-                },
-            })],
+            services: {
+                session_storage: SessionStorageService.extend({
+                    setItem: function (key, value) {
+                        if (checkSessionStorage) {
+                            assert.strictEqual(value, JSON.stringify(expectedAction),
+                                "should correctly store the executed action in the sessionStorage");
+                        }
+                    },
+                }),
+            },
         });
 
         // execute an action and open a record in form view
