@@ -66,9 +66,9 @@ class MrpStockReport(models.TransientModel):
         elif rec_id and model in ('stock.picking', 'mrp.production'):
             record = self.env[model].browse(rec_id)
             if model == 'stock.picking':
-                lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+                lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.state == 'done')
             else:
-                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.state == 'done')
         move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)
         final_vals = sorted(move_line_vals, key=lambda v: v['date'], reverse=True)
         lines = self._final_vals_to_lines(final_vals, level)
@@ -112,7 +112,8 @@ class MrpStockReport(models.TransientModel):
     def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self._get_reference(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
-        unfoldable = False if not move_line.lot_id else unfoldable
+        if level > 1:  # level 1 is always foldable even if there is not SN/Lot
+            unfoldable = False if not move_line.lot_id else unfoldable
         data = [{
             'level': level,
             'unfoldable': unfoldable,
