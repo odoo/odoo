@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
+import base64
 import io
 
 import odoo
 from odoo.tests import common
+from odoo.tools.misc import file_open, mute_logger
+from odoo.tools.translate import _
 
 
 class TestTermCount(common.TransactionCase):
@@ -79,3 +82,49 @@ class TestTermCount(common.TransactionCase):
         menu.with_context(lang='fr_FR').name = "Nouveau nom"
         update_translations()
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom", 'The translation of "New Name" should be "Nouveau nom"')
+
+    def test_import_from_po_file(self):
+        """Test the import from a single po file works"""
+        with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
+            po_file = base64.encodestring(f.read())
+
+        import_tlh = self.env["base.language.import"].create({
+            'name': 'Klingon',
+            'code': 'tlh',
+            'data': po_file,
+            'filename': 'tlh.po',
+        })
+        with mute_logger('odoo.addons.base.models.res_lang'):
+            import_tlh.import_lang()
+
+        lang_count = self.env['res.lang'].search_count([('code', '=', 'tlh')])
+        self.assertEqual(lang_count, 1, "The imported language was not creates")
+
+        trans_count = self.env['ir.translation'].search_count([('lang', '=', 'tlh')])
+        self.assertEqual(trans_count, 1, "The imported translations were not created")
+
+        self.env.context = dict(self.env.context, lang="tlh")
+        self.assertEqual(_("Klingon"), "tlhIngan", "The code translation was not applied")
+
+    def test_import_from_csv_file(self):
+        """Test the import from a single CSV file works"""
+        with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
+            po_file = base64.encodestring(f.read())
+
+        import_tlh = self.env["base.language.import"].create({
+            'name': 'Dothraki',
+            'code': 'dot',
+            'data': po_file,
+            'filename': 'dot.csv',
+        })
+        with mute_logger('odoo.addons.base.models.res_lang'):
+            import_tlh.import_lang()
+
+        lang_count = self.env['res.lang'].search_count([('code', '=', 'dot')])
+        self.assertEqual(lang_count, 1, "The imported language was not creates")
+
+        trans_count = self.env['ir.translation'].search_count([('lang', '=', 'dot')])
+        self.assertEqual(trans_count, 1, "The imported translations were not created")
+
+        self.env.context = dict(self.env.context, lang="dot")
+        self.assertEqual(_("Accounting"), "samva", "The code translation was not applied")
