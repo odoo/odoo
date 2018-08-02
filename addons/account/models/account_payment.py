@@ -92,6 +92,7 @@ class account_abstract_payment(models.AbstractModel):
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
             or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
             or inv.account_id != invoices[0].account_id
+            or inv.partner_bank_id != invoices[0].partner_bank_id
             for inv in invoices)
 
         currency = invoices[0].currency_id
@@ -249,6 +250,10 @@ class account_register_payments(models.TransientModel):
     _inherit = 'account.abstract.payment'
     _description = "Register payments on multiple invoices"
 
+    group_invoices = fields.Boolean(string="Group Invoices", help="""If enabled, groups invoices by commercial partner, invoice account,
+                                                                    type and recipient bank account in the generated payments. If disabled,
+                                                                    a distinct payment will be generated for each invoice.""")
+
     @api.model
     def default_get(self, fields):
         rec = super(account_register_payments, self).default_get(fields)
@@ -259,13 +264,18 @@ class account_register_payments(models.TransientModel):
 
         return rec
 
+    #TODO OCO multi pour les invoices du même partenaire qui ont des comptes différents sélectionnés (sauf si vide)
+
     @api.multi
     def _groupby_invoices(self):
         '''Split the invoices linked to the wizard according to their commercial partner,
          their account and their type.
 
         :return: a dictionary mapping (partner_id, account_id, invoice_type) => invoices recordset.
-        '''
+        ''' #TODO OCO DOC
+        if not self.group_invoices:
+            return {inv.id: inv for inv in self.invoice_ids}
+
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id and type
         for inv in self.invoice_ids:
