@@ -3,14 +3,14 @@
 # * sale_order_dates
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Максим Дронь <dronmax@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -20,40 +20,31 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_order_dates
-#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order__commitment_date
 msgid "Commitment Date"
 msgstr "Дата предоставления"
 
 #. module: sale_order_dates
-#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
-msgid ""
-"Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
 msgstr ""
-"Дата, к которой клиент запросил доставку товаров.\n"
-"После подтверждения этого заказа ожидаемая дата поставки будет \n"
-"вычислена на основе этой даты и возможной задержки со стороны компании.\n"
-"Оставьте это поле пустым, если хотите, чтобы заказ на поставку был обработан как можно скорее. В этом случае ожидаемая дата будет вычислена методом по умолчанию: на основе длительности изготовления изделия и возможной задержки со стороны компании."
 
 #. module: sale_order_dates
-#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order__expected_date
 msgid ""
-"Date by which the products are sure to be delivered. This is a date that you"
-" can promise to the customer, based on the Product Lead Times."
+"Delivery date you can promise to the customer, computed from product lead "
+"times and from the shipping policy of the order."
 msgstr ""
-"Дата, к которой товары точно будут доставлены. Это дата которую Вы можете "
-"пообещать клиенту, она основана на длительности изготовления изделия."
 
 #. module: sale_order_dates
-#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
-msgid "Date on which the first Delivery Order was created."
-msgstr "Дата, когда был создан первый заказ на поставку."
-
-#. module: sale_order_dates
-#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order__effective_date
 msgid "Effective Date"
 msgstr "Срок эффективности"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order__expected_date
+msgid "Expected Date"
+msgstr "Ожидаемая дата"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -61,15 +52,10 @@ msgid "Quotation"
 msgstr "Предложение цен"
 
 #. module: sale_order_dates
-#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
-msgid "Requested Date"
-msgstr "Требуемая дата"
-
-#. module: sale_order_dates
-#: code:addons/sale_order_dates/models/sale_order.py:57
+#: code:addons/sale_order_dates/models/sale_order.py:50
 #, python-format
-msgid "Requested date is too soon!"
-msgstr "Требуемая дата слишком скоро!"
+msgid "Requested date is too soon."
+msgstr ""
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
@@ -77,7 +63,7 @@ msgid "Sales Order Line"
 msgstr "Строка заказа на продажу"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/models/sale_order.py:58
+#: code:addons/sale_order_dates/models/sale_order.py:51
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
@@ -85,3 +71,10 @@ msgid ""
 msgstr ""
 "Дата, запрашиваемая клиентом, наступит раньше, чем дата выполнения "
 "обязательства на поставку. Вы можете не успеть выполнить запрос клиента."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order__commitment_date
+msgid ""
+"This is the delivery date promised to the customer. If set, the delivery "
+"order will be scheduled based on this date rather than product lead times."
+msgstr ""

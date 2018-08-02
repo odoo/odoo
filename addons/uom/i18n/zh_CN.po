@@ -1,0 +1,409 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * uom
+# 
+# Translators:
+# Martin Trigaux, 2018
+# Maie <m@maie.name>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# liyes <bodetools@gmail.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# Ted Wang <feiyuwang2012@gmail.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Xu Lei <xulei8@qq.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__active
+msgid "Active"
+msgstr "有效"
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_form_action
+msgid "Add a new unit of measure"
+msgstr ""
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid "Add a new unit of measure category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
+msgid "Bigger Ratio"
+msgstr "更大比率"
+
+#. module: uom
+#: selection:uom.uom,uom_type:0
+msgid "Bigger than the reference Unit of Measure"
+msgstr "大于参考单位"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+msgid "Category"
+msgstr "类别"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr "计量单位转换只能在同一个类型之间进行。转换基于比例"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:138
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr "产品单位 %s 与默认单位 %s 无法转换，二者属于不同的类别！"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_day
+msgid "Day(s)"
+msgstr "天"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozen(s)"
+msgstr "打"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_hour
+msgid "Hour(s)"
+msgstr "小时"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr "这个度量单位的数量大于此类别中的参考度量单位：1 *（本单位）=比率*（参考单位）"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 * (本单位)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__id
+#: model:ir.model.fields,field_description:uom.field_uom_uom__id
+msgid "ID"
+msgstr "ID"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
+#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Length"
+msgstr "长度"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_length
+msgid "Length / Distance"
+msgstr "长度或距离"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "Liter(s)"
+msgstr "升"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_res_users__has_group_uom
+#: model:res.groups,name:uom.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "管理多个计量单位"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__name
+msgid "Name"
+msgstr "名称"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "产品测量单位"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_category
+msgid "Product UoM Categories"
+msgstr "产品计量单位类别"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+msgid "Ratio"
+msgstr "比例"
+
+#. module: uom
+#: selection:uom.uom,uom_type:0
+msgid "Reference Unit of Measure for this category"
+msgstr "这个类别的参考计量单位"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
+msgid "Rounding Precision"
+msgstr "舍入精确度"
+
+#. module: uom
+#: selection:uom.uom,uom_type:0
+msgid "Smaller than the reference Unit of Measure"
+msgstr "小于参考计量单位"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__rounding
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr "计算的数量将是这个值的倍数。  不能进一步分割的单位，比如 1 片，使用1.0 。"
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "计量单位的转换比率不能为 0！"
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The rounding precision must be greater than 0!"
+msgstr "舍入精度必须大于0！"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Time"
+msgstr "时间"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
+msgid "Type"
+msgstr "类型"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
+msgid "Type of Measure"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
+msgid "Type of measurement category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__active
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr "取消选中活动字段以禁用度量单位，而不删除它。"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_unit
+msgid "Unit"
+msgstr "单位"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__name
+msgid "Unit of Measure"
+msgstr "量度单位"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "计量单位类别"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_unit
+msgid "Unit(s)"
+msgstr "件"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Units"
+msgstr ""
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model:ir.ui.view,arch_db:uom.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "测量单位"
+
+#. module: uom
+#: model:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+msgid "Units of Measure categories"
+msgstr "计量单位类别"
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid ""
+"Units of measure belonging to the same category can be\n"
+"            converted between each others. For example, in the category\n"
+"            <i>'Time'</i>, you will have the following units of measure:\n"
+"            Hours, Days."
+msgstr ""
+"属于相同类别的测量单位可以在彼此之间转换。\n"
+"例如，在类别<i>'Time'</i>中，\n"
+"您将有以下计量单位：小时，天。"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:86
+#, python-format
+msgid ""
+"UoM category %s should have a reference unit of measure. If you just created"
+" a new category, please record the 'reference' unit first."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:88
+#, python-format
+msgid "UoM category %s should only have one reference unit of measure."
+msgstr ""
+
+#. module: uom
+#: model:ir.model,name:uom.model_res_users
+msgid "Users"
+msgstr "用户"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+#: model:uom.category,name:uom.product_uom_categ_vol
+msgid "Volume"
+msgstr "体积"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+#: model:uom.category,name:uom.product_uom_categ_kgm
+msgid "Weight"
+msgstr "重量"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_wtime
+msgid "Working Time"
+msgstr "工作时间"
+
+#. module: uom
+#: sql_constraint:uom.category:0
+msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_form_action
+msgid ""
+"You must define a conversion rate between several Units of\n"
+"            Measure within the same category."
+msgstr ""
+"您必须在几个单位之间定义转换率\n"
+"在同一类别内测量。"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: uom
+#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr "例如: 1*(参考单位) = 比例 * （本单位）"
+
+#. module: uom
+#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr "例如: 1 * (本单位t) = 比例 * (参考单位)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_floz
+msgid "fl oz"
+msgstr "fl oz"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_foot
+msgid "foot(ft)"
+msgstr "英尺"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal(s)"
+msgstr "加仑"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_inch
+msgid "inch(es)"
+msgstr "英寸"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_km
+msgid "km"
+msgstr "km"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_lb
+msgid "lb(s)"
+msgstr "磅"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_mile
+msgid "mile(s)"
+msgstr "英里"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_oz
+msgid "oz(s)"
+msgstr "盎司"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_qt
+msgid "qt"
+msgstr "夸脱"
