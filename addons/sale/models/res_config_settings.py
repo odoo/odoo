@@ -19,7 +19,6 @@ class ResConfigSettings(models.TransientModel):
     group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
     portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Digital Signature')
     portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Electronic Payment')
-    module_sale_payment = fields.Boolean("Sale Payment", help='Technical field implied by user choice of portal_confirmation_pay.')
     module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
@@ -67,6 +66,18 @@ class ResConfigSettings(models.TransientModel):
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
+    automatic_invoice = fields.Boolean("Automatic Invoice",
+                                       help="The invoice is generated automatically and available in the customer portal "
+                                            "when the transaction is confirmed by the payment acquirer.\n"
+                                            "The invoice is marked as paid and the payment is registered in the payment journal "
+                                            "defined in the configuration of the payment acquirer.\n"
+                                            "This mode is advised if you issue the final invoice at the order and not after the delivery.",
+                                       config_parameter='sale_payment.automatic_invoice')
+    template_id = fields.Many2one('mail.template', 'Email Template',
+                                  domain="[('model', '=', 'account.invoice')]",
+                                  config_parameter='sale_payment.default_email_template',
+                                  default=lambda self: self.env.ref('account.email_template_edi_invoice', False))
+
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if not self.group_discount_per_so_line:
@@ -101,11 +112,6 @@ class ResConfigSettings(models.TransientModel):
                 'group_sale_pricelist': False,
                 'group_pricelist_item': False,
             })
-
-    @api.onchange('portal_confirmation_pay')
-    def _onchange_portal_confirmation_pay(self):
-        if self.portal_confirmation_pay:
-            self.module_sale_payment = True
 
     @api.model
     def get_values(self):
