@@ -138,6 +138,11 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
                     <filter string="Receivable Accounts" name="receivableacc" domain="[('internal_type','=','receivable')]"/>
                     <filter string="Payable Accounts" name="payableacc" domain="[('internal_type','=','payable')]"/>
+                    <filter string="Equity" name="equityacc" domain="[('internal_group','=', 'equity')]"/>
+                    <filter string="Assets" name="assetsacc" domain="[('internal_group','=', 'assets')]"/>
+                    <filter string="Liability" name="liabilityacc" domain="[('internal_group','=', 'liability')]"/>
+                    <filter string="Income" name="incomeacc" domain="[('internal_group','=', 'income')]"/>
+                    <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'user_type_id'}"/>
