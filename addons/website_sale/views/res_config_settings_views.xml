@@ -11,7 +11,7 @@
                 Show the automatic invoices setting in sales settings.
                 -->
                 <div class="col-12 col-lg-6 o_setting_box"
-                     attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), '&amp;', ('portal_confirmation_pay', '=', False), ('module_website_quote', '=', False)]}">
+                     attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), ('portal_confirmation_pay', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="automatic_invoice" nolabel="1"/>
                     </div>

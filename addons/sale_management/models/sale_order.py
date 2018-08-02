@@ -51,7 +51,9 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def _get_default_template(self):
-        template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+        if not self.env.user.has_group('sale_management.group_quotation_template'):
+            return False
+        template = self.env.ref('sale_management.sale_management_template_default', raise_if_not_found=False)
         return template and template.active and template or False
 
     def _get_default_require_signature(self):
@@ -78,8 +80,6 @@ class SaleOrder(models.Model):
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    amount_undiscounted = fields.Float(
-        'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature,
                                        states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
@@ -95,13 +95,6 @@ class SaleOrder(models.Model):
             default = dict(default or {})
             default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
         return super(SaleOrder, self).copy(default=default)
-
-    @api.one
-    def _compute_amount_undiscounted(self):
-        total = 0.0
-        for line in self.order_line:
-            total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
-        self.amount_undiscounted = total
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):

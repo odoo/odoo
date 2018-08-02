@@ -1,4 +1,4 @@
-odoo.define('website_quote.website_quote', function (require) {
+odoo.define('sale_management.sale_management', function (require) {
 'use strict';
 
 require('web.dom_ready');
@@ -6,8 +6,8 @@ var ajax = require('web.ajax');
 var config = require('web.config');
 var Widget = require('web.Widget');
 
-if(!$('.o_website_quote').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_website_quote'");
+if (!$('.o_portal_sale_sidebar').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_portal_sale_sidebar'");
 }
 
     // Add to SO button
@@ -40,7 +40,7 @@ if(!$('.o_website_quote').length) {
     });
 
     var update_button_list = [];
-    $('a.js_update_line_json').each(function( index ) {
+    $('a.js_update_line_json').each(function(index) {
         var button = new UpdateLineButton();
         button.setElement($(this)).start();
         update_button_list.push(button);
@@ -93,7 +93,7 @@ if(!$('.o_website_quote').length) {
             this.spy_watched.find($el).attr('id', id);
             return id;
         },
-        extractText: function($node){
+        extractText: function ($node){
             var self = this;
             var raw_text = [];
             _.each($node.contents(), function(el){
@@ -113,7 +113,7 @@ if(!$('.o_website_quote').length) {
     nav_menu.setElement($('[data-id="quote_sidebar"]'));
     nav_menu.start($('body[data-target=".navspy"]'));
 
-    var $bs_sidebar = $(".o_website_quote .bs-sidebar");
+    var $bs_sidebar = $(".o_portal_sale_sidebar .bs-sidebar");
     $(window).on('resize', _.throttle(adapt_sidebar_position, 200, {leading: false}));
     adapt_sidebar_position();
 
