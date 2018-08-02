@@ -412,10 +412,13 @@ var StatementModel = BasicModel.extend({
         var def_taxes = this._rpc({
                 model: 'account.tax',
                 method: 'search_read',
-                fields: ['price_include'],
+                fields: ['price_include', 'amount_type'],
             })
             .then(function (taxes) {
-                self.taxes = _.object(_.pluck(taxes, 'id'), _.pluck(taxes, 'price_include'));
+                self.taxes = _.object(_.pluck(taxes, 'id'), {
+                    price_include: _.pluck(taxes, 'price_include'),
+                    amount_type: _.pluck(taxes, 'amount_type'),
+                })
             });
         return $.when(def_statement, def_reconcileModel, def_account, def_taxes).then(function () {
             _.each(self.lines, function (line) {
@@ -641,7 +644,7 @@ var StatementModel = BasicModel.extend({
 
             if(values.tax_id)
                 // Set force_tax_included at the 'price_include' tax value when changing the tax.
-                values.tax_id.readonly_force_tax_included = prop.force_tax_included = this.taxes[values.tax_id.id];
+                values.tax_id.readonly_force_tax_included = prop.force_tax_included = this.taxes[values.tax_id.id].price_include;
             else if('tax_id' in values && prop.base_amount && prop.base_amount != prop.amount)
                 // When removing a price_included tax, reset the amount to the base_amount.
                 prop.amount = prop.base_amount;
@@ -1056,15 +1059,18 @@ var StatementModel = BasicModel.extend({
             prop.base_amount = sign * field_utils.parse.monetary(amount, {}, formatOptions);
         }
 
-        // Set the readonly_force_tax_included value.
-        if(prop.tax_id)
-            prop.tax_id.readonly_force_tax_included = this.taxes[prop.tax_id.id];
+        if(prop.tax_id){
+            // Set the amount_type value.
+            prop.tax_id.amount_type = this.taxes[prop.tax_id.id].amount_type;
+            // Set the readonly_force_tax_included value.
+            prop.tax_id.readonly_force_tax_included = this.taxes[prop.tax_id.id].price_include;
+        }
 
         // Set the force_tax_included value.
         if(prop.tax_id && values.force_tax_included !== undefined)
             prop.force_tax_included = values.force_tax_included;
-        else if(prop.tax_id && this.taxes[prop.tax_id.id])
-            prop.force_tax_included = this.taxes[prop.tax_id.id];
+        else if(prop.tax_id && this.taxes[prop.tax_id.id].price_include)
+            prop.force_tax_included = this.taxes[prop.tax_id.id].price_include;
         prop.amount = prop.base_amount;
         return prop;
     },
