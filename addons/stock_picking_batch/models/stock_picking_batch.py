@@ -81,7 +81,6 @@ class StockPickingBatch(models.Model):
                 picking_to_backorder |= picking
             else:
                 picking.action_done()
-        self.write({'state': 'done'})
         if picking_without_qty_done:
             view = self.env.ref('stock.view_immediate_transfer')
             wiz = self.env['stock.immediate.transfer'].create({
@@ -102,7 +101,7 @@ class StockPickingBatch(models.Model):
             }
         if picking_to_backorder:
             return picking_to_backorder.action_generate_backorder_wizard()
-        return True
+        return self.write({'state': 'done'})
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
