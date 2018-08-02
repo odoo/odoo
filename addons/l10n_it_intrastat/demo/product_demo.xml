@@ -1,0 +1,27 @@
+<openerp>
+    <data>
+    <!-- Intrastat Codes -->
+    <record id="intrastat_intrastat_01012100" model="report.intrastat.code">
+        <field name="name">Pure-bred breeding horses</field>
+        <field name="type">good</field>
+    </record>
+    <record id="intrastat_intrastat_01019000" model="report.intrastat.code">
+        <field name="name">Live mules and hinnies</field>
+        <field name="type">good</field>
+    </record>
+
+    <!-- Intrastat on product -->
+    <record id="product.product_product_10_product_template" model="product.template">
+        <field name="intrastat_type">good</field>
+        <field name="intrastat_id" ref="intrastat_intrastat_01012100"/>
+    </record>
+
+    <!-- Intrastat on product category -->
+    <record id="product.product_category_6" model="product.category">
+        <field name="name">intrademocategory</field>
+        <field name="intrastat_type">good</field>
+        <field name="intrastat_code_id" ref="intrastat_intrastat_01019000"/>
+    </record>
+
+    </data>
+</openerp>

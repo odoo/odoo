@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!--
+        Fiscal Position
+        -->
+        <record id="view_intrastat_account_position_form" model="ir.ui.view">
+            <field name="name">intrastat.account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="inherit_id" ref="account.view_account_position_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='note']" position="before">
+                    <separator string="Intrastat"/>
+                    <group colspan="4">
+                        <field name="intrastat"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+        INVOICE CUSTOMER
+        -->
+        <record model="ir.ui.view" id="account_intrastat_invoice_form">
+            <field name="name">account.intrastat.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                    <field name="intrastat"/>
+                </xpath>
+
+                <xpath expr="//page[@name='other_info']" position="before">
+                    <page string="Intrastat" attrs="{'invisible': [('intrastat', '=', False)]}">
+                        <group colspan="4">
+                            <group>
+                                <button name="compute_intrastat_lines" states="draft,sent" string="Recompute Intrastat Lines" type="object"/>
+                            </group>
+                            <newline/>
+                            <group colspan="4">
+                                <field name="intrastat_line_ids" nolabel="1" colspan="4"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!--
+        INVOICE SUPPLIER
+        -->
+        <record model="ir.ui.view" id="account_intrastat_invoice_supplier_form">
+            <field name="name">account.intrastat.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="intrastat"/>
+                </xpath>
+                <xpath expr="//sheet/notebook/page[1]" position="after">
+
+                    <page string="Intrastat" attrs="{'invisible': [('intrastat', '=', False)]}">
+                        <group colspan="4">
+                            <group>
+                                <button name="compute_intrastat_lines" states="draft,sent" string="Recompute Intrastat Lines" type="object"/>
+                            </group>
+                            <newline/>
+                            <group colspan="4">
+                            <field name="intrastat_line_ids" nolabel="1" colspan="4"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!--
+        INVOICE - INTRASTAT
+        -->
+        <record model="ir.ui.view" id="view_tree_invoice_intrastat_form">
+            <field name="name">views.tree.account.intrastat.invoice.intrastat</field>
+            <field name="model">account.invoice.intrastat</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="intrastat_code_type"/>
+                    <field name="intrastat_code_id"/>
+                    <field name="transation_nature_id"/>
+                    <field name="transport_code_id"/>
+                    <field name="weight_kg"/>
+                    <field name="amount_currency" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_invoice_intrastat_form">
+            <field name="name">views.form.account.intrastat.invoice.intrastat</field>
+            <field name="model">account.invoice.intrastat</field>
+            <field name="arch" type="xml">
+                <form>
+                       <field name="statement_section" readonly="1"/>
+                       <group>
+                           <group>
+                               <field name="intrastat_code_type"/>
+                               <field name="intrastat_code_id" />
+                               <field name="amount_currency"/>
+                               <field name="amount_euro"/>
+                               <field name="statistic_amount_euro"/>
+                           </group>
+                           <group>
+                               <field name="transation_nature_id"/>
+                               <field name="weight_kg"/>
+                               <field name="additional_units"/>
+                               <field name="additional_units_uom"/>
+                           </group>
+                           <newline/>
+                           <group name="intrastat_partner">
+                               <field name="country_partner_id"/>
+                           </group>
+
+                           <!-- Origin -->
+                           <group name="intra_origin" string="Origin">
+                                   <field name="province_origin_id"
+                                       attrs="{
+                                       'invisible': [
+                                           ('statement_section', 'not in', ['sale_s1'])],
+                                       'required': [
+                                           ('statement_section', 'in', ['sale_s1'])]}"/>
+                                   <field name="country_origin_id"/>
+                                  <field name="country_good_origin_id"/>
+                           </group>
+
+                           <!-- Destination -->
+                           <group name="intra_destination" string="Destination">
+                               <field name="delivery_code_id"/>
+                               <field name="transport_code_id"/>
+                               <field name="province_destination_id"
+                                   attrs="{
+                                   'invisible': [
+                                       ('statement_section', 'not in', ['purchase_s1'])],
+                                   'required': [
+                                       ('statement_section', 'in', ['purchase_s1'])]}"/>
+                               <field name="country_destination_id"
+                                   attrs="{
+                                   'invisible': [
+                                       ('statement_section', 'not in', ['sale_s1'])],
+                                   'required': [
+                                       ('statement_section', 'in', ['sale_s1'])]}" />
+                           </group>
+
+                           <!-- Invoice Ref -->
+                           <group name="intra_invoice" string="Invoice Ref"
+                               attrs="{'invisible': [
+                                               ('statement_section', '!=', 'sale_s3'),
+                                               ('statement_section', '!=', 'sale_s4'),
+                                               ('statement_section', '!=', 'purchase_s3'),
+                                               ('statement_section', '!=', 'purchase_s4'),
+                                           ]}">
+                               <field name="invoice_number"/>
+                               <field name="invoice_date"/>
+                               <field name="supply_method"/>
+                               <field name="payment_method"/>
+                               <field name="country_payment_id"/>
+                           </group>
+                       </group>
+                   </form>
+            </field>
+        </record>
+
+        <!-- Invoice intrastat for report -->
+
+        <record model="ir.ui.view" id="view_tree_invoice_intrastat_report_tree">
+            <field name="name">account.intrastat.invoice.intrastat.report</field>
+            <field name="model">account.invoice.intrastat</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="invoice_id"/>
+                    <field name="intrastat_code_id"/>
+                    <field name="country_origin_id"/>
+                    <field name="country_destination_id"/>
+                    <field name="transation_nature_id"/>
+                    <field name="transport_code_id"/>
+                    <field name="weight_kg"/>
+                    <field name="additional_units"/>
+                    <field name="amount_currency" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_invoice_intrastat_search">
+            <field name="name">invoice.intrastat.search</field>
+            <field name="model">account.invoice.intrastat</field>
+            <field name="arch" type="xml">
+                <search string="Intrastat Search">
+                    <field name="intrastat_code_id" filter_domain="[('intrastat_code_id','ilike',self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id','ilike',self)]"/>
+                    <field name="country_origin_id" filter_domain="[('country_origin_id','ilike',self)]"/>
+                    <field name="country_destination_id" filter_domain="[('country_destination_id','ilike',self)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Intrastat Code" icon="terp-personal" domain="[]"  context="{'group_by':'intrastat_code_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_invoice_intrastat_report_action" model="ir.actions.act_window">
+            <field name="name">Intrastat Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice.intrastat</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_tree_invoice_intrastat_report_tree"/>
+            <field name="search_view_id" ref="view_invoice_intrastat_search" />
+        </record>
+
+         <!-- Override standard intrastat report -->
+        <menuitem name="Intrastat"
+            action="view_invoice_intrastat_report_action" id="report_intrastat.menu_report_intrastat_all"
+            parent="account.menu_finance_reports" sequence="4"/>
+
+        <!--
+        Payment Terms
+        -->
+        <record id="account_intrastat_payment_term_form_view" model="ir.ui.view">
+            <field name="name">account.intrastat.payment.term.form.view</field>
+            <field name="model">account.payment.term</field>
+            <field name="inherit_id" ref="account.view_payment_term_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='line_ids']" position="after">
+                    <group string="INTRASTAT Classification">
+                        <field name="intrastat_code"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+</odoo>

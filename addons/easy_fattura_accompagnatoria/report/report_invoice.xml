@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_fattura_differita"
+                  inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@class='page']/h2/span[1]" position="replace">
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and o.accompagnatoria">
+                    Delivery Invoice
+                </span>
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid') and not o.accompagnatoria">
+                    INVOICE
+                </span>
+            </xpath>
+
+
+            <xpath expr="//p[@t-if='o.fiscal_position_id.note']"
+                   position="after">
+                <p t-if="o.accompagnatoria">
+                    <t t-call="easy_ddt.delivery_data">
+                        <t t-set="ddt" t-value="o"/>
+                    </t>
+                </p>
+            </xpath>
+
+
+        </template>
+
+    </data>
+</odoo>

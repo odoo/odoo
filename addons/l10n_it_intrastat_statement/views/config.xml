@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_intrastat_statement_company_form" model="ir.ui.view">
+        <field name="name">view_form_intrastat_statement_company</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="l10n_it_intrastat.view_intrastat_company_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='intrastat_export_file_name']" position="after">
+                <field name="intrastat_custom_id"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

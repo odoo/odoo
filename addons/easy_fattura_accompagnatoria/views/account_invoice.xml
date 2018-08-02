@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="account_invoice_form_ddt_inherit">
+            <field name="name">account.invoice.form.ddt.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="easy_ddt.invoice_form_view_ddt"/>
+            <field name="arch" type="xml">
+                <field name="number_of_packages" position="before">
+                    <field name="carrier_id"/>
+                    <field name="carrier_tracking_ref"/>
+                </field>
+                <field name="number_of_packages" position="after">
+                    <field name="weight"/>
+                    <field name="gross_weight"/>
+                    <field name="volume"/>
+                    <!--<field name="date_done"/>-->
+                    <field name="date_transport_ddt"/>
+                    <field name="time_transport_ddt"/>
+                    <field name="ddt_notes"/>
+                    <field name="delivery_invoice" invisible="True"/>
+                    <field name="accompagnatoria"/>
+                </field>
+                <field name="state" position="before">
+                    <button name="print_delivery_invoice" type="object" string="Print and Validate Delivery Invoice"
+                            attrs="{'invisible': ['|', ('delivery_invoice','=',False), ('state', '!=', 'draft')]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
