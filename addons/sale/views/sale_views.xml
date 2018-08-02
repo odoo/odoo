@@ -205,6 +205,14 @@
             <field name="arch" type="xml">
                 <form string="Sales Order" class="o_sale_order">
                 <header>
+                    <field name="authorized_transaction_ids" invisible="1"/>
+                    <button name="payment_action_capture" type="object"
+                            string="Capture Transaction" class="oe_highlight"
+                            attrs="{'invisible': [('authorized_transaction_ids', '=', [])]}"/>
+                    <button name="payment_action_void" type="object"
+                            string="Void Transaction"
+                            confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
+                            attrs="{'invisible': [('authorized_transaction_ids', '=', [])]}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>
