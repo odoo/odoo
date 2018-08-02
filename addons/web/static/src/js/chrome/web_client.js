@@ -172,33 +172,11 @@ return AbstractWebClient.extend({
             }
         });
     },
-
-    // --------------------------------------------------------------
-    // Menu handling
-    // --------------------------------------------------------------
-    on_app_clicked: function (ev) {
-        var self = this;
-        return this.menu_dm.add(data_manager.load_action(ev.data.action_id))
-            .then(function (result) {
-                return self.action_mutex.exec(function () {
-                    var completed = $.Deferred();
-                    var options = _.extend({}, ev.data.options, {
-                        clear_breadcrumbs: true,
-                        action_menu_id: ev.data.menu_id,
-                    });
-                    $.when(self._openMenu(result, options)).fail(function () {
-                        completed.resolve();
-                    }).done(function () {
-                        self._on_app_clicked_done(ev)
-                            .then(completed.resolve.bind(completed))
-                            .fail(completed.reject.bind(completed));
-                    });
-                    setTimeout(function () {
-                        completed.resolve();
-                    }, 2000);
-                    return completed;
-                });
-            });
+    on_menu_action: function(event) {
+        this.action_manager.doAction(event.data.action_id, {
+            clear_breadcrumbs: true,
+            action_menu_id: event.data.id,
+        });
     },
     _on_app_clicked_done: function (ev) {
         core.bus.trigger('change_menu_section', ev.data.menu_id);
