@@ -27,7 +27,7 @@ class SaleTimesheetController(http.Controller):
         return {
             'html_content': view.render(values),
             'project_ids': projects.ids,
-            'actions': self._plan_prepare_actions(projects),
+            'actions': self._plan_prepare_actions(projects, values),
         }
 
     def _plan_prepare_values(self, projects):
@@ -60,7 +60,7 @@ class SaleTimesheetController(http.Controller):
 
         # hours (from timesheet) and rates (by billable type)
         dashboard_domain = [('project_id', 'in', projects.ids), ('timesheet_invoice_type', '!=', False)]  # force billable type
-        dashboard_data = request.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_revenue', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
+        dashboard_data = request.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
         dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data])
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
@@ -128,8 +128,17 @@ class SaleTimesheetController(http.Controller):
         #
         # Table grouped by SO / SOL / Employees
         #
+        timesheet_forecast_table_rows = self._table_get_line_values(projects)
+        if timesheet_forecast_table_rows:
+            values['timesheet_forecast_table'] = timesheet_forecast_table_rows
+        return values
+
+    def _table_get_line_values(self, projects):
+        """ return the header and the rows informations of the table """
         if not projects:
-            return values
+            return False
+
+        uom_hour = request.env.ref('uom.product_uom_hour')
 
         # build SQL query and fetch raw data
         query, query_params = self._table_rows_sql_query(projects)
@@ -218,11 +227,10 @@ class SaleTimesheetController(http.Controller):
                             timesheet_forecast_table_rows.append(employee_row)
 
         # complete table data
-        values['timesheet_forecast_table'] = {
+        return {
             'header': self._table_header(projects),
             'rows': timesheet_forecast_table_rows
         }
-        return values
 
     def _table_header(self, projects):
         initial_date = fields.Date.from_string(fields.Date.today())
@@ -232,8 +240,17 @@ class SaleTimesheetController(http.Controller):
             month_index = fields.Date.from_string(date).month
             return babel.dates.get_month_names('abbreviated', locale=request.env.context.get('lang', 'en_US'))[month_index]
 
-        header = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
-        return header
+        header_names = [_('Name'), _('Before')] + [_to_short_month_name(date) for date in ts_months] + [_('Done'), _('Sold'), _('Remaining')]
+
+        result = []
+        for name in header_names:
+            result.append({
+                'label': name,
+                'tooltip': '',
+            })
+        # add tooltip for reminaing
+        result[-1]['tooltip'] = _('What is still to deliver based on sold hours and hours already done. Equals to sold hours - done hours.')
+        return result
 
     def _table_row_default(self, projects):
         lenght = len(self._table_header(projects))
@@ -312,7 +329,7 @@ class SaleTimesheetController(http.Controller):
     # Actions: Stat buttons, ...
     # --------------------------------------------------
 
-    def _plan_prepare_actions(self, projects):
+    def _plan_prepare_actions(self, projects, values):
         actions = []
         if len(projects) == 1:
             if request.env.user.has_group('sales_team.group_sale_salesman'):
@@ -324,8 +341,9 @@ class SaleTimesheetController(http.Controller):
                         'context': json.dumps({'active_id': projects.id, 'active_model': 'project.project'}),
                     })
             if request.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+                to_invoice_amount = values['dashboard']['profit'].get('to_invoice', False)  # plan project only takes services SO line with timesheet into account
                 sale_orders = projects.tasks.mapped('sale_line_id.order_id').filtered(lambda so: so.invoice_status == 'to invoice')
-                if sale_orders:
+                if to_invoice_amount and sale_orders:
                     if len(sale_orders) == 1:
                         actions.append({
                             'label': _("Create Invoice"),
@@ -417,5 +435,5 @@ class SaleTimesheetController(http.Controller):
         elif res_model == 'account.invoice':
             action = clean_action(request.env.ref('account.action_invoice_tree1').read()[0])
             action['domain'] = domain
-            action['context'] = {'create': False, 'edit': False, 'delete': False}  # No CRUD operation when coming from overview
+            action['context'] = {'create': False, 'delete': False}  # only edition of invoice from overview
         return action
