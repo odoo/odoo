@@ -26,6 +26,14 @@ class AccountAccountType(models.Model):
         help="The 'Internal Type' is used for features available on "\
         "different types of accounts: liquidity type is for cash or bank accounts"\
         ", payable/receivable is for vendor/customer accounts.")
+    internal_group = fields.Selection([
+        ('equity', 'Equity'),
+        ('asset', 'Asset'),
+        ('liability', 'Liability'),
+        ('income', 'Income'),
+        ('expense', 'Expense'),
+    ], string="Internal Group",
+       help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
     note = fields.Text(string='Description')
 
 
@@ -70,6 +78,7 @@ class AccountAccount(models.Model):
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type",
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
+    internal_group = fields.Selection(related='user_type_id.internal_group', string="Internal Group", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
