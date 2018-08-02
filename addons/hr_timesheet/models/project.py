@@ -48,7 +48,7 @@ class Project(models.Model):
         allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
         if allow_timesheets and not values.get('analytic_account_id'):
             analytic_account = self.env['account.analytic.account'].create({
-                'name': values.get('name', _('Unkwon Analytic Account')),
+                'name': values.get('name', _('Unknown Analytic Account')),
                 'company_id': values.get('company_id', self.env.user.company_id.id),
                 'partner_id': values.get('partner_id'),
                 'active': True,

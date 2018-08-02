@@ -25,8 +25,8 @@ class ProfitabilityAnalysis(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', readonly=True)
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    amount_untaxed_to_invoice = fields.Float("Untaxed Amout To Invoice", digits=(16, 2), readonly=True, group_operator="sum")
-    amount_untaxed_invoiced = fields.Float("Untaxed Amout Invoiced", digits=(16, 2), readonly=True, group_operator="sum")
+    amount_untaxed_to_invoice = fields.Float("Untaxed Amount To Invoice", digits=(16, 2), readonly=True, group_operator="sum")
+    amount_untaxed_invoiced = fields.Float("Untaxed Amount Invoiced", digits=(16, 2), readonly=True, group_operator="sum")
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)

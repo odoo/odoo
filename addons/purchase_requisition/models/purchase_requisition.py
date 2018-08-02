@@ -119,7 +119,7 @@ class PurchaseRequisition(models.Model):
     def action_in_progress(self):
         self.ensure_one()
         if not all(obj.line_ids for obj in self):
-            raise UserError(_('You cannot confirm agreement because there is no product line.'))
+            raise UserError(_("You cannot confirm agreement '%s' because there is no product line.") % self.name)
         if self.type_id.quantity_copy == 'none' and self.vendor_id:
             for requisition_line in self.line_ids:
                 if requisition_line.price_unit <= 0.0:
