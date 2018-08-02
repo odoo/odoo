@@ -21,6 +21,15 @@ ajax.jsonRpc('/web/dataset/call', 'call', {
     QWeb.add_template(data);
 });
 
+// [TODO]: use method from widget
+function RGBtoHEX (rgb) {
+    if (rgb.indexOf("#") !== -1) {
+        return rgb;
+    }
+    rgb = rgb.replace(/[^\d,]/g,"").split(",");
+    return ("#" + ((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)).toUpperCase();
+};
+
 // Summernote Lib (neek change to make accessible: method and object)
 var dom = $.summernote.core.dom;
 var range = $.summernote.core.range;
@@ -63,27 +72,55 @@ renderer.createPalette = function ($container, options) {
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
+    // Find the custom color from page which are used and add them to custon color palettes.
+    var rteWidget = new rte.Class();
+    var $customColors = rteWidget.editable().find('font, span');
+    var colors = [];
+    $customColors.each(function () {
+        if (this.style.color) { // find font color
+            colors.push(this.style.color);
+        }
+        if (this.style.backgroundColor){ // find background color
+            colors.push(this.style.backgroundColor);
+        }
+    });
+
+    var $customColorBtn = [];
+    _.each(_.uniq(colors), function (color) {
+        var hexColor = RGBtoHEX(color);
+        if (_.indexOf(_.flatten(options.colors), hexColor) === -1) {
+            // Create button of used custom color for backcolor and forecolor both and add them into palette
+            $customColorBtn.push('<button da type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />');
+        }
+    })
+    $container.find('.note-color .note-custom-color-palette').append($('<div/>', {class: "note-color-row"}).append($customColorBtn));
+    var $customColorPalettes = $container.find('.note-color .note-custom-color-palette');
+
     var $bg = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    $bg.push($customColorPalettes.filter(":even").find("button"));
+
     var $fore = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    $fore.push($customColorPalettes.filter(":odd").find("button"));
+
     $bg.each(function () {
         var $el = $(this);
-        var className = 'bg-' + $el.data('color');
-        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
+        var className = $el.data('value') || 'bg-' + $el.data('color');
+        $el.attr('data-event', 'backColor').attr('data-value', className).addClass($el.data('color') ? className : '');
     });
     $fore.each(function () {
         var $el = $(this);
-        var className = 'text-' + $el.data('color');
-        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
+        var className = $el.data("value") || 'text-' + $el.data('color');
+        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass($el.data('color') ? 'bg-' + $el.data('color') : '');
     });
 
     // Toggle Text Color and Highlight Color on click
     var $color = $container.find('.note-color');
     var $colorSection = $color.find('.dropdown-menu li .btn-group');
-    $color.find('[data-event="highlightColor"], [data-event="textColor"]').on('click', function (event) {
+    $color.find('.switchColor').on('click', function (event) {
         event.stopPropagation();
-        var isTextColor = $(this).data('event') === 'textColor';
-        $color.find('[data-event="textColor"]').toggleClass('active', isTextColor);
-        $color.find('[data-event="highlightColor"]').toggleClass('active', !isTextColor);
+        var isTextColor = event.target.dataset.value === 'textColor';
+        $color.find('[data-value="textColor"]').toggleClass('active', isTextColor);
+        $color.find('[data-value="highlightColor"]').toggleClass('active', !isTextColor);
         $colorSection.filter(':even').toggleClass('d-none', isTextColor);
         $colorSection.filter(':odd').toggleClass('d-none', !isTextColor);
     });
@@ -259,7 +296,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
         } else {
-            $container.find('.d-none:not(.only_fa, .note-color .btn-group, .note-recent-color, [type="color"])').removeClass("d-none");
+            $container.find('.d-none:not(.only_fa, .note-color .btn-group, .note-recent-color)').removeClass("d-none");
             $container.find('.only_fa').addClass("d-none");
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {

@@ -982,8 +982,8 @@ renderer.tplButtonInfo.color = function (lang, options) {
     });
     var items = [
         '<div class="text-center">',
-        '<button type="button" class="btn btn-default btn-sm active" data-event="textColor">' + lang.color.text + '</button>',
-        '<button type="button" class="btn btn-default btn-sm" data-event="highlightColor">' + lang.color.highlight + '</button>',
+        '<button type="button" class="btn switchColor active" data-value="textColor">' + lang.color.text + '</button>',
+        '<button type="button" class="btn switchColor" data-value="highlightColor">' + lang.color.highlight + '</button>',
         '</div>',
         '<li class="flex"><div class="btn-group d-none flex-column">',
         '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
