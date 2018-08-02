@@ -533,7 +533,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
     assert.expect(4);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
 
     var messagePostDef = $.Deferred();
 
@@ -613,7 +613,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
     assert.expect(8);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -696,7 +696,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
     assert.expect(5);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {

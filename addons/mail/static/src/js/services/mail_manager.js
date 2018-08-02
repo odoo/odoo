@@ -44,7 +44,6 @@ var _lt = core._lt;
 var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 
 var MailManager =  AbstractService.extend({
-    name: 'mail_service',
     dependencies: ['ajax', 'bus_service', 'local_storage'],
     _ODOOBOT_ID: "ODOOBOT", // default authorID for transient messages
 

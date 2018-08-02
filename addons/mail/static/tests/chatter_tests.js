@@ -424,7 +424,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
     assert.expect(27);
 
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
 
     this.data.partner.records[0].message_ids = [1];
     this.data['mail.message'].records = [{
@@ -784,7 +784,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     var getSuggestionsDef = $.Deferred();
 
     var messages = [];
-    var bus = this.services[1].prototype.bus;
+    var bus = this.services.bus_service.prototype.bus;
     var form = createView({
         View: FormView,
         model: 'partner',

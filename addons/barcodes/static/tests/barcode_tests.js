@@ -65,11 +65,13 @@ QUnit.test('Button with barcode_trigger', function (assert) {
                 '</header>' +
             '</form>',
         res_id: 2,
-        services: [NotificationService.extend({
-            notify: function (params) {
-                assert.step(params.type);
-            }
-        })],
+        services: {
+            notification: NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            }),
+        },
         intercepts: {
             execute_action: function (event) {
                 assert.strictEqual(event.data.action_data.name, 'do_something',
@@ -512,11 +514,13 @@ QUnit.test('barcode_scanned only trigger error for active view', function (asser
                 '</form>',
         },
         res_id: 1,
-        services: [NotificationService.extend({
-            notify: function (params) {
-                assert.step(params.type);
-            }
-        })],
+        services: {
+            notification: NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            }),
+        },
         viewOptions: {
             mode: 'edit',
         },

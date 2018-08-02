@@ -74,7 +74,6 @@ function getMailServices() {
         is_odoo_focused: function () { return true; },
     });
     var BusService =  AbstractService.extend({
-        name: 'bus_service',
         bus: new MockBus(),
 
         //--------------------------------------------------------------------------
@@ -89,10 +88,13 @@ function getMailServices() {
         }
     });
     var LocalStorageService = AbstractStorageService.extend({
-        name: 'local_storage',
         storage: new RamStorage(),
     });
-    return [MailService, BusService, LocalStorageService];
+    return {
+        mail_service: MailService,
+        bus_service: BusService,
+        local_storage: LocalStorageService,
+    };
 }
 
 return {
