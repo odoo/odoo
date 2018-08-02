@@ -5,8 +5,8 @@
             string="Web Quotation"
             model="sale.order" 
             report_type="qweb-pdf"
-            file="website_quote.report_quotation" 
-            name="website_quote.report_quote" 
+            file="sale_management.report_quotation"
+            name="sale_management.report_quote"
             menu="False"
             print_report_name="
                 (object.state in ('draft', 'sent') and 'Quotation - %s' % object.name or

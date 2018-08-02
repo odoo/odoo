@@ -29,10 +29,12 @@
                 </page>
             </xpath>
             <xpath expr="//field[@name='partner_shipping_id']" position="after">
-                <label for="template_id"/>
-                <div>
-                    <field name="template_id" context="{'company_id': company_id}"
-                        options="{'no_create': True, 'no_open': True}"/>
+                <div groups="sale_management.group_quotation_template">
+                    <label for="template_id"/>
+                    <div>
+                        <field name="template_id" context="{'company_id': company_id}"
+                            options="{'no_create': True, 'no_open': True}"/>
+                    </div>
                 </div>
             </xpath>
             <xpath expr="//field[@name='client_order_ref']" position="after">

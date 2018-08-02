@@ -61,7 +61,7 @@ class sale_quote(http.Controller):
         if order_sudo.validity_date:
             days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
         if pdf:
-            pdf = request.env.ref('website_quote.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
+            pdf = request.env.ref('sale_management.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         transaction = order_sudo.get_portal_last_transaction()
@@ -99,7 +99,7 @@ class sale_quote(http.Controller):
 
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
-        return request.render('website_quote.so_quotation', values)
+        return request.render('sale_management.so_quotation', values)
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def decline(self, order_id, token, **post):
@@ -133,7 +133,7 @@ class sale_quote(http.Controller):
     @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = {'template': quote}
-        return request.render('website_quote.so_template', values)
+        return request.render('sale_management.so_template', values)
 
     @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
     def add(self, option_id, order_id, token, **post):

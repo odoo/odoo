@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="website_quote_template_1" model="sale.quote.template">
+        <record id="sale_management_template_1" model="sale.quote.template">
             <field name="name">4 Person Desk</field>
             <field name="number_of_days">45</field>
         </record>
 
         <record id="website_sale_order_line_1" model="sale.quote.line">
-            <field name="quote_id" ref="website_quote_template_1"/>
+            <field name="quote_id" ref="sale_management_template_1"/>
             <field name="name">4 Person Desk</field>
             <field name="product_id" ref="product.consu_delivery_03"/>
             <field name="product_uom_qty">1</field>
@@ -16,7 +16,7 @@
         </record>
 
         <record id="website_sale_option_line_1" model="sale.quote.option">
-            <field name="template_id" ref="website_quote_template_1"/>
+            <field name="template_id" ref="sale_management_template_1"/>
             <field name="name">Office Chair</field>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="quantity">4</field>

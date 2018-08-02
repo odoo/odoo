@@ -51,7 +51,9 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def _get_default_template(self):
-        template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+        if not self.env.user.has_group('sale_management.group_quotation_template'):
+            return False
+        template = self.env.ref('sale_management.sale_management_template_default', raise_if_not_found=False)
         return template and template.active and template or False
 
     def _get_default_require_signature(self):
