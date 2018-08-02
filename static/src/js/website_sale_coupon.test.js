@@ -55,7 +55,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "click on 'I have a promo code'",
-            trigger: 'a.show_coupon',
+            trigger: '.show_coupon',
         },
         {
             content: "insert promo code '10pc'",
