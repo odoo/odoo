@@ -9,29 +9,22 @@
             web_icon="account,static/description/icon.png"
             sequence="40"/>
 
-        <menuitem id="menu_finance_receivables" name="Sales" parent="menu_finance" sequence="2"/>
-            <!--Sales sub-menus-->
-            <menuitem id="menu_finance_receivables_documents" name="Documents" parent="menu_finance_receivables" sequence="1"/>
-            <menuitem id="menu_finance_receivables_follow_up" name="Follow-up" parent="menu_finance_receivables" sequence="2"/>
-            <menuitem id="menu_finance_receivables_master_data" name="Master Data" parent="menu_finance_receivables" sequence="3"/>
-        <menuitem id="menu_finance_payables" name="Purchases" parent="menu_finance" sequence="3"/>
-            <!--Purchases sub-menus-->
-            <menuitem id="menu_finance_payables_documents" name="Documents" parent="menu_finance_payables" sequence="1"/>
-            <menuitem id="menu_finance_payables_master_data" name="Master Data" parent="menu_finance_payables" sequence="2"/>
-        <menuitem id="menu_finance_entries" name="Adviser" parent="menu_finance" sequence="4" groups="account.group_account_user"/>
+        <menuitem id="menu_finance_receivables" name="Customers" parent="menu_finance" sequence="2"/>
+        <menuitem id="menu_finance_payables" name="Vendors" parent="menu_finance" sequence="3"/>
+        <menuitem id="menu_finance_entries" name="Accounting" parent="menu_finance" sequence="4" groups="account.group_account_user"/>
             <!-- Adviser sub-menus -->
             <menuitem id="menu_finance_entries_accounting_entries" name="Accounting Entries" parent="account.menu_finance_entries"/>
-            <menuitem id="menu_finance_entries_management" name="Management" parent="account.menu_finance_entries"/>
+            <menuitem id="menu_finance_entries_management" name="Management" parent="menu_finance_entries" sequence="10" groups="account.group_account_invoice"/>
             <menuitem id="menu_finance_entries_actions" name="Actions" parent="account.menu_finance_entries"/>
             <menuitem id="menu_finance_entries_generate_entries" name="Generate Entries" parent="account.menu_finance_entries"/>
-        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="5" groups="account.group_account_manager"/>
+        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="20" groups="account.group_account_manager"/>
             <!-- Reporting sub-menus -->
             <menuitem id="account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4"/>
             <menuitem id="account_reports_legal_statements_menu" name="Generic Statements" parent="account.menu_finance_reports" sequence="1" groups="account.group_account_user"/>
             <menuitem id="account_reports_business_intelligence_menu" name="Business Intelligence" parent="account.menu_finance_reports" sequence="5" groups="account.group_account_invoice"/>
             <menuitem id="menu_finance_legal_statement" name="PDF Reports" parent="account.menu_finance_reports"/>
 
-        <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="account.group_account_manager"/>
+        <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="35" groups="account.group_account_manager"/>
             <!-- Configuration Sub-Menu -->
             <menuitem id="account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="2" groups="account.group_account_invoice"/>
             <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="3" groups="account.group_account_manager"/>
