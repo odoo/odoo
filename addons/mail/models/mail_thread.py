@@ -2030,7 +2030,11 @@ class MailThread(models.AbstractModel):
             values.pop(x, None)
 
         # Post the message
+        # canned_response_ids are added by js to be used by other computations (odoobot)
+        # we need to pop it from values since it is not stored on mail.message
+        canned_response_ids = values.pop('canned_response_ids', False)
         new_message = MailMessage.create(values)
+        values['canned_response_ids'] = canned_response_ids
         self._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
         return new_message
 

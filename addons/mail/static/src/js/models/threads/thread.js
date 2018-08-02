@@ -329,6 +329,7 @@ var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             partner_ids: data.partner_ids,
             body: body,
             attachment_ids: data.attachment_ids,
+            canned_response_ids: data.canned_response_ids,
         };
         if ('subject' in data) {
             messageData.subject = data.subject;
