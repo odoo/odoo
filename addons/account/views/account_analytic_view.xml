@@ -11,9 +11,8 @@
                         <field name="ref"/>
                         <field name="partner_id"/>
                     </xpath>
-                    <xpath expr="//field[@name='amount']" position="after">
+                    <xpath expr="//field[@name='product_uom_id']" position="before">
                         <field name="product_id"/>
-                        <field name="product_uom_id" class="oe_inline"/>
                     </xpath>
                     <group name="amount" position="after">
                         <group/> <!-- put Accounting group under Amount group -->
