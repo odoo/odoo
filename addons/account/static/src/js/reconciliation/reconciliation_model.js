@@ -409,15 +409,18 @@ var StatementModel = BasicModel.extend({
             .then(function (accounts) {
                 self.accounts = _.object(_.pluck(accounts, 'id'), _.pluck(accounts, 'code'));
             });
+        self.taxes = {};
         var def_taxes = this._rpc({
                 model: 'account.tax',
                 method: 'search_read',
                 fields: ['price_include', 'amount_type'],
             })
             .then(function (taxes) {
-                self.taxes = _.object(_.pluck(taxes, 'id'), {
-                    price_include: _.pluck(taxes, 'price_include'),
-                    amount_type: _.pluck(taxes, 'amount_type'),
+                _.each(taxes, function(tax){
+                    self.taxes[tax.id] = {
+                        price_include: tax.price_include,
+                        amount_type: tax.amount_type,
+                    }
                 })
             });
         return $.when(def_statement, def_reconcileModel, def_account, def_taxes).then(function () {
@@ -642,10 +645,10 @@ var StatementModel = BasicModel.extend({
         if ('account_id' in values || 'amount' in values || 'tax_id' in values  || 'force_tax_included' in values) {
             prop.__tax_to_recompute = true;
 
-            if(values.tax_id)
-                // Set force_tax_included at the 'price_include' tax value when changing the tax.
-                values.tax_id.readonly_force_tax_included = prop.force_tax_included = this.taxes[values.tax_id.id].price_include;
-            else if('tax_id' in values && prop.base_amount && prop.base_amount != prop.amount)
+            if(values.tax_id){
+                values.tax_id.amount_type = this.taxes[values.tax_id.id].amount_type;
+                values.tax_id.price_include = prop.force_tax_included = this.taxes[values.tax_id.id].price_include;
+            }else if('tax_id' in values && prop.base_amount && prop.base_amount != prop.amount)
                 // When removing a price_included tax, reset the amount to the base_amount.
                 prop.amount = prop.base_amount;
         }
@@ -839,7 +842,7 @@ var StatementModel = BasicModel.extend({
 
                 var args = [[prop.tax_id.id], prop.base_amount, formatOptions.currency_id];
                 var add_context = {'round': true};
-                if(line.createForm.force_tax_included)
+                if(line.createForm.force_tax_included && !prop.tax_id.amount_type == "group")
                     add_context.force_price_include = true;
                 tax_defs.push(self._rpc({
                         model: 'account.tax',
@@ -1062,8 +1065,8 @@ var StatementModel = BasicModel.extend({
         if(prop.tax_id){
             // Set the amount_type value.
             prop.tax_id.amount_type = this.taxes[prop.tax_id.id].amount_type;
-            // Set the readonly_force_tax_included value.
-            prop.tax_id.readonly_force_tax_included = this.taxes[prop.tax_id.id].price_include;
+            // Set the price_include value.
+            prop.tax_id.price_include = this.taxes[prop.tax_id.id].price_include;
         }
 
         // Set the force_tax_included value.

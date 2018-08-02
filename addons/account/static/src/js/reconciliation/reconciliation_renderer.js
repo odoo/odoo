@@ -468,13 +468,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                             if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
                                 field.reset(record);
                             }
-                            debugger;
                             if (fieldName === 'tax_id') {
-                                if (state.createForm[fieldName]) {
-                                    $('.create_force_tax_included').removeClass('hidden');
+                                if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
+                                    $('.create_force_tax_included').addClass('d-none');
                                 }
                                 else {
-                                    $('.create_force_tax_included').addClass('hidden');
+                                    $('.create_force_tax_included').removeClass('d-none');
                                 }
                             } 
                         });
@@ -482,8 +481,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 });
             });
             if(state.createForm.tax_id){
-                // Set the 'Tax Include' field editable or not depending of the 'readonly_force_tax_included' value.
-                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.readonly_force_tax_included);
+                // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
+                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
             }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
@@ -665,14 +664,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         } else {
             if (event.data.changes.amount && isNaN(event.data.changes.amount)) {
                 return;
-            }
-            if (fieldName === 'tax_id') {
-                if (event.data.changes.tax_id === false) {
-                    $('.create_force_tax_included').addClass('hidden');
-                }
-                else {
-                    $('.create_force_tax_included').removeClass('hidden');   
-                }
             }
             this.trigger_up('update_proposition', {'data': event.data.changes});
         }
