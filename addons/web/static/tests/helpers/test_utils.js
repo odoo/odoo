@@ -427,15 +427,15 @@ function addMockEnvironment(widget, params) {
     // Deploy services
     var done = false;
     while (!done) {
-        var index = _.findIndex(params.services, function (Service) {
+        var serviceName = _.findKey(params.services, function (Service) {
             return !_.some(Service.prototype.dependencies, function (depName) {
                 return !_.has(services, depName);
             });
         });
-        if (index !== -1) {
-            var Service = params.services.splice(index, 1)[0];
-            services[Service.prototype.name] = new Service(widget);
-            services[Service.prototype.name].start();
+        if (serviceName) {
+            var service = services[serviceName] = new params.services[serviceName](widget);
+            delete params.services[serviceName];
+            service.start();
         } else {
             done = true;
         }

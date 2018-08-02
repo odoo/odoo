@@ -10,7 +10,6 @@ var core = require('web.core');
 var sessionStorage = require('web.sessionStorage');
 
 var SessionStorageService = AbstractStorageService.extend({
-    name: 'session_storage',
     storage: sessionStorage,
 });
 

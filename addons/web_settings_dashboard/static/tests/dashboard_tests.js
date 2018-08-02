@@ -88,11 +88,13 @@ QUnit.module('settings_dashboard', function () {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: [NotificationService.extend({
-                notify: function (params) {
-                    assert.step(params.type);
-                }
-            })],
+            services: {
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type);
+                    }
+                }),
+            },
         });
 
         // enter an invalid email address to invite
@@ -167,11 +169,13 @@ QUnit.module('settings_dashboard', function () {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: [NotificationService.extend({
-                notify: function (params) {
-                    assert.step(params.type);
-                }
-            })],
+            services: {
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type);
+                    }
+                }),
+            },
         });
 
         // simulate a copy paste of multiple email addresses

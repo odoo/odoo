@@ -7,7 +7,6 @@ var AbstractService = require('web.AbstractService');
 var core = require('web.core');
 
 var BusService =  AbstractService.extend({
-    name: 'bus_service',
     /**
      * @override
      */
