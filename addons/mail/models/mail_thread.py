@@ -2203,6 +2203,10 @@ class MailThread(models.AbstractModel):
             self.check_access_rights('write')
             self.check_access_rule('write')
 
+        # filter inactive
+        if partner_ids and not adding_current:
+            partner_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('active', '=', True)]).ids
+
         return self._message_subscribe(partner_ids, channel_ids, subtype_ids, customer_ids=customer_ids)
 
     def _message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, customer_ids=None):
