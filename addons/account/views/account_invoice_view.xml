@@ -726,7 +726,7 @@
         </record>
 
         <record id="action_invoice_tree1" model="ir.actions.act_window">
-            <field name="name">Customer Invoices</field>
+            <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -757,10 +757,10 @@
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
 
-        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables_documents" sequence="1"/>
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_receivables" sequence="1"/>
 
         <record id="action_invoice_out_refund" model="ir.actions.act_window">
-            <field name="name">Customer Credit Notes</field>
+            <field name="name">Credit Notes</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -794,7 +794,7 @@
 
         <menuitem action="action_invoice_out_refund"
                   id="menu_action_invoice_out_refund"
-                  parent="menu_finance_receivables_documents"
+                  parent="account.menu_finance_receivables"
                   sequence="1"/>
 
         <record id="action_vendor_bill_template" model="ir.actions.act_window">
@@ -816,7 +816,7 @@
             server action opening the vendor bills and returning the right help tooltip
         -->
         <record id="action_invoice_tree2" model="ir.actions.server">
-            <field name="name">Vendor Bills</field>
+            <field name="name">Bills</field>
             <field name="model_id" ref="model_account_invoice"/>
             <field name="state">code</field>
             <field name="code">
@@ -841,11 +841,11 @@ action = action_values
             <field name="act_window_id" ref="action_vendor_bill_template"/>
         </record>
 
-        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables_documents" sequence="1"/>
+        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="account.menu_finance_payables" sequence="1"/>
 
 
         <record id="action_invoice_in_refund" model="ir.actions.act_window">
-            <field name="name">Vendor Credit Notes</field>
+            <field name="name">Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -878,8 +878,8 @@ action = action_values
 
         <menuitem action="action_invoice_in_refund"
                   id="menu_action_invoice_in_refund"
-                  parent="menu_finance_payables_documents"
-                  sequence="1"/>
+                  parent="account.menu_finance_payables"
+                  sequence="5"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"

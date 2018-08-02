@@ -170,7 +170,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu" groups="account.group_account_user" sequence="0"/>
+        <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="2"/>
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
@@ -962,6 +962,8 @@
               </p>
             </field>
         </record>
+        <menuitem id="action_account_reconcile_model_menu" parent="account.account_account_menu"
+                action="account.action_account_reconcile_model" sequence="100" />
 
         <menuitem
             id="account_report_folder"
@@ -1194,7 +1196,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_account_menu" sequence="1"/>
+        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_account_menu" sequence="2"/>
 
         <!-- Journal Items -->
         <record id="view_move_line_form" model="ir.ui.view">
@@ -1425,7 +1427,7 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
-        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries_accounting_entries" sequence="1" groups="group_account_manager" />
+        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries_accounting_entries" sequence="10" groups="group_account_manager" />
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
@@ -1660,7 +1662,7 @@
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries_accounting_entries"
             groups="account.group_account_user"
-            sequence="2"/>
+            sequence="1"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
             <field name="name">Entries</field>
@@ -2159,8 +2161,8 @@
         </record>
 
         <menuitem id="menu_account_customer" name="Customers"
-            parent="menu_finance_receivables_master_data"
-            action="base.action_partner_customer_form" sequence="100"/>
+            parent="account.menu_finance_receivables"
+            action="base.action_partner_customer_form" sequence="110"/>
 
         <record id="product_product_view_tree" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -2187,7 +2189,7 @@
         </record>
 
         <record id="product_product_action_sellable" model="ir.actions.act_window">
-            <field name="name">Sellable Products</field>
+            <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -2202,7 +2204,7 @@
         </record>
 
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
-            <field name="name">Purchasable Products</field>
+            <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -2216,13 +2218,13 @@
             </field>
         </record>
 
-        <menuitem id="product_product_menu_sellable" name="Sellable Products" action="product_product_action_sellable" parent="account.menu_finance_receivables_master_data" sequence="100"/>
+        <menuitem id="product_product_menu_sellable" name="Products" action="product_product_action_sellable" parent="account.menu_finance_receivables" sequence="100"/>
 
-        <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables_master_data" sequence="101"/>
+        <menuitem id="product_product_menu_purchasable" name="Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="100"/>
 
         <menuitem id="menu_account_supplier" name="Vendors"
-            parent="menu_finance_payables_master_data"
-            action="base.action_partner_supplier_form" sequence="100"/>
+            parent="account.menu_finance_payables"
+            action="base.action_partner_supplier_form" sequence="200"/>
 
         <!-- Account Financial Report -->
 
@@ -2297,11 +2299,11 @@
 
         <!-- Manual reconciliation -->
         <record id="action_manual_reconciliation" model="ir.actions.client">
-            <field name="name">Manual Reconciliation</field>
+            <field name="name">Reconciliation</field>
             <field name="tag">manual_reconciliation_view</field>
         </record>
 
-        <menuitem id="menu_action_manual_reconciliation" parent="menu_finance_entries_actions" action="action_manual_reconciliation" sequence="25"/>
+        <menuitem id="menu_action_manual_reconciliation" parent="account.menu_finance_entries_actions" action="action_manual_reconciliation" sequence="25"/>
 
         <record id="view_account_group_form" model="ir.ui.view">
             <field name="name">account.group.form</field>
