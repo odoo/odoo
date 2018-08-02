@@ -68,7 +68,7 @@ class MrpStockReport(models.TransientModel):
             if model == 'stock.picking':
                 lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
             else:
-                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.state == 'done')
         move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)
         final_vals = sorted(move_line_vals, key=lambda v: v['date'], reverse=True)
         lines = self._final_vals_to_lines(final_vals, level)
@@ -112,7 +112,6 @@ class MrpStockReport(models.TransientModel):
     def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self._get_reference(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
-        unfoldable = False if not move_line.lot_id else unfoldable
         data = [{
             'level': level,
             'unfoldable': unfoldable,
@@ -126,8 +125,8 @@ class MrpStockReport(models.TransientModel):
             'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
-            'location_source': move_line.location_id.name if not unfoldable or level == 1 else False,
-            'location_destination': move_line.location_dest_id.name if not unfoldable or level == 1 else False,
+            'location_source': move_line.location_id.name,
+            'location_destination': move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
             'res_model': res_model}]
@@ -181,7 +180,9 @@ class MrpStockReport(models.TransientModel):
                 for line in move_line:
                     final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line)
         for line in lines:
-            unfoldable = bool(line.produce_line_ids or line.consume_line_ids)
+            unfoldable = False
+            if line.consume_line_ids or ( line.lot_id and self._get_move_lines(line) and model != "stock.production.lot"):
+                unfoldable = True
             final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line, unfoldable=unfoldable)
         return final_vals
 
