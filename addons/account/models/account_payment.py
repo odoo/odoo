@@ -174,7 +174,6 @@ class account_abstract_payment(models.AbstractModel):
             # context for partner_bank_account_id properly when provided with a
             # default partner_id. Without it, the onchange recomputes the bank account
             # uselessly and might assign a different value to it.
-
             if self.partner_id and len(self.partner_id.bank_ids) > 0:
                 self.partner_bank_account_id = self.partner_id.bank_ids[0]
             elif self.partner_id and len(self.partner_id.commercial_partner_id.bank_ids) > 0:
@@ -492,15 +491,13 @@ class account_payment(models.Model):
     @api.model
     def create(self, vals):
         rslt = super(account_payment, self).create(vals)
-
         # When a payment is created by the multi payments wizard in 'multi' mode,
         # its partner_bank_account_id will never be displayed, and hence stay empty,
         # even if the payment method requires it. This condition ensures we set
-        # the first (and thus more prioritary) account of the partner in this field
+        # the first (and thus most prioritary) account of the partner in this field
         # in that situation.
         if not rslt.partner_bank_account_id and rslt.show_partner_bank_account and rslt.partner_id.bank_ids:
             rslt.partner_bank_account_id = rslt.partner_id.bank_ids[0]
-
         return rslt
 
     @api.multi
