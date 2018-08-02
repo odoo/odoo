@@ -5,7 +5,7 @@
     'name' : 'Analytic Accounting',
     'version': '1.1',
     'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail'],
+    'depends' : ['base', 'decimal_precision', 'mail', 'uom'],
     'description': """
 Module for defining analytic accounting object.
 ===============================================
