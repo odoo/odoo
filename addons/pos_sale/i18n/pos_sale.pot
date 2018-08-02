@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,12 @@ msgid "All sales orders grouped by sales channels"
 msgstr ""
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:103
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
+msgid "Channel Type"
+msgstr ""
+
+#. module: pos_sale
+#: code:addons/pos_sale/models/crm_team.py:107
 #, python-format
 msgid "Dashboard"
 msgstr ""
@@ -64,6 +69,7 @@ msgstr ""
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 #: model:crm.team,name:pos_sale.pos_sales_team
+#: selection:crm.team,team_type:0
 msgid "Point of Sale"
 msgstr ""
 
@@ -73,6 +79,7 @@ msgid "Point of Sales"
 msgstr ""
 
 #. module: pos_sale
+#: selection:crm.team,team_type:0
 #: model:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
 msgid "Sales"
 msgstr ""
@@ -85,7 +92,7 @@ msgid "Sales Channel"
 msgstr ""
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:115
+#: code:addons/pos_sale/models/crm_team.py:119
 #, python-format
 msgid "Sales: Untaxed Amount"
 msgstr ""
@@ -111,9 +118,19 @@ msgid "Sessions Running"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_crm_team__team_type
+msgid "The type of this channel, it will define the resources this channel uses."
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Channel."
+msgstr ""
+
+#. module: pos_sale
+#: selection:crm.team,team_type:0
+msgid "Website"
 msgstr ""
 
 #. module: pos_sale
