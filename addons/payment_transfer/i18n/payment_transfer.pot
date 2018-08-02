@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:70
+#: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
 msgstr ""
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:68
+#: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
 msgstr ""
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:28
+#: code:addons/payment_transfer/models/payment.py:41
 #, python-format
 msgid "<div>\n"
 "<h3>Please use the following transfer details</h3>\n"
@@ -40,15 +40,45 @@ msgid "<div>\n"
 msgstr ""
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Account"
 msgstr ""
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Accounts"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
 msgstr ""
 
 #. module: payment_transfer
@@ -62,7 +92,32 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:66
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr ""
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
 msgstr ""

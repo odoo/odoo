@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,12 @@ msgid "Analytic Lines"
 msgstr ""
 
 #. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:38
+#, python-format
+msgid "Both the internal project and task are required to generate timesheet for the leaves."
+msgstr ""
+
+#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
 msgstr ""
@@ -34,12 +40,6 @@ msgstr ""
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
-msgstr ""
-
-#. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:38
-#, python-format
-msgid "For the leaves to generate timesheet, the internal project and task are requried."
 msgstr ""
 
 #. module: project_timesheet_holidays
