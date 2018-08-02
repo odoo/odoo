@@ -6,18 +6,18 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Bole <bole@dajmi5.com>, 2017
 # Marko Carević <marko.carevic@live.com>, 2017
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
-# Tina Milas <tina@uvid.hr>, 2017
+# Tina Milas, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Tina Milas, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,17 +66,17 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
 msgid "# Views"
 msgstr "# Pregled"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_views
 msgid "# of Embedded Views"
 msgstr "# ugrađeni pregled"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
 msgid "# of Website Views"
 msgstr "# pregled web stranice"
 
@@ -155,8 +155,8 @@ msgstr "<i class=\"fa fa-cloud-upload\"/> Postavi"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-code\"/> Embeded Views"
-msgstr "<i class=\"fa fa-code\"/> Ugrađeni pregled"
+msgid "<i class=\"fa fa-code\"/> Embedded Views"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -220,6 +220,13 @@ msgstr "<i class=\"fa fa-thumbs-down\"/> Dislikes"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgstr "<i class=\"fa fa-thumbs-up\"/> Likes"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:107
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -301,15 +308,26 @@ msgid "API Key"
 msgstr "API ključ"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "Akcije"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
 msgstr "Aktivan"
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_slides_slides
+msgid "Add a new slide"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -319,32 +337,22 @@ msgstr "Arhivirano"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
-msgid "Authentified Users Only"
-msgstr "Samo provjereni korisnici"
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_5
-msgid "Awesome Timesheet by Odoo"
-msgstr "Odlična Odoo evidencija rada"
-
-#. module: website_slides
-#: model:slide.tag,name:website_slides.tag1
-msgid "CMS"
+msgid "Authenticated Users Only"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see
 msgid "Can See"
 msgstr "Može vidjeti"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_upload
 msgid "Can Upload"
 msgstr "Može učitati"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Categories"
@@ -352,9 +360,9 @@ msgstr "Kategorije"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:250
+#: code:addons/website_slides/static/src/js/slides_upload.js:252
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
@@ -363,8 +371,8 @@ msgid "Category"
 msgstr "Kategorija"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -372,7 +380,7 @@ msgid "Channel"
 msgstr "Kanal"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
 msgid "Channel Groups"
 msgstr "Grupe kanala"
 
@@ -383,7 +391,7 @@ msgstr "Postavke kanala"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:170
+#: code:addons/website_slides/static/src/js/slides_upload.js:172
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
@@ -409,12 +417,7 @@ msgid "Channels"
 msgstr "Kanali prodaje"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_10
-msgid "Company Culture"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
 msgid "Content"
 msgstr "Sadržaj"
 
@@ -426,7 +429,7 @@ msgid "Content Preview"
 msgstr "Pregled sadržaja"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:255
+#: code:addons/website_slides/controllers/main.py:256
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
@@ -434,7 +437,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:322
+#: code:addons/website_slides/models/slides.py:325
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -449,27 +452,37 @@ msgid "Create a Google Project and Get a Key"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_slide_channels
+msgid "Create a channel"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_ir_slide_category
+msgid "Create a new category"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:219
+#: code:addons/website_slides/static/src/js/slides_upload.js:221
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "Stvori novu oznaku '%s'"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_date
 msgid "Created on"
 msgstr "Datum kreiranja"
 
@@ -486,8 +499,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:60
 #: code:addons/website_slides/static/src/xml/website_slides.xml:62
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__description
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
@@ -501,50 +514,22 @@ msgid "Discard"
 msgstr "Odbaci"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_6
-msgid "Discover how easy marketing your business can be with Odoo"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_0
-msgid ""
-"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
-"\n"
-"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
-"\n"
-"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_1
-msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_2
-msgid ""
-"Discover the all-in-one business management software solution that fits any business size and use case.\n"
-"\n"
-"Learn more at https://odoo.com"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
 msgid "Dislikes"
 msgstr "Dislikes"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_category__sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel__sequence
 msgid "Display order"
 msgstr "Redoslijed prikaza"
 
@@ -555,12 +540,12 @@ msgid "Document"
 msgstr "Dokument"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_id
 msgid "Document ID"
 msgstr "ID dokumenta"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "Document URL"
 msgstr "URL dokument"
 
@@ -575,36 +560,27 @@ msgid "Download"
 msgstr "Preuzimanje"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_5
-msgid ""
-"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
-"\n"
-"Chrome: http://bit.ly/2613LcY\n"
-"iOS: http://bit.ly/1ZUZsZD"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
 msgid "Download Security"
 msgstr "Sigurnost preuzimanja"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid "Email template to send slide publication through email"
 msgstr "Predložak e-maila kako biste slajd publikaciju poslali putem e-maila"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
 msgid "Email template used when sharing a slide"
 msgstr "Predložak e-maila koji se koristi za dijeljenje slajda"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
 msgid "Embed Code"
 msgstr "Ugrađeni kod"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embedcount_ids
 msgid "Embed Count"
 msgstr "Ugrađena točka"
 
@@ -629,7 +605,7 @@ msgid "Employee Channel"
 msgstr "Djelatnik kanala"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_error_msg
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Error Message"
 msgstr "Poruka greške:"
@@ -645,30 +621,43 @@ msgid "Featured Presentation"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_1
-msgid "Featured Presentations"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Featuring Policy"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/controllers/main.py:263
+#: code:addons/website_slides/controllers/main.py:266
 #: code:addons/website_slides/static/src/js/slides_upload.js:89
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr "Datoteka je prevelika. Veličina datoteke ne smije prelaziti 25MB"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_channel_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see_full
 msgid "Full Access"
 msgstr "Puni pristup"
 
@@ -678,7 +667,7 @@ msgid "General"
 msgstr "Općenito"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
 msgid "Google Doc Key"
 msgstr ""
 
@@ -698,28 +687,46 @@ msgid "Group By"
 msgstr "Grupiraj po"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
+#: model:ir.model.fields,help:website_slides.field_slide_channel__group_ids
 msgid "Groups allowed to see presentations in this channel"
 msgstr "Grupe kojima je dozvoljeno vidjeti prezentaciju u ovom kanalu"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
 msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
 msgid "Image"
 msgstr "Slika"
 
@@ -734,7 +741,7 @@ msgid "Infographics"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:285
+#: code:addons/website_slides/controllers/main.py:288
 #, python-format
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
@@ -751,29 +758,35 @@ msgid "Invalid file type. Please select pdf or image file"
 msgstr "Pogešna vrsta datoteke. Odaberite pdf ili slikovnu datoteku"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
@@ -783,34 +796,36 @@ msgid "Latest Published"
 msgstr "Zadnje objavljeno"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_8
-msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
 msgstr "Likes"
 
 #. module: website_slides
-#: model:slide.tag,name:website_slides.tag2
-msgid "Marketing"
-msgstr "Marketing"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
 msgid "Medium"
 msgstr "Medij"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
 msgid "Message to display when not accessible due to access rights"
 msgstr ""
 "Poruka koja će se prikazati kada nije moguće pristupiti zbog prava pristupa"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
 msgid "Mime-type"
 msgstr ""
 
@@ -828,9 +843,9 @@ msgid "Most Voted"
 msgstr "Najviše glasova"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__name
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
@@ -872,79 +887,58 @@ msgid "No presentation published yet."
 msgstr "Još nema objavljenih prezentacija."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_documents
 msgid "Number of Documents"
 msgstr "Broj dokumenata"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographics
 msgid "Number of Infographics"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentations
 msgid "Number of Presentations"
 msgstr "Broj prezentacija"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_videos
 msgid "Number of Videos"
 msgstr "Broj videa"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_2
-msgid "Odoo All-in-One Software Demonstration"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of error"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_1
-msgid "Odoo CRM"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_2
-#: model:slide.tag,name:website_slides.tag5
-msgid "Odoo Days"
-msgstr "Odoo dani"
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_7
-msgid "Odoo Inventory"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_0
-msgid "Odoo MRP"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_6
-msgid "Odoo Marketing"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_8
-msgid "Odoo Sales"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_3
-msgid "Odoo Sign Demonstration"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_9
-msgid "Open Days 2014 Infographic"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_11
-msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr ""
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
 
 #. module: website_slides
 #. openerp-web
@@ -973,20 +967,20 @@ msgstr ""
 "ovaj slajd"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
-#: code:addons/website_slides/models/slides.py:545
+#: code:addons/website_slides/models/slides.py:328
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Molim unesite valjani Youtube ili Google dok URL"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:247
+#: code:addons/website_slides/controllers/main.py:248
 #, python-format
 msgid "Please enter valid youtube or google doc url"
 msgstr "Molim unesite valjani youtube ili google dok url"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
 msgstr "Prezentacija"
@@ -998,7 +992,6 @@ msgid "Presentation Published"
 msgstr "Objavljena prezentacija"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_footer
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
@@ -1025,7 +1018,7 @@ msgid "Public Channel"
 msgstr "Javni kanal"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
 msgid "Publish Date"
 msgstr "Datum objave"
 
@@ -1035,7 +1028,7 @@ msgid "Published"
 msgstr "Objavljeno"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "Published Template"
 msgstr "Objavljeni predložak"
 
@@ -1091,8 +1084,8 @@ msgid "Select page to start with"
 msgstr "Odaberite početnu stranicu"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
 msgid "Sequence"
 msgstr "Sekvenca"
 
@@ -1117,7 +1110,7 @@ msgid "Share with a friend"
 msgstr "Podijeli s prijateljem"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
 msgid "Shared Template"
 msgstr "Zajednički predložak"
 
@@ -1137,15 +1130,15 @@ msgid "Slide Tag"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
 msgid "Slide to Promote"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
 #: model:ir.model,name:website_slides.model_slide_slide
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
 #: model:ir.ui.menu,name:website_slides.menu_website_slides_root
 #: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1164,24 +1157,16 @@ msgid "Sorry, but nothing matches your search criteria"
 msgstr "Žao nam je, ali ništa ne odgovara vašim kriterijima pretrage"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_3
-msgid ""
-"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
-"\n"
-"Discover more at https://www.odoo.com/page/sign"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "Oznaka"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:273
+#: code:addons/website_slides/static/src/js/slides_upload.js:275
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
 #: model:ir.ui.menu,name:website_slides.menu_slide_tag
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
@@ -1199,11 +1184,17 @@ msgid "The"
 msgstr "!"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Puni URL za pristup dokumentu putem web stranice."
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1211,7 +1202,7 @@ msgid "The slide name must be unique within a channel"
 msgstr "Ime slajda mora biti jedinstveno unutar kanala"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
 msgstr ""
 
@@ -1224,7 +1215,7 @@ msgstr ""
 "Ovaj kanal je privatan i njegov je sadržaj ograničen na neke korisnike."
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:251
+#: code:addons/website_slides/controllers/main.py:252
 #, python-format
 msgid ""
 "This video already exists in this channel <a target=\"_blank\" "
@@ -1234,7 +1225,7 @@ msgstr ""
 "href=\"/slides/slide/%s\">klikni ovdje za pregled </a>"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_thumb
 msgid "Thumbnail"
 msgstr ""
 
@@ -1242,29 +1233,29 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:42
 #: code:addons/website_slides/static/src/xml/website_slides.xml:44
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 #, python-format
 msgid "Title"
 msgstr "Naslov"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__total
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total
 msgid "Total"
 msgstr "Ukupno"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 msgid "Total # Views"
 msgstr "Ukupno # posjeta"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__index_content
 msgid "Transcript"
 msgstr "Prijepis"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
 msgstr "Vrsta"
@@ -1281,7 +1272,7 @@ msgid "Uncategorized presentation"
 msgstr "Prezentacija bez kategorije"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:534
+#: code:addons/website_slides/models/slides.py:540
 #, python-format
 msgid "Unknown document"
 msgstr "Nepoznat dokument"
@@ -1292,7 +1283,19 @@ msgid "Unpublished"
 msgstr "Neobjavljeno"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
 msgstr "Prijenos grupe"
 
@@ -1352,9 +1355,15 @@ msgid "Views ."
 msgstr "Pregled."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
 msgid "Visibility"
 msgstr "Vidljivost"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_published
+msgid "Visible in Website"
+msgstr "Vidljivo na web stranicama"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1362,17 +1371,45 @@ msgid "Waiting for validation"
 msgstr "Čeka ovjeru"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_7
-msgid ""
-"Warehouse management software for the 21st century.\n"
-"\n"
-"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
 msgstr "Web stranica"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
+msgid "Website URL"
+msgstr "URL web stranice"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_description
+msgid "Website meta description"
+msgstr "Web meta opis"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_keywords
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Web meta ključne riječi"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_title
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_title
+msgid "Website meta title"
+msgstr "Web meta naslov"
 
 #. module: website_slides
 #. openerp-web
@@ -1403,12 +1440,12 @@ msgid "Youtube or Google Doc URL"
 msgstr "URL Youtube ili Google Dok"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
 msgid "Youtube or Google Document ID"
 msgstr "ID Youtube ili Google dokumenta"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
 msgstr "URL Youtube ili Google dokumenta"
 

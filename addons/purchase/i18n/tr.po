@@ -4,25 +4,25 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Esin Kandemir <esaykandemir@gmail.com>, 2017
 # Martin Trigaux, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Mehmet Demirel <mdemirell@gmail.com>, 2017
-# Levent Karakaş <levent@mektup.at>, 2018
 # Saban Yildiz <sabany@projetgrup.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,12 +87,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:100
-#, python-format
-msgid " Buy"
-msgstr " Satınal"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_count
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_count
 msgid "# Purchases"
@@ -133,6 +127,13 @@ msgid ""
 msgstr ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> İptal "
 "Edildi</span>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-file-text\"/> "
+"Waiting for Bill</span>"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -243,9 +244,25 @@ msgstr ""
 "Dijital içerik, çevrimiçi sattığınız maddi olmayan bir üründür. Ürünlere eklenen dosyalar e-ticarette e-kitap, müzik, resim gibi satılmaktadır ... \"Dijital Ürün\" modülü kurulmalıdır."
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_users__has_group_warning_purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Bir ürün veya müşteri üzerinde uyarı konulabilir (Satınalma)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
+msgid "Action Needed"
+msgstr "Eylem Gerekiyor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
+msgid "Activity State"
+msgstr "Aktivite Durumu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
@@ -262,6 +279,11 @@ msgstr "Tümü"
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
 msgstr "Satınalma siparişlerini düzenlemeye izin ver"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
+msgid "Amount"
+msgstr "Tutar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
@@ -292,6 +314,11 @@ msgid ""
 msgstr ""
 "İlişkili Alış Siparişi. Satıcı faturasında bir AS (Alış Siparişi) "
 "seçildiğinde otomatik olarak doldurulur."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
+msgid "Auto-Complete"
+msgstr ""
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -339,6 +366,11 @@ msgid "Bills"
 msgstr "Faturalar"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_purchase_bill_union
+msgid "Bills & Purchases"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Bills Received"
 msgstr "Alım Faturaları"
@@ -348,18 +380,6 @@ msgstr "Alım Faturaları"
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
 msgstr "Engelleme"
-
-#. module: purchase
-#: code:addons/purchase/models/stock.py:94
-#: model:stock.location.route,name:purchase.route_warehouse0_buy
-#, python-format
-msgid "Buy"
-msgstr "Satınal"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_stock_warehouse__buy_pull_id
-msgid "Buy rule"
-msgstr "Alım Kuralı"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -384,12 +404,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:97
-#, python-format
-msgid "Can't find any generic Buy route."
-msgstr "Satınalma rotasında herhangi bir tanım yok."
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Cancel"
 msgstr "İptal"
@@ -402,7 +416,12 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:797
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Cancelled Purchase Order #"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:492
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "'%s' Durumundaki satınalma satırı silinemiyor"
@@ -418,6 +437,7 @@ msgid "Companies"
 msgstr "Şirketler"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
@@ -431,7 +451,7 @@ msgid "Company Currency"
 msgstr "Şirket Para Birimi"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:330
+#: code:addons/purchase/models/purchase.py:270
 #, python-format
 msgid "Compose Email"
 msgstr "Eposta Yaz"
@@ -498,11 +518,6 @@ msgid "Create a vendor bill"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_stock_move__created_purchase_line_id
-msgid "Created Purchase Order Line"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
 msgid "Created by"
@@ -515,11 +530,17 @@ msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
 msgid "Currency"
 msgstr "Para Birimi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
+msgid "Date"
+msgstr "Tarih"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
@@ -547,19 +568,9 @@ msgid "Define your terms and conditions ..."
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__picking_type_id
-msgid "Deliver To"
-msgstr "Teslim Alacak"
-
-#. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Delivered quantities"
 msgstr "Teslim edilen miktar"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Deliveries & Invoices"
-msgstr "Teslimatlar & Faturalar"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -582,11 +593,7 @@ msgid "Description for Vendors"
 msgstr "Tedarikçiler için Açıklama"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__default_location_dest_id_usage
-msgid "Destination Location Type"
-msgstr "Hedef Konum Türü"
-
-#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
@@ -604,11 +611,6 @@ msgid "Double validation amount"
 msgstr "Çift onay tutarı"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__move_dest_ids
-msgid "Downstream Moves"
-msgstr ""
-
-#. module: purchase
 #: selection:purchase.report,state:0
 msgid "Draft RFQ"
 msgstr "Taslak Teklif Talebi"
@@ -617,30 +619,6 @@ msgstr "Taslak Teklif Talebi"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Drop Ship Address"
 msgstr "Transit Satış Adresi"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_stock_dropshipping
-msgid "Dropshipping"
-msgstr "Transit Satış"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_invoice__purchase_id
-msgid ""
-"Encoding help. When selected, the associated purchase order lines are added "
-"to the vendor bill. Several PO can be selected."
-msgstr ""
-"Kodlama yardımı. Seçildiği zaman, ilişkili satın alma sipariş satırları "
-"tedarikçi faturasına eklenir. Bir çok PO seçilebilir."
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.exception_on_po
-msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.exception_on_po
-msgid "Exception(s):"
-msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -653,7 +631,7 @@ msgid "Extended Filters"
 msgstr "Genişletilmiş Filtreler"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:617
+#: code:addons/purchase/models/purchase.py:474
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -664,6 +642,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
 msgstr "Mali Koşul"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Takipçiler (Kanallar)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Tekipçiler (İş ortakları)"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -704,11 +697,27 @@ msgid "How to import"
 msgstr "Nasıl içe aktarım yapılır"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -723,34 +732,10 @@ msgid "Import vendor pricelists"
 msgstr "Tedarikçi fiyat listelerini içe aktar"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:221
+#: code:addons/purchase/models/purchase.py:167
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "Bir satınalma siparişi silmek için, önce onu iptal etmeniz gerekir."
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
-msgid "Incoming  Products"
-msgstr "Gelen Ürünler"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Incoming Shipments"
-msgstr "Gelen Sevkiyatlar"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
-msgid "Incoterm"
-msgstr "Teslimat Koşulu"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
-msgid ""
-"International Commercial Terms are a series of predefined commercial terms "
-"used in international transactions."
-msgstr ""
-"Uluslararası Ticari Terimler, uluslararası işlemlerde kullanılan önceden "
-"tanımlanmış ticari  dizinlerdir."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
@@ -773,14 +758,9 @@ msgid "Invoicing"
 msgstr "Faturalama"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__is_shipped
-msgid "Is Shipped"
-msgstr "Sevk Edildi"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__is_installed_sale
-msgid "Is the Sale Module Installed"
-msgstr "Satış modülü yüklü mü"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -788,6 +768,7 @@ msgid "It will be converted into a purchase order."
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order____last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
@@ -822,6 +803,13 @@ msgid "Levels of Approvals *"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_invoice__purchase_id
+msgid ""
+"Load the vendor bill based on selected purchase order. Several PO can be "
+"selected."
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Lock"
 msgstr "Kilitle"
@@ -840,11 +828,6 @@ msgstr "Kilitli"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Logistics"
-msgstr "Lojistik"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
@@ -852,6 +835,7 @@ msgstr ""
 "yapın"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_users__has_group_manage_vendor_price
 #: model:res.groups,name:purchase.group_manage_vendor_price
 msgid "Manage Vendor Price"
 msgstr "Tedarikçi Fiyatını Yönetin"
@@ -879,11 +863,6 @@ msgid "Manual Invoices"
 msgstr "Elle Fatura"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.exception_on_po
-msgid "Manual actions may be needed."
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
@@ -897,11 +876,15 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
+msgid "Message Delivery error"
 msgstr ""
 
 #. module: purchase
@@ -917,14 +900,14 @@ msgid "Message for Purchase Order Line"
 msgstr "Satınalma Sipariş Satırı için Mesaj"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
 msgstr "Minimum Tutar"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Min. Envanter Kuralı"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
@@ -936,11 +919,6 @@ msgstr " Çift doğrulama gerektiren minimum miktar"
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
 msgstr "Aylık Satınalmalar"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
-msgid "Move forward expected delivery dates by"
-msgstr "Beklenen teslim tarihlerini ileriye taşıyın : "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -965,9 +943,19 @@ msgid "Newest"
 msgstr "En yeni"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.exception_on_po
-msgid "Next transfer(s) impacted:"
-msgstr ""
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Sonraki Faaliyet Zaman Sınırı"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sonraki Faaliyet Özeti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Sonraki Faaliyet Türü"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1004,6 +992,31 @@ msgid "Nothing to Bill"
 msgstr "Faturalanacak Bir Şey Yok"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Eylemlerin Sayısı"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Eylem gerektiren mesaj sayısı"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Okunmamış mesaj sayısı"
+
+#. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On ordered quantities"
 msgstr "Sipariş edilen miktarlarda"
@@ -1034,6 +1047,7 @@ msgstr "Sipariş Onayı"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Date"
 msgstr "Sipariş Tarihi"
 
@@ -1041,11 +1055,6 @@ msgstr "Sipariş Tarihi"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
 msgid "Order Lines"
 msgstr "Sipariş Satırları"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Order Month"
-msgstr "Sipariş Ay"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__name
@@ -1060,11 +1069,6 @@ msgid "Order Status"
 msgstr "Sipariş Durumu"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Order of Day"
-msgstr "Sipariş Günü"
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
 msgstr "Sipariş Miktarı:"
@@ -1075,15 +1079,20 @@ msgid "Ordered quantities"
 msgstr "Siparişin miktarından"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__orderpoint_id
-msgid "Orderpoint"
-msgstr ""
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Orders"
 msgstr "Siparişler"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Other Information"
+msgstr "Diğer Bilgiler"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Overdue"
+msgstr "Geciken"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1111,9 +1120,9 @@ msgid "Payment Terms"
 msgstr "Ödeme Koşulları"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__picking_count
-msgid "Picking count"
-msgstr "Toplama Listesi Adedi"
+#: selection:purchase.order,activity_state:0
+msgid "Planned"
+msgstr "Planlanan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1131,16 +1140,6 @@ msgstr "Tedarikçi Bazında Fiyat"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
 msgstr "Teklif Talebi Yazdır"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__group_id
-msgid "Procurement Group"
-msgstr "Tedarik Grubu"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Tedarik Kuralı"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1254,6 +1253,7 @@ msgstr "Satınalma Tedarik Süresi"
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1265,6 +1265,11 @@ msgstr "Satınalma Tedarik Süresi"
 #, python-format
 msgid "Purchase Order"
 msgstr "Satınalma Siparişi"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Purchase Order #"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1287,7 +1292,6 @@ msgstr "Satınalma Siparişi Mali Koşulu"
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line__purchase_line_id
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
-#: model:ir.model.fields,field_description:purchase.field_stock_move__purchase_line_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -1323,11 +1327,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.actions.act_window,name:purchase.purchase_order_action_generic
-#: model:ir.model.fields,field_description:purchase.field_stock_picking__purchase_id
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
@@ -1368,20 +1372,15 @@ msgid "Purchase orders that include lines not invoiced."
 msgstr "İçinde faturalanmamış kalemler içeren satınalma siparişleri"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_stock_warehouse__buy_to_resupply
-msgid "Purchase to resupply this warehouse"
-msgstr "Bu depoya yeniden tedarik için satınal"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__negociation
 msgid "Purchase-Standard Price"
 msgstr "Satınalma-Standart Fiyat"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_users__group_purchase_user
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-#: model:ir.ui.view,arch_db:purchase.view_warehouse_orderpoint_purchase_form
 msgid "Purchases"
 msgstr "Satınalma"
 
@@ -1452,13 +1451,8 @@ msgstr "Teklif Talepleri ve Satınalmalar"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Send RFQ by Email"
-msgstr "Teklif talebini (RFQ) yeniden E-Postayla gönder"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Receive Products"
-msgstr "Ürün Kabulleri"
+msgid "Re-Send by Email"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
@@ -1471,12 +1465,6 @@ msgid "Received Quantity:"
 msgstr "Alınan Miktar:"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_open_picking
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__picking_ids
-msgid "Receptions"
-msgstr "Kabuller"
-
-#. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Record a new vendor bill"
 msgstr ""
@@ -1487,10 +1475,17 @@ msgid "Record a vendor bill related to this purchase"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Reference"
 msgstr "Referans"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
+msgid "Reference Document"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom
@@ -1536,30 +1531,15 @@ msgid "Request for Quotation #"
 msgstr "Teklif Talebi #"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Request your vendors to deliver to your customers"
-msgstr "Tedarikçiler müşterilerinize sizin adınıza direk teslimat yaparlar"
-
-#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
 msgstr "Teklif Talepleri"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__move_ids
-msgid "Reservation"
-msgstr "Rezervasyon"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_stock_return_picking
-msgid "Return Picking"
-msgstr "Ters Transfer"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
-msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1574,9 +1554,19 @@ msgid "Search Purchase Order"
 msgstr "Satınalma Siparişi Ara"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
+msgid "Search Reference Document"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
 msgstr "Satın Alma için Teslimat Zaman Güvenliği"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_invoice_supplier_purchase_form
+msgid "Select a purchase order or an old bill"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
@@ -1599,8 +1589,8 @@ msgstr "PO E-Postayla Gönder"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Send RFQ by Email"
-msgstr "E-posta Gönder"
+msgid "Send by Email"
+msgstr "E-posta ile Gönder"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -1624,14 +1614,14 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Shipment"
-msgstr "Sevkiyat"
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
+msgid "Source"
+msgstr "Kaynak"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
@@ -1647,14 +1637,13 @@ msgid "Status"
 msgstr "Durumu"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_move
-msgid "Stock Move"
-msgstr "Stok Hareketi"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
-msgid "Stock Moves"
-msgstr "Stok Hareketleri"
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -1685,11 +1674,6 @@ msgid "Taxes:"
 msgstr "Vergiler:"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__default_location_dest_id_usage
-msgid "Technical field used to display the Drop Ship Address"
-msgstr "Teslimat Bırakma Adresini görüntülemek için kullanılan teknik alan"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__notes
 msgid "Terms and Conditions"
 msgstr "Şartlar ve Koşullar"
@@ -1698,14 +1682,6 @@ msgstr "Şartlar ve Koşullar"
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Belgeye web sitesinden erişim için tam URL adresi."
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:702
-#, python-format
-msgid ""
-"The quantities on your purchase order indicate less than billed. You should "
-"ask for a refund. "
-msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1726,14 +1702,6 @@ msgstr ""
 "edebileceksiniz."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:931
-#, python-format
-msgid ""
-"There is no vendor associated to the product %s. Please define a vendor for "
-"this product."
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
 msgid ""
 "This account will be used to value price difference between purchase price "
@@ -1751,16 +1719,6 @@ msgid ""
 msgstr ""
 "Bu hesap satınalma fiyatı ile maliyet fiyatı arasındaki fiyat farkını "
 "değerlendirmek için kullanılacaktır."
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
-msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1793,13 +1751,13 @@ msgid "This note will show up on purchase orders."
 msgstr "Buraya yazacağınız açıklamalar satınalma siparişlerinde görünecektir."
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:216
+#: code:addons/purchase/models/account_invoice.py:154
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Bu satıcı faturası üzerinden oluşturuldu: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:230
+#: code:addons/purchase/models/account_invoice.py:168
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1810,15 +1768,15 @@ msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__picking_type_id
-msgid "This will determine operation type of incoming shipment"
-msgstr "Bu, gelen teslimatın operasyon türünü belirleyecektir."
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
 msgstr "Onaylanacak"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Today"
+msgstr "Bugün"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1850,27 +1808,12 @@ msgid "Total amount"
 msgstr "Toplam tutar"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_picking
-msgid "Transfer"
-msgstr "Transfer"
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:386
+#: code:addons/purchase/models/purchase.py:326
 #, python-format
 msgid ""
-"Unable to cancel purchase order %s as some receptions have already been "
-"done."
+"Unable to cancel this purchase order. You must first cancel the related "
+"vendor bills."
 msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:389
-#, python-format
-msgid ""
-"Unable to cancel this purchase order. You must first cancel related vendor "
-"bills."
-msgstr ""
-"Bu satınalma siparişi iptal edilemiyor. Önce ilgili tedarikçi faturalarını "
-"iptal etmeniz gerekir."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -1893,9 +1836,15 @@ msgid "Unlock"
 msgstr "Kilidini Aç"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1929,11 +1878,17 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
 msgid "Utility field to express amount currency"
 msgstr "Miktar para birimini ifade etmek için kullanım alanı"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -1944,12 +1899,18 @@ msgid "Vendor"
 msgstr "Tedarikçi"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
+msgid "Vendor Bill"
+msgstr "Tedarikçi Faturası"
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.actions.act_window,name:purchase.purchase_open_invoice
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
+#: model:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Tedarikçi  Faturaları"
 
@@ -1994,20 +1955,14 @@ msgid "Waiting Bills"
 msgstr "Bekleyen Faturalar"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_warehouse
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__picking_type_id
-msgid "Warehouse"
-msgstr "Depo"
-
-#. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
 msgstr "Uyarı"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:284
-#: code:addons/purchase/models/purchase.py:868
+#: code:addons/purchase/models/purchase.py:229
+#: code:addons/purchase/models/purchase.py:557
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -2028,14 +1983,19 @@ msgid "Warnings"
 msgstr "Uyarılar"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_url
 msgid "Website URL"
 msgstr "Web Sitesi URL Adresi"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_stock_warehouse__buy_to_resupply
-msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Ürünler satın alındığında bu depoya sevk edilebilir"
+#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
+msgid "Website communication history"
+msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -2045,14 +2005,6 @@ msgid ""
 msgstr ""
 "Tedarikçinizden satın aldığınız (hizmet) veya (ürünleri) \n"
 "faturasından kontrol edebilirsiniz."
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:694
-#, python-format
-msgid ""
-"You cannot decrease the ordered quantity below the received quantity.\n"
-"Create a return first."
-msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -2066,27 +2018,6 @@ msgstr ""
 msgid ""
 "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:428
-#, python-format
-msgid "You must set a Vendor Location for this partner %s"
-msgstr "Bu iş ortağı %s için bir tedarikçi konumu belirlemelisiniz"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
-msgid "days"
-msgstr "gün"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.exception_on_po
-msgid "of"
-msgstr "ile ilgili"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.exception_on_po
-msgid "ordered instead of"
 msgstr ""
 
 #. module: purchase

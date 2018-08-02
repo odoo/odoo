@@ -2,31 +2,24 @@
 # This file contains the translation of the following modules:
 # * website_sale_delivery
 # 
+# Translators:
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
+# Martin Trigaux, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Tsogjav <Tsogjav2007@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:50
-#, python-format
-msgid ""
-"%s does not ship to your address, please choose another one.\n"
-"(Error: %s)"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
-msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add delivery methods"
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -36,24 +29,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
-msgid ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
-"updated after choosing a new delivery method\"> Delivery:</span>"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
 msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Захиалагчтай харилцах гэж байгаа барааны тодорхойлолт. Энэ тодорхойлолт нь "
+"борлуулалтын захиалга, хүргэх захиалга, захиалагчийн нэхэмжлэл, буцаалт бүрд"
+" хуулагдана."
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr ""
+msgstr "Тээвэрлэгч"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -63,7 +52,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Улс"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -71,29 +60,44 @@ msgid "DHL Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Хүргэлтийн Дүн"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Delivery Methods"
+msgstr "Хүргэлтийн арга"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery will be updated after choosing a new delivery method"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery:"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Онлайн борлуулалт ба онлайн үнийн саналууд дээр харуулсан тайлбар."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
+msgstr "Онлайн үнийн саналын тайлбар"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "Easypost Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -104,57 +108,72 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Free"
-msgstr ""
+msgstr "үнэгүй"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "Хүргэлтэд тохируулсан захиалгын мөртэй"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Хүргэлттэй"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:42
+#: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
+"Таны энэ захиалга ба хүргэх хаягт хүргэлтийн арга боломжгүй. Бидэнтэй "
+"холбогдож дэлгэрэнгүй мэдээлэл авна уу."
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:49
-#, python-format
-msgid "Ouch, you cannot choose this carrier!"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
+msgid "Order Lines displayed on Website"
+msgstr "Вэбсайт дээр харуулсан Захиалгын мөрүүд"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
+msgid ""
+"Order Lines to be displayed on the website. They should not be used for "
+"computation purpose."
 msgstr ""
+"Вэбсайт дээр харуулах Захиалгын мөрүүд. Эдгээрийг тооцоолох зорилгоор "
+"ашиглах ёсгүй."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
-msgstr ""
+msgstr "Нийтлэгдсэн"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Quotation"
-msgstr ""
+msgstr "Үнийн санал"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:41
+#: code:addons/website_sale_delivery/controllers/main.py:43
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Уучлаарай, бид таны захиалгыг хүргэх боломжгүй"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
 msgid "The amount without tax."
-msgstr ""
+msgstr "Татваргүй дүн."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Вебсайтаар дамжин баримт руу хандах бүтэн URL."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
 msgid "Tracking:"
-msgstr ""
+msgstr "Хөтлөлт:"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -162,9 +181,14 @@ msgid "USPS Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Вебсайт дээр харагдах"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
+msgid "Website URL"
+msgstr "Вебсайт URL"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

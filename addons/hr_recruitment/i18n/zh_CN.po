@@ -15,13 +15,17 @@
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Maie <m@maie.name>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# Xu Lei <xulei8@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -782,9 +786,30 @@ msgid ""
 msgstr "当创建别名的新记录时，一个Python字典被提供作为默认值"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__active
 msgid "Active"
 msgstr "有效"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
+#: model:ir.ui.menu,name:hr_recruitment.hr_recruitment_menu_config_activity_type
+msgid "Activity Types"
+msgstr "活动类型"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -978,6 +1003,18 @@ msgid "Bachelor Degree"
 msgstr "本科"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:67
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job4
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job5
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, python-format
+msgid "Blocked"
+msgstr "阻塞"
+
+#. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
 msgstr "部门"
@@ -991,6 +1028,11 @@ msgstr "工作"
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
 msgstr "被招聘人"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
+msgid "Campaign"
+msgstr "营销"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -1033,14 +1075,14 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:350
+#: code:addons/hr_recruitment/models/hr_recruitment.py:370
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
 msgid "Contact"
 msgstr "联系"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:352
+#: code:addons/hr_recruitment/models/hr_recruitment.py:372
 #, python-format
 msgid "Contact Email"
 msgstr "联系电邮"
@@ -1110,14 +1152,10 @@ msgstr "创建时间"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Creation Date"
 msgstr "创建日期"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-msgid "Creation Week"
-msgstr "创建周"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -1233,7 +1271,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Documents"
 msgstr "文档"
 
@@ -1349,6 +1386,21 @@ msgid "Folded in Recruitment Pipe"
 msgstr "在招聘管道收起"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Future Activities"
 msgstr "未来活动"
@@ -1372,6 +1424,26 @@ msgstr "好"
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
 msgid "Graduate"
 msgstr "毕业生"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,kanban_state:0
+msgid "Green"
+msgstr "绿色"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
+msgid "Green Kanban Label"
+msgstr "绿色看板标签"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,kanban_state:0
+msgid "Grey"
+msgstr "灰色"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr "灰色看板标签"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1411,6 +1483,21 @@ msgid ""
 msgstr "上级记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
@@ -1425,6 +1512,22 @@ msgid ""
 msgstr "如果“有效”字段设为false，它对信息进行隐藏但不删除它。"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:71
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job4
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job5
+#, python-format
+msgid "In Progress"
+msgstr "进行中"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "In progress"
+msgstr "进行中"
+
+#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
 msgstr "初步评价"
@@ -1434,6 +1537,11 @@ msgstr "初步评价"
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
 msgstr "面试表单"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_job.py:94
@@ -1517,6 +1625,26 @@ msgid "Jobs Sources"
 msgstr "招聘来源"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
+msgid "Kanban Blocked"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
+msgid "Kanban Ongoing"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
+msgid "Kanban State"
+msgstr "看板状态"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
+msgid "Kanban Valid"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category____last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree____last_update
@@ -1562,7 +1690,7 @@ msgstr "逾期活动"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
-msgstr ""
+msgstr "让我们创建一个工作职位"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1581,6 +1709,21 @@ msgstr "管理员"
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
 msgstr "硕士"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
+msgid "Medium"
+msgstr "中等"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_ids
+msgid "Messages"
+msgstr "消息"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile
@@ -1634,7 +1777,7 @@ msgid "New Applications"
 msgstr "新的申请"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:426
+#: code:addons/hr_recruitment/models/hr_recruitment.py:446
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "被雇佣的新员工%s"
@@ -1666,7 +1809,22 @@ msgid "Next Activities"
 msgstr "下一步活动"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:368
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:388
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -1693,6 +1851,11 @@ msgid "Normal"
 msgstr "一般"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_number
 msgid "Number of Attachments"
 msgstr "附件数量"
@@ -1701,6 +1864,26 @@ msgstr "附件数量"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
 msgid "Number of days to close"
 msgstr "要关闭的天数"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1746,6 +1929,11 @@ msgid ""
 msgstr "所有的进来的邮件都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
 
 #. module: hr_recruitment
+#: selection:hr.applicant,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
 msgid "Owner"
 msgstr "所有者"
@@ -1781,6 +1969,11 @@ msgid "Phone"
 msgstr "电话"
 
 #. module: hr_recruitment
+#: selection:hr.applicant,activity_state:0
+msgid "Planned"
+msgstr "已安排"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1814,6 +2007,18 @@ msgid "Publish available jobs on your website"
 msgstr "在网站上发布现有职位"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:69
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job4
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job5
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, python-format
+msgid "Ready for Next Stage"
+msgstr "下一阶段就绪"
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Ready to recruit more efficiently?"
@@ -1825,6 +2030,7 @@ msgid "Record Thread ID"
 msgstr "记录线索ID"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_users__group_hr_recruitment_user
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment"
@@ -1866,6 +2072,16 @@ msgid "Recruitments"
 msgstr "招聘"
 
 #. module: hr_recruitment
+#: selection:hr.applicant,kanban_state:0
+msgid "Red"
+msgstr "红色"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "红色看板标签"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__reference
 msgid "Referred By"
 msgstr "引荐于"
@@ -1902,6 +2118,11 @@ msgstr "要求"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Responsible"
 msgstr "负责人"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_user_id
+msgid "Responsible User"
+msgstr "责任用户"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
@@ -1967,6 +2188,7 @@ msgid "Show all records which has next action date is before today"
 msgstr "显示在今天之前的下一个行动日期的所有记录"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
 msgstr "来源"
@@ -2049,6 +2271,19 @@ msgstr "开始招聘"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start recruitment"
 msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来的活动。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -2135,6 +2370,25 @@ msgid "This Year"
 msgstr "本年度"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr "这是一个帮助您追踪不同营销活动的名称，例如，节能减排、圣诞特辑"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "这是传达方法，例如，明信片、电子邮件或横幅广告"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr "这是链接源，例如，搜索引擎、其他域名或电子邮件列表名称"
+
+#. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid ""
 "This menu helps you search through resumes and motivation\n"
@@ -2142,6 +2396,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"此菜单有助您通过简历和动机\n"
+" 信进行搜索。Odoo 自动检索PDF、DOC、DOCX、TXT\n"
+" 文件，这样您便可在这些\n"
+" 文件的内容中搜索关键字。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -2151,9 +2409,19 @@ msgid ""
 msgstr "当这个阶段中没有任何记录要呈现的时候，这个阶段在看板视图中被折叠起来"
 
 #. module: hr_recruitment
+#: selection:hr.applicant,activity_state:0
+msgid "Today"
+msgstr "今日"
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Today Activities"
 msgstr "今天的活动"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid "Tooltips"
+msgstr ""
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2171,11 +2439,17 @@ msgid "Unassigned"
 msgstr "未分派"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "未读消息"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
@@ -2208,6 +2482,11 @@ msgid "User Email"
 msgstr "用户Email"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_users
+msgid "Users"
+msgstr "用户"
+
+#. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 msgid "Very Good"
 msgstr "非常好"
@@ -2225,6 +2504,16 @@ msgid "Watchers Emails"
 msgstr "关注者的电子邮件"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
 msgstr "欢迎 ${object.name}"
@@ -2238,7 +2527,14 @@ msgid ""
 msgstr "随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信息;联系人数据，工作岗位，可用性等。"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:430
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid ""
+"You can define here the labels that will be displayed for the kanban state instead\n"
+"                        of the default labels."
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:450
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr "你必须指定应聘者应聘的岗位和姓名"
@@ -2246,7 +2542,7 @@ msgstr "你必须指定应聘者应聘的岗位和姓名"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Your Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "您的申请：${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
@@ -2259,7 +2555,7 @@ msgid "e.g. Sales Manager"
 msgstr "例如：销售经理"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:281
+#: code:addons/hr_recruitment/models/hr_recruitment.py:298
 #, python-format
 msgid "job applicant"
 msgstr ""

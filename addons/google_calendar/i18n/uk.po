@@ -3,30 +3,30 @@
 # * google_calendar
 # 
 # Translators:
-# zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Консультація"
 
 #. module: google_calendar
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
@@ -84,7 +84,7 @@ msgid "Calendar"
 msgstr "Календар"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
 msgstr "ID календар"
 
@@ -96,15 +96,15 @@ msgstr "ID клієнта"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "Пароль клієнта"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
 msgid "Client_id"
 msgstr "ID клієнта"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_secret
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_secret
 msgid "Client_key"
 msgstr "Ключ клієнта"
 
@@ -117,7 +117,7 @@ msgid "Configuration"
 msgstr "Налаштування"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -148,7 +148,7 @@ msgid "Event disconnection success"
 msgstr "Подія успішно відключена"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
 msgstr "ID події Google календаря "
 
@@ -157,7 +157,7 @@ msgstr "ID події Google календаря "
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
-msgstr ""
+msgstr "Google Calendar: синхронізація"
 
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
@@ -177,9 +177,9 @@ msgstr ""
 " %s"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: google_calendar
 #. openerp-web
@@ -193,7 +193,7 @@ msgstr ""
 "старого облікового запису."
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
+#: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
@@ -202,22 +202,22 @@ msgstr ""
 "ми видалимо всі посилання між GoogleID і Odoo Google Internal ID"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_last_sync_date
 msgid "Last synchro date"
 msgstr "Дата останньої синхронізації"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__oe_synchro_date
 msgid "Odoo Synchro Date"
 msgstr "Дата синхронізації Odoo"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__oe_update_date
 msgid "Odoo Update Date"
 msgstr "Дата оновлення Odoo"
 
@@ -229,14 +229,9 @@ msgid "Redirection"
 msgstr "Перенаправлення"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
 msgstr "Оновити токен"
-
-#. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
-msgid "Settings"
-msgstr "Налаштування"
 
 #. module: google_calendar
 #. openerp-web
@@ -268,17 +263,17 @@ msgstr ""
 "використаний останнього разу (%s)!"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
 msgstr "Термін дії токена"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_server_uri
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__server_uri
 msgid "URI for tuto"
 msgstr "URI-адреса для tuto"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
 msgstr "Токен користувача"
 

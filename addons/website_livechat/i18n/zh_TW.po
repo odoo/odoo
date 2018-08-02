@@ -1,72 +1,98 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_livechat
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-10 09:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
-msgstr ""
+msgstr "<span>即時聊天頻道</span>"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Channel"
+msgstr "群組"
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
-msgstr ""
+msgstr "渠道的說明顯示在網站上"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live Chat"
+msgstr "線上聊天"
+
+#. module: website_livechat
+#: model:website.menu,name:website_livechat.menu_livechat
+msgid "Live Support"
+msgstr "即時支援"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live chat channel of your website"
+msgstr "網站的線上聊天頻道"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.ui.view,arch_db:website_livechat.header_footer_custom
-msgid "Livechat Support"
-msgstr ""
+msgstr "即時聊天渠道"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
-msgstr ""
+msgstr "即時聊天支援渠道"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Statistics"
-msgstr "統計"
+msgstr "統計信息"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "這"
+msgstr "此"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The Team"
-msgstr ""
+msgstr "團隊"
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr "通過網站訪問單據的完整網址。"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
-msgstr ""
+msgstr "沒有可顯示的公開即時對話渠道。"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "This is no rating for this channel for now."
-msgstr ""
+msgstr "現在這個頻道沒有評論。"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible in Website"
+msgstr "在網站可見"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
@@ -74,25 +100,31 @@ msgid "Website"
 msgstr "網站"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
-#: model:ir.model.fields,field_description:website_livechat.field_website_config_settings_channel_id
-msgid "Website Live Chat Channel"
-msgstr ""
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
+msgid "Website Live Channel"
+msgstr "網站直播頻道"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
+msgid "Website Live Chat Channel"
+msgstr "網站線上聊天頻道"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr "網站網址"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
-msgstr ""
+msgstr "網站說明"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
-msgstr ""
+msgstr "最後回饋"
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website_config_settings
-msgid "website.config.settings"
-msgstr ""
-
-#~ msgid "Website URL"
-#~ msgstr "網址"
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

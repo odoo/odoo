@@ -10,13 +10,15 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Martin Trigaux, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +63,11 @@ msgid "APPROVAL CODE:"
 msgstr "ONAY KODU:"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Alias"
+msgstr "Rumuz"
+
+#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Banka Hesap Özeti Kalemi"
@@ -100,6 +107,16 @@ msgid "Card Reader"
 msgstr "Kart Okuyucu"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "Kasiyer"
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "Müşteri"
+
+#. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
 msgstr ""
@@ -124,7 +141,8 @@ msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:15
+#: code:addons/pos_mercury/models/pos_mercury.py:16
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Credit Card"
 msgstr "Kredi Kartı"
@@ -138,6 +156,11 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "İndirimli Ürün"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -154,7 +177,7 @@ msgstr "Elektronik Ödeme"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:650
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -235,6 +258,16 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "Konum"
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "Lot"
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "Merchant ID"
 msgstr "Ticari ID"
@@ -248,7 +281,7 @@ msgstr "Satıcı Şifresi"
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "Mercury Yapılandırması"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal__pos_mercury_config_id
@@ -289,7 +322,7 @@ msgstr "Yevmiye ile bağlı bir Mercury yapılandırması bulunmuyor."
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
 #, python-format
-msgid "No opened point of sale session for user %s found"
+msgid "No opened point of sale session for user %s found."
 msgstr ""
 
 #. module: pos_mercury
@@ -309,21 +342,26 @@ msgstr "Mercury'den cevap yok (Ağa bağlı mı?)"
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:423
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:576
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "İşlem yapılırken Odoo hata verdi."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Bir kredi kartı okutması zaten bekliyor."
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "Paket"
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:469
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
 msgstr "Kısmen onaylanmış"
@@ -357,6 +395,11 @@ msgid "Point of Sale Orders"
 msgstr "Satış Noktası Siparişi"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "Fiyatlandırılmış Ürünler"
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
 #, python-format
@@ -365,24 +408,24 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:548
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Ters kayıt başarısız oldu, VoidSale gönderiliyor."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:590
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Ters Kayıt başarılı oldu."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:551
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
 #, python-format
 msgid "Sending reversal..."
-msgstr ""
+msgstr "Ters kayıt gönderiliyor"
 
 #. module: pos_mercury
 #. openerp-web
@@ -432,7 +475,17 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "İşlem onaylandı"
+
+#. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
+msgid "Type"
+msgstr "Tür"
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Unit Product"
+msgstr "Birim Ürün"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -453,7 +506,7 @@ msgstr "Vantiv Hesabı"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:598
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "VoidSale Başarıyla Gerçekleşti"
@@ -473,6 +526,11 @@ msgid ""
 msgstr ""
 "Biz şu anda MagTek Dynamag kart okuyucu cihazları destekliyoruz.Cihaz Satış "
 "Noktasına ya da POSBox'a bağlanmış olabilir."
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "Tartılmış Ürün"
 
 #. module: pos_mercury
 #. openerp-web

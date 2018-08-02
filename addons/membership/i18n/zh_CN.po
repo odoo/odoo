@@ -8,10 +8,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -227,6 +227,7 @@ msgstr "已实现收入"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
 msgstr "结束日期"
 
@@ -236,30 +237,19 @@ msgid "End Membership Date"
 msgstr "会籍终止日期"
 
 #. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "End Month"
-msgstr "终止月份"
-
-#. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
 msgstr "会籍终止日期"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Ending Month Of Membership"
-msgstr "会籍终止月份"
+msgid "Ending Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "错误！失效日期不能早于开始日期"
-
-#. module: membership
-#: code:addons/membership/models/partner.py:159
-#, python-format
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -279,11 +269,6 @@ msgstr "免费会员"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
 msgstr "从"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
-msgid "From Month"
-msgstr "开始月份"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -621,18 +606,15 @@ msgstr "提供免费成员资格"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
 msgstr "开始日期"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Start Month"
-msgstr "开始月份"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Starting Month Of Membership"
-msgstr "会员资格起始月份"
+msgid "Starting Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -676,6 +658,12 @@ msgstr "供应商"
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
 msgstr "等待会员"
+
+#. module: membership
+#: code:addons/membership/models/partner.py:159
+#, python-format
+msgid "You cannot create recursive associated members."
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line

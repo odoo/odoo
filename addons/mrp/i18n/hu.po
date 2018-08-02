@@ -8,13 +8,14 @@
 # gezza <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 # Zoltán Csapó <csapoz@gmail.com>, 2017
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: Zoltán Csapó <csapoz@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgid "# of BoM Where is Used"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:298
+#: code:addons/mrp/models/mrp_bom.py:301
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -103,7 +104,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span class=\"o_stat_text\">Scraps</span>"
 msgstr ""
 
@@ -123,9 +124,20 @@ msgid "<span class=\"o_stat_text\">Work Orders</span>"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "<span><strong>Unit Cost</strong></span>"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Actions</span>"
 msgstr "Műveletek"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom_line
+#: model:ir.ui.view,arch_db:mrp.report_mrp_operation_line
+msgid "<span>Minutes</span>"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -153,14 +165,14 @@ msgid "<span>WORK ORDERS</span>"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid ""
 "<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to</strong>\n"
 "                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">to</strong>"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8\">to</strong>"
 msgstr ""
 
@@ -170,18 +182,23 @@ msgid "<strong>Effectiveness Category: </strong>"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Finished Product:</strong><br/>"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Is a Blocking Reason? </strong>"
 msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Name</strong>"
-msgstr "<strong>Név</strong>"
+msgid "<strong>No. Of Minutes</strong>"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>No. Of Minutes</strong>"
+msgid "<strong>Operation</strong>"
 msgstr ""
 
 #. module: mrp
@@ -191,32 +208,17 @@ msgstr "<strong>Nyomtatás dátuma:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Product:</strong><br/>"
-msgstr "<strong>Termék:</strong><br/>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Product</strong>"
-msgstr "<strong>Termék</strong>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Products to Consume</strong>"
-msgstr "<strong>Felhasználandó termék</strong>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Quantity:</strong><br/>"
-msgstr "<strong>Mennyiség:</strong><br/>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Quantity</strong>"
-msgstr "<strong>Mennyiség</strong>"
+msgid "<strong>Quantity to Produce:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Reason: </strong>"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "<strong>Responsible:</strong><br/>"
 msgstr ""
 
 #. module: mrp
@@ -231,18 +233,13 @@ msgstr "<strong>Forrás dokumentum:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Work Orders</strong>"
-msgstr "<strong>Munka megrendelés</strong>"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Munkaállomás</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:493
+#: code:addons/mrp/models/mrp_workorder.py:515
 #, python-format
-msgid "A Manufacturing Order is already done or cancelled!"
+msgid "A Manufacturing Order is already done or cancelled."
 msgstr ""
 
 #. module: mrp
@@ -261,11 +258,23 @@ msgid "Access Token"
 msgstr "Hozzáférési token"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_procurement_rule__action
+msgid "Action"
+msgstr "Akció"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__active
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
 msgid "Active"
 msgstr "Aktív"
 
@@ -273,6 +282,18 @@ msgstr "Aktív"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__active_move_line_ids
 msgid "Active Move Line"
 msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_ids
+msgid "Activities"
+msgstr "Tevékenységek"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_state
+msgid "Activity State"
+msgstr "Tevékenység állapota"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -305,6 +326,13 @@ msgstr "Összes"
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "All components available"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid ""
+"All components could not be reserved. Click on the \"Check Availability "
+"button\" to try to reserve components."
 msgstr ""
 
 #. module: mrp
@@ -355,15 +383,10 @@ msgid "Attachment URL"
 msgstr "Melléklet URL elérési útja"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:290
+#: code:addons/mrp/models/mrp_bom.py:293
 #, python-format
 msgid "Attachments"
 msgstr "Mellékletek"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
-msgid "Author"
-msgstr "Szerző"
 
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
@@ -376,7 +399,7 @@ msgid "Availability Losses"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: selection:mrp.production,availability:0
 msgid "Available"
 msgstr "Rendelkezésre álló"
@@ -390,14 +413,9 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.report,name:mrp.action_report_bom_price
-msgid "BOM Cost"
-msgstr "Anyagjegyzék költség"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
-msgid "BOM Name"
-msgstr "Anyagjegyzék név"
+#: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
+msgid "BOM Product Variants"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
@@ -407,31 +425,19 @@ msgstr ""
 "alkalmazásához."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
-msgid "BOM Ref"
-msgstr "Anyagjegyzék hivatkozás"
-
-#. module: mrp
-#: model:ir.actions.report,name:mrp.action_report_bom_structure
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
-msgid "BOM Structure"
-msgstr "Anyagjegyzék struktúra"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
 msgstr "Anyagjegyzék tétel sorok a hivatkozott darabjegyzékből"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Barcode"
+msgstr "Vonalkód"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode_batch
 msgid "Based on"
 msgstr "Alapján"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
-msgid "Bill Of Material"
-msgstr "Anyagjegyzék"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -482,7 +488,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
 msgstr ""
@@ -510,8 +516,18 @@ msgid "Blocked hour(s) over the last month"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
+#: model:ir.model.fields,field_description:mrp.field_product_template__bom_line_ids
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:33
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+#, python-format
+msgid "BoM Cost"
 msgstr ""
 
 #. module: mrp
@@ -523,6 +539,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
 msgstr "Anyagjegyzék sorok"
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:32
+#: model:ir.actions.report,name:mrp.action_report_bom_structure
+#, python-format
+msgid "BoM Structure"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:31
+#, python-format
+msgid "BoM Structure & Cost"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "BoM Structure &amp; Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -539,6 +575,11 @@ msgstr ""
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
 msgstr ""
+
+#. module: mrp
+#: selection:procurement.rule,action:0
+msgid "Buy"
+msgstr "Vásárlás"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_byproduct
@@ -565,7 +606,7 @@ msgid "Cancelled"
 msgstr "Visszavont"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:318
+#: code:addons/mrp/models/mrp_production.py:335
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
@@ -607,13 +648,6 @@ msgid "Checksum/SHA1"
 msgstr "Checksum/SHA1"
 
 #. module: mrp
-#. openerp-web
-#: code:addons/mrp/static/src/xml/mrp.xml:9
-#, python-format
-msgid "Clear"
-msgstr "Törlés"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view_kanban
 msgid "Code"
@@ -636,12 +670,12 @@ msgstr "Vállalatok"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__company_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__company_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_component_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Components"
@@ -664,6 +698,7 @@ msgid "Confirmed"
 msgstr "Jóváhagyott"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__qty_done
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "Consumed"
@@ -690,19 +725,35 @@ msgid "Consumed Materials"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Consumed Products"
+msgstr "Felhasznált termékek"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
 msgid "Consumed in Operation"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Continue Production"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
-msgid "Cost Structure"
-msgstr "Költségszerkezet"
+#: model:ir.actions.client,name:mrp.action_report_mrp_bom
+#: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "Cost & Structure"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
+msgid "Cost per hour"
+msgstr "Költség/óra"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Costing Information"
+msgstr "Költségszámítási információk"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -730,11 +781,6 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid "Create a new work center"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_message_action_main
-msgid "Create a new work order message"
 msgstr ""
 
 #. module: mrp
@@ -794,12 +840,12 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Current Production"
 msgstr "Jelenlegi gyártás"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Current Qty"
 msgstr ""
 
@@ -807,6 +853,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
 msgid "Currently Produced Quantity"
 msgstr ""
+
+#. module: mrp
+#: selection:stock.picking.type,code:0
+msgid "Customers"
+msgstr "Vevők"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -845,9 +896,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
 msgstr "Alapértelmezett mértékegység"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
+msgid "Define the schedule of resource"
+msgstr "Az erőforrás ütemezésének a meghatározása."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__description
@@ -881,12 +936,6 @@ msgid "Disassembly Order"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
-msgid "Discard"
-msgstr "Elvetés"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__display_name
@@ -902,16 +951,14 @@ msgstr "Elvetés"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__display_name
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_cost_report__display_name
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_structure_report__display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__qty_done
 #: model:ir.model.fields,field_description:mrp.field_stock_move__is_done
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
@@ -958,7 +1005,7 @@ msgid "Duration Per Unit"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Effective Date"
 msgstr "Teljesítés kelte"
 
@@ -979,7 +1026,7 @@ msgid "Effectiveness Category"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Efficiency"
 msgstr ""
 
@@ -1020,19 +1067,19 @@ msgid "Filters"
 msgstr "Szűrők"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Finish Order"
 msgstr "Megrendelés elvégzése"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Finished"
 msgstr "Befejezett"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__lot_produced_id
-msgid "Finished Lot"
+msgid "Finished Lot/Serial Number"
 msgstr ""
 
 #. module: mrp
@@ -1056,6 +1103,35 @@ msgstr "Késztermékek"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_dest_id
 msgid "Finished Products Location"
 msgstr "Késztermékek helye"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_follower_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_channel_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Követők (Csatornák)"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_partner_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "From"
+msgstr "Kezdő dátum"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -1106,14 +1182,13 @@ msgid "Gives the sequence order when displaying."
 msgstr "Kijelzéskor egy sorrendet ad."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Group By..."
@@ -1161,8 +1236,7 @@ msgstr "Magas"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__id
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_cost_report__id
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_structure_report__id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__id
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__id
 msgid "ID"
 msgstr "Azonosító ID"
@@ -1174,6 +1248,30 @@ msgid ""
 msgstr ""
 "Ha egy termék variáns meghatározott akkor a anyagjegyzék csak erre a "
 "termékre vonatkozik. "
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_unread
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_has_error
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate
@@ -1235,7 +1333,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: selection:mrp.production,state:0 selection:mrp.workcenter,working_state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
@@ -1258,11 +1356,9 @@ msgid "Insufficient Quantity"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
-msgid "Inventory Message"
-msgstr ""
+#: selection:stock.picking.type,code:0
+msgid "Internal"
+msgstr "Belső"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -1275,6 +1371,14 @@ msgstr ""
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_is_follower
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_is_follower
+msgid "Is Follower"
+msgstr "Ő egy követő"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_locked
@@ -1302,9 +1406,9 @@ msgid "Is the Current User Working"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workcenter.py:162
+#: code:addons/mrp/models/mrp_workcenter.py:163
 #, python-format
-msgid "It has been unblocked already. "
+msgid "It has already been unblocked."
 msgstr ""
 
 #. module: mrp
@@ -1336,8 +1440,7 @@ msgstr "Szett"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss____last_update
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder____last_update
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_cost_report____last_update
-#: model:ir.model.fields,field_description:mrp.field_report_mrp_mrp_bom_structure_report____last_update
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure____last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild____last_update
 msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
@@ -1392,7 +1495,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Late"
 msgstr "Később"
 
@@ -1403,7 +1506,7 @@ msgid "Late Activities"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:434
+#: code:addons/mrp/models/mrp_production.py:451
 #, python-format
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
@@ -1412,6 +1515,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__location_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Helyszín"
 
@@ -1454,6 +1558,11 @@ msgid "Lot/Serial Number"
 msgstr "Szett/Széria szám"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Lot/Serial barcode"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Lot/Serial number"
 msgstr ""
@@ -1480,11 +1589,7 @@ msgid "MRP Work Orders"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_maintenance
-msgid "Maintenance"
-msgstr "Karbantartás"
-
-#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_res_users__has_group_mrp_routings
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
 msgstr "Munka megrendelés műveletek kezelése"
@@ -1501,6 +1606,7 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:34
+#: selection:procurement.rule,action:0
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1522,7 +1628,14 @@ msgid "Manufacture this product"
 msgstr "Gyártsa le ezt a terméket"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
+#: model:ir.ui.view,arch_db:mrp.view_mrp_product_product_form_inherited_view
+msgid "Manufactured Products"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:64
+#: model:ir.model.fields,field_description:mrp.field_res_users__group_mrp_user
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
@@ -1539,6 +1652,11 @@ msgstr "Gyártás"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 msgid "Manufacturing Lead Time"
 msgstr "Gyártási átfutási idő"
+
+#. module: mrp
+#: selection:stock.picking.type,code:0
+msgid "Manufacturing Operation"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -1645,9 +1763,24 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message__message
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
 msgid "Message"
 msgstr "Üzenet"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__mimetype
@@ -1657,7 +1790,7 @@ msgstr "MIME-típus"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Miscellaneous"
 msgstr "Egyéb"
 
@@ -1670,6 +1803,11 @@ msgstr "Bizonylat, áthelyezés"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__done_move
 msgid "Move Done"
 msgstr ""
+
+#. module: mrp
+#: selection:procurement.rule,action:0
+msgid "Move From Another Location"
+msgstr "Másik helyről mozgatás"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -1703,20 +1841,15 @@ msgid "My Activities"
 msgstr "Tevékenységeim"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
-msgid "My Messages"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__name
 msgid "Name"
 msgstr "Név"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:304
-#: code:addons/mrp/models/mrp_production.py:308
+#: code:addons/mrp/models/mrp_production.py:45
+#: code:addons/mrp/models/mrp_production.py:321
+#: code:addons/mrp/models/mrp_production.py:325
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
@@ -1726,6 +1859,24 @@ msgstr "Név"
 #, python-format
 msgid "New"
 msgstr "Új"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_summary
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_summary
+msgid "Next Activity Summary"
+msgstr "Következő tevékenység összegzése"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_type_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__batch
@@ -1745,6 +1896,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "No Routing"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "No data available."
 msgstr ""
 
 #. module: mrp
@@ -1797,6 +1953,14 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
 msgid "Number of Manufacturing Orders Late"
 msgstr ""
@@ -1812,10 +1976,42 @@ msgid "Number of Manufacturing Orders to Process"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_error_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_has_error_counter
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_has_error_counter
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__capacity
 msgid "Number of pieces that can be produced in parallel."
 msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_production__message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_unread_counter
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1866,18 +2062,31 @@ msgid "Operation Type"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/mrp_report_bom_structure.py:196
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__operation_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
 #: model:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model:ir.ui.view,arch_db:mrp.oee_loss_search_view
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:mrp.workcenter_line_calendar
 #: model:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 #: model:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model:ir.ui.view,arch_db:mrp.workcenter_line_pivot
+#, python-format
 msgid "Operations"
 msgstr "Műveletek"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Operations Done"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Operations Planned"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__order_finished_lot_ids
@@ -1913,6 +2122,12 @@ msgid "Overall Equipment Effectiveness: no working or blocked time"
 msgstr ""
 
 #. module: mrp
+#: selection:mrp.production,activity_state:0
+#: selection:mrp.unbuild,activity_state:0
+msgid "Overdue"
+msgstr "lejárt"
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
 msgid "Packing Operation"
 msgstr "Csomag művelete"
@@ -1933,13 +2148,13 @@ msgid "Partially Available"
 msgstr "Részlegesen elérhető"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Pause"
 msgstr "Szünet"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Pending"
 msgstr "Függő"
@@ -1974,12 +2189,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: selection:mrp.production,state:0
+#: selection:mrp.production,activity_state:0 selection:mrp.production,state:0
+#: selection:mrp.unbuild,activity_state:0
 msgid "Planned"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Planned Date"
 msgstr "Tervezett időpont"
 
@@ -1990,13 +2206,13 @@ msgid "Planning"
 msgstr "Tervezés"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:149
+#: code:addons/mrp/wizard/mrp_product_produce.py:103
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:297
+#: code:addons/mrp/models/mrp_workorder.py:310
 #, python-format
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
@@ -2061,13 +2277,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_id
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Product"
 msgstr "Termék"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "Product Cost"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -2092,6 +2315,7 @@ msgstr "Termékmennyiség"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_message__product_tmpl_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_tmpl_id
 msgid "Product Template"
@@ -2110,20 +2334,20 @@ msgid "Product Variant"
 msgstr "Termékváltozat"
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.product_variant_mrp
+msgid "Product Variants"
+msgstr "Termékváltozatok"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__produce_line_ids
 msgid "Product to Track"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_message_kanban
-msgid "Product:"
-msgstr "Termék:"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__production_id
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Production"
 msgstr "Éles"
 
@@ -2157,11 +2381,6 @@ msgid "Production Order"
 msgstr "Termelési megrendelés"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "Production Order # :"
-msgstr "Munka megbízás # :"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
 msgstr ""
@@ -2172,13 +2391,13 @@ msgid "Production Order for raw materials"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Production Workcenter"
 msgstr "Termelési munkaállomás"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Production started late"
 msgstr "A termelés késve indított"
 
@@ -2217,6 +2436,11 @@ msgid "Products"
 msgstr "Termékek"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
+msgid "Products to Consume"
+msgstr "Felhasználandó termékek"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate
 msgid "Propagate cancel and split"
 msgstr "Továbbítás törölve és szétválasztás"
@@ -2238,15 +2462,20 @@ msgid "Quality Losses"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
+msgid "Quant"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_produced
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+#: model:ir.ui.view,arch_db:mrp.report_mrporder
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Quantity"
 msgstr "Mennyiség"
@@ -2258,7 +2487,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Quantity Produced"
 msgstr "Gyártott mennyiség"
 
@@ -2279,13 +2508,19 @@ msgid "Quantity to Process"
 msgstr ""
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:10
+#, python-format
+msgid "Quantity:"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
 msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Raw Materials"
 msgstr "Nyersanyagok"
 
@@ -2296,14 +2531,14 @@ msgstr "Alapanyagok helye"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Ready"
 msgstr "Kész"
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/js/mrp.js:147
+#: code:addons/mrp/static/src/js/mrp.js:38
 #, python-format
 msgid "Ready to produce"
 msgstr ""
@@ -2330,7 +2565,7 @@ msgid "Record Production Line"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:164
+#: code:addons/mrp/models/mrp_bom.py:166
 #, python-format
 msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
@@ -2342,7 +2577,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__code
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__name
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Reference"
 msgstr "Hivatkozás"
 
@@ -2358,18 +2592,20 @@ msgid ""
 msgstr "A dokumentum hivatkozása hozta létre ezt a munka megbízás igényt."
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "Reference:"
+msgstr "Hivatkozás:"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__ir_attachment_id
 msgid "Related attachment"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_repair
-msgid "Repair"
-msgstr "Javítás"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid "Repair products and invoice the repair orders"
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:29
+#, python-format
+msgid "Report:"
 msgstr ""
 
 #. module: mrp
@@ -2383,10 +2619,16 @@ msgid "Requires Serial"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__qty_reserved
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
 msgid "Reserved"
 msgstr "Lefoglalt"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
+msgid "Resource"
+msgstr "Erőforrás"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_field
@@ -2424,6 +2666,12 @@ msgid "Responsible"
 msgstr "Felelős"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_user_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_user_id
+msgid "Responsible User"
+msgstr "Felelős felhasználó"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_message__routing_id
@@ -2457,7 +2705,6 @@ msgstr "Munkaállomások irányítása"
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
 msgstr "Eljárás"
 
@@ -2470,20 +2717,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
-msgid "Save"
-msgstr "Mentés"
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Schedule manufacturing orders earlier to avoid delays"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid "Schedule the maintenance of your equipment"
-msgstr ""
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
+msgid "Scheduled Date"
+msgstr "Tervezett dátum"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_finished
@@ -2496,23 +2738,11 @@ msgid "Scheduled Date Start"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
-msgid "Scheduled Date by Month"
-msgstr "Tervezett idő havi lebontásban"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
-msgid "Scheduled Month"
-msgstr "Ütemezés hónapja"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:592
-#: code:addons/mrp/models/mrp_workorder.py:502
+#: code:addons/mrp/models/mrp_production.py:632
+#: code:addons/mrp/models/mrp_workorder.py:524
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #, python-format
 msgid "Scrap"
 msgstr "Hulladék"
@@ -2534,7 +2764,6 @@ msgid "Scraps"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Search"
 msgstr "Keresés"
@@ -2545,17 +2774,12 @@ msgid "Search Bill Of Material"
 msgstr "Anyagjegyzék keresése"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
-msgid "Search Bill Of Material Components"
-msgstr "anyagjegyzék alkotó elemeinek keresése"
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Search Production"
 msgstr "Gyártás keresése"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Search Work Orders"
 msgstr "Munka állomások keresése"
 
@@ -2574,14 +2798,6 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_res_config_settings__manufacturing_lead
 msgid "Security days for each manufacturing operation."
 msgstr "Minden gyártási művelet biztonsági ideje."
-
-#. module: mrp
-#. openerp-web
-#: code:addons/mrp/static/src/xml/mrp.xml:7
-#: code:addons/mrp/static/src/xml/mrp.xml:8
-#, python-format
-msgid "Select"
-msgstr "Kiválasztás"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -2614,12 +2830,6 @@ msgid "Settings"
 msgstr "Beállítások"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:89
-#, python-format
-msgid "Should have a lot for the finished product"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
 msgid "Show Final Lots"
 msgstr ""
@@ -2633,9 +2843,22 @@ msgstr ""
 "előtti"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:548
+#, python-format
+msgid ""
+"Some raw materials were produced for a lot without finished product. You can"
+" correct the following components by unlocking:\n"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
 msgid "Source"
 msgstr "Forrás"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
+msgid "Specify cost of work center per hour."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
@@ -2644,7 +2867,7 @@ msgid "Start Date"
 msgstr "Kezdő dátum"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Start Working"
 msgstr "Munka kezdése"
 
@@ -2666,9 +2889,19 @@ msgstr "Állapot"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__state
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Status"
 msgstr "Állapot"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__activity_state
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -2768,7 +3001,7 @@ msgid "Technical: used to figure out default serial number on work orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:259
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:262
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2778,7 +3011,7 @@ msgstr ""
 "űrlapján van."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workcenter.py:156
+#: code:addons/mrp/models/mrp_workcenter.py:157
 #, python-format
 msgid "The capacity must be strictly positive."
 msgstr ""
@@ -2840,9 +3073,9 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#: code:addons/mrp/wizard/mrp_product_produce.py:56
 #, python-format
-msgid "The production order for '%s' has no quantity specified"
+msgid "The production order for '%s' has no quantity specified."
 msgstr ""
 
 #. module: mrp
@@ -2889,6 +3122,13 @@ msgid "This Year"
 msgstr "Tárgyév"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__tz
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
 msgid ""
 "This field is used to calculate the the expected duration of a work order at"
@@ -2896,6 +3136,18 @@ msgid ""
 "efficiency factor is 100%, then the expected duration will be one hour. If "
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid ""
+"This is the cost based on the BoM of the product. It is computed by summing "
+"the costs of the components and operations needed to build the product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "This is the cost defined on the product."
 msgstr ""
 
 #. module: mrp
@@ -2924,12 +3176,12 @@ msgid "Time Logs"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Time Tracking"
 msgstr "Idő követés"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:423
+#: code:addons/mrp/models/mrp_workorder.py:445
 #, python-format
 msgid "Time Tracking: "
 msgstr ""
@@ -2962,9 +3214,19 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "Time the currently logged user spent on this workorder."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
+msgid "Timezone"
+msgstr "Időzóna"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__qty_to_consume
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "To Consume"
 msgstr "Használja fel"
 
@@ -2980,7 +3242,7 @@ msgid "To Launch"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "To Produce"
 msgstr ""
 
@@ -3002,6 +3264,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+#: selection:mrp.production,activity_state:0
+#: selection:mrp.unbuild,activity_state:0
 msgid "Today"
 msgstr "Ma"
 
@@ -3010,16 +3274,6 @@ msgstr "Ma"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Today Activities"
 msgstr "Mai napi tevékenységek"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
-msgid "Total Cost"
-msgstr "Összes költség"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
-msgid "Total Cost of Components"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -3042,7 +3296,7 @@ msgid "Total Running Orders"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Total duration"
 msgstr ""
 
@@ -3053,6 +3307,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__product_tracking
+#: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__product_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_tracking
 #: model:ir.model.fields,field_description:mrp.field_stock_move__needs_lots
@@ -3065,7 +3320,12 @@ msgid "Type"
 msgstr "Típus"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
+msgid "Type of Operation"
+msgstr "Művelet típusa"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Unblock"
 msgstr ""
 
@@ -3095,11 +3355,6 @@ msgid "Unbuild Orders"
 msgstr "Bontás"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
-msgid "Unit Cost"
-msgstr "Egységár"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
 msgid "Unit Factor"
 msgstr ""
@@ -3110,6 +3365,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+#: model:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Unit of Measure"
 msgstr "Mértékegység"
 
@@ -3134,6 +3390,22 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_unread
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_unread
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_unread_counter
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Olvasatlan üzenetek számlálója"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unreserve"
 msgstr "Fenn nem tartott"
@@ -3142,20 +3414,6 @@ msgstr "Fenn nem tartott"
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update"
 msgstr "Frissítés"
-
-#. module: mrp
-#. openerp-web
-#: code:addons/mrp/static/src/xml/mrp.xml:7
-#, python-format
-msgid "Upload your file"
-msgstr "Fáljok feltöltése"
-
-#. module: mrp
-#. openerp-web
-#: code:addons/mrp/static/src/xml/mrp.xml:6
-#, python-format
-msgid "Uploading..."
-msgstr "Feltöltés..."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -3188,6 +3446,11 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid ""
 "Using a MPS report to schedule your reordering and manufacturing operations "
@@ -3197,19 +3460,25 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message__valid_until
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
 msgid "Validity Date"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
-msgid "Variant"
-msgstr "Variáció"
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:21
+#, python-format
+msgid "Variant:"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attribute_value_ids
 msgid "Variants"
 msgstr "Változatok"
+
+#. module: mrp
+#: selection:stock.picking.type,code:0
+msgid "Vendors"
+msgstr "Beszállítók"
 
 #. module: mrp
 #: selection:mrp.document,priority:0
@@ -3240,7 +3509,7 @@ msgstr ""
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/static/src/js/mrp.js:147
+#: code:addons/mrp/static/src/js/mrp.js:38
 #, python-format
 msgid "Waiting Materials"
 msgstr ""
@@ -3251,16 +3520,32 @@ msgid "Warehouse"
 msgstr "Raktár"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:259
-#: code:addons/mrp/wizard/mrp_product_produce.py:203
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:262
+#: code:addons/mrp/wizard/mrp_product_produce.py:202
 #, python-format
 msgid "Warning"
 msgstr "Figyelmeztetés"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__website_message_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__website_message_ids
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_url
 msgid "Website URL"
 msgstr "Honlap URL"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_production__website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__website_message_ids
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__website_message_ids
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
@@ -3288,7 +3573,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Work Center"
 msgstr "Munkaállomás"
 
@@ -3348,7 +3633,7 @@ msgstr ""
 "                mint feladat hozzárendelési egységek úgy mint kapacitás és tervezési előrejelzés."
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Work Instruction"
 msgstr ""
 
@@ -3360,19 +3645,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__workorder_id
 msgid "Work Order"
 msgstr "Munka megrendelés"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_message_action_main
-#: model:ir.ui.menu,name:mrp.mrp_message_menu
-msgid "Work Order Messages"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_message_action_main
-msgid ""
-"Work Order Messages are used to warn users about any change in the product,\n"
-"                process, etc. These messages will appear on the involved Work Orders."
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3403,9 +3675,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_workorder
 #: model:ir.ui.menu,name:mrp.menu_mrp_work_order_report
 #: model:ir.ui.menu,name:mrp.menu_mrp_workorder_todo
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_tree_view_inherit
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_inherit
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Work Orders"
 msgstr "Munka megrendelések"
 
@@ -3441,7 +3713,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:569
+#: code:addons/mrp/models/mrp_production.py:608
 #, python-format
 msgid "Work order %s is still running"
 msgstr ""
@@ -3488,6 +3760,11 @@ msgid "Workcenter blocked, click to unblock."
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
+msgid "Working Hours"
+msgstr "Munkaórák"
+
+#. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
 msgstr "Munkaidő"
@@ -3517,26 +3794,26 @@ msgstr ""
 "internet linkjét, elérési útját."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:523
+#: code:addons/mrp/models/mrp_production.py:562
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:249
+#: code:addons/mrp/models/mrp_workorder.py:250
 #, python-format
 msgid "You can not change the finished work order."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:555
+#: code:addons/mrp/models/mrp_production.py:594
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:96
+#: code:addons/mrp/models/mrp_bom.py:98
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -3546,13 +3823,13 @@ msgstr ""
 "Kérem zárja be vagy törölje azokat először."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:202
+#: code:addons/mrp/wizard/mrp_product_produce.py:201
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:136
+#: code:addons/mrp/models/stock_move.py:143
 #, python-format
 msgid ""
 "You cannot cancel a manufacturing order if you have already consumed "
@@ -3561,7 +3838,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:202
+#: code:addons/mrp/models/stock_move.py:209
 #, python-format
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
@@ -3569,7 +3846,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:129
+#: code:addons/mrp/wizard/mrp_product_produce.py:82
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr ""
@@ -3581,9 +3858,9 @@ msgid "You cannot unbuild a undone manufacturing order."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:46
+#: code:addons/mrp/wizard/change_production_qty.py:47
 #, python-format
-msgid "You have already processed %d. Please input a quantity higher than %d "
+msgid "You have already processed %s. Please input a quantity higher than %s "
 msgstr ""
 
 #. module: mrp
@@ -3594,7 +3871,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:413
+#: code:addons/mrp/models/mrp_workorder.py:435
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3603,7 +3880,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:409
+#: code:addons/mrp/models/mrp_workorder.py:431
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3612,7 +3889,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:467
+#: code:addons/mrp/models/mrp_workorder.py:489
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3621,21 +3898,27 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:125
+#: code:addons/mrp/wizard/mrp_product_produce.py:78
 #, python-format
-msgid "You need to provide a lot for the finished product"
+msgid "You need to provide a lot for the finished product."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:323
+#: code:addons/mrp/models/mrp_unbuild.py:89
 #, python-format
-msgid "You should provide a lot/serial number for a component"
+msgid "You should provide a lot number for the final product."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:300
+#: code:addons/mrp/models/mrp_workorder.py:336
 #, python-format
-msgid "You should provide a lot/serial number for the final product"
+msgid "You should provide a lot/serial number for a component."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:313
+#, python-format
+msgid "You should provide a lot/serial number for the final product."
 msgstr ""
 
 #. module: mrp
@@ -3671,7 +3954,7 @@ msgid "last"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:614
+#: code:addons/mrp/models/mrp_production.py:654
 #, python-format
 msgid "manufacturing order"
 msgstr ""
@@ -3682,9 +3965,12 @@ msgid "minute(s)"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+#: code:addons/mrp/report/mrp_report_bom_structure.py:199
+#: code:addons/mrp/report/mrp_report_bom_structure.py:209
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+#, python-format
 msgid "minutes"
 msgstr "percek"
 
@@ -3694,18 +3980,27 @@ msgid "mrp.bom.line"
 msgstr "mrp.bom.line"
 
 #. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:4
+#, python-format
+msgid "print"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:5
+#, python-format
+msgid "print unfolded"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_mrp_bom_cost_report
-msgid "report.mrp.mrp_bom_cost_report"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_mrp_bom_structure_report
-msgid "report.mrp.mrp_bom_structure_report"
+#: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
+msgid "report.mrp.report_bom_structure"
 msgstr ""
 
 #. module: mrp

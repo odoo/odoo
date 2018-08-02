@@ -22,10 +22,10 @@
 # Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -88,6 +88,11 @@ msgstr "<strong>Herkunft:</strong><br/>"
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
 msgstr "<strong>Lieferant</strong>"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
@@ -264,8 +269,8 @@ msgstr "Entwurf"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Month"
-msgstr "Monatsende"
+msgid "End Date"
+msgstr "Enddatum"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -273,6 +278,21 @@ msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
 "Beispiel für Kaufverträge beinhalten Ausschreibungen und Blankoaufträge."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
+msgid "Followers"
+msgstr "Abonnenten"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Abonnenten (Kanäle)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnenten (Partner)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -298,6 +318,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "In a call for tenders, you can record the products you need to buy\n"
@@ -317,6 +352,11 @@ msgstr "In Verhandlung"
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Information about a product vendor"
 msgstr "Informationen zum Produktlieferanten"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
+msgid "Is Follower"
+msgstr "Ist ein Abonnent"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
@@ -345,6 +385,16 @@ msgid "Lines"
 msgstr "Linien"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
+msgid "Messages"
+msgstr "Nachrichten"
+
+#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr "Multiple Bestellmeldung"
@@ -365,9 +415,34 @@ msgid "New Quotation"
 msgstr "Neues Angebot"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
 msgstr "Anzahl der Aufträge"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -673,6 +748,16 @@ msgid "Unit Price"
 msgstr "Preis pro ME"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
+msgid "Unread Messages"
+msgstr "Ungelesene Nachrichten"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Zähler der ungelesenen Nachrichten"
+
+#. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
 msgstr "Vereinbarungspositionen verwenden"
@@ -680,7 +765,7 @@ msgstr "Vereinbarungspositionen verwenden"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Vereinbarungsmengen verwenden"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -702,6 +787,16 @@ msgstr "Lager"
 #, python-format
 msgid "Warning for %s"
 msgstr "Warnung für %s"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationshistorie"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:177

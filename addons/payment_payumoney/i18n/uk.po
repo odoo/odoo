@@ -3,55 +3,81 @@
 # * payment_payumoney
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# LoganDowns <k0mna80@gmail.com>, 2017
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: LoganDowns <k0mna80@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Ручне налаштування"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "Merchant Key"
-msgstr ""
+msgstr "Ключ Merchant"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
-msgstr ""
+msgstr "Секретний ключ Merchant"
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:146
-#, python-format
-msgid "PayUmoney: feedback error"
-msgstr ""
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Огон"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:108
 #, python-format
 msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
+"PayUmoney: недійсний shasign, отриманий %s, обчислений %s, для даних %s"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:102
 #, python-format
 msgid "PayUmoney: received data for reference %s; multiple orders found"
-msgstr ""
+msgstr "PayUmoney: отримані дані для довідки%s; знайдено декілька замовлень"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:99
 #, python-format
 msgid "PayUmoney: received data for reference %s; no order found"
-msgstr ""
+msgstr "PayUmoney: отримані дані для довідки %s; замовлення не знайдено"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:94
@@ -60,6 +86,8 @@ msgid ""
 "PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
 "shashign (%s)"
 msgstr ""
+"PayUmoney: отримані дані з відсутньою довідкою (%s) або pay_id (%s) або "
+"shashign (%s)"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer
@@ -69,4 +97,29 @@ msgstr "Платіжний еквайєр"
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Платіжні операції"
+msgstr "Платіжна операція"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Провайдер"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Набирає"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Смуга"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Банківський переказ"

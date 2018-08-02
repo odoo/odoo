@@ -10,10 +10,10 @@
 # Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -242,16 +242,16 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:152
-#, python-format
-msgid "No more available seats for the ticket"
-msgstr "Geen beschikbare plaatsen meer voor het ticket"
-
-#. module: event_sale
 #: code:addons/event_sale/models/event.py:179
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Geen beschikbare plaatsen meer voor dit ticket"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:152
+#, python-format
+msgid "No more available seats for this ticket type."
+msgstr "Geen beschikbare plaatsen meer voor dit soort ticket."
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:224
@@ -405,9 +405,8 @@ msgstr "Soort ticket"
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:157
 #, python-format
-msgid "Ticket should belong to either event category or event but not both"
+msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
-"Ticket moet toebehoren aan evenement categorie of evenement, maar niet beide"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
@@ -457,3 +456,13 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
+msgstr ""

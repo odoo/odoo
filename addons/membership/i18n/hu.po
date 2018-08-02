@@ -8,10 +8,10 @@
 # Martin Trigaux, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Martin Trigaux, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -229,6 +229,7 @@ msgstr "Beérkező / megkeresett összeg"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
 msgstr "Befejezés dátuma"
 
@@ -238,30 +239,19 @@ msgid "End Membership Date"
 msgstr "Utolsó tagsági dátum"
 
 #. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "End Month"
-msgstr "Befejezés hónapja"
-
-#. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
 msgstr "Tagság vége dátum"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Ending Month Of Membership"
-msgstr "A tagság lejártának hónapja"
+msgid "Ending Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Hiba ! A befejezés időpontja nem lehet előbb mint a kezdés időpontja."
-
-#. module: membership
-#: code:addons/membership/models/partner.py:159
-#, python-format
-msgid "Error ! You cannot create recursive associated members."
-msgstr "HIBA ! Nem tud létrehozni önmagára hivatkozó felhasználókat/tagokat."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -281,11 +271,6 @@ msgstr "Ingyenes tag"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
 msgstr "Kezdő dátum"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
-msgid "From Month"
-msgstr "Ettől a hónaptól"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -625,18 +610,15 @@ msgstr "Válassza ki, ha ingyenes tagságot szeretne adni."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
 msgstr "Kezdő dátum"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Start Month"
-msgstr "Kezdő hónap"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Starting Month Of Membership"
-msgstr "Tagság kezdő hónapja"
+msgid "Starting Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -682,6 +664,12 @@ msgstr "Beszállítók"
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
 msgstr "Tagságra várakozó"
+
+#. module: membership
+#: code:addons/membership/models/partner.py:159
+#, python-format
+msgid "You cannot create recursive associated members."
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line

@@ -5,13 +5,14 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux, 2016
+# Cas Vissers <c.vissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
+"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "\"Add to\n"
 "                Dashboard\""
 msgstr ""
+"\"Toevoegen aan\n"
+"Dashboard\""
 
 #. module: board
 #. openerp-web
@@ -37,7 +40,7 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:98
+#: code:addons/board/static/src/js/favorite_menu.js:103
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' toegevoegd aan dashboard"
@@ -58,13 +61,16 @@ msgstr "Aan mijn dashboard toevoegen"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:337
+#: code:addons/board/static/src/js/board_view.js:362
 #, python-format
 msgid "Are you sure you want to remove this item?"
 msgstr "Weet u zeker dat u dit item wilt verwijderen?"
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:439
 #: model:ir.model,name:board.model_board_board
+#, python-format
 msgid "Board"
 msgstr "Board"
 
@@ -91,7 +97,7 @@ msgstr "Kies dashboard opmaak"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:100
+#: code:addons/board/static/src/js/favorite_menu.js:107
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Kan geen filter aan het dashboard toevoegen"
@@ -103,7 +109,7 @@ msgstr "Schermnaam"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:85
+#: code:addons/board/static/src/js/board_view.js:80
 #, python-format
 msgid "Edit Layout"
 msgstr "Opmaak bewerken"
@@ -120,13 +126,20 @@ msgstr "Laatst gewijzigd op"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:48
+#: code:addons/board/static/src/js/board_view.js:43
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
 #, python-format
 msgid "My Dashboard"
 msgstr "Mijn dashboard"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/favorite_menu.js:104
+#, python-format
+msgid "Please refresh your browser for the changes to take effect."
+msgstr "Ververs uw browser om de wijzigingen door te voeren."
 
 #. module: board
 #. openerp-web
@@ -151,11 +164,11 @@ msgstr ""
 #: code:addons/board/static/src/xml/board.xml:49
 #, python-format
 msgid "Your personal dashboard is empty"
-msgstr ""
+msgstr "Uw persoonlijk dashboard is leeg"
 
 #. module: board
 #. openerp-web
 #: code:addons/board/static/src/xml/board.xml:53
 #, python-format
 msgid "in the extended search options."
-msgstr ""
+msgstr "in de uitgebreide zoek opties."

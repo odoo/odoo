@@ -15,10 +15,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgid "Bill of Material"
 msgstr "Stückliste"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__bom_id
 msgid "BoM"
 msgstr "Liste"
 
@@ -43,7 +43,7 @@ msgid "Byproduct"
 msgstr "Kuppelprodukt"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom__sub_products
 #: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "Kuppelprodukte"
@@ -54,52 +54,52 @@ msgid "Change Quantity of Products"
 msgstr "Menge der Produkte ändern"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_uid
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_date
 msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__id
 msgid "ID"
 msgstr "ID"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct____last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert durch"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__operation_id
 msgid "Produced at Operation"
 msgstr "Während eines Vorganges produziert"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_id
 msgid "Product"
 msgstr "Produkt"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_qty
 msgid "Product Qty"
 msgstr "Produktmenge"
 
@@ -119,12 +119,12 @@ msgid "Stock Move"
 msgstr "Lagerbuchung"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move__subproduct_id
 msgid "Subproduct"
 msgstr "Unterprodukt"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move__subproduct_id
 msgid "Subproduct line that generated the move in a manufacturing order"
 msgstr "Unterproduktlinie,"
 
@@ -132,14 +132,12 @@ msgstr "Unterproduktlinie,"
 #: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
+"The unit of measure you chose is in a different category than the product "
+"unit of measure."
 msgstr ""
-"Die ausgewählte Mengeneinheit ist in einer anderen Kategorie als die dieses "
-"Produkts"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_uom_id
 msgid "Unit of Measure"
 msgstr "Mengeneinheit"
 

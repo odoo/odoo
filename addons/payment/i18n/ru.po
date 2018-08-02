@@ -6,7 +6,7 @@
 # Collex100, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin, 2017
 # Василий Коробатов <boxat@mail.ru>, 2017
 # Leonid Froenchenko <lfroen@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
@@ -14,19 +14,25 @@
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Viktor Scorpion <victorscorpion2000@gmail.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Viktor Scorpion <victorscorpion2000@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
+msgid "# of Invoices"
+msgstr "кол-во счетов"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -69,13 +75,13 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:113
+#: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:109
+#: code:addons/payment/models/payment_acquirer.py:120
 #, python-format
 msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
@@ -83,7 +89,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:117
+#: code:addons/payment/models/payment_acquirer.py:128
 #, python-format
 msgid ""
 "<i>Error,</i> Please be aware that an error occurred during the transaction."
@@ -92,7 +98,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:105
+#: code:addons/payment/models/payment_acquirer.py:116
 #, python-format
 msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
@@ -101,7 +107,7 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:351
+#: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
 msgstr ""
@@ -203,6 +209,54 @@ msgid ""
 msgstr "<span><i>Ожидание</i>... Заказ будет проверен после оплаты.</span>"
 
 #. module: payment
+#: code:addons/payment/models/account_invoice.py:72
+#, python-format
+msgid "A journal must be specified of the acquirer %s."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:65
+#, python-format
+msgid "A payment acquirer is required to create a transaction."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_payment.py:55
+#, python-format
+msgid "A payment transaction already exists."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_payment.py:57
+#, python-format
+msgid "A token is required to create a new payment transaction."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:642
+#, python-format
+msgid "A transaction %s with %s has been initiated using %s credit card."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:648
+#, python-format
+msgid "A transaction %s with %s has been initiated."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:36
+#, python-format
+msgid "A transaction can't be linked to invoices having different currencies."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:41
+#, python-format
+msgid "A transaction can't be linked to invoices having different partners."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 msgid "Acquirer"
 msgstr "Покупатель"
@@ -266,10 +320,17 @@ msgstr "Всегда"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
-#: model:ir.model.fields,help:payment.field_payment_transaction__amount
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "Amount"
 msgstr "Сумма"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -286,6 +347,11 @@ msgstr "Authorize.Net"
 #: selection:payment.transaction,state:0
 msgid "Authorized"
 msgstr "Авторизованный"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
+msgid "Authorized Transactions"
+msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -321,7 +387,7 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:359
+#: code:addons/payment/static/src/js/payment_form.js:360
 #, python-format
 msgid "Cancel"
 msgstr "Отменить"
@@ -338,13 +404,13 @@ msgstr "Отменено"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:189
+#: code:addons/payment/static/src/js/payment_form.js:190
 #, python-format
 msgid "Cannot set-up the payment"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/controllers/portal.py:110
+#: code:addons/payment/controllers/portal.py:128
 #, python-format
 msgid "Cannot setup the payment."
 msgstr ""
@@ -355,6 +421,7 @@ msgid "Capture Amount Manually"
 msgstr ""
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
 msgstr "Захвата транзакций"
@@ -393,7 +460,7 @@ msgstr "Настроить"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:358
+#: code:addons/payment/static/src/js/payment_form.js:359
 #, python-format
 msgid "Confirm Deletion"
 msgstr ""
@@ -457,13 +524,9 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_icon__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
 msgstr "Создан"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
-msgid "Creation Date"
-msgstr "Дата создания"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -545,18 +608,13 @@ msgid "Environment"
 msgstr "Окружение"
 
 #. module: payment
-#: selection:payment.transaction,state:0
-msgid "Error"
-msgstr "Ошибка"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__error_msg
 msgid "Error Message"
 msgstr "Сообщение об ошибке"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:423
+#: code:addons/payment/static/src/js/payment_form.js:430
 #, python-format
 msgid "Error: "
 msgstr ""
@@ -592,6 +650,11 @@ msgstr "Фиксированные внутренние сборы"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
 msgstr "Фиксированные международные сборы"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
+msgid "For Incoming Payments"
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -671,6 +734,35 @@ msgid "Internal reference of the TX"
 msgstr "Внутренняя ссылка TX"
 
 #. module: payment
+#: code:addons/payment/models/account_invoice.py:55
+#, python-format
+msgid "Invalid token found! Token acquirer %s != %s"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:58
+#, python-format
+msgid "Invalid token found! Token partner %s != %s"
+msgstr ""
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_invoice
+msgid "Invoice"
+msgstr "Счёт"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Invoice(s)"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:801
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids
+#, python-format
+msgid "Invoices"
+msgstr "Счета"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
 msgid "Language"
 msgstr "Язык"
@@ -728,6 +820,17 @@ msgstr "Управление вашими способами оплаты"
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
 msgstr "Ручное подтверждение"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer__inbound_payment_method_ids
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
+msgstr ""
+"Вручную: Оплачено наличными, чеком или любым другим способом вне Odoo.\n"
+"Электронно: Оплачено автоматически с помощью платёжного агента, путём запроса перевода с карты, сохранённой покупателем при приобретении или подписке онлайн (признак оплаты).\n"
+"Пакетное списание: Объединяет чеки нескольких покупателей за раз, генерируя пакетное списание для отправки в ваш банк. Когда расшифровывается выписка банка в Odoo, вам предлагается сопоставить перевод  с пакетным списанием. Задействуйте эту возможность в Настройках."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
@@ -795,7 +898,7 @@ msgid "Messages"
 msgstr "Сообщения"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:389
+#: code:addons/payment/models/payment_acquirer.py:468
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
 msgstr ""
@@ -827,8 +930,8 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:200
-#: code:addons/payment/static/src/js/payment_form.js:309
+#: code:addons/payment/static/src/js/payment_form.js:201
+#: code:addons/payment/static/src/js/payment_form.js:310
 #, python-format
 msgid "No payment method selected"
 msgstr ""
@@ -856,22 +959,46 @@ msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:427
+#: code:addons/payment/static/src/js/payment_form.js:434
 #, python-format
 msgid "Ok"
 msgstr "Ok"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:754
+#: code:addons/payment/models/payment_acquirer.py:708
 #, python-format
-msgid "Only transactions in the Authorized status can be captured."
-msgstr "Только транзакции в статусе авторизации могут быть захвачены."
+msgid "Only draft transaction can be authorized."
+msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:761
+#: code:addons/payment/models/payment_acquirer.py:699
 #, python-format
-msgid "Only transactions in the Authorized status can be voided."
-msgstr "Только транзакции в статусе авторизации могут быть аннулированы."
+msgid "Only draft transaction can be processed."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:745
+#, python-format
+msgid "Only draft/authorized transaction can be cancelled."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:717
+#, python-format
+msgid "Only draft/authorized transaction can be posted."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:972
+#, python-format
+msgid "Only transactions having the capture status can be captured."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:979
+#, python-format
+msgid "Only transactions having the capture status can be voided."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__partner_id
@@ -890,6 +1017,7 @@ msgid "PayUmoney"
 msgstr "PayUmoney"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_id
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Payment"
@@ -971,14 +1099,8 @@ msgid "Payment from Odoo"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_payment.py:59
-#, python-format
-msgid "Payment transaction failed (%s)"
-msgstr "Ошибка процесса платежа (%s)"
-
-#. module: payment
-#: code:addons/payment/controllers/portal.py:129
-#: code:addons/payment/controllers/portal.py:133
+#: code:addons/payment/controllers/portal.py:150
+#: code:addons/payment/controllers/portal.py:154
 #, python-format
 msgid "Payment transaction failed."
 msgstr ""
@@ -1030,14 +1152,14 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:201
+#: code:addons/payment/static/src/js/payment_form.js:202
 #, python-format
 msgid "Please select a payment method."
 msgstr "Выберите способ оплаты."
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:310
+#: code:addons/payment/static/src/js/payment_form.js:311
 #, python-format
 msgid "Please select the option to add a new payment method."
 msgstr ""
@@ -1083,19 +1205,14 @@ msgid "Reference"
 msgstr "Ссылка"
 
 #. module: payment
+#: sql_constraint:payment.transaction:0
+msgid "Reference must be unique!"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
 msgstr "Ссылка TX, как хранящиеся в базе приобретателя"
-
-#. module: payment
-#: selection:payment.transaction,state:0
-msgid "Refunded"
-msgstr ""
-
-#. module: payment
-#: selection:payment.transaction,state:0
-msgid "Refunding"
-msgstr ""
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -1142,11 +1259,11 @@ msgstr "Нумерация"
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:120
 #: code:addons/payment/static/src/js/payment_form.js:135
-#: code:addons/payment/static/src/js/payment_form.js:174
-#: code:addons/payment/static/src/js/payment_form.js:180
-#: code:addons/payment/static/src/js/payment_form.js:286
-#: code:addons/payment/static/src/js/payment_form.js:333
-#: code:addons/payment/static/src/js/payment_form.js:368
+#: code:addons/payment/static/src/js/payment_form.js:175
+#: code:addons/payment/static/src/js/payment_form.js:181
+#: code:addons/payment/static/src/js/payment_form.js:287
+#: code:addons/payment/static/src/js/payment_form.js:334
+#: code:addons/payment/static/src/js/payment_form.js:369
 #, python-format
 msgid "Server Error"
 msgstr "Ошибка сервера"
@@ -1158,7 +1275,7 @@ msgstr "Сервер к серверу"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:301
+#: code:addons/payment/static/src/js/payment_form.js:302
 #, python-format
 msgid "Server error"
 msgstr ""
@@ -1227,23 +1344,51 @@ msgid "Thanks Message"
 msgstr "Спасибо сообщение"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:561
+#: code:addons/payment/models/payment_acquirer.py:821
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:554
+#: code:addons/payment/models/payment_acquirer.py:645
 #, python-format
-msgid "The payment transaction reference must be unique!"
-msgstr "Ссылка на платежную транзакцию должна быть уникальной!"
+msgid "The customer has selected %s to pay this document."
+msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_payment.py:42
+#: code:addons/payment/models/payment_acquirer.py:662
 #, python-format
 msgid ""
-"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
-"Please use a token from another provider than %s."
+"The transaction %s with %s for %s has been authorized. Waiting for "
+"capture..."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:667
+#, python-format
+msgid ""
+"The transaction %s with %s for %s has been cancelled with the following "
+"message: %s"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:670
+#, python-format
+msgid "The transaction %s with %s for %s has been cancelled."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:664
+#, python-format
+msgid ""
+"The transaction %s with %s for %s has been confirmed. The related payment is"
+" posted: %s"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:660
+#, python-format
+msgid "The transaction %s with %s for %s is pending."
 msgstr ""
 
 #. module: payment
@@ -1287,6 +1432,11 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
+msgid "Transactions"
+msgstr "Транзакции"
+
+#. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
@@ -1298,7 +1448,7 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__date_validate
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__date
 msgid "Validation Date"
 msgstr "Дата утверждения"
 
@@ -1328,13 +1478,20 @@ msgid "Visible in Portal / Website"
 msgstr "Видимый в Портале / Вебсайте"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
 msgstr "Пустая транзакция"
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:651
+#, python-format
+msgid "Waiting for payment confirmation..."
+msgstr ""
+
+#. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:354
+#: code:addons/payment/static/src/js/payment_form.js:355
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -1348,36 +1505,36 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:302
+#: code:addons/payment/static/src/js/payment_form.js:303
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:334
-#: code:addons/payment/static/src/js/payment_form.js:369
+#: code:addons/payment/static/src/js/payment_form.js:335
+#: code:addons/payment/static/src/js/payment_form.js:370
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:175
+#: code:addons/payment/static/src/js/payment_form.js:176
 #, python-format
 msgid "We are not able to redirect you to the payment form."
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:181
+#: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
-msgid "We are not able to redirect you to the payment form.<"
+msgid "We are not able to redirect you to the payment form. "
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:190
+#: code:addons/payment/static/src/js/payment_form.js:191
 #, python-format
 msgid "We're unable to process your payment."
 msgstr ""
@@ -1489,7 +1646,7 @@ msgstr "валюта: обзор запись транзакции валюты"
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:121
-#: code:addons/payment/static/src/js/payment_form.js:287
+#: code:addons/payment/static/src/js/payment_form.js:288
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr ""
@@ -1533,3 +1690,8 @@ msgstr "tx_values: значения транзакций"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "пользователь: обзор записи текущего пользователя"
+
+#. module: payment
+#: model:ir.model,name:payment.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

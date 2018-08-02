@@ -9,19 +9,27 @@
 # liAnGjiA <liangjia@qq.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Maie <m@maie.name>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Xu Lei <xulei8@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
@@ -65,11 +73,13 @@ msgid "Analytic Account Groups"
 msgstr ""
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "分析会计"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_tags
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
 msgstr ""
@@ -140,6 +150,7 @@ msgstr "关联的业务伙伴"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
 msgstr "余额"
 
@@ -219,6 +230,7 @@ msgstr "创建时间"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
 msgstr "贷方"
 
@@ -240,6 +252,7 @@ msgstr "日期"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
 msgstr "借方"
 
@@ -257,6 +270,21 @@ msgstr "说明"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -280,6 +308,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
@@ -297,6 +340,11 @@ msgstr ""
 "在 Odoo 中，使用\n"
 " 分析账户实施销售订单和项目。您可以跟踪成本和收入，轻松分析\n"
 " 您的利润"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
@@ -326,9 +374,14 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_left
-msgid "Left Parent"
-msgstr "左父项"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "消息"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
@@ -348,9 +401,39 @@ msgid "No activity yet on this account"
 msgstr ""
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "上级"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
+msgid "Parent Path"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
@@ -393,11 +476,6 @@ msgstr ""
 " 费用（例如差旅费的再开票）创建客户发票。"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_right
-msgid "Right Parent"
-msgstr "右父项"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "搜索分析行"
@@ -414,8 +492,8 @@ msgstr "标签"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Month"
-msgstr "任务月份"
+msgid "Tasks Date"
+msgstr ""
 
 #. module: analytic
 #: sql_constraint:account.analytic.distribution:0
@@ -424,7 +502,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:165
+#: code:addons/analytic/models/analytic_account.py:193
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "
@@ -442,8 +520,23 @@ msgid "Total"
 msgstr "总计"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
+msgstr "用户"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_res_users
+msgid "Users"
 msgstr "用户"
 
 #. module: analytic

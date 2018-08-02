@@ -2,12 +2,25 @@
 # This file contains the translation of the following modules:
 # * point_of_sale
 # 
+# Translators:
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Martin Trigaux, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Erdenebold Ts <erdenebold10@gmail.com>, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
+# Ganbold BATKHUYAG <gbatkhuyag@gmail.com>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
+# Jacara <baskhuujacara@gmail.com>, 2018
+# Bayarkhuu Bataa, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Bayarkhuu Bataa, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,16 +29,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:807
-#: code:addons/point_of_sale/models/pos_order.py:816
+#: code:addons/point_of_sale/models/pos_order.py:880
+#: code:addons/point_of_sale/models/pos_order.py:889
 #, python-format
 msgid " REFUND"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
-msgid "# of Lines"
-msgstr ""
+msgstr "БУЦААН ОЛГОХ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -56,7 +64,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1474
 #, python-format
 msgid "% discount"
-msgstr ""
+msgstr "% хөнгөлөлт"
 
 #. module: point_of_sale
 #. openerp-web
@@ -64,10 +72,10 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1643
 #, python-format
 msgid "&nbsp;"
-msgstr ""
+msgstr "&nbsp;"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:83
+#: code:addons/point_of_sale/models/pos_order.py:85
 #, python-format
 msgid "(RESCUE FOR %(session)s)"
 msgstr ""
@@ -75,17 +83,17 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "(update)"
-msgstr ""
+msgstr "(шинэчлэх)"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Гүйлгээнүүд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "<b>Set Custom Image...</b>"
-msgstr ""
+msgstr "<b>Хувийн зураг тохируулах...</b>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
@@ -93,7 +101,7 @@ msgid "<i class=\"fa fa-eye-slash\"/>Hide"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
 msgstr ""
 
@@ -106,6 +114,10 @@ msgid ""
 "laptops, or industrial hardware.</p><p>Once the session launched, the system"
 " continues to run without an internet connection.</p>"
 msgstr ""
+"<p>Борлуулалтын цэгийн интерфейсийг эхлүүлэх бол дарна уу. Энэ нь <b>таблет "
+"</b>,  зөөврийн компьютер, эсвэл үйлдвэрийн төхөөрөмж дээр "
+"ажилладаг.</p><p>Сэшн эхлэмэгц систем нь Интернэт холболтгүйгээр ажилласаар "
+"байдаг.</p>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -113,16 +125,18 @@ msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
 "                                <span class=\"o_stat_text\">Money In</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Мөнгө</span>\n"
+"<span class=\"o_stat_text\">хийх</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Closing Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Хаах Үлдэгдэл тохируулах</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Set Opening Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Нээх Үлдэгдэл тохируулах</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -130,6 +144,8 @@ msgid ""
 "<span class=\"o_stat_text\">Take</span>\n"
 "                                <span class=\"o_stat_text\">Money Out</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Мөнгө</span>\n"
+"<span class=\"o_stat_text\">авах</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -175,128 +191,127 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Cash Balance</span>"
-msgstr ""
+msgstr "<span>Бэлэн мөнгөний Үлдэгдэл</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Last Closing Date</span>"
-msgstr ""
+msgstr "<span>Сүүлчийн Хаах Огноо</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Тайлангууд</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>Харагдац</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Company</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Компани</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Ending Balance</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Төгсгөлийн Үлдэгдэл</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Журнал</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Opening Date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Нээх Огноо</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Starting Balance</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Эхлэх Үлдэгдэл</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Statement Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Мэдэгдлийн Нэр</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Нийт</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>User</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Хэрэглэгч</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "= Theoretical Closing Balance"
-msgstr ""
+msgstr "= Онолын Хаалтын Баланс"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1975
+#: code:addons/point_of_sale/static/src/js/screens.js:2012
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr ""
+msgstr "? \"Батлах\"-г дарснаар төлбөрийг батлах болно."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1242
+#: code:addons/point_of_sale/static/src/js/screens.js:1260
 #, python-format
 msgid "A Customer Name Is Required"
-msgstr ""
+msgstr "Харилцагчийн нэрийг заавал бөглөнө."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
+#: model:ir.model.fields,help:point_of_sale.field_res_users__pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
 msgstr ""
+"Борлуулалтын цэгийн ухаалаг боломжийг хамгаалахад ашиглах хамгаалалтын ПИН"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_uuid
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr ""
+msgstr "Захиалагч пос сэшнийг үргэлжлүүлэх тутамд нэмэгддэг дарааллын тоо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr ""
+msgstr "Захиалга тутамд нэмэгддэг дарааллын тоо"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid ""
-"A session is a period of time, usually one day, during which\n"
-"                you sell through the point of sale. The user has to check the\n"
-"                currencies in your cash registers at the beginning and the end\n"
-"                of each session."
+"A session is a period of time, usually one day, during which you sell "
+"through the Point of Sale."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
 msgid "A session-unique sequence number for the order"
-msgstr ""
+msgstr "Захиалгын сэшн бүрт давтагдахгүй дарааллын тоо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_footer
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_header
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
 msgstr ""
 
@@ -305,65 +320,64 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1642
 #, python-format
 msgid "ABC"
-msgstr ""
+msgstr "АБВ"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Accept payments with an integrated card reader"
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Accept payments with a credit card reader"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr ""
+msgstr "Банкны хуулгын мөнгөний хайрцагны дэлгэрэнгүй"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accounting"
-msgstr ""
+msgstr "Санхүү"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Accounting Information"
-msgstr ""
+msgstr "Санхүүгийн мэдээлэл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_invoice_journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr ""
+msgstr "Нэхэмжлэл үүсгэхэд ашигладаг нягтлан бодох бүртгэлийн журнал."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_journal_id
-#: model:ir.model.fields,help:point_of_sale.field_pos_order_sale_journal
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__journal_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__sale_journal
 msgid "Accounting journal used to post sales entries."
-msgstr ""
+msgstr "Борлуулалтын бичилт хийхэд ашигладаг нягтлан бодох бүртгэлийн журнал."
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_5
-#: model:product.template,name:point_of_sale.partner_product_5_product_template
-msgid "Acsone.eu"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
 msgid "Active"
-msgstr ""
+msgstr "Идэвхитэй"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1821
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Add Tip"
-msgstr ""
+msgstr "Шан Нэмэх"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr ""
+msgstr "Нийтийн хөнгөлөлт нэмэх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add a custom message to header and footer"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
+msgid "Add a new payment method"
 msgstr ""
 
 #. module: point_of_sale
@@ -372,10 +386,20 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:511
 #, python-format
 msgid "Address"
+msgstr "Хаяг"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Advanced Currencies Setup"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:237
+#: selection:barcode.rule,type:0
+msgid "Alias"
+msgstr "Хуурмаг нэр"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:244
 #, python-format
 msgid ""
 "All available pricelists must be in the same currency as the company or as "
@@ -384,7 +408,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:243
+#: code:addons/point_of_sale/models/pos_config.py:250
 #, python-format
 msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
@@ -394,12 +418,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr ""
+msgstr "Бүх борлуулалтын мөрүүд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow cashier to reprint receipts"
-msgstr ""
+msgstr "Кассчин баримтуудыг дахин хэвлэхийг зөвшөөрөх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -407,30 +431,23 @@ msgid "Allow global discounts on orders"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_group_sale_pricelist
-msgid ""
-"Allows to manage different prices based on rules per category of customers.\n"
-"                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Amount"
-msgstr ""
+msgstr "Дүн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_journal_amount_authorized_diff
+#: model:ir.model.fields,field_description:point_of_sale.field_account_journal__amount_authorized_diff
 msgid "Amount Authorized Difference"
-msgstr ""
+msgstr "Зөвшөөрөгдсөн зөрүү дүн"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "Amount total"
-msgstr ""
+msgstr "Бүгд дүн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_name
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__name
 msgid "An internal identification of the point of sale."
 msgstr ""
 
@@ -444,48 +461,48 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_discount
 msgid "Apply Discount"
-msgstr ""
+msgstr "Хөнгөлөлт тооцох"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1967
+#: code:addons/point_of_sale/static/src/js/screens.js:2004
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
-msgstr ""
+msgstr "Захиалагч төлбөр хийхийг хүсч байгаа нь үнэн үү"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_variants_action
 msgid "Attribute Values"
-msgstr ""
+msgstr "Онцлогийн утгууд"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
 msgid "Attributes"
-msgstr ""
+msgstr "Хувилбарууд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_rescue
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr ""
+msgstr "Автомат Баримт Хэвлэлт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_cashdrawer
 msgid "Automatically open the cashdrawer."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_ids
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_journal_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__journal_ids
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "Боломжит төлбөрийн аргууд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_available_pricelist_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Pricelists"
 msgstr ""
@@ -498,18 +515,18 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr ""
+msgstr "ПОС - д бэлэн байгаа"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
-#: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product__available_in_pos
+#: model:ir.model.fields,field_description:point_of_sale.field_product_template__available_in_pos
 msgid "Available in Point of Sale"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__average_price
 msgid "Average Price"
-msgstr ""
+msgstr "Дундаж Үнэ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -517,46 +534,47 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:646
 #, python-format
 msgid "Back"
-msgstr ""
+msgstr "Буцах"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_statement_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_ids
 msgid "Bank Statement"
-msgstr ""
+msgstr "Банкны хуулга"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Банкны хуулгын мөр"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:380
 #: code:addons/point_of_sale/static/src/xml/pos.xml:443
+#: model:ir.model.fields,field_description:point_of_sale.field_res_partner__barcode
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "Зураасан код"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_barcode_nomenclature_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__barcode_nomenclature_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "Зураасан кодын нэр төрөл"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1342
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_barcode_scanner
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__barcode_scanner
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "Зураасан код уншигч"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Base Amount"
-msgstr ""
+msgstr "Суурь Дүн"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -564,26 +582,14 @@ msgid "Bills &amp; Receipts"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.raisins_noir
-#: model:product.template,name:point_of_sale.raisins_noir_product_template
-msgid "Black Grapes"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.boni_orange
-#: model:product.template,name:point_of_sale.boni_orange_product_template
-msgid "Boni Oranges"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:938
+#: code:addons/point_of_sale/static/src/js/screens.js:949
 #, python-format
 msgid "Button"
-msgstr ""
+msgstr "Даруул"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_via_proxy
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
 msgstr ""
 
@@ -592,7 +598,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:847
 #, python-format
 msgid "CHANGE"
-msgstr ""
+msgstr "ХАРИУЛТ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -609,53 +615,48 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцлах"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Цуцлагдсан"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1956
+#: code:addons/point_of_sale/static/src/js/screens.js:1993
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.carotte
-#: model:product.template,name:point_of_sale.carotte_product_template
-msgid "Carrots"
-msgstr ""
+msgstr "Бэлэн мөнгөний төлбөрийн аргагүйгээр хариултыг буцаах боломжгүй"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:317
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_control
 #, python-format
 msgid "Cash Control"
-msgstr ""
+msgstr "Кассын хяналт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_journal_id
 msgid "Cash Journal"
-msgstr ""
+msgstr "Бэлэн мөнгөний Журнал"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_id
 msgid "Cash Register"
-msgstr ""
+msgstr "Кассын бүртгэл"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:141
 #, python-format
 msgid "Cash control can only be applied to cash journals."
 msgstr ""
+"Бэлэн мөнгөний хяналт нь зөвхөн бэлэн мөнгөний журналууд дээр боломжтой."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr ""
+msgstr "Мөнгөний авдарын мөрүүд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
@@ -663,26 +664,22 @@ msgid "Cashbox balance"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Cashdrawer"
-msgstr ""
+msgstr "Мөнгөний хайрцаг"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:16
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Cashier"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
-msgid "Catalog"
-msgstr ""
+msgstr "Кассчин"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Categories"
-msgstr ""
+msgstr "Ангилалууд"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -690,6 +687,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Мэдрэгч дэлгэцтэй интерфейсээр барааг үзэхийн тулд\n"
+" ангилалуудыг ашиглана."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -701,28 +700,28 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:552
 #, python-format
 msgid "Change"
-msgstr ""
+msgstr "Солих"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:103
+#: code:addons/point_of_sale/static/src/js/chrome.js:105
 #, python-format
 msgid "Change Cashier"
-msgstr ""
+msgstr "Кассчинг өөрчлөх"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1187
+#: code:addons/point_of_sale/static/src/js/screens.js:1205
 #, python-format
 msgid "Change Customer"
-msgstr ""
+msgstr "Захиалагчийг өөрчлөх"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1821
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Change Tip"
-msgstr ""
+msgstr "Шанг өөрчлөх"
 
 #. module: point_of_sale
 #. openerp-web
@@ -731,42 +730,45 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1693
 #, python-format
 msgid "Change:"
-msgstr ""
+msgstr "Хариулт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_product_product_to_weight
-#: model:ir.model.fields,help:point_of_sale.field_product_template_to_weight
+#: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
+#: model:ir.model.fields,help:point_of_sale.field_product_template__to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
 msgstr ""
+"Хэрэв барааг компьютертэй холбосон жигнүүрээр жигнэх бол үүнийг сонгоно"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_product_product_available_in_pos
-#: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
+#: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
+#: model:ir.model.fields,help:point_of_sale.field_product_template__available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
+msgstr "Хэрэв энэ бараа нь Борлуулалтын Цэгт харагдах бол үүнийг сонгоно"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_product_uom_categ_is_pos_groupable
-#: model:ir.model.fields,help:point_of_sale.field_product_uom_is_pos_groupable
+#: model:ir.model.fields,help:point_of_sale.field_uom_category__is_pos_groupable
+#: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr ""
+msgstr "Нээх, хаах үед мөнгөний хайрцгийн хэмжээг шалгах."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_account_journal_journal_user
+#: model:ir.model.fields,help:point_of_sale.field_account_journal__journal_user
 msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
 msgstr ""
+"Энэ журнал нь борлуулалтын цэгт ашиглаж болох төлбөрийн аргыг тодорхойлж "
+"байгаа бол үүнийг чагтал."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_group_by
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__group_by
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session."
@@ -774,15 +776,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2014
+#: code:addons/point_of_sale/static/src/js/screens.js:2053
 #, python-format
 msgid "Check your internet connection and try again."
-msgstr ""
+msgstr "Интернэт холболтоо шалгаад дахин оролдоно уу."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_child_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_id
 msgid "Children Categories"
-msgstr ""
+msgstr "Дэд ангилалууд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -807,47 +809,18 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:352
 #, python-format
 msgid "City"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_product_action
-msgid "Click to add a new product."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
-msgid "Click to add a payment method."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
-msgid "Click to create a new PoS config."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
-msgid "Click to create a new order."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
-msgid "Click to define a new category."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.action_pos_session
-msgid "Click to start a new session."
-msgstr ""
+msgstr "Сум/Дүүрэг"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:15
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Client"
-msgstr ""
+msgstr "Клиент"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:461
+#: code:addons/point_of_sale/static/src/js/chrome.js:463
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
 msgstr ""
@@ -859,49 +832,48 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Хаах"
 
 #. module: point_of_sale
 #: selection:pos.session,state:0
 msgid "Closed & Posted"
-msgstr ""
+msgstr "Хаасан ба Бичсэн"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:346
 #, python-format
 msgid "Closing ..."
-msgstr ""
+msgstr "Хааж байна ..."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: selection:pos.session,state:0
 msgid "Closing Control"
-msgstr ""
+msgstr "Хаах хяналт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_stop_at
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__stop_at
 msgid "Closing Date"
-msgstr ""
+msgstr "Хаалтын огноо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_company_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_company_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_company_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_company_id
+#: model:ir.model,name:point_of_sale.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__company_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__company_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__company_id
 msgid "Company"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.poire_conference
-#: model:product.template,name:point_of_sale.poire_conference_product_template
-msgid "Conference pears"
-msgstr ""
+msgstr "Компани"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
 msgid "Configuration"
-msgstr ""
+msgstr "Тохиргоо"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -914,6 +886,8 @@ msgid ""
 "Configure at least one Point of Sale to be able to sell through the PoS "
 "interface."
 msgstr ""
+"ПОС интерфейсээр борлуулалт хийхийн тулд ядаж нэг Борлуулалтын Цэгийг "
+"тохируулна уу."
 
 #. module: point_of_sale
 #. openerp-web
@@ -921,31 +895,31 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1059
 #, python-format
 msgid "Confirm"
-msgstr ""
+msgstr "Батлах"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:454
+#: code:addons/point_of_sale/static/src/js/chrome.js:456
 #, python-format
 msgid "Connected, Not Owned"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:120
+#: code:addons/point_of_sale/static/src/js/models.js:121
 #, python-format
 msgid "Connecting to the PosBox"
-msgstr ""
+msgstr "PosBox - той холбогдож байна"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Холбох хаяг"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
-msgstr ""
+msgstr "Борлуулалтыг үргэлжлүүлэх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -954,77 +928,102 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1339
+#: code:addons/point_of_sale/static/src/js/screens.js:1363
 #, python-format
 msgid "Could Not Read Image"
-msgstr ""
+msgstr "Зургийг уншиж чадсангүй"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:359
 #, python-format
 msgid "Country"
+msgstr "Улс"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
+msgid "Create a new PoS config"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_create_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_create_uid
+#: model:ir.actions.act_window,help:point_of_sale.product_product_action
+msgid "Create a new product variant"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__create_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_create_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_create_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__create_date
 msgid "Creation Date"
+msgstr "Үүсгэсэн Огноо"
+
+#. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "Зээлийн карт"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Credit Card Reader"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_currency_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_currency_id
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Currencies"
+msgstr "Валютууд"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__currency_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Валют"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_id
 msgid "Current Session"
-msgstr ""
+msgstr "Одоогийн Сэшн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
 msgid "Current Session State"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1832
+#: code:addons/point_of_sale/static/src/js/screens.js:1873
 #: code:addons/point_of_sale/static/src/xml/pos.xml:145
 #: code:addons/point_of_sale/static/src/xml/pos.xml:676
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__partner_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Захиалагч"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1032,59 +1031,58 @@ msgid "Customer Display"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_customer_facing_display
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Customer Facing Display"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:486
-#: code:addons/point_of_sale/models/pos_order.py:537
+#: code:addons/point_of_sale/models/pos_order.py:561
+#: code:addons/point_of_sale/models/pos_order.py:612
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Захиалагчийн нэхэмжлэл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_customer_facing_display_html
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_facing_display_html
 msgid "Customer facing display content"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
+msgid "Customers"
+msgstr "Захиалагчид"
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Хяналтын самбар"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_7
-#: model:product.template,name:point_of_sale.partner_product_7_product_template
-msgid "Datalp.com"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_date
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__date
 msgid "Date Order"
-msgstr ""
+msgstr "Захиалгын Огноо"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1332
 #, python-format
 msgid "Debug Window"
-msgstr ""
+msgstr "Дебагдах Цонх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_cashbox_lines_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_cashbox_lines_ids
 msgid "Default Balance"
-msgstr ""
+msgstr "Үндсэн Баланс"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__account_id
 msgid "Default Debit Account"
-msgstr ""
+msgstr "Үндсэн дебит данс"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "Үндсэн Санхүүгийн харгалзаа"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1092,10 +1090,20 @@ msgid "Default Opening"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Default Pricelist"
-msgstr ""
+msgstr "Үндсэн Үнийн хүснэгт"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
+msgid "Default Sale Tax"
+msgstr "Борлуулалтын Татварын Анхны Утга"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default Sales Tax"
+msgstr "Борлуулалтын үндсэн татвар"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
@@ -1103,100 +1111,110 @@ msgid "Default company logo"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default sales tax for products"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
+msgid "Define a new category"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__barcode_nomenclature_id
 msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_delay_validation
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__delay_validation
 msgid "Delay Validation"
-msgstr ""
+msgstr "Шалгалтыг азнах"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1352
 #, python-format
 msgid "Delete Paid Orders"
-msgstr ""
+msgstr "Төлбөр хийгдсэн Захиалгуудыг Устгах"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:262
+#: code:addons/point_of_sale/static/src/js/chrome.js:264
 #, python-format
 msgid "Delete Paid Orders ?"
-msgstr ""
+msgstr "Төлбөр хийгдсэн Захиалгуудыг Устгах уу ?"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1353
 #, python-format
 msgid "Delete Unpaid Orders"
-msgstr ""
+msgstr "Төлбөр хийгдээгүй Захиалгуудыг Устгах"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:272
+#: code:addons/point_of_sale/static/src/js/chrome.js:274
 #, python-format
 msgid "Delete Unpaid Orders ?"
-msgstr ""
+msgstr "Төлбөр хийгдээгүй Захиалгуудыг Устгах уу ?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1190
+#: code:addons/point_of_sale/static/src/js/screens.js:1208
 #, python-format
 msgid "Deselect Customer"
-msgstr ""
+msgstr "Захиалагчийг үл сонгох"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:54
+#: code:addons/point_of_sale/static/src/js/chrome.js:56
 #, python-format
 msgid "Destroy Current Order ?"
-msgstr ""
+msgstr "Энэ Захиалгыг устгах уу ?"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_difference
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Difference"
-msgstr ""
+msgstr "Зөрүү"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_difference
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
-msgstr ""
+msgstr "Хаалтын онолын баланс болон хаалтын бодит балансын зөрүү."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:168
 #, python-format
 msgid "Disc"
-msgstr ""
+msgstr "Хөнг"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Disc:"
-msgstr ""
+msgstr "Хөнг:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:459
+#: code:addons/point_of_sale/static/src/js/chrome.js:461
 #, python-format
 msgid "Disconnected"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_discount
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_discount
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__discount
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Хөнгөлөлт (%)"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_notice
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__notice
 msgid "Discount Notice"
-msgstr ""
+msgstr "Хөнгөлөлтийн санамж"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1205,42 +1223,43 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1504
 #, python-format
 msgid "Discount:"
-msgstr ""
+msgstr "Хөнгөлөлт:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:14
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Discounted Product"
-msgstr ""
+msgstr "Хямдарсан Бараа"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:856
 #, python-format
 msgid "Discounts"
-msgstr ""
+msgstr "Хөнгөлөлтүүд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_display_categ_images
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_display_categ_images
 msgid "Display Category Pictures"
-msgstr ""
+msgstr "Ангилалын Зургийг Харуулах"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1248,36 +1267,27 @@ msgid "Display pictures of product categories"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_product_action
-msgid ""
-"Do not forget to set the price and the point of sale category\n"
-"                in which it should appear. If a product has no point of sale\n"
-"                category, you can not sell it through the point of sale\n"
-"                interface."
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid "Do you want to open cash registers?"
+msgstr "Бэлэн мөнгөний бүртгэлийг нээх үү?"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Don't turn this option on if you take orders on smartphones or tablets. Such"
+" devices already benefit from a native keyboard."
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
-msgstr ""
+msgstr "Дууссан"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_vkeyboard
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_vkeyboard
 msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid ""
-"Don’t turn this option on if you take orders on smartphones or tablets. Such"
-" devices already benefit from a native keyboard."
 msgstr ""
 
 #. module: point_of_sale
@@ -1285,48 +1295,30 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1355
 #, python-format
 msgid "Download Paid Orders"
-msgstr ""
+msgstr "Төлбөр хийгдсэн Захиалгуудыг Татах"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1357
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr ""
+msgstr "Төлбөр хийгдээгүй Захиалгуудыг Татах"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:550
 #, python-format
 msgid "Due"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_9
-#: model:product.template,name:point_of_sale.partner_product_9_product_template
-msgid "EGGS-solutions.fr"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_3
-#: model:product.template,name:point_of_sale.partner_product_3_product_template
-msgid "Eezee-It"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_4
-#: model:product.template,name:point_of_sale.partner_product_4_product_template
-msgid "Ekomurz.nl"
-msgstr ""
+msgstr "Төлбөр"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1335
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_electronic_scale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_electronic_scale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Electronic Scale"
-msgstr ""
+msgstr "Цахим Хэмжээ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1334,73 +1326,74 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:423
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "Имэйл"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1927
+#: code:addons/point_of_sale/static/src/js/screens.js:1975
 #, python-format
 msgid "Empty Order"
-msgstr ""
+msgstr "Захиалга хоосон байна"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:440
+#: code:addons/point_of_sale/static/src/js/screens.js:449
 #, python-format
 msgid "Empty Serial/Lot Number"
-msgstr ""
+msgstr "Сериал/Цувралын Дугаар хоосон байна"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
 msgid "Enable barcode scanning with a remotely connected barcode scanner."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_electronic_scale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
 msgid "Enables Electronic Scale integration."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_payment_terminal
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_payment_terminal
 msgid "Enables Payment Terminal integration."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account_invoicing
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__invoice_group
 msgid "Enables invoice generation from the Point of Sale."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__end_date
 msgid "End Date"
-msgstr ""
+msgstr "Дуусах Огноо"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "End of Session"
-msgstr ""
+msgstr "Сэшний Төгсгөл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end_real
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Ending Balance"
-msgstr ""
+msgstr "Төгсгөлийн баланс"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_category.py:13
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Алдаа ! Тойрог ангилал үүсгэх боломжгүй."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1268
+#: code:addons/point_of_sale/static/src/js/screens.js:1292
 #, python-format
 msgid "Error: Could not Save Changes"
-msgstr ""
+msgstr "Алдаа: Өөрчлөлтийг хадгалж чадсангүй"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:243
+#: code:addons/point_of_sale/static/src/js/models.js:244
 #, python-format
 msgid ""
 "Error: The Point of Sale User must belong to the same company as the Point "
@@ -1408,50 +1401,47 @@ msgid ""
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
 msgstr ""
+"Алдаа: Борлуулалтын Цэгийн Хэрэглэгч нь Борлуулалтын Цэгтэй ижил компанид "
+"харьялагдах ёстой. Та борлуулалтын цэгийг олон-компанитай, буруу компанид "
+"тохируулагдсан админаар ачааллахыг оролдож байгаа бололтой."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1354
 #, python-format
 msgid "Export Paid Orders"
-msgstr ""
+msgstr "Төлбөр хийгдсэн Захиалгуудыг экспортлох"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1356
 #, python-format
 msgid "Export Unpaid Orders"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.chicon_flandria_extra
-#: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
-msgid "Extra Flandria chicory"
-msgstr ""
+msgstr "Төлбөр хийгдээгүй Захиалгуудыг экспортлох"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Extra Info"
-msgstr ""
+msgstr "Нэмэлт мэдээлэл"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Fanta"
-msgstr ""
+msgstr "Фанта"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1211
 #, python-format
 msgid "Finished Importing Orders"
-msgstr ""
+msgstr "Захиалгуудыг импортлож дууссан"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_fiscal_position_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Санхүүгийн Харгалзаа"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1459,30 +1449,25 @@ msgid "Fiscal Position per Order"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Positions"
-msgstr ""
+msgstr "Санхүүгийн харгалзаа"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Footer"
-msgstr ""
+msgstr "Хөл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_big_scrollbars
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
 msgid "For imprecise industrial touchscreens."
-msgstr ""
-
-#. module: point_of_sale
-#: model:pos.category,name:point_of_sale.fruits_vegetables
-msgid "Fruits and Vegetables"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "General Information"
-msgstr ""
+msgstr "Ерөнхий Мэдээлэл"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1505,55 +1490,37 @@ msgid "Give customer rewards, free samples, etc."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
+#: model:ir.model.fields,help:point_of_sale.field_pos_category__sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Барааны харгалзах ангилалын хувьд эрэмбэ дарааллыг тодорхойлно."
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_discount
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_discount
 msgid "Global Discounts"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.pomme_golden_perlim
-#: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
-msgid "Golden Apples Perlim"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Gordon"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.pomme_granny_smith
-#: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
-msgid "Granny Smith apples"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.poivron_verts
-#: model:product.template,name:point_of_sale.poivron_verts_product_template
-msgid "Green Peppers"
-msgstr ""
+msgstr "Gordon"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_by
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Group Journal Items"
-msgstr ""
+msgstr "Кассын бичилтийг бүлэглэх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
-#: model:ir.model.fields,field_description:point_of_sale.field_product_uom_is_pos_groupable
+#: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
+#: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__is_pos_groupable
 msgid "Group Products in POS"
 msgstr ""
 
@@ -1562,62 +1529,62 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1369
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Тоног төхөөрөмжийн арга хэмжээнүүд"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1364
 #, python-format
 msgid "Hardware Status"
-msgstr ""
+msgstr "Тоног төхөөрөмжийн Төлөв"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_control
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
 msgid "Has Cash Control"
-msgstr ""
+msgstr "Бэлэн мөнгөний Бүртгэлтэй"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Header"
-msgstr ""
+msgstr "Толгой"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_header_or_footer
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 msgid "Header & Footer"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice__id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails__id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/popups.js:115
 #, python-format
 msgid "IMPORTANT: Bug Report From Odoo Point Of Sale"
-msgstr ""
+msgstr "ЧУХАЛ: Odoo Борлуулалтын Цэгийн Алдааны Тайлан"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_proxy_ip
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "IP Address"
-msgstr ""
+msgstr "IP Хаяг"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_use_existing_lots
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__use_existing_lots
 msgid ""
 "If this is checked, you will be able to choose the Lots/Serial Numbers. You "
 "can also decide to not put lots in this operation type.  This means it will "
@@ -1625,24 +1592,23 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
-msgid ""
-"If you put a photo on the category, the layout of the\n"
-"                touchscreen interface will automatically. We suggest not to put\n"
-"                a photo on categories for small (1024x768) screens."
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
+#: model:ir.model.fields,field_description:point_of_sale.field_res_company__iface_tax_included
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__iface_tax_included
+msgid "Iface Tax Included"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image
 msgid "Image"
-msgstr ""
+msgstr "Зураг"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1358
 #, python-format
 msgid "Import Orders"
-msgstr ""
+msgstr "Захиалгуудыг Импортлох"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1650,48 +1616,38 @@ msgid "Improve navigation for imprecise industrial touchscreens"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.tomate_en_grappe
-#: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
-msgid "In Cluster Tomatoes"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: selection:pos.session,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Боловсруулагдаж буй"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:468
+#: code:addons/point_of_sale/models/pos_order.py:543
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr ""
+msgstr "Захиалгыг устгахын тулд энэ нь шинэ юмуу цуцлагдсан байх ёстой."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Inactive"
-msgstr ""
+msgstr "Идэвхгүй"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:277
 #, python-format
 msgid "Incorrect Password"
-msgstr ""
+msgstr "Нууц үг буруу байна"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_start_categ_id
 msgid "Initial Category"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_mercury
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Integrated Card Reader"
 msgstr ""
 
 #. module: point_of_sale
@@ -1700,157 +1656,140 @@ msgid "Internal Categories"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_note
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__note
 msgid "Internal Notes"
-msgstr ""
+msgstr "Дотоод тэмдэглэл"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Inventory"
-msgstr ""
+msgstr "Хадгалах"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:684
 #: model:ir.actions.report,name:point_of_sale.pos_invoice_report
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_invoice_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__invoice_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "Нэхэмжлэл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_invoice_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Invoice Journal"
-msgstr ""
+msgstr "Нэхэмжлэлийн Журнал"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_invoiced
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Нэхэмжилсэн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_invoicing
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_account_invoicing
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__invoice_group
 msgid "Invoicing"
-msgstr ""
+msgstr "Нэхэмжлэх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_installed_account_accountant
-msgid "Is Installed Account Accountant"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_restaurant
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
 msgid "Is a Bar/Restaurant"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_account_id
-msgid "It acts as a default account for debit amount"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_installed_account_accountant
+msgid "Is the Full Accounting Installed"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.pomme_jonagold
-#: model:product.template,name:point_of_sale.pomme_jonagold_product_template
-msgid "Jonagold apples"
-msgstr ""
+#: model:ir.model.fields,help:point_of_sale.field_account_bank_statement__account_id
+msgid "It acts as a default account for debit amount"
+msgstr "Энэ бол дебит гүйлгээний үндсэн данс"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_journal
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Journal Entries"
-msgstr ""
+msgstr "Журналийн бичилт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_account_move
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Журналийн бичилт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_big_scrollbars
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
 msgid "Large Scrollbars"
-msgstr ""
+msgstr "Том Гүйлгэх зурвас"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails___last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order___last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
 msgid "Last Session Closing Cash"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
 msgid "Last Session Closing Date"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_write_uid
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__write_uid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_write_date
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_discount__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_open_statement__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__write_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.poireaux_poireaux
-#: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
-msgid "Leeks"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.citron
-#: model:product.template,name:point_of_sale.citron_product_template
-msgid "Lemon"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
 msgid "Line No"
-msgstr ""
+msgstr "Мөрийн №"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -1861,55 +1800,61 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:33
 #, python-format
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Кассын жагсаалт"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:518
+#: code:addons/point_of_sale/static/src/js/models.js:532
 #: code:addons/point_of_sale/static/src/xml/pos.xml:38
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Ачааллаж байна"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_location_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_location_id
+#: selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__location_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__location_id
 msgid "Location"
-msgstr ""
+msgstr "Байршил"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_login_number
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
 msgid "Login Sequence Number"
-msgstr ""
+msgstr "Нэвтрэх Дарааллын Дугаар"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:304
 #, python-format
 msgid "Login as a Manager"
-msgstr ""
+msgstr "Менежерээр нэвтрэх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_lot_name
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "Цуврал"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "Цувралын нэр"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:2339
+#: code:addons/point_of_sale/static/src/js/models.js:2372
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr ""
+msgstr "Цуврал/Сериал Дугаар(ууд) Шаардлагатай"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Цуврал/сериал Дугаар"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_loyalty
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_loyalty
 msgid "Loyalty Program"
-msgstr ""
+msgstr "Лоялти хөтөлбөр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1919,10 +1864,10 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Төлбөр Хийх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_available_pricelist_ids
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__available_pricelist_ids
 msgid ""
 "Make several pricelists available in the Point of Sale. You can also apply a"
 " pricelist to specific customers from their contact form (in Sales tab). To "
@@ -1939,43 +1884,51 @@ msgstr ""
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менежер"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_medium
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Дунд-хэмжээтэй зураг"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_category_image_medium
+#: model:ir.model.fields,help:point_of_sale.field_pos_category__image_medium
 msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Ангилалын дунд-хэмжээтэй зураг. Үүний хэмжээг харьцааг нь хадгалж автоматаар"
+" 128x128px болгож өөрчилдөг. Энэ талбарыг форм эсвэл зарим канбан харагдац "
+"дээр ашиглана уу."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:553
 #, python-format
 msgid "Method"
-msgstr ""
+msgstr "Метод"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_consumable
 #: model:product.template,name:point_of_sale.product_product_consumable_product_template
 msgid "Miscellaneous"
+msgstr "Бусад"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sales_price
+msgid "Multiple Product Prices"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
-msgid "Month of order date"
-msgstr ""
+#: selection:res.config.settings,pos_pricelist_setting:0
+msgid "Multiple prices per product (e.g. customer segments, currencies)"
+msgstr "Захиалагчийн сегмент, валют, г.м. бүрт олон үнэ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "My Sales"
-msgstr ""
+msgstr "Миний борлуулалт"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1987,92 +1940,95 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:466
 #, python-format
 msgid "N/A"
-msgstr ""
+msgstr "Алга"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:339
 #: code:addons/point_of_sale/static/src/xml/pos.xml:510
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__name
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #, python-format
 msgid "Name"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1937
-#, python-format
-msgid "Negative Bank Payment"
-msgstr ""
+msgstr "Нэр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Шинэ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
-msgstr ""
+msgstr "Шинэ Сэшн"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:709
 #, python-format
 msgid "Next Order"
+msgstr "Дараагийн Захиалга"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:1090
+#, python-format
+msgid "No Taxes"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:140
+#: code:addons/point_of_sale/models/pos_order.py:143
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
+"Энэ сэшнд бэлэн мөнгөний тооцоо алга. Буцаагдсан мөнгийг бүртгэх боломжгүй."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:24
 #, python-format
 msgid "No link to an invoice for %s."
+msgstr "%s - н нэхэмжлэлийн холбоос алга."
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
+msgid "No orders found"
 msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:24
 #, python-format
 msgid "No sequence defined on the journal"
+msgstr "Журнал дээр тодорхойлогдсон дараалал алга"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.action_pos_session
+msgid "No sessions found"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2067
+#: code:addons/point_of_sale/static/src/js/screens.js:2106
 #: code:addons/point_of_sale/static/src/xml/pos.xml:361
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "Байхгүй"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.action_pos_session
-msgid ""
-"Note that you may use the menu <i>Your Session</i>\n"
-"                to quickly open a new session."
-msgstr ""
+msgstr "Нэхэмжлэгдээгүй"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Notes"
-msgstr ""
+msgstr "Тэмдэглэл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_nb_print
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__nb_print
 msgid "Number of Print"
-msgstr ""
+msgstr "Хэвлэсэн тоо"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2082,17 +2038,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:401
+#: code:addons/point_of_sale/static/src/js/chrome.js:403
 #, python-format
 msgid "Offline"
-msgstr ""
+msgstr "Оффлайн"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:328
 #, python-format
 msgid "Offline Orders"
-msgstr ""
+msgstr "Оффлайн Захиалгууд"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2107,23 +2063,17 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1236
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Тийм"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:441
+#: code:addons/point_of_sale/static/src/js/screens.js:450
 #, python-format
 msgid "One or more product(s) required serial/lot number."
-msgstr ""
+msgstr "Нэг эсвэл олон бараа(нууд) - нд сериал/цуврал дугаар шаардлагатай."
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.Onions
-#: model:product.template,name:point_of_sale.Onions_product_template
-msgid "Onions"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_restrict_price_control
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
@@ -2132,20 +2082,21 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1325
+#: code:addons/point_of_sale/static/src/js/screens.js:1349
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr ""
+"Зөвхөн .png эсвэл .jpeg зэрэг вэбэд нийцтэй Зургийн форматууд дэмжигдсэн"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Open"
-msgstr ""
+msgstr "Нээх"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "Кассыг бүртгүүлэх"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2153,17 +2104,17 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1371
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "Нээлттэй касс"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Open POS Menu"
-msgstr ""
+msgstr "POS цэсийг нээх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid "Open Registers"
-msgstr ""
+msgstr "Бүртгүүлэх"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
@@ -2174,30 +2125,30 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Open Session"
-msgstr ""
+msgstr "Сэшнийг Нээх"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid "Open Statements"
-msgstr ""
+msgstr "Нээлттэй Тооцоонууд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Opening Balance"
-msgstr ""
+msgstr "Нээлтийн үлдэгдэл"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: selection:pos.session,state:0
 msgid "Opening Control"
-msgstr ""
+msgstr "Нээлтийн Хяналт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_start_at
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__start_at
 msgid "Opening Date"
-msgstr ""
+msgstr "Нээх өдөр"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -2206,8 +2157,8 @@ msgid "Opening/Closing Values"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_picking_type_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_type_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_type_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation Type"
 msgstr ""
@@ -2223,36 +2174,32 @@ msgid "Operation types show up in the Inventory dashboard."
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.papillon_orange
-#: model:product.template,name:point_of_sale.papillon_orange_product_template
-msgid "Orange Butterfly"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:311
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_order_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__order_id
 #, python-format
 msgid "Order"
-msgstr ""
+msgstr "Захиалга"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1922
-#: code:addons/point_of_sale/static/src/js/models.js:1962
+#: code:addons/point_of_sale/static/src/js/models.js:1947
+#: code:addons/point_of_sale/static/src/js/models.js:1987
 #, python-format
 msgid "Order "
-msgstr ""
+msgstr "Захиалах"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_date_order
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__date_order
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
+#: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Order Date"
-msgstr ""
+msgstr "Захиалгын Огноо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_id
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "Захиалгын ID Дараалал"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2260,48 +2207,42 @@ msgid "Order Interface"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_lines
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
 msgid "Order Lines"
-msgstr ""
+msgstr "Захиалгын Мөрүүд"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
-msgid "Order Month"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_order_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_name
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_order_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__order_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__order_id
 msgid "Order Ref"
-msgstr ""
+msgstr "Ордер Заалт"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Reference"
-msgstr ""
+msgstr "Захиалгын Дугаар"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_sequence_number
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sequence_number
 msgid "Order Sequence Number"
-msgstr ""
+msgstr "Захиалгын Дарааллын Дугаар"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:498
+#: code:addons/point_of_sale/models/pos_order.py:573
 #, python-format
 msgid "Order is not paid."
-msgstr ""
+msgstr "Захиалгын төлбөр хийгдээгүй."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr ""
+msgstr "Ордерууд"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2309,20 +2250,20 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_order_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Orders"
-msgstr ""
+msgstr "Захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all_filtered
 msgid "Orders Analysis"
-msgstr ""
+msgstr "Захиалгын анализ"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_journal_action_point_of_sale
@@ -2330,41 +2271,46 @@ msgid "POS Journals"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:335
+#: code:addons/point_of_sale/models/pos_config.py:343
 #, python-format
 msgid "POS Order %s"
-msgstr ""
+msgstr "ПОС Захиалга %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr ""
+msgstr "POS захиалгын мөр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr ""
+msgstr "POS захиалгын мөрүүд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr ""
+msgstr "POS захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
+msgstr "POS захиалгуудын мөрүүд"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_pricelist_setting
+msgid "POS Pricelists"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "POS Sales"
-msgstr ""
+msgstr "ПОС Борлуулалт"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:344
+#: code:addons/point_of_sale/models/pos_config.py:352
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "ПОС захиалгын мөр %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2372,42 +2318,42 @@ msgid "POS orders created during the current year"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line_pos_statement_id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
 msgid "POS statement"
-msgstr ""
+msgstr "ПОС тооцоо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_paid
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "Баглаа"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_paid
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Төлөгдсөн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_parent_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "Эцэг Ангилал"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Partner"
-msgstr ""
-
-#. module: point_of_sale
-#: model:pos.category,name:point_of_sale.partner_services
-msgid "Partner Services"
-msgstr ""
+msgstr "Харилцагч"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:274
 #, python-format
 msgid "Password ?"
-msgstr ""
+msgstr "Нууц үг ?"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Pay Order"
-msgstr ""
+msgstr "Захиалгыг Төлөх"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2418,34 +2364,34 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Payment"
-msgstr ""
+msgstr "Төлбөр"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_payment_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_date
 msgid "Payment Date"
-msgstr ""
+msgstr "Төлбөрийн Огноо"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment Methods"
-msgstr ""
+msgstr "Төлбөрийн аргууд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__journal_id
 msgid "Payment Mode"
-msgstr ""
+msgstr "Төлбөрийн горим"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_payment_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
 msgid "Payment Reference"
-msgstr ""
+msgstr "Төлбөрийн Сурвалж"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_payment_terminal
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_payment_terminal
 msgid "Payment Terminal"
-msgstr ""
+msgstr "Төлбөрийн Терминал"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -2455,6 +2401,10 @@ msgid ""
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
 msgstr ""
+"Төлбөрийн аргыг <i>ПОС Төлбөрийн Арга</i> талбарыг \n"
+"чагталсан нягтлан бодох бүртгэлийн журналаар тодорхойлно. \n"
+"Мэдрэгч дэлгэцтэй интерфейсээс ашиглахын тулд та <i>Борлуулалтын Цэг</i> \n"
+"тохиргоо дээр төлбөрийн аргыг тохируулах ёстой."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2462,37 +2412,34 @@ msgid "Payment methods available"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__statement_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
-msgstr ""
+msgstr "Төлбөрүүд"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:939
 #, python-format
 msgid "Payments:"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.peche
-#: model:product.template,name:point_of_sale.peche_product_template
-msgid "Peaches"
-msgstr ""
+msgstr "Төлбөрүүд:"
 
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
-msgstr ""
+msgstr "Сэшн бүрээр"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_order_user_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
 msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
+"Кассын бүртгэлийг ашигладаг хүн. Сэлгээний хүн, оюутан эсвэл завсрын ажилтан"
+" байж болно."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2501,62 +2448,62 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:512
 #, python-format
 msgid "Phone"
-msgstr ""
+msgstr "Утас"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1450
 #, python-format
 msgid "Phone:"
-msgstr ""
+msgstr "Утас:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_picking_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_id
 msgid "Picking"
-msgstr ""
+msgstr "Бэлтгэх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Picking Errors"
-msgstr ""
+msgstr "Бэлтгэх Алдаанууд"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1966
+#: code:addons/point_of_sale/static/src/js/screens.js:2003
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr ""
+msgstr "Их Тоо Хэмжээг баталгаажуулна уу"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:296
+#: code:addons/point_of_sale/models/pos_order.py:345
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Энэ бараанд орлогын данс тодорхойлно уу: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:514
+#: code:addons/point_of_sale/models/pos_order.py:589
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "Харилцагчийг сонгоно уу."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:533
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "Төлбөрийн арга сонгоно уу."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2005
+#: code:addons/point_of_sale/static/src/js/screens.js:2044
 #, python-format
 msgid "Please select the Customer"
-msgstr ""
+msgstr "Захиалагчийг сонгоно уу"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
@@ -2566,7 +2513,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pos_categ_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "PoS Category"
 msgstr ""
@@ -2574,121 +2521,128 @@ msgstr ""
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
 msgid "PoS Orders"
-msgstr ""
+msgstr "PoS захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_config_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_config_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users__group_point_of_sale_user
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_form_view
-#: model:ir.ui.view,arch_db:point_of_sale.res_users_form_view
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_users_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_bank_journal_form_inherited_pos
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Point of Sale"
-msgstr ""
+msgstr "Борлуулалтын цэг"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_graph
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_pivot
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Шинжилгээ"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_product_product_pos_categ_id
-#: model:ir.model.fields,field_description:point_of_sale.field_product_template_pos_categ_id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_categ_id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_template__pos_categ_id
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "POS ангилал"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "Борлуулалтын цэгийн тохиргоо"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Кассын тохиргоо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_manager_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Менежерийн Бүлэг"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
 msgid "Point of Sale Name"
-msgstr ""
+msgstr "Борлуулалтын цэгийн нэр"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "Борлуулалтын цэгийн захиалгын статистик"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Төлбөр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Сэшн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Хэрэглэгчийн Бүлэг"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Categories"
-msgstr ""
+msgstr "ПОС-н Ангилалууд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_pos_config_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
+#: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
+msgid "Pos Session Duration"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PosBox"
 msgstr ""
@@ -2703,24 +2657,18 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:355
 #, python-format
 msgid "Postcode"
-msgstr ""
+msgstr "Шуудангийн индекс"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Батлагдсан"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.pomme_de_terre
-#: model:product.template,name:point_of_sale.pomme_de_terre_product_template
-msgid "Potatoes"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr ""
+msgstr "Бэлэн мөнгөний төлбөр хүлээж авах"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2734,7 +2682,7 @@ msgstr ""
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 #, python-format
 msgid "Price"
-msgstr ""
+msgstr "Үнэ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2744,41 +2692,49 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Price Unit"
+msgstr "Үнийн Нэгж"
+
+#. module: point_of_sale
+#: selection:res.config.settings,pos_pricelist_setting:0
+msgid "Price computed from formulas (discounts, margins, roundings)"
 msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:13
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Priced Product"
-msgstr ""
+msgstr "Үнэлсэн Бараа"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2149
+#: code:addons/point_of_sale/static/src/js/screens.js:2194
 #: code:addons/point_of_sale/static/src/xml/pos.xml:388
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pricelist_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pricelist_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pricelist_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Pricelist"
-msgstr ""
+msgstr "Үнийн хүснэгт"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_pricelist
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricelists"
-msgstr ""
+msgstr "Үнийн хүснэгт"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricing"
-msgstr ""
+msgstr "Үнэ тооцоолол"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Print"
-msgstr ""
+msgstr "Хэвлэх"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2786,7 +2742,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1372
 #, python-format
 msgid "Print Receipt"
-msgstr ""
+msgstr "Баримт хэвлэх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2795,87 +2751,89 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Print receipts automatically once the payment registered"
+msgid "Print receipts automatically once the payment is registered"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_via_proxy
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Print via Proxy"
-msgstr ""
+msgstr "Proxy - гоор Хэвлэх"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:389
+#: code:addons/point_of_sale/static/src/js/chrome.js:391
 #, python-format
 msgid "Printer"
-msgstr ""
+msgstr "Хэвлэгч"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:430
+#: code:addons/point_of_sale/static/src/js/devices.js:432
 #, python-format
 msgid "Printing Error: "
-msgstr ""
+msgstr "Хэвлэлтийн Алдаа:"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_product_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_id
+#: model:ir.model,name:point_of_sale.model_product_product
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__product_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_id
+#: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
-msgstr ""
+msgstr "Бараа"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_categ_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product Category"
-msgstr ""
+msgstr "Барааны Ангилал"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product Prices"
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "Бараа Барааны Ангилалууд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_qty
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "Барааны Тоо хэмжээ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_tmpl_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "Барааны үлгэр"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_product_uom
+#: model:ir.model,name:point_of_sale.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Барааны Хэмжих нэгж"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_product_uom_categ
+#: model:ir.model,name:point_of_sale.model_uom_category
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Барааны Хэм.Нэгж Ангилал"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_product
 msgid "Product Variants"
-msgstr ""
+msgstr "Барааны Хувилбар"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product prices on receipts"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_tipproduct
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tipproduct
 msgid "Product tips"
 msgstr ""
 
@@ -2886,82 +2844,70 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Products"
-msgstr ""
+msgstr "Бараанууд"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "Мөнгө дотогш хийх"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:163
 #, python-format
 msgid "Qty"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_qty
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__qty
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Quantity"
-msgstr ""
+msgstr "Тоо"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1373
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "Жигнүүрийг унших"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/tour.js:14
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>? <i>Click here</i>."
-msgstr ""
+msgstr "<b>Борлуулалтын цэгээ</b> эхлэхэд бэлэн үү? <i>Энд дарна уу</i>."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Real Closing Balance"
-msgstr ""
+msgstr "Бодит Хаалтын Баланс"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_receipt_footer
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
 msgid "Receipt Footer"
-msgstr ""
+msgstr "Баримтын Хөл"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_receipt_header
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_header
 msgid "Receipt Header"
-msgstr ""
+msgstr "Баримтын Толгой"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Receipt Printer"
-msgstr ""
+msgstr "Баримт Хэвлэгч"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pos_reference
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 msgid "Receipt Ref"
-msgstr ""
+msgstr "Баримтын Сурвалж"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
 msgid "Recovery Session"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.poivron_rouges
-#: model:product.template,name:point_of_sale.poivron_rouges_product_template
-msgid "Red Pepper"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.pamplemousse_rouge_pamplemousse
-#: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
-msgid "Red grapefruit"
 msgstr ""
 
 #. module: point_of_sale
@@ -2974,27 +2920,27 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
 msgid "Reporting"
-msgstr ""
+msgstr "Тайлан"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_reprint
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_reprint
 msgid "Reprint Receipt"
-msgstr ""
+msgstr "Баримтыг дахин хэвлэх"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1339
 #, python-format
 msgid "Reset"
-msgstr ""
+msgstr "Сэргээх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_user_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
 msgid "Responsible"
-msgstr ""
+msgstr "Хариуцагч"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_restrict_price_control
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__restrict_price_control
 msgid "Restrict Price Modifications to Managers"
 msgstr ""
 
@@ -3006,18 +2952,23 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr ""
+msgstr "Үргэлжлүүлэх"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:823
+#: code:addons/point_of_sale/models/pos_order.py:896
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "Бараанууд Буцаах"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_return
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_return
 msgid "Returned"
+msgstr "Буцаагдсан"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
+msgid "Sale Line Count"
 msgstr ""
 
 #. module: point_of_sale
@@ -3025,7 +2976,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "Борлуулалтын мөр"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -3034,36 +2985,37 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 msgid "Sales Details"
-msgstr ""
+msgstr "Борлуулалтын дэлгэрэнгүй"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_sale_journal
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sale_journal
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Sales Journal"
-msgstr ""
+msgstr "Борлуулалтын журнал"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sales Orders"
-msgstr ""
+msgstr "Борлуулалтын Захиалгууд"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_user_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Salesman"
-msgstr ""
+msgstr "Борлуулагч"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_user_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Salesperson"
-msgstr ""
+msgstr "Борлуулагч"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Save"
-msgstr ""
+msgstr "Хадгалах"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3072,179 +3024,184 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:397
+#: code:addons/point_of_sale/static/src/js/chrome.js:399
 #, python-format
 msgid "Scale"
-msgstr ""
+msgstr "Хэмжээ"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1345
 #, python-format
 msgid "Scan"
-msgstr ""
+msgstr "Унших"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1346
 #, python-format
 msgid "Scan EAN-13"
-msgstr ""
+msgstr "EAN-13 унших"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_scan_via_proxy
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
 msgid "Scan via Proxy"
-msgstr ""
+msgstr "Проксигоор унших"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:380
+#: code:addons/point_of_sale/static/src/js/chrome.js:382
 #, python-format
 msgid "Scanner"
-msgstr ""
+msgstr "Уншигч"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:483
 #, python-format
 msgid "Search Customers"
-msgstr ""
+msgstr "Захиалагч Хайх"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:220
 #, python-format
 msgid "Search Products"
-msgstr ""
+msgstr "Бараа Хайх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Борлуулалтын Захиалга Хайх"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_security_pin
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_security_pin
 msgid "Security PIN"
-msgstr ""
+msgstr "Хамгаалалтын PIN"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/res_users.py:15
+#: code:addons/point_of_sale/models/res_users.py:20
 #, python-format
 msgid "Security PIN can only contain digits"
-msgstr ""
+msgstr "Хамгаалалтын PIN - д зөвхөн тоо орох ёстой"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:491
 #, python-format
 msgid "Select Customer"
-msgstr ""
+msgstr "Захиалагч Сонгох"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:247
 #, python-format
 msgid "Select User"
-msgstr ""
+msgstr "Хэрэглэгч Сонгох"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2137
+#: code:addons/point_of_sale/static/src/js/screens.js:2182
 #, python-format
 msgid "Select pricelist"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2078
+#: code:addons/point_of_sale/static/src/js/screens.js:2117
 #, python-format
 msgid "Select tax"
-msgstr ""
+msgstr "Татвар сонгох"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:236
+#: code:addons/point_of_sale/models/pos_order.py:250
 #, python-format
 msgid "Selected orders do not have the same session!"
+msgstr "Сонгосон захиалгууд ижил сэшнгүй байна!"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Sell in several currencies"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_sequence
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_sequence_number
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
 msgid "Sequence Number"
-msgstr ""
+msgstr "Дарааллын Дугаар"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1099
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Сериал/Цувралын Дугаар"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:768
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "Үйлчилсэн"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#: code:addons/point_of_sale/static/src/js/screens.js:2057
 #, python-format
 msgid "Server Error"
-msgstr ""
+msgstr "Серверийн Алдаа"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:447
-#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_session_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_session_id
+#: code:addons/point_of_sale/models/pos_config.py:456
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__pos_session_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__session_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__session_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Session"
-msgstr ""
+msgstr "Харилцаа"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_name
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__name
 msgid "Session ID"
-msgstr ""
+msgstr "Сэшн ID"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1225
 #, python-format
 msgid "Session ids:"
-msgstr ""
+msgstr "Сэшн id-ууд:"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Session:"
-msgstr ""
+msgstr "Сэшн:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session_filtered
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_session_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__session_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sessions"
-msgstr ""
+msgstr "Сэшнүүд"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1185
+#: code:addons/point_of_sale/static/src/js/screens.js:1203
 #, python-format
 msgid "Set Customer"
-msgstr ""
+msgstr "Захиалагч Тохируулах"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_start_category
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
 msgid "Set Start Category"
 msgstr ""
 
@@ -3253,11 +3210,16 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1338
 #, python-format
 msgid "Set Weight"
-msgstr ""
+msgstr "Жин Тохируулах"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set barcodes to scan products, customer cards, etc."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Set multiple prices per product, automated discounts, etc."
 msgstr ""
 
 #. module: point_of_sale
@@ -3273,18 +3235,15 @@ msgid "Set your customized advertisement here"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Settings"
-msgstr ""
+msgstr "Тохиргоо"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_customer_facing_display
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pricelist_item
-msgid "Show pricelists to customers"
 msgstr ""
 
 #. module: point_of_sale
@@ -3292,42 +3251,45 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:42
 #, python-format
 msgid "Skip"
-msgstr ""
+msgstr "Алгасах"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_skip_screen
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
 msgid "Skip Preview Screen"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_small
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Жижиг-хэмжээт зураг"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_category_image_small
+#: model:ir.model.fields,help:point_of_sale.field_pos_category__image_small
 msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Ангилалын жижиг хэмжээт зураг. Энэ нь автоматаар 64x64px хэмжээтэй болно, "
+"харьцаа нь гэхдээ хадгалагдана. Энэ талбарыг жижиг зураг хэрэгцээтэй газарт "
+"хаана ч хамаагүй хэрэглэж болно."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:333
 #, python-format
 msgid "Some orders could not be submitted to"
-msgstr ""
+msgstr "Зарим захиалгыг дараах руу илгээж чадсангүй:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "ПОС захиалгын мөр дээр барааны цуврал/сериал дугаарыг тодорхойлно уу"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_start_date
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
-msgstr ""
+msgstr "Эхлэх Огноо"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3335,38 +3297,38 @@ msgid "Start selling from a default product category"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Starting Balance"
-msgstr ""
+msgstr "Нээлтийн баланс"
 
 #. module: point_of_sale
 #: model:ir.actions.report,name:point_of_sale.action_report_account_statement
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Statement"
-msgstr ""
+msgstr "Хуулга"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Statement lines"
-msgstr ""
+msgstr "Тооцооны мөрүүд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Statements"
-msgstr ""
+msgstr "Харилцахын ордер"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_state
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_state
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_state
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__state
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__state
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__state
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_stock_location_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__stock_location_id
 msgid "Stock Location"
-msgstr ""
+msgstr "Барааны байрлал"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3379,97 +3341,86 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:348
 #, python-format
 msgid "Street"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.limon
-#: model:product.template,name:point_of_sale.limon_product_template
-msgid "Stringers"
-msgstr ""
+msgstr "Гудамж"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:818
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal_incl
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 #, python-format
 msgid "Subtotal"
-msgstr ""
+msgstr "Дэд дүн"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
 msgid "Subtotal w/o Tax"
-msgstr ""
+msgstr "Дэд дүн w/o татвар"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_price_sub_total
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_sub_total
 msgid "Subtotal w/o discount"
-msgstr ""
+msgstr "Хөнгөлөлтгүй дэд дүн"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1489
 #, python-format
 msgid "Subtotal:"
-msgstr ""
+msgstr "Дэд дүн:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "Successfully  imported"
-msgstr ""
+msgstr "Амжилттай импортлосон"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1216
 #, python-format
 msgid "Successfully imported"
-msgstr ""
+msgstr "Амжилттай импортлосон"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Sum of opening balance and transactions."
-msgstr ""
+msgstr "Нээлтийн баланс болон гүйлгээний нийлбэр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Sum of subtotals"
-msgstr ""
+msgstr "Дэд дүнгүүдийн нийлбэр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr ""
+msgstr "Төлбөрийн Арга бүрээрх Нийлбэр"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:831
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "НИЙТ"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "Мөнгийг гадагш авах"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:325
-#: code:addons/point_of_sale/static/src/js/screens.js:2091
+#: code:addons/point_of_sale/models/pos_order.py:377
+#: code:addons/point_of_sale/static/src/js/screens.js:2136
 #, python-format
 msgid "Tax"
-msgstr ""
+msgstr "Татвар"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Tax Amount"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_tax_included
-msgid "Tax Display"
-msgstr ""
+msgstr "Татварын дүн"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3477,35 +3428,42 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:452
 #, python-format
 msgid "Tax ID"
-msgstr ""
+msgstr "Татварын ID"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime
 msgid "Tax Regime"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime_selection
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
 msgstr ""
 
 #. module: point_of_sale
-#: selection:pos.config,iface_tax_included:0
-msgid "Tax-Excluded Prices"
+#: selection:res.company,iface_tax_included:0
+msgid "Tax-Excluded Price"
 msgstr ""
 
 #. module: point_of_sale
-#: selection:pos.config,iface_tax_included:0
-msgid "Tax-Included Prices"
+#: selection:res.company,iface_tax_included:0
+msgid "Tax-Included Price"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
+#: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Taxes"
+msgstr "Татварууд"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
+msgid "Taxes to Apply"
 msgstr ""
 
 #. module: point_of_sale
@@ -3514,27 +3472,27 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1318
 #, python-format
 msgid "Taxes:"
-msgstr ""
+msgstr "Татварууд:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:748
 #, python-format
 msgid "Tel:"
-msgstr ""
+msgstr "Утас:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:551
 #, python-format
 msgid "Tendered"
-msgstr ""
+msgstr "Тендер зарласан"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:284
+#: code:addons/point_of_sale/models/pos_order.py:333
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr ""
+msgstr "Энэ функцийг дуудахад ПОС захиалга нь мөрүүдтэй байх ёстой"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3544,50 +3502,31 @@ msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
 msgstr ""
+"Борлуулалтын цэг нь уншсан баркодтой холбоотой ямар ч бараа, үйлчлүүлэгч, "
+"ажилтан эсвэл үйлдэл олсонгүй."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:230
-#, python-format
-msgid ""
-"The company of a payment method is different than the one of point of sale"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:220
-#, python-format
-msgid ""
-"The company of the sales journal is different than the one of point of sale"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:215
-#, python-format
-msgid ""
-"The company of the stock location is different than the one of point of sale"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:235
+#: code:addons/point_of_sale/models/pos_config.py:242
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_proxy_ip
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
 msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:225
+#: code:addons/point_of_sale/models/pos_config.py:232
 #, python-format
 msgid ""
-"The invoice journal and the point of sale must belong to the same company"
+"The invoice journal and the point of sale must belong to the same company."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:241
+#: code:addons/point_of_sale/models/pos_config.py:248
 #, python-format
 msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
@@ -3595,86 +3534,121 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:pos.session:0
-msgid "The name of this POS Session must be unique !"
+#: code:addons/point_of_sale/models/pos_session.py:283
+#, python-format
+msgid "The journal type for your payment method should be bank or cash."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
-#: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
+#: code:addons/point_of_sale/models/pos_config.py:237
+#, python-format
+msgid ""
+"The method payments and the point of sale must belong to the same company."
+msgstr ""
+
+#. module: point_of_sale
+#: sql_constraint:pos.session:0
+msgid "The name of this POS Session must be unique !"
+msgstr "Энэ ПОС Сэшний нэр дахин давтагдахгүй байх ёстой !"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_partner__pos_order_count
+#: model:ir.model.fields,help:point_of_sale.field_res_users__pos_order_count
 msgid "The number of point of sales orders related to this customer"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2013
+#: code:addons/point_of_sale/static/src/js/screens.js:2052
 #, python-format
 msgid "The order could not be sent"
-msgstr ""
+msgstr "Захиалгыг илгээж чадсангүй"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2024
+#: code:addons/point_of_sale/static/src/js/screens.js:2063
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
-msgstr ""
+msgstr "Үл мэдэгдэх алдаанаас болж захиалгыг сервер рүү илгээж чадсангүй"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_config_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__config_id
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "Таны ашиглах бодит борлуулалтын цэг."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_start_categ_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_start_categ_id
 msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_pricelist_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
 msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_display_categ_images
 msgid "The product categories will be displayed with pictures."
-msgstr ""
+msgstr "Барааны ангилалууд нь зурагтайгаа харагдах болно."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1340
+#: code:addons/point_of_sale/static/src/js/screens.js:1364
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
-msgstr ""
+msgstr "Өгсөн файл нь үл мэдэгдэх алдаанаас болж уншигдаж чадсангүй"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_skip_screen
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
 msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
 msgstr ""
+"Баримтыг автоматаар хэвлэх боломжтой бол баримтын дэлгэцийг алгасах болно."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:227
+#, python-format
+msgid ""
+"The sales journal and the point of sale must belong to the same company."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2019
+#: code:addons/point_of_sale/static/src/js/screens.js:2058
 #, python-format
 msgid "The server encountered an error while receiving your order."
+msgstr "Таны захиалгыг хүлээн авах явцад серверт алдаа гарлаа."
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid ""
+"The session has been opened for an unusually long period. Please consider "
+"closing."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:222
+#, python-format
+msgid ""
+"The stock location and the point of sale must belong to the same company."
 msgstr ""
 
 #. module: point_of_sale
@@ -3684,18 +3658,22 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"Систем кассын бүртгэлүүдийг бүгдийг нээх бөгөөд ингэснээр төлбөрүүдийг "
+"хөтлөж эхлэх боломжтой болно. Кассын бүртгэл бүрийн нээлтийн балансыг "
+"тэдгээрийн касс хавтасыг ашиглан шалгахыг зөвлөе."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:283
-#, python-format
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The type of the journal for your payment method should be bank or cash "
+"The transactions are processed by Vantiv. Set your Vantiv credentials on the"
+" related payment journal."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
-msgstr ""
+msgstr "Онолын Хаалтын Баланс"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3705,92 +3683,123 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Өгөгдлийн баазад хадгалагдаж чадахгүй хүлээгдэж байгаа үйлдлүүд байна, та "
+"гарахдаа итгэлтэй байна уу?"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"There are two ways to manage pricelists: 1) Multiple prices per product "
+"(e.g. quantity, shop-specific) : must be set in the Sales tab of the product"
+" detail form. 2) Price computed from formulas (discounts, margins, rounding)"
+" : must be set in the pricelist form."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1957
+#: code:addons/point_of_sale/static/src/js/screens.js:1994
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
 msgstr ""
+"Энэ борлуулалтын цэгт хариулт мөнгийг зохицуулах бэлэн мөнгөний төлбөрийн арга алга.\n"
+"\n"
+"Дүнд тохируулж төлнө үү эсвэл борлуулалтын цэгийн тохиргоо дотор бэлэн мөнгөний төлбөрийн аргыг нэмнэ үү"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:21
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr ""
+msgstr "Энэ ПОС Сэшнд кассын бүртгэл алга"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:764
+#: code:addons/point_of_sale/models/pos_order.py:837
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
 msgstr ""
+"Харилцагчид төлбөр төлөх авлагын данс тодорхойлогдоогүй байна:\"%s\" "
+"(id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:762
+#: code:addons/point_of_sale/models/pos_order.py:835
 #, python-format
 msgid "There is no receivable account defined to make payment."
-msgstr ""
+msgstr "Төлбөрийг төлөх авлагын данс тодорхойлогдоогүй байна."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1928
+#: code:addons/point_of_sale/static/src/js/screens.js:1976
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
+msgstr "Таны захиалгад батлахаас өмнө ядаж нэг бараа байх ёстой"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "This adds the choice of a currency on pricelists."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_cashbox_line_default_pos_id
+#: model:ir.model.fields,field_description:point_of_sale.field_account_cashbox_line__default_pos_id
 msgid ""
 "This cashbox line is used by default when opening or closing a balance for "
 "this point of sale"
 msgstr ""
+"Энэ борлуулалтын цэгт балансыг нээх эсвэл хаахад энэ мөнгөний хайрцгийн "
+"мөрийг анхны утгаар ашиглана"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
+#: model:ir.model.fields,help:point_of_sale.field_account_journal__amount_authorized_diff
 msgid ""
 "This field depicts the maximum difference allowed between the ending balance"
 " and the theoretical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"ПОС-ын биш менежерүүдийн хувьд, сэшнийг хаах үед энэ талбар нь хаалтын "
+"баланс ба онолын бэлэн мөнгөний хооронд зөвшөөрөгдсөн хамгийн их ялгааг "
+"дүрсэлнэ. Хэрэв энэ хамгийн их утгад хүрсэн тохиолдолд хэрэглэгчид сэшнээ "
+"хаах үед нь менежертэй холбогд гэсэн алдааны зурвас гарч ирэх болно."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_category_image
+#: model:ir.model.fields,help:point_of_sale.field_pos_category__image
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
 msgstr ""
+"Энэ талбарт ангилалд ашиглах хамгийн ихдээ 1024x1024px хэмжээтэй зургийг "
+"хадгална."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
 msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:522
+#: code:addons/point_of_sale/models/pos_order.py:597
 #, python-format
 msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Энэ нэхэмжлэлийг дараах борлуулалтын цэгийн сэшнээс үүсгэсэн: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_fiscal_position_ids
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
@@ -3798,7 +3807,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:273
+#: code:addons/point_of_sale/static/src/js/chrome.js:275
 #, python-format
 msgid ""
 "This operation will destroy all unpaid orders in the browser. You will lose "
@@ -3808,57 +3817,70 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:263
+#: code:addons/point_of_sale/static/src/js/chrome.js:265
 #, python-format
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Энэ үйлдэл нь дотоод сангаас бүх төлсөн захиалгуудыг үүрд устгах болно. Та "
+"бүх өгөгдлийг алдах болно. Энэ үйлдлийг буцаах боломжгүй."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_tip_product_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 msgid "This product is used as reference on customer receipts."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_line_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_line_id
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
+"Энэ дарааллыг Odoo автоматаар үүсгэдэг ч та үүнийг захиалгуудын сурвалжийн "
+"дугаарыг өөрчлөхийн тулд засварлах боломжтой."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:626
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "This tax is applied to any new product created in the catalog."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:701
 #, python-format
 msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Энэ гуйвуулга нь борлуулалтын цэгийн сэшнээс үүсгэгдсэн байна: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
-#: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
+#: model:ir.model.fields,help:point_of_sale.field_product_product__pos_categ_id
+#: model:ir.model.fields,help:point_of_sale.field_product_template__pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
+"Эдгээр ангилалууд нь ижил төрлийн барааг борлуулалтын цэг дээр бүлэглэхэд "
+"хэрэглэгддэг."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:690
 #, python-format
 msgid "Tip"
-msgstr ""
+msgstr "Зөвлөгөө"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tip_product_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
 msgid "Tip Product"
-msgstr ""
+msgstr "Шангийн бараа"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_tip
@@ -3867,71 +3889,81 @@ msgid "Tips"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_product_product_to_weight
-#: model:ir.model.fields,field_description:point_of_sale.field_product_template_to_weight
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "To Close"
+msgstr "Хаах"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
+#: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
+msgstr "Жигнүүрээр жигнэх"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
+msgid "To record new orders, start a new session."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:803
+#: code:addons/point_of_sale/models/pos_order.py:876
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr ""
+msgstr "Бараа(нууд) буцаахын тулд буцаан олголтыг бүртгэх сэшн нээх хэрэгтэй."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Today"
-msgstr ""
+msgstr "Өнөөдөр"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_total
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total"
-msgstr ""
+msgstr "Нийт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_total_entry_encoding
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_total_entry_encoding
 msgid "Total Cash Transaction"
-msgstr ""
+msgstr "Нийт Бэлэн мөнгөний Гүйлгээ"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_total_discount
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__total_discount
 msgid "Total Discount"
-msgstr ""
+msgstr "Нийт хөнгөлөлт"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_price_total
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
 msgid "Total Price"
-msgstr ""
+msgstr "Нийт Үнэ"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:868
 #, python-format
 msgid "Total Taxes"
-msgstr ""
+msgstr "Нийт Татвар"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_total_entry_encoding
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_total_entry_encoding
 msgid "Total of all paid sales orders"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end_real
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end_real
 msgid "Total of closing cash control lines."
-msgstr ""
+msgstr "Кассын хаалтын хяналтын мөрүүдийн дүн."
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_start
+#: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Нээлтийн үлдэгдлийн мөрүүдийн нийлбэр"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Total qty"
-msgstr ""
+msgstr "Нийт тоо"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3941,13 +3973,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total:"
-msgstr ""
+msgstr "Нийт:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:345
+#: code:addons/point_of_sale/models/pos_order.py:397
 #, python-format
 msgid "Trade Receivables"
-msgstr ""
+msgstr "Худалдааны авлага"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
+msgid "Type"
+msgstr "Төрөл"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:178
@@ -3958,35 +3995,45 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Нэгж Үнэ"
+
+#. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Unit Product"
+msgstr "Нэгж Бараа"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1036
 #, python-format
 msgid "Unknown Barcode"
-msgstr ""
+msgstr "Үл мэдэгдэх Баркод"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2023
+#: code:addons/point_of_sale/static/src/js/screens.js:2062
 #, python-format
 msgid "Unknown Error"
-msgstr ""
+msgstr "Үл мэдэгдэх Алдаа"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1324
+#: code:addons/point_of_sale/static/src/js/screens.js:1348
 #, python-format
 msgid "Unsupported File Format"
+msgstr "Дэмжигдээгүй Файлын Формат"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "Unused"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_existing_lots
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr ""
+msgstr "Байгаа Цувралын дугаарыг хэрэглэх"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3994,7 +4041,7 @@ msgid "Use a default specific tax regime"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_pricelist
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_pricelist
 msgid "Use a pricelist."
 msgstr ""
 
@@ -4009,104 +4056,86 @@ msgid "Use an integrated hardware setup like"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_account_journal_journal_user
+#: model:ir.model.fields,field_description:point_of_sale.field_account_journal__journal_user
 msgid "Use in Point of Sale"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_sale_pricelist
-msgid "Use pricelists to adapt your price per customers"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
-msgid ""
-"Use this menu to browse previous orders. To record new\n"
-"                orders, you may use the menu <i>Your Session</i> for\n"
-"                the touchscreen interface."
 msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:res.groups,name:point_of_sale.group_pos_user
 msgid "User"
-msgstr ""
+msgstr "Хэрэглэгч"
 
 #. module: point_of_sale
 #: model:ir.actions.report,name:point_of_sale.report_user_label
 msgid "User Labels"
-msgstr ""
+msgstr "Хэрэглэгчийн Шошгууд"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1453
 #, python-format
 msgid "User:"
-msgstr ""
+msgstr "Хэрэглэгч:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Хэрэглэгчид"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:751
 #, python-format
 msgid "VAT:"
-msgstr ""
+msgstr "НӨАТ:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:650
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "Батлах"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Validate Closing & Post Entries"
-msgstr ""
+msgstr "Хаалтын ба Батлагдсан Гүйлгээг Батлах"
 
 #. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_6
-#: model:product.template,name:point_of_sale.partner_product_6_product_template
-msgid "Vauxoo.com"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_vkeyboard
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_vkeyboard
 msgid "Virtual KeyBoard"
-msgstr ""
+msgstr "Хийсвэр Гар"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_stock_location_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__stock_location_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Агуулах"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Water"
-msgstr ""
+msgstr "Ус"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1366
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "Жинлэх"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:12
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Weighted Product"
-msgstr ""
+msgstr "Жигнэсэн бараа"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4122,33 +4151,28 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1473
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr " "
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Year"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.poivron_jaunes
-#: model:product.template,name:point_of_sale.poivron_jaunes_product_template
-msgid "Yellow Peppers"
-msgstr ""
+msgstr "Жил"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid ""
 "You can define another list of available currencies on the\n"
-"                                <i>Cash Registers</i> tab of the"
+"                                    <i>Cash Registers</i> tab of the"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:458
+#: code:addons/point_of_sale/models/pos_order.py:533
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
 msgstr ""
+"Аль хэдийн нэхэмжлэгдсэн ПОС захиалгын харилцагчийг өөрчлөх боломжгүй."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:33
@@ -4161,25 +4185,19 @@ msgstr ""
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:151
 #, python-format
-msgid "You cannot create two active sessions with the same responsible!"
+msgid "You cannot create two active sessions with the same responsible."
 msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
+#: code:addons/point_of_sale/models/product.py:38
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
 msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1938
-#, python-format
-msgid ""
-"You cannot have a negative amount in a Bank payment. Use a cash payment "
-"method to return money to the customer."
-msgstr ""
+"Сэшн нээлттэй байх үеэр борлуулалтын цэгт худалдах боломжтой барааг устгах "
+"боломжгүй."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:299
@@ -4200,44 +4218,52 @@ msgid ""
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
 msgstr ""
+"Борлуулалтын цэгт аль төлбөрийн арга нь боломжтой байхыг тодорхойлохын тулд "
+"одоо байгаа банк болон кассыг \"Нягтлан бодох бүртгэл / Тохиргоо / Журналууд"
+" / Журналууд\" - аар орж дахин ашиглах хэрэгтэй. Журналыг сонгоод "
+"\"Борлуулалтын Цэг\" таб дээр \"ПОС Төлбөрийн Арга\" талбарыг чагтална уу. "
+"Мөн та \"ПОС Арын хэсэг / Тохиргоо / Төлбөрийн Аргууд\" цэсээс шинэ "
+"төлбөрийн аргуудыг шууд үүсгэх боломжтой."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:778
+#: code:addons/point_of_sale/models/pos_order.py:851
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr ""
+msgstr "Дор хаяж нэг касс нээх хэрэгтэй"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:926
-#, python-format
-msgid "You have to select a pricelist in the sale form !"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:912
+#: code:addons/point_of_sale/models/pos_order.py:985
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
+msgstr ""
+"Борлуулалтын маягтад үнийн жагсаалтыг сонгох хэрэгтэй !\n"
+"Бараа сонгохоосоо өмнө нэгийг тааруулна уу."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:999
+#, python-format
+msgid "You have to select a pricelist in the sale form."
 msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:26
 #, python-format
 msgid "You have to set a Sale Journal for the POS:%s"
-msgstr ""
+msgstr "ПОС - д Борлуулалтын Журнал тохируулна уу:%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_details.py:48
 #, python-format
 msgid "You have to set a logo or a layout for your company."
-msgstr ""
+msgstr "Та компанидаа зориулж лого буюу зураглал хийх хэрэгтэй."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_details.py:50
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr ""
+msgstr "Та тайлангийн толгой ба хажуугийн байршлыг тохируулах ёстой."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -4245,33 +4271,35 @@ msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
 msgstr ""
+"Борлуулалтын цэгийн интерфейсээр худалдаж буй бүх зүйлсд \n"
+"бараа тодорхойлох ёстой."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2006
+#: code:addons/point_of_sale/static/src/js/screens.js:2045
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
-msgstr ""
+msgstr "Захиалгыг нэхэмжлэхээс өмнө захиалагчийг сонгоно уу."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:166
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr ""
+msgstr "Сэшнд Борлуулалтын Цэг оноож өгнө үү."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:55
+#: code:addons/point_of_sale/static/src/js/chrome.js:57
 #, python-format
 msgid "You will lose any data associated with the current order"
-msgstr ""
+msgstr "Энэ захиалгатай холбоотой бүх өгөгдлийг алдах болно"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1269
+#: code:addons/point_of_sale/static/src/js/screens.js:1286
 #, python-format
 msgid "Your Internet connection is probably down."
-msgstr ""
+msgstr "Таны интернэт холболт тасарсан бололтой."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:281
@@ -4281,68 +4309,58 @@ msgid ""
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
 msgstr ""
+"Таны хаах үлдэгдэл онолын касс хаалтаас (%.2f) хэтэрхий өөр байна. Боломжит "
+"хамгийн их нь: %.2f. Та менежертэйгээ холбогдож үүнийг хүчлэх боломжтой."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1309
 #, python-format
 msgid "Your shopping cart is empty"
-msgstr ""
+msgstr "Таны сагс хоосон байна"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:356
 #, python-format
 msgid "ZIP"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.courgette
-#: model:product.template,name:point_of_sale.courgette_product_template
-msgid "Zucchini"
-msgstr ""
+msgstr "ЗИП"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1282
 #, python-format
 msgid "at"
-msgstr ""
+msgstr "at"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1222
 #, python-format
 msgid "belong to another session:"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.product,name:point_of_sale.partner_product_8
-#: model:product.template,name:point_of_sale.partner_product_8_product_template
-msgid "camptocamp.com"
-msgstr ""
+msgstr "өөр сэшнд хамаарна:"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1578
 #, python-format
 msgid "caps lock"
-msgstr ""
+msgstr "caps lock"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_out
 msgid "cash.box.out"
-msgstr ""
+msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4350,7 +4368,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1647
 #, python-format
 msgid "close"
-msgstr ""
+msgstr "Хаах"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4358,14 +4376,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1640
 #, python-format
 msgid "delete"
-msgstr ""
+msgstr "устгах"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1292
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "Хөнгөлөлт"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4382,62 +4400,75 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/popups.js:109
 #, python-format
 msgid "error"
-msgstr ""
+msgstr "алдаа"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1971
+#: code:addons/point_of_sale/static/src/js/screens.js:2008
 #, python-format
 msgid "for an order of"
-msgstr ""
+msgstr "захиалгад"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:323
+#: model:product.product,weight_uom_name:point_of_sale.product_product_consumable
+#: model:product.product,weight_uom_name:point_of_sale.product_product_tip
+#: model:product.template,weight_uom_name:point_of_sale.product_product_consumable_product_template
+#: model:product.template,weight_uom_name:point_of_sale.product_product_tip_product_template
+msgid "kg"
+msgstr "кг"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:331
 #, python-format
 msgid "not used"
-msgstr ""
+msgstr "хэрэглэгдээгүй"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:292
+#: code:addons/point_of_sale/static/src/js/chrome.js:294
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1216
 #, python-format
 msgid "paid orders"
-msgstr ""
+msgstr "төлөгдсөн захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "payment method."
-msgstr ""
+msgstr "Төлбөрийн арга"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
 msgid "pos.config"
-msgstr ""
+msgstr "pos.config"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
 msgid "pos.session"
-msgstr ""
+msgstr "pos.session"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "report.point_of_sale.report_invoice"
-msgstr ""
+msgstr "report.point_of_sale.report_invoice"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "report.point_of_sale.report_saledetails"
-msgstr ""
+msgstr "report.point_of_sale.report_saledetails"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:145
+#: code:addons/point_of_sale/models/pos_order.py:148
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1590
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1645
 #, python-format
 msgid "return"
-msgstr ""
+msgstr "буцаах"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4445,33 +4476,33 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1602
 #, python-format
 msgid "shift"
-msgstr ""
+msgstr "shift"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1564
 #, python-format
 msgid "tab"
-msgstr ""
+msgstr "tab"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:284
+#: code:addons/point_of_sale/static/src/js/chrome.js:286
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "unpaid orders"
-msgstr ""
+msgstr "төлөгдөөгүй захиалгууд"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1219
 #, python-format
 msgid "unpaid orders could not be imported"
-msgstr ""
+msgstr "төлөгдөөгүй захиалгуудыг импортлож чадсангүй"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1221
 #, python-format
 msgid "were duplicates of existing orders"
-msgstr ""
+msgstr "одоо байгаа захиалгуудын хуулбар"

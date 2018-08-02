@@ -12,13 +12,15 @@
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 # Filip Cuk <filipcuk2@gmail.com>, 2017
 # Mario Jureša <mario.juresa@uvid.hr>, 2017
+# Marko Carević <marko.carevic@live.com>, 2018
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +64,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% popust i %s naplate"
 
 #. module: product
-#: code:addons/product/models/product_template.py:353
+#: code:addons/product/models/product_template.py:355
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -172,23 +174,30 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_needaction
+#: model:ir.model.fields,field_description:product.field_product_template__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
 #: model:ir.model.fields,field_description:product.field_product_product__active
 #: model:ir.model.fields,field_description:product.field_product_template__active
-#: model:ir.model.fields,field_description:product.field_product_uom__active
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active"
 msgstr "Aktivan"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid "Add a new unit of measure"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_product__activity_ids
+#: model:ir.model.fields,field_description:product.field_product_template__activity_ids
+msgid "Activities"
+msgstr "Aktivnosti"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid "Add a new unit of measure category"
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_product__activity_state
+#: model:ir.model.fields,field_description:product.field_product_template__activity_state
+msgid "Activity State"
+msgstr "Status aktivnosti"
 
 #. module: product
 #: model:product.category,name:product.product_category_all
@@ -324,16 +333,6 @@ msgid "Big-sized image"
 msgstr "Velika slika"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom__factor_inv
-msgid "Bigger Ratio"
-msgstr "Veći omjer"
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Bigger than the reference Unit of Measure"
-msgstr "Veće od referentne jedinice mjere"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Izračun cijene proizvoda po jedinici bazirano na verziji cjenika."
@@ -362,11 +361,6 @@ msgstr "Može se prodavati"
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Cancel"
 msgstr "Odustani"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom__category_id
-msgid "Category"
-msgstr "Kategorija"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -450,26 +444,6 @@ msgid "Contained Quantity"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom__category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Konverzija jedinica mjere može se vršiti samo za jedinice mjere koje "
-"pripadaju istoj kategoriji. Konverzija će se izvršiti temeljem omjera "
-"jedinica mjere."
-
-#. module: product
-#: code:addons/product/models/product_uom.py:98
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
-msgstr ""
-"Konverzija između JM Proizvoda %s i zadane JM %s nije moguća jer te dvije "
-"pripadaju u različite kategorije!"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history__cost
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
 #: model:ir.model.fields,field_description:product.field_product_template__standard_price
@@ -540,8 +514,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__create_uid
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_uid
 #: model:ir.model.fields,field_description:product.field_product_template__create_uid
-#: model:ir.model.fields,field_description:product.field_product_uom__create_uid
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
@@ -559,8 +531,6 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:product.field_product_product__create_date
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_date
 #: model:ir.model.fields,field_description:product.field_product_template__create_date
-#: model:ir.model.fields,field_description:product.field_product_uom__create_date
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__create_date
 msgid "Created on"
 msgstr "Datum kreiranja"
 
@@ -582,11 +552,6 @@ msgstr "Šifra kupca"
 #: model:ir.model.fields,field_description:product.field_product_price_history__datetime
 msgid "Date"
 msgstr "Datum"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day(s)"
-msgstr "Dan(a)"
 
 #. module: product
 #: code:addons/product/models/res_company.py:59
@@ -627,6 +592,11 @@ msgid "Description for Customers"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value__sequence
 msgid "Determine the display order"
@@ -646,16 +616,9 @@ msgstr "Odredite redoslijed prikaza"
 #: model:ir.model.fields,field_description:product.field_product_product__display_name
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:product.field_product_template__display_name
-#: model:ir.model.fields,field_description:product.field_product_uom__display_name
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen(s)"
-msgstr "Tucet(i)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -674,19 +637,7 @@ msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:56
-#, python-format
-msgid "Error ! You cannot create recursive categories."
-msgstr "Greška! Nemožete kreirati rekurzivne kategorije."
-
-#. module: product
-#: code:addons/product/models/product_attribute.py:101
-#, python-format
-msgid "Error ! You cannot use this attribute with the following value."
-msgstr "Greška ! Ne možete koristiti ovu značajku sa sljedećim vrijednostima."
-
-#. module: product
-#: code:addons/product/models/product.py:288
+#: code:addons/product/models/product.py:291
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -695,30 +646,9 @@ msgstr ""
 "Greška! Nije dopušteno odabrati više od jedne vrijednosti za danu značajku."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:427
-#, python-format
-msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr "Greška! Minimalna marža bi trebala biti manja od  maksimalne marže."
-
-#. module: product
-#: code:addons/product/models/product_pricelist.py:421
-#, python-format
-msgid ""
-"Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Greška! nemožete dodijeliti Glavni cjenik kao Dugi cjenik u Stavkama "
-"cjenika!"
-
-#. module: product
-#: code:addons/product/models/product_template.py:303
-#, python-format
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-"Greška! Zadana jedinica mjere i nabavna jedinica mjere moraju biti u istoj "
-"kategoriji."
+#: model:product.category,name:product.cat_expense
+msgid "Expenses"
+msgstr "Troškovi"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
@@ -735,6 +665,24 @@ msgstr "Fiksna cijena"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
 msgid "Fixed Price"
 msgstr "Fiksna cijena"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_channel_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -787,27 +735,6 @@ msgid "Group By"
 msgstr "Grupiraj po"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_hour
-msgid "Hour(s)"
-msgstr "Sat(i)"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_uom__factor_inv
-msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_uom__factor
-msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-"Koliko je ova jedinica veća ili manja od referentne jedinice mjere za ovu kategoriju:\n"
-"1 * (referentna jedinica) = omjer * (ova jedinica)"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_line__id
 #: model:ir.model.fields,field_description:product.field_product_attribute_price__id
@@ -821,11 +748,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:product.field_product_template__id
-#: model:ir.model.fields,field_description:product.field_product_uom__id
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
 msgid "ID"
 msgstr "ID"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_unread
+#: model:ir.model.fields,help:product.field_product_template__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_needaction
+#: model:ir.model.fields,help:product.field_product_template__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_has_error
+#: model:ir.model.fields,help:product.field_product_template__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -901,6 +844,12 @@ msgid "Inventory"
 msgstr "Skladište"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
+#: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
@@ -925,8 +874,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product____last_update
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo____last_update
 #: model:ir.model.fields,field_description:product.field_product_template____last_update
-#: model:ir.model.fields,field_description:product.field_product_uom____last_update
-#: model:ir.model.fields,field_description:product.field_product_uom_categ____last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
@@ -945,8 +892,6 @@ msgstr "Zadnja promjena"
 #: model:ir.model.fields,field_description:product.field_product_product__write_uid
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_uid
 #: model:ir.model.fields,field_description:product.field_product_template__write_uid
-#: model:ir.model.fields,field_description:product.field_product_uom__write_uid
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
@@ -964,8 +909,6 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_date
 #: model:ir.model.fields,field_description:product.field_product_template__write_date
-#: model:ir.model.fields,field_description:product.field_product_uom__write_date
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
@@ -983,41 +926,24 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category__parent_left
-msgid "Left Parent"
-msgstr "Left Parent"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_length
-msgid "Length / Distance"
-msgstr "Duljina / udaljenost"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
 msgid "Lines"
 msgstr "Stavke"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Liter(s)"
-msgstr "Litra(e)"
-
-#. module: product
-#: model:res.groups,name:product.group_uom
-msgid "Manage Multiple Units of Measure"
-msgstr "Upravljanje sa više jedinica mjere"
-
-#. module: product
+#: model:ir.model.fields,field_description:product.field_res_users__has_group_pricelist_item
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
 msgstr "Upravljaj stavkama cjenika"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_users__has_group_stock_packaging
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
 msgstr "Upravljaj pakiranjem proizvoda"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_users__has_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
 msgstr "Upravljaj varijantama proizvoda"
@@ -1050,6 +976,18 @@ msgstr ""
 "Koristite ovo polje u pogledima forme ili kanban pogledima."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_error
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr "Min. marža"
@@ -1075,7 +1013,6 @@ msgstr "Minimalna količina"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
 #: model:ir.model.fields,field_description:product.field_product_product__name
 #: model:ir.model.fields,field_description:product.field_product_template__name
-#: model:ir.model.fields,field_description:product.field_product_uom_categ__name
 msgid "Name"
 msgstr "Naziv"
 
@@ -1083,6 +1020,54 @@ msgstr "Naziv"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "New Price ="
 msgstr "Nova cijena ="
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_summary
+#: model:ir.model.fields,field_description:product.field_product_template__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sažetak sljedeće aktivnosti"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
+#: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
+#: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_unread_counter
+#: model:ir.model.fields,help:product.field_product_template__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1094,6 +1079,12 @@ msgstr "Ostali podaci"
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
 msgstr "Drugi cjenik"
+
+#. module: product
+#: selection:product.product,activity_state:0
+#: selection:product.template,activity_state:0
+msgid "Overdue"
+msgstr "Dospjelo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
@@ -1115,6 +1106,11 @@ msgid "Parent Category"
 msgstr "Nadređena kategorija"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__parent_path
+msgid "Parent Path"
+msgstr ""
+
+#. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
 msgstr "Postotak (popust)"
@@ -1123,6 +1119,12 @@ msgstr "Postotak (popust)"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
 msgstr "Postotak cijena"
+
+#. module: product
+#: selection:product.product,activity_state:0
+#: selection:product.template,activity_state:0
+msgid "Planned"
+msgstr "Planirano"
 
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
@@ -1242,6 +1244,7 @@ msgid "Pricelists"
 msgstr "Cjenici"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_users__has_group_product_pricelist
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
 msgstr "Cjenici proizvoda"
@@ -1270,6 +1273,7 @@ msgstr "Ispis"
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_id
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_search_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
@@ -1360,16 +1364,6 @@ msgid "Product Type"
 msgstr "Tip artikla"
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom
-msgid "Product Unit of Measure"
-msgstr "JM proizvoda"
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product UoM Categories"
-msgstr "Kategorije jedinica mjera proizvoda"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1418,7 +1412,7 @@ msgid "Products Price Search"
 msgstr "Pretraživanje cijena proizvoda"
 
 #. module: product
-#: code:addons/product/models/product.py:454
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -1438,11 +1432,6 @@ msgstr "Javni cjenik"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Purchase"
 msgstr "Nabava"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Purchase Bills"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_purchase
@@ -1482,34 +1471,20 @@ msgid "Quantity-5"
 msgstr "Količina-5"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom__factor
-msgid "Ratio"
-msgstr "Omjer"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 msgid "Reference"
 msgstr "Vezna oznaka"
 
 #. module: product
-#: selection:product.uom,uom_type:0
-msgid "Reference Unit of Measure for this category"
-msgstr "Referentna jedinica mjere za ovu kategoriju"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_category__parent_right
-msgid "Right Parent"
-msgstr "Desni roditelj"
+#: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
+msgid "Responsible User"
+msgstr "Odgovorna osoba"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Rounding Method"
 msgstr "Metoda zaokruživanja"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom__rounding
-msgid "Rounding Precision"
-msgstr "Točnost zaokruživanja"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_sale
@@ -1547,6 +1522,7 @@ msgid "Sales Price"
 msgstr "Prodajna cijena"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_res_users__has_group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
 msgstr "Prodajni cjenici"
@@ -1634,11 +1610,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: selection:product.uom,uom_type:0
-msgid "Smaller than the reference Unit of Measure"
-msgstr "Manje od referentne jedinice mjere"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -1708,6 +1679,16 @@ msgid "Starting date for the pricelist item validation"
 msgstr "Početni datum za potvrdu stavke cjenika"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_product__activity_state
+#: model:ir.model.fields,help:product.field_product_template__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
 msgstr "Uskladištivi proizvod"
@@ -1727,16 +1708,12 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom__rounding
+#: code:addons/product/models/product_template.py:304
+#, python-format
 msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
-"of Measure that cannot be further split, such as a piece."
+"The default Unit of Measure and the purchase Unit of Measure must be in the "
+"same category."
 msgstr ""
-
-#. module: product
-#: sql_constraint:product.uom:0
-msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "Koeficijent pretvorbe ne smije biti 0!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
@@ -1752,6 +1729,12 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/product_pricelist.py:427
+#, python-format
+msgid "The minimum margin should be lower than the maximum margin."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
@@ -1759,7 +1742,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -1770,11 +1753,6 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
 msgstr "CIjena za kupnju proizvoda"
-
-#. module: product
-#: sql_constraint:product.uom:0
-msgid "The rounding precision must be greater than 0!"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -1834,6 +1812,11 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will show up on sales orders & invoices."
 msgstr ""
 
@@ -1866,71 +1849,48 @@ msgstr ""
 "prazno ukoliko želite ispisati interni naziv."
 
 #. module: product
+#: selection:product.product,activity_state:0
+#: selection:product.template,activity_state:0
+msgid "Today"
+msgstr "Danas"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Today Activities"
 msgstr "Današnje aktivnosti"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom__uom_type
-msgid "Type"
-msgstr "Vrsta"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_uom__active
-msgid ""
-"Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
-"Odznačite aktivno polje kako biste onemogućili jedinicu mjere, a da je ne "
-"izbrišete."
-
-#. module: product
-#: model:product.uom.categ,name:product.product_uom_categ_unit
-msgid "Unit"
-msgstr "Jedinica"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_id
-#: model:ir.model.fields,field_description:product.field_product_uom__name
 msgid "Unit of Measure"
 msgstr "Jedinica mjere"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-msgid "Unit of Measure Categories"
-msgstr "Kategorije JM"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_unit
-msgid "Unit(s)"
-msgstr "kom"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
-#: model:ir.ui.view,arch_db:product.product_uom_form_view
-#: model:ir.ui.view,arch_db:product.product_uom_tree_view
 msgid "Units of Measure"
 msgstr "Jedinice mjere"
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
-msgid "Units of Measure categories"
-msgstr "Kategorije jedinica mjere"
+#: model:ir.model.fields,field_description:product.field_product_product__message_unread
+#: model:ir.model.fields,field_description:product.field_product_template__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Units of measure belonging to the same category can be\n"
-"            converted between each others. For example, in the category\n"
-"            <i>'Time'</i>, you will have the following units of measure:\n"
-"            Hours, Days."
-msgstr ""
+#: model:ir.model.fields,field_description:product.field_product_product__message_unread_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
 msgstr "Koristite cjenik za prilagodbu cijena po kupcima"
+
+#. module: product
+#: model:ir.model,name:product.model_res_users
+msgid "Users"
+msgstr "Korisnici"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2002,6 +1962,11 @@ msgid "Vendor"
 msgstr "Dobavljač"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Vendor Bills"
+msgstr "Ulazni računi"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
@@ -2042,14 +2007,24 @@ msgstr "Dobavljači"
 #: model:ir.model.fields,field_description:product.field_product_product__volume
 #: model:ir.model.fields,field_description:product.field_product_template__volume
 #: model:ir.ui.view,arch_db:product.product_template_form_view
-#: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Volumen"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__website_message_ids
+#: model:ir.model.fields,help:product.field_product_template__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
-#: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Težina"
 
@@ -2083,15 +2058,23 @@ msgid "Weights"
 msgstr "Težine"
 
 #. module: product
-#: model:product.uom.categ,name:product.uom_categ_wtime
-msgid "Working Time"
-msgstr "Radno vrijeme"
-
-#. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:421
+#, python-format
+msgid ""
+"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product.py:54
+#, python-format
+msgid "You cannot create recursive categories."
 msgstr ""
 
 #. module: product
@@ -2100,6 +2083,12 @@ msgstr ""
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:102
+#, python-format
+msgid "You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
@@ -2112,13 +2101,6 @@ msgstr ""
 #: code:addons/product/wizard/product_price_list.py:28
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"You must define a conversion rate between several Units of\n"
-"            Measure within the same category."
 msgstr ""
 
 #. module: product
@@ -2148,12 +2130,8 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_cm
-msgid "cm"
-msgstr "cm"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 msgid "days"
 msgstr "dana"
 
@@ -2178,63 +2156,8 @@ msgid "e.g. USD Retailers"
 msgstr "npr. USD Retailers"
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_uom_form_view
-msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr "npr. : 1* (referentna jedinica) = omjer * (ova jedinica)"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_uom_form_view
-msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "npr. 1 + (ova JM) = omjer * (referentna jedinica)"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_floz
-msgid "fl oz"
-msgstr "fl oz"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_foot
-msgid "foot(ft)"
-msgstr "stopa(ft)"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_gal
-msgid "gal(s)"
-msgstr "galon(a)"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_inch
-msgid "inch(es)"
-msgstr "inč(a)"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
-msgstr "kg"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_km
-msgid "km"
-msgstr "km"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_lb
-msgid "lb(s)"
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_mile
-msgid "mile(s)"
-msgstr "milja(e)"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_oz
-msgid "oz(s)"
-msgstr ""
-
-#. module: product
-#: code:addons/product/models/product.py:559
-#: code:addons/product/models/product_template.py:479
+#: code:addons/product/models/product.py:570
+#: code:addons/product/models/product_template.py:484
 #, python-format
 msgid "product"
 msgstr ""
@@ -2258,11 +2181,6 @@ msgstr "product.attribute.value"
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
 msgstr "product.price.history"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_qt
-msgid "qt"
-msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist

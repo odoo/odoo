@@ -12,13 +12,15 @@
 # Talway <9010446@qq.com>, 2018
 # Jonathon Li <jonathonli@gmail.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# Xu Lei <xulei8@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:41
+#: code:addons/hr_payroll/models/hr_salary_rule.py:42
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -138,6 +140,11 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
+msgid "Account Accountant"
+msgstr "会计"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -263,7 +270,7 @@ msgid "Cancel Payslip"
 msgstr "取消工资单"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:98
+#: code:addons/hr_payroll/models/hr_payslip.py:96
 #, python-format
 msgid "Cannot cancel a payslip that is done."
 msgstr "不能取消完成的工资单"
@@ -608,6 +615,11 @@ msgid "Employee's Advantage on Contract"
 msgstr "雇员在合同中的优势"
 
 #. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Employee's working schedule."
+msgstr "员工的工作时间表"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__employee_ids
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -616,10 +628,16 @@ msgid "Employees"
 msgstr "员工"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#: code:addons/hr_payroll/models/hr_salary_rule.py:92
 #, python-format
-msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr "错误!您不能创建递归的薪资结构。"
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:177
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__register_id
@@ -900,7 +918,7 @@ msgid "Net Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:199
+#: code:addons/hr_payroll/models/hr_payslip.py:201
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "正常工作日100%付薪"
@@ -994,6 +1012,7 @@ msgstr "工资单名称"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
+#: model:ir.model.fields,field_description:hr_payroll.field_res_users__group_hr_payroll_user
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
@@ -1026,10 +1045,10 @@ msgid "Payslip"
 msgstr "工资单"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:84
+#: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
-msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "工资单的开始日期必须在结束日期之前"
+msgid "Payslip 'Date From' must be earlier 'Date To'."
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1216,7 +1235,7 @@ msgid "Refund"
 msgstr "退款"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:104
+#: code:addons/hr_payroll/models/hr_payslip.py:102
 #, python-format
 msgid "Refund: "
 msgstr "退款："
@@ -1250,16 +1269,9 @@ msgstr "薪资计算"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "薪资规则类别"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "薪资规则类别层级"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
@@ -1287,8 +1299,8 @@ msgid "Salary Rules"
 msgstr "薪资规则"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:401
-#: code:addons/hr_payroll/models/hr_payslip.py:451
+#: code:addons/hr_payroll/models/hr_payslip.py:403
+#: code:addons/hr_payroll/models/hr_payslip.py:453
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "工资条：%s %s"
@@ -1465,6 +1477,11 @@ msgid "Used to display the salary rule on payslip."
 msgstr "用于工资单显示薪资规则"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_users
+msgid "Users"
+msgstr "用户"
+
+#. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
 msgstr "正在等待"
@@ -1490,37 +1507,48 @@ msgid "Worked Days & Inputs"
 msgstr "工作天数及输入"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:198
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Working Schedule"
+msgstr "工作安排"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:209
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr "薪资规则 %s (%s)百分比基数或者数量定义错误。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:204
+#: code:addons/hr_payroll/models/hr_salary_rule.py:215
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "薪资规则 %s (%s) Python代码定义错误"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:227
+#: code:addons/hr_payroll/models/hr_salary_rule.py:238
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "薪资规则 %s (%s) Python条件定义错误。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:191
+#: code:addons/hr_payroll/models/hr_salary_rule.py:202
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "为薪资规则  %s (%s) 定义的数量错误。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:221
+#: code:addons/hr_payroll/models/hr_salary_rule.py:232
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "薪资规则%s (%s) 范围条件定义错误。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:129
+#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#, python-format
+msgid "You cannot create a recursive salary structure."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:127
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr "你不能删除非草稿或者取消状态的工资单！"
@@ -1532,7 +1560,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "您必须选择员工以生成工资单。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:522
+#: code:addons/hr_payroll/models/hr_payslip.py:524
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "您必须设置一份合同以便创建工资核算单。"

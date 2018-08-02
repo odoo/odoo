@@ -15,10 +15,10 @@
 # Tina Milas, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Tina Milas, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,11 @@ msgstr "<span>Izvještaji</span>"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
 msgstr "<span>Pogled</span>"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -175,6 +180,21 @@ msgstr ""
 "članovima tima."
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Graph"
 msgstr "Dijagram"
@@ -200,6 +220,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
@@ -218,6 +253,11 @@ msgstr ""
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Invoices"
 msgstr "Računi"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
@@ -260,6 +300,16 @@ msgid "Manager"
 msgstr "Voditelj"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
 msgid "Month"
 msgstr "Mjesec"
@@ -274,6 +324,31 @@ msgstr "Moji favoriti"
 #, python-format
 msgid "Not Defined"
 msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -294,6 +369,7 @@ msgstr "Odgovori na"
 #: selection:crm.team,dashboard_graph_model:0
 #: model:crm.team,name:sales_team.team_sales_department
 #: selection:crm.team,team_type:0
+#: model:ir.model.fields,field_description:sales_team.field_res_users__group_sales_team_user
 msgid "Sales"
 msgstr "Prodaja"
 
@@ -415,6 +491,16 @@ msgid "Undefined graph model for Sales Channel: %s"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
@@ -433,6 +519,14 @@ msgid "User: Own Documents Only"
 msgstr "Korisnik: samo vlastiti dokumenti"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users__group_sales_team_user
+msgid ""
+"User: Own Documents Only: the user will have access to his own data in the sales application.\n"
+"User: All Documents: the user will have access to all records of everyone in the sales application.\n"
+"Manager: the user will have an access to the sales configuration as well as statistic reports."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Korisnici"
@@ -442,6 +536,16 @@ msgstr "Korisnici"
 #: selection:crm.team,team_type:0
 msgid "Website"
 msgstr "Web stranica"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0

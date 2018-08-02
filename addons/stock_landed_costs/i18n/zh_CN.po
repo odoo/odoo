@@ -12,13 +12,15 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,10 +29,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:343
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:347
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:364
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:368
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:344
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:348
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:365
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:369
 #, python-format
 msgid " already out"
 msgstr "已退订"
@@ -44,6 +46,11 @@ msgstr "科目"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
 msgid "Account Journal"
 msgstr "科目日记账"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -134,6 +141,7 @@ msgstr "创建时间"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Date"
 msgstr "日期"
 
@@ -195,6 +203,21 @@ msgid "Final Cost"
 msgstr "最终成本"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Former Cost"
 msgstr "前成本"
@@ -217,6 +240,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "信息"
@@ -225,6 +263,11 @@ msgstr "信息"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 msgid "Inventory Valuation"
 msgstr "库存计价"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -302,9 +345,14 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-msgid "Month"
-msgstr "月份"
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
+msgid "Messages"
+msgstr "消息"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
@@ -327,6 +375,31 @@ msgid ""
 msgstr "没有估值调整明细。 你也许应该重新计算成本。"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
+
+#. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:87
 #, python-format
 msgid "Only draft landed costs can be validated"
@@ -338,7 +411,7 @@ msgid "Pickings"
 msgstr "分拣"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:310
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:312
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "请配置产品: %s的库存费用帐户。"
@@ -414,7 +487,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "库存计价调整明细行"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:158
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:161
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -427,6 +500,16 @@ msgstr "选择的分拣不包含任何影响到岸成本的移动。登录成本
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
 msgid "Total"
 msgstr "总计"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -451,6 +534,16 @@ msgstr "计价调整"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
 msgid "Volume"
 msgstr "体积"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight

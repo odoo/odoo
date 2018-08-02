@@ -3,23 +3,23 @@
 # * website_livechat
 # 
 # Translators:
-# ТАрас <tratatuta@i.ua>, 2017
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2018
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -32,29 +32,29 @@ msgid "Channel"
 msgstr "Канал"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
 msgstr "Опис каналу відображається на сайті"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Live Chat"
-msgstr ""
+msgstr "Живий чат"
+
+#. module: website_livechat
+#: model:website.menu,name:website_livechat.menu_livechat
+msgid "Live Support"
+msgstr "Жива підтримка"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Live chat channel of your website"
-msgstr ""
+msgstr "Чат-канал на вашому веб-сайті"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
 msgstr "Канал живого чату"
-
-#. module: website_livechat
-#: model:ir.ui.view,arch_db:website_livechat.header_footer_custom
-msgid "Livechat Support"
-msgstr "Підтримка"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
@@ -77,6 +77,11 @@ msgid "The Team"
 msgstr "Група обговорення"
 
 #. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL-адреса повністю, для доступу до документації через сайт"
+
+#. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
 msgstr "Немає відкритих чат-каналів для відображення."
@@ -87,22 +92,32 @@ msgid "This is no rating for this channel for now."
 msgstr "Наразі немає рейтингу для цього чату."
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible in Website"
+msgstr "Видимий на сайті"
+
+#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "Веб-сайт"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
 msgid "Website Live Channel"
-msgstr ""
+msgstr "Живи канал веб-сайту"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
 msgstr "Канал чату на сайті"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr "URL сайту"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
 msgstr "Опис сайту"
 

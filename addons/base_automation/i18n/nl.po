@@ -9,13 +9,14 @@
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
+"Last-Translator: e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +81,7 @@ msgid "Assigned to admin user"
 msgstr "Toegewezen aan administrator gebruiker"
 
 #. module: base_automation
+#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
 msgstr "Geautomatiseerde actie"
@@ -417,6 +419,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Vul het veld in welke gebruikt wordt om het nieuw aangemaakte veld te linken"
+" aan het veld gebruikt door de server actie."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -439,9 +443,19 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: base_automation
+#: selection:ir.actions.server,usage:0
+msgid "Scheduled Action"
+msgstr "Geplande actie"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
 msgstr "Reeks"
+
+#. module: base_automation
+#: selection:ir.actions.server,usage:0
+msgid "Server Action"
+msgstr "Serveractie"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -460,7 +474,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Zet een nieuwe geautomatiseerde automatisering op "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -471,6 +485,14 @@ msgstr "Status"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
 msgid "Subject"
 msgstr "Onderwerp"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:87
+#, python-format
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -504,6 +526,7 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
 msgid "Usage"
 msgstr "Gebruik"
 
@@ -536,6 +559,12 @@ msgstr "Gebruiker"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
 msgstr "Waarde verdeling"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:86
+#, python-format
+msgid "Warning"
+msgstr "Waarschuwing"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

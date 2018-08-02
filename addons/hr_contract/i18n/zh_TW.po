@@ -3,15 +3,17 @@
 # * hr_contract
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,355 +24,490 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
-msgstr ""
+msgstr "<span class=「text-muted」>(If fixed-term contract)</span>"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span>/ month</span>"
-msgstr ""
+msgstr "<span>/ 月</span>"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
+msgid "Action Needed"
+msgstr "需要採取行動"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
+msgid "Active"
+msgstr "有效"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
+msgid "Activity State"
+msgstr "活動狀態"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
 msgid "Advantages"
-msgstr ""
+msgstr "補貼"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr ""
+msgstr "津貼..."
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Archived"
+msgstr "歸檔"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "Cancelled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
 msgid "Company Vehicle"
+msgstr "公司汽車"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
+msgid "Contract Count"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Details"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
-msgstr ""
+msgstr "合同參考編號"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Terms"
-msgstr ""
+msgstr "合同條款"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5898
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contract Type"
-msgstr ""
+msgstr "合同類型"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
 msgid "Contract Types"
-msgstr ""
+msgstr "合同類型"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "合同即將到期"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "合同到期"
 
 #. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:100
+#: code:addons/hr_contract/models/hr_contract.py:99
 #, python-format
-msgid "Contract start date must be less than contract end date."
+msgid "Contract start date must be earlier than contract end date."
 msgstr ""
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "需續簽的合同"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_ids
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contracts_count
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__group_hr_contract_user
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Contracts"
+msgstr "合同"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Create a new contract"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
 msgid "Currency"
 msgstr "貨幣"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "目前合同"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "目前員工"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
 msgid "Department"
-msgstr ""
+msgstr "部門"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
-msgstr ""
+msgstr "編輯合同"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
-msgstr ""
+msgstr "員工"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__type_id
+msgid "Employee Category"
+msgstr "員工類別"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
 msgid "Employee Contract"
-msgstr ""
+msgstr "員工合同"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
+msgid "Employee Contracts"
+msgstr "員工合同"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 msgid "Employee's monthly gross wage."
-msgstr ""
+msgstr "員工月薪資總額。"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Employee's working schedule."
-msgstr ""
+msgstr "員工的工作時間表"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
 msgid "End Date"
-msgstr ""
+msgstr "終止日期"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr ""
+msgstr "合同終止日期（如果是固定期限合同）。"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr ""
+msgstr "試用期結束日期（如果有的話）。"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
 msgid "End of Trial Period"
-msgstr ""
+msgstr "試用期結束"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "到期"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
+msgid "Followers"
+msgstr "訂閱者"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "關注者(渠道)"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "關注者(業務夥伴)"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
+msgstr "給了顯示合同列表時的順序。"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__reported_to_secretariat
+msgid ""
+"Green this button when the contract information has been transfered to the "
+"social secretariat."
 msgstr ""
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
 #: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
-msgstr ""
+msgstr "人力資源合同：更新狀態"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
-msgid "Home-Work Dist."
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要您留意的新信息。"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾選此項，有新消息會提醒您。"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Important Messages"
-msgstr ""
+msgstr "重要信息"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
-msgid "In kilometers"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
+msgid "Is Follower"
+msgstr "是訂閱者"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__manager
 msgid "Is a Manager"
-msgstr ""
+msgstr "是經理"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job"
-msgstr ""
+msgstr "工作"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
 msgid "Job Position"
-msgstr ""
+msgstr "工作職缺"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type___last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Latest contract of the employee"
-msgstr ""
+msgstr "員工的最新合同"
+
+#. module: hr_contract
+#: model:res.groups,name:hr_contract.group_hr_contract_manager
+msgid "Manager"
+msgstr "經理"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
+msgstr "體檢"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
+msgid "Medical Examination Date"
+msgstr "體檢日期"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
+msgid "Message Delivery error"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
-msgid "Medical Examination Date"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
+msgid "Messages"
+msgstr "消息"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Monthly Advantages in Cash"
-msgstr ""
+msgstr "每月現金獲利"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "New"
-msgstr "新增"
+msgstr "新建"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活動截止日期"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活動摘要"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活動類型"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
+msgstr "便簽"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行動數量"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
+msgid "Number of error"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
-msgid "Number of Children"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行動消息的數量"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Other Information"
-msgstr "其他資訊"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未讀消息的數量"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
-msgid "Place of Birth"
-msgstr ""
+#: selection:hr.contract,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
+
+#. module: hr_contract
+#: selection:hr.contract,activity_state:0
+msgid "Planned"
+msgstr "已安排"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id
+msgid "Responsible User"
+msgstr "責任用戶"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "Running"
-msgstr ""
+msgstr "運行中"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
-msgstr ""
+msgstr "薪資信息"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
-msgstr ""
+msgstr "搜尋合同"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Search Contract Type"
-msgstr ""
+msgstr "搜尋合同類型"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__sequence
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
 msgstr "序列"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
-msgid "Start Date"
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
+msgid "Social Secretariat"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
+msgid "Start Date"
+msgstr "開始日期"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_start
 msgid "Start date of the contract."
-msgstr ""
+msgstr "合同的開始日期。"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -378,43 +515,91 @@ msgid "State"
 msgstr "州/省"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
 msgid "Status"
 msgstr "狀態"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_state
-msgid "Status of the contract"
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
+"根據活動的狀態 \n"
+" 逾期：已經超過截止日期 \n"
+" 現今：活動日期是當天 \n"
+" 計劃：未來的活動。"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__state
+msgid "Status of the contract"
+msgstr "合同狀態"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
+msgstr "待續約"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "To Report to Social Secretariat"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
+#: selection:hr.contract,activity_state:0
+msgid "Today"
+msgstr "今日"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread
+msgid "Unread Messages"
+msgstr "未讀消息"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未讀消息計數器"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_res_users
+msgid "Users"
+msgstr "使用者"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
 msgid "Visa Expire Date"
-msgstr ""
+msgstr "簽證到期日期"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
 msgid "Visa No"
-msgstr ""
+msgstr "簽證號"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
 msgid "Wage"
-msgstr ""
+msgstr "薪資"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
+msgid "Website Messages"
+msgstr "網站信息"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
+msgid "Website communication history"
+msgstr "網站溝通記錄"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
-msgstr ""
+msgstr "工作許可編號"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Working Schedule"
-msgstr ""
+msgstr "工作安排"

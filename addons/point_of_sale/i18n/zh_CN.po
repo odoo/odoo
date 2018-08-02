@@ -9,21 +9,25 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # Alex Duan <alex.duan@elico-corp.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# mrshelly <mrshelly@hotmail.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# Gang LIU <liu9ang@hotmail.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,8 +36,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:866
-#: code:addons/point_of_sale/models/pos_order.py:875
+#: code:addons/point_of_sale/models/pos_order.py:880
+#: code:addons/point_of_sale/models/pos_order.py:889
 #, python-format
 msgid " REFUND"
 msgstr "退款"
@@ -78,7 +82,7 @@ msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:83
+#: code:addons/point_of_sale/models/pos_order.py:85
 #, python-format
 msgid "(RESCUE FOR %(session)s)"
 msgstr "（救援%(session)s）"
@@ -104,7 +108,7 @@ msgid "<i class=\"fa fa-eye-slash\"/>Hide"
 msgstr "<i class=\"fa fa-eye-slash\"/>隐藏"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>如何管理含税价格"
 
@@ -255,14 +259,14 @@ msgstr "=理论的期末余额"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2009
+#: code:addons/point_of_sale/static/src/js/screens.js:2012
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? 点击 \"确认\"  将验证付款."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1258
+#: code:addons/point_of_sale/static/src/js/screens.js:1260
 #, python-format
 msgid "A Customer Name Is Required"
 msgstr "客户名称是必须的"
@@ -322,9 +326,9 @@ msgid "ABC"
 msgstr "ABC"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Accept payments with an integrated card reader"
-msgstr "接受付款与一个集成的读卡器"
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Accept payments with a credit card reader"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
@@ -359,7 +363,7 @@ msgstr "有效"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1859
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Add Tip"
 msgstr "添加提示"
@@ -388,7 +392,17 @@ msgid "Address"
 msgstr "地址"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:250
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Advanced Currencies Setup"
+msgstr ""
+
+#. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Alias"
+msgstr "别名"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:244
 #, python-format
 msgid ""
 "All available pricelists must be in the same currency as the company or as "
@@ -397,7 +411,7 @@ msgid ""
 msgstr "所有可用的价目表必须在相同的货币作为公司或销售日记账设置该销售点，如果您使用的会计应用。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:256
+#: code:addons/point_of_sale/models/pos_config.py:250
 #, python-format
 msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
@@ -418,15 +432,6 @@ msgstr "允许收银员再次打印收据"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow global discounts on orders"
 msgstr "订单全场折扣"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__group_sale_pricelist
-msgid ""
-"Allows to manage different prices based on rules per category of customers.\n"
-"                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"允许根据客户的类别管理不同的定价规则。\n"
-"例如：零售打折10%，特定产品促销5欧元等。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -463,7 +468,7 @@ msgstr "应用折扣"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2001
+#: code:addons/point_of_sale/static/src/js/screens.js:2004
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
 msgstr "你确定客户想要付款吗"
@@ -549,6 +554,7 @@ msgstr "银行对账单明细"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:380
 #: code:addons/point_of_sale/static/src/xml/pos.xml:443
+#: model:ir.model.fields,field_description:point_of_sale.field_res_partner__barcode
 #, python-format
 msgid "Barcode"
 msgstr "条码"
@@ -621,7 +627,7 @@ msgstr "已取消"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1990
+#: code:addons/point_of_sale/static/src/js/screens.js:1993
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr "不能改变无现金支付的方法"
@@ -667,14 +673,10 @@ msgstr "钱箱"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:16
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Cashier"
 msgstr "收银员"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
-msgid "Catalog"
-msgstr "目录"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -702,21 +704,21 @@ msgstr "更改"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:104
+#: code:addons/point_of_sale/static/src/js/chrome.js:105
 #, python-format
 msgid "Change Cashier"
 msgstr "更换收银员"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1203
+#: code:addons/point_of_sale/static/src/js/screens.js:1205
 #, python-format
 msgid "Change Customer"
 msgstr "变更客户"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1859
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Change Tip"
 msgstr "更换提示"
@@ -744,8 +746,8 @@ msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "如果你想这个产品适用于POS，勾选此项"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_product_uom__is_pos_groupable
-#: model:ir.model.fields,help:point_of_sale.field_product_uom_categ__is_pos_groupable
+#: model:ir.model.fields,help:point_of_sale.field_uom_category__is_pos_groupable
+#: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr "检查是否要在销售点订单中对此类别的产品进行分组"
@@ -771,7 +773,7 @@ msgstr "如果您想要在关闭会话时按产品分组日记账项目，则对
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2050
+#: code:addons/point_of_sale/static/src/js/screens.js:2053
 #, python-format
 msgid "Check your internet connection and try again."
 msgstr "请检查你的网络连接然后重试。"
@@ -808,21 +810,22 @@ msgstr "城市"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:15
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Client"
 msgstr "客户"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:462
+#: code:addons/point_of_sale/static/src/js/chrome.js:463
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
 msgstr "不支持客户端屏幕。请升级 PosBox"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:824
-#: code:addons/point_of_sale/static/src/js/chrome.js:832
+#: code:addons/point_of_sale/static/src/js/chrome.js:825
+#: code:addons/point_of_sale/static/src/js/chrome.js:833
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
@@ -852,6 +855,11 @@ msgid "Closing Date"
 msgstr "关张日期"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__company_id
@@ -878,7 +886,7 @@ msgstr "至少配置一个能通过这个销售点卖东西的销售点"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:829
+#: code:addons/point_of_sale/static/src/js/chrome.js:830
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1059
 #, python-format
 msgid "Confirm"
@@ -886,7 +894,7 @@ msgstr "确认"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:455
+#: code:addons/point_of_sale/static/src/js/chrome.js:456
 #, python-format
 msgid "Connected, Not Owned"
 msgstr "Connected, Not Owned"
@@ -915,7 +923,7 @@ msgstr "在打开和关闭时控制现金箱"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1360
+#: code:addons/point_of_sale/static/src/js/screens.js:1363
 #, python-format
 msgid "Could Not Read Image"
 msgstr "不能读取图像。"
@@ -970,6 +978,21 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "信用卡"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Credit Card Reader"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Currencies"
+msgstr "币种"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__currency_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__currency_id
 msgid "Currency"
@@ -987,7 +1010,7 @@ msgstr "当前会话状态"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1870
+#: code:addons/point_of_sale/static/src/js/screens.js:1873
 #: code:addons/point_of_sale/static/src/xml/pos.xml:145
 #: code:addons/point_of_sale/static/src/xml/pos.xml:676
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__partner_id
@@ -1008,8 +1031,8 @@ msgid "Customer Facing Display"
 msgstr "面向客户的显示"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:545
-#: code:addons/point_of_sale/models/pos_order.py:596
+#: code:addons/point_of_sale/models/pos_order.py:561
+#: code:addons/point_of_sale/models/pos_order.py:612
 #, python-format
 msgid "Customer Invoice"
 msgstr "客户发票"
@@ -1018,6 +1041,11 @@ msgstr "客户发票"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_facing_display_html
 msgid "Customer facing display content"
 msgstr "面向客户的显示内容"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
+msgid "Customers"
+msgstr "客户"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -1063,9 +1091,24 @@ msgid "Default Pricelist"
 msgstr "默认价格表"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
+msgid "Default Sale Tax"
+msgstr "默认销售税"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default Sales Tax"
+msgstr "默认销项税"
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "Default company logo"
 msgstr "默认公司徽标"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default sales tax for products"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1093,7 +1136,7 @@ msgstr "删除已付款订单"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:263
+#: code:addons/point_of_sale/static/src/js/chrome.js:264
 #, python-format
 msgid "Delete Paid Orders ?"
 msgstr "删除已付款订单"
@@ -1107,21 +1150,21 @@ msgstr "删除未付款订单"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:273
+#: code:addons/point_of_sale/static/src/js/chrome.js:274
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "删除未付款订单"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1206
+#: code:addons/point_of_sale/static/src/js/screens.js:1208
 #, python-format
 msgid "Deselect Customer"
 msgstr "取消选择客户"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:55
+#: code:addons/point_of_sale/static/src/js/chrome.js:56
 #, python-format
 msgid "Destroy Current Order ?"
 msgstr "销毁当前订单？"
@@ -1152,7 +1195,7 @@ msgstr "折扣："
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:460
+#: code:addons/point_of_sale/static/src/js/chrome.js:461
 #, python-format
 msgid "Disconnected"
 msgstr "已断开连接"
@@ -1179,6 +1222,7 @@ msgstr "折扣："
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:14
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Discounted Product"
 msgstr "折扣的产品"
@@ -1283,7 +1327,7 @@ msgstr "Email"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1972
+#: code:addons/point_of_sale/static/src/js/screens.js:1975
 #, python-format
 msgid "Empty Order"
 msgstr "空订单"
@@ -1311,7 +1355,8 @@ msgid "Enables Payment Terminal integration."
 msgstr "启用支付终端集成。"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_invoicing
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account_invoicing
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__invoice_group
 msgid "Enables invoice generation from the Point of Sale."
 msgstr "通过销售点启用发票生成。"
 
@@ -1338,7 +1383,7 @@ msgstr "错误！您不能创建循环类别。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1289
+#: code:addons/point_of_sale/static/src/js/screens.js:1292
 #, python-format
 msgid "Error: Could not Save Changes"
 msgstr "错误：不能保存更改"
@@ -1469,8 +1514,8 @@ msgid "Group Journal Items"
 msgstr "分组日记账项目"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_product_uom__is_pos_groupable
-#: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ__is_pos_groupable
+#: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
+#: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__is_pos_groupable
 msgid "Group Products in POS"
 msgstr "分组销售点中的产品"
 
@@ -1543,6 +1588,13 @@ msgstr ""
 "如果选中此项，您将可以选择批次/序列号。 您也可以决定不要在这种操作类型中投入很多。 这意味着它将创造出没有多少的库存，或者不会限制所采取的手数。"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
+#: model:ir.model.fields,field_description:point_of_sale.field_res_company__iface_tax_included
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__iface_tax_included
+msgid "Iface Tax Included"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image
 msgid "Image"
 msgstr "图像"
@@ -1566,7 +1618,7 @@ msgid "In Progress"
 msgstr "进行中"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:527
+#: code:addons/point_of_sale/models/pos_order.py:543
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "只有新的或被取消的销售流水可以删除"
@@ -1590,13 +1642,9 @@ msgstr "初始类别"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Integrated Card Payments"
 msgstr "集成卡支付"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Integrated Card Reader"
-msgstr "集成读卡器"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -1638,7 +1686,8 @@ msgid "Invoiced"
 msgstr "已开票"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_invoicing
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_account_invoicing
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__invoice_group
 msgid "Invoicing"
 msgstr "开票"
 
@@ -1751,13 +1800,14 @@ msgstr "出纳机列表"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:521
+#: code:addons/point_of_sale/static/src/js/models.js:532
 #: code:addons/point_of_sale/static/src/xml/pos.xml:38
 #, python-format
 msgid "Loading"
 msgstr "正在加载"
 
 #. module: point_of_sale
+#: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__location_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__location_id
 msgid "Location"
@@ -1776,13 +1826,18 @@ msgid "Login as a Manager"
 msgstr "用管理员的身份登陆"
 
 #. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "批次"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
 msgstr "批次名称"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:2354
+#: code:addons/point_of_sale/static/src/js/models.js:2372
 #, python-format
 msgid "Lot/Serial Number(s) Required"
 msgstr "批次/序列号码必须"
@@ -1854,9 +1909,14 @@ msgid "Miscellaneous"
 msgstr "杂项"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
-msgid "Month of order date"
-msgstr "订单月份"
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sales_price
+msgid "Multiple Product Prices"
+msgstr ""
+
+#. module: point_of_sale
+#: selection:res.config.settings,pos_pricelist_setting:0
+msgid "Multiple prices per product (e.g. customer segments, currencies)"
+msgstr "每个产品的多个价格（例如客户细分、货币）"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -1905,13 +1965,13 @@ msgid "Next Order"
 msgstr "下一订单"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:1075
+#: code:addons/point_of_sale/models/pos_order.py:1090
 #, python-format
 msgid "No Taxes"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:140
+#: code:addons/point_of_sale/models/pos_order.py:143
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -1941,7 +2001,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2103
+#: code:addons/point_of_sale/static/src/js/screens.js:2106
 #: code:addons/point_of_sale/static/src/xml/pos.xml:361
 #, python-format
 msgid "None"
@@ -1970,7 +2030,7 @@ msgstr "Odoo 徽标"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:402
+#: code:addons/point_of_sale/static/src/js/chrome.js:403
 #, python-format
 msgid "Offline"
 msgstr "离线"
@@ -2014,7 +2074,7 @@ msgstr "仅具有 PoS 应用的管理器访问权限的用户能够修改订单�
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1346
+#: code:addons/point_of_sale/static/src/js/screens.js:1349
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr "仅仅支持与网页兼容的图像格式，如.png 或 .jpeg"
@@ -2114,14 +2174,16 @@ msgstr "订单"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1929
-#: code:addons/point_of_sale/static/src/js/models.js:1969
+#: code:addons/point_of_sale/static/src/js/models.js:1947
+#: code:addons/point_of_sale/static/src/js/models.js:1987
 #, python-format
 msgid "Order "
 msgstr "订单"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__date_order
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
+#: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Order Date"
 msgstr "单据日期"
 
@@ -2146,12 +2208,6 @@ msgid "Order Lines"
 msgstr "订单行"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
-#: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
-msgid "Order Month"
-msgstr "订单月份"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__order_id
@@ -2169,7 +2225,7 @@ msgid "Order Sequence Number"
 msgstr "订单编号"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:557
+#: code:addons/point_of_sale/models/pos_order.py:573
 #, python-format
 msgid "Order is not paid."
 msgstr "订单未支付。"
@@ -2206,7 +2262,7 @@ msgid "POS Journals"
 msgstr "销售点日记账"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:348
+#: code:addons/point_of_sale/models/pos_config.py:343
 #, python-format
 msgid "POS Order %s"
 msgstr "PoS 订单 %s"
@@ -2232,12 +2288,17 @@ msgid "POS Orders lines"
 msgstr "POS单明细"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_pricelist_setting
+msgid "POS Pricelists"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "POS Sales"
 msgstr "POS 销售"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:357
+#: code:addons/point_of_sale/models/pos_config.py:352
 #, python-format
 msgid "POS order line %s"
 msgstr "销售点订单行 %s"
@@ -2251,6 +2312,11 @@ msgstr "当前年度创建的销售点订单"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
 msgid "POS statement"
 msgstr "POS报表"
+
+#. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "包装"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_paid
@@ -2338,6 +2404,7 @@ msgstr "可用支付方式"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__statement_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
 msgstr "付款"
@@ -2394,19 +2461,19 @@ msgstr "分拣错误"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2000
+#: code:addons/point_of_sale/static/src/js/screens.js:2003
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "请确认大金额"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:342
+#: code:addons/point_of_sale/models/pos_order.py:345
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "请为这个产品定义收益科目: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:573
+#: code:addons/point_of_sale/models/pos_order.py:589
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "请提供业务伙伴。"
@@ -2420,7 +2487,7 @@ msgstr "请选择付款方式"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2041
+#: code:addons/point_of_sale/static/src/js/screens.js:2044
 #, python-format
 msgid "Please select the Customer"
 msgstr "请选择客户"
@@ -2449,10 +2516,12 @@ msgstr "POS 订单"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__config_id
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users__group_point_of_sale_user
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_form_view
-#: model:ir.ui.view,arch_db:point_of_sale.res_users_form_view
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_users_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_bank_journal_form_inherited_pos
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -2613,14 +2682,20 @@ msgid "Price Unit"
 msgstr "单价"
 
 #. module: point_of_sale
+#: selection:res.config.settings,pos_pricelist_setting:0
+msgid "Price computed from formulas (discounts, margins, roundings)"
+msgstr "价格计算公式（折扣、利润、凑整）"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:13
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Priced Product"
 msgstr "标价产品"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2191
+#: code:addons/point_of_sale/static/src/js/screens.js:2194
 #: code:addons/point_of_sale/static/src/xml/pos.xml:388
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pricelist_id
@@ -2633,11 +2708,13 @@ msgstr "价格表"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_pricelist
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricelists"
 msgstr "价格表"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "定价"
 
@@ -2671,7 +2748,7 @@ msgstr "通过代理打印"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:390
+#: code:addons/point_of_sale/static/src/js/chrome.js:391
 #, python-format
 msgid "Printer"
 msgstr "打印机"
@@ -2684,9 +2761,11 @@ msgid "Printing Error: "
 msgstr "打印错误："
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_product
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_id
+#: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
@@ -2699,7 +2778,7 @@ msgid "Product Category"
 msgstr "产品种类"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product Prices"
 msgstr "产品价格"
 
@@ -2720,12 +2799,12 @@ msgid "Product Template"
 msgstr "产品模板"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_product_uom
+#: model:ir.model,name:point_of_sale.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "单位"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_product_uom_categ
+#: model:ir.model,name:point_of_sale.model_uom_category
 msgid "Product UoM Categories"
 msgstr "产品计量单位 类别"
 
@@ -2736,7 +2815,7 @@ msgid "Product Variants"
 msgstr "产品变体"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product prices on receipts"
 msgstr "收据上的产品价格"
 
@@ -2863,7 +2942,7 @@ msgid "Resume"
 msgstr "重新开始"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:882
+#: code:addons/point_of_sale/models/pos_order.py:896
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -2921,6 +3000,7 @@ msgstr "销售员"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Save"
 msgstr "保存"
 
@@ -2931,7 +3011,7 @@ msgstr "保存此配置以查看和编辑客户显示"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:398
+#: code:addons/point_of_sale/static/src/js/chrome.js:399
 #, python-format
 msgid "Scale"
 msgstr "比例"
@@ -2957,7 +3037,7 @@ msgstr "通过代理浏览"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:381
+#: code:addons/point_of_sale/static/src/js/chrome.js:382
 #, python-format
 msgid "Scanner"
 msgstr "扫描仪"
@@ -2987,7 +3067,7 @@ msgid "Security PIN"
 msgstr "安全PIN"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/res_users.py:15
+#: code:addons/point_of_sale/models/res_users.py:20
 #, python-format
 msgid "Security PIN can only contain digits"
 msgstr "安全PIN只能包含数字"
@@ -3008,23 +3088,28 @@ msgstr "选择用户"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2179
+#: code:addons/point_of_sale/static/src/js/screens.js:2182
 #, python-format
 msgid "Select pricelist"
 msgstr "选择价目表"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2114
+#: code:addons/point_of_sale/static/src/js/screens.js:2117
 #, python-format
 msgid "Select tax"
 msgstr "选择税"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:247
+#: code:addons/point_of_sale/models/pos_order.py:250
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "选择的订单不在相同的会话中！"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Sell in several currencies"
+msgstr "以多种货币销售"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -3052,13 +3137,13 @@ msgstr "服务员"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2054
+#: code:addons/point_of_sale/static/src/js/screens.js:2057
 #, python-format
 msgid "Server Error"
 msgstr "服务器错误"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:460
+#: code:addons/point_of_sale/models/pos_config.py:456
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_id
@@ -3097,7 +3182,7 @@ msgstr "会话"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1201
+#: code:addons/point_of_sale/static/src/js/screens.js:1203
 #, python-format
 msgid "Set Customer"
 msgstr "设置客户"
@@ -3120,6 +3205,11 @@ msgid "Set barcodes to scan products, customer cards, etc."
 msgstr "设置条码以扫描产品、客户卡等"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Set multiple prices per product, automated discounts, etc."
+msgstr "设置每个产品的多个价格，自动折扣等。"
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
 msgstr "设置商店特定价格、季节性折扣等"
@@ -3132,6 +3222,8 @@ msgid "Set your customized advertisement here"
 msgstr "在此处设置自定义广告"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Settings"
 msgstr "设置"
@@ -3140,11 +3232,6 @@ msgstr "设置"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
 msgstr "通过远程连接的屏幕向客户显示结账。"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pricelist_item
-msgid "Show pricelists to customers"
-msgstr "给客户显示价目表"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3308,8 +3395,8 @@ msgstr "把钱拿出"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:374
-#: code:addons/point_of_sale/static/src/js/screens.js:2133
+#: code:addons/point_of_sale/models/pos_order.py:377
+#: code:addons/point_of_sale/static/src/js/screens.js:2136
 #, python-format
 msgid "Tax"
 msgstr "税金"
@@ -3318,11 +3405,6 @@ msgstr "税金"
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Tax Amount"
 msgstr "税金总额"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
-msgid "Tax Display"
-msgstr "税金显示"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3340,17 +3422,17 @@ msgstr "税制"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
+msgstr "税制选择值"
+
+#. module: point_of_sale
+#: selection:res.company,iface_tax_included:0
+msgid "Tax-Excluded Price"
 msgstr ""
 
 #. module: point_of_sale
-#: selection:pos.config,iface_tax_included:0
-msgid "Tax-Excluded Prices"
-msgstr "计税价格"
-
-#. module: point_of_sale
-#: selection:pos.config,iface_tax_included:0
-msgid "Tax-Included Prices"
-msgstr "含税价格"
+#: selection:res.company,iface_tax_included:0
+msgid "Tax-Included Price"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
@@ -3358,6 +3440,7 @@ msgstr "含税价格"
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Taxes"
 msgstr "税金"
@@ -3390,7 +3473,7 @@ msgid "Tendered"
 msgstr "投标"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:330
+#: code:addons/point_of_sale/models/pos_order.py:333
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr "当调用此方法时，POS订单中必须要有内容。"
@@ -3405,28 +3488,7 @@ msgid ""
 msgstr "POS扫描的条形码找不到对应的产品,客户,员工或相关记录"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:243
-#, python-format
-msgid ""
-"The company of a payment method is different than the one of point of sale"
-msgstr "支付方式的公司不同于POS所在公司"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:233
-#, python-format
-msgid ""
-"The company of the sales journal is different than the one of point of sale"
-msgstr "销售日记账所属公司不同于销售点所属公司"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:228
-#, python-format
-msgid ""
-"The company of the stock location is different than the one of point of sale"
-msgstr "库位所属公司不同于POS所属公司"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:248
+#: code:addons/point_of_sale/models/pos_config.py:242
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
 msgstr "默认价目表必须包括在可用价目表中。"
@@ -3439,19 +3501,32 @@ msgid ""
 msgstr "将自动检测是否留空硬件代理的主机名或 IP 地址"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:238
+#: code:addons/point_of_sale/models/pos_config.py:232
 #, python-format
 msgid ""
-"The invoice journal and the point of sale must belong to the same company"
-msgstr "发票日记账和销售点必须属于同一公司"
+"The invoice journal and the point of sale must belong to the same company."
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:254
+#: code:addons/point_of_sale/models/pos_config.py:248
 #, python-format
 msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr "发票日记账所使用币种在未设置的情况下必须与销售日记账或公司币种一致。"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:283
+#, python-format
+msgid "The journal type for your payment method should be bank or cash."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:237
+#, python-format
+msgid ""
+"The method payments and the point of sale must belong to the same company."
+msgstr ""
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3466,14 +3541,14 @@ msgstr "与此客户相关的销售点订单的数量"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2049
+#: code:addons/point_of_sale/static/src/js/screens.js:2052
 #, python-format
 msgid "The order could not be sent"
 msgstr "订单不能被发送"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2060
+#: code:addons/point_of_sale/static/src/js/screens.js:2063
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "因为未知错误，订单不能发送到服务器"
@@ -3512,7 +3587,7 @@ msgstr "产品的图片将会以图片的形式显示出来"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1361
+#: code:addons/point_of_sale/static/src/js/screens.js:1364
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
 msgstr " 由于未知的错误，提供的文件不能被读取"
@@ -3530,8 +3605,15 @@ msgid "The receipt will automatically be printed at the end of each order."
 msgstr "在每个订单结束时将自动打印收据。"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:227
+#, python-format
+msgid ""
+"The sales journal and the point of sale must belong to the same company."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2055
+#: code:addons/point_of_sale/static/src/js/screens.js:2058
 #, python-format
 msgid "The server encountered an error while receiving your order."
 msgstr "在收到你的订单的时候，服务器遇到了错误"
@@ -3544,6 +3626,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:222
+#, python-format
+msgid ""
+"The stock location and the point of sale must belong to the same company."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid ""
 "The system will open all cash registers, so that you can start recording "
@@ -3552,11 +3641,12 @@ msgid ""
 msgstr "系统将打开所有现金出纳机，这样你能开始记录付款。我们建议你使用钱箱页卡管理每个出纳机的开张余额。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:283
-#, python-format
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The type of the journal for your payment method should be bank or cash "
-msgstr "你的付款方式的日记账应该为银行或现金"
+"The transactions are processed by Vantiv. Set your Vantiv credentials on the"
+" related payment journal."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -3573,8 +3663,17 @@ msgid ""
 msgstr "数据库中有不能保存的暂停作业，你确认要退出？"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"There are two ways to manage pricelists: 1) Multiple prices per product "
+"(e.g. quantity, shop-specific) : must be set in the Sales tab of the product"
+" detail form. 2) Price computed from formulas (discounts, margins, rounding)"
+" : must be set in the pricelist form."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1991
+#: code:addons/point_of_sale/static/src/js/screens.js:1994
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
@@ -3592,7 +3691,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr "这次POS交易没有收取现金"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:823
+#: code:addons/point_of_sale/models/pos_order.py:837
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -3600,18 +3699,23 @@ msgid ""
 msgstr "没有定义业务伙伴付款的应收科目：\"%s\" (id:%d)。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:821
+#: code:addons/point_of_sale/models/pos_order.py:835
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "没有为支付指定应收帐款科目。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1973
+#: code:addons/point_of_sale/static/src/js/screens.js:1976
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
 msgstr "至少要有一个产品后，订单才能被确认"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "This adds the choice of a currency on pricelists."
+msgstr "这会添加价格表上的货币选项。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cashbox_line__default_pos_id
@@ -3651,7 +3755,7 @@ msgid ""
 msgstr "该字段用于将销售点用户组的 ID 传递到销售点客户端。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:581
+#: code:addons/point_of_sale/models/pos_order.py:597
 #, python-format
 msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
@@ -3667,7 +3771,7 @@ msgstr "这对于提供具有特定税率的上门服务和外卖服务的餐厅
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:274
+#: code:addons/point_of_sale/static/src/js/chrome.js:275
 #, python-format
 msgid ""
 "This operation will destroy all unpaid orders in the browser. You will lose "
@@ -3677,7 +3781,7 @@ msgstr "此操作将销毁浏览器中的所有未支付订单。您将丢失所
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:264
+#: code:addons/point_of_sale/static/src/js/chrome.js:265
 #, python-format
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
@@ -3704,7 +3808,12 @@ msgid ""
 msgstr "这个序列号是由Odoo自动产生的，不过你可以自己定义订单的序列号。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:685
+#: model:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "This tax is applied to any new product created in the catalog."
+msgstr "此税适用于该目录中新创建的产品。"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:701
 #, python-format
 msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
@@ -3752,7 +3861,7 @@ msgid "To record new orders, start a new session."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:862
+#: code:addons/point_of_sale/models/pos_order.py:876
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -3823,10 +3932,15 @@ msgid "Total:"
 msgstr "总计："
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:394
+#: code:addons/point_of_sale/models/pos_order.py:397
 #, python-format
 msgid "Trade Receivables"
 msgstr "贸易应收"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
+msgid "Type"
+msgstr "类型"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:178
@@ -3842,6 +3956,11 @@ msgid "Unit Price"
 msgstr "单价"
 
 #. module: point_of_sale
+#: selection:barcode.rule,type:0
+msgid "Unit Product"
+msgstr "单位产品"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1036
 #, python-format
@@ -3850,14 +3969,14 @@ msgstr "未知条形码"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2059
+#: code:addons/point_of_sale/static/src/js/screens.js:2062
 #, python-format
 msgid "Unknown Error"
 msgstr "未知错误"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1345
+#: code:addons/point_of_sale/static/src/js/screens.js:1348
 #, python-format
 msgid "Unsupported File Format"
 msgstr "不支持的文件格式"
@@ -3896,11 +4015,6 @@ msgstr "使用集成的硬件安装程序"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__journal_user
 msgid "Use in Point of Sale"
 msgstr "在销售点中使用"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_sale_pricelist
-msgid "Use pricelists to adapt your price per customers"
-msgstr "为每个客户使用价格表来适配您的价格"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3974,6 +4088,7 @@ msgstr "称重"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:12
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Weighted Product"
 msgstr "称重的产品"
@@ -4003,11 +4118,11 @@ msgstr "年"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid ""
 "You can define another list of available currencies on the\n"
-"                                <i>Cash Registers</i> tab of the"
-msgstr "<i/>"
+"                                    <i>Cash Registers</i> tab of the"
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:517
+#: code:addons/point_of_sale/models/pos_order.py:533
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -4027,11 +4142,12 @@ msgstr ""
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:151
 #, python-format
-msgid "You cannot create two active sessions with the same responsible!"
-msgstr "同一个负责人不能创建两个活动销售会话"
+msgid "You cannot create two active sessions with the same responsible."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
+#: code:addons/point_of_sale/models/product.py:38
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
@@ -4061,7 +4177,7 @@ msgstr ""
 "\"PoS\"选项卡中点选\"PoS付款方式\"。你也可以直接通过菜单 \"PoS后台 / 配置 /付款方式\"来新建一个付款方式。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:837
+#: code:addons/point_of_sale/models/pos_order.py:851
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "您至少要打开一个钱箱。"
@@ -4069,18 +4185,18 @@ msgstr "您至少要打开一个钱箱。"
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:985
 #, python-format
-msgid "You have to select a pricelist in the sale form !"
-msgstr "在销售页面选择一个价格表"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:971
-#, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
 "你必须在销售窗口选择一条报价单！\n"
 "请在选择某个产品之前设置它。"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:999
+#, python-format
+msgid "You have to select a pricelist in the sale form."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:26
@@ -4109,7 +4225,7 @@ msgstr "在销售点界面需要定义一个能代表所有东西的产品"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2042
+#: code:addons/point_of_sale/static/src/js/screens.js:2045
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "如果需要给开票，就需要先给订单找到一个客户"
@@ -4122,14 +4238,14 @@ msgstr "您需要为您的销售会话指定一个POS"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:56
+#: code:addons/point_of_sale/static/src/js/chrome.js:57
 #, python-format
 msgid "You will lose any data associated with the current order"
 msgstr "当前订单的所有数据将丢失"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1283
+#: code:addons/point_of_sale/static/src/js/screens.js:1286
 #, python-format
 msgid "Your Internet connection is probably down."
 msgstr "你的互联网连接可能断开了。"
@@ -4219,7 +4335,7 @@ msgstr "折扣"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Company Address, Website"
-msgstr ""
+msgstr "例如公司地址、网站"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4235,7 +4351,7 @@ msgstr "错误"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2005
+#: code:addons/point_of_sale/static/src/js/screens.js:2008
 #, python-format
 msgid "for an order of"
 msgstr "一个订单"
@@ -4249,14 +4365,14 @@ msgid "kg"
 msgstr "kg"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:336
+#: code:addons/point_of_sale/models/pos_config.py:331
 #, python-format
 msgid "not used"
 msgstr "未被使用"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:293
+#: code:addons/point_of_sale/static/src/js/chrome.js:294
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1216
 #, python-format
 msgid "paid orders"
@@ -4288,8 +4404,13 @@ msgid "report.point_of_sale.report_saledetails"
 msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:145
+#: code:addons/point_of_sale/models/pos_order.py:148
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1590
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1645
 #, python-format
@@ -4313,7 +4434,7 @@ msgstr "页卡"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:285
+#: code:addons/point_of_sale/static/src/js/chrome.js:286
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "unpaid orders"

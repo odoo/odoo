@@ -3,7 +3,7 @@
 # * website_event
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
@@ -11,13 +11,15 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +31,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "(Free)"
 msgstr "(Ücretsiz)"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.brand_promotion
+msgid ""
+".\n"
+"            Try the"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -68,6 +77,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
 msgstr "<i class=\"fa fa-clock-o\"/> Başlangıç"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to Google Calendar"
+msgstr "<i class=\"fa-fw fa-arrow-right\"/> Google Takvim'e ekle"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
+msgstr "<i class =\"fa-fw fa-ok-right \"/> iCal / Outlook'a ekle"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -159,13 +178,13 @@ msgid "<strong>Use this tag:</strong>"
 msgstr "<strong>Bu etiketi kullan:</strong>"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:96
+#: code:addons/website_event/controllers/main.py:101
 #, python-format
 msgid "All Categories"
 msgstr "Tüm Kategoriler"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:103
+#: code:addons/website_event/controllers/main.py:108
 #, python-format
 msgid "All Countries"
 msgstr "Tüm Ülkeler"
@@ -178,7 +197,7 @@ msgstr "Tüm Olaylar"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr ""
+msgstr "Katılımcılar online kayıt oluşturdğunda onlara sorular sor"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -196,6 +215,8 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
+"Web sitenizde etkinliğiniz için bu seçeneği işaretleyin: kayıt, plan, harita"
+" ..."
 
 #. module: website_event
 #. openerp-web
@@ -240,21 +261,23 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_menu
+#: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr ""
+"Websitenizdeki etkinlik sayfasında Giriş, Konum ve Kayıt menüleri için "
+"oluşturun."
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Dedicated Menu"
 msgstr "Erişim Menüsü"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "Web sitesinde özel bir menü göster"
 
 #. module: website_event
 #. openerp-web
@@ -271,7 +294,7 @@ msgstr "E-mail"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Edit Badges"
-msgstr ""
+msgstr "Rozetleri Düzenle"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
@@ -304,7 +327,7 @@ msgid "Event Location"
 msgstr "Etkinlik Yeri"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
+#: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
 msgstr "Menu"
 
@@ -322,12 +345,12 @@ msgstr "Yayınlanan"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration is closed."
-msgstr ""
+msgstr "Etkinlik kaydı kapandı"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration not yet started."
-msgstr ""
+msgstr "Etkinlik kaydı henüz başlamadı"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -336,7 +359,6 @@ msgid "Event unpublished"
 msgstr "Yayınlanmamış Etkinlik"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
 msgstr "Etkinlikler"
@@ -366,20 +388,18 @@ msgstr ""
 "ve konuşmaya katılın."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:61
+#: code:addons/website_event/models/event.py:73
 #, python-format
 msgid "Introduction"
 msgstr "Giriş"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
 msgid "Is Participating"
-msgstr ""
+msgstr "Katılımcı"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:62
+#: code:addons/website_event/models/event.py:74
 #, python-format
 msgid "Location"
 msgstr "Konum"
@@ -396,7 +416,7 @@ msgstr "İsim"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:183
+#: code:addons/website_event/controllers/main.py:191
 #: code:addons/website_event/static/src/js/website_event.editor.js:29
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -404,22 +424,28 @@ msgid "New Event"
 msgstr "Yeni Etkinlik"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:34
+#: code:addons/website_event/controllers/main.py:40
 #, python-format
 msgid "Next Events"
 msgstr "Sonraki Etkinlikler"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:49
 #, python-format
 msgid "Next Week"
 msgstr "Sonraki Hafta"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:57
 #, python-format
 msgid "Next month"
 msgstr "Sonraki Ay"
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:152
+#, python-format
+msgid "No date has been specified for the event, no file will be generated."
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -427,7 +453,12 @@ msgid "No event found"
 msgstr "Hiçbir olay bulunamadı"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: model:ir.ui.view,arch_db:website_event.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:61
 #, python-format
 msgid "Old Events"
 msgstr "Eski Etkinlikler"
@@ -481,6 +512,18 @@ msgid "Photos of Past Events"
 msgstr "Geçmiş Etkinlik Fotoğrafları"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.js:55
+#, python-format
+msgid "Please select at least one ticket."
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.brand_promotion
+msgid "Powered by"
+msgstr "Hazırlayan"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
 msgstr "Fiyat"
@@ -501,8 +544,7 @@ msgid "Reference"
 msgstr "Referans"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:75
 #, python-format
 msgid "Register"
 msgstr "Kayıt Ol"
@@ -515,7 +557,7 @@ msgstr "Şimdi Kaydol"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Registration for this event is now closed"
-msgstr ""
+msgstr "Bu etkinlik için kayıtlar şimdi kapandı"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -543,13 +585,18 @@ msgid "Sorry, the requested event is not available anymore."
 msgstr "Maalesef, istenen etkinlik artık mevcut değildir."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: model:ir.model.fields,help:website_event.field_event_event__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Belgeye web sitesinden erişim için tam URL adresi."
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:45
 #, python-format
 msgid "This Week"
 msgstr "Bu Hafta"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:53
 #, python-format
 msgid "This month"
 msgstr "Bu ay"
@@ -557,10 +604,10 @@ msgstr "Bu ay"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket Type #"
-msgstr ""
+msgstr "Talep Türü #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:35
+#: code:addons/website_event/controllers/main.py:41
 #, python-format
 msgid "Today"
 msgstr "Bugün"
@@ -571,19 +618,19 @@ msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_published
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
 msgid "Visible in Website"
 msgstr "Web Sitesinde Görünür"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr ""
+msgstr "Google Haritalarda görselleştirin"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Etkinliğimize kaydınızı onaylarsanız çok mutlu oluruz."
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -594,6 +641,26 @@ msgstr "Websitesi Anasayfa"
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "Web Sitesi Menü"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
+msgid "Website URL"
+msgstr "Web Sitesi URL Adresi"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
+msgid "Website meta description"
+msgstr "Web sitesi meta açıklaması"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Web Sitesi meta anahtar kelimeleri"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
+msgid "Website meta title"
+msgstr "Web sitesi meta başlık"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -619,7 +686,12 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
-msgstr ""
+msgstr "Kaydınız"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.brand_promotion
+msgid "open source website builder"
+msgstr "açık kaynak kodlu website oluşturucu"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details

@@ -5,7 +5,7 @@
 # Translators:
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Collex100, 2017
@@ -17,10 +17,10 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
 "Last-Translator: Gennady Marchenko <gennadym@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:41
+#: code:addons/hr_payroll/models/hr_salary_rule.py:42
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -140,6 +140,11 @@ msgid ""
 "A contribution register is a third party involved in the salary\n"
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
+msgid "Account Accountant"
 msgstr ""
 
 #. module: hr_payroll
@@ -268,7 +273,7 @@ msgid "Cancel Payslip"
 msgstr "Отклонить платежную ведомость"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:98
+#: code:addons/hr_payroll/models/hr_payslip.py:96
 #, python-format
 msgid "Cannot cancel a payslip that is done."
 msgstr "Невозможно отклонить проведённую ведомость."
@@ -617,6 +622,11 @@ msgid "Employee's Advantage on Contract"
 msgstr ""
 
 #. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Employee's working schedule."
+msgstr "График работы сотрудника"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__employee_ids
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -625,10 +635,16 @@ msgid "Employees"
 msgstr "Сотрудники"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#: code:addons/hr_payroll/models/hr_salary_rule.py:92
 #, python-format
-msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr "Ошибка! Вы не можете создать рекурсивную зарплатную структуру."
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:177
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__register_id
@@ -919,7 +935,7 @@ msgid "Net Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:199
+#: code:addons/hr_payroll/models/hr_payslip.py:201
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Обычные рабочие дни оплачиваются 100%"
@@ -1013,6 +1029,7 @@ msgstr "Название расчетного листка"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
+#: model:ir.model.fields,field_description:hr_payroll.field_res_users__group_hr_payroll_user
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
@@ -1045,10 +1062,10 @@ msgid "Payslip"
 msgstr "Расчетный листок"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:84
+#: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
-msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "В платежной ведомости \"дата от\" должна быть раньше \"Даты до\"."
+msgid "Payslip 'Date From' must be earlier 'Date To'."
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1235,7 +1252,7 @@ msgid "Refund"
 msgstr "Возврат"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:104
+#: code:addons/hr_payroll/models/hr_payslip.py:102
 #, python-format
 msgid "Refund: "
 msgstr "Возврат: "
@@ -1269,16 +1286,9 @@ msgstr "Вычисление заработной платы"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "Категории правила начисления зарплаты"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Иерархия категорий правила начисления зарплаты"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
@@ -1306,8 +1316,8 @@ msgid "Salary Rules"
 msgstr "Правила начисления зарплаты"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:401
-#: code:addons/hr_payroll/models/hr_payslip.py:451
+#: code:addons/hr_payroll/models/hr_payslip.py:403
+#: code:addons/hr_payroll/models/hr_payslip.py:453
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Зарплатный листок от %s для %s"
@@ -1493,6 +1503,11 @@ msgstr ""
 "Используется для выведения правила начисления зарплаты на расчетный листок."
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_users
+msgid "Users"
+msgstr "Пользователи"
+
+#. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
 msgstr "Ожидание"
@@ -1518,7 +1533,12 @@ msgid "Worked Days & Inputs"
 msgstr "Отработанные дни и исходные данные"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:198
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Working Schedule"
+msgstr "График работы"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:209
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1526,14 +1546,14 @@ msgstr ""
 "начисления зарплаты %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:204
+#: code:addons/hr_payroll/models/hr_salary_rule.py:215
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 "Неверный код python определенный для правила начисления зарплаты %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:227
+#: code:addons/hr_payroll/models/hr_salary_rule.py:238
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
@@ -1541,14 +1561,14 @@ msgstr ""
 "%s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:191
+#: code:addons/hr_payroll/models/hr_salary_rule.py:202
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 "Неверное количество, определенное для правила начисления зарплаты %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:221
+#: code:addons/hr_payroll/models/hr_salary_rule.py:232
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
@@ -1556,7 +1576,13 @@ msgstr ""
 "(%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:129
+#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#, python-format
+msgid "You cannot create a recursive salary structure."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:127
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1570,7 +1596,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Вы должны выбрать сотрудника(ов) чтобы создать расчетный листок(ки)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:522
+#: code:addons/hr_payroll/models/hr_payslip.py:524
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "Нужно указать договор для создания расчётного листа."

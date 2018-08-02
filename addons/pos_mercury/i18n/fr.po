@@ -15,13 +15,17 @@
 # Quentin THEURET <odoo@kerpeo.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # e2f <projects@e2f.com>, 2018
+# Lucas Deliege <lud@odoo.com>, 2018
+# Shark McGnark <peculiarcheese@gmail.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
+# Mohammed SK <medkamar@blutec.ma>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Mohammed SK <medkamar@blutec.ma>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +75,11 @@ msgid "APPROVAL CODE:"
 msgstr "CODE D'APPROBATION :"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Alias"
+msgstr "Alias"
+
+#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Ligne de relevé bancaire"
@@ -110,6 +119,16 @@ msgid "Card Reader"
 msgstr "Lecteur de carte"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "Caissier"
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "Client"
+
+#. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Configure your card reader"
 msgstr ""
@@ -134,7 +153,8 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:15
+#: code:addons/pos_mercury/models/pos_mercury.py:16
+#: selection:barcode.rule,type:0
 #, python-format
 msgid "Credit Card"
 msgstr "Carte de crédit "
@@ -148,6 +168,11 @@ msgid ""
 "payment method, click 'Validate' and refund the original charge manually "
 "through the Vantiv backend."
 msgstr ""
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "Article en promotion"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -164,7 +189,7 @@ msgstr "Paiement électronique"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:650
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
 #, python-format
 msgid "Error"
 msgstr "Erreur"
@@ -245,6 +270,16 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "Lieu"
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "Lot"
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "Merchant ID"
 msgstr "Identifiant du marchand"
@@ -299,10 +334,8 @@ msgstr "Aucune configuration Mercury n'est associée à ce journal."
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
 #, python-format
-msgid "No opened point of sale session for user %s found"
+msgid "No opened point of sale session for user %s found."
 msgstr ""
-"Aucune session de pointe de vente ouverte n'a été trouvée pour l'utilisateur"
-" %s."
 
 #. module: pos_mercury
 #. openerp-web
@@ -321,21 +354,26 @@ msgstr "Pas de réponse du serveur (connecté au réseau?)"
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:423
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:576
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Erreur Odoo pendant le traitement de la transaction."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Une carte de crédit est déjà en attente."
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "Localisation comptable"
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:469
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
 msgstr "Partiellement approuvé"
@@ -371,6 +409,11 @@ msgid "Point of Sale Orders"
 msgstr "Commandes du point de vente"
 
 #. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "Coûteux Produit"
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
 #, python-format
@@ -379,21 +422,21 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:548
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Echec du remboursement, envoie d'une vente vide..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:590
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Remboursement réussi"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:551
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
 #, python-format
 msgid "Sending reversal..."
 msgstr "Envoie du remboursement..."
@@ -449,6 +492,16 @@ msgid "Transaction approved"
 msgstr "Transaction approuvée"
 
 #. module: pos_mercury
+#: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
+msgid "Type"
+msgstr "Type"
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Unit Product"
+msgstr "Unité de produit"
+
+#. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Mercury integration in the Point Of Sale is easy: just press the\n"
@@ -469,7 +522,7 @@ msgstr "Comptes Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:598
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "VoidSale a réussi "
@@ -489,6 +542,11 @@ msgid ""
 msgstr ""
 "On supporte actuellement le lecteur de carte MagTek Dynamag. Il peut être "
 "connecté directement au point de vente ou à la POSBox."
+
+#. module: pos_mercury
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "Article pesé"
 
 #. module: pos_mercury
 #. openerp-web

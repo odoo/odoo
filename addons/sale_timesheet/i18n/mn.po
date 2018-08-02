@@ -2,12 +2,21 @@
 # This file contains the translation of the following modules:
 # * sale_timesheet
 # 
+# Translators:
+# Martin Trigaux, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
+# Adyasuren Amarsanaa <adyashde19@gmail.com>, 2018
+# Ganbold BATKHUYAG <gbatkhuyag@gmail.com>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +30,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                <p class=\"oe_view_nocontent_create\">\n"
-"                    Click to record timesheets.\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Record timesheets\n"
 "                </p><p>\n"
 "                    You can register and track your workings hours by project every\n"
 "                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
@@ -42,8 +51,64 @@ msgid "<span class=\"o_label\">Overview</span>"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
+msgid "Amount to invoice"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
+msgid "Analytic Account"
+msgstr "Шинжилгээний данс"
+
+#. module: sale_timesheet
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Analytic From Expenses"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
+msgstr "Шинжилгээний Мөр"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
+msgid "Analytic lines"
+msgstr "Шинжилгээний мөрүүд"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_task_assign_so_line_view_form
+msgid "Assign"
+msgstr "Оноох"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.project_task_action_multi_assign_so_line
+msgid "Assign Sale Order Item"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task_assign_sale
+msgid "Assign Sale Order line to tasks"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_task_assign_so_line_view_form
+msgid "Assign sale line to Tasks"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:235
+#, python-format
+msgid "Before"
 msgstr ""
 
 #. module: sale_timesheet
@@ -62,7 +127,7 @@ msgid "Billable Time"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_type
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
 msgid "Billable Type"
 msgstr ""
 
@@ -77,6 +142,11 @@ msgid "Billable time"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Billing"
+msgstr "Тооцоо"
+
+#. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
 msgid "Billing Rate"
 msgstr ""
@@ -88,14 +158,62 @@ msgid "By Billing Rate"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "Cost"
+#: model:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+#: model:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+#: model:ir.ui.view,arch_db:sale_timesheet.project_task_assign_so_line_view_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
+msgid "Choose the Sales Order to invoice"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_report_cost_revenue
-#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_report_cost_revenue
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Company"
+msgstr "Компани"
+
+#. module: sale_timesheet
+#: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
 msgid "Costs and Revenues"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:331
+#: code:addons/sale_timesheet/controllers/main.py:338
+#: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_invoice
+#: model:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+#, python-format
+msgid "Create Invoice"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+msgid "Create Sales Order"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
+#: model:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
+msgid "Create Sales Order from Project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_invoice
+msgid "Create a Invoice from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
+msgid "Create a SO from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:321
+#: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
+#, python-format
+msgid "Create a Sales Order"
 msgstr ""
 
 #. module: sale_timesheet
@@ -114,9 +232,40 @@ msgid "Create a task in an existing project"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__create_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__create_uid
+msgid "Created by"
+msgstr "Үүсгэгч"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__create_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__currency_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Валют"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__partner_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__partner_id
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Customer"
+msgstr "Захиалагч"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__display_name
+msgid "Display Name"
+msgstr "Дэлгэцийн Нэр"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
@@ -124,14 +273,20 @@ msgid "Don't create task"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_hr_employee
-msgid "Employee"
+#: code:addons/sale_timesheet/controllers/main.py:235
+#, python-format
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_project_view_search
+msgid "Exact name"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Fixed"
-msgstr ""
+msgstr "Тогтмол"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -144,35 +299,112 @@ msgid "Fixed price services"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__project_id
+msgid "Generated Project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__task_id
+msgid "Generated Task"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Group By"
+msgstr "Бүлэглэх"
+
+#. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours"
-msgstr ""
+msgstr "Цаг"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_invoice
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice"
-msgstr ""
+msgstr "Нэхэмжлэл"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_policy
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_policy
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_policy
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_policy
 msgid "Invoice based on"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Invoiced"
+msgstr "Нэхэмжилсэн"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:373
+#, python-format
+msgid "Invoices"
+msgstr "Нэхэмжлэлүүд"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__is_service
+msgid "Is a Service"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_is_service
-msgid "Is a Service"
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report____last_update
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale____last_update
+msgid "Last Modified on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_uid
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__write_uid
+msgid "Last Updated by"
+msgstr "Сүүлийн засвар хийсэн"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__write_date
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__write_date
+msgid "Last Updated on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: sale_timesheet
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Manual"
+msgstr "Гараар"
+
+#. module: sale_timesheet
+#: selection:product.template,service_type:0
+msgid "Manually set quantities on order"
+msgstr "Захиалга дээр тоог гараар тохируулах"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+msgstr ""
+"Захиалга дээр тоо хэмжээг гараар оруулах: Шинжилгээний данс үүсгэхгүйгээр гараар оруулсан тоо хэмжээн дээр суурилсан нэхэмжлэл.\n"
+"Гэрээ дээрх Цагийн хуудсууд: Холбоотой цагийн хуудас дээр хянасан цагууд дээр суурилсан нэхэмжлэл.\n"
+"Даалгавар үүсгээд цагийг хянах: Борлуулалтын захиалга батлах даалгавар үүсгээд ажлын цагуудыг хянах."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
 msgstr ""
 
 #. module: sale_timesheet
@@ -186,6 +418,31 @@ msgid "Milestones (manually set quantities on order)"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "My Project"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:235
+#, python-format
+msgid "Name"
+msgstr "Нэр"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:193
+#, python-format
+msgid "No Sales Order"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:155
+#: code:addons/sale_timesheet/controllers/main.py:163
+#: code:addons/sale_timesheet/controllers/main.py:175
+#, python-format
+msgid "No Sales Order Line"
+msgstr ""
+
+#. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "No task found"
@@ -193,7 +450,6 @@ msgstr ""
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
-#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non Billable"
 msgstr ""
 
@@ -203,18 +459,25 @@ msgid "Non Billable Hours"
 msgstr ""
 
 #. module: sale_timesheet
+#. openerp-web
+#: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:262
+#, python-format
+msgid "Non Billable Tasks"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice__timesheet_count
 msgid "Number of timesheets"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
-#: model:ir.model.fields,help:sale_timesheet.field_product_template_service_tracking
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__service_tracking
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__service_tracking
 msgid ""
 "On Sales order confirmation, this product can generate a project and/or "
 "task. From those, you can track the service you are selling."
@@ -223,17 +486,49 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Ordered quantities"
+msgstr "Захиалсан тоо хэмжээ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
+msgid "Other Cost"
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/project.py:45
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Other costs"
+msgstr ""
+
+#. module: sale_timesheet
+#. openerp-web
+#: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:29
+#: model:ir.actions.client,name:sale_timesheet.project_timesheet_action_client_timesheet_plan
 #, python-format
 msgid "Overview"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__price_unit
+msgid "Price"
+msgstr "Үнэ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__price_unit
+msgid "Price unit of the selected product for the generated Sales Order."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__product_id
+msgid "Product"
+msgstr "Бараа"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
+msgstr "Барааны үлгэр"
+
+#. module: sale_timesheet
+#: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_manager_and_product
+msgid "Product by Customer"
 msgstr ""
 
 #. module: sale_timesheet
@@ -241,7 +536,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_milestone
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_time_based
 msgid "Products"
-msgstr ""
+msgstr "Бараанууд"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -249,15 +544,65 @@ msgid "Profitability"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_project
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
-msgid "Project"
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_graph
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_pivot
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Profitability Analysis"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
-msgid "Project associated to this sale"
+#: model:ir.model,name:sale_timesheet.model_project_project
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__project_id
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Project"
+msgstr "Төсөл"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__company_id
+msgid "Project Company"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.project_profitability_report_action
+#: model:ir.ui.menu,name:sale_timesheet.menu_project_profitability_analysis
+msgid "Project Costs and Revenues"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
+msgid "Project Currency"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
+#: model:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
+msgid "Project Manager"
+msgstr "Төслийн Менежер"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_profitability_report
+msgid "Project Profitability Analysis"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
+msgid "Project Template"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__project_id
+msgid "Project generated by the sales order item"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
+msgid "Project to make billable"
 msgstr ""
 
 #. module: sale_timesheet
@@ -266,74 +611,146 @@ msgid "Project(s) Overview"
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:107
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_ids
+#: code:addons/sale_timesheet/models/sale_order.py:101
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__project_ids
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "Төслүүд"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order_project_ids
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_ids
 msgid "Projects used in this sales order."
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
 msgid "Quotation"
-msgstr ""
+msgstr "Үнийн санал"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Rates"
+msgstr "Ханшууд"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Re-invoiced costs"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_revenue
+#: code:addons/sale_timesheet/controllers/main.py:235
+#, python-format
+msgid "Remaining"
+msgstr "Үлдэгдэл"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_revenue
 msgid "Revenue"
-msgstr ""
+msgstr "Орлого"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_project_project_sale_line_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
+msgid "Sale Order"
+msgstr "Борлуулах захиалга"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
+msgid "Sale Order Line"
+msgstr "Борлуулалтын захиалгын шугам"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_id
 msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
-msgid "Sales Order"
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__sale_line_id
+msgid "Sale order line to link to selected tasks"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+msgid "Sales Order"
+msgstr "Борлуулалтын Захиалга"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
+msgid "Sales Order Confirmation Date"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_line_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__sale_line_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
 msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_project_sale_line_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_id
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Борлуулалтын Захиалгын Мөр"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_is_service
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__is_service
 msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
+#: code:addons/sale_timesheet/controllers/main.py:364
+#, python-format
+msgid "Sales Orders"
+msgstr "Борлуулалтын Захиалгууд"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
 msgid ""
 "Select a non billable project on which tasks can be created. This setting "
 "must be set for each company."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_tracking
+#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
+msgid ""
+"Select a non billable project to be the skeleton of the new created project "
+"when selling the current product. Its stages and tasks will be duplicated."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__task_ids
+msgid ""
+"Select the tasks to assign to the Sale Order Items. You can only choose task"
+" (no sub tasks)."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid ""
+"Sell services (e.g. project, maintenance), record time spent using "
+"Timesheets app and invoice them based on a fixed price (ordered quantity) or"
+" on the time spent (delivered quantity)"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
+msgid "Service"
+msgstr "Үйлчилгээ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_tracking
 msgid "Service Tracking"
 msgstr ""
 
@@ -353,35 +770,84 @@ msgid "Setup your time-based services"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_task
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_task_id
-msgid "Task"
+#: code:addons/sale_timesheet/controllers/main.py:235
+#, python-format
+msgid "Sold"
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:234
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Stock Moves"
+msgstr "Барааны Хөдөлгөөнүүд"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+msgid "Task"
+msgstr "Даалгавар"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:176
 #, python-format
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Даалгавар Үүссэн(%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__task_id
 msgid "Task generated by the sales order item"
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/controllers/main.py:109
-#: code:addons/sale_timesheet/controllers/main.py:141
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
+#: code:addons/sale_timesheet/controllers/main.py:354
+#: code:addons/sale_timesheet/controllers/main.py:405
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__task_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Tasks"
+msgstr "Даалгаврууд"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_ids
+msgid "Tasks associated to this sale"
+msgstr "Энэ борлуулалттай холбоотой даалгаврууд"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/product.py:68
+#, python-format
+msgid ""
+"The product %s should not have a global project since it will generate a "
+"project."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
-msgid "Tasks associated to this sale"
+#: code:addons/sale_timesheet/models/product.py:64
+#, python-format
+msgid ""
+"The product %s should not have a project nor a project template since it "
+"will not generate project."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/product.py:66
+#, python-format
+msgid ""
+"The product %s should not have a project template since it will generate a "
+"task in a global project."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:41
+#, python-format
+msgid "The project is already linked to a sales order item."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/wizard/project_create_invoice.py:51
+#, python-format
+msgid "The selected Sales Order should contain something to invoice."
 msgstr ""
 
 #. module: sale_timesheet
@@ -390,16 +856,26 @@ msgid "There is no timesheet for now."
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:237
+#: model:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
+msgid ""
+"This report allows you to analyse the profitability of your projects: "
+"compare the amount to invoice, the ones already invoiced and the project "
+"cost (via timesheet cost of your employees)."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:267
 #, python-format
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"Энэ даалгаврыг дараахаас үүсгэсэн: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "Time and material"
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Time Billing"
 msgstr ""
 
 #. module: sale_timesheet
@@ -414,45 +890,62 @@ msgstr ""
 
 #. module: sale_timesheet
 #. openerp-web
-#: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:143
+#: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:171
 #: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 #, python-format
 msgid "Timesheet"
-msgstr ""
+msgstr "Цагийн бүртгэл"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
 msgid "Timesheet Cost"
+msgstr "Цагийн хуудсын Өртөг"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
+msgid "Timesheet Unit Amount"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "Цагийн хуудсын үйл ажиллагаанууд"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
+msgstr "Энэ борлуулалттай холбоотой цагийн хуудсын үйл ажиллагаанууд"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Timesheet costs"
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/controllers/main.py:101
-#: code:addons/sale_timesheet/controllers/main.py:130
+#: code:addons/sale_timesheet/controllers/main.py:348
+#: code:addons/sale_timesheet/controllers/main.py:394
 #: code:addons/sale_timesheet/models/account_invoice.py:26
-#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_ids
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice__timesheet_ids
 #: model:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: selection:sale.order.line,qty_delivered_method:0
 #, python-format
 msgid "Timesheets"
-msgstr ""
+msgstr "Цагийн хуудас"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
+msgstr ""
+
+#. module: sale_timesheet
+#: selection:product.template,service_type:0
+msgid "Timesheets on project (one fare per SO/Project)"
 msgstr ""
 
 #. module: sale_timesheet
@@ -463,10 +956,42 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "To invoice"
+msgstr "Нэхэмжлэх"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__amount_to_invoice
+msgid ""
+"Total amount to invoice on the sales order, including all items (services, "
+"stockables, expenses, ...)"
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/account.py:32
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
+msgid "Track Service"
+msgstr "Үйлчилгээг Хянах"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
+msgid "Untaxed Amount Invoiced"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
+msgid "Untaxed Amount To Invoice"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
+msgid "Untaxed Amount to Re-invoiced"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
+msgid "Untaxed Re-invoiced Amount"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:29
 #, python-format
 msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
@@ -474,14 +999,23 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/project.py:74
+#: code:addons/sale_timesheet/wizard/project_create_invoice.py:18
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:18
 #, python-format
-msgid ""
-"You cannot delete a task related to a Sales Order. You can only archive this"
-" task."
+msgid "You can only apply this action from a project."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
-msgid "per hour"
+#: code:addons/sale_timesheet/models/project.py:124
+#, python-format
+msgid ""
+"You cannot delete a task related to a sales order. You can only archive it."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:93
+#, python-format
+msgid ""
+"You cannot link the order item %s - %s to this task because it is a re-"
+"invoiced expense."
 msgstr ""

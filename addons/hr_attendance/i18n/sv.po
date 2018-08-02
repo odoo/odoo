@@ -3,19 +3,17 @@
 # * hr_attendance
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
-# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2017
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Patrik Lermon <patrik.lermon@gmail.com>, 2017
-# Daniel Forslund <daniel.forslund@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Christelle Wehbe <libanon_cristelle@hotmail.com>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,21 +22,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:55
+#: code:addons/hr_attendance/models/hr_attendance.py:56
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:29
+#: code:addons/hr_attendance/models/hr_attendance.py:30
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
 msgstr "%(empl_name)s från %(check_in)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:34
+#: code:addons/hr_attendance/models/hr_attendance.py:35
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:109
+#, python-format
+msgid ""
+"<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
+"right, please contact Human Resource staff"
 msgstr ""
 
 #. module: hr_attendance
@@ -47,15 +54,22 @@ msgid "<span class=\"o_stat_text\">Attendance</span>"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid ""
+"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"                To create employees go to the Employees menu."
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:117
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:124
 #, python-format
 msgid "An apple a day keeps the doctor away"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:106
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr ""
@@ -63,8 +77,8 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__group_hr_attendance_user
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -78,6 +92,11 @@ msgid "Attendance Analysis"
 msgstr "Närvaroanalys"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
+msgid "Attendance Status"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
@@ -86,15 +105,15 @@ msgstr "Närvaroanalys"
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
-msgstr "Deltagare"
+msgstr "Närvarande"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__barcode
 msgid "Badge ID"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:85
+#: code:addons/hr_attendance/models/hr_attendance.py:86
 #, python-format
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
@@ -102,8 +121,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:72
-#: code:addons/hr_attendance/models/hr_attendance.py:98
+#: code:addons/hr_attendance/models/hr_attendance.py:73
+#: code:addons/hr_attendance/models/hr_attendance.py:99
 #, python-format
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
@@ -111,13 +130,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:108
+#: code:addons/hr_attendance/models/hr_employee.py:109
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:122
+#: code:addons/hr_attendance/models/hr_employee.py:123
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -126,7 +145,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
 msgid "Check In"
 msgstr ""
 
@@ -136,22 +155,8 @@ msgid "Check In / Check Out"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
 msgid "Check Out"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:53
-#, python-format
-msgid "Check in"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:49
-#, python-format
-msgid "Check out"
 msgstr ""
 
 #. module: hr_attendance
@@ -166,7 +171,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:109
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:122
 #, python-format
 msgid "Checked in at"
 msgstr ""
@@ -178,28 +183,22 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:97
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:113
 #, python-format
 msgid "Checked out at"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:27
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
 #, python-format
-msgid "Click to check in"
+msgid "Click to"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:31
-#, python-format
-msgid "Click to check out"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:12
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 #, python-format
 msgid "Company Logo"
@@ -212,53 +211,56 @@ msgstr "Konfiguration"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
-msgid ""
-"Create a few employees to be able to select an employee here and perform his"
-" check in / check out."
+msgid "Create a new employee"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
 msgid "Created by"
 msgstr "Skapad av"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
 msgid "Created on"
 msgstr "Skapad den"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Current Month"
-msgstr "Aktuell Månad"
+msgstr "Aktuell månad"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_department_id
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 msgid "Department"
 msgstr "Avdelning"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:123
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:130
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:115
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:122
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Employee"
 msgstr "Anställd"
@@ -269,7 +271,7 @@ msgid "Employee Image"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr ""
@@ -292,6 +294,7 @@ msgid "Employees"
 msgstr "Anställda"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__has_group_hr_attendance_use_pin
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr ""
@@ -305,64 +308,73 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:35
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:48
 #, python-format
 msgid "Error : Could not find employee linked to user."
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:81
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
 #, python-format
 msgid "Error: could not find corresponding employee."
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:70
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:77
 #, python-format
 msgid "First come, first served"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:92
 #, python-format
 msgid "Glad to have you back, it's been a while!"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:76
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:135
+#, python-format
+msgid "Go back"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:83
 #, python-format
 msgid "Good afternoon"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:78
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Good evening"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:73
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
 #, python-format
 msgid "Good morning"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:64
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:71
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:87
 #, python-format
 msgid "Good night"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:100
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:111
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:129
 #, python-format
 msgid "Goodbye"
 msgstr ""
@@ -374,28 +386,28 @@ msgstr "Gruppera på"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:127
 #, python-format
 msgid "Have a good afternoon"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:118
 #, python-format
 msgid "Have a good day!"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:125
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:132
 #, python-format
 msgid "Have a good evening"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
 #, python-format
 msgid "Have a nice lunch!"
 msgstr ""
@@ -406,25 +418,25 @@ msgid "Hr Attendance Search"
 msgstr "Närvarosökning"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_barcode
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee__barcode
 msgid "ID used for employee identification."
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:88
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:95
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:134
 #, python-format
 msgid "Invalid request, please return to the main menu."
 msgstr ""
@@ -435,22 +447,22 @@ msgid "Kiosk Mode"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
 msgid "Last Attendance"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
 msgid "Last Modified on"
 msgstr "Senast redigerad"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
@@ -465,7 +477,8 @@ msgid "Manager"
 msgstr "Chef"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__manual_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__has_group_hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr ""
@@ -474,11 +487,6 @@ msgstr ""
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
 msgid "Message"
 msgstr "Meddelande"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Month"
-msgstr "Månad"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -491,15 +499,27 @@ msgid "No Check Out"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
-msgid "No attendance records to display."
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+msgid "No attendance records found"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:72
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "No attendance records to display"
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:73
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
 msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:130
+#, python-format
+msgid "OK"
+msgstr "OK"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -507,38 +527,25 @@ msgid "Officer"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__pin
 msgid "PIN"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee__pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
 #, python-format
-msgid "Please enter your PIN to check in"
+msgid "Please enter your PIN to"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:59
-#, python-format
-msgid "Please enter your PIN to check out"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
-msgid ""
-"Please make sure you're using the correct filter if you expected to see any."
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:82
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
 #, python-format
 msgid "Please return to the main menu."
 msgstr ""
@@ -555,14 +562,14 @@ msgstr "Rapportering"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:18
 #, python-format
 msgid "Scan your badge"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:15
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
 #, python-format
 msgid "Select Employee"
 msgstr ""
@@ -578,6 +585,16 @@ msgid "Settings"
 msgstr "Inställningar"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed In"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed Out"
+msgstr ""
+
+#. module: hr_attendance
 #: sql_constraint:hr.employee:0
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -585,31 +602,33 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:63
+#: code:addons/hr_attendance/models/hr_employee.py:64
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr ""
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "The attendance records of your employees will be displayed here."
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:68
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:75
 #, python-format
 msgid "The early bird catches the worm"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_manual_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee__manual_attendance
 msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_res_users__has_group_hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
 msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
@@ -617,15 +636,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_res_users__has_group_hr_attendance_use_pin
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
-msgid "To create employees go to the Employees menu."
 msgstr ""
 
 #. module: hr_attendance
@@ -639,62 +654,83 @@ msgid "Use PIN codes to check in in Kiosk Mode"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_users
+msgid "Users"
+msgstr "Användare"
+
+#. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:102
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
 #, python-format
-msgid ""
-"Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
-"please contact Human Resources."
+msgid "Want to check out?"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:112
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
 #, python-format
 msgid "Welcome"
 msgstr "Välkommen"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:11
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Welcome to"
 msgstr "Välkommen till"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#, python-format
+msgid "Welcome!"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
 msgid "Worked Hours"
 msgstr "Arbetstimmar"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:79
+#: code:addons/hr_attendance/models/hr_employee.py:80
 #, python-format
 msgid "Wrong PIN"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:105
+#: code:addons/hr_attendance/models/hr_attendance.py:107
 #, python-format
 msgid "You cannot duplicate an attendance."
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#, python-format
+msgid "check in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#, python-format
+msgid "check out"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
 msgid "list of attendances for the employee"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:123
-#, python-format
-msgid "ok"
-msgstr "ok"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:21
 #, python-format
 msgid "or"
 msgstr "eller"

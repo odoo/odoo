@@ -11,10 +11,10 @@
 # Franciele Neiva <franciele.neiva@br.ey.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Franciele Neiva <franciele.neiva@br.ey.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -441,6 +441,7 @@ msgid "List"
 msgstr "Lista"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__group_lunch_user
 #: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
 msgid "Lunch"
@@ -610,8 +611,8 @@ msgstr "Pedido"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Order Month"
-msgstr "Mês do Pedido"
+msgid "Order Date"
+msgstr "Data da Ordem"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -889,6 +890,11 @@ msgid "User"
 msgstr "Usuário"
 
 #. module: lunch
+#: model:ir.model,name:lunch.model_res_users
+msgid "Users"
+msgstr "Usuários"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier
@@ -898,7 +904,7 @@ msgstr "Fornecedor"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Vendor Orders by Month"
+msgid "Vendor Orders by Date"
 msgstr ""
 
 #. module: lunch

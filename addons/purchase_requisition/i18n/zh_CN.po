@@ -9,13 +9,16 @@
 # liAnGjiA <liangjia@qq.com>, 2018
 # fausthuang, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# niulin lnc. <admin@niulin.net>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: niulin lnc. <admin@niulin.net>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +80,11 @@ msgstr "<strong>来源:</strong><br/>"
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
 msgstr "<strong>供应商 </strong>"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
@@ -253,14 +261,29 @@ msgstr "草稿"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Month"
-msgstr "终止月份"
+msgid "End Date"
+msgstr "终止日期"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr "采购协议的例子，包含招标和总括订单。"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -283,6 +306,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "In a call for tenders, you can record the products you need to buy\n"
@@ -300,6 +338,11 @@ msgstr "在谈判中"
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Information about a product vendor"
 msgstr "有关产品的供应商信息。"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
@@ -328,6 +371,16 @@ msgid "Lines"
 msgstr "明细行"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr "多个请求"
@@ -348,9 +401,34 @@ msgid "New Quotation"
 msgstr "新报价单"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
 msgstr "订单的号码"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -654,6 +732,16 @@ msgid "Unit Price"
 msgstr "单价"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
+
+#. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
 msgstr "使用协议的明细行"
@@ -683,6 +771,16 @@ msgstr "仓库"
 #, python-format
 msgid "Warning for %s"
 msgstr "%s的警告"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:177

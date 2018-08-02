@@ -3,16 +3,17 @@
 # * payment_payumoney
 # 
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# SV <sv@grimmette.ru>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Sergey Vilizhanin, 2017
+# Martin Trigaux, 2017
+# Collex100, 2017
+# Василий Коробатов <boxat@mail.ru>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Василий Коробатов <boxat@mail.ru>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,20 +22,44 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Ручное подтверждение"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "Merchant Key"
 msgstr "Мерчант Ключ"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
 msgstr "Мерчант Салт"
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:146
-#, python-format
-msgid "PayUmoney: feedback error"
-msgstr "PayUmoney: Ошибка обратная связь"
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:108
@@ -74,3 +99,28 @@ msgstr "Платежи клиентов"
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Операция Оплаты"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Провайдер"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Банковский Перевод"

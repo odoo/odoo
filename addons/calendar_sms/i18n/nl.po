@@ -6,19 +6,25 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Email"
+msgstr "E-mail"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
@@ -37,6 +43,16 @@ msgid "Event reminder: %s on %s."
 msgstr "Evenement herinnering: %s op %s."
 
 #. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Notification"
+msgstr "Melding"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "SMS Text Message"
+msgstr "SMS tekstbericht"
+
+#. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:24
 #, python-format
 msgid "SMS text message reminder sent !"
@@ -46,6 +62,11 @@ msgstr "Herinnering per SMS verstuurd!"
 #: model:ir.actions.act_window,name:calendar_sms.sms_message_send_action_mutli
 msgid "Send SMS to attendees"
 msgstr "Verstuur SMS aan deelnemers"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__type
+msgid "Type"
+msgstr "Type"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager

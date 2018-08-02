@@ -7,18 +7,18 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
-# Liping Wang <lynn.config@gmail.com>, 2017
 # Bo Cao, 2017
 # Martin Trigaux, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# Xu Lei <xulei8@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +45,15 @@ msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr "%(empl_name)s 从%(check_in)s 到 %(check_out)s"
 
 #. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:109
+#, python-format
+msgid ""
+"<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
+"right, please contact Human Resource staff"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
 msgstr "<span class=\"o_stat_text\">考勤</span>"
@@ -58,14 +67,14 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:117
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:124
 #, python-format
 msgid "An apple a day keeps the doctor away"
 msgstr "一天一苹果医生远离我"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:106
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr "期待很快与您见面！"
@@ -74,6 +83,7 @@ msgstr "期待很快与您见面！"
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__group_hr_attendance_user
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -125,13 +135,13 @@ msgid ""
 msgstr "无法为%(empl_name)s 创建新的出勤记录, 该员工已在 %(datetime)s中签入"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:108
+#: code:addons/hr_attendance/models/hr_employee.py:109
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr "无法对多个员工执行签入或签出。"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:122
+#: code:addons/hr_attendance/models/hr_employee.py:123
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -155,20 +165,6 @@ msgid "Check Out"
 msgstr "签退"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:53
-#, python-format
-msgid "Check in"
-msgstr "签到"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:49
-#, python-format
-msgid "Check out"
-msgstr "签退"
-
-#. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
 msgstr "签到/签退"
@@ -180,7 +176,7 @@ msgstr "签到"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:109
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:122
 #, python-format
 msgid "Checked in at"
 msgstr "签到时间"
@@ -192,28 +188,22 @@ msgstr "签退"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:97
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:113
 #, python-format
 msgid "Checked out at"
 msgstr "签退时间"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:27
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
 #, python-format
-msgid "Click to check in"
-msgstr "点击签到"
+msgid "Click to"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:31
-#, python-format
-msgid "Click to check out"
-msgstr "点击签退"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:12
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 #, python-format
 msgid "Company Logo"
@@ -245,6 +235,11 @@ msgid "Current Month"
 msgstr "当前月份"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Date"
+msgstr "日期"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 msgid "Department"
 msgstr "部门"
@@ -256,14 +251,14 @@ msgstr "显示名称"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:123
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:130
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr "早睡早起, 使人健康, 富有和聪明"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:115
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:122
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr "早餐当国王，午餐当商人，晚餐当乞丐"
@@ -304,6 +299,7 @@ msgid "Employees"
 msgstr "员工"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__has_group_hr_attendance_use_pin
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "允许使用PIN"
@@ -317,64 +313,73 @@ msgstr "错误: 找不到与用户链接的员工"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:35
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:48
 #, python-format
 msgid "Error : Could not find employee linked to user."
 msgstr "错误: 找不到与用户链接的员工。"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:81
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
 #, python-format
 msgid "Error: could not find corresponding employee."
 msgstr "错误: 找不到相应的员工。"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:70
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:77
 #, python-format
 msgid "First come, first served"
 msgstr "先到先得"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:92
 #, python-format
 msgid "Glad to have you back, it's been a while!"
 msgstr "很高兴你回来了, 已经有一段时间了!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:76
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:135
+#, python-format
+msgid "Go back"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:83
 #, python-format
 msgid "Good afternoon"
 msgstr "下午好"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:78
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Good evening"
 msgstr "晚上好"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:73
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
 #, python-format
 msgid "Good morning"
 msgstr "早上好"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:64
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:71
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:87
 #, python-format
 msgid "Good night"
 msgstr "晚上"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:100
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:111
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:129
 #, python-format
 msgid "Goodbye"
 msgstr "再见"
@@ -386,28 +391,28 @@ msgstr "分组"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:127
 #, python-format
 msgid "Have a good afternoon"
 msgstr "下午好"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:118
 #, python-format
 msgid "Have a good day!"
 msgstr "祝你今天开心！"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:125
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:132
 #, python-format
 msgid "Have a good evening"
 msgstr "晚上好"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
 #, python-format
 msgid "Have a nice lunch!"
 msgstr "吃顿美味的午餐!"
@@ -429,14 +434,14 @@ msgstr "用于员工识别的ID。"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:88
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:95
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
 msgstr "如果一份工作值得做，就值得做好！"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:134
 #, python-format
 msgid "Invalid request, please return to the main menu."
 msgstr "请求无效，请返回主菜单。"
@@ -478,6 +483,7 @@ msgstr "管理员"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__manual_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__has_group_hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "手动出勤"
@@ -486,11 +492,6 @@ msgstr "手动出勤"
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
 msgid "Message"
 msgstr "消息"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Month"
-msgstr "月"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -513,10 +514,17 @@ msgid "No attendance records to display"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:72
+#: code:addons/hr_attendance/models/hr_employee.py:73
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
 msgstr "没有员工对应的条码 %(barcode)s"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:130
+#, python-format
+msgid "OK"
+msgstr "确认"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -535,21 +543,14 @@ msgstr "在Kiosk模式下用于签到/签退的PIN（如果在配置中启用）
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
 #, python-format
-msgid "Please enter your PIN to check in"
-msgstr "请输入你的PIN签到"
+msgid "Please enter your PIN to"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:59
-#, python-format
-msgid "Please enter your PIN to check out"
-msgstr "请输入你的PIN签退"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:82
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
 #, python-format
 msgid "Please return to the main menu."
 msgstr "请退回到主菜单"
@@ -566,14 +567,14 @@ msgstr "报告"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:18
 #, python-format
 msgid "Scan your badge"
 msgstr "扫描你的工牌"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:15
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
 #, python-format
 msgid "Select Employee"
 msgstr "选择员工"
@@ -606,7 +607,7 @@ msgid ""
 msgstr "徽章ID必须是唯一的，这个已经分配给另一个员工。"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:63
+#: code:addons/hr_attendance/models/hr_employee.py:64
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr "PIN码必须是一串数字。"
@@ -619,7 +620,7 @@ msgstr "您的员工的出勤记录将显示在此处。"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:68
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:75
 #, python-format
 msgid "The early bird catches the worm"
 msgstr "早起的鸟儿有虫吃"
@@ -632,6 +633,7 @@ msgid ""
 msgstr "员工将有权访问  “我的出勤 “ 菜单, 在会话中进行签入和签出。"
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_res_users__has_group_hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
 msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
@@ -639,6 +641,7 @@ msgid ""
 msgstr "用户将获得权限访问人力资源的考勤菜单，使他能够管理自己的考勤。"
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_res_users__has_group_hr_attendance_use_pin
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
@@ -656,29 +659,39 @@ msgid "Use PIN codes to check in in Kiosk Mode"
 msgstr "使用PIN码在Kiosk模式下登录"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:102
-#, python-format
-msgid ""
-"Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
-"please contact Human Resources."
-msgstr "警告！ 最后一次签入时间超过12小时。<br/>如果不正确，请联系人力资源部。"
+#: model:ir.model,name:hr_attendance.model_res_users
+msgid "Users"
+msgstr "用户"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:112
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#, python-format
+msgid "Want to check out?"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
 #, python-format
 msgid "Welcome"
 msgstr "欢迎"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:11
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Welcome to"
 msgstr "欢迎"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#, python-format
+msgid "Welcome!"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -686,16 +699,34 @@ msgid "Worked Hours"
 msgstr "工作时数"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:79
+#: code:addons/hr_attendance/models/hr_employee.py:80
 #, python-format
 msgid "Wrong PIN"
 msgstr "错误 PIN"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:106
+#: code:addons/hr_attendance/models/hr_attendance.py:107
 #, python-format
 msgid "You cannot duplicate an attendance."
 msgstr "你不能复制出勤记录。"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#, python-format
+msgid "check in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#, python-format
+msgid "check out"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
@@ -704,14 +735,7 @@ msgstr "员工出勤列表"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:123
-#, python-format
-msgid "ok"
-msgstr "确定"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:21
 #, python-format
 msgid "or"
 msgstr "或"

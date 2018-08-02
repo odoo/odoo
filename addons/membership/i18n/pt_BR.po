@@ -7,14 +7,14 @@
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
 # falexandresilva <falexandresilva@gmail.com>, 2016
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,6 +231,7 @@ msgstr "Valor Agregado"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
 msgstr "Data Final"
 
@@ -240,30 +241,19 @@ msgid "End Membership Date"
 msgstr "Finalizar Data do Grupo"
 
 #. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "End Month"
-msgstr "Mês de Término"
-
-#. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
 msgstr "Data de término da Associação"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Ending Month Of Membership"
-msgstr "Mês Final de Associação"
+msgid "Ending Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Erro! A Data de Término não pode começar antes da Data de Início."
-
-#. module: membership
-#: code:addons/membership/models/partner.py:159
-#, python-format
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Erro! Você não pode criar membros associados recursivamente."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -283,11 +273,6 @@ msgstr "Membro Gratuito"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
 msgstr "De"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
-msgid "From Month"
-msgstr "Do Mês"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -627,18 +612,15 @@ msgstr "Escolha se você deseja oferecer associações gratuítas."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
 msgstr "Data de Início"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Start Month"
-msgstr "Mês de Início"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Starting Month Of Membership"
-msgstr "Mês inicial da Associação"
+msgid "Starting Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -682,6 +664,12 @@ msgstr "Fornecedores"
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
 msgstr "Membro em Espera"
+
+#. module: membership
+#: code:addons/membership/models/partner.py:159
+#, python-format
+msgid "You cannot create recursive associated members."
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line

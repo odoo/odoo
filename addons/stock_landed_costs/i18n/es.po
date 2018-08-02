@@ -6,7 +6,6 @@
 # oihane <oihanecruce@gmail.com>, 2016
 # Martin Trigaux, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -15,16 +14,20 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Antonio Trueba, 2016
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# Javier Ramirez <elbomba887@gmail.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,10 +36,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:343
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:347
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:364
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:368
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:344
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:348
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:365
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:369
 #, python-format
 msgid " already out"
 msgstr " ya fuera"
@@ -50,6 +53,11 @@ msgstr "Cuenta"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
 msgid "Account Journal"
 msgstr "Diario de contabilidad"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "Action Needed"
+msgstr "Acción requerida"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -142,6 +150,7 @@ msgstr "Creado el"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Date"
 msgstr "Fecha"
 
@@ -203,6 +212,21 @@ msgid "Final Cost"
 msgstr "Coste final"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seguidores (Canales)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Empresas)"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Former Cost"
 msgstr "Antiguo coste"
@@ -225,6 +249,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Información"
@@ -233,6 +272,11 @@ msgstr "Información"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 msgid "Inventory Valuation"
 msgstr "Valoración del inventario"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
+msgid "Is Follower"
+msgstr "Es un seguidor"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -311,9 +355,14 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-msgid "Month"
-msgstr "Mes"
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
+msgid "Messages"
+msgstr "Mensajes"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
@@ -338,6 +387,31 @@ msgstr ""
 "costos de transporte."
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de acciones"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Número de mensajes que requieren una acción"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Número de mensajes no leidos"
+
+#. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:87
 #, python-format
 msgid "Only draft landed costs can be validated"
@@ -349,7 +423,7 @@ msgid "Pickings"
 msgstr "Albaranes"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:310
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:312
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -426,7 +500,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Líneas de ajuste de valorización de existencias"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:158
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:161
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -444,6 +518,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
 msgid "Total"
 msgstr "Total"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_unread
+msgid "Unread Messages"
+msgstr "Mensajes sin leer"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Contador de mensajes sin leer"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -470,6 +554,16 @@ msgstr "Ajustes de valorización"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
 msgid "Volume"
 msgstr "Volumen"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicaciones del sitio web"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight

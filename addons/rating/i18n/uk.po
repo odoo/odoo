@@ -3,24 +3,24 @@
 # * rating
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Yaroslav Molochko <onorua@gmail.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Yaroslav Molochko <onorua@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -28,19 +28,21 @@ msgid ""
 "<br/>\n"
 "                            on our services on \""
 msgstr ""
+"<br/>\n"
+"                            на наших сервісах \""
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ресурс</span>"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_access_token
+#: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
 msgstr "Токен доступу для встановлення рейтингу значення"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_message_id
+#: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
@@ -48,49 +50,49 @@ msgstr ""
 "використовується в аддонах веб-сайтів."
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_partner_id
+#: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
 msgstr "Автор рейтингу"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_feedback
+#: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
 msgid "Comment"
 msgstr "Коментар"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_create_uid
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_create_date
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_partner_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
 msgstr "Клієнт"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Day"
-msgstr "День"
+msgid "Date"
+msgstr "Дата"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_display_name
-#: model:ir.model.fields,field_description:rating.field_rating_rating_display_name
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
 msgid "Document"
 msgstr "Документ"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_model
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
 msgid "Document Model"
 msgstr "Модель документу"
 
@@ -100,12 +102,12 @@ msgid "Email Thread"
 msgstr "Ланцюжки повідомлень"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_consumed
+#: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
 msgstr "Увімкнено, якщо рейтинг був заповнений."
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_consumed
+#: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
 msgstr "Заповнений рейтинг"
 
@@ -123,42 +125,42 @@ msgstr "Групувати за"
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "Високо незадоволений"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_id
-#: model:ir.model.fields,field_description:rating.field_rating_rating_id
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_id
+#: model:ir.model.fields,help:rating.field_rating_rating__res_id
 msgid "Identifier of the rated object"
-msgstr "Ідентифікатор номінального об'єкта"
+msgstr "Ідентифікатор оцінювання об'єкта"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rating_image
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
 msgid "Image"
 msgstr "Зображення"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin___last_update
-#: model:ir.model.fields,field_description:rating.field_rating_rating___last_update
+#: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_write_uid
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_write_date
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_message_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Linked message"
 msgstr "Об'єднане повідомлення"
 
@@ -168,75 +170,71 @@ msgid "Message"
 msgstr "Повідомлення"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_model_id
+#: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
 msgid "Model of the followed resource"
-msgstr ""
-
-#. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Month"
-msgstr "Місяць"
+msgstr "Модель наступного ресурсу"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr "мої рейтинги"
+msgstr "мої оцінки"
 
 #. module: rating
 #: selection:rating.rating,rating_text:0
 msgid "No Rating yet"
-msgstr ""
+msgstr "Ще немає жодного рейтингу"
+
+#. module: rating
+#: model:ir.actions.act_window,help:rating.action_view_rating
+msgid "No rating yet"
+msgstr "Ще немає рейтингу"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
-msgstr ""
+msgstr "Не задоволений"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_rated_partner_id
+#: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
 msgid "Owner of the rated resource"
-msgstr "Власник рейтингового ресурсу"
+msgstr "Власник ресурсу оцінювання"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Батьківський документ"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_model
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Модель батьківського документу"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "Назва батьківського документу"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_model_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "Модель, пов'язана з батьківським документом"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
-msgstr "Номінальний користувач"
+msgstr "Користувач оцінювання"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rated_partner_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 msgid "Rated person"
-msgstr ""
+msgstr "Номінальна особа"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_ids
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_ids
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_ids
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_ids
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rating_text
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
@@ -250,26 +248,17 @@ msgid "Rating Average"
 msgstr "Середнє оцінювання"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_feedback
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_feedback
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_feedback
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_feedback
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Останній зворотній зв'язок рейтингу"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_image
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_image
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_image
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_image
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Останнє зображення рейтингу"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_value
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_value
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_value
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_value
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
 msgstr "Оцінювання останнього значення"
 
@@ -279,18 +268,19 @@ msgid "Rating Mixin"
 msgstr "Оцінювання Mixin"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message_rating_value
-#: model:ir.model.fields,field_description:rating.field_mail_mail_rating_value
-#: model:ir.model.fields,field_description:rating.field_mail_message_rating_value
-#: model:ir.model.fields,field_description:rating.field_survey_mail_compose_message_rating_value
-msgid "Rating Value"
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
+msgid "Rating Number"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_count
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_count
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_count
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_count
+#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+msgid "Rating Value"
+msgstr "Значення рейтингу"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
 msgstr "Підрахунок оцінювання"
 
@@ -300,7 +290,7 @@ msgid "Rating should be between 0 to 10"
 msgstr "Оцінювання повинно бути від 0 до 10"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_rating
+#: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "Значення оцінювання: 0=Нещасливий, 10=Щасливий"
 
@@ -310,26 +300,22 @@ msgid "Ratings"
 msgstr "Оцінювання"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_mail_channel_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_product_template_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_project_task_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_rating_mixin_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_rating_rating_feedback
+#: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
+#: model:ir.model.fields,help:rating.field_rating_rating__feedback
 msgid "Reason of the rating"
 msgstr "Причина оцінювання"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_model_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
 msgstr "Пов'язана модель документа"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message_rating_ids
-#: model:ir.model.fields,field_description:rating.field_mail_mail_rating_ids
-#: model:ir.model.fields,field_description:rating.field_mail_message_rating_ids
-#: model:ir.model.fields,field_description:rating.field_survey_mail_compose_message_rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Пов'язані рейтинги"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -337,18 +323,18 @@ msgid "Resource"
 msgstr "Ресурс"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr ""
+msgstr "Назва ресурсу"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Satisfied"
-msgstr ""
+msgstr "Задоволений"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_access_token
+#: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
 msgid "Security Token"
 msgstr "Token безпеки"
 
@@ -361,7 +347,7 @@ msgstr "Відправити Feedback"
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
-msgstr ""
+msgstr "Відправлено на"
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -369,7 +355,7 @@ msgid "Thanks! We appreciate your feedback."
 msgstr "Дякуємо! Ми цінуємо ваш відгук."
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_name
+#: model:ir.model.fields,help:rating.field_rating_rating__res_name
 msgid "The name of the rated resource."
 msgstr "Назва ресурсу оцінювання."
 
@@ -389,11 +375,6 @@ msgid "Would be great if you can provide more information:"
 msgstr "Було би чудово, якщо ви би надали більше інформації:"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Year"
-msgstr "Рік"
-
-#. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
 msgstr "Ваша оцінювання було подане."
@@ -407,7 +388,7 @@ msgstr "від"
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
+msgstr "для"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:21

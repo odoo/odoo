@@ -9,10 +9,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgstr "Ken badge toe"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "Ken deze werknemer zijn eerste badge toe"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
@@ -170,6 +170,12 @@ msgid "Received Badges"
 msgstr "Ontvangen badges"
 
 #. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+"Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
@@ -188,6 +194,11 @@ msgstr ""
 "De geselecteerde werknemer komt niet overeen met de geselecteerde gebruiker."
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
 msgid "Users"
 msgstr "Gebruikers"
@@ -200,8 +211,8 @@ msgstr "Waar bent u dankbaar voor?"
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
 #, python-format
-msgid "You can not send a badge to yourself"
-msgstr "U kunt geen badge naar uzelf sturen"
+msgid "You can not send a badge to yourself."
+msgstr "U kan geen badge naar uzelf sturen"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18

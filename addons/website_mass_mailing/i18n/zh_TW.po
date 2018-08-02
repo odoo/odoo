@@ -1,123 +1,187 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mass_mailing
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter Popup</span>"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter</span>"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
 "<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
 "active on this page. Click"
-msgstr ""
+msgstr "<strong>時事快訊!</strong> 此時事快訊片段效果被激活這個頁面上。點選"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr ""
+msgstr "添加一個通訊訂閱按鈕"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:49
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr ""
+msgstr "添加一個快訊訂閱彈出"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_options
+#: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
-msgstr ""
+msgstr "變更通訊"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "Choose your mailing subscriptions."
-msgstr ""
+msgstr "選擇您的訂閱信件。"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid "Encourage to subscribe to mailing lists with a popup"
+msgstr "鼓勵通過彈出窗口訂閱信件列表"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
-msgstr ""
+msgstr "在這裡編輯對話內容"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
+msgid "Mailing List"
+msgstr "信件列表"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
 msgid "Mailing Subscriptions"
-msgstr ""
+msgstr "信件訂閱"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:22
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
 #, python-format
 msgid "Newsletter"
-msgstr "電子報"
+msgstr "快訊"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
+msgid "Popup Content"
+msgstr "彈出內容"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
 msgstr "訂閱"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
-msgstr ""
+msgstr "謝謝"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks for your subscription!"
+msgstr "感謝您的訂閱!"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid ""
+"This adds a new Newsletter Popup snippet to drag & drop on your website "
+"pages. It triggers a popup when visitors land on the page. This popup "
+"prompts them to enter their email address to join a mailing list."
 msgstr ""
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:80
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
 #, python-format
 msgid "Type Here ..."
-msgstr ""
+msgstr "在這裡輸入..."
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_users__has_group_website_popup_on_exit
+#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
+msgid "Use subscription pop up on the website"
+msgstr "使用網站的彈出訂閱"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_res_users
+msgid "Users"
+msgstr "使用者"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings__group_website_popup_on_exit
+msgid "Website Popup"
+msgstr "網站彈出窗口"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list__popup_content
+msgid "Website Popup Content"
+msgstr "網站彈出內容"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list__popup_redirect_url
+msgid "Website Popup Redirect URL"
+msgstr "網站彈出重新定向網址"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
-msgstr ""
+msgstr "您沒有訂閱任何我們的信件列表。"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "Your changes have been saved."
-msgstr ""
+msgid "You have been successfully <strong>unsubscribed</strong>!"
+msgstr "您已經成功<strong> 取消訂閱</strong>!"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
+#, python-format
+msgid "Your changes have been saved."
+msgstr "您的修改已經保存。"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
+#, python-format
+msgid "Your changes have not been saved, try again later."
+msgstr "您所做的更改尚未保存，請稍後重試。"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr ""
+msgstr "您的電子信件..."

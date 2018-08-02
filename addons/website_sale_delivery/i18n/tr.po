@@ -5,37 +5,26 @@
 # Translators:
 # Alper Çiftçi <inactive+alprciftci@transifex.com>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # gezgin biri <gezginbiri@hotmail.com>, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:50
-#, python-format
-msgid ""
-"%s does not ship to your address, please choose another one.\n"
-"(Error: %s)"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
-msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add delivery methods"
-msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -45,16 +34,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
-msgid ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
-"updated after choosing a new delivery method\"> Delivery:</span>"
-msgstr ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"Teslimat, yeni bir "
-"teslimat yöntemi seçildikten sonra güncellenecek.\"> Teslimat:</span>"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
 msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
@@ -72,7 +52,7 @@ msgstr "Nakliyeci"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
-msgstr ""
+msgstr "Bir teslimat yöntemi seçin"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -82,10 +62,10 @@ msgstr "Ülke"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "DHL Delivery Methods"
-msgstr ""
+msgstr "DHL Teslimat Yöntemi"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
 msgstr "Teslimat Tutarı"
 
@@ -96,6 +76,16 @@ msgid "Delivery Methods"
 msgstr "Teslimat Yöntemleri"
 
 #. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery will be updated after choosing a new delivery method"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery:"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
 msgstr "Tanım"
@@ -103,17 +93,22 @@ msgstr "Tanım"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Açıklama eTicaret ve online sorularda görüntülenir."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
 msgstr "Çevrimiçi Teklifler için Açıklama"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "FedEx Delivery Methods"
+msgid "Easypost Delivery Methods"
 msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "FedEx Delivery Methods"
+msgstr "FedEx Teslimat Yöntemi"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -121,17 +116,17 @@ msgid "Free"
 msgstr "Ücretsiz"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has an order line set for delivery"
 msgstr "Teslimat için belirlenmiş bir sipariş kalemi vardır"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has delivery"
 msgstr "Teslimat var"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:42
+#: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
@@ -141,10 +136,18 @@ msgstr ""
 "bulunmamaktadır. Daha fazla bilgi için lütfen bizimle iletişime geçin."
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:49
-#, python-format
-msgid "Ouch, you cannot choose this carrier!"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
+msgid "Order Lines displayed on Website"
+msgstr "Web sitesinde görüntülenen sipariş satırları"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
+msgid ""
+"Order Lines to be displayed on the website. They should not be used for "
+"computation purpose."
 msgstr ""
+"Sipariş satırları web sitesinde görüntülenecek. Bunlar hesaplama amacıyla "
+"kullanılmamalıdır."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -157,15 +160,20 @@ msgid "Quotation"
 msgstr "Teklif"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:41
+#: code:addons/website_sale_delivery/controllers/main.py:43
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Üzgünüz, siparişinizi gönderememekteyiz."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
 msgid "The amount without tax."
 msgstr "Vergisiz tutar"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
@@ -178,11 +186,16 @@ msgid "USPS Delivery Methods"
 msgstr "USPS Teslimat Yöntemleri"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
 msgid "Visible in Website"
 msgstr "Web Sitesinde Görünür"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
+msgid "Website URL"
+msgstr "Web Sitesi URL Adresi"
+
+#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Delivery Methods"
-msgstr ""
+msgstr "bpost Teslimat Yöntemi"

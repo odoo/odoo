@@ -3,19 +3,19 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Sergey Vilizhanin, 2017
+# Collex100, 2017
+# Martin Trigaux, 2017
 # Vladimir Lukianov <lvm.mobile@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Yuriy Ney <k_wizard@mail.ru>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -25,19 +25,6 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:50
-#, python-format
-msgid ""
-"%s does not ship to your address, please choose another one.\n"
-"(Error: %s)"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
-msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add delivery methods"
-msgstr ""
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid ""
 "<span class=\"badge pull-right o_delivery_compute\">Select to compute "
@@ -45,16 +32,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
-msgid ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
-"updated after choosing a new delivery method\"> Delivery:</span>"
-msgstr ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"Доставка будет "
-"обновляться после выбора нового способа доставки\"> Доставка:</span>"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
 msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
@@ -85,7 +63,7 @@ msgid "DHL Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
 msgstr "Сумма доставки"
 
@@ -94,6 +72,16 @@ msgstr "Сумма доставки"
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr "Способы доставки"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery will be updated after choosing a new delivery method"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery:"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -107,9 +95,14 @@ msgstr ""
 "Описание отображается на eCommerce и онлайн коммерческих предложениях."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
 msgstr "Описание для Онлайн-предложения"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "Easypost Delivery Methods"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -122,17 +115,17 @@ msgid "Free"
 msgstr "Свободно"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has an order line set for delivery"
 msgstr "Есть строки заказа на доставку"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has delivery"
 msgstr "Есть доставка"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:42
+#: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
@@ -142,10 +135,18 @@ msgstr ""
 "Пожалуйста, свяжитесь с нами для получения дополнительной информации."
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:49
-#, python-format
-msgid "Ouch, you cannot choose this carrier!"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
+msgid "Order Lines displayed on Website"
+msgstr "Строки заказа отображеные на сайте"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
+msgid ""
+"Order Lines to be displayed on the website. They should not be used for "
+"computation purpose."
 msgstr ""
+"Строки заказа, которые должны быть отображены на сайте. Они не должны быть "
+"использованы в целях подсчета."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -158,15 +159,20 @@ msgid "Quotation"
 msgstr "Предложение цен"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:41
+#: code:addons/website_sale_delivery/controllers/main.py:43
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "К сожалению, мы не можем отправить ваш заказ"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
 msgid "The amount without tax."
 msgstr "Сумма без налога."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Полный URL-адрес для доступа к документу через веб-сайт."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
@@ -179,9 +185,14 @@ msgid "USPS Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
 msgid "Visible in Website"
 msgstr "Видимый на сайте"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
+msgid "Website URL"
+msgstr "URL Веб-сайта"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

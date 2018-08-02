@@ -1,0 +1,569 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: portal
+#: model:mail.template,body_html:portal.mail_template_data_portal_welcome
+msgid ""
+"\n"
+"<p>\n"
+"    Dear ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    You have been given access to ${user.company_id.name}'s portal.\n"
+"</p>\n"
+"<p>\n"
+"    Your login account data is:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Username: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    You can set or change your password via the following url:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_show_sign_in
+msgid "<b>Sign in</b>"
+msgstr "<b>登錄</b>"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_searchbar
+msgid ""
+"<span id=\"search_label\" class=\"hidden-xs mr4\">Search</span><span "
+"class=\"caret\"/>"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Apply"
+msgstr "應用"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_archive_groups
+msgid "Archives"
+msgstr "歸檔"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Cancel"
+msgstr "取消"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_layout
+msgid "Change"
+msgstr "找零"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:219
+#, python-format
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "City"
+msgstr "城市"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:12
+#, python-format
+msgid "Clear"
+msgstr "清除"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:27
+#, python-format
+msgid "Click here to see your document."
+msgstr "點選此處查看您的文檔。"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Company Name"
+msgstr "公司名稱"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"Confirm\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+"確認\n"
+"<span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_partner
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Contacts"
+msgstr "聯絡人"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Country"
+msgstr "國家"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Country..."
+msgstr "國家..."
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
+msgid "Created by"
+msgstr "創建者"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
+msgid "Created on"
+msgstr "創建時間"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_mixin__portal_url
+msgid "Customer Portal URL"
+msgstr "客戶門戶網址"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:14
+#, python-format
+msgid "Draw your signature"
+msgstr "繪製您的簽名"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Email"
+msgstr "電子郵箱"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_thread
+msgid "Email Thread"
+msgstr "電郵線程"
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP 路由"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
+msgid "ID"
+msgstr "ID"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__in_portal
+msgid "In Portal"
+msgstr "在門戶中"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:200
+#, python-format
+msgid "Invalid Email! Please enter a valid email address."
+msgstr "無效電郵！請輸入有效的電子信件地址。"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
+msgid "Invitation Message"
+msgstr "邀請消息"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin____last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
+msgid "Last Modified on"
+msgstr "最後修改時間"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
+msgid "Last Updated by"
+msgstr "最後更新人"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
+msgid "Last Updated on"
+msgstr "最後更新時間"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:20
+#, python-format
+msgid "Leave a comment"
+msgstr "留下評論"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
+msgid "Login User"
+msgstr "登陸使用者"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid "Logout"
+msgstr "註銷"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "消息"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.my_account_link
+msgid "My Account"
+msgstr "我的帳號"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.pager
+msgid "Next"
+msgstr "下一個"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "No title"
+msgstr ""
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:38
+#, python-format
+msgid "Oops! Something went wrong. Try to reload the page and log in."
+msgstr "糟糕！出錯了。請嘗試重新加載頁面並登錄。"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Phone"
+msgstr "電話"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Portal Access Management"
+msgstr "門戶訪問管理"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__portal_url
+msgid "Portal Access URL"
+msgstr "門戶訪問網址"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "門戶使用者配置"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.pager
+msgid "Prev"
+msgstr "前一個"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_chatter.js:109
+#, python-format
+msgid "Published on %s"
+msgstr "已在 %s 時發佈"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid ""
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr ""
+"請從下面的列表中選擇需要顯示在門戶頁面的聯繫人。\n"
+"    請確認每個聯繫人的電郵地址必須是有效且唯一的。\n"
+"    如果需要，可以直接在列表中修改聯繫人的電郵地址。"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:41
+#, python-format
+msgid "Send"
+msgstr "發送"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:100
+#, python-format
+msgid "Several contacts have the same email: "
+msgstr "多個聯繫人擁有同一個郵箱："
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:97
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr "一些聯繫人沒有有效的郵箱："
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:103
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr "某些聯繫人的郵箱和一個已存在的門戶使用者之郵箱相同："
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:223
+#, python-format
+msgid "Some required fields are empty."
+msgstr "一些必須的字段是空的。"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "State / Province"
+msgstr "州/省"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Street"
+msgstr "街道"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:25
+#, python-format
+msgid "Thank You !"
+msgstr "感謝您！"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:11
+#, python-format
+msgid "There are no comments for now."
+msgstr "目前沒有任何評論。"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr "這段文字將包含在發送給新門戶網站使用者的電子信件中。"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
+msgid "This text is included in the email sent to new users of the portal."
+msgstr "這段文字會被包含在發給門戶網站的新使用者的電郵中。"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:106
+#, python-format
+msgid ""
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr ""
+"要解決這個錯誤，您可以： \n"
+"- 更正相關聯繫人的郵箱\n"
+"- 僅允許擁有唯一的郵箱地址的聯繫人訪問"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
+msgid "Users"
+msgstr "使用者"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "VAT Number"
+msgstr "增值稅號碼"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_event_event__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_event_registration__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_mass_mailing_contact__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
+msgid "Website Messages"
+msgstr "網站信息"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
+#: model:ir.model.fields,help:portal.field_event_event__website_message_ids
+#: model:ir.model.fields,help:portal.field_event_registration__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_mass_mailing_contact__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
+#: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
+#: model:ir.model.fields,help:portal.field_res_users__website_message_ids
+msgid "Website communication history"
+msgstr "網站溝通記錄"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
+msgid "Wizard"
+msgstr "嚮導"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:32
+#, python-format
+msgid "Write a message..."
+msgstr "寫信息..."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:21
+#, python-format
+msgid "You must be"
+msgstr "您必須"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:175
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr "您必須在使用者設定裡輸入電子信件地址才能發送信件。"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Your Contact Details"
+msgstr "您的聯繫人詳細信息"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_layout
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Your Details"
+msgstr "您的詳細信息"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Your Documents"
+msgstr "您的文檔"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:6
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+#, python-format
+msgid "Your Name"
+msgstr "您的姓名"
+
+#. module: portal
+#: model:mail.template,subject:portal.mail_template_data_portal_welcome
+msgid "Your Odoo account at ${user.company_id.name}"
+msgstr "您在 ${user.company_id.name} 的Odoo帳號"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Zip / Postal Code"
+msgstr "郵政代碼"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:56
+#, python-format
+msgid "avatar"
+msgstr "頭像"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:8
+#, python-format
+msgid "comment"
+msgstr "評論"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:9
+#, python-format
+msgid "comments"
+msgstr "評語"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:21
+#, python-format
+msgid "logged in"
+msgstr "登入"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_mixin
+msgid "portal.mixin"
+msgstr "portal.mixin"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_my_details
+msgid "select..."
+msgstr "請選擇……"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:21
+#, python-format
+msgid "to post a comment."
+msgstr "張貼評論。"

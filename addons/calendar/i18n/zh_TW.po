@@ -3,15 +3,17 @@
 # * calendar
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +107,88 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"% set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"            <td valign=\"center\" align=\"right\" width=\"340\" style=\"padding:10px 10px 10px 5px; font-size: 12px;\">\n"
+"                <p>\n"
+"                    <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">接受</a>\n"
+"                    <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">拒絕</a>\n"
+"                    <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">查看</a>\n"
+"                </p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:10px 10px 10px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
+"                <p style=\"font-size: 20px; text-align: center;\"><strong>${object.event_id.name} 日期更新通知</strong></p>\n"
+"                <p>\n"
+"                    <strong>尊敬的 ${object.common_name}</strong>，<br />\n"
+"                    會議日期已更新。由 ${object.event_id.user_id.partner_id.name} 創建的  ${object.event_id.name} 會議現定於 ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)} 舉行。\n"
+"                </p>\n"
+"                <table style=\"margin-top: 20px;\"><tr>\n"
+"                    <td>\n"
+"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;\">\n"
+"                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                        </div>\n"
+"                        <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;\">\n"
+"                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                        </div>\n"
+"                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
+"                        <div style=\"border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>\n"
+"                    </td>\n"
+"                    <td width=\"20px;\"/>\n"
+"                    <td>\n"
+"                        <p>活動詳細信息</p>\n"
+"                        <ul>\n"
+"                        % if object.event_id.location:\n"
+"                            <li>地點：${object.event_id.location}\n"
+"                            （<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">查看地圖</a>）\n"
+"                            </li>\n"
+"                        % endif\n"
+"                        % if object.event_id.description :\n"
+"                            <li>描述： ${object.event_id.description}</li>\n"
+"                        % endif\n"
+"                        % if not object.event_id.allday and object.event_id.duration\n"
+"                            <li>持續時間：${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                        % endif\n"
+"                        <li>出席人員\n"
+"                        <ul>\n"
+"                        % for attendee in object.event_id.attendee_ids:\n"
+"                            <li>\n"
+"                                <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};\"></div>\n"
+"                                % if attendee.common_name != object.common_name:\n"
+"                                <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                                % else:\n"
+"                                <span style=\"margin-left:5px\">您</span>\n"
+"                                % endif\n"
+"                            </li>\n"
+"                        % endfor\n"
+"                        </ul></li>\n"
+"                        </ul>\n"
+"                    </td>\n"
+"                </tr></table>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -191,6 +275,87 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"% set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"            <td valign=\"center\" align=\"right\" width=\"340\" style=\"padding:10px 10px 10px 5px; font-size: 12px;\">\n"
+"                <p>\n"
+"                    <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">接受</a>\n"
+"                    <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">拒絕</a>\n"
+"                    <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">查看</a>\n"
+"                </p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:10px 10px 10px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
+"                <p style=\"font-size: 20px; text-align: center;\">邀請參加<strong>${object.event_id.name}</strong></p>\n"
+"                <p>\n"
+"                    <strong>尊敬的 ${object.common_name}</strong>，<br />\n"
+"                    ${object.event_id.user_id.partner_id.name} 邀請您參加 ${object.event_id.user_id.company_id.name} 的 ${object.event_id.name} 會議。</p>\n"
+"                <table style=\"margin-top: 20px;\"><tr>\n"
+"                    <td>\n"
+"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;border:1px solid #875A7B;\">\n"
+"                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                        </div>\n"
+"                        <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;\">\n"
+"                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                        </div>\n"
+"                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
+"                        <div style=\"border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>\n"
+"                    </td>\n"
+"                    <td width=\"20px;\"/>\n"
+"                    <td>\n"
+"                        <p>活動詳細信息</p>\n"
+"                        <ul>\n"
+"                        % if object.event_id.location:\n"
+"                            <li>地點：${object.event_id.location}\n"
+"                            （<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">查看地圖</a>）\n"
+"                            </li>\n"
+"                        % endif\n"
+"                        % if object.event_id.description :\n"
+"                            <li>描述：${object.event_id.description}</li>\n"
+"                        % endif\n"
+"                        % if not object.event_id.allday and object.event_id.duration\n"
+"                            <li>持續時間：${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                        % endif\n"
+"                        <li>參加者\n"
+"                        <ul>\n"
+"                        % for attendee in object.event_id.attendee_ids:\n"
+"                            <li>\n"
+"                                <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};\"></div>\n"
+"                                % if attendee.common_name != object.common_name:\n"
+"                                <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                                % else:\n"
+"                                <span style=\"margin-left:5px\">您</span>\n"
+"                                % endif\n"
+"                            </li>\n"
+"                        % endfor\n"
+"                        </ul></li>\n"
+"                        </ul>\n"
+"                    </td>\n"
+"                </tr></table>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -278,113 +443,197 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
-msgid "# Meetings Highlight"
-msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"% set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"            <td valign=\"center\" align=\"right\" width=\"340\" style=\"padding:10px 10px 10px 5px; font-size: 12px;\">\n"
+"                <p>\n"
+"                    <a href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">接受</a>\n"
+"                    <a href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">拒絕</a>\n"
+"                    <a href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">查看</a>\n"
+"                </p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:10px 10px 10px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
+"                <p style=\"font-size: 20px; text-align: center;\"><strong>${object.event_id.name}</strong>提醒</p>\n"
+"                <p>\n"
+"                    <strong>尊敬的 ${object.common_name}</strong>，<br />\n"
+"                    這是關於以下活動的提醒：\n"
+"                </p>\n"
+"                <table style=\"margin-top: 20px;\"><tr>\n"
+"                    <td>\n"
+"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;\">\n"
+"                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                        </div>\n"
+"                        <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;\">\n"
+"                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"                        </div>\n"
+"                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
+"                        <div style=\"border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>\n"
+"                    </td>\n"
+"                    <td width=\"20px;\"/>\n"
+"                    <td>\n"
+"                        <p>活動詳細信息</p>\n"
+"                        <ul>\n"
+"                        % if object.event_id.location:\n"
+"                            <li>地點：${object.event_id.location}\n"
+"                            （<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">查看地圖</a>）\n"
+"                            </li>\n"
+"                        % endif\n"
+"                        % if object.event_id.description :\n"
+"                            <li>描述：${object.event_id.description}</li>\n"
+"                        % endif\n"
+"                        % if not object.event_id.allday and object.event_id.duration\n"
+"                            <li>持續時間：${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                        % endif\n"
+"                        <li>參加者\n"
+"                        <ul>\n"
+"                        % for attendee in object.event_id.attendee_ids:\n"
+"                            <li>\n"
+"                                <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};\"></div>\n"
+"                                % if attendee.common_name != object.common_name:\n"
+"                                <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                                % else:\n"
+"                                <span style=\"margin-left:5px\">您</span>\n"
+"                                % endif\n"
+"                            </li>\n"
+"                        % endfor\n"
+"                        </ul></li>\n"
+"                        </ul>\n"
+"                    </td>\n"
+"                </tr></table>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - 提醒"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} 邀請"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: 日期已更新"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:720
+#: code:addons/calendar/models/calendar.py:741
 #, python-format
 msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
+"%s 在 %s 到\n"
+" %s 在 %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:711
+#: code:addons/calendar/models/calendar.py:732
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s 在 (%s 到 %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:225
+#: code:addons/calendar/models/calendar.py:227
 #, python-format
 msgid "%s has accepted invitation"
-msgstr ""
+msgstr "%s接受了邀請"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:233
+#: code:addons/calendar/models/calendar.py:235
 #, python-format
 msgid "%s has declined invitation"
-msgstr ""
+msgstr "%s已經拒絕了邀請"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "1 Day(s)"
-msgstr ""
+msgstr "1天"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "1 Hour(s)"
-msgstr ""
+msgstr "1小時"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "15 Minute(s)"
-msgstr ""
+msgstr "15分鐘"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "2 Hour(s)"
-msgstr ""
+msgstr "2小時"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "3 Hour(s), by e-mail"
-msgstr ""
+msgstr "3小時，透過信件"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "30 Minute(s)"
-msgstr ""
+msgstr "30分鐘"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "6 Hour(s), by e-mail"
-msgstr ""
+msgstr "6小時，透過信件"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr ""
+msgstr "<span> 小時</span>"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr ""
+msgstr "接受"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Accepted"
-msgstr ""
+msgstr "已接受"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_active
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_active
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
+msgid "Action Needed"
+msgstr "需要採取行動"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_activity_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
 msgid "Activities"
 msgstr "活動"
 
@@ -396,70 +645,73 @@ msgstr "活動"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "動態類別"
+msgstr "活動類型"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
+#, python-format
 msgid "All Day"
-msgstr ""
+msgstr "全天"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:707
+#: code:addons/calendar/models/calendar.py:728
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "全天，%s"
 
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
 msgid "An user cannot have twice the same contact."
-msgstr ""
+msgstr "使用者不能重複創建相同的聯繫人。"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_attendee
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
 msgid "Attendee"
-msgstr ""
+msgstr "參會者"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_status
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
 msgid "Attendee Status"
-msgstr ""
+msgstr "參會者狀態"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr "參與者資訊"
+msgstr "參會者信息"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
-msgstr ""
+msgstr "參會者"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
-msgstr ""
+msgstr "可用"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1606
+#: code:addons/calendar/models/calendar.py:1673
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
 msgid "Busy"
-msgstr ""
+msgstr "忙碌"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_byday
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 msgid "By day"
-msgstr ""
+msgstr "按天"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 msgid "Calendar"
-msgstr "行事曆"
+msgstr "日曆"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -467,126 +719,131 @@ msgstr "行事曆"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "日曆警示"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "日程邀請"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr ""
+msgstr "日曆會議"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "日曆：活動提醒"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid "Categories may trigger specific behavior like opening calendar view"
+msgstr "類別可能觸發特定行為，例如，打開日曆視圖"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Category"
+msgstr "類別"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "點選這裡只更新此實例，不包含其它定期會議。"
 
 #. module: calendar
-#: model:ir.actions.act_window,help:calendar.action_calendar_event
-msgid "Click to schedule a new meeting."
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
 msgid "Common name"
-msgstr ""
+msgstr "通用名稱"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "已確認"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
 msgid "Contact"
 msgstr "聯絡人"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_start
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
-msgstr "日期"
+msgstr "日期   "
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_day
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__day
 msgid "Date of month"
-msgstr ""
+msgstr "月日期"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "月天數"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
 msgid "Day of month"
-msgstr ""
+msgstr "日期"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "天"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr ""
+msgstr "拒絕"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Declined"
-msgstr ""
+msgstr "已拒絕"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_description
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__description
 msgid "Description"
-msgstr "說明"
+msgstr "描述"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:18
 #, python-format
 msgid "Details"
-msgstr ""
+msgstr "詳細信息"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -594,83 +851,71 @@ msgstr "顯示名稱"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
-msgstr ""
+msgstr "文件"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "文檔ID"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr ""
+msgstr "單據模型"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "單據模型名稱"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
-msgstr ""
+msgstr "時長"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
-#: model:ir.model.fields,help:calendar.field_calendar_alarm_duration_minutes
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr ""
+msgstr "時長（分鐘）"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_email
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
 msgid "Email"
-msgstr "電郵"
+msgstr "電子郵箱"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_attendee_email
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "被邀請人的電子信件"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_partner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_id
 msgid "Employee"
-msgstr ""
+msgstr "員工"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr ""
+msgstr "終止日期"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "結束時間"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "結束日期"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:915
-#, python-format
-msgid "Ending date cannot be set before starting date."
-msgstr ""
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:913
-#, python-format
-msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "結束時間"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -678,111 +923,141 @@ msgid "Event"
 msgstr "活動"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_display_time
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
-msgstr ""
+msgstr "活動時間"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "活動警示"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1164
+#: code:addons/calendar/models/calendar.py:1225
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr ""
+msgstr "事件重複間隔不能為負數。"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
-msgstr "所有人"
+msgstr "每一個人"
 
 #. module: calendar
 #: code:addons/calendar/models/mail_activity.py:38
 #, python-format
 msgid "Feedback: "
-msgstr ""
+msgstr "回饋："
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fifth"
-msgstr ""
+msgstr "第五個"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "First"
-msgstr ""
+msgstr "第一個"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:955
+#: code:addons/calendar/models/calendar.py:990
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "首先，必須指定邀請的日期。"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
+msgid "Followers"
+msgstr "訂閱者"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "關注者(渠道)"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "關注者(業務夥伴)"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fourth"
-msgstr ""
+msgstr "第四"
 
 #. module: calendar
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 msgid "Free"
-msgstr ""
+msgstr "免費"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_availability
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Free/Busy"
-msgstr ""
+msgstr "空閒/忙碌"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_fr
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
 msgid "Fri"
-msgstr ""
+msgstr "週五"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Friday"
-msgstr ""
+msgstr "週五"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1549
+#: code:addons/calendar/models/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "目前不支援按日期分組，使用日曆視圖來進行。"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP 路由"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Hour(s)"
+msgstr "小時"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要您留意的新信息。"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾選此項，有新消息會提醒您。"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
+msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_id
-msgid "ID"
-msgstr "編號"
-
-#. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_active
+#: model:ir.model.fields,help:calendar.field_calendar_event__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "如果有效字段設為false，它將允許您隱藏活動提醒信息而不需要刪除它。"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -790,121 +1065,139 @@ msgid "Invitation"
 msgstr "邀請"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 msgid "Invitation Token"
-msgstr ""
+msgstr "邀請指示物"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr ""
+msgstr "邀請詳情"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "邀請"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "邀請"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr "邀請精靈"
+msgstr "邀請嚮導"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
+msgid "Is Follower"
+msgstr "是訂閱者"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
+msgid "Is the Event Highlighted"
+msgstr ""
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Last"
-msgstr ""
+msgstr "最後"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_event___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type___last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_event____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
-#: model:ir.model.fields,field_description:calendar.field_res_users_calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "從基本日曆標示最後的提醒為已讀"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_rrule_type
+#: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "讓事件在該時間間隔自動重複"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_location
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__location
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
-msgstr ""
+msgstr "地點"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_location
+#: model:ir.model.fields,help:calendar.field_calendar_event__location
 msgid "Location of Event"
-msgstr ""
+msgstr "活動的地點"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_user_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
 msgid "Me"
-msgstr ""
+msgstr "我"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: selection:mail.activity.type,category:0
 msgid "Meeting"
 msgstr "會議"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "Meeting Details"
+#: code:addons/calendar/models/calendar.py:936
+#: code:addons/calendar/models/calendar.py:941
+#, python-format
+msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_name
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Meeting Details"
+msgstr "會議詳情"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
-msgstr ""
+msgstr "會議主題"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "會議類型"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr ""
+msgstr "會議類型"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
 msgid "Meeting linked"
-msgstr ""
+msgstr "會議已連接"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -914,51 +1207,61 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
-msgstr ""
+msgstr "會議"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
-msgstr "訊息"
+msgstr "消息"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
+msgid "Messages"
+msgstr "消息"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "分鐘"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Misc"
-msgstr ""
+msgstr "雜項"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_mo
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__mo
 msgid "Mon"
-msgstr ""
+msgstr "週一"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Monday"
-msgstr ""
+msgstr "週一"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "月"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr ""
+msgstr "我的活動"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "我的會議"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 msgid "Name"
 msgstr "名稱"
 
@@ -966,12 +1269,12 @@ msgstr "名稱"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr ""
+msgstr "需要採取行動"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr ""
+msgstr "我不會去。"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -979,31 +1282,61 @@ msgid "Notification"
 msgstr "通知"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行動數量"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行動消息的數量"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "重複的數量"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未讀消息的數量"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:17
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "確認"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only internal users"
-msgstr ""
+msgstr "僅內部使用者"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only me"
+msgstr "僅我"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Open Calendar"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_month_by
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
 msgid "Option"
-msgstr ""
+msgstr "選項"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1011,238 +1344,248 @@ msgid "Options"
 msgstr "選項"
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Other"
+msgstr "其他"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
-msgstr "擁有者"
+msgstr "所有者"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
-msgstr ""
+msgstr "參與者"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_partner_id
+#: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "使用者之業務夥伴的相關數據。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1177
+#: code:addons/calendar/models/calendar.py:1238
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr ""
+msgstr "請選擇這個月合適的一天。"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
 msgstr "隱私"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
-msgstr ""
+msgstr "重新提起"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "重複終止"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrency
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
 msgid "Recurrent"
-msgstr ""
+msgstr "循環"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrent_id
 msgid "Recurrent ID"
-msgstr ""
+msgstr "循環ID"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrent_id_date
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "循環ID日期"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_recurrency
+#: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "定期會議"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "循環規則"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
+msgstr "提醒早於"
+
+#. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Reminder"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
 msgid "Reminders"
-msgstr ""
+msgstr "提醒"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_count
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Repeat"
-msgstr ""
+msgstr "重複"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_interval
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "重複每"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_final_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__final_date
 msgid "Repeat Until"
-msgstr ""
+msgstr "重複直到"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_interval
+#: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "每(日/周/月/年)重複"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_count
+#: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
-msgstr ""
+msgstr "重複 x 次"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr "負責人"
+msgstr "負責"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "SMS Text Message"
-msgstr ""
+msgstr "短信"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_sa
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
 msgid "Sat"
-msgstr ""
+msgstr "週六"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "週六"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting"
+#: model:ir.actions.act_window,help:calendar.action_calendar_event
+msgid "Schedule a new meeting"
 msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "搜尋會議"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Second"
-msgstr ""
+msgstr "第二個"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr ""
+msgstr "選擇參會者..."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "發送信件"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_show_as
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show Time as"
-msgstr ""
+msgstr "顯示時間為"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "延後"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_start
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 msgid "Start"
-msgstr ""
+msgstr "開始"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_start_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr ""
+msgstr "開始日期"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_start_datetime
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_datetime
 msgid "Start DateTime"
-msgstr ""
+msgstr "開始日期時間"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_start
+#: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr ""
+msgstr "一個事件的開始日期，不包括全天事件的時間"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "開始時間"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_state
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_state
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__state
 msgid "Status"
 msgstr "狀態"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_attendee_state
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__state
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "參會者的參與狀況"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_stop
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
 msgid "Stop"
-msgstr ""
+msgstr "結束"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_stop
+#: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr ""
+msgstr "一個事件的結束日期，不包括全天事件的時間"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Subject"
-msgstr "主旨"
+msgstr "主題"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_su
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__su
 msgid "Sun"
-msgstr ""
+msgstr "週日"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Sunday"
-msgstr ""
+msgstr "週日"
 
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
 msgid "Tag name already exists !"
-msgstr "標籤名稱已經存在！"
+msgstr "標籤名已存在!"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "標籤"
+msgstr "摘要"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr "此"
 
 #. module: calendar
 #. openerp-web
@@ -1251,7 +1594,7 @@ msgstr ""
 msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
-msgstr ""
+msgstr "活動與會議相關聯。刪除該活動也會刪除相關會議。是否要繼續？"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1260,132 +1603,165 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"該日曆可在員工之間共享，並與\n"
+"            其他應用程序（例如員工休假或商機）\n"
+"            全面整合。"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:935
+#, python-format
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:940
+#, python-format
+msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
-msgstr ""
+msgstr "第三個"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "這個事件關聯到一個循環...<br/>"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_th
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__th
 msgid "Thu"
-msgstr ""
+msgstr "週四"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
+msgstr "週四"
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:41
+#, python-format
+msgid "Today's Meetings"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_tu
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
 msgid "Tue"
-msgstr ""
+msgstr "週二"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Tuesday"
-msgstr ""
+msgstr "週二"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
 msgid "Type"
-msgstr ""
+msgstr "類型"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Uncertain"
-msgstr ""
+msgstr "不確定"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "未確認"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_interval
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
-msgstr ""
+msgstr "單位"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
-msgstr "未讀訊息"
+msgstr "未讀消息"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未讀消息計數器"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "直到"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "僅更新這個實例"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_we
+#: model:ir.model,name:calendar.model_res_users
+msgid "Users"
+msgstr "使用者"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__we
 msgid "Wed"
-msgstr ""
+msgstr "週三"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Wednesday"
-msgstr ""
+msgstr "週三"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "周"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_week_list
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__week_list
 msgid "Weekday"
-msgstr ""
+msgstr "工作日"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "年"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr ""
+msgstr "我會去。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:155
+#: code:addons/calendar/models/calendar.py:157
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "您不能複製日程參與者。"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "calendar.alarm_manager"
-msgstr ""
+msgstr "calendar.alarm_manager"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "calendar.contacts"
-msgstr ""
+msgstr "日曆.聯繫人"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "例如:商務午餐"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1162
+#: code:addons/calendar/models/calendar.py:1223
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "間隔不能是負數。"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "附件"

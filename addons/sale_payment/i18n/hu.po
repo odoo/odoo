@@ -7,10 +7,10 @@
 # Martin Trigaux, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -20,26 +20,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:125
-#, python-format
-msgid "<%s> transaction (%s) failed: <%s>"
-msgstr ""
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:132
-#, python-format
-msgid "<%s> transaction (%s) invalid state: %s"
-msgstr ""
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:140
-#, python-format
-msgid "<%s> transaction (%s) order confirmation failed: <%s>"
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__sale_order_ids_nbr
+msgid "# of Sales Orders"
 msgstr ""
 
 #. module: sale_payment
@@ -50,6 +32,13 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Fizetés most"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
 msgstr ""
 
 #. module: sale_payment
@@ -74,38 +63,50 @@ msgid "<strong>Transactions</strong>"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
+#: code:addons/sale_payment/models/sale_order.py:72
 #, python-format
-msgid "Amount Mismatch (%s)"
+msgid "A journal must be specified of the acquirer %s."
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team__pending_payment_transactions_amount
-msgid "Amount of pending transactions"
+#: code:addons/sale_payment/models/sale_order.py:65
+#, python-format
+msgid "A payment acquirer is required to create a transaction."
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team__authorized_payment_transactions_amount
-msgid "Amount of transactions to capture"
+#: code:addons/sale_payment/models/sale_order.py:36
+#, python-format
+msgid ""
+"A transaction can't be linked to sales orders having different currencies."
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
-msgid "Authorized Payment Transactions"
+#: code:addons/sale_payment/models/sale_order.py:41
+#, python-format
+msgid ""
+"A transaction can't be linked to sales orders having different partners."
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
-msgid "Awaiting Payment"
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form_inherit_sale_payment
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
-msgid "Awaiting Payments"
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__authorized_transaction_ids
+msgid "Authorized Transactions"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:52
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form_inherit_sale_payment
+msgid "Capture Transaction"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -113,33 +114,25 @@ msgid ""
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_tx_id
-msgid "Last Transaction"
+#: code:addons/sale_payment/models/sale_order.py:55
+#, python-format
+msgid "Invalid token found! Token acquirer %s != %s"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_transaction_count
-msgid "Number of payment transactions"
+#: code:addons/sale_payment/models/sale_order.py:58
+#, python-format
+msgid "Invalid token found! Token partner %s != %s"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team__pending_payment_transactions_count
-msgid "Number of pending transactions"
-msgstr ""
-
-#. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team__authorized_payment_transactions_count
-msgid "Number of transactions to capture"
-msgstr ""
-
-#. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:49
+#: code:addons/sale_payment/controllers/payment.py:46
 #, python-format
 msgid "Pay"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:201
+#: code:addons/sale_payment/models/payment.py:116
 #, python-format
 msgid "Pay Now"
 msgstr "Fizessen most"
@@ -148,11 +141,6 @@ msgstr "Fizessen most"
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "Pay with"
 msgstr ""
-
-#. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_acquirer_id
-msgid "Payment Acquirer"
-msgstr "Fizetést lebonyolító"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
@@ -165,58 +153,21 @@ msgid "Payment Transaction"
 msgstr "Fizetési tranzakció"
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
-msgid "Payment to Capture"
-msgstr ""
-
-#. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
-msgid "Payments to Capture"
-msgstr ""
-
-#. module: sale_payment
-#: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
-msgid "Pending Payment Transactions"
-msgstr ""
-
-#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
 msgid "Quotation"
 msgstr "Árajánlat"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__so_state
-msgid "Sale Order State"
-msgstr ""
-
-#. module: sale_payment
-#: model:ir.model,name:sale_payment.model_crm_team
-msgid "Sales Channel"
-msgstr "Értékesítési csatorna"
-
-#. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__sale_order_id
-msgid "Sales Order"
-msgstr "Vásárlói megrendelés"
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:55
+#: code:addons/sale_payment/models/payment.py:88
+#: model:ir.ui.view,arch_db:sale_payment.transaction_form_inherit_sale_payment
 #, python-format
-msgid ""
-"The sale order was not confirmed despite response from the acquirer (%s): SO"
-" amount is %r but acquirer replied with %r."
+msgid "Sales Order(s)"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
-msgid ""
-"There was an error processing your payment: impossible to validate order."
-msgstr ""
-
-#. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
-msgid "There was an error processing your payment: invalid order state."
-msgstr ""
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__sale_order_ids
+msgid "Sales Orders"
+msgstr "Vevői megrendelések"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -228,12 +179,6 @@ msgstr ""
 msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
-msgstr ""
-
-#. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
-msgid ""
-"There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
 
 #. module: sale_payment
@@ -252,12 +197,11 @@ msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_tx_ids
-#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "Tranzakciók"
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
-msgid "Your payment has been authorized."
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form_inherit_sale_payment
+msgid "Void Transaction"
 msgstr ""

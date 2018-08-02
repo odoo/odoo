@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # gezgin biri <gezginbiri@hotmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2017
@@ -15,13 +15,15 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 # Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2017
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:36+0000\n"
-"PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: İlknur Püskül <ilknurpuskull@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,14 +33,14 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:927
+#: code:addons/website/static/src/js/editor/snippets.options.js:1009
 #, python-format
 msgid " Add Images"
-msgstr ""
+msgstr "Resimler Ekle"
 
 #. module: website
-#: code:addons/website/models/website.py:233
-#: code:addons/website/models/website.py:302
+#: code:addons/website/models/website.py:241
+#: code:addons/website/models/website.py:310
 #, python-format
 msgid "%s (id:%s)"
 msgstr ""
@@ -76,29 +78,22 @@ msgstr "& zaman;"
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "' did not match any pages."
-msgstr ""
+msgstr "Hiç bir sayfa ile eşleşmedi"
 
 #. module: website
-#: code:addons/website/models/website.py:723
-#: code:addons/website/models/website.py:725
-#: code:addons/website/models/website.py:743
+#: code:addons/website/models/website.py:737
+#: code:addons/website/models/website.py:739
+#: code:addons/website/models/website.py:757
 #, python-format
 msgid "(copy)"
-msgstr ""
+msgstr "(kopya)"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:29
+#: code:addons/website/static/src/xml/website.pageProperties.xml:33
 #, python-format
 msgid "(could be used in"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid ""
-",\n"
-"                                                      the #1"
-msgstr ""
+msgstr "(için kullanılabilir"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -121,17 +116,19 @@ msgstr ", güncelle:"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:23
+#: code:addons/website/static/src/xml/website.pageProperties.xml:27
 #, python-format
 msgid ""
 ".\n"
 "            Changing its name will break these calls."
 msgstr ""
+".\n"
+"Adını değiştirmek bu çağrıları kesecek."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.default_csv
 msgid "1,2,3"
-msgstr ""
+msgstr "1,2,3"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -236,21 +233,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.actions.act_window,help:website.action_module_theme
-msgid "<b>No theme module found!</b>"
-msgstr "<b>Tema modülü bulunamadı!</b>"
-
-#. module: website
-#: model:ir.actions.act_window,help:website.action_module_website
-msgid "<b>No website module found!</b>"
-msgstr "<b>Web sitesi modülü bulunamadı!</b>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<b>Set Custom Image...</b>"
-msgstr "<b>Özel Resmi Ayarla ...</b>"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-arrows\"/>Background Image Sizing"
 msgstr "<i class=\"fa fa-arrows\"/>Arka Plan Görüntü Boyutlandırma"
@@ -268,6 +250,11 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-clock-o\"/>Slideshow speed"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-columns\"/>Number of columns"
 msgstr ""
 
 #. module: website
@@ -322,7 +309,7 @@ msgstr "<i class=\"fa fa-paint-brush\"/>Şekillendirme"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-picture-o\"/>Background Image"
+msgid "<i class=\"fa fa-picture-o\"/>Choose Background Image"
 msgstr ""
 
 #. module: website
@@ -437,15 +424,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout
-msgid ""
-"<span class=\"sr-only\">Toggle navigation</span>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid ""
 "<span/>\n"
@@ -478,6 +456,11 @@ msgstr ""
 "<i class=\"fa fa-chevron-right\"/>"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "<span>Copyright &amp;copy;</span>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_share
 msgid "<span>Share</span>"
 msgstr "<span>Paylaş</span>"
@@ -498,6 +481,9 @@ msgid ""
 "A CDN helps you serve your website’s content with high availability and high"
 " performance to any visitor wherever they are located."
 msgstr ""
+"Bir CDN, web sitenizin içeriğiniz, ziyaretçiler nerede olursa olsunlar, "
+"herhangi bir ziyaretçiye yüksek erişim ve yüksek performans ile hizmet "
+"etmenize yardımcı olur."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
@@ -516,7 +502,7 @@ msgid "A Section Subtitle"
 msgstr "Bölüm Altbaşlığı"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_ir_act_server_website_published
+#: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 msgid ""
 "A code server action can be executed from the website, using a dedicated "
 "controller. The address is <base>/website/action/<website_path>. Set this "
@@ -540,6 +526,7 @@ msgid ""
 "A great way to catch your reader's attention is to tell a story.\n"
 "                        Everything you consider writing can be told as a story."
 msgstr ""
+"Bir hikaye anlatmak, okuyucunun dikkatini çekmek için harika bir yoldur."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -547,9 +534,9 @@ msgid "A small explanation of this great<br/>feature, in clear words."
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_module_website_version
+#: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_version
 msgid "A/B Testing"
-msgstr ""
+msgstr "A/B Testi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -559,7 +546,7 @@ msgstr "API Anahtarı"
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.aboutus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 #: model:website.page,arch_db:website.aboutus_page
 msgid "About us"
 msgstr "Hakkımızda"
@@ -570,13 +557,13 @@ msgid "Account &amp; Sales management"
 msgstr "Müşteri &amp; Satış yönetimi"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_cdn_activated
+#: model:ir.model.fields,field_description:website.field_website__cdn_activated
 msgid "Activate CDN for assets"
-msgstr ""
+msgstr "Varlıklar için CDN'i etkinleştir"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_active
-#: model:ir.model.fields,field_description:website.field_website_redirect_active
+#: model:ir.model.fields,field_description:website.field_website_page__active
+#: model:ir.model.fields,field_description:website.field_website_redirect__active
 msgid "Active"
 msgstr "Aktif"
 
@@ -587,6 +574,8 @@ msgid ""
 "                        To duplicate, delete or move columns, select the\n"
 "                        column and use the top icons to perform your action."
 msgstr ""
+"Bu üç sütunu sizin tasarım ihtiyacınıza uyacak şekilde uyarlayın.\n"
+"Yedeklemek, silmek yada sütunları taşımak için sütunu seçin ve işleminizi gerçekleştirmek için üst simgeyi kullanın."
 
 #. module: website
 #. openerp-web
@@ -609,7 +598,7 @@ msgstr "Büyük bir slogan ekle"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:49
+#: code:addons/website/static/src/js/menu/new_content.js:50
 #, python-format
 msgid "Add page in menu"
 msgstr "Menüde sayfayı ekle"
@@ -624,7 +613,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
-msgstr ""
+msgstr "Aline Turner, CTO"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -633,6 +622,8 @@ msgid ""
 "                                She mentors 100+ in-house developers and looks after the community of over\n"
 "                                thousands developers."
 msgstr ""
+"Aline, ne yapabiliyorsa onu sevdiğini söyleyebilen ikonik bir kişi.\n"
+"100'den fazla kurum içi geliştiriciye danışmanlık yapıyor ve binlerce geliştiriciden oluşan topluluğa bakıyor."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -650,6 +641,10 @@ msgid ""
 "                                indirectly, implying any approval, association, sponsorship, endorsement, or\n"
 "                                affiliation with any linked website, unless specifically stated herein."
 msgstr ""
+"Bu websitesi diğer websiteleri ile bağlantılı olabilmesine rağmen, biz, "
+"direk yada doğrudan, burada özellikle belirtilmediği sürece, hiçbir bağlantı"
+" websitesi ile, herhangi bir onay, birlik, sponsorluk, açıklama ya da "
+"bağlantı ima etmiyoruz."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -677,34 +672,29 @@ msgid "Apply"
 msgstr "Uygula"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_arch_db
+#: model:ir.model.fields,field_description:website.field_website_page__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Damlayı kavislendir"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_arch_fs
+#: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch Filename"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:60
 #, python-format
 msgid "Are you sure you want to delete this page ?"
-msgstr ""
+msgstr "Bu sayfayı silmek istediğinize emin misiniz?"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_attachment_website_url
-msgid "Attachment URL"
-msgstr "Eklenti URL"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_auto_redirect_lang
+#: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
-msgstr ""
+msgstr "Otoyönlendirme Dili"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_published
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 msgid "Available on the Website"
 msgstr "Websitesinde mevcuttur"
 
@@ -712,6 +702,11 @@ msgstr "Websitesinde mevcuttur"
 #: model:ir.ui.view,arch_db:website.500
 msgid "Back"
 msgstr "Geri"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__arch_base
+msgid "Base View Architecture"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -729,21 +724,16 @@ msgid "Big"
 msgstr "Büyük"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Building Profile"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_url
-#: model:ir.model.fields,field_description:website.field_website_cdn_url
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
+#: model:ir.model.fields,field_description:website.field_website__cdn_url
 msgid "CDN Base URL"
-msgstr ""
+msgstr "URL Temelli CDN"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_filters
-#: model:ir.model.fields,field_description:website.field_website_cdn_filters
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_filters
+#: model:ir.model.fields,field_description:website.field_website__cdn_filters
 msgid "CDN Filters"
-msgstr ""
+msgstr "CDN Filtreler"
 
 #. module: website
 #. openerp-web
@@ -766,12 +756,13 @@ msgid "Change Icons"
 msgstr "Simgeleri Değiştir"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_field_parent
+#: model:ir.model.fields,field_description:website.field_website_page__field_parent
 msgid "Child Field"
 msgstr "Alt Alan"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_child_id
+#: model:ir.model.fields,field_description:website.field_website_menu__child_id
+#: model:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Child Menus"
 msgstr "Alt Menüleri"
 
@@ -782,16 +773,13 @@ msgid ""
 "                        about it. It does not have to be long, but it should\n"
 "                        reinforce your image."
 msgstr ""
+"Coşkulu bir imaj seçin ve onun hakkında ilham verici bir paragraf yazın. Çok"
+" zamanınızı almaz, ancak imajınızı güçlendirir."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Circle"
 msgstr "Circle"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "City"
-msgstr "Semt/İlçe"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -816,7 +804,7 @@ msgstr "İstemci Gizli Anahtarı"
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Clone this page"
-msgstr ""
+msgstr "Bu sayfayı klonla"
 
 #. module: website
 #. openerp-web
@@ -831,7 +819,7 @@ msgid "Companies"
 msgstr "Firmalar"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_company_id
+#: model:ir.model.fields,field_description:website.field_website__company_id
 msgid "Company"
 msgstr "Firma"
 
@@ -843,7 +831,7 @@ msgstr "Firma Adı"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
-msgstr ""
+msgstr "Her boyutta takım için CRM'i tamamlayın"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -858,7 +846,7 @@ msgid "Confirmation"
 msgstr "Doğrulama"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Connect with us"
 msgstr "Bizimle iletişime geçin"
 
@@ -876,7 +864,7 @@ msgstr "Bize Ulaşın"
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -907,24 +895,19 @@ msgstr "İçerik"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Content Delivery Network (CDN)"
-msgstr ""
+msgstr "İçerik İletim Ağı "
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:392
+#: code:addons/website/static/src/js/menu/content.js:424
 #: code:addons/website/static/src/xml/website.xml:26
 #, python-format
 msgid "Continue"
 msgstr "Devam Et"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Copyright &amp;copy;"
-msgstr ""
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:332
+#: code:addons/website/static/src/js/menu/content.js:366
 #, python-format
 msgid "Create Menu"
 msgstr "Menü Oluştur"
@@ -935,35 +918,40 @@ msgid "Create Page"
 msgstr "Sayfa Oluştur"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.brand_promotion
+msgid "Create a"
+msgstr "Oluşturun"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
-msgstr ""
+msgstr "Bir Google projesi oluşturun ve bir key alın."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create several versions of your website pages"
-msgstr ""
+msgstr "Website sayfanızın çeşitli versiyonlarını oluşturun"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_create_uid
-#: model:ir.model.fields,field_description:website.field_website_menu_create_uid
-#: model:ir.model.fields,field_description:website.field_website_page_create_uid
-#: model:ir.model.fields,field_description:website.field_website_redirect_create_uid
+#: model:ir.model.fields,field_description:website.field_website__create_uid
+#: model:ir.model.fields,field_description:website.field_website_menu__create_uid
+#: model:ir.model.fields,field_description:website.field_website_page__create_uid
+#: model:ir.model.fields,field_description:website.field_website_redirect__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_create_date
-#: model:ir.model.fields,field_description:website.field_website_menu_create_date
-#: model:ir.model.fields,field_description:website.field_website_page_create_date
-#: model:ir.model.fields,field_description:website.field_website_redirect_create_date
+#: model:ir.model.fields,field_description:website.field_website__create_date
+#: model:ir.model.fields,field_description:website.field_website_menu__create_date
+#: model:ir.model.fields,field_description:website.field_website_page__create_date
+#: model:ir.model.fields,field_description:website.field_website_redirect__create_date
 msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Cubes"
-msgstr ""
+#: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
+msgid "Customer Account"
+msgstr "Müşteri Hesabı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -987,6 +975,13 @@ msgstr ""
 "değiştirmek için deneyin."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:75
+#, python-format
+msgid "DRAG BUILDING BLOCKS HERE"
+msgstr ""
+
+#. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_dashboard
 msgid "Dashboard"
@@ -1003,18 +998,18 @@ msgid "Default Access Rights"
 msgstr "Varsayılan Erişim Hakları"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_default_lang_id
+#: model:ir.model.fields,field_description:website.field_website__default_lang_id
 msgid "Default Language"
 msgstr "Öntanımlı  Dil"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_default_lang_id
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
 msgid "Default language"
 msgstr "Öntanımlı  Dil"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_default_lang_code
-#: model:ir.model.fields,field_description:website.field_website_default_lang_code
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_code
+#: model:ir.model.fields,field_description:website.field_website__default_lang_code
 msgid "Default language code"
 msgstr "Varsayılan dil kodu"
 
@@ -1023,7 +1018,7 @@ msgstr "Varsayılan dil kodu"
 #: code:addons/website/static/src/xml/website.seo.xml:41
 #, python-format
 msgid "Define Keywords"
-msgstr ""
+msgstr "Anahtar kelime tanımlayın"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1032,7 +1027,8 @@ msgstr "Blokları Sil"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:750
+#: code:addons/website/static/src/js/menu/content.js:59
+#: code:addons/website/static/src/js/menu/content.js:797
 #, python-format
 msgid "Delete Page"
 msgstr "Sayfayı Sil"
@@ -1048,17 +1044,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Delete this page"
-msgstr ""
+msgstr "Bu sayfayı sil"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_references
 msgid "Demo Logo"
-msgstr ""
+msgstr "Demo Logo"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:23
-#: code:addons/website/static/src/xml/website.pageProperties.xml:32
+#: code:addons/website/static/src/xml/website.pageProperties.xml:27
+#: code:addons/website/static/src/xml/website.pageProperties.xml:36
 #, python-format
 msgid "Dependencies"
 msgstr "Bağımlılıklar"
@@ -1073,7 +1069,7 @@ msgstr "Tanım"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Disable autoplay"
-msgstr ""
+msgstr "Otomatik oynatıcıyı kapat"
 
 #. module: website
 #. openerp-web
@@ -1089,18 +1085,18 @@ msgid "Discussion Group"
 msgstr "Tartışma Grubu"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_display_name
-#: model:ir.model.fields,field_description:website.field_website_menu_display_name
-#: model:ir.model.fields,field_description:website.field_website_page_display_name
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_display_name
-#: model:ir.model.fields,field_description:website.field_website_redirect_display_name
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_display_name
+#: model:ir.model.fields,field_description:website.field_website__display_name
+#: model:ir.model.fields,field_description:website.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website.field_website_page__display_name
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__display_name
+#: model:ir.model.fields,field_description:website.field_website_redirect__display_name
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:89
+#: code:addons/website/static/src/js/editor/snippets.options.js:90
 #, python-format
 msgid "Do you want to edit the company data ?"
 msgstr "Firma bilgilerini düzenlemek ister misiniz?"
@@ -1115,12 +1111,7 @@ msgstr "Domain"
 #: code:addons/website/static/src/xml/website.xml:35
 #, python-format
 msgid "Don't forget to update all links referring to this page."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Downtown"
-msgstr ""
+msgstr "Bu sayfaya dair tüm linkleri güncellemeyi unutmayın."
 
 #. module: website
 #. openerp-web
@@ -1134,7 +1125,7 @@ msgstr "Bir alt menü oluşturmak için sağa bir menü sürükleyin"
 #: code:addons/website/static/src/js/tours/banner.js:36
 #, python-format
 msgid "Drag another block in your page, below the cover."
-msgstr ""
+msgstr "Sayfanıza başka bir blok yükleyin, kapağın altına "
 
 #. module: website
 #. openerp-web
@@ -1160,7 +1151,7 @@ msgstr "Düzenle"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:421
+#: code:addons/website/static/src/js/menu/content.js:453
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
@@ -1174,7 +1165,7 @@ msgstr "Üst Menü Düzenleme"
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Edit code in backend"
-msgstr ""
+msgstr "Arka sunucudaki kodları düzen"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
@@ -1187,7 +1178,7 @@ msgstr "Arkaplanda düzenle"
 #: code:addons/website/static/src/xml/website.backend.xml:28
 #, python-format
 msgid "Edit my Analytics Client ID"
-msgstr ""
+msgstr "Benim Analitik Müşteri ID'sini düzenle"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
@@ -1203,17 +1194,17 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/snippets.options.js:35
 #, python-format
 msgid "Edit the menu"
-msgstr ""
+msgstr "Menüyü düzenle"
 
 #. module: website
 #: model:res.groups,name:website.group_website_designer
 msgid "Editor and Designer"
-msgstr ""
+msgstr "Düzenleyici ve Tasarımcı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
-msgstr ""
+msgstr "Eposta desteği"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1233,13 +1224,6 @@ msgid "Events"
 msgstr "Etkinlikler"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:61
-#, python-format
-msgid "Existing Page, URL or Email"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Expert"
 msgstr "Uzman"
@@ -1254,7 +1238,8 @@ msgstr ""
 "hizmetlerden değil, çözümlerinizden bahsedin."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_xml_id
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
+#: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr "Harici Kimlik"
 
@@ -1264,13 +1249,13 @@ msgid "Extra-Large"
 msgstr "Ekstra-Büyük"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_facebook
+#: model:ir.model.fields,field_description:website.field_website__social_facebook
 msgid "Facebook Account"
 msgstr "Facebook Hesabı"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:411
+#: code:addons/website/static/src/js/editor/snippets.options.js:493
 #, python-format
 msgid "Facebook Page"
 msgstr ""
@@ -1281,9 +1266,9 @@ msgid "Fast"
 msgstr "Hızlı"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_favicon
+#: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
 msgid "Favicon"
-msgstr ""
+msgstr "Sık Kullanılan İkonu"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -1311,6 +1296,12 @@ msgid "First Feature"
 msgstr "Özellik 1"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_ir_ui_view__first_page_id
+#: model:ir.model.fields,help:website.field_website_page__first_page_id
+msgid "First page linked to this view"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fixed"
 msgstr "Sabit"
@@ -1323,14 +1314,14 @@ msgstr "Kaydırma"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Folded list"
-msgstr ""
+msgstr "Katlanmış liste"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "Follow all the"
-msgstr ""
+msgstr "Tümünü takip et"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -1339,6 +1330,13 @@ msgid ""
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing and the Customer Experience strategies."
 msgstr ""
+"Kurucu ve vizyoner şef, Tony şirketin arkasındaki sürücü güç. \n"
+"Yazılım, pazarlama ve Müşteri Deneyimi stratejilerinin gelişimine katılarak ellerini tam anlamıyla birleştirmeye bayılır."
+
+#. module: website
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up (B2C)"
+msgstr "Üyelik Sistemi (B2C)"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1351,17 +1349,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "General Terms and Conditions / Service Policies"
-msgstr ""
+msgstr "Genel Şartlar ve Koşullar / Hizmet Politikası"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Get access to all modules"
-msgstr ""
+msgstr "Tüm modüllere erişin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Get access to all modules and features"
-msgstr ""
+msgstr "Tüm modül ve özelliklere erişin"
 
 #. module: website
 #. openerp-web
@@ -1371,9 +1369,11 @@ msgid ""
 "Get this page efficiently referenced in search engines to attract more "
 "visitors."
 msgstr ""
+"Daha fazla ziyaretçi çekmek için etkin arama motoru  başvurulan bu sayfayı "
+"alın."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_github
+#: model:ir.model.fields,field_description:website.field_website__social_github
 msgid "GitHub Account"
 msgstr "GitHub Hesap"
 
@@ -1382,26 +1382,26 @@ msgstr "GitHub Hesap"
 #: code:addons/website/static/src/js/menu/content.js:50
 #, python-format
 msgid "Go To Page"
-msgstr ""
+msgstr "Sayfaya Git"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:27
 #, python-format
 msgid "Go to Link"
-msgstr ""
+msgstr "Bağlantıya Git"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Go to Page Manager"
-msgstr ""
+msgstr "Sayfa Yöneticisine Git"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:92
+#: code:addons/website/static/src/xml/website.backend.xml:93
 #, python-format
 msgid "Go to Website"
-msgstr ""
+msgstr "Websitesine Git"
 
 #. module: website
 #. openerp-web
@@ -1415,21 +1415,21 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/backend/dashboard.js:84
-#: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
 #, python-format
 msgid "Google Analytics"
 msgstr "Google Analitik Kayıtları"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_analytics_key
-#: model:ir.model.fields,field_description:website.field_website_google_analytics_key
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
+#: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
 msgstr "Google Analytics Anahtar"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics_dashboard
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics_dashboard
 msgid "Google Analytics in Dashboard"
-msgstr ""
+msgstr "Panelde Google Analytics"
 
 #. module: website
 #. openerp-web
@@ -1439,32 +1439,34 @@ msgid ""
 "Google Analytics initialization failed. Maybe this domain is not whitelisted"
 " in your Google Analytics project for this client ID."
 msgstr ""
+"Google Analytics başlangıcı başarısız oldu. Belki de bu alan adı, bu müşteri"
+" kimliği için Google Analytics projenizde beyaz listede yer almamaktadır."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_management_client_id
-#: model:ir.model.fields,field_description:website.field_website_google_management_client_id
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_id
+#: model:ir.model.fields,field_description:website.field_website__google_management_client_id
 msgid "Google Client ID"
 msgstr "Google Kullanıcı ID"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_management_client_secret
-#: model:ir.model.fields,field_description:website.field_website_google_management_client_secret
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_secret
+#: model:ir.model.fields,field_description:website.field_website__google_management_client_secret
 msgid "Google Client Secret"
 msgstr "Google Kullanıcı Gizli Anahtarı"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_maps
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
 #: model:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Haritalar"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_maps_api_key
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
 msgid "Google Maps API Key"
-msgstr ""
+msgstr "Google Haritalar API Keyi"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_googleplus
+#: model:ir.model.fields,field_description:website.field_website__social_googleplus
 msgid "Google+ Account"
 msgstr "Google+ Hesabı"
 
@@ -1487,18 +1489,19 @@ msgstr "Tablo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
+#: model:ir.ui.view,arch_db:website.view_redirect_search
 msgid "Group By"
 msgstr "Grupla"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_groups_id
+#: model:ir.model.fields,field_description:website.field_website_page__groups_id
 msgid "Groups"
 msgstr "Gruplar"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "HTML/CSS Editor"
-msgstr ""
+msgstr "HTML/CSS Editörü"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -1519,14 +1522,21 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:110
+#: code:addons/website/static/src/xml/website.pageProperties.xml:114
 #, python-format
 msgid "Hide this page from search results"
+msgstr "Arama sonuçlarından bu sayfayı gizle"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.contentMenu.xml:54
+#, python-format
+msgid "Hint: Simply type '#' to create a container menu"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 #: model:website.menu,name:website.menu_homepage
 msgid "Home"
 msgstr "Ana Sayfa"
@@ -1534,10 +1544,9 @@ msgstr "Ana Sayfa"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:4
-#: model:ir.model.fields,field_description:website.field_website_homepage_id
-#: model:ir.model.fields,field_description:website.field_website_page_is_homepage
+#: model:ir.model.fields,field_description:website.field_website__homepage_id
+#: model:ir.model.fields,field_description:website.field_website_page__is_homepage
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
-#: model:ir.ui.view,arch_db:website.footer_custom
 #, python-format
 msgid "Homepage"
 msgstr "Ana Sayfa"
@@ -1548,7 +1557,7 @@ msgstr "Ana Sayfa"
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "How to get my Client ID"
-msgstr ""
+msgstr "Kendi müşteri ID'sini nasıl bulurum"
 
 #. module: website
 #. openerp-web
@@ -1556,20 +1565,25 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "How to get my Tracking ID"
-msgstr ""
+msgstr "Kendi takip ID'sini nasıl bulurum"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7378
-#: model:ir.model.fields,field_description:website.field_website_page_id
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_id
-#: model:ir.model.fields,field_description:website.field_website_redirect_id
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
+#: model:ir.model.fields,field_description:website.field_website__id
+#: model:ir.model.fields,field_description:website.field_website_menu__id
+#: model:ir.model.fields,field_description:website.field_website_page__id
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__id
+#: model:ir.model.fields,field_description:website.field_website_redirect__id
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_xml_id
+#: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "Bir XML dosyasında tanımlıysa, eylemin kimliği"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_page__xml_id
 msgid "ID of the view defined in xml file"
 msgstr "XML dosyasında tanımlanan tablo görünümünün ID si"
 
@@ -1582,45 +1596,50 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_groups_id
+#: model:ir.model.fields,help:website.field_website_page__groups_id
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Bu alan boşsa, görünüm tüm kullanıcılara uygulanır. Değilse, görünüm sadece "
+"grup kullanıcılarına uygulanır."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_active
+#: model:ir.model.fields,help:website.field_website_page__active
 msgid ""
 "If this view is inherited,\n"
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Eğer bu görünüm kaldıysa,\n"
+"* Eğer doğruysa, görünüm her zaman üst öğeyi genişletir\n"
+"*Yanlış ise, görünüm şu anda üst öğeyi genişletmez ancak etkinleştirilebilir"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:68
 #, python-format
 msgid "In description"
-msgstr ""
+msgstr "Açıklamada"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:69
 #, python-format
 msgid "In page's content"
-msgstr ""
+msgstr "Sayfa içeriğinde"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:67
 #, python-format
 msgid "In title"
-msgstr ""
+msgstr "Başlıkta"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:108
+#: code:addons/website/static/src/xml/website.pageProperties.xml:112
 #: model:ir.ui.view,arch_db:website.index_management
 #, python-format
 msgid "Indexed"
@@ -1632,7 +1651,7 @@ msgid "Information about the"
 msgstr "Hakkında bilgisi"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_inherit_id
+#: model:ir.model.fields,field_description:website.field_website_page__inherit_id
 msgid "Inherited View"
 msgstr "Devralınan Görünüm"
 
@@ -1644,7 +1663,7 @@ msgstr "Dil Yükleme"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Install new language"
-msgstr ""
+msgstr "Yeni dil yükleyin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -1666,7 +1685,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Iris Joe, CFO"
-msgstr ""
+msgstr "Iris Joe, CFO"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -1675,18 +1694,21 @@ msgid ""
 "                                improves them. She is determined to drive success and delivers her professional\n"
 "                                acumen to bring Company at the next level."
 msgstr ""
+"Iris, uluslararası tecrübesi ile birlikte sayıları kolay anlamamıza ve onları yükseltmemize yardım eder. \n"
+"Başarıya ulaşmaya kararlı ve profesyonel zekasını bir sonraki seviyeye getirmek için kendini şirkete teslim ediyor."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_is_visible
+#: model:ir.model.fields,field_description:website.field_website_menu__is_visible
+#: model:ir.model.fields,field_description:website.field_website_page__is_visible
 msgid "Is Visible"
-msgstr ""
+msgstr "Görünür"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:19
+#: code:addons/website/static/src/xml/website.pageProperties.xml:23
 #, python-format
 msgid "It looks like your file is being called by"
-msgstr ""
+msgstr "Dosyanız tarafından aranıyor gibi görünüyor"
 
 #. module: website
 #. openerp-web
@@ -1703,7 +1725,7 @@ msgid "Join us and make your company a better place."
 msgstr "Bize katılın ve sizinle daha değerliyiz."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_key
+#: model:ir.model.fields,field_description:website.field_website_page__key
 msgid "Key"
 msgstr "Anahtar"
 
@@ -1712,18 +1734,18 @@ msgstr "Anahtar"
 #: code:addons/website/static/src/xml/website.seo.xml:48
 #, python-format
 msgid "Keyword"
-msgstr ""
+msgstr "Anahtar Kelime"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_language_ids
-#: model:ir.model.fields,field_description:website.field_website_language_ids
+#: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
+#: model:ir.model.fields,field_description:website.field_website__language_ids
 msgid "Languages"
 msgstr "Diller"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Languages available on your website"
-msgstr ""
+msgstr "Sitenizde diller mevcut"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1731,51 +1753,51 @@ msgid "Large"
 msgstr "Geniş"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website___last_update
-#: model:ir.model.fields,field_description:website.field_website_menu___last_update
-#: model:ir.model.fields,field_description:website.field_website_page___last_update
-#: model:ir.model.fields,field_description:website.field_website_published_mixin___last_update
-#: model:ir.model.fields,field_description:website.field_website_redirect___last_update
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata___last_update
+#: model:ir.model.fields,field_description:website.field_website____last_update
+#: model:ir.model.fields,field_description:website.field_website_menu____last_update
+#: model:ir.model.fields,field_description:website.field_website_page____last_update
+#: model:ir.model.fields,field_description:website.field_website_published_mixin____last_update
+#: model:ir.model.fields,field_description:website.field_website_redirect____last_update
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 msgid "Last Modified on"
+msgstr "Son Güncelleme"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:67
+#, python-format
+msgid "Last Month"
+msgstr "Geçen Ay"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__write_uid
+#: model:ir.model.fields,field_description:website.field_website_menu__write_uid
+#: model:ir.model.fields,field_description:website.field_website_page__write_uid
+#: model:ir.model.fields,field_description:website.field_website_redirect__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__write_date
+#: model:ir.model.fields,field_description:website.field_website_menu__write_date
+#: model:ir.model.fields,field_description:website.field_website_page__write_date
+#: model:ir.model.fields,field_description:website.field_website_redirect__write_date
+msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:66
 #, python-format
-msgid "Last Month"
-msgstr "Geçen Ay"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_write_uid
-#: model:ir.model.fields,field_description:website.field_website_page_write_uid
-#: model:ir.model.fields,field_description:website.field_website_redirect_write_uid
-#: model:ir.model.fields,field_description:website.field_website_write_uid
-msgid "Last Updated by"
-msgstr "Son Güncelleyen"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_write_date
-#: model:ir.model.fields,field_description:website.field_website_page_write_date
-#: model:ir.model.fields,field_description:website.field_website_redirect_write_date
-#: model:ir.model.fields,field_description:website.field_website_write_date
-msgid "Last Updated on"
-msgstr "Son Güncelleme"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:65
-#, python-format
 msgid "Last Week"
 msgstr "Son Hafta"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:67
+#: code:addons/website/static/src/xml/website.backend.xml:68
 #, python-format
 msgid "Last Year"
-msgstr ""
+msgstr "Geçen Sene"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1787,7 +1809,7 @@ msgstr "Sol"
 #: code:addons/website/static/src/xml/website.seo.xml:65
 #, python-format
 msgid "Legend:"
-msgstr ""
+msgstr "Gösterge: "
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1799,22 +1821,15 @@ msgstr "Müşterilerinize sizinle çalıştıkları tüm konular için bir porta
 #: code:addons/website/static/src/xml/website.editor.xml:5
 #, python-format
 msgid "Let's start designing."
-msgstr ""
+msgstr "Tasarıma başlayalım."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
-msgstr ""
+msgstr "Sınırlı özelleştirme"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:55
-#, python-format
-msgid "Link"
-msgstr "Bağlantı"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_module_website_links
+#: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
 msgid "Link Trackers"
 msgstr ""
 
@@ -1823,17 +1838,17 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:36
 #, python-format
 msgid "Link my Analytics Account"
-msgstr ""
+msgstr "Benim Analytics Hesabıma Bağla"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_linkedin
+#: model:ir.model.fields,field_description:website.field_website__social_linkedin
 msgid "LinkedIn Account"
 msgstr "LinkedIn Hesabı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Links to other websites"
-msgstr ""
+msgstr "Diğer Website Bağlantıları"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1850,32 +1865,32 @@ msgstr "Yükleniyor..."
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
 msgid "Local Events"
-msgstr ""
+msgstr "Lokal Etkinlikler"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_id
+#: model:ir.model.fields,field_description:website.field_website__menu_id
 msgid "Main Menu"
 msgstr "Ana Menü"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
-msgstr ""
+msgstr "Sayfayı Yönet"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Manage Your Pages"
-msgstr ""
+msgstr "Sayfanızı Yönetin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Your Website Pages"
-msgstr ""
+msgstr "Websitenizin Sayfalarını Yönetin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Manage this page"
-msgstr ""
+msgstr "Bu sayfayı yönet"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1895,24 +1910,25 @@ msgstr "Medya"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Meet the Executive Team"
-msgstr ""
+msgstr "Yönetici Ekibi ile tanışın"
 
 #. module: website
-#: code:addons/website/models/website.py:241
-#: model:ir.model.fields,field_description:website.field_website_menu_name
+#: code:addons/website/models/website.py:249
+#: model:ir.model.fields,field_description:website.field_website_menu__name
 #, python-format
 msgid "Menu"
 msgstr "Menü"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:342
+#: code:addons/website/static/src/js/menu/content.js:380
 #, python-format
 msgid "Menu Label"
 msgstr "Menü Etiketi"
 
 #. module: website
-#: code:addons/website/models/website.py:243
+#: code:addons/website/models/website.py:251
+#: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
 msgid "Menus"
 msgstr "Menüler"
@@ -1927,7 +1943,7 @@ msgstr "Mesajlar"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Mich Stark, COO"
-msgstr ""
+msgstr "Mitch Stark, COO"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -1936,6 +1952,9 @@ msgid ""
 "                                Director in the software industry, Mich has helped Company to get where it\n"
 "                                is today. Mich is among the best minds."
 msgstr ""
+"Mich meydan okumalara bayılır. yazılım dünyasındaki Reklam Direktörü olarak "
+"yılların tecrübesi ile birlikte, Mich, şirketin bugünlere gelmesinde "
+"yardımcı oldu. Mich en iyilerden biridir."
 
 #. module: website
 #. openerp-web
@@ -1945,15 +1964,19 @@ msgid "Mobile preview"
 msgstr "Mobil önizleme"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_model
-#: model:ir.model.fields,field_description:website.field_website_page_model_ids
+#: model:ir.model.fields,field_description:website.field_website_page__model
 msgid "Model"
 msgstr "Model"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_model_data_id
+#: model:ir.model.fields,field_description:website.field_website_page__model_data_id
 msgid "Model Data"
 msgstr "Model Verileri"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__model_ids
+msgid "Models"
+msgstr "Modeller"
 
 #. module: website
 #. openerp-web
@@ -1966,41 +1989,41 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Move to first"
-msgstr ""
+msgstr "İlk sıraya taşı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Move to last"
-msgstr ""
+msgstr "Sona taşı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Move to next"
-msgstr ""
+msgstr "İleriye taşı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Move to previous"
+msgstr "Geriye taşı"
+
+#. module: website
+#: selection:website.redirect,type:0
+msgid "Moved permanently (301)"
 msgstr ""
 
 #. module: website
 #: selection:website.redirect,type:0
-msgid "Moved permanently"
-msgstr ""
-
-#. module: website
-#: selection:website.redirect,type:0
-msgid "Moved temporarily"
+msgid "Moved temporarily (302)"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout
 msgid "My Website"
-msgstr ""
+msgstr "Websitem"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:40
+#: code:addons/website/static/src/xml/website.pageProperties.xml:44
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
@@ -2010,19 +2033,18 @@ msgstr "İsim"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Name and favicon of your website"
-msgstr ""
+msgstr "Websitenizin adı ve site simgesi"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:41
-#: code:addons/website/static/src/xml/website.contentMenu.xml:58
+#: code:addons/website/static/src/js/menu/new_content.js:42
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "New Page"
 msgstr "Yeni Sayfa"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_new_window
+#: model:ir.model.fields,field_description:website.field_website_menu__new_window
 msgid "New Window"
 msgstr "Yeni Pencere"
 
@@ -2039,7 +2061,7 @@ msgstr "Sonraki"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "No customization"
-msgstr ""
+msgstr "Özelliştirme yok"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2047,9 +2069,15 @@ msgid "No support"
 msgstr "Desteklenmiyor"
 
 #. module: website
+#: model:ir.actions.act_window,help:website.action_module_theme
+#: model:ir.actions.act_window,help:website.action_module_website
+msgid "No website module found!"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "No-scroll"
-msgstr ""
+msgstr "Kaydırma yok"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2061,7 +2089,7 @@ msgstr "Hiçbiri"
 #: code:addons/website/static/src/xml/website.seo.xml:66
 #, python-format
 msgid "Not used"
-msgstr ""
+msgstr "Kullanılmayan"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2071,39 +2099,39 @@ msgstr ""
 "kaldırın."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_language_count
+#: model:ir.model.fields,field_description:website.field_res_config_settings__language_count
 msgid "Number of languages"
-msgstr ""
+msgstr "Dillerin sayısı"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+#: model:ir.ui.view,arch_db:website.brand_promotion
 msgid "Odoo"
 msgstr "Odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Odoo - Sample 1 for three columns"
-msgstr ""
+msgstr "Odoo- üç sütun için örnek 1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Odoo - Sample 2 for three columns"
-msgstr ""
+msgstr "Odoo - Üç sütun için örnek 2"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Odoo - Sample 3 for three columns"
-msgstr ""
+msgstr "Odoo - Üç sütun için örnek 3"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid "Odoo CMS - a big picture"
-msgstr ""
+msgstr "Odoo CMS - bir büyük resim"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_floating
 msgid "Odoo CMS- Sample image floating"
-msgstr ""
+msgstr "Odoo CMS - Kayan örnek resim"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2113,7 +2141,7 @@ msgstr "Odoo sürüm"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
 msgid "Odoo image and text block"
-msgstr ""
+msgstr "Odoo resim ve metin engeli"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
@@ -2121,11 +2149,13 @@ msgid ""
 "Odoo provides essential platform for our project management.\n"
 "                                                Things are better organized and more visible with it."
 msgstr ""
+"Odoo, proje yönetimimiz için önemli bir platform sağlar. İşler Odoo ile daha"
+" organize ve daha görünür olur."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_image
 msgid "Odoo text and image block"
-msgstr ""
+msgstr "Odoo metin ve resim engeli"
 
 #. module: website
 #. openerp-web
@@ -2135,7 +2165,12 @@ msgid "On Website"
 msgstr "Web Sitesinde"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_mode
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation (B2B)"
+msgstr "Davet Üzerine (B2B)"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_page__mode
 msgid ""
 "Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
 "\n"
@@ -2154,14 +2189,9 @@ msgid "Open Source ERP"
 msgstr "Açık kaynak ERP"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Open Source eCommerce"
-msgstr "Açık kaynak e-ticaret"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
-msgstr ""
+msgstr "SEO'ya optimize et"
 
 #. module: website
 #. openerp-web
@@ -2186,7 +2216,7 @@ msgid "Our Offers"
 msgstr "Tekliflerimiz"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Our Products &amp; Services"
 msgstr "Ürünler &amp Hizmetler"
 
@@ -2210,61 +2240,61 @@ msgid ""
 "Our products are designed for small to medium size companies willing to optimize\n"
 "                                                      their performance."
 msgstr ""
+"Ürünlerimiz, küçük ve orta boy şirketlerin performanslarını optimize etmek "
+"için tasarlanmıştır."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid ""
 "Our products are designed for small to medium size companies willing to optimize\n"
-"                            their performance."
+"                                their performance."
 msgstr ""
-"Ürünlerimiz, küçük ve orta boy şirketlerin performanslarını optimize\n"
-" etmek için tasarlanmıştır."
 
 #. module: website
-#: code:addons/website/models/website.py:206
-#: code:addons/website/models/website.py:275
+#: code:addons/website/models/website.py:214
+#: code:addons/website/models/website.py:283
 #: model:ir.model,name:website.model_website_page
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_page_ids
-#: model:ir.model.fields,field_description:website.field_website_page_page_ids
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
+#: model:ir.model.fields,field_description:website.field_website_page__page_ids
 #, python-format
 msgid "Page"
 msgstr "Sayfa"
 
 #. module: website
-#: code:addons/website/models/website.py:213
+#: code:addons/website/models/website.py:221
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:282
+#: code:addons/website/models/website.py:290
 #, python-format
 msgid "Page <b>%s</b> is calling this file"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_website_indexed
+#: model:ir.model.fields,field_description:website.field_website_page__website_indexed
 msgid "Page Indexed"
-msgstr ""
+msgstr "Dizinlenmiş Sayfa"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:46
+#: code:addons/website/static/src/xml/website.pageProperties.xml:50
 #, python-format
 msgid "Page Name"
-msgstr ""
+msgstr "Sayfa Adı"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:59
+#: code:addons/website/static/src/js/menu/content.js:67
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Page Properties"
-msgstr ""
+msgstr "Sayfa Özellikleri"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:42
+#: code:addons/website/static/src/js/menu/new_content.js:43
 #: code:addons/website/static/src/xml/website.seo.xml:14
 #, python-format
 msgid "Page Title"
@@ -2273,24 +2303,19 @@ msgstr "Sayfa Başlığı"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.facebook_page.xml:7
-#: code:addons/website/static/src/xml/website.pageProperties.xml:53
-#: model:ir.model.fields,field_description:website.field_website_page_url
+#: code:addons/website/static/src/xml/website.pageProperties.xml:57
+#: model:ir.model.fields,field_description:website.field_website_page__url
 #, python-format
 msgid "Page URL"
-msgstr ""
+msgstr "Sayfa URL"
 
 #. module: website
-#: code:addons/website/models/website.py:208
-#: code:addons/website/models/website.py:277
+#: code:addons/website/models/website.py:216
+#: code:addons/website/models/website.py:285
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #, python-format
 msgid "Pages"
 msgstr "Sayfalar"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Panama Sky"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -2302,34 +2327,19 @@ msgstr ""
 " temel özellikleri vurgulamak için harika bir araç vardır. İçine ürünleri karşılaştırmak için kullanın sütunlar."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_parent_left
-msgid "Parent Left"
-msgstr "Üst Sol"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_parent_id
+#: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr "Üst Menü"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_parent_right
-msgid "Parent Rigth"
-msgstr "Sağ Üst"
-
-#. module: website
-#: model:ir.model.fields,help:website.field_website_partner_id
-msgid "Partner-related data of the user"
-msgstr "Kullanıcının İş Ortağı ilgili veriler"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Peak"
+#: model:ir.model.fields,field_description:website.field_website_menu__parent_path
+msgid "Parent Path"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "People"
-msgstr "Kişiler"
+#: model:ir.model.fields,help:website.field_website__partner_id
+msgid "Partner-related data of the user"
+msgstr "Kullanıcının İş Ortağı ilgili veriler"
 
 #. module: website
 #. openerp-web
@@ -2341,12 +2351,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.theme_customize
 msgid "Please install a theme in order to customize your website."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Powered by"
-msgstr "Hazırlayan"
+msgstr "Lütfen web sitenizi kişiselleştirmek için bir tema yükleyin."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -2376,7 +2381,7 @@ msgstr "Promote"
 #: code:addons/website/static/src/js/menu/seo.js:339
 #, python-format
 msgid "Promote Page"
-msgstr ""
+msgstr "Sayfayı Yükselt"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -2384,19 +2389,19 @@ msgid "Promote page on the web"
 msgstr "Promote"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_partner_id
+#: model:ir.model.fields,field_description:website.field_website__partner_id
 msgid "Public Partner"
 msgstr "Genel İş Ortakları"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_user_id
+#: model:ir.model.fields,field_description:website.field_website__user_id
 msgid "Public User"
 msgstr "Genel Kullanıcılar"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:41
-#: code:addons/website/static/src/xml/website.pageProperties.xml:122
+#: code:addons/website/static/src/xml/website.pageProperties.xml:45
+#: code:addons/website/static/src/xml/website.pageProperties.xml:126
 #, python-format
 msgid "Publish"
 msgstr "Yayınla"
@@ -2419,11 +2424,11 @@ msgstr "Yayımlandı"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:133
-#: model:ir.model.fields,field_description:website.field_website_page_date_publish
+#: code:addons/website/static/src/xml/website.pageProperties.xml:137
+#: model:ir.model.fields,field_description:website.field_website_page__date_publish
 #, python-format
 msgid "Publishing Date"
-msgstr ""
+msgstr "Yayınlanma Tarihi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -2431,53 +2436,54 @@ msgid "QWeb"
 msgstr "QWeb"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect_url_from
+#: model:ir.model.fields,field_description:website.field_website_redirect__url_from
 msgid "Redirect From"
-msgstr ""
+msgstr "Yönlendirme "
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:62
+#: code:addons/website/static/src/xml/website.pageProperties.xml:66
 #, python-format
 msgid "Redirect Old URL"
-msgstr ""
+msgstr "Eski URL' ye yönlendir"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect_url_to
+#: model:ir.model.fields,field_description:website.field_website_redirect__url_to
 msgid "Redirect To"
-msgstr ""
+msgstr "Buraya Yönlendir"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect_type
+#: model:ir.model.fields,field_description:website.field_website_redirect__type
+#: model:ir.ui.view,arch_db:website.view_redirect_search
 msgid "Redirection Type"
-msgstr ""
+msgstr "Yönlendirme Türü"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_redirect_list
 msgid "Redirects"
-msgstr ""
+msgstr "Yönlendirmeler"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Related Menu Items"
-msgstr ""
+msgstr "İlgili Menü Öğeleri"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_menu_ids
+#: model:ir.model.fields,field_description:website.field_website_page__menu_ids
 msgid "Related Menus"
-msgstr ""
+msgstr "İlgili Menüler"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_page_id
+#: model:ir.model.fields,field_description:website.field_website_menu__page_id
 msgid "Related Page"
-msgstr ""
+msgstr "İlgili Sayfa"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:68
 #, python-format
 msgid "Rename Page To:"
-msgstr ""
+msgstr "Adı Değiştirilecek Sayfa:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -2492,7 +2498,7 @@ msgstr "Taslağa Ayarla"
 #. module: website
 #: model:res.groups,name:website.group_website_publisher
 msgid "Restricted Editor"
-msgstr ""
+msgstr "Kısıtlı Editör"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2508,11 +2514,6 @@ msgstr "Yuvarlak köşeler"
 #: model:ir.model,name:website.model_website_seo_metadata
 msgid "SEO metadata"
 msgstr "SEO meta veriler"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Sails"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -2531,6 +2532,11 @@ msgstr "Kaydet"
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "Search Menus"
+msgstr "Arama Menüleri"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_redirect_search
+msgid "Search Redirect"
 msgstr ""
 
 #. module: website
@@ -2551,14 +2557,14 @@ msgstr "İkinci liste"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "See Google Analytics data on your Website Dashboard"
-msgstr ""
+msgstr "Google Analytics verilerini web sitenizdeki panelde görün"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:391
+#: code:addons/website/static/src/js/menu/content.js:423
 #, python-format
 msgid "Select a Menu"
-msgstr ""
+msgstr "Bir Menü Seçin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -2578,9 +2584,9 @@ msgid "Send us an email"
 msgstr "Bize bir e-posta gönderin"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_sequence
-#: model:ir.model.fields,field_description:website.field_website_page_priority
-#: model:ir.model.fields,field_description:website.field_website_redirect_sequence
+#: model:ir.model.fields,field_description:website.field_website_menu__sequence
+#: model:ir.model.fields,field_description:website.field_website_page__priority
+#: model:ir.model.fields,field_description:website.field_website_redirect__sequence
 msgid "Sequence"
 msgstr "Sıra"
 
@@ -2597,13 +2603,13 @@ msgid "Shadows"
 msgstr "Gölge"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_auto_redirect_lang
+#: model:ir.model.fields,help:website.field_website__auto_redirect_lang
 msgid "Should users be redirected to their browser's language"
-msgstr ""
+msgstr "Kullanıcılar tarayıcılarının diline yönlendirilmelidir"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_customize_show
-#: model:ir.model.fields,field_description:website.field_website_page_customize_show
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__customize_show
+#: model:ir.model.fields,field_description:website.field_website_page__customize_show
 msgid "Show As Optional Inherit"
 msgstr "İsteğe bağlı olarak göstermek devral"
 
@@ -2616,25 +2622,25 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:86
+#: code:addons/website/static/src/xml/website.pageProperties.xml:90
 #, python-format
 msgid "Show in Top Menu"
-msgstr ""
+msgstr "Üst Menüde Göster"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Show your address on a map in the"
-msgstr ""
+msgstr "Haritada adresinizi gösterin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
 msgid "Slider Odoo Image"
-msgstr ""
+msgstr "Odoo Resim Kaydırıcı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Slideshow"
-msgstr ""
+msgstr "Slayt Gösterisi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2647,22 +2653,21 @@ msgid "Small"
 msgstr "Küçüi"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_company_form_inherit_website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Social Media"
 msgstr "Sosyal Medya"
 
 #. module: website
-#: code:addons/website/controllers/main.py:218
+#: code:addons/website/controllers/main.py:219
 #, python-format
 msgid "Sort by Name"
-msgstr ""
+msgstr "İsme Göre Sırala"
 
 #. module: website
-#: code:addons/website/controllers/main.py:217
+#: code:addons/website/controllers/main.py:218
 #, python-format
 msgid "Sort by Url"
-msgstr ""
+msgstr "URL'ye Göre Sırala"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2676,6 +2681,7 @@ msgid ""
 "Start with the customer – find out what they want\n"
 "                        and give it to them."
 msgstr ""
+"Müşteri ile başlayın - onların ne istediğini bulun ve onlara onu verin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2690,26 +2696,11 @@ msgid "Stay on this page"
 msgstr "Bu sayfada kal"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_custom
-msgid "Subtitle"
-msgstr "Altyazı"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.footer_custom
-msgid "Subtitle 2"
-msgstr "Altyazı 2"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.footer_custom
-msgid "Subtitle 3"
-msgstr "Altyazı 3"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
 msgid "Suggested"
-msgstr ""
+msgstr "Önderilen"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -2721,7 +2712,7 @@ msgstr "ÇEVİRME"
 #: code:addons/website/static/src/xml/website.facebook_page.xml:14
 #, python-format
 msgid "Tabs"
-msgstr ""
+msgstr "Sekmeler"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2742,20 +2733,20 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:225
-#: code:addons/website/models/website.py:295
+#: code:addons/website/models/website.py:233
+#: code:addons/website/models/website.py:303
 #, python-format
 msgid "Template"
 msgstr "Şablon"
 
 #. module: website
-#: code:addons/website/models/website.py:231
+#: code:addons/website/models/website.py:239
 #, python-format
 msgid "Template <b>%s (id:%s)</b> contains a link to this page"
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:301
+#: code:addons/website/models/website.py:309
 #, python-format
 msgid "Template <b>%s (id:%s)</b> is calling this file"
 msgstr ""
@@ -2766,8 +2757,8 @@ msgid "Template fallback"
 msgstr "Şablon Adı"
 
 #. module: website
-#: code:addons/website/models/website.py:227
-#: code:addons/website/models/website.py:297
+#: code:addons/website/models/website.py:235
+#: code:addons/website/models/website.py:305
 #, python-format
 msgid "Templates"
 msgstr "Şablonlar"
@@ -2775,7 +2766,7 @@ msgstr "Şablonlar"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Terms of service"
-msgstr ""
+msgstr "Kullanım Şartları"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -2788,26 +2779,13 @@ msgid "The following error was raised in the website controller"
 msgstr "Beklenmedik bir hata meydana geldi:"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_blog_post_website_url
-#: model:ir.model.fields,help:website.field_delivery_carrier_website_url
-#: model:ir.model.fields,help:website.field_event_event_website_url
-#: model:ir.model.fields,help:website.field_event_track_website_url
-#: model:ir.model.fields,help:website.field_hr_employee_website_url
-#: model:ir.model.fields,help:website.field_hr_job_website_url
-#: model:ir.model.fields,help:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,help:website.field_product_template_website_url
-#: model:ir.model.fields,help:website.field_res_partner_grade_website_url
-#: model:ir.model.fields,help:website.field_res_partner_tag_website_url
-#: model:ir.model.fields,help:website.field_res_partner_website_url
-#: model:ir.model.fields,help:website.field_slide_channel_website_url
-#: model:ir.model.fields,help:website.field_slide_slide_website_url
-#: model:ir.model.fields,help:website.field_website_page_website_url
-#: model:ir.model.fields,help:website.field_website_published_mixin_website_url
+#: model:ir.model.fields,help:website.field_website_page__website_url
+#: model:ir.model.fields,help:website.field_website_published_mixin__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_ir_act_server_website_url
+#: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 msgid "The full URL to access the server action through the website."
 msgstr "Sunucu eylemi Web sitesi üzerinden erişim tam URL."
 
@@ -2835,14 +2813,14 @@ msgstr "Seçilen şablonlar fabrika ayarlarına sıfırlanacaktır."
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "There are currently no pages for your website."
-msgstr ""
+msgstr "Şuanda web sitenizde hiç sayfa yoktur."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:35
 #, python-format
 msgid "There is no data currently available."
-msgstr ""
+msgstr "Şuanda erişilebilir bir veri yok"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -2850,6 +2828,8 @@ msgid ""
 "These terms of service (\"Terms\", \"Agreement\") are an agreement between the website\n"
 "                                (\"Website operator\", \"us\", \"we\" or \"our\") and you (\"User\", \"you\" or \"your\")."
 msgstr ""
+"Bu kullanım koşulları (anlaşması) web sitesi (web sitesi operatörü, biz, "
+"bizim) ile sizin (kullanıcı) aranızda bir anlaşmadır. "
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -2862,16 +2842,21 @@ msgid ""
 "This Agreement sets forth the general terms and conditions of your use of this website\n"
 "                                and any of its products or services (collectively, \"Website\" or \"Services\")."
 msgstr ""
+"Bu Anlaşma, bu web sitesini ve ürün veya hizmetlerini (topluca \"Web "
+"Sitesi\" veya \"Hizmetler\") kullanımınızın genel şartlarını ve koşullarını "
+"belirtmektedir."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_res_config_settings_favicon
-#: model:ir.model.fields,help:website.field_website_favicon
+#: model:ir.model.fields,help:website.field_res_config_settings__favicon
+#: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
 msgstr ""
+"Bu alan web sitenizdeki sekme ikonunun görüntülenmesi için kullanılan resmi "
+"tutar."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_res_config_settings_default_lang_code
-#: model:ir.model.fields,help:website.field_website_default_lang_code
+#: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
+#: model:ir.model.fields,help:website.field_website__default_lang_code
 msgid "This field is used to set/get locales for user"
 msgstr "This field is used to set/get locales for user"
 
@@ -2881,9 +2866,11 @@ msgid ""
 "This page does not exist, but you can create it as you are administrator of "
 "this site."
 msgstr ""
+"Bu sayfa mevcut değil, ama bu sitenin yöneticisi olarak bunu "
+"oluşturabilirsiniz."
 
 #. module: website
-#: code:addons/website/models/website.py:246
+#: code:addons/website/models/website.py:254
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr ""
@@ -2891,7 +2878,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
-msgstr ""
+msgstr "Küçük Resimler"
 
 #. module: website
 #. openerp-web
@@ -2908,15 +2895,17 @@ msgid ""
 "                        Then, duplicate one of the column to create a new\n"
 "                        one as a copy."
 msgstr ""
+"Dördüncü bir sütun eklemek için, her bir bloğun sağ simgesini kullanarak bu üç sütunun boyutunu azaltın.\n"
+"Sonra, bir sütunu çoğaltarak yeni bir tane kopya olarak oluşturun."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
-msgstr ""
+msgstr "Tony Fred, CEO"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:386
+#: code:addons/website/static/src/js/menu/content.js:418
 #: model:website.menu,name:website.main_menu
 #, python-format
 msgid "Top Menu"
@@ -2935,34 +2924,33 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Track visits in Google Analytics"
-msgstr ""
+msgstr "Google Analytics'den ziyaretlerinizi takip edin."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Tracking ID"
-msgstr ""
+msgstr "Takip ID"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/rte.summernote.js:17
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
-msgstr ""
+msgstr "Resmi dönüştür ( dönüşümü sıfırlamak için iki kere tıklayınız)"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_twitter
+#: model:ir.model.fields,field_description:website.field_website__social_twitter
 msgid "Twitter Account"
 msgstr "Twitter Hesabı"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
 msgid "Twitter Scroller"
-msgstr ""
+msgstr "Twitter Kaydırıcı"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:76
-#: model:ir.ui.view,arch_db:website.snippet_options
+#: code:addons/website/static/src/xml/website.pageProperties.xml:80
 #, python-format
 msgid "Type"
 msgstr "Tür"
@@ -2984,30 +2972,32 @@ msgid "UA-XXXXXXXX-Y"
 msgstr "UA-XXXXXXXX-Y"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_res_config_settings_cdn_filters
-#: model:ir.model.fields,help:website.field_website_cdn_filters
+#: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
+#: model:ir.model.fields,help:website.field_website__cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
+"Bu filtrelerle URL'nin eşleşmesi CDN Temel URL kullanılarak tekrar "
+"yazılacak."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Ultimate package"
-msgstr ""
+msgstr "Nihai paket"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.index_management
 msgid "Unindexed"
-msgstr ""
+msgstr "Sıralanmamış"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited CRM power and support"
-msgstr ""
+msgstr "Limitsiz CRM gücü ve desteği"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited customization"
-msgstr ""
+msgstr "Sınırsız özelleştirme"
 
 #. module: website
 #. openerp-web
@@ -3019,7 +3009,7 @@ msgid "Unpublished"
 msgstr "Yayınlanmayan"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_url
+#: model:ir.model.fields,field_description:website.field_website_menu__url
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Url"
 msgstr "Url"
@@ -3027,7 +3017,7 @@ msgstr "Url"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Use Of Cookies"
-msgstr ""
+msgstr "Cookie Kullanımı"
 
 #. module: website
 #. openerp-web
@@ -3040,18 +3030,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use a CDN to optimize the availability of your website's content"
 msgstr ""
+"Webs site içeriğinizin uygunluğunu optimize etmek için bir CDN kullanın."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_activated
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
 msgid "Use a Content Delivery Network (CDN)"
-msgstr ""
+msgstr "Bir İçerik İletim Ağı (CDN) kullanın"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:97
+#: code:addons/website/static/src/xml/website.pageProperties.xml:101
 #, python-format
 msgid "Use as Homepage"
-msgstr ""
+msgstr "Anasayfa olarak kullan"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -3059,6 +3050,13 @@ msgid ""
 "User-agent: *\n"
 "Sitemap:"
 msgstr ""
+"Kullanıcı aracı:*\n"
+"Site haritası:"
+
+#. module: website
+#: model:ir.model,name:website.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3071,48 +3069,38 @@ msgid "Very Slow"
 msgstr "Çok Yavaş"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_view_id
+#: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "Görünüm"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_arch
-#: model:ir.model.fields,field_description:website.field_website_page_arch_base
+#: model:ir.model.fields,field_description:website.field_website_page__arch
 msgid "View Architecture"
 msgstr "Görünüm Yapısı"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_name
+#: model:ir.model.fields,field_description:website.field_website_page__name
 msgid "View Name"
 msgstr "Görünüm Adı"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_type
+#: model:ir.model.fields,field_description:website.field_website_page__type
 msgid "View Type"
 msgstr "Görünüm Türü"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_mode
+#: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
 msgstr "Görünüm devralma modu"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_inherit_children_ids
+#: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Birisinden kalan görünümler."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_post_website_published
-#: model:ir.model.fields,field_description:website.field_event_track_website_published
-#: model:ir.model.fields,field_description:website.field_hr_employee_website_published
-#: model:ir.model.fields,field_description:website.field_hr_job_website_published
-#: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_published
-#: model:ir.model.fields,field_description:website.field_product_template_website_published
-#: model:ir.model.fields,field_description:website.field_res_partner_website_published
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_published
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_published
-#: model:ir.model.fields,field_description:website.field_website_page_website_published
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_website_published
+#: model:ir.model.fields,field_description:website.field_website_page__website_published
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
 msgid "Visible in Website"
 msgstr "Web Sitesinde Görünür"
 
@@ -3132,24 +3120,23 @@ msgid ""
 "                                                      life through disruptive products. We build great products to solve your\n"
 "                                                      business problems."
 msgstr ""
+"Bizler yenilikçi ürünlerle herkesin hayatını iyileştirmeye çalışan bir grup "
+"tutkulu insanız. İş sorunlarınızı çözmek için müthiş ürünler üretiyoruz."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
-"                            life through disruptive products. We build great products to solve your\n"
-"                            business problems."
+"                                life through disruptive products. We build great products to solve your\n"
+"                                business problems."
 msgstr ""
-"Bizler yenilikçi ürünlerle herkesin hayatını iyileştirmeye çalışan\n"
-"bir grup tutkulu insanız. İş sorunlarınızı çözmek için müthiş\n"
-"ürünler üretiyoruz."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:37
 #, python-format
 msgid "We found these ones:"
-msgstr ""
+msgstr "Bunu bulduk:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -3161,10 +3148,10 @@ msgstr "En kısa sürede sizinle irtibata geçeceğiz."
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_website_id
-#: model:ir.model.fields,field_description:website.field_website_page_website_id
-#: model:ir.model.fields,field_description:website.field_website_redirect_website_id
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
+#: model:ir.model.fields,field_description:website.field_website_menu__website_id
+#: model:ir.model.fields,field_description:website.field_website_page__website_id
+#: model:ir.model.fields,field_description:website.field_website_redirect__website_id
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website.view_server_action_search_website
@@ -3177,14 +3164,19 @@ msgid "Website Apps"
 msgstr "Web Sitesi Uygulamalar"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_domain
+#: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
+msgstr "Website Domaini"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_users__group_website_user
+msgid "Website Editor"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_favicon
+#: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
-msgstr ""
+msgstr "Website Simgesi"
 
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website_homepage
@@ -3198,42 +3190,53 @@ msgid "Website Menu"
 msgstr "Web Sitesi Menü"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_website_name
-#: model:ir.model.fields,field_description:website.field_website_name
+#: model:ir.ui.view,arch_db:website.website_menus_form_view
+msgid "Website Menus Settings"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
+#: model:ir.model.fields,field_description:website.field_website__name
 msgid "Website Name"
 msgstr "Web Sitesi Adı"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__first_page_id
+#: model:ir.model.fields,field_description:website.field_website_page__first_page_id
+msgid "Website Page"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Website Page Settings"
-msgstr ""
+msgstr "Website Sayfa Ayarları"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_pages_list
 #: model:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Website Pages"
-msgstr ""
+msgstr "Website Sayfaları"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 msgid "Website Path"
 msgstr "Web Sitesi Yolu"
 
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
 msgid "Website Redirect"
-msgstr ""
+msgstr "Website Yönlendirmesi"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_redirect_form_view
 msgid "Website Redirect Settings"
-msgstr ""
+msgstr "Website Yönlendirme Ayarları"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_redirect_list
 #: model:ir.ui.view,arch_db:website.website_redirect_tree_view
 msgid "Website Redirects"
-msgstr ""
+msgstr "Website Yönlendirmeleri"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -3248,29 +3251,17 @@ msgstr "Web Sitesi Teması"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Title"
-msgstr ""
+msgstr "Website Başlığı"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_post_website_url
-#: model:ir.model.fields,field_description:website.field_delivery_carrier_website_url
-#: model:ir.model.fields,field_description:website.field_event_event_website_url
-#: model:ir.model.fields,field_description:website.field_event_track_website_url
-#: model:ir.model.fields,field_description:website.field_hr_employee_website_url
-#: model:ir.model.fields,field_description:website.field_hr_job_website_url
-#: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,field_description:website.field_product_template_website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_grade_website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_tag_website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_website_url
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_url
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_url
-#: model:ir.model.fields,field_description:website.field_website_page_website_url
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_website_url
+#: model:ir.model.fields,field_description:website.field_ir_attachment__website_url
+#: model:ir.model.fields,field_description:website.field_website_page__website_url
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__website_url
 msgid "Website URL"
 msgstr "Web sitesi URL'si"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 msgid "Website Url"
 msgstr "Web Sitesi URL'si"
 
@@ -3281,6 +3272,10 @@ msgid ""
 "                                User by this site. The User may configure his / her browser to notify and\n"
 "                                reject the installation of the cookies sent by us."
 msgstr ""
+"Web Sitesi, kullanıcının bu sitedeki gezinmesini en yüksek seviyede "
+"kişiselleştirmek ve kolaylaştırmak için çerezleri kullanabilir. Kullanıcı, "
+"tarayıcısını, tarafımızdan gönderilen çerezlerin kurulumunu bildirmek ve "
+"reddetmek üzere yapılandırabilir."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_tree
@@ -3288,84 +3283,39 @@ msgid "Website menu"
 msgstr "Web sitesi menü"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_description
-#: model:ir.model.fields,field_description:website.field_blog_post_website_meta_description
-#: model:ir.model.fields,field_description:website.field_blog_tag_website_meta_description
-#: model:ir.model.fields,field_description:website.field_event_event_website_meta_description
-#: model:ir.model.fields,field_description:website.field_event_track_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_forum_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_post_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_tag_website_meta_description
-#: model:ir.model.fields,field_description:website.field_hr_job_website_meta_description
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_meta_description
-#: model:ir.model.fields,field_description:website.field_product_public_category_website_meta_description
-#: model:ir.model.fields,field_description:website.field_product_template_website_meta_description
-#: model:ir.model.fields,field_description:website.field_res_partner_website_meta_description
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_meta_description
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_meta_description
-#: model:ir.model.fields,field_description:website.field_website_page_website_meta_description
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_description
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
 msgstr "Web sitesi meta açıklaması"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_blog_post_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_blog_tag_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_event_event_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_event_track_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_forum_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_post_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_tag_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_hr_job_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_product_public_category_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_product_template_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_res_partner_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_website_page_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_keywords
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_keywords
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Web Sitesi meta anahtar kelimeleri"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_title
-#: model:ir.model.fields,field_description:website.field_blog_post_website_meta_title
-#: model:ir.model.fields,field_description:website.field_blog_tag_website_meta_title
-#: model:ir.model.fields,field_description:website.field_event_event_website_meta_title
-#: model:ir.model.fields,field_description:website.field_event_track_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_forum_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_post_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_tag_website_meta_title
-#: model:ir.model.fields,field_description:website.field_hr_job_website_meta_title
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_meta_title
-#: model:ir.model.fields,field_description:website.field_product_public_category_website_meta_title
-#: model:ir.model.fields,field_description:website.field_product_template_website_meta_title
-#: model:ir.model.fields,field_description:website.field_res_partner_website_meta_title
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_meta_title
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_meta_title
-#: model:ir.model.fields,field_description:website.field_website_page_website_meta_title
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_title
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_title
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
 msgstr "Web sitesi meta başlık"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
 msgid "Website: Dashboard"
-msgstr ""
+msgstr "Website: Panel"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_website_ids
+#: model:ir.model.fields,field_description:website.field_website_page__website_ids
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "Web Siteleri"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_language_install_website_ids
+#: model:ir.model.fields,field_description:website.field_base_language_install__website_ids
 msgid "Websites to translate"
 msgstr "Web Sitelerini Çevirme"
 
@@ -3374,19 +3324,19 @@ msgstr "Web Sitelerini Çevirme"
 #: code:addons/website/static/src/xml/website.editor.xml:4
 #, python-format
 msgid "Welcome to your"
-msgstr ""
+msgstr "Hoşgeldiniz"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:10
 #, python-format
 msgid "What do you want to do?"
-msgstr ""
+msgstr "Ne yapmak istiyorsunuz?"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
 msgid "With a great subtitle"
-msgstr ""
+msgstr "İyi bir alt yazı ile birlikte"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
@@ -3394,6 +3344,8 @@ msgid ""
 "Write a quote here from one of your customers. Quotes are a\n"
 "                                                great way to build confidence in your products or services."
 msgstr ""
+"Buraya müşterilerinizden bir alıntı yazın.\n"
+"Alıntılar hizmetiniz ya da ürününüz için güven oluşturmanın iyi bir yoludur."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_image
@@ -3410,6 +3362,8 @@ msgid ""
 "                        services or a specific feature. To be successful\n"
 "                        your content needs to be useful to your readers."
 msgstr ""
+"Ürününüzü, hizmetinizi ya da belirli bir özelliğinizi tanımlamak için bir yada iki paragraf yazın.\n"
+" İçeriğinizin başarılı olması için okuyucular için işe yarar olmaya ihtiyacı vardır"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
@@ -3417,6 +3371,9 @@ msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
 "feature. To be successful your content needs to be useful to your readers."
 msgstr ""
+"Ürününüzü, hizmetinizi ya da belirli bir özelliğinizi tanımlamak için bir "
+"yada iki paragraf yazın. İçeriğinizin başarılı olması için okuyucular için "
+"işe yarar olmaya ihtiyacı vardır"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
@@ -3434,6 +3391,15 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:47
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
+msgstr "Bu Analytics Hesabına erişiminiz yok gibi görünüyor."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/seo.js:543
+#, python-format
+msgid ""
+"You have hidden this page from search results. It won't be indexed by search"
+" engines."
 msgstr ""
 
 #. module: website
@@ -3441,7 +3407,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:46
 #, python-format
 msgid "You need to log in to your Google Account before:"
-msgstr ""
+msgstr "Önce Google Hesabınıza giriş yapmanız gerekir:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3450,6 +3416,10 @@ msgid ""
 "                                any website which you access through a link from this Website. Your linking to\n"
 "                                any other off-site pages or other websites is at your own risk."
 msgstr ""
+"Bu web sitesindeki bir bağlantı aracılığıyla eriştiğiniz herhangi bir web "
+"sitesinin yasal beyanlarını ve diğer kullanım koşullarını dikkatlice "
+"incelemelisiniz. Başka site dışı sayfalara veya diğer web sitelerine "
+"bağlantı, kendi sorumluluğunuzdadır."
 
 #. module: website
 #: model:ir.actions.act_window,help:website.action_module_theme
@@ -3462,19 +3432,19 @@ msgstr "Başka bir arama kriteri denemelisiniz."
 #: code:addons/website/static/src/xml/website.backend.xml:56
 #, python-format
 msgid "Your Client ID:"
-msgstr ""
+msgstr "Müşteri ID :"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
 msgid "Your Slide Title"
-msgstr ""
+msgstr "Sunum Başlıuğınız"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:51
 #, python-format
 msgid "Your Tracking ID:"
-msgstr ""
+msgstr "İzleme ID'si:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_title
@@ -3486,15 +3456,15 @@ msgstr "Website Başlığı"
 #: code:addons/website/static/src/xml/website.editor.xml:11
 #, python-format
 msgid "Your current changes will be saved automatically."
-msgstr ""
+msgstr "Değişiklikleriniz otomatik olarak kaydedilecektir."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Your search '"
-msgstr ""
+msgstr "Aramanız"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_youtube
+#: model:ir.model.fields,field_description:website.field_website__social_youtube
 msgid "Youtube Account"
 msgstr "Youtube Hesabı"
 
@@ -3515,14 +3485,19 @@ msgstr "sayfa içeriğini açıklayan"
 #: code:addons/website/static/src/xml/website.xml:70
 #, python-format
 msgid "e.g. About Us"
-msgstr ""
+msgstr "örn. Hakkımızda"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
 msgid "found(s)"
-msgstr ""
+msgstr "bulunanlar"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.brand_promotion
+msgid "free website"
+msgstr "ücretsiz websitesi"
 
 #. module: website
 #. openerp-web
@@ -3539,22 +3514,22 @@ msgstr "https://plus.google.com/+Odooapps"
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "https://twitter.com/Odoo"
-msgstr ""
+msgstr "https://twitter.com/Odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "https://www.facebook.com/odoo"
-msgstr ""
+msgstr "https://www.facebook.com/odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "https://www.linkedin.com/company/odoo"
-msgstr ""
+msgstr "https://www.linkedin.com/company/odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "https://www.youtube.com/user/OpenERPonline"
-msgstr ""
+msgstr "https://www.youtube.com/user/OpenERPonline"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -3599,7 +3574,7 @@ msgstr "ya da Esasını Düzenle"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "page"
-msgstr ""
+msgstr "sayfa"
 
 #. module: website
 #: model:ir.model,name:website.model_res_config_settings
@@ -3611,7 +3586,7 @@ msgstr "res.config.settings"
 #: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "signs to get your website ready in no time."
-msgstr ""
+msgstr "Web sitenizi kullanıma hazır işaretleri."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -3621,15 +3596,15 @@ msgstr "sitemap.xml"
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "url"
-msgstr ""
+msgstr "url"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "user / month (billed annually)"
-msgstr ""
+msgstr "kullanıcı / ay (yıllık fatura)"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_website_id
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "Websitesi"
@@ -3637,7 +3612,12 @@ msgstr "Websitesi"
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
 msgid "website.published.mixin"
-msgstr ""
+msgstr "website.published.mixin"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.brand_promotion
+msgid "with"
+msgstr "ile"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500

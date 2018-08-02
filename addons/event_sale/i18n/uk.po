@@ -3,26 +3,26 @@
 # * event_sale
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
-# Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2018
+# Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -35,12 +35,12 @@ msgid "Attendee"
 msgstr "Гість"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
 msgid "Available Seat"
 msgstr "Вільне місце"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_available
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_available
 msgid "Available Seats"
 msgstr "Вільні місця"
 
@@ -50,14 +50,14 @@ msgid "Before confirming"
 msgstr "Перед підтвердженням"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
 msgstr "Виберіть подію і автоматично буде створено реєстацію на цю подію"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
@@ -66,27 +66,21 @@ msgstr ""
 "автоматично."
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_2_product
-#: model:product.template,name:event_sale.event_2_product_product_template
-msgid "Conference on Business Applications"
-msgstr "Конференція з Програм для бізнесу"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
+#: model:ir.model.fields,help:event_sale.field_event_event_ticket__seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
@@ -96,9 +90,9 @@ msgstr ""
 "не зможете продати більше квитків. Вкажіть 0, щоб ігнорувати це правило."
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product_event_ok
-#: model:ir.model.fields,help:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
@@ -107,33 +101,33 @@ msgstr ""
 "рядку підтвердження замовлення на продаж"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
 msgid "Editor"
 msgstr "Редактор"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
 msgid "Email"
 msgstr "Ел. пошта"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
 msgstr "Подія"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_type_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_type_id
 msgid "Event Category"
 msgstr "Категорія зустрічі"
 
@@ -146,7 +140,7 @@ msgstr "Назва події"
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
-msgstr "Реєстрація Події"
+msgstr "Реєстрація події"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -155,15 +149,15 @@ msgstr "Реєстрації на подію"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
-#: model:ir.model.fields,field_description:event_sale.field_event_event_event_ticket_ids
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 msgid "Event Ticket"
 msgstr "Квиток на подію"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Квитки на подію"
 
@@ -178,23 +172,17 @@ msgid "Events"
 msgstr "Події"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:226
+#: code:addons/event_sale/models/event.py:228
 #, python-format
 msgid "Free"
 msgstr "Вільно"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_1_product
-#: model:product.template,name:event_sale.event_1_product_product_template
-msgid "Functional Webinar"
-msgstr "Вебінар-практикум"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
@@ -202,35 +190,35 @@ msgid "Invoice"
 msgstr "Рахунок"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_is_expired
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__is_expired
 msgid "Is Expired"
 msgstr "Термін дії минув"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
-msgstr ""
+msgstr "Є квиток на події"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
@@ -240,41 +228,35 @@ msgid "Limited"
 msgstr "Обмежений"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_max
 msgid "Maximum Available Seats"
 msgstr "Максимальна к-ть вільних місць"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:222
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_name
+#: code:addons/event_sale/models/event.py:223
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
 msgid "Name"
 msgstr "Назва"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:151
-#, python-format
-msgid "No more available seats for the ticket"
-msgstr "Не залишилось вільних місць за квитком"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:178
+#: code:addons/event_sale/models/event.py:179
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Не залишилось вільних місць за цим квитком"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:152
+#, python-format
+msgid "No more available seats for this ticket type."
+msgstr ""
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:224
 #, python-format
 msgid "None"
 msgstr "Немає"
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_0_product
-#: model:product.template,name:event_sale.event_0_product_product_template
-msgid "Open Days in Los Angeles"
-msgstr "Відкриті дні у Лос-Анджелесі"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -282,45 +264,45 @@ msgid "Origin"
 msgstr "Походження"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
 msgstr "Первинна реєстрація"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:233
 #, python-format
 msgid "Paid"
 msgstr "Оплачено"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:232
+#: code:addons/event_sale/models/event.py:234
 #, python-format
 msgid "Payment"
-msgstr "Платіж"
+msgstr "Оплата"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
 msgid "Phone"
 msgstr "Телефон"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 msgid "Price"
-msgstr "Разом"
+msgstr "Ціна"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 msgid "Price Reduce"
 msgstr "Уцінка"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
 msgstr "Ціна зниження податку вкл"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_product_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 msgid "Product"
 msgstr "Товар"
 
@@ -332,64 +314,64 @@ msgstr "Шаблон товару"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
 msgid "Quotation"
-msgstr "Пропозиція"
+msgstr "Комерційна пропозиція"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:19
-#: code:addons/event_sale/models/event.py:32
+#: code:addons/event_sale/models/event.py:20
+#: code:addons/event_sale/models/event.py:33
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 #, python-format
 msgid "Registration"
 msgstr "Реєстрація"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:33
-#: code:addons/event_sale/models/event.py:50
+#: code:addons/event_sale/models/event.py:34
+#: code:addons/event_sale/models/event.py:51
 #, python-format
 msgid "Registration for %s"
-msgstr ""
+msgstr "Реєстрація для %s"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_registration_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
 msgid "Registrations"
 msgstr "Реєстрації"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_event_registration_ids
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
 msgstr "Редагувати заявки"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
 msgstr "Зарезервовано місць"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
 msgstr "Припинення продажу"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
-msgstr "Замовлення"
+msgstr "Замовлення на продаж"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
 msgstr "Рядок замовлення"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
 msgid "Seats Used"
-msgstr ""
+msgstr "Використовуються сидіння"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
 msgid "Sell Online"
-msgstr ""
+msgstr "Продаж онлайн"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -397,32 +379,18 @@ msgid "Skip"
 msgstr "Пропустити"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 msgid "Source Sales Order"
-msgstr ""
+msgstr "Джерело продажів замовлення"
 
 #. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_1
-#: model:event.event.ticket,name:event_sale.event_1_ticket_1
-#: model:event.event.ticket,name:event_sale.event_2_ticket_1
-#: model:event.event.ticket,name:event_sale.event_3_ticket_1
-msgid "Standard"
-msgstr "Standard"
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_3_product
-#: model:product.template,name:event_sale.event_3_product_product_template
-msgid "Technical Training"
-msgstr "Технічна підготовка"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:229
+#: code:addons/event_sale/models/event.py:231
 #, python-format
 msgid "The registration must be paid"
-msgstr ""
+msgstr "Реєстрація має бути сплачена"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:224
 #, python-format
 msgid "Ticket"
 msgstr "Квиток"
@@ -434,31 +402,31 @@ msgid "Ticket Type"
 msgstr "Тип квитка"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:156
+#: code:addons/event_sale/models/event.py:157
 #, python-format
-msgid "Ticket should belong to either event category or event but not both"
+msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_type_use_ticketing
+#: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
 msgid "Ticketing"
-msgstr ""
+msgstr "Видавати квитки"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_type_event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_type__event_ticket_ids
 #: model:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr "Білети"
+msgstr "Квитки"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:230
 #, python-format
 msgid "To pay"
 msgstr "Оплатити"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Непідтверджені зарезервовані місця"
 
@@ -468,11 +436,10 @@ msgid "Unlimited"
 msgstr "Необмежено"
 
 #. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_2
-#: model:event.event.ticket,name:event_sale.event_2_ticket_2
-#: model:event.event.ticket,name:event_sale.event_3_ticket_2
-msgid "VIP"
-msgstr "Дуже важливі особи"
+#: model:product.product,weight_uom_name:event_sale.product_product_event
+#: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
+msgid "kg"
+msgstr "кг"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -488,3 +455,13 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
+msgstr ""

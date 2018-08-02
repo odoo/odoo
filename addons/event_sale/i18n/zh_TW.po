@@ -3,15 +3,16 @@
 # * event_sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,168 +23,156 @@ msgstr ""
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
-msgstr "套用"
+msgstr "應用"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 msgid "Attendee"
-msgstr ""
+msgstr "參會者"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
 msgid "Available Seat"
-msgstr ""
+msgstr "可用席位"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_available
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_available
 msgid "Available Seats"
-msgstr ""
+msgstr "可用席位"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before confirming"
-msgstr ""
+msgstr "確認之前"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr ""
+msgstr "選擇一個活動，它將會自動為此活動創建登記。"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr ""
+msgstr "選譯活動入券場，它將自動生成該活動入場券的登記。"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_2_product
-#: model:product.template,name:event_sale.event_2_product_product_template
-msgid "Conference on Business Applications"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
+#: model:ir.model.fields,help:event_sale.field_event_event_ticket__seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr ""
+msgstr "定義可用入場券的數量。如果太多人來註冊，超過設定數量就不可再賣票。如果設定為0，可忽略此規則變成無限制。"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product_event_ok
-#: model:ir.model.fields,help:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr ""
+msgstr "決定是否在銷售訂單行被確認時，一個產品自動創建一個活動登記。"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
 msgid "Editor"
-msgstr ""
+msgstr "編輯"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
 msgid "Email"
-msgstr "電郵"
+msgstr "電子郵箱"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
 msgstr "活動"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_type_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_type_id
 msgid "Event Category"
-msgstr ""
+msgstr "活動類別"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event Name"
-msgstr ""
+msgstr "活動名稱"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
-msgstr ""
+msgstr "活動登記"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr ""
+msgstr "活動登記"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
-#: model:ir.model.fields,field_description:event_sale.field_event_event_event_ticket_ids
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 msgid "Event Ticket"
-msgstr ""
+msgstr "活動入場券"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "活動門票"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event's Ticket"
-msgstr ""
+msgstr "活動的入場券"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
 msgid "Events"
-msgstr ""
+msgstr "活動"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:226
+#: code:addons/event_sale/models/event.py:228
 #, python-format
 msgid "Free"
-msgstr ""
+msgstr "免費"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_1_product
-#: model:product.template,name:event_sale.event_1_product_product_template
-msgid "Functional Webinar"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
@@ -191,289 +180,278 @@ msgid "Invoice"
 msgstr "發票"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_is_expired
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr ""
+msgstr "已到期"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
-msgstr ""
+msgstr "是一張活動門票"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "限制的"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_max
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "最多可用席位"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:222
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_name
+#: code:addons/event_sale/models/event.py:223
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
 msgid "Name"
 msgstr "名稱"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:151
-#, python-format
-msgid "No more available seats for the ticket"
-msgstr ""
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:178
+#: code:addons/event_sale/models/event.py:179
 #, python-format
 msgid "No more available seats for this ticket"
+msgstr "該入場券沒有可用座位"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:152
+#, python-format
+msgid "No more available seats for this ticket type."
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:224
 #, python-format
 msgid "None"
-msgstr ""
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_0_product
-#: model:product.template,name:event_sale.event_0_product_product_template
-msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "無"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
-msgstr ""
+msgstr "原始"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "原始登記"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:233
 #, python-format
 msgid "Paid"
-msgstr ""
+msgstr "已付款"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:232
+#: code:addons/event_sale/models/event.py:234
 #, python-format
 msgid "Payment"
 msgstr "付款"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
 msgid "Phone"
-msgstr ""
+msgstr "電話"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 msgid "Price"
 msgstr "價格"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 msgid "Price Reduce"
 msgstr "降價"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "稅後降價"
+msgstr "減稅後價格"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_product_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 msgid "Product"
 msgstr "產品"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
-msgstr "產品範本"
+msgstr "產品模板"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
 msgid "Quotation"
-msgstr "報價單"
+msgstr "報價"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:19
-#: code:addons/event_sale/models/event.py:32
+#: code:addons/event_sale/models/event.py:20
+#: code:addons/event_sale/models/event.py:33
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 #, python-format
 msgid "Registration"
-msgstr "登記註冊"
+msgstr "登記"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:33
-#: code:addons/event_sale/models/event.py:50
+#: code:addons/event_sale/models/event.py:34
+#: code:addons/event_sale/models/event.py:51
 #, python-format
 msgid "Registration for %s"
-msgstr ""
+msgstr "登記%s"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_registration_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
 msgid "Registrations"
-msgstr ""
+msgstr "登記"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_event_registration_ids
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "編輯登記"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "預訂的席位"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
-msgstr ""
+msgstr "銷售結束"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
-msgstr "銷貨單"
+msgstr "銷售訂單"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "銷售訂單細項"
+msgstr "銷售訂單行"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
 msgid "Seats Used"
-msgstr ""
+msgstr "使用的座椅"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
 msgid "Sell Online"
-msgstr ""
+msgstr "網上銷售"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
-msgstr ""
+msgstr "掠過"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 msgid "Source Sales Order"
-msgstr ""
+msgstr "源銷售訂單"
 
 #. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_1
-#: model:event.event.ticket,name:event_sale.event_1_ticket_1
-#: model:event.event.ticket,name:event_sale.event_2_ticket_1
-#: model:event.event.ticket,name:event_sale.event_3_ticket_1
-msgid "Standard"
-msgstr ""
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_3_product
-#: model:product.template,name:event_sale.event_3_product_product_template
-msgid "Technical Training"
-msgstr ""
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:229
+#: code:addons/event_sale/models/event.py:231
 #, python-format
 msgid "The registration must be paid"
-msgstr ""
+msgstr "必須繳納登記費。"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:224
 #, python-format
 msgid "Ticket"
-msgstr ""
+msgstr "門票"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
 msgid "Ticket Type"
-msgstr ""
+msgstr "入場券類型"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:156
+#: code:addons/event_sale/models/event.py:157
 #, python-format
-msgid "Ticket should belong to either event category or event but not both"
+msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_type_use_ticketing
+#: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
 msgid "Ticketing"
-msgstr ""
+msgstr "出票"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_type_event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_type__event_ticket_ids
 #: model:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
+msgstr "入場券"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:230
 #, python-format
 msgid "To pay"
-msgstr ""
+msgstr "待支付"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "未確認的席位預訂"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Unlimited"
-msgstr ""
+msgstr "無限制的"
 
 #. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_2
-#: model:event.event.ticket,name:event_sale.event_2_ticket_2
-#: model:event.event.ticket,name:event_sale.event_3_ticket_2
-msgid "VIP"
-msgstr ""
+#: model:product.product,weight_uom_name:event_sale.product_product_event
+#: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
+msgid "kg"
+msgstr "kg"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
+msgstr "請給出註冊的詳細信息"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "registration.editor"
-msgstr ""
+msgstr "registration.editor"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
+msgstr "registration.editor.line"
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
 msgstr ""

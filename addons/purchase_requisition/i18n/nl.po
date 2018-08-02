@@ -11,10 +11,10 @@
 # e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -79,6 +79,11 @@ msgid "<strong>Vendor </strong>"
 msgstr "<strong>Leverancier </strong>"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
 msgstr "Deadline overeenkomst"
@@ -129,7 +134,7 @@ msgstr "Blanket order"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Blanket order"
-msgstr ""
+msgstr "Afroeporder"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
@@ -253,8 +258,8 @@ msgstr "Concept"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "End Month"
-msgstr "Laatste maand"
+msgid "End Date"
+msgstr "Einddatum"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -262,6 +267,21 @@ msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
 "Voorbeeld van inkoopovereenkomsten bevatten aanbestedingen en afroeporders."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Volgers (Kanalen)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -286,6 +306,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "In a call for tenders, you can record the products you need to buy\n"
@@ -307,6 +342,11 @@ msgstr "In onderhandeling"
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
 msgid "Information about a product vendor"
 msgstr "Informatie over een productleverancier"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
@@ -335,6 +375,16 @@ msgid "Lines"
 msgstr "Lijnen"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
+msgid "Message Delivery error"
+msgstr "Bericht aflever fout"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr "Meer aanvragen"
@@ -355,9 +405,34 @@ msgid "New Quotation"
 msgstr "Nieuwe offerte"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
 msgstr "Aantal orders"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of error"
+msgstr "Aantal foutmeldingen"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met leveringsfout"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Aantal ongelezen berichten"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -543,7 +618,7 @@ msgstr "Aanvraag"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requisition_line_ids
 msgid "Requisition Line"
-msgstr ""
+msgstr "Aanvraag lijn"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -604,12 +679,12 @@ msgstr "Brondocument"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr ""
+msgstr "Start een nieuwe inkoopovereenkomst"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "Status afroeporde"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -625,7 +700,7 @@ msgstr "Voorraadmutatie"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
-msgstr ""
+msgstr "Leveranciers info"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -663,6 +738,16 @@ msgid "Unit Price"
 msgstr "Prijs"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Aantal ongelezen berichten"
+
+#. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
 msgstr "Gebruik lijnen van overeenkomst"
@@ -694,16 +779,26 @@ msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website Messages"
+msgstr "Website berichten"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
+
+#. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:177
 #, python-format
 msgid "You can only delete draft requisitions."
-msgstr ""
+msgstr "U kan enkel concept aanvragen verwijderen."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:122
 #, python-format
 msgid "You cannot confirm agreement because there is no product line."
-msgstr ""
+msgstr "U kan deze overeenkomst niet bevestigen omdat er geen productlijn is."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:126
@@ -711,13 +806,13 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:227
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr ""
+msgstr "U kan de afroeporder niet bevestigen zonder prijs."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:128
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr ""
+msgstr "U kan de afroeporder niet bevestigen zonder hoeveelheid."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:155

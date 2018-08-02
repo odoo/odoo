@@ -5,13 +5,16 @@
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +23,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+#: code:addons/account_budget/models/account_budget.py:278
+#, python-format
 msgid ""
-"A budget is a forecast of your company's income and/or expenses\n"
-"                expected for a period in the future. A budget is defined on some\n"
-"                financial accounts and/or analytic accounts (that may represent\n"
-"                projects, departments, categories of products, etc.)"
-msgstr "预算是对未来一段时间公司收入和费用的预测。 预算是基于一些财务科目或是分析科目 (可能是项目, 部门, 产品类别, 等等.)"
+"\"End Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr ""
+
+#. module: account_budget
+#: code:addons/account_budget/models/account_budget.py:273
+#, python-format
+msgid ""
+"\"Start Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__account_ids
@@ -40,10 +50,37 @@ msgid "Achievement"
 msgstr "成就"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__practical_amount
+msgid "Amount really earned/spent."
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__theoritical_amount
+msgid "Amount you are supposed to have earned/spent at this date."
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__planned_amount
+msgid ""
+"Amount you plan to earn/spend. Record a positive amount if it is a revenue "
+"and a negative amount if it is a cost."
+msgstr ""
+
+#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_account_id
 msgid "Analytic Account"
 msgstr "分析账户"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_group_id
+msgid "Analytic Group"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -72,11 +109,11 @@ msgstr "预算明细"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__crossovered_budget_line
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__crossovered_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__crossovered_budget_line
-#: model:ir.model.fields,field_description:account_budget.field_project_project__crossovered_budget_line
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
 msgid "Budget Lines"
@@ -87,6 +124,11 @@ msgstr "预算明细"
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
 msgstr "预算名称"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_state
+msgid "Budget State"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
@@ -105,22 +147,17 @@ msgid "Budgetary Positions"
 msgstr "预算状况"
 
 #. module: account_budget
-#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 msgid "Budgets"
 msgstr "预算"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"By keeping track of where your money goes, you may be less\n"
-"                likely to overspend, and more likely to meet your financial\n"
-"                goals. Forecast a budget by detailing the expected revenue per\n"
-"                analytic account and monitor its evolution based on the actuals\n"
-"                realised during that period."
-msgstr "记录钱所花的地方, 你可能就不会超支,而且符合你的财务目标. 在那段期间内，通过细化每个分析科目的预期收入来做预算，然后监控实际变化。"
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budgets Analysis"
+msgstr ""
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -133,11 +170,23 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Click to create a new budget."
+msgstr "点击以创建一个新的预算。"
+
+#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__company_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__company_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__company_id
 msgid "Company"
 msgstr "公司"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__percentage
+msgid ""
+"Comparison between practical and theoretical amount. This measure tells you "
+"if you are below or over budget."
+msgstr ""
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -148,11 +197,6 @@ msgstr "确认"
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
 msgstr "已确认"
-
-#. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid "Create a new budget"
-msgstr "创建一张新的预算单"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_uid
@@ -167,6 +211,11 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_date
 msgid "Created on"
 msgstr "创建时间"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__currency_id
+msgid "Currency"
+msgstr "币种"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__display_name
@@ -199,11 +248,61 @@ msgid "End Date"
 msgstr "结束日期"
 
 #. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Entries..."
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Group By"
+msgstr "分组按"
+
+#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__is_above_budget
+msgid "Is Above Budget"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post____last_update
@@ -227,9 +326,50 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__name
 msgid "Name"
 msgstr "名字"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Not Cancelled"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__paid_date
@@ -248,6 +388,12 @@ msgid "Planned Amount"
 msgstr "已计划的金额"
 
 #. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Planned amount"
+msgstr ""
+
+#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__practical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
@@ -255,12 +401,18 @@ msgid "Practical Amount"
 msgstr "实际金额"
 
 #. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Practical amount"
+msgstr ""
+
+#. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Reset to Draft"
 msgstr "重置为草稿"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__creating_user_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__user_id
 msgid "Responsible"
 msgstr "负责人"
 
@@ -276,7 +428,7 @@ msgid "Status"
 msgstr "状态"
 
 #. module: account_budget
-#: code:addons/account_budget/models/account_budget.py:31
+#: code:addons/account_budget/models/account_budget.py:29
 #, python-format
 msgid "The budget must have at least one account."
 msgstr "预算应该至少有一个科目"
@@ -293,6 +445,12 @@ msgid "Theoritical Amount"
 msgstr "理论金额"
 
 #. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Theoritical amount"
+msgstr ""
+
+#. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve"
 msgstr "待批准"
@@ -303,6 +461,39 @@ msgid "To Approve Budgets"
 msgstr "待审核的预算"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Use budgets to compare actual with expected revenues and costs"
+msgstr ""
+
+#. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
 msgstr "已验证"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: account_budget
+#: code:addons/account_budget/models/account_budget.py:242
+#, python-format
+msgid ""
+"You have to enter at least a budgetary position or analytic account on a "
+"budget line."
+msgstr ""
