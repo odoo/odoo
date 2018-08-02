@@ -169,7 +169,7 @@ class account_abstract_payment(models.AbstractModel):
     def _onchange_partner_id(self):
         if not self.multi and self.invoice_ids and self.invoice_ids[0].partner_bank_id:
             self.partner_bank_account_id = self.invoice_ids[0].partner_bank_id
-        elif self.partner_id != self.partner_bank_account_id.partner_id:#TODO OCO pas sûr
+        elif self.partner_id != self.partner_bank_account_id.partner_id:
             # This condition ensures we use the default value provided into
             # context for partner_bank_account_id properly when provided with a
             # default partner_id. Without it, the onchange recomputes the bank account
@@ -264,20 +264,23 @@ class account_register_payments(models.TransientModel):
 
         return rec
 
-    #TODO OCO multi pour les invoices du même partenaire qui ont des comptes différents sélectionnés (sauf si vide)
-
     @api.multi
     def _groupby_invoices(self):
-        '''Split the invoices linked to the wizard according to their commercial partner,
-         their account and their type.
+        '''Groups the invoices linked to the wizard.
 
-        :return: a dictionary mapping (partner_id, account_id, invoice_type) => invoices recordset.
-        ''' #TODO OCO DOC
+        If the group_invoices option is activated, invoices will be grouped
+        according to their commercial partner, their account, their type and
+        the account where the payment they expect should end up. Otherwise,
+        invoices will be grouped so that each of them belongs to a
+        distinct group.
+
+        :return: a dictionary mapping, grouping invoices as a recordset under each of its keys.
+        '''
         if not self.group_invoices:
             return {inv.id: inv for inv in self.invoice_ids}
 
         results = {}
-        # Create a dict dispatching invoices according to their commercial_partner_id and type
+        # Create a dict dispatching invoices according to their commercial_partner_id, account_id, invoice_type and partner_bank_id
         for inv in self.invoice_ids:
             partner_id = inv.commercial_partner_id.id
             account_id = inv.account_id.id
