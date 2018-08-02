@@ -22,7 +22,8 @@ except ImportError:
 import psycopg2
 
 from .sql_db import LazyCursor
-from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat, sql
+from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar,\
+    ustr, OrderedSet, pycompat, sql, date_utils
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -1512,7 +1513,15 @@ class Html(_String):
         return value
 
 
-class Date(Field):
+class DateLike():
+
+    start_of = date_utils.start_of
+    end_of = date_utils.end_of
+    add = date_utils.add
+    subtract = date_utils.subtract
+
+
+class Date(Field, DateLike):
     type = 'date'
     column_type = ('date', 'date')
     column_cast_from = ('timestamp',)
@@ -1548,11 +1557,11 @@ class Date(Field):
         return (context_today or today).date()
 
     @staticmethod
-    def from_string(value):
+    def to_date(value):
         """
         Convert an ORM ``value`` into a :class:`date` value.
 
-        Despite its name, this function can take as input different kinds of types:
+        This function can take as input different kinds of types:
             * A falsy object, in which case None will be returned.
             * A string representing a date or datetime.
             * A date object, in which case the object will be returned as-is.
@@ -1567,6 +1576,8 @@ class Date(Field):
             return value
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
+
+    from_string = to_date
 
     @staticmethod
     def to_string(value):
@@ -1586,21 +1597,25 @@ class Date(Field):
         return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
 
-class Datetime(Field):
+class Datetime(Field, DateLike):
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
     column_cast_from = ('date',)
 
     @staticmethod
-    def now(*args, midnight=False):
+    def now(*args):
         """ Return the current day and time in the format expected by the ORM.
             This function may be used to compute default values.
-
-            midnight (bool): Will return the current date at midnight instead of now.
         """
         # microseconds must be annihilated as they don't comply with the server datetime format
-        base = datetime.now().replace(microsecond=0)
-        return base if not midnight else datetime.combine(base, time.min)
+        return datetime.now().replace(microsecond=0)
+
+    @staticmethod
+    def today(*args):
+        """
+        Return the current day, at midnight (00:00:00).
+        """
+        return Datetime.now().replace(hour=0, minute=0, second=0)
 
     @staticmethod
     def context_timestamp(record, timestamp):
@@ -1630,11 +1645,11 @@ class Datetime(Field):
         return utc_timestamp
 
     @staticmethod
-    def from_string(value):
+    def to_datetime(value):
         """
         Convert an ORM ``value`` into a :class:`datetime` value.
 
-        Despite its name, this function can take as input different kinds of types:
+        This function can take as input different kinds of types:
             * A falsy object, in which case None will be returned.
             * A string representing a date or datetime.
             * A datetime object, in which case the object will be returned as-is.
@@ -1650,6 +1665,10 @@ class Datetime(Field):
             return datetime.strptime(value[:DATETIME_LENGTH], DATETIME_FORMAT)
         except ValueError:
             return datetime.strptime(value, DATE_FORMAT)
+
+    # kept for backwards compatibility, but consider `from_string` as deprecated, will probably
+    # be removed after V12
+    from_string = to_datetime
 
     @staticmethod
     def to_string(value):

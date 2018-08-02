@@ -66,7 +66,11 @@ def get_fiscal_year(date, day=31, month=12):
     return date_from, date_to
 
 
-def start_of(self, value, granularity):
+def _get_quarter(month):
+    return int((month - 1)/3) * 3 + 1
+
+
+def start_of(value, granularity):
     """
     Get start of a time period from a date or a datetime.
 
@@ -77,8 +81,11 @@ def start_of(self, value, granularity):
     if granularity == "year":
         result = value.replace(month=1, day=1)
     elif granularity == "quarter":
-        month = int((value.month - 1)/3) * 3 + 1
-        result = value.replace(month=month, day=1)
+        # Q1 = Jan 1st
+        # Q2 = Apr 1st
+        # Q3 = Jul 1st
+        # Q4 = Oct 1st
+        result = value.replace(month=_get_quarter(value.month), day=1)
     elif granularity == "month":
         result = value.replace(day=1)
     elif granularity == "day":
@@ -93,7 +100,7 @@ def start_of(self, value, granularity):
     return datetime.combine(result, time.min) if is_datetime else result
 
 
-def end_of(self, value, granularity):
+def end_of(value, granularity):
     """
     Get end of a time period from a date or a datetime.
 
@@ -104,8 +111,12 @@ def end_of(self, value, granularity):
     if granularity == "year":
         result = value.replace(month=12, day=31)
     elif granularity == "quarter":
-        result = value.replace(month=int((value.month - 1)/3 + 1)*3)
-        result = value + relativedelta(day=1, months=1, days=-1)
+        # Q1 = Mar 31st
+        # Q2 = Jun 30th
+        # Q3 = Sep 30th
+        # Q4 = Dec 31st
+        month = _get_quarter(value.month) + 2
+        result = value.replace(month=month, day=calendar.monthrange(value.year, month)[1])
     elif granularity == "month":
         result = value + relativedelta(day=1, months=1, days=-1)
     elif granularity == "day":
@@ -118,6 +129,14 @@ def end_of(self, value, granularity):
         raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
 
     return datetime.combine(result, time.max) if is_datetime else result
+
+
+def add(value, *args, **kwargs):
+    return value + relativedelta(*args, **kwargs)
+
+
+def subtract(value, *args, **kwargs):
+    return value - relativedelta(*args, **kwargs)
 
 
 def json_default(obj):
