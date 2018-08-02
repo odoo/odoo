@@ -252,6 +252,17 @@ class account_register_payments(models.TransientModel):
     group_invoices = fields.Boolean(string="Group Invoices", help="""If enabled, groups invoices by commercial partner, invoice account,
                                                                     type and recipient bank account in the generated payments. If disabled,
                                                                     a distinct payment will be generated for each invoice.""")
+    show_communication_field = fields.Boolean(compute='_compute_show_communication_field')
+
+    @api.depends('invoice_ids.partner_id', 'group_invoices')
+    def _compute_show_communication_field(self):
+        """ We allow choosing a common communication for payments if the group
+        option has been activated, and all the invoices relate to the same
+        partner.
+        """
+        for record in self:
+            record.show_communication_field = len(record.invoice_ids) == 1 \
+                                              or record.group_invoices and len(record.mapped('invoice_ids.partner_id.commercial_partner_id')) == 1
 
     @api.model
     def default_get(self, fields):
@@ -301,11 +312,14 @@ class account_register_payments(models.TransientModel):
         amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
         bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
+        pmt_communication = self.show_communication_field and self.communication \
+                            or self.group_invoices and ' '.join(invoices.mapped('reference')) \
+                            or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
         return {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
-            'communication': self.communication,
+            'communication': pmt_communciation,
             'invoice_ids': [(6, 0, invoices.ids)],
             'payment_type': payment_type,
             'amount': abs(amount),
