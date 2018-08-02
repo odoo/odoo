@@ -16,3 +16,4 @@ from . import test_update_notification
 from . import test_discuss
 from . import test_performance
 from . import test_res_users
+from . import test_odoobot
