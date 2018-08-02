@@ -164,6 +164,7 @@ class SaleOrder(models.Model):
              "will be scheduled based on this date rather than product lead times.")
     expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False, oldname='commitment_date',  # Note: can not be stored since depends on today()
         help="Delivery date you can promise to the customer, computed from product lead times and from the shipping policy of the order.")
+    amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
@@ -202,6 +203,13 @@ class SaleOrder(models.Model):
     def _compute_authorized_transaction_ids(self):
         for trans in self:
             trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
+
+    @api.one
+    def _compute_amount_undiscounted(self):
+        total = 0.0
+        for line in self.order_line:
+            total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
+        self.amount_undiscounted = total
 
     @api.multi
     def get_portal_last_transaction(self):

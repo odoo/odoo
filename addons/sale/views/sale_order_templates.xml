@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Quote frontend assets">
-    <xpath expr="." position="inside">
-      <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-      <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-    </xpath>
-  </template>
-
-  <template id="assets_editor" inherit_id="web_editor.assets_editor" name="Website Quote Editor assets">
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Sale frontend assets">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/website_quote/static/src/scss/website_quotation.scss"/>
+            <script type="text/javascript" src="/sale/static/src/js/sale_portal_sidebar.js"></script>
         </xpath>
-  </template>
+    </template>
+
+    <template id="assets_backend" name="project assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale/static/src/js/tour.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_editor" inherit_id="web_editor.assets_editor" name="Website Quote Editor assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale.scss"/>
+        </xpath>
+    </template>
 
   <template id="pricing" name="Price">
       <section id="quote">
@@ -40,7 +45,6 @@
                     <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
                     <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
                   </th>
-                  <th></th>
               </tr>
             </thead>
             <tbody class="sale_tbody">
@@ -91,11 +95,6 @@
                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                         groups="account.group_show_line_subtotals_tax_included"
                       />
-                    </td>
-                    <td class="text-center">
-                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.option_line_id" aria-label="Remove" title="Remove">
-                        <span class="fa fa-trash-o"></span>
-                      </a>
                     </td>
                   </t>
                   <t t-if="line.display_type == 'line_section'">
@@ -194,7 +193,8 @@
       </div>
   </template>
 
-  <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
+  <!-- TODO SEB customize_show="True" in the future sale_design commit -->
+  <template id="change_quantity" inherit_id="sale.pricing" active="False"  name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group oe_website_spinner">
               <div class="input-group-prepend d-print-none">
@@ -245,12 +245,10 @@
     </template>
 
   <!-- Complete page of the quotation -->
-  <template id="so_quotation" name="Product Quotation">
-      <t t-call="portal.portal_layout">
-        <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
-        <body data-spy="scroll" data-target=".navspy" data-offset="50">
-            <div class="container o_website_quote">
-              <div class="row mt16">
+  <template id="so_quotation" name="Product Quotation" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+          <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
+              <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                   <div class="col-lg-3 d-print-none">
                       <div class="bs-sidebar">
@@ -277,7 +275,9 @@
                               </a>
                           </div>
                           <hr class="mt0 mb0"/>
-                          <t t-call="website_quote.navigation_menu"/>
+                          <div class="navspy" t-ignore="true" role="complementary">
+                              <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
+                          </div>
                           <hr class="mt0 mb0"/>
                           <div t-if="order_valid and quotation.state in ['draft', 'sent']" class="text-center">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
@@ -340,7 +340,7 @@
                       </div>
                       <t t-if="payment_tx">
                           <t t-set="payment_tx_id" t-value="payment_tx"/>
-                          <t t-call="website_quote.payment_confirmation_status"/>
+                          <t t-call="sale.payment_confirmation_status"/>
                       </t>
                       <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
@@ -436,7 +436,7 @@
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
 
-                      <t t-call="website_quote.so_quotation_content"/>
+                      <t t-call="sale.so_quotation_content"/>
 
                       <div class="text-center d-print-none mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
                           <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.has_to_be_paid()">
@@ -457,12 +457,11 @@
 
                   </div><!-- //col-lg-9 -->
               </div>
-            </div>
-        </body>
-      </t>
+            </xpath>
   </template>
 
-  <template id="chatter" name="Allow Comments &amp; History" customize_show="True" inherit_id="website_quote.so_quotation">
+  <!-- TODO SEB customize_show="True" in the future sale_design commit -->
+  <template id="chatter" name="Allow Comments &amp; History" inherit_id="sale.so_quotation">
       <xpath expr="//div[@id='quote_content']" position="inside">
           <h1 class="page-header">History</h1>
           <!-- Options:Quotation Chatter: user can reply -->
@@ -587,77 +586,18 @@
       </t>
       <div class="oe_structure"/>
       <!-- Pricing -->
-      <t t-call="website_quote.pricing"/>
+      <t t-call="sale.pricing"/>
       <!-- Signature -->
-      <t t-call="website_quote.signature"/>
+      <t t-call="sale.signature"/>
       <!-- Options -->
-      <t t-call="website_quote.optional_products"/>
-  </template>
-
-
-  <template id="navigation_menu">
-    <div class="navspy" t-ignore="true" role="complementary">
-        <ul class="nav bs-sidenav" data-id="quote_sidebar">
-            <li class="nav-item"><a href="#introduction" class="nav-link">Introduction</a></li>
-        </ul>
-    </div>
-  </template>
-
-  <template id="optional_products">
-      <t t-if="any([(not option.line_id) for option in quotation.options])">
-        <section>
-            <h1 class="page-header">Suggested Products</h1>
-        </section>
-        <section>
-            <table class="table table-hover wq-table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th></th>
-                        <th class="text-right">Price</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr t-foreach="quotation.options" t-as="option">
-                        <t t-if="not option.line_id">
-                            <td>
-                                <div t-field="option.name"/>
-                            </td>
-                            <td>
-                                <strong t-if="option.discount" class="text-info">
-                                    <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>% discount
-                                </strong>
-                            </td>
-                            <td>
-                                <strong class="text-right">
-                                    <div t-field="option.price_unit"
-                                    t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
-                                    t-att-style="option.discount and 'text-decoration: line-through' or None"
-                                    t-att-class="option.discount and 'text-danger' or None"/>
-                                    <div t-if="option.discount">
-                                        <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                    </div>
-                                </strong>
-                            </td>
-                            <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
-                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
-                                    <span class="fa fa-shopping-cart"/>
-                                </a>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-      </t>
+      <t t-call="sale.optional_products"/>
   </template>
 
   <!-- Template to edit the quotation template with the website editor -->
   <template id="so_template" name="SO Template">
     <t t-call="website.layout">
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
-            <div class="container o_website_quote">
+            <div class="container o_sale_order">
                 <div class="row mt16">
                     <div class="col-lg-3 d-print-none">
                         <div class="bs-sidebar">
@@ -669,7 +609,7 @@
                     <div class="col-lg-9">
                         <div class="row mb8">
                             <div t-ignore="true" class="css_editable_mode_hidden offset-lg-11">
-                              <a role="button" class="btn btn-info d-print-none" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
+                              <a role="button" class="btn btn-info d-print-none" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('sale.action_sale_quotation_template').id)">Back</a>
                             </div>
                         </div>
                         <div class="alert alert-info alert-dismissable" t-ignore="True" role="status">
@@ -723,14 +663,17 @@
         </t>
   </template>
 
-  <template id="website_quote.brand_promotion" inherit_id="website.brand_promotion">
+  <!-- TODO SEB put this in the future sale_design commit -->
+  <!--
+  <template id="sale.brand_promotion" inherit_id="website.brand_promotion">
       <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
           <div class="o_brand_promotion">
-              Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder?utm_source=db&amp;utm_medium=website">Odoo</a>,
-              an awesome <a target="_blank" href="http://www.odoo.com/page/crm?utm_source=db&amp;utm_medium=website">Open Source CRM</a>.
+              Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+              an awesome <a target="_blank" href="http://www.odoo.com/page/crm">Open Source CRM</a>.
           </div>
       </xpath>
   </template>
+  -->
 
     <template id="portal_my_quotations_inherit_quote" inherit_id="sale.portal_my_quotations">
         <xpath expr="//t[@t-foreach='quotations']/tr/td/a" position="replace">
