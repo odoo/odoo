@@ -113,17 +113,25 @@ class account_register_payments(models.TransientModel):
 
     @api.model
     def _compute_payment_amount(self, invoice_ids):
-        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
+        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoice_ids and invoice_ids[0].currency_id
 
         total = 0
         for inv in invoice_ids:
             if inv.currency_id == payment_currency:
-                total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * inv.residual_company_signed
+                total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * inv.residual_signed
             else:
                 amount_residual = inv.company_currency_id.with_context(date=self.payment_date).compute(
                     inv.residual_company_signed, payment_currency)
                 total += MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] * amount_residual
         return total
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        res = super(account_register_payments, self)._onchange_journal()
+        active_ids = self._context.get('active_ids')
+        invoices = self.env['account.invoice'].browse(active_ids)
+        self.amount = abs(self._compute_payment_amount(invoices))
+        return res
 
     @api.model
     def default_get(self, fields):
