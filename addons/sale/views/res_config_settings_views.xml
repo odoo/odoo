@@ -156,11 +156,13 @@
                                 <field name="portal_confirmation_pay"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <field name="module_sale_payment" invisible="1"/>
                                 <label for="portal_confirmation_pay"/>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
                                     Request an electronic payment to confirm orders
+                                </div>
+                                <div attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
+                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
                                 </div>
                             </div>
                         </div>

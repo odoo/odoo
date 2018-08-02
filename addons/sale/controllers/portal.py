@@ -43,7 +43,39 @@ class CustomerPortal(CustomerPortal):
             'order_invoice_lines': order_invoice_lines,
             'portal_confirmation': order.get_portal_confirmation_action(),
         }
-        return self._get_page_view_values(order, access_token, values, 'my_orders_history', True, **kwargs)
+
+        values = self._get_page_view_values(order, access_token, values, 'my_orders_history', True, **kwargs)
+
+        if access_token:
+            values['no_breadcrumbs'] = True
+            values['access_token'] = access_token
+        values['portal_confirmation'] = order.get_portal_confirmation_action()
+
+        if kwargs.get('error'):
+            values['error'] = kwargs['error']
+        if kwargs.get('warning'):
+            values['warning'] = kwargs['warning']
+        if kwargs.get('success'):
+            values['success'] = kwargs['success']
+
+        history = request.session.get('my_orders_history', [])
+        values.update(get_records_pager(history, order))
+
+        if values['portal_confirmation'] == 'pay':
+            payment_inputs = request.env['payment.acquirer']._get_available_payment_input(order.partner_id, order.company_id)
+            # if not connected (using public user), the method _get_available_payment_input will return public user tokens
+            is_public_user = request.env.ref('base.public_user') == request.env.user
+            if is_public_user:
+                # we should not display payment tokens owned by the public user
+                payment_inputs.pop('pms', None)
+                token_count = request.env['payment.token'].sudo().search_count([
+                    ('acquirer_id.company_id', '=', order.company_id.id),
+                    ('partner_id', '=', order.partner_id.id),
+                ])
+                values['existing_token'] = token_count > 0
+            values.update(payment_inputs)
+            values['partner_id'] = order.partner_id if is_public_user else request.env.user.partner_id
+        return values
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):

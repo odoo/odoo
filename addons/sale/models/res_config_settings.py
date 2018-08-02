@@ -19,7 +19,6 @@ class ResConfigSettings(models.TransientModel):
     group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
     portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Digital Signature')
     portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Electronic Payment')
-    module_sale_payment = fields.Boolean("Sale Payment", help='Technical field implied by user choice of portal_confirmation_pay.')
     module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
@@ -100,11 +99,6 @@ class ResConfigSettings(models.TransientModel):
                 'group_sale_pricelist': False,
                 'group_pricelist_item': False,
             })
-
-    @api.onchange('portal_confirmation_pay')
-    def _onchange_portal_confirmation_pay(self):
-        if self.portal_confirmation_pay:
-            self.module_sale_payment = True
 
     @api.model
     def get_values(self):

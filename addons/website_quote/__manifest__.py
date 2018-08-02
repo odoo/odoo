@@ -7,7 +7,7 @@
     'website': 'https://www.odoo.com/page/quote-builder',
     'version': '1.0',
     'description': "This module allows to create polished, professional proposals using templates. Templates come with default products, options, terms & conditions and confirmation methods (sign, pay).",
-    'depends': ['website', 'sale_management', 'mail', 'sale_payment', 'website_mail'],
+    'depends': ['website', 'sale_management', 'mail', 'website_mail'],
     'data': [
         'data/website_quote_data.xml',
         'report/sale_order_reports.xml',
