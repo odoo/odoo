@@ -26,6 +26,8 @@ import werkzeug
 
 import odoo
 from odoo import api
+from odoo.service import security
+
 
 _logger = logging.getLogger(__name__)
 
@@ -286,7 +288,7 @@ class HttpCase(TransactionCase):
         session.db = db
         session.uid = uid
         session.login = user
-        session.password = password
+        session.session_token = uid and security.compute_session_token(session, env)
         session.context = env['res.users'].context_get() or {}
         session.context['uid'] = uid
         session._fix_lang(session.context)

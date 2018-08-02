@@ -72,7 +72,7 @@
                 <field name="partner_ids"/>
                 <field name="location"/>
                 <field name="state" invisible="True"/>
-                <field name="duration"/>
+                <field name="duration" widget="float_time"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
@@ -116,10 +116,10 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">

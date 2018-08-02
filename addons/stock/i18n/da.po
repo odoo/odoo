@@ -3,7 +3,7 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Sanne Kristensen <sanne@vkdata.dk>, 2016
 # Ejner Sønniksen <ejner@vkdata.dk>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
@@ -15,19 +15,38 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
 # peso <peer.sommerlund@gmail.com>, 2016
 # Visti Kristensen <visti@vkdata.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Visti Kristensen <visti@vkdata.dk>, 2017\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:230
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:231
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Blocking: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -3435,7 +3454,7 @@ msgstr "Forbundet antal"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "Listevisning af linjer"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -5143,7 +5162,7 @@ msgstr "Antal må ikke være negativ"
 #: code:addons/stock/models/stock_move.py:394
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "Antal reduceret!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
@@ -5682,7 +5701,7 @@ msgstr "Lagersøgning"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "Søg lagerlinjer"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
@@ -6235,12 +6254,12 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Lagerkoden skal være unik for hver virksomhed!"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
 msgid "The combination of serial number and product must be unique !"
-msgstr ""
+msgstr "Kombinationen af serienummer og produkt skal være unik!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_company_id
@@ -6289,7 +6308,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Navnet op lageret skal være unikt for hver virksomhed!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_propagated_from_id
@@ -6299,7 +6318,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_dest_id
 msgid "The new location where the goods need to go"
-msgstr ""
+msgstr "Den nye lokation hvor varerne skal hen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_parent_id
@@ -6390,7 +6409,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:132
 #, python-format
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "De valgte lagermuligheder er ikke sammenhængende."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:222
@@ -6457,6 +6476,8 @@ msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their current inventory value."
 msgstr ""
+"Denne analyse giver dig en hurtig oversigt over det nuværende lagerniveau "
+"for dine produkter og deres nuværende lagerværdi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_packaging_id
@@ -6870,6 +6891,8 @@ msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
 msgstr ""
+"Medmindre du starter en ny virksomhed, har du formentlig en liste over "
+"leverandører, du gerne vil importere."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -7376,6 +7399,12 @@ msgstr "Du kan ikke fortryde en lagerbevægelse der er sat til \"Udført\". "
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "Du kan ikke slette en kassation der er udført. "
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:103
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374

@@ -1,42 +1,149 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * delivery
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# amos lin <seeing@edirect168.com>, 2018
+# Jason Wu <jaronemo@msn.com>, 2018
+# Kenny Kang <winterrise@gmail.com>, 2018
+# Michael Yeung, 2018
+# Carson Tsai <Ra661tCat@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-06-13 10:08+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Carson Tsai <Ra661tCat@gmail.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
 msgid "# Analytic Rules"
-msgstr "輔助核算規則"
+msgstr "# 分析規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
+msgid "# Bill of Material"
+msgstr "# 物料清單"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
+msgid "# Invoiced in Purchase"
+msgstr "# 採購開立發票"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
+msgid "# Invoiced in Sale"
+msgstr "# 銷售開立發票"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
+msgid "# Manufacturing Orders"
+msgstr "# 製造訂單"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
+msgid "# Product Variants"
+msgstr "# 產品變體"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
+msgid "# Purchases"
+msgstr "# 採購"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
 msgid "# Sales"
-msgstr "銷售"
+msgstr "# 銷售"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:74
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    升級到 Odoo企業版可以獲取更多的提供商。\n"
+"                </p>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "<span>kg</span>"
+msgstr "<span>kg</span>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model:ir.ui.view,arch_db:delivery.report_shipping2
+msgid "<strong>Carrier</strong>"
+msgstr "<strong>承運商</strong>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model:ir.ui.view,arch_db:delivery.report_shipping2
+msgid "<strong>Weight</strong>"
+msgstr "<strong>重量</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr "您想與客戶溝通的產品說明。此說明將被複製到每個銷售訂單，交貨單和客戶發票/退款單"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
+msgid ""
+"A description of the Product that you want to communicate to your vendors. "
+"This description will be copied to every Purchase Order, Receipt and Vendor "
+"Bill/Refund."
+msgstr "您要與供應商溝通的產品說明。此說明將被複製到每個採購訂單，收貨和供應商帳單/退款單。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_description
+msgid ""
+"A precise description of the Product, used only for internal information "
+"purposes."
+msgstr "產品的精確描述，僅用於內部備註使用。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
+msgid ""
+"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+msgstr ""
+"可庫存產品是您管理庫存的產品。 “Inventory”應用程序必須安裝。\n"
+"另一方面，可消耗品是不管理庫存的產品\n"
+"服務是您提供的非實體產品。\n"
+"數位產品是您在線銷售的非物質產品。使用於附在產品上的文件，或電子商務中的文件，例如電子書，音樂，圖片等等。必須安裝“Digital Product”模組。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr "待處理"
+msgstr "需要採取行動"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
+msgid "Action while validating Delivery Orders"
+msgstr "在驗證交貨單時所採取之行動"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
 msgid "Active"
-msgstr "活躍"
+msgstr "有效"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
@@ -44,15 +151,62 @@ msgid "Amount"
 msgstr "金額"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr "選用免費送貨的訂單金額，以公司幣別顯示"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "已存檔"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
+msgid "Asset Type"
+msgstr "資產類型"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
+msgid "Attributes"
+msgstr "屬性"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available
 msgid "Available"
-msgstr "有庫存"
+msgstr "可用"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr "可用於POS"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
+msgid ""
+"Average delay in days to produce this product. In the case of multi-level "
+"BOM, the manufacturing lead times of the components will be added."
+msgstr ""
+"生成該產品的平均延時天數。在多級BoM的情況下，部件的製造交貨時間將被累加\n"
+"\n"
+"生產此產品的平均前置天數。在多層級之BOM的情況下，該母件的製造前置時間將被疊加。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
+msgid "Avg. Price in Customer Invoices."
+msgstr "客戶發票中的平均價格"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
+msgid "Avg. Price in Vendor Bills "
+msgstr "供應商發票的平均價格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Unit Price"
-msgstr "平均單位價格"
+msgstr "平均單價"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_barcode
@@ -62,8 +216,19 @@ msgstr "條碼"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
-msgstr "計算客戶價格的基礎價格。有時叫做目錄價格。"
+"Base price to compute the customer price. Sometimes called the catalog "
+"price."
+msgstr "計算客戶報價的基準價格。也叫目錄價格"
+
+#. module: delivery
+#: selection:delivery.carrier,delivery_type:0
+msgid "Based on Rules"
+msgstr "根據規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
+msgid "Big-sized image"
+msgstr "大尺寸圖像"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
@@ -71,20 +236,37 @@ msgid "Bill of Materials"
 msgstr "物料清單"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
+msgid "Bulk Weight"
+msgstr "散裝重量"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
+msgid "Can be Expensed"
+msgstr "可用於費用"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
 msgid "Can be Purchased"
-msgstr "可採購"
+msgstr "可用於採購"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rental
 msgid "Can be Rent"
-msgstr "可租"
+msgstr "可用於出租"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_ok
 msgid "Can be Sold"
-msgstr "可銷售"
+msgstr "可用於銷售"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
+msgid ""
+"Can be changed during the 'put in pack' to adjust the weight of the "
+"shipping."
+msgstr "可以在「加入包裝」時調節航運的重量。"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -100,7 +282,33 @@ msgstr "取消"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "運輸公司"
+msgstr "承運商"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
+msgid "Category Routes"
+msgstr "類別路線"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
+msgid "Check if the product is eligible for membership."
+msgstr "檢查產品是否適於會員。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr "請檢查此商品是否需要使用標準秤重器來稱重"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr "如果您想這個產品適用於POS，請勾選此處"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Click to define a new delivery method."
+msgstr "點選創建一個新的運輸方式"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -118,6 +326,11 @@ msgid "Condition"
 msgstr "條件"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
+msgid "Control Purchase Bills"
+msgstr "控制採購帳單"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
 msgid "Cost"
 msgstr "成本"
@@ -128,9 +341,22 @@ msgid "Cost Price"
 msgstr "成本價"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
+msgid "Cost method"
+msgstr "成本方法"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
+msgid ""
+"Cost of the product template used for standard stock valuation in accounting"
+" and used as a base price on purchase orders. Expressed in the default unit "
+"of measure of the product."
+msgstr "於會計中採標準庫存成本計算的產品模板成本，作為採購訂單的基準價格。以產品的預設度量單位表示。"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
 msgid "Costing Method"
-msgstr "成本計算方法"
+msgstr "成本方法"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
@@ -138,36 +364,39 @@ msgid "Countries"
 msgstr "國家"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
+msgid ""
+"Create a task under this project on sale order validation. This setting must"
+" be set for each company."
+msgstr "在銷售訂單確認項目下創建一個任務。此設置必須為每個公司進行設置。"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_currency_id
 msgid "Currency"
-msgstr "貨幣"
+msgstr "幣別"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its "
-"children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"當前產品數量。 \n"
+"目前產品數量。 \n"
 "對位置來說，包括了此位置或其子位置的產品。 \n"
 "對倉庫來說，包括了這個倉庫位置或其子位置的產品。  \n"
 "另外，包括了所有'內部'類型位置的產品。"
@@ -175,7 +404,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
 msgid "Customer Lead Time"
-msgstr "客戶交期間隔"
+msgstr "客戶前置時間"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
+msgid "Customer Ref"
+msgstr "客戶單號"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -183,21 +417,36 @@ msgid "Customer Taxes"
 msgstr "客戶稅"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
+msgid "Date from which membership becomes active."
+msgstr "會員資格生效日"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr "釋出到記錄上的最後資訊的日期"
+msgstr "最後發佈日"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
+msgid "Date until which membership remains active."
+msgstr "會員資格結束日"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "所有庫存操作之預設量度單位"
+msgstr "所有庫存作業的預設計量單位"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "採購單預設量度單位。須與預設單位相同分類。"
+msgstr "採購單預設使用的計量單位。必須與預設計量單位位於同一類別。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "遞延收入類型"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
@@ -205,6 +454,16 @@ msgstr "採購單預設量度單位。須與預設單位相同分類。"
 #: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
 msgstr "交貨"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr "交貨承運商"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Delivery Information"
+msgstr "交貨訊息"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -217,7 +476,12 @@ msgstr "交貨方法"
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr "送貨方式"
+msgstr "交貨方式"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_price_rule
+msgid "Delivery Price Rules"
+msgstr "運輸價格規則"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
@@ -229,9 +493,7 @@ msgstr "交貨產品"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
-"基於此安裝的模組。能夠定義的產品路線：產品是否是購買的製造的還是MTO/MTS(按訂"
-"單生產/按庫存生產),等等..."
+msgstr "根據安裝的模組，將允許您定義產品的路線：是否將被購買，製造，MTO / MTS，..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -239,9 +501,31 @@ msgid "Description"
 msgstr "說明"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
+msgid "Description on Picking"
+msgstr "揀貨說明"
+
+#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr "目的地"
+msgstr "目的"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_event_ok
+msgid ""
+"Determine if a product needs to create automatically an event registration "
+"at the confirmation of a sales order line."
+msgstr "設定於銷售訂單明細被確認時，是否自動創建該產品資料。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
+msgid "Determine the display order"
+msgstr "決定顯示順序"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Discard"
+msgstr "丟棄"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -250,14 +534,64 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"                to each method."
+msgstr ""
+"每一個承運人(例如UPS)能有幾種不同的運輸方式(例如UPS快運, UPS 標準)\n"
+"並且每種方式都相應的一套定價規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
+msgid "Environment"
+msgstr "環境"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
+msgid "Estimated Delivery Price"
+msgstr "預估運輸價格"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
+msgid "Event Registration"
+msgstr "活動登記"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
+msgid "Event Tickets"
+msgstr "活動入場券"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
 msgid "Expected Margin"
-msgstr "預期毛利率"
+msgstr "預期毛利"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr "預期毛利率 (%)"
+msgstr "預期毛利(%)"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_expected
+msgid "Expected Sale"
+msgstr "預計銷售"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin
+msgid "Expected Sale - Normal Cost"
+msgstr "預計銷售 - 標準成本"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sales_gap
+msgid "Expected Sale - Turn Over"
+msgstr "預計銷售 -  營業額"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin_rate
+msgid "Expected margin * 100 / Expected Sale"
+msgstr "預期毛利 * 100 / 預期銷售"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
@@ -265,9 +599,37 @@ msgid "Expense Account"
 msgstr "費用科目"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
+msgid "Fill this field if you plan to invoice the shipping based on picking."
+msgstr "若您依據發貨之實際數量開立發票，於此設定"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr "於此，您可依據您的客戶之送貨地址進行過濾。"
+
+#. module: delivery
+#: selection:delivery.carrier,delivery_type:0
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
+msgid "Fixed Price"
+msgstr "固定價格"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
 msgid "Followers"
-msgstr "關注者"
+msgstr "訂閱者"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "訂閱者(群組)"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "訂閱者(業務夥伴)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -278,65 +640,187 @@ msgstr "預測數量"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"預測數量(計算方法：在手數量-將要出貨的數量+將要進貨的數量) \n"
-"對於一個位置來說，這包括了將要到達此位置或其子位置的產品。\n"
-"對於一個倉庫來說，這包括了將要到達這個倉庫的位置,或其子位置的產品。\n"
-"另外，這包括了要到達所有“內部”類型的位置的產品。"
+"預測數量(計算方式為 庫存數量 - 出庫 + 入庫) \n"
+"對於單一庫存位置來說，包括了存儲於此位置及其子位置的貨物。\n"
+"對於單一倉庫來說，這包括了存儲於此倉庫的庫存位置及其子位置的貨物。\n"
+"否則，這包括存儲在任何「內部」類型位置的貨物。"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
+#: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
+msgid "Free delivery charges"
+msgstr "免費運輸"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
+msgid "Free if Order total is more than"
+msgstr "免運，當訂單總額大於"
+
+#. module: delivery
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate"
+msgstr "取得評價"
+
+#. module: delivery
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate and Create Shipment"
+msgstr "獲得價格並創建貨件"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
+msgid ""
+"Gives the different ways to package the same product. This has no impact on "
+"the picking order and is mainly used if you use the EDI module."
+msgstr "指定同一產品的多種包裝方式。此處與揀貨單並不衝突且，主要用於 EDI 模組。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
+msgid "Gives the sequence order when calculating delivery carrier."
+msgstr "在計算發貨承運人時，生成序號"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr "分組"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
+msgid "HS Code"
+msgstr "HS編碼"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+msgid "Height"
+msgstr "高度"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Height must be positive"
+msgstr "高度必須是正數。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
 msgid "If checked new messages require your attention."
-msgstr "當有新訊息時通知您。"
+msgstr "查看是否有需要留意的新訊息。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾選此項，有新消息會提醒您"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr ""
+"如果一個產品能夠被永久的估值，系統將會自動創建與標識為特別「成本方法」的帶有產品價格的庫存移動一致的日記帳分錄，在產品種類上設定的庫存變變更科目的餘額將代表目前的庫存價值，而入庫科目和出庫科目將會是產品出入庫的對應科目\n"
+"如果該產品採用永續盤存法，則係統將自動創建與庫存移動對應的日記帳分錄，其中“成本計算方法”中指定的產品價格。\n"
+"產品類別上設置的庫存計價科目將表示目前庫存值，庫存進貨和庫存出貨科目將使用於持有進出產品的配對動作。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
+msgstr "如果訂單金額大於某個特定金額，客戶可以享受免運服務"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr "如未勾選，將允許將產品隱藏而不須移除。"
+msgstr "如不勾選，將允許您隱藏此產品而不進行刪除。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image
+msgid ""
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
+msgstr ""
+"產品變體的樣圖(如果為False,採用大尺寸圖像模板). \n"
+"將保持圖像的寬高比,並自動調整圖像大小為1024 x 1024px."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
+msgid ""
+"Image of the product variant (Medium-sized image of product template if "
+"false)."
+msgstr "產品變體的樣圖(如果為Flase,採用產品模板的中尺寸圖像)"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
+msgid ""
+"Image of the product variant (Small-sized image of product template if "
+"false)."
+msgstr "產品變體的樣圖(如果為Flase,採用產品模板的小尺寸圖像)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
 msgid "Income Account"
-msgstr "收益科目"
+msgstr "收入科目"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
-msgstr "內送"
+msgstr "入向"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr "增加更多供應商"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
+msgid "Integration Level"
+msgstr "基礎等級"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
+msgid "Internal Category"
+msgstr "內部類別"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
 msgid "Internal Reference"
-msgstr "內部參照"
+msgstr "內部參考"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
 msgid "International Article Number used for product identification."
-msgstr "用於產品識別的國際商品號碼(International Article Number)"
+msgstr "國際物品編碼用於產品標識"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
 msgid "Inventory Location"
-msgstr "存貨倉位"
+msgstr "庫存位置"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
 msgid "Inventory Valuation"
-msgstr "存貨估價"
+msgstr "庫存計價"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+msgid "Invoice Shipping on Delivery"
+msgstr "根據交貨單開立發票"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -344,27 +828,58 @@ msgid "Invoice State"
 msgstr "發票狀態"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
+msgid "Invoicing Policy"
+msgstr "開立發票策略"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
+msgid "Is Follower"
+msgstr "是訂閱者"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
+msgid "Is a Delivery"
+msgstr "是交貨"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
+msgid ""
+"Keep empty if the pricing depends on the advanced pricing per destination"
+msgstr "預設運費的價格，如果根據目的地定價，此處請保持空白。"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
 msgid "Last Message Date"
-msgstr "最後訊息日期"
+msgstr "最後消息日期"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_length
+msgid "Length"
+msgstr "長度"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Length must be positive"
+msgstr "長度必須大於0"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -374,7 +889,23 @@ msgstr "地點"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Logistical Units"
-msgstr "物流單位"
+msgstr "邏輯單位"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Manage Package Type"
+msgstr "管理封裝類型"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation and track the work hours."
+msgstr ""
+"按訂單手動設置數量：基於手動輸入數量的發票，無需創建分析帳戶。\n"
+"合同上的時間表：基於相關時間表上的跟踪時間的發票。\n"
+"創建任務並跟踪工時：在銷售訂單確認上創建任務並跟踪工作時間。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -382,14 +913,74 @@ msgid "Manufacturing Lead Time"
 msgstr "製造前置時間"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+msgid "Margin"
+msgstr "邊距"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
+msgid "Margin Date From"
+msgstr "毛利開始日"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_to
+msgid "Margin Date To"
+msgstr "毛利結束日"
+
+#. module: delivery
+#: sql_constraint:delivery.carrier:0
+msgid "Margin cannot be lower than -100%"
+msgstr "保證金不得低於-100％"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+msgid "Max Weight"
+msgstr "最大重量"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Max Weight must be positive"
+msgstr "最大重量必須是正數"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
 msgid "Maximum Value"
 msgstr "最大值"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
+msgid "Maximum weight shippable in this packaging"
+msgstr "可交付最大重量包裝。"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
 msgid "Medium-sized image"
-msgstr "中尺寸影像"
+msgstr "中等尺寸圖像"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
+msgid "Membership"
+msgstr "會員資格"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
+msgid "Membership End Date"
+msgstr "會員資格終止日"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
+msgid "Membership Start Date"
+msgstr "會員資格生效日"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "採購訂單明細的資訊"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "銷售訂單明細資訊"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -406,22 +997,106 @@ msgstr "最小庫存規則"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_name
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
+
+#. module: delivery
+#: selection:product.packaging,package_carrier_type:0
+msgid "No carrier integration"
+msgstr "無承運商整合資料"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:63
+#, python-format
+msgid "No carrier matching."
+msgstr "無承運商匹配"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:72
+#, python-format
+msgid "No carrier set for this order."
+msgstr "此訂單沒有設定承運商"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
+msgid "Normal Cost"
+msgstr "一般成本"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
+msgid "Normal Cost - Total Cost"
+msgstr "一般成本 - 總成本"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
+msgid "Normal Delivery Charges"
+msgstr "正常運輸成本"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
+msgid "Number of Actions"
+msgstr "行動數量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
-msgstr "包裝數"
+msgstr "包裹件數"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行動消息的數量"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
+msgid "Number of unread messages"
+msgstr "尚未讀取之訊息數量"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
+msgid ""
+"On ordered quantities: control bills based on ordered quantities.\n"
+"On received quantities: control bills based on received quantity."
+msgstr ""
+"訂購數量：根據訂購數量控制帳單。\n"
+"收到的數量：根據收到的數量控制帳單。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
 msgid "Operator"
-msgstr "經手人"
+msgstr "運算符"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_invoice_policy
+msgid ""
+"Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
+msgstr ""
+"已訂購數量：根據客戶訂購的數量開具發票。\n"
+"交貨數量：根據供應商交付的數量（工時或交貨數量）開具發票。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
 msgid "Outgoing"
-msgstr "外送"
+msgstr "出向"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Package"
+msgstr "包裹"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+msgid "Package Code"
+msgstr "封裝代碼"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:128
+#, python-format
+msgid "Package Details"
+msgstr "包裝詳情"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -429,14 +1104,29 @@ msgid "Packages"
 msgstr "包裹"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Packaging"
+msgstr "包裝"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_pack_operation
+msgid "Packing Operation"
+msgstr "打包作業"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr "伙伴"
+msgstr "合作夥伴"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
 msgstr "物理包裹"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "POS類別"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -448,23 +1138,79 @@ msgstr "價格"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr "價格差異帳戶"
+msgstr "價格差異科目"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Price Rules"
+msgstr "價格規則"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
 msgid "Pricelist"
-msgstr "價目表"
+msgstr "價格表"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
+msgid "Pricelist Items"
+msgstr "價格表項目"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
+msgid "Pricelist item ids"
+msgstr "價格表項目 ids "
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Pricing"
+msgstr "定價"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
+msgid "Pricing Rules"
+msgstr "定價規則"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
 msgid "Procurement Location"
-msgstr "採購地點"
+msgstr "補貨位置"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_id
+msgid "Product"
+msgstr "產品"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
+msgid "Product Alert Time"
+msgstr "產品警示時間"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
+msgid "Product Attributes"
+msgstr "產品屬性"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
+msgid "Product Email Template"
+msgstr "產品 Email 模板"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
+msgid "Product Life Time"
+msgstr "產品壽命時間"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
+msgid "Product Removal Time"
+msgstr "產品下架時間"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_tmpl_id
 msgid "Product Template"
-msgstr "產品範本"
+msgstr "產品模板"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
@@ -473,9 +1219,14 @@ msgid "Product Type"
 msgstr "產品類型"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
+msgid "Product Use Time"
+msgstr "產品啟用時間"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
-msgstr "生產地點"
+msgstr "生產位置"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
@@ -483,14 +1234,36 @@ msgid "Products"
 msgstr "產品"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
+msgid "Project"
+msgstr "項目"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "服務商"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
 msgid "Purchase Description"
 msgstr "採購說明"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_gap
+msgid "Purchase Gap"
+msgstr "採購差距"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "採購訂單行"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr "採購量度單位"
+msgstr "採購計量單位"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -502,54 +1275,73 @@ msgstr "數量"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
 msgid "Quantity On Hand"
-msgstr "在庫數量"
+msgstr "在手數量"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
 msgid ""
 "Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
 "計劃到達的產品數量。\n"
 "對於一個位置來說，這包括了將要到達此位置或其子位置的貨物。\n"
 "對於一個倉庫來說，這包括了將要到達這個倉庫的的這個位置,或其子位置的貨物。\n"
-"另外，這包括了所有“內部”類型位置要到達的貨物。"
+"另外，這包括了所有「內部」類型位置要到達的貨物。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
 msgid ""
 "Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 "計劃出庫的產品數量。\n"
 "對於一個位置來說，這包括了將要離開此位置或其子位置的貨物。\n"
 "對於一個倉庫來說，這包括了將要離開這個倉庫的的這個位置,或其子位置的貨物。\n"
-"另外，這包括了所有“內部”類型位置要離開的貨物。"
+"另外，這包括了所有「內部」類型位置要離開的貨物。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
+msgid "Re-Invoice Expenses"
+msgstr "重新發票費用"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
 msgid "Receipt"
-msgstr "收據"
+msgstr "收貨"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr "重訂貨規則"
+msgstr "訂貨規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
+msgid "Reordering max qty"
+msgstr "訂貨最大數量"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
+msgid "Reordering min qty"
+msgstr "訂貨最小數量"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "退貨揀貨"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
 msgid "Routes"
 msgstr "路線"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
+msgid "Sale Base Price"
+msgstr "銷售基礎價格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_sale
@@ -563,45 +1355,125 @@ msgstr "銷售說明"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Sale Price"
-msgstr "售價"
+msgstr "標價"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_gap
 msgid "Sales Gap"
-msgstr "銷售差額"
+msgstr "銷售差距"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "銷貨單"
+msgstr "銷售訂單"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
 msgid "Sales Order Line"
-msgstr "銷售訂單細項"
+msgstr "銷售訂單行"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+msgid "Save"
+msgstr "保存"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
 msgid "Select category for the current product"
-msgstr "為當前商品選取分類"
+msgstr "為目前產品選擇一個類別"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:296
+#, python-format
+msgid ""
+"Selected product in the delivery method doesn't fulfill any of the delivery "
+"carrier(s) criteria."
+msgstr "交付方式中選擇的產品不符合任何交付承運人標準。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_line_warn
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"選擇此「警告「選項，將通知使用者此消息。\n"
+"選擇「受阻消息「選項，將在流程受阻時將拋出一個消息。\n"
+"消息寫入下一個字段。"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Send to Shipper"
+msgstr "發給托運人"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序號"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Set price"
+msgstr "設定價格"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr "如果您的憑證已通過生產認證，請設置為True。"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:147
+#, python-format
+msgid ""
+"Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost:"
+" %.2f %s"
+msgstr "將貨件發送給運營商%s ，以追踪號碼%s為費用：<br/>Cost: %.2f %s"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
+msgid "Shipping Cost"
+msgstr "發貨成本"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
+msgid "Shipping Weight"
+msgstr "發貨重量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
 msgid "Small-sized image"
-msgstr "小尺寸影像"
+msgstr "小尺寸圖像"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr "若該產品可以在銷售訂單明細中被選擇者，請指明。"
+msgstr "設定是否可在銷貨訂單明細中選擇該產品。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr "設定是否能夠被在人資費用中選擇該產品。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+"標準價格：成本價格在特定時期結束時（通常每年一次）手動更新\n"
+"平均價格：成本價格在每次進貨時重新計算，並用於產品估價\n"
+"實際價格：顯示的成本價格是最後一個外出產品的價格（例如，在庫存損失的情況下使用）。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,help:delivery.field_product_template_hs_code
+msgid "Standardized code for international shipping and goods declaration"
+msgstr "國際航運和貨物申報代碼規範"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -611,64 +1483,194 @@ msgstr "狀態"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
 msgid "Stock Input Account"
-msgstr "入庫科目"
+msgstr "庫存進貨科目"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "庫存調動"
+msgstr "庫存移動"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_output
 msgid "Stock Output Account"
-msgstr "庫存輸出帳戶"
+msgstr "庫存出貨科目"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
+msgid "Stock move ids"
+msgstr "庫存移動 ids"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Stock quant ids"
+msgstr "庫存份ids "
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
+msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
+msgstr "供應商發票成本價和數量相乘的總和"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr "客戶發票的開立發票價格和數量相乘的總和"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
+msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
+msgstr "供應商發票成本價和數量的相乘的總和"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
+msgstr "客戶發票的銷售分類價格和數量相乘的總和"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_num_invoiced
+msgid "Sum of Quantity in Customer Invoices"
+msgstr "客戶發票數量合計"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
+msgid "Sum of Quantity in Vendor Bills"
+msgstr "供應商發票中數量總和"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
+msgid ""
+"Technical field. Used for searching on pricelists, not stored in database."
+msgstr "技術字段。用於在價格表搜索，未存儲在數據庫中。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Technical: used to compute quantities."
+msgstr "技術: 用來計算數量."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
+msgid "The Poste"
+msgstr "郵政"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
-"The average delay in days between the confirmation of the customer order and "
-"the delivery of the finished products. It's the time you promise to your "
+"The average delay in days between the confirmation of the customer order and"
+" the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr "在客戶訂單確認和出貨之間的平均延遲天數。這是你承諾客戶的出貨時間。"
+msgstr "在客戶訂單確認和完工產品交付之間的平均的延期日子。這是您承諾給客戶的日期。"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:54
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr "訂單狀態要是草稿才能添加交貨明細。"
+msgstr "只能對草稿狀態的訂單增加交貨明細"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_lst_price
+msgid ""
+"The sale price is managed from the product template. Click on the 'Variant "
+"Prices' button to set the extra attribute prices."
+msgstr "銷售價格是由產品模板管理。點選「變體價格」按鈕來設定附加屬性的價格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
 msgid "The volume in m3."
-msgstr "體積（立方公尺）"
+msgstr "這體積是m3"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
+msgid "The weight of the contents in Kg, not including any packaging, etc."
+msgstr "以Kg(公斤)表示內容物重量，不包含任何包裝等。"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders)."
+msgstr ""
+"這些方法能根據您的設定自動的計算運輸價格；\n"
+"在銷售訂單中（根據報價單）或者發票中（根據發貨單）"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "此科目將代替目前產品的預設費用科目用來開立發票"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "此科目將被用來代替目前產品的預設銷售科目用來開立發票"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr "此帳戶將被使用於衡量採購價及成本價之間的價差。"
+msgstr "此科目將用於評估採購價格和成本價格之間的價格差異。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
+msgid "This delivery method will be used when invoicing from picking."
+msgstr "此交貨方式會用在當從揀貨開發票時。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
+msgid ""
+"This field holds the image used as image for the product variant, limited to"
+" 1024x1024px."
+msgstr "該字段保存產品的圖像，限製圖像大小須小於 1024x1024px."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
+msgid "This is the sum of the extra price of all attributes"
+msgstr "這是所有屬性額外價格的總和"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
+msgid "This percentage will be added to the shipping price."
+msgstr "這個百分比將被添加到航運價格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr "此倉位將會替代預設倉位，用於生產單產生的調動的來源倉位。"
+msgstr "該位置將被使用以替換預設的，同樣的，庫存移動的源位置將根據製造單生成。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr "此倉位將會替代預設倉位，用在因採購而產生的庫存調動的來源倉位。"
+msgstr "該位置將被使用以替換預設的，同樣的，庫存移動的源位置將根據補貨生成。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "此倉位將會代替預設倉位，用為進行盤點時建立庫存調動的來源庫位。"
+msgstr "該位置將被使用以替換預設的，同樣當您做盤點時，庫存移動的源位置將被生成。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr "這些類別用於為POS的類似產品分組。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
+msgid "To Weigh With Scale"
+msgstr "稱重"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -676,10 +1678,35 @@ msgid "Total Cost"
 msgstr "總成本"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin
+msgid "Total Margin"
+msgstr "總毛利"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
+msgid "Total Margin Rate(%)"
+msgstr "總毛利率(%)"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
+msgid "Total margin * 100 / Turnover"
+msgstr "總毛利* 100 / 營業額"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
+msgid "Track Service"
+msgstr "追蹤服務"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
 msgstr "追蹤"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "物流單號"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -694,38 +1721,69 @@ msgstr "營業額"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
 msgid "Turnover - Standard price"
-msgstr "營業額 - 標準價格"
+msgstr "營業額  -  標準價格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of Measure"
-msgstr "量度單位"
+msgstr "計量單位"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
-msgid "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr "量度單位為重量衡量的單位"
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr "計量單位 是測量重量的單位"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of measurement for Weight"
-msgstr "重量的度量單位"
+msgstr "重量的計量單位"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
 msgid "Unread Messages"
-msgstr "未讀訊息"
+msgstr "未讀消息"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未讀消息計數器"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
+msgid "Valuation"
+msgstr "估值"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
 msgid "Variable"
-msgstr "變量"
+msgstr "可變"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
 msgid "Variable Factor"
-msgstr "可變因子"
+msgstr "可變係數"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
+msgid "Variant Image"
+msgstr "變體圖像"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
+msgid "Variant Price Extra"
+msgstr "變體價格額外"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
+msgid "Vendor Taxes"
+msgstr "供應商稅"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
+msgid "Vendors"
+msgstr "供應商"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -743,7 +1801,7 @@ msgstr "倉庫"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
 msgid "Warranty"
-msgstr "保證"
+msgstr "質保"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -760,7 +1818,48 @@ msgstr "重量"
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Weight * Volume"
-msgstr "重量 * 體積"
+msgstr "重量* 體積"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
+msgid "Weight Unit of Measure"
+msgstr "測量的重量單位"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
+msgid "Weight for Shipping"
+msgstr "航運重量"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr "此處表明當新序號生成時，商品生成提醒前的天數。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"此處表明當新序號生成時，商品變危險以至於不能使用前的天數。When a new a Serial Number is issued, this is "
+"the number of days before the goods may become dangerous and must not be "
+"consumed."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr "此處表明當新序號生成時，商品需要提前多少天從庫存移除。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr "此處表明當新序號生成時，商品變質前（未變危險）的天數。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
@@ -770,8 +1869,7 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
-"使用即時存貨估價時，除非來源倉位已設定庫存估價科目，否則所有入庫調動的相應分"
-"錄將自動記錄在此科目。若產品未設定此項設定，則使用產品分類的設定。"
+"在進行及時庫存估值時，除非為源庫位指定一個庫存核算科目，否則所有的入向庫存移動日記帳明細將登入這科目。當沒在產品設定時，使用產品類別的設定。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -780,6 +1878,55 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
+msgstr "在進行及時估值時，除非對目標庫位指定一個核算科目否則出向庫存移動日記帳分錄將登入這個科目。當產品沒設定時，它預設繼承產品的類別的設定。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to"
+" an email template."
+msgstr "在驗證發票時，將根據此模板將電子郵件發送給客戶。客戶將收到電子郵件，而該電子郵件中之每個產品將與該電子郵件模板互相鏈接。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging_width
+msgid "Width"
+msgstr "寬度"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Width must be positive"
+msgstr "寬度必須是正數"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:187
+#, python-format
+msgid ""
+"You are shipping different packaging types in the same shipment.\n"
+"Packaging Types: %s"
 msgstr ""
-"在執行即時庫存估價時，除非目標倉位已設定估價科目，否則所有出庫調動的相對日記"
-"帳分錄將自動紀錄在此科目。當產品未設定估價科目時，使用產品分類的設定。"
+"您在同一批貨出貨不同的包裝類型。\n"
+"包裝類型: '%s' "
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:163
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "快遞服務商的網站對您的配送方式沒有追蹤此訂單的鏈接。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
+msgid "Zip From"
+msgstr "郵編從"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
+msgid "Zip To"
+msgstr "郵編到"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. UPS Express"
+msgstr "例如，UPS　快遞"

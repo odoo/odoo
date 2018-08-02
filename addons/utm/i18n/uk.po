@@ -3,23 +3,24 @@
 # * utm
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Bohdan Lisnenko, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium_active
@@ -69,17 +70,17 @@ msgstr "Канали"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
-msgstr ""
+msgstr "Спеціальні різдвяні"
 
 #. module: utm
 #: model:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Click to define a new medium."
-msgstr ""
+msgstr "Натисніть, щоб визначити нове середовище."
 
 #. module: utm
 #: model:ir.actions.act_window,help:utm.utm_source_action
 msgid "Click to define a new source."
-msgstr ""
+msgstr "Натисніть, щоб визначити нове джерело."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_create_uid
@@ -106,12 +107,12 @@ msgstr "Назва для відображення"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr ""
+msgstr "Електронна пошта - служба"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -156,7 +157,7 @@ msgstr "Відстеження посилань"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
 msgid "Mailing Partner"
-msgstr ""
+msgstr "Поштовий партнер"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -176,7 +177,7 @@ msgstr "Засіб розповсюдження"
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
-msgstr ""
+msgstr "Інформаційний бюлетень"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
@@ -186,7 +187,7 @@ msgstr "Знижка"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
 msgid "Search engine"
-msgstr ""
+msgstr "Пошукова система"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
@@ -202,13 +203,13 @@ msgstr "Джерело"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_name
 msgid "Source Name"
-msgstr ""
+msgstr "Назва джерела"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
 #: model:ir.ui.menu,name:utm.menu_utm_source
 msgid "Sources"
-msgstr ""
+msgstr "Джерела"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
@@ -221,6 +222,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
 "Ex: Fall_Drive, Christmas_Special"
 msgstr ""
+"Це назва, яка допомагає вам стежити за різними зусиллями кампанії. "
+"Наприклад: Fall_Drive, Christmas_Special"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_medium_id
@@ -231,6 +234,8 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
 msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
 msgstr ""
+"Це спосіб доставки. Наприклад: листівка, електронна пошта або банерна "
+"реклама"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_source_id
@@ -243,18 +248,20 @@ msgid ""
 "This is the source of the link Ex:Search Engine, another domain,or name of "
 "email list"
 msgstr ""
+"Це джерело посилання. Наприклад: Пошукова система, інший домен або назва "
+"списку листів"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm
 msgid "UTMs"
-msgstr ""
+msgstr "UTMs"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "utm.mixin"
-msgstr ""
+msgstr "utm.mixin"

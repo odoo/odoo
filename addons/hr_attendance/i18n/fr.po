@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Richard Mathot <rim@odoo.com>, 2016
-# Jerther <jerther@gmail.com>, 2016
+# Jerther, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Frédéric LIETART <stuff@tifred.fr>, 2016
@@ -14,13 +14,14 @@
 # Olivier Dony <odo@odoo.com>, 2016
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,6 +117,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"Impossible de créer un enregistrement de présence pour %(empl_name)s, "
+"l'employé(e) n'a pas effectué de pointage à la sortie depuis le %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -125,12 +128,16 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"Impossible de créer un enregistrement de présence pour %(empl_name)s, "
+"l'employé(e) a déjà effectué un pointage à l'entrée le %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:111
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
+"Impossible d'effectuer un pointage à l'entrée ou à la sortie sur plusieurs "
+"employés."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:125
@@ -140,6 +147,9 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"Impossible d'effectuer un pointage à la sortie sur %(empl_name)s, le "
+"pointage d'entrée correspondant est introuvable. Vos présences ont "
+"probablement été modifiées manuellement par les ressources humaines."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -223,6 +233,8 @@ msgid ""
 "Create a few employees to be able to select an employee here and perform his"
 " check in / check out."
 msgstr ""
+"Créez quelques employés pour être en mesure d'en sélectionner un et "
+"d'effectuer son pointage à l'entrée/à la sortie."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
@@ -315,7 +327,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr ""
+msgstr "Activer l'utilisation de code PIN"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
@@ -327,14 +339,14 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/my_attendances.js:29
 #, python-format
 msgid "Error : Could not find employee linked to user"
-msgstr ""
+msgstr "Erreur : impossible de trouver l'employé associé à l'utilisateur"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:35
 #, python-format
 msgid "Error : Could not find employee linked to user."
-msgstr ""
+msgstr "Erreur : impossible de trouver l'employé associé à l'utilisateur."
 
 #. module: hr_attendance
 #. openerp-web
@@ -439,7 +451,7 @@ msgstr "ID"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "Identifiant utilisé pour l'identification de l'employé."
 
 #. module: hr_attendance
 #. openerp-web
@@ -493,7 +505,7 @@ msgstr "Gestionnaire"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
 msgid "Manual Attendance"
-msgstr ""
+msgstr "Présence manuelle"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -514,7 +526,7 @@ msgstr "Mes présences"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr ""
+msgstr "Aucun pointage à la sortie"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
@@ -536,20 +548,22 @@ msgstr "Code"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"Code PIN utilisé pour le pointage à l'entrée/à la sortie en mode kiosque (si"
+" cette option est activée dans Configuration)."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:62
 #, python-format
 msgid "Please enter your PIN to check in"
-msgstr ""
+msgstr "Saisissez votre code PIN pour effectuer un pointage à l'entrée"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:59
 #, python-format
 msgid "Please enter your PIN to check out"
-msgstr ""
+msgstr "Saisissez votre code PIN pour effectuer un pointage à la sortie"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -588,7 +602,7 @@ msgstr "Scannez votre badge"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:15
 #, python-format
 msgid "Select Employee"
-msgstr ""
+msgstr "Sélectionner un employé"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
@@ -608,12 +622,12 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_employee.py:63
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "Le code PIN doit être une séquence de chiffres."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "Les enregistrements de présence de vos employés seront affichés ici."
 
 #. module: hr_attendance
 #. openerp-web
@@ -628,6 +642,8 @@ msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
 msgstr ""
+"L'employé aura accès au menu « Mes présences » pour effectuer le pointage à "
+"l'entrée et à la sortie pour sa session"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -635,11 +651,13 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"L'utilisateur devra saisir son code PIN pour effectuer un pointage à "
+"l'entrée ou à la sortie sur l'écran de l'entreprise."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "To create employees go to the Employees menu."
-msgstr ""
+msgstr "Pour créer des employés, accédez au menu Employés."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -688,7 +706,7 @@ msgstr "Mauvais PIN"
 #: code:addons/hr_attendance/models/hr_attendance.py:105
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr ""
+msgstr "Vous ne pouvez pas dupliquer une présence."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_base_config_settings
@@ -706,7 +724,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
-msgstr ""
+msgstr "liste de présences pour l'employé"
 
 #. module: hr_attendance
 #. openerp-web

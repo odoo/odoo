@@ -3,23 +3,24 @@
 # * project_issue
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Martin N <nedbalm@gmail.com>, 2016
 # Ladislav Tomm <tomm@helemik.cz>, 2016
 # xlu <xlu@seznam.cz>, 2016
+# Jiří P., 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: xlu <xlu@seznam.cz>, 2016\n"
+"Last-Translator: Jiří P., 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
@@ -142,7 +143,7 @@ msgstr "Blokovaný"
 #: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Buzz nebo nastaveno jako hotovo"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -361,7 +362,7 @@ msgstr "Vysoká"
 #: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "beru to"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -565,7 +566,7 @@ msgstr "Normální"
 #: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
 msgid "Not validated"
-msgstr ""
+msgstr "Neověřeno"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -583,6 +584,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Přepínejte výchozí hodnotu zobrazenou pro zablokovaný stav pro výběr kanban,"
+" když je úloha nebo problém v této fázi."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
@@ -590,6 +593,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Přepínejte výchozí hodnotu zobrazenou pro dokončený stav pro výběr kanban, "
+"pokud je úkol nebo problém v této fázi."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
@@ -597,6 +602,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Přepněte výchozí hodnotu zobrazenou pro normální stav výběru kanban, pokud "
+"je úkol nebo problém v této fázi."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner

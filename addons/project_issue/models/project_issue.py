@@ -204,11 +204,11 @@ class ProjectIssue(models.Model):
 
     @api.multi
     def _track_template(self, tracking):
-        self.ensure_one()
         res = super(ProjectIssue, self)._track_template(tracking)
-        changes, dummy = tracking[self.id]
-        if 'stage_id' in changes and self.stage_id.mail_template_id:
-            res['stage_id'] = (self.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
+        test_issue = self[0]
+        changes, tracking_value_ids = tracking[test_issue.id]
+        if 'stage_id' in changes and test_issue.stage_id.mail_template_id:
+            res['stage_id'] = (test_issue.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
         return res
 
     def _track_subtype(self, init_values):

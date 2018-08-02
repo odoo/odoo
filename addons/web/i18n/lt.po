@@ -3,29 +3,30 @@
 # * web
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Arminas Grigonis <arminas@versada.lt>, 2016
-# Anatolij <an@cq.lt>, 2016
+# Anatolij, 2016
 # Zygi Mantus <zygimantus@gmail.com>, 2016
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Rolandas <info@paninfo.lt>, 2016
-# Valdemar St <vaalds@gmail.com>, 2016
+# vaalds <vaalds@gmail.com>, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
-# Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
 "PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: web
 #. openerp-web
@@ -54,7 +55,7 @@ msgstr "pasirinkti įrašai"
 #: code:addons/web/static/src/js/view_manager.js:222
 #, python-format
 msgid " view couldn't be loaded"
-msgstr ""
+msgstr "nepavyko įkelti rodinio"
 
 #. module: web
 #. openerp-web
@@ -111,7 +112,7 @@ msgstr "prieš %d mėnesių"
 #: code:addons/web/static/src/js/widgets/debug_manager.js:136
 #, python-format
 msgid "%d requests (%d ms) %d queries (%d ms)"
-msgstr ""
+msgstr "%d kreipimaisi (%d ms) %d užklausos (%d ms)"
 
 #. module: web
 #. openerp-web
@@ -199,7 +200,7 @@ msgstr "(nėra eilutės)"
 #: code:addons/web/static/src/xml/base_common.xml:34
 #, python-format
 msgid "(nolabel)"
-msgstr ""
+msgstr "(be pavadinimo)"
 
 #. module: web
 #. openerp-web
@@ -230,14 +231,14 @@ msgstr "Prieiga uždrausta"
 #: code:addons/web/static/src/js/framework/crash_manager.js:15
 #, python-format
 msgid "Access Error"
-msgstr ""
+msgstr "Prieigos klaida"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1283
 #, python-format
 msgid "Access to all Enterprise Apps"
-msgstr ""
+msgstr "Prieiga prie visų Enterprise aplikacijų"
 
 #. module: web
 #. openerp-web
@@ -295,7 +296,7 @@ msgstr "Pridėti"
 #: code:addons/web/static/src/xml/base.xml:932
 #, python-format
 msgid "Add Custom Filter"
-msgstr ""
+msgstr "Pridėti papildomą filtrą"
 
 #. module: web
 #. openerp-web
@@ -316,7 +317,7 @@ msgstr "Pridėti objektą"
 #: code:addons/web/static/src/xml/base.xml:1042
 #, python-format
 msgid "Add custom group"
-msgstr ""
+msgstr "Pridėti papildomą grupę"
 
 #. module: web
 #. openerp-web
@@ -409,7 +410,7 @@ msgstr "Galimi laukai"
 #: code:addons/web/static/src/xml/base.xml:546
 #, python-format
 msgid "Bar Chart"
-msgstr ""
+msgstr "Juostinė diagrama"
 
 #. module: web
 #. openerp-web
@@ -423,7 +424,7 @@ msgstr "Dvejetainis failas"
 #: code:addons/web/static/src/xml/base.xml:1287
 #, python-format
 msgid "Bugfixes guarantee"
-msgstr ""
+msgstr "Klaidų taisymas garantuojamas"
 
 #. module: web
 #. openerp-web
@@ -595,7 +596,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:571
 #, python-format
 msgid "Count"
-msgstr ""
+msgstr "Skaičiuoti"
 
 #. module: web
 #. openerp-web
@@ -690,7 +691,7 @@ msgstr "Data"
 #: code:addons/web/static/src/js/views/form_widgets.js:634
 #, python-format
 msgid "Deactivate"
-msgstr ""
+msgstr "Deaktyvuoti"
 
 #. module: web
 #. openerp-web
@@ -885,7 +886,7 @@ msgstr "Vertinimo klaida"
 #: code:addons/web/static/src/xml/base.xml:576
 #, python-format
 msgid "Expand all"
-msgstr ""
+msgstr "Išskleisti viską"
 
 #. module: web
 #. openerp-web
@@ -934,7 +935,7 @@ msgstr "Eksportuoti visus duomenis"
 #: code:addons/web/static/src/js/view_manager.js:435
 #, python-format
 msgid "Failed to evaluate search criterions"
-msgstr ""
+msgstr "Nepavyko įvertinti paieškos kriterijų"
 
 #. module: web
 #. openerp-web
@@ -1033,7 +1034,7 @@ msgstr "Filtrai"
 #: code:addons/web/static/src/xml/base.xml:575
 #, python-format
 msgid "Flip axis"
-msgstr ""
+msgstr "Sukeisti ašis"
 
 #. module: web
 #. openerp-web
@@ -1120,7 +1121,7 @@ msgstr "Paveikslėlis"
 #: code:addons/web/static/src/xml/base.xml:1093
 #, python-format
 msgid "Import-Compatible Export"
-msgstr ""
+msgstr "Importuoti tinkamas eksportavimas"
 
 #. module: web
 #. openerp-web
@@ -1135,7 +1136,7 @@ msgstr "Neaktyvus"
 #: code:addons/web/static/src/js/views/graph_widget.js:217
 #, python-format
 msgid "Invalid data"
-msgstr ""
+msgstr "Netinkami duomenys"
 
 #. module: web
 #: code:addons/web/controllers/main.py:653
@@ -1145,6 +1146,8 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
+"Netinkamas duomenų bazės pavadinimas. Leidžiama naudoti raidinius ir "
+"skaitinius simbolius, apatinius brūkšnius, brūkšnelius ir taškus."
 
 #. module: web
 #. openerp-web
@@ -1185,7 +1188,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:547
 #, python-format
 msgid "Line Chart"
-msgstr ""
+msgstr "Linijinė diagrama"
 
 #. module: web
 #. openerp-web
@@ -1512,7 +1515,7 @@ msgstr "Odoo apps bus greitai pasiekiami"
 #: code:addons/web/static/src/js/views/form_upgrade_widgets.js:53
 #, python-format
 msgid "Odoo Enterprise"
-msgstr ""
+msgstr "Odoo Enterprise"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_suite
@@ -1524,7 +1527,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:648
 #, python-format
 msgid "Off"
-msgstr ""
+msgstr "Išjungta"
 
 #. module: web
 #. openerp-web
@@ -1548,7 +1551,7 @@ msgstr "Senas slaptažodis"
 #: code:addons/web/static/src/js/views/form_widgets.js:646
 #, python-format
 msgid "On"
-msgstr ""
+msgstr "Įjungta"
 
 #. module: web
 #. openerp-web
@@ -1576,14 +1579,14 @@ msgstr "Tik man"
 #: code:addons/web/static/src/xml/base.xml:95
 #, python-format
 msgid "Open Developer Tools"
-msgstr ""
+msgstr "Atidaryti derinimo įrankius"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:115
 #, python-format
 msgid "Open View"
-msgstr ""
+msgstr "Atidaryti rodinį"
 
 #. module: web
 #. openerp-web
@@ -1605,7 +1608,7 @@ msgstr "Slaptažodis"
 #: code:addons/web/static/src/xml/base.xml:548
 #, python-format
 msgid "Pie Chart"
-msgstr ""
+msgstr "Skritulinė diagrama"
 
 #. module: web
 #. openerp-web
@@ -1677,7 +1680,7 @@ msgstr "Technologija"
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr ""
+msgstr "Sukurta <span>Odoo</span>"
 
 #. module: web
 #. openerp-web
@@ -1740,7 +1743,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:114
 #, python-format
 msgid "Run JS Tests"
-msgstr ""
+msgstr "Paleisti JS testus"
 
 #. module: web
 #. openerp-web
@@ -1864,7 +1867,7 @@ msgstr "Rinktis <i class=\"fa fa-database\"/>"
 #: code:addons/web/static/src/js/widgets/debug_manager.js:165
 #, python-format
 msgid "Select a view"
-msgstr ""
+msgstr "Pasirinkite rodinį"
 
 #. module: web
 #. openerp-web
@@ -1934,7 +1937,7 @@ msgstr "Dalintis su visais naudotojais"
 #: code:addons/web/static/src/js/apps.js:195
 #, python-format
 msgid "Showing locally available modules"
-msgstr ""
+msgstr "Rodomi lokaliai pasiekiami moduliai"
 
 #. module: web
 #. openerp-web
@@ -1947,7 +1950,7 @@ msgstr "Dydis:"
 #: code:addons/web/controllers/main.py:1038
 #, python-format
 msgid "Something horrible happened"
-msgstr ""
+msgstr "Įvyko kažkas labai negero"
 
 #. module: web
 #. openerp-web
@@ -1975,7 +1978,7 @@ msgstr "Vis dar kraunama...<br />Būkite kantrūs."
 #: code:addons/web/static/src/xml/base.xml:1269
 #, python-format
 msgid "Support"
-msgstr ""
+msgstr "Palaikymas"
 
 #. module: web
 #. openerp-web
@@ -2406,7 +2409,7 @@ msgstr "Taip"
 #: code:addons/web/static/src/js/abstract_web_client.js:217
 #, python-format
 msgid "You are back online"
-msgstr ""
+msgstr "Jūs vėl prisijungėte"
 
 #. module: web
 #. openerp-web
@@ -2456,6 +2459,7 @@ msgstr "Turite pasirinkti bent vieną įrašą."
 #, python-format
 msgid "Your Odoo session expired. Please refresh the current web page."
 msgstr ""
+"Jūsų Odoo sesija baigėsi. Prašome atnaujinti dabartinį naršyklės puslapį."
 
 #. module: web
 #. openerp-web
@@ -2522,7 +2526,7 @@ msgstr "daugiau"
 #: code:addons/web/static/src/js/views/search_filters.js:285
 #, python-format
 msgid "greater than or equal to"
-msgstr ""
+msgstr "didednis nei ar lugus"
 
 #. module: web
 #. openerp-web
@@ -2607,7 +2611,7 @@ msgstr "yra teigiamas"
 #: code:addons/web/static/src/js/framework/utils.js:303
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. openerp-web
@@ -2632,7 +2636,7 @@ msgstr "mažiau negu prieš minutę"
 #: code:addons/web/static/src/js/views/search_filters.js:286
 #, python-format
 msgid "less than or equal to"
-msgstr ""
+msgstr "mažiau ar lygu"
 
 #. module: web
 #. openerp-web

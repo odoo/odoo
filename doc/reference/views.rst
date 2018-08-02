@@ -232,8 +232,7 @@ Possible children elements of the list view are:
         context of the current row's record, if ``True`` the corresponding
         attribute is set on the cell.
 
-        Possible attributes are ``invisible`` (hides the button) and
-        ``readonly`` (disables the button but still shows it)
+        Possible attribute is ``invisible`` (hides the button).
     ``states``
         shorthand for ``invisible`` ``attrs``: a list of states, comma separated,
         requires that the model has a ``state`` field and that it is

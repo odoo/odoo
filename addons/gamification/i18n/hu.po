@@ -3,16 +3,17 @@
 # * gamification
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
+# Martin Trigaux, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"POT-Creation-Date: 2018-03-08 13:58+0000\n"
+"PO-Revision-Date: 2018-03-08 13:58+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -450,7 +451,7 @@ msgstr "Egy elkezdett célnak a beállítását nem tudja módosítani"
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégsem"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -727,7 +728,7 @@ msgstr ""
 #: selection:gamification.challenge,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -1212,6 +1213,11 @@ msgstr "Soha"
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
 msgid "Never reminded if no value or zero is specified."
 msgstr "Ne emlékeztessen, ha nincs érték vagy nulla van megadva."
+
+#. module: gamification
+#: model:mail.template,subject:gamification.email_template_badge_received
+msgid "New badge ${object.badge_id.name} granted"
+msgstr "Új jelvény ${object.badge_id.name} megadva"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date

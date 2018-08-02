@@ -1,39 +1,161 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_crm
-#
+# 
 # Translators:
+# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-08 09:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2017-06-26 14:46+0000\n"
+"PO-Revision-Date: 2017-06-26 14:46+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:35
+#, python-format
+msgid "% Leads"
+msgstr "% 線索"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">寄信</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:63
+#, python-format
+msgid "Campaign"
+msgstr "行銷活動"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:62
+#, python-format
+msgid "Create Date"
+msgstr "建立日期"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Email"
-msgstr "電郵"
+msgstr "Email"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+msgid "If you have an emergency, do not hesitate to contact us by phone:"
+msgstr "如果您遇到了急待解決的問題，請不要猶豫，立即通過電話聯繫我們："
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "潛在客戶/商機"
+msgstr "線索/商機"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/controllers/main.py:53
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
+#, python-format
+msgid "Leads"
+msgstr "線索"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:8
+#, python-format
+msgid "Leads Acquisition /"
+msgstr "線索採集 /"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:13
+#, python-format
+msgid "Leads Analysis"
+msgstr "線索分析"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:64
+#, python-format
+msgid "Medium"
+msgstr "媒介"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Phone Number"
+msgstr "電話號碼"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:57
+#, python-format
+msgid "Previous Leads"
+msgstr ""
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:65
+#, python-format
+msgid "Source"
+msgstr "來源"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Subject"
-msgstr "主旨"
+msgstr "主題"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+msgid "Thanks!"
+msgstr "感謝！"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:15
+#, python-format
+msgid "There is no recent lead."
+msgstr "無近期之線索"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+msgid "We will get back to you shortly."
+msgstr "我們將很快回復。"
+
+#. module: website_crm
+#: model:ir.actions.act_url,name:website_crm.action_open_website
+msgid "Website Contact Form"
+msgstr "網站聯繫表格"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Company"
 msgstr "您的公司"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Your Name"
+msgstr "您的姓名"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Your Question"
+msgstr "您的問題"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+msgid "Your message has been sent successfully."
+msgstr "您的消息已成功發出。"

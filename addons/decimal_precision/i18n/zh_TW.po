@@ -1,46 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * decimal_precision
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# amos lin <seeing@edirect168.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-10 09:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_date
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
 msgid "Decimal Accuracy"
-msgstr "小數準確度"
+msgstr "小數準確性"
 
 #. module: decimal_precision
 #: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
 #: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
 msgid "Decimal Precision"
-msgstr "小數精確度"
+msgstr "小數精度"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
@@ -54,33 +56,48 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
+msgid "Float"
+msgstr "浮點數"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
+msgid "Float 2"
+msgstr "浮點數 2"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
+msgid "Float 4"
+msgstr "浮點數 4"
+
+#. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision___last_update
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_uid
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_date
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr "每種用途只可定義一個值！"
+msgstr "每個用途只能定義一個值"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
@@ -91,3 +108,13 @@ msgstr "用途"
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
 msgstr "decimal.precision"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "decimal.precision.test"
+msgstr "decimal.precision.test"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
+msgid "ir.qweb.field.float"
+msgstr "ir.qweb.field.float"

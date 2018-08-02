@@ -126,8 +126,18 @@ class PaymentAcquirerAuthorize(models.Model):
         for field_name in mandatory_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
-        if data['cc_expiry'] and datetime.now().strftime('%y%M') > datetime.strptime(data['cc_expiry'], '%M / %y').strftime('%y%M'):
-            return False
+        if data['cc_expiry']:
+            # FIX we split the date into their components and check if there is two components containing only digits
+            # this fixes multiples crashes, if there was no space between the '/' and the components the code was crashing
+            # the code was also crashing if the customer was proving non digits to the date.
+            cc_expiry = [i.strip() for i in data['cc_expiry'].split('/')]
+            if len(cc_expiry) != 2 or any(not i.isdigit() for i in cc_expiry):
+                return False
+            try:
+                if datetime.now().strftime('%y%m') > datetime.strptime('/'.join(cc_expiry), '%m/%y').strftime('%y%m'):
+                    return False
+            except ValueError:
+                return False
         return False if error else True
 
     @api.multi

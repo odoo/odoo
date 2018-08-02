@@ -5,25 +5,27 @@
 # Translators:
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Paolo Valier, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016
-# Luca Tralli <luca.tralli@gemsrl.it>, 2016
+# Luca Tralli, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Christian <chris@effeci.info>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
 # Tiziano Zambelli <zstiziano@gmail.com>, 2016
 # Alessandro Forte <a.forte1010@gmail.com>, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
+# Niccolò Lubello <nlubello@gmail.com>, 2018
+# David Minneci <david@numeko.it>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Giovanni Perteghella <giovanni@perteghella.org>, 2016\n"
+"Last-Translator: David Minneci <david@numeko.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,6 +81,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Acquista Odoo Enterprise ora per avere più fonti.\n"
+"                </p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -136,6 +141,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un prodotto di tipo stoccabile è un prodotto per il quale gestisci lo stock. L’app “Inventario” deve essere installata.\n"
+"Un prodotto di consumo, d’altra parte, è un prodotto per il quale lo stock non è gestito.\n"
+"Un servizio è un prodotto non materiale che fornisci.\n"
+"Un contenuto digitale è un prodotto non materiale che vendi online. I file allegati ai prodotti sono quelli che vengono venduti sull’e-commerce come e-book, musica, immagini, … Il modulo “Prodotto digitale” deve essere installato."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -318,7 +327,7 @@ msgstr "Seleziona se vuoi che questo prodotto appaia all'interno del POS"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr "Clic per definire un nuovo tipo di spedizione"
+msgstr "Clicca per impostare un nuovo metodo di consegna."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -423,7 +432,7 @@ msgstr "Tempi di consegna cliente"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Rif. Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -456,7 +465,7 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"Unità di misura utilizzata di default per gli ordini di acquisto. Deve "
+"Unità di misura predefinita utilizzata per gli ordini di acquisto. Deve "
 "essere della stessa categoria dell'unità di misura predefinita."
 
 #. module: delivery
@@ -474,12 +483,12 @@ msgstr "Consegna"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Trasportatore"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Informazioni di Consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -632,6 +641,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"La compilazione del form permette di filtrare i corrieri in base "
+"all'indirizzo di consegna del tuo cliente."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -675,8 +686,9 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
-msgstr "Nessuna spesa di Spedizione"
+msgstr "Consegna gratuita"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
@@ -727,7 +739,7 @@ msgstr "Altezza"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "L'altezza deve essere un numero positivo (>0)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -932,7 +944,7 @@ msgstr "Unità logistica"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr "Gestisci Tipo di Package"
+msgstr "Gestisci Tipo di Imballo"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -1064,6 +1076,7 @@ msgstr "Costo normale - costo totale"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "Spese di Spedizione Normali"
 
@@ -1141,7 +1154,7 @@ msgstr "Confezionamento"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Operazione di imballaggio"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1338,7 +1351,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Spese di Ri-fatturazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1474,7 +1487,7 @@ msgstr "Costo di Spedizione"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Peso Spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1592,6 +1605,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "La Posta"
 
@@ -1768,7 +1782,7 @@ msgstr "Tracciabilità"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Tracking di riferimento"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1890,7 +1904,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Peso per Spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1992,18 +2006,18 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Il metodo di spedizione non reindirizza al sito dello spedizioniere per il "
+"Il metodo di consegna non reindirizza al sito dello spedizioniere per il "
 "tracking dell'ordine."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr "CAP Da"
+msgstr "Da CAP"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr "CAP A"
+msgstr "A CAP"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

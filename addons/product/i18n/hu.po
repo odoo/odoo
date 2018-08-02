@@ -3,8 +3,9 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
+# krnkris, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
@@ -495,7 +496,7 @@ msgstr "Nagyítási arányszám"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Nagyobb mint a referencia mértékegység"
+msgstr "Nagyobb mint a referencia-mértékegység"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -574,7 +575,7 @@ msgstr "Értékesíthető"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégsem"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
@@ -743,8 +744,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"A mértékegységek átváltása csak akkor lehetséges, ha ugyanabba a kategóriába"
-" tartoznak. Az átváltás az arányszámok alapján történik."
+"A mértékegységek közötti átváltás csak akkor valósul meg, ha ugyanabba a "
+"kategóriába tartoznak. Az átváltás az arányszámok alapján történik."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:89
@@ -900,7 +901,7 @@ msgstr "Dátum"
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr "Nap(ok)"
+msgstr "Nap"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
@@ -1321,7 +1322,7 @@ msgstr "Magas minőségű kivitel."
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
 msgid "Hour(s)"
-msgstr "Óra(k)"
+msgstr "Óra"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1352,9 +1353,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
-"Mennyivel nagyobb vagy kisebb ez az egység a kategóriához tartozó referencia"
-" mértékegységhez viszonyítva: 1 * (referencia egység) = arány * (ez az "
-"egység)"
+"Mennyivel nagyobb vagy kisebb ez az egység ezen kategória referencia-"
+"mértékegységhez képest: 1 * (referencia egység) = arány * (ez az egység)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2207,7 +2207,7 @@ msgstr "Arány"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr "Ennek a kategóriának a referencia mértékegysége"
+msgstr "Ezen kategória referencia-mértékegysége"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2430,7 +2430,7 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Kisebb mint a referencia mértékegység"
+msgstr "Kisebb mint a referencia-mértékegység"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2627,8 +2627,9 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"A számított mennyiség többszörös lesz ehhez az értékhez. Használja az 1.0 a "
-"mértékegységhez, melyet nem lehet tovább osztani, mint darab."
+"A kiszámított mennyiség ezen érték többszöröse lesz. Használja az 1.0 "
+"értéket olyan mértékegységhez, amely nem osztható tovább, mint például egy "
+"árucikk."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:43 sql_constraint:product.uom:0
@@ -3334,12 +3335,12 @@ msgstr "pl. USD Kiskereskedők"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr "e.g: 1 * (referencia egység) = arány * (ezaz egység)"
+msgstr "pl.: 1 * (referencia egység) = arány * (ez az egység)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "e.g: 1 * (e az egység) = arány * (referencia egység)"
+msgstr "pl.: 1 * (ez az egység) = arány * (referencia egység)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_floz

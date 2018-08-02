@@ -3,10 +3,11 @@
 # * mrp
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# krnkris, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
 # Zoltán Csapó <csapoz@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -552,12 +553,12 @@ msgstr "Nem található egyetlen általános gyátási útvonal."
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégsem"
 
 #. module: mrp
 #: selection:mrp.production,state:0 selection:mrp.workorder,state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavonva"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:263
@@ -927,7 +928,7 @@ msgstr "Megjelenített név"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: selection:mrp.production,state:0 selection:mrp.unbuild,state:0
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_done_wo
@@ -2246,6 +2247,11 @@ msgid "Quantity To Produce"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_quantity_done_store
+msgid "Quantity done store"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
 msgid "Quantity to Process"
 msgstr ""
@@ -2874,6 +2880,11 @@ msgstr ""
 msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Time the currently logged user spent on this workorder."
 msgstr ""
 
 #. module: mrp

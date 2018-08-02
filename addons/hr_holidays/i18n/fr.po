@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Symons <xsy@openerp.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
@@ -22,13 +22,14 @@
 # leemannd <denis.leemann@camptocamp.com>, 2016
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,6 +129,8 @@ msgid ""
 "Absent Employee(s), Whose leaves request are either confirmed or validated "
 "on today"
 msgstr ""
+"Employé(s) absent(s) dont la demande de congé a été confirmée ou validée "
+"aujourd'hui"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -148,7 +151,7 @@ msgstr "Actif"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Leaves and Allocations"
-msgstr ""
+msgstr "Congés et allocations en cours"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -356,12 +359,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
 msgid "Click here to create a new leave allocation request."
-msgstr ""
+msgstr "Cliquez ici pour créer une nouvelle demande d'allocation de congé."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
 msgid "Click here to create a new leave allocation."
-msgstr ""
+msgstr "Cliquez ici pour créer une nouvelle allocation de congé."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
@@ -719,18 +722,21 @@ msgstr "Type de congé"
 #, python-format
 msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
+"La demande de congé doit être confirmée (\"À approuver\") avant d'être "
+"approuvée."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:460
 #, python-format
 msgid "Leave request must be confirmed in order to approve it."
-msgstr ""
+msgstr "La demande de congé doit être confirmée avant d'être approuvée."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:519
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
+"La demande de congé doit être confirmée ou validée avant d'être refusée."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:432
@@ -738,6 +744,8 @@ msgstr ""
 msgid ""
 "Leave request must be in Draft state (\"To Submit\") in order to confirm it."
 msgstr ""
+"La demande de congé doit être à l'état de brouillon (\"À soumettre\") pour "
+"pouvoir être confirmée."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:417
@@ -746,6 +754,8 @@ msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
 "to Draft."
 msgstr ""
+"La demande de congé doit être \"Refusée\" ou \"À approuver\" pour pouvoir "
+"être remise à l'état de brouillon."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -1022,12 +1032,16 @@ msgstr ""
 #, python-format
 msgid "Only an HR Manager can apply the second approval on leave requests."
 msgstr ""
+"Seul un responsable RH peut accorder la deuxième approbation d'une demande "
+"de congé."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:415
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
+"Seul un responsable RH ou l'employé concerné peut remettre la demande à "
+"l'état de brouillon."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:440
@@ -1035,12 +1049,13 @@ msgstr ""
 #, python-format
 msgid "Only an HR Officer or Manager can approve leave requests."
 msgstr ""
+"Seul un agent ou un responsable RH peut approuver une demande de congé."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:514
 #, python-format
 msgid "Only an HR Officer or Manager can refuse leave requests."
-msgstr ""
+msgstr "Seul un agent ou un responsable RH peut refuser une demande de congé."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1219,6 +1234,8 @@ msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
+"Le champ \"Jours de congés restants\" ne peut être utilisé que s'il n'existe qu'un seul type de congés et que l'option \"Autoriser à outrepasser la limite\" est décochée. (%s trouvé). Autrement, la mise à jour serait ambigüe car le système ne pourrait pas déterminer le type de congés devant être mis à jour.\n"
+" Si la configuration ne permet pas d'utiliser le champ précité, il est préférable de se servir des menus \"Demandes de congés\" et \"Demandes d'allocation\" dans l'application Congés pour gérer les congés des employés."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1272,6 +1289,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Cette couleur sera utilisée dans le rapport récapitulatif des congés, "
+"accessible à partir de Rapports > Congés par département."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken

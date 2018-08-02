@@ -5,7 +5,7 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
@@ -16,10 +16,10 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Mika Karvinen <karvinenm@gmail.com>, 2016
 # Timo Koukkari <ti.ko@netikka.fi>, 2016
-# salmemik <salmemik@gmail.com>, 2016
+# Mikko Salmela <salmemik@gmail.com>, 2016
 # Sanna Edelman <direct@generare.com>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
-# Jan-Erik Finlander <janerik.finlander@gmail.com>, 2016
+# Jan-Erik Finlander, 2016
 # Timo Soronen <tisonen@gmail.com>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
@@ -434,7 +434,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"<strong>Laskuttaja</strong> (rajoitettu köyttö)\n"
+"<strong>Laskuttaja</strong> (rajoitettu käyttö)\n"
 "</span>"
 
 #. module: account
@@ -1556,6 +1556,11 @@ msgid "Adjustment Tax"
 msgstr "OIkaisuvero"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2229,6 +2234,12 @@ msgstr "Pankin täsmäytyssiirron esiasetus"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Pankin tiliote"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -4238,7 +4249,7 @@ msgstr "Tuotemallin kustannustili"
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
-msgstr "menot"
+msgstr "Menot"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
@@ -5435,7 +5446,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_sent
 msgid "It indicates that the invoice has been sent."
-msgstr ""
+msgstr "Merkitsee, että lasku on lähetetty."
 
 #. module: account
 #: code:addons/account/models/account_move.py:882
@@ -6415,7 +6426,7 @@ msgstr "Uusi tapahtuma"
 #: code:addons/account/models/account_move.py:1132
 #, python-format
 msgid "New expected payment date: "
-msgstr ""
+msgstr "Uusi oletettu maksupäivä:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10351,6 +10362,14 @@ msgstr ""
 "liittyvät täsmäytykset peruuttaa."
 
 #. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
@@ -10744,7 +10763,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "lasku"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view

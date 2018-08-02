@@ -1,27 +1,145 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * im_livechat
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
+# amos lin <seeing@edirect168.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-05-27 09:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
+msgid "# of Sessions"
+msgstr "# 會話"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
+msgid "# of speakers"
+msgstr "講解人"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "% Happy"
+msgstr "高興"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
+msgid ""
+"* 'Display the button' displays the chat button on the pages.\n"
+"* 'Auto popup' displays the button and automatically open the conversation pane.\n"
+"* 'Hide the button' hides the chat button on the pages."
+msgstr ""
+"\n"
+"*“顯示按鈕”顯示頁面上的聊天按鈕。\n"
+"*“自動彈出”顯示按鈕並自動打開對話窗格。\n"
+"*“隱藏按鈕”隱藏頁面上的聊天按鈕。"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"<span>Define rules for your live support channel. You can apply an action "
+"(disable the support, automatically open your support, or just make the "
+"button available) for the given URL, and per country.<br/>To identify the "
+"country, GeoIP must be install on your server, otherwise, the countries of "
+"the rule will not be taken into account.</span>"
+msgstr ""
+"<span>為您的線上支援頻道定義規則. 您能對所給的URL按國家做類似動作 (禁用支援, 自動開啟支援, 或只是讓按鈕可用).<br/>為了定義國家,"
+" 必須在您的服務器上安裝GeoIP, 否則,該規則的國家不會被考慮.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
 msgid "Action"
 msgstr "動作"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_anonymous_name
+msgid "Anonymous Name"
+msgstr "匿名使用者姓名"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_are_you_inside
+msgid "Are you inside the matrix?"
+msgstr "您是否在頻道中？"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:27
+#, python-format
+msgid "Ask something ..."
+msgstr "說點什麼..."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Attendees"
+msgstr "與會者"
+
+#. module: im_livechat
+#: selection:im_livechat.channel.rule,action:0
+msgid "Auto popup"
+msgstr "自動彈出"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
+msgid "Auto popup timer"
+msgstr "自動彈出時間"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_duration
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_duration
+msgid "Average duration"
+msgstr "平均時間"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_message
+msgid "Average message"
+msgstr "每個消息"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_time_to_answer
+msgid "Average time to give the first answer to the visitor"
+msgstr "首次回復訪客的平均時間"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:13
+#, python-format
+msgid "Bad"
+msgstr "壞"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr "罐裝回應"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still edit\n"
+"                it before sending."
+msgstr ""
+"罐裝回應允許您在預先寫入的回復中插入\n"
+"                通過鍵入<i>:shortcut</i>來輸入消息。快速使用方式是\n"
+"                直接在你的信息中取代，同時在發送前你仍然可以編輯\n"
+"                該訊息。"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -32,17 +150,50 @@ msgstr "動作"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Channel"
-msgstr "管道"
+msgstr "頻道"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_name
 msgid "Channel Name"
-msgstr "管道名稱"
+msgstr "頻道名稱"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "Channel Rule"
+msgstr "頻道規則"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Channel Rules"
+msgstr "頻道規則"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
 msgid "Channels"
-msgstr "管道"
+msgstr "頻道"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_input_placeholder
+msgid "Chat Input Placeholder"
+msgstr "聊天輸入為空白時顯示"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:29
+#, python-format
+msgid "Chat with one of our collaborators"
+msgstr "與我們的服務人員請求協助"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr "點擊創建一個新罐裝回應。"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid "Click to define a new website live chat channel."
+msgstr "創建新的即時聊天"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
@@ -51,21 +202,99 @@ msgid "Code"
 msgstr "代碼"
 
 #. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.livechat_config
+msgid "Configuration"
+msgstr "配置"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_channel_id
+msgid "Conversation"
+msgstr "對話"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Copy and paste this code into your website, within the &lt;head&gt; tag:"
+msgstr "將此代碼複製並粘貼到您的網站的<head>標籤內："
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_country_ids
 msgid "Country"
-msgstr "國家/地區"
+msgstr "國家"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_create_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_create_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (day)"
+msgstr "創建日期(天)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Creation date (hour)"
+msgstr "創建日期(小時)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (month)"
+msgstr "創建日期(月)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (week)"
+msgstr "創建日期(周)"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Creation date (year)"
+msgstr "創建日期(年)"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
+msgid "Default text displayed on the Livechat Support Button"
+msgstr "線上客服按鈕上的預設內容"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
+msgid ""
+"Delay (in seconds) to automatically open the conversation window. Note: the "
+"selected action must be 'Auto popup' otherwise this parameter will not be "
+"taken into account."
+msgstr ""
+"延遲（以秒為單位）自動打開對話窗口。\n"
+"注意：所選的動作必須是“自動彈出”，否則這個參數將不被考慮。"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:7
+#, python-format
+msgid "Did we correctly answer your question ?"
+msgstr "我們是否正確回答了您的問題?"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel
+msgid "Discussion channel"
+msgstr "討論頻道"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_display_name
@@ -76,11 +305,69 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: im_livechat
+#: selection:im_livechat.channel.rule,action:0
+msgid "Display the button"
+msgstr "顯示按鈕"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_duration
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_duration
+msgid "Duration of the conversation (in seconds)"
+msgstr "對話持續時間(秒)"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid ""
+"Each channel has it's own URL that you can send by email to\n"
+"                your customers in order to start chatting with you."
+msgstr "每個頻道都有對應的URL地址,您可以通過它來和您的客戶進行信件溝通."
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
+#, python-format
+msgid "Explain your note"
+msgstr "備註您的筆記"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"For website built with Odoo CMS, please install the website_livechat module."
+" Then go to Settings &gt; Website Settings and select the Website Live Chat "
+"Channel you want to add on your website."
+msgstr ""
+"對於帶有Odoo CMS 的網站，請安裝 website_livechat 模塊。 然後到 設定 > 網站設定，選擇要添加到您的站點的即時聊天頻道。"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
+msgid ""
+"Given the order to find a matching rule. If 2 rules are matching for the "
+"given url/country, the one with the lowest sequence will be chosen."
+msgstr "幫助訂單找到匹配規則。如果兩條規則同時匹配給定的Url/國家，會選擇低序列的一個"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:11
+#, python-format
+msgid "Good"
+msgstr "好"
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Group By..."
-msgstr "群組依據..."
+msgstr "分組..."
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Has a Rating"
+msgstr "請幫我們進行評價讓彼此更進步"
+
+#. module: im_livechat
+#: selection:im_livechat.channel.rule,action:0
+msgid "Hide the button"
+msgstr "隱藏按鈕"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
@@ -90,17 +377,57 @@ msgid "History"
 msgstr "歷史"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date_hour
+msgid "Hour of start Date of session"
+msgstr "會話開始的小時數"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:30
+#, python-format
+msgid "How may I help you?"
+msgstr "請問有什麼可以幫到您？"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "How to use the Website Live Chat widget?"
+msgstr "如何使用網站在線聊天功能？"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:15
+#, python-format
+msgid "I don't want to rate this conversation"
+msgstr "我不想評論此次服務"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image
 msgid "Image"
-msgstr "圖片"
+msgstr "圖像"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Join"
+msgstr "加入"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Join Channel"
+msgstr "加入頻道"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Last 24h"
+msgstr "過去24小時"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel___last_update
@@ -108,36 +435,157 @@ msgstr "圖片"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Last Seen Many2many"
+msgstr "Last Seen Many2many"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Last Week"
+msgstr "上周"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Leave"
+msgstr "休假"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Leave Channel"
+msgstr "離開頻道"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_livechat_root
+msgid "Live Chat"
+msgstr "線上聊天"
+
+#. module: im_livechat
+#: model:ir.module.category,name:im_livechat.module_category_im_livechat
+msgid "Live Support"
+msgstr "即時支援"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
+#, python-format
+msgid "Livechat"
+msgstr "線上客服"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel
+msgid "Livechat Channel"
+msgstr "即時聊天"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
+msgid ""
+"Livechat Support Channel Statistics allows you to easily check and analyse "
+"your company livechat session performance. Extract information about the "
+"missed sessions, the audiance, the duration of a session, etc."
+msgstr ""
+"在線聊天支援頻道統計，使您可以輕鬆查看和分析您公司的即時聊天會話狀況。\n"
+"特別關於錯過的線上詢問，線上詢問者，線上諮詢的持續時間等信息。"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+#: model:ir.model,name:im_livechat.model_im_livechat_report_operator
+msgid "Livechat Support Report"
+msgstr "實時聊天支援報表"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
+msgid "Livechat Support Report Channel"
+msgstr "實時聊天支援報表頻道"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
+msgid "Livechat Support Statistics"
+msgstr "線上客服支援統計"
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
 msgid "Manager"
-msgstr "經理"
+msgstr "管理員"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_sequence
+msgid "Matching order"
+msgstr "匹配的訂單"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_medium
+msgid "Medium"
+msgstr "普通"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_medium
+msgid ""
+"Medium-sized photo of the group. It is automatically resized as a 128x128px "
+"image, with aspect ratio preserved. Use this field in form views or some "
+"kanban views."
+msgstr "群組的中等尺寸照片。它們自動被縮放為128x128px，保持縱橫比。表單視圖或者一些看板視圖使用這個字段。"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Missed sessions"
+msgstr "結束的對話"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_name
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:117
+#, python-format
+msgid ""
+"None of our collaborators seems to be available, please try again later."
+msgstr "我們的合作者似乎都不線上，請稍後再次嘗試。"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_nbr_channel
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_nbr_channel
+msgid "Number of conversation"
+msgstr "對話數"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_speaker
+msgid "Number of different speakers"
+msgstr "其他發言人數"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_message
+msgid "Number of message in the conversation"
+msgstr "對話中的消息數"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:12
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "Ok"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
@@ -145,12 +593,64 @@ msgstr "OK"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Operator"
-msgstr "經手人"
+msgstr "客服人員"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
+msgid "Operator Analysis"
+msgstr "客服人員分析"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_user_ids
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Operators"
+msgstr "客服人員"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid ""
+"Operators\n"
+"                                            <br/>\n"
+"                                            <i class=\"fa fa-comments\"/>"
+msgstr ""
+"客服人員\n"
+"                                            <br/>\n"
+"                                            <i class=\"fa fa-comments\"/>"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr "在系統中超過30分鐘不顯示任何活動的線上使用者商將被視為已離開該連接。"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Options"
 msgstr "選項"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+msgid "Percentage of happy ratings over the past 7 days"
+msgstr "在過去的7天內，得到之評價為快樂等級的百分比"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_rating_rating
+msgid "Rating"
+msgstr "評價"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/im_livechat.js:309
+#, python-format
+msgid "Rating: :rating_%d"
+msgstr "Rating: :rating_%d"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
+msgid ""
+"Regular expression specifying the web pages this rule will be applied on."
+msgstr "指定此規則將應用於的網頁列表(正面列表表達方式)。"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -164,23 +664,219 @@ msgid "Rules"
 msgstr "規則"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_script_external
+msgid "Script (external)"
+msgstr "腳本（外部）"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Search history"
+msgstr "搜索歷史"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Search report"
+msgstr "搜索報表"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "Session Date"
+msgstr "會話日期"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Session Form"
+msgstr "會話表格"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
+msgid "Session Statistics"
+msgstr "對話統計"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_channel_ids
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Sessions"
+msgstr "會話"
+
+#. module: im_livechat
+#: model:ir.ui.menu,name:im_livechat.session_history
+msgid "Sessions History"
+msgstr "會話歷史"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "群組的小尺寸照片. 被自動縮放到64x64px，保持縱橫比。這個字段用於任何需要小圖像的地方"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_start_date
+msgid "Start Date of session"
+msgstr "會話的開始日期"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_start_date
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_start_date
+msgid "Start date of the conversation"
+msgstr "會話的開始日期"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_button_text
+msgid "Text of the Button"
+msgstr "按鈕的文本"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_channel_id
+msgid "The channel of the rule"
+msgstr "規則的頻道"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_name
+msgid "The name of the channel"
+msgstr "渠道的名稱"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_country_ids
+msgid ""
+"The rule will only be applied for these countries. Example: if you select "
+"'Belgium' and 'United States' and that you set the action to 'Hide Button', "
+"the chat button will be hidden on the specified URL from the visitors "
+"located in these 2 countries. This feature requires GeoIP installed on your "
+"server."
 msgstr ""
-"群組中小尺寸照片。會被自動縮為 64x64px 影像，且將保留比例。當需要小影像時，請"
-"使用此欄位。"
+"這個規則只適用於這些國家。例如：如果您選擇“比利時”和“美國”，並且您將操作設置為“隱藏按鈕”，\n"
+"聊天按鈕將隱藏在位於這兩個國家的訪問者的指定網址上。此功能需要在您的伺服器上安裝GeoIP。"
+
+#. module: im_livechat
+#: model:res.groups,comment:im_livechat.im_livechat_group_manager
+msgid "The user will be able to delete support channels."
+msgstr "允許使用者關閉服務支援頻道。"
+
+#. module: im_livechat
+#: model:res.groups,comment:im_livechat.im_livechat_group_user
+msgid "The user will be able to join support channels."
+msgstr "使用者能夠加入服務支援頻道。"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr "此欄位保存群組照片所使用的影像, 限於 1024x1024px。"
+msgstr "這個字段保存的圖像作為群組的照片，限制為  1024x1024px."
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_default_message
+msgid ""
+"This is an automated 'welcome' message that your visitor will see when they "
+"initiate a new conversation."
+msgstr "這是一個自動的『歡迎』信息，當初始化新的會話的時候訪問者會看到"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_small
+msgid "Thumbnail"
+msgstr "略所圖"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_time_to_answer
+msgid "Time to answer"
+msgstr "該回答了"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+msgid "Treated sessions"
+msgstr "已處理的會話"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_regex_url
+msgid "URL Regex"
+msgstr "URL的正則表達式"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_web_page
+msgid ""
+"URL to a static page where you client can discuss with the operator of the "
+"channel."
+msgstr "您可以在靜態網頁的URL和客戶討論"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_uuid
+msgid "UUID"
+msgstr "UUID"
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_user
 msgid "User"
-msgstr "用戶"
+msgstr "使用者"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/controllers/main.py:37
+#: code:addons/im_livechat/static/src/js/im_livechat.js:28
+#, python-format
+msgid "Visitor"
+msgstr "訪問者"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_web_page
+msgid "Web Page"
+msgstr "Web頁"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
+msgid "Website Live Chat Channels"
+msgstr "網站線上客服"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
+msgid "Welcome Message"
+msgstr "歡迎信息"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid ""
+"You can create channels for each website on which you want\n"
+"                to integrate the website live chat widget, allowing your website\n"
+"                visitors to talk in real time with your operators."
+msgstr ""
+"您可以為每個網站創建頻道，以在其中整合網站即時聊天窗口功能，\n"
+"使您的網站訪問者能夠與您的線上諮詢者即時交談。"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid ""
+"Your chatter history is empty. Create a channel and start chatting to fill "
+"up your history."
+msgstr "你尚未有聊天記錄。創建一個頻道，開始聊天，創造企業的輝煌歷史。"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. Hello, how may I help you?"
+msgstr "例如：您好！請問有什麼可以幫您的嗎？"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "e.g. YourWebsite.com"
+msgstr "例如：您的網站地址 "
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "or copy this url and send it by email to your customers or suppliers:"
+msgstr "或者拷貝這個URL並且通過信件發送給您的客戶、供應商："
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+msgid "seconds"
+msgstr "秒數"

@@ -15,6 +15,9 @@ var _t = core._t;
 
 var ViewManager = Widget.extend(ControlPanelMixin, {
     className: "o_view_manager_content",
+    custom_events: {
+        get_controller_context: '_onGetControllerContext',
+    },
     /**
      * Called each time the view manager is attached into the DOM
      */
@@ -473,6 +476,25 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             }
         }
         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    // ONLY FORWARDPORT THIS COMMIT UP TO SAAS-15
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * active view.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        var controller = this.active_view && this.active_view.controller;
+        var context = controller && controller.get_context();
+        ev.data.callback(context);
     },
 });
 

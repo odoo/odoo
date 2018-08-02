@@ -239,7 +239,7 @@ class ImLivechatChannelRule(models.Model):
         """
         def _match(rules):
             for rule in rules:
-                if re.search(rule.regex_url, url):
+                if re.search(rule.regex_url or '', url):
                     return rule
             return False
         # first, search the country specific rules (the first match is returned)

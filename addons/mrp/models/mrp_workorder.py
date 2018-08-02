@@ -312,20 +312,25 @@ class MrpWorkorder(models.Model):
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
-            production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
-            if production_move.product_id.tracking != 'none':
-                move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
-                if move_lot:
-                    move_lot.quantity += self.qty_producing
+            production_moves = self.production_id.move_finished_ids.filtered(lambda x: (x.state not in ('done', 'cancel')))
+            for production_move in production_moves:
+                if production_move.product_id.id == self.production_id.product_id.id and production_move.product_id.tracking != 'none':
+                    move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                    if move_lot:
+                        move_lot.quantity += self.qty_producing
+                        move_lot.quantity_done += self.qty_producing
+                    else:
+                        move_lot.create({'move_id': production_move.id,
+                                         'lot_id': self.final_lot_id.id,
+                                         'quantity': self.qty_producing,
+                                         'quantity_done': self.qty_producing,
+                                         'workorder_id': self.id,
+                                         })
+                elif production_move.unit_factor:
+                    rounding = production_move.product_uom.rounding
+                    production_move.quantity_done += float_round(self.qty_producing * production_move.unit_factor, precision_rounding=rounding)
                 else:
-                    move_lot.create({'move_id': production_move.id,
-                                     'lot_id': self.final_lot_id.id,
-                                     'quantity': self.qty_producing,
-                                     'quantity_done': self.qty_producing,
-                                     'workorder_id': self.id,
-                                     })
-            else:
-                production_move.quantity_done += self.qty_producing  # TODO: UoM conversion?
+                    production_move.quantity_done += self.qty_producing  # TODO: UoM conversion?
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 

@@ -3,22 +3,23 @@
 # * stock_landed_costs
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Bohdan Lisnenko, 2016
+# Martin Trigaux, 2016
 # ТАрас <tratatuta@i.ua>, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:355
@@ -48,7 +49,7 @@ msgstr "Додаткові витрати"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "За поточною вартістю"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -116,6 +117,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Рядки витрат та коригування не співпадають. Ви, можливо, повинні "
+"переобчислити додаткові витрати."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -149,6 +152,8 @@ msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
 "feature."
 msgstr ""
+"Вимкнення методів калькуляції перешкоджатиме використанню функції "
+"\"Додаткові витрати\"."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -184,6 +189,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Рівномірно: Вартість буде рівномірно розподілена.\n"
+"За кількістю: вартість буде поділена на кількість товару.\n"
+"По поточній вартості: вартість буде розподілена за поточною вартістю товару.\n"
+"За вагою: вартість буде розподілена залежно від ваги.\n"
+"За обсягом: вартість буде розподілена залежно від обсягу."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -257,7 +267,7 @@ msgstr "Додаткові витрати"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Додаткові витрати обчислюються на основі одиниці виміру закупівлі."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -302,12 +312,14 @@ msgstr "Назва"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Немає рядків коригування вартості. Ви, можливо, повинні переобчислити "
+"додаткові витрати."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Можна підтвердити лише проекти додаткових витрат"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -419,6 +431,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Не можна скасувати підтверджені додаткові витрати, але ви можете створити "
+"негативні витрати на випадок повернення коштів"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines

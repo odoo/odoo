@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Giota Dandidou <giotadandidou@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
+"updated after choosing a new delivery method\"> Παράδοση:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -44,6 +47,10 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
+"Τα αξεσουάρ εμφανίζονται όταν ο πελάτης εξετάζει το καλάθι πριν από την "
+"πληρωμή (στρατηγική διασταυρούμενων πωλήσεων π.χ. για υπολογιστές: ποντίκι, "
+"πληκτρολόγιο κ.λπ.). Ένας αλγόριθμος παρουσιάζει μια λίστα αξεσουάρ με βάση "
+"όλα τα είδη που προστίθενται στο καλάθι."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -83,6 +90,11 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
+"Μπορείτε να δημοσιεύσετε κατηγορίες στη σελίδα του καταστήματος (online "
+"πλέγμα καταλόγων) για να βοηθήσετε τους πελάτες να βρουν όλα τα είδη μιας "
+"κατηγορίας. Για να τις δημοσιεύσετε, μεταβείτε στη σελίδα του καταστήματος, "
+"πατήστε Προσαρμογή και ενεργοποιήστε τις *Κατηγορίες Ειδών*. Ένα είδος "
+"μπορεί να ανήκει σε διάφορες κατηγορίες."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -112,7 +124,7 @@ msgstr "Περιγραφή"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Περιγραφή που εμφανίζεται στο eshop και στις online προσφορές."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
@@ -147,12 +159,12 @@ msgstr "Αρχείο"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "Έχει οριστεί αποστολή για γραμμή παραγγελίας"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Έχει παραδοθεί"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
@@ -191,6 +203,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Προαιρετικά είδη που προτείνονται κάθε φορά που ο πελάτης κάνει κλικ στο "
+"*Προσθήκη στο καλάθι* (στρατηγική διασταυρούμενων πωλήσεων, π.χ. για "
+"υπολογιστές: εγγύηση, λογισμικό κ.λπ.)."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -259,6 +274,8 @@ msgid ""
 "Suggest more expensive alternatives to your customers (upsell strategy). "
 "Those products show up on the product page."
 msgstr ""
+"Προτείνετε πιο ακριβές εναλλακτικές λύσεις για τους πελάτες σας (στρατηγική "
+"upsell). Αυτά τα είδη εμφανίζονται στη σελίδα του είδους."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -268,7 +285,7 @@ msgstr "Το ποσό χωρίς φόρο"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
 msgid "Tracking:"
-msgstr ""
+msgstr "Παρακολούθηση:"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
@@ -288,7 +305,7 @@ msgstr "Κατηγορία Προϊόντος για Ιστότοπο"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "Ακολουθία ιστοτόπου"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description

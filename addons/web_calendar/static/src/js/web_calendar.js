@@ -917,9 +917,10 @@ var CalendarView = View.extend({
             }
         }
         else {
+            var res_id = parseInt(id).toString() === id ? parseInt(id) : id;
             new form_common.FormViewDialog(this, {
                 res_model: this.model,
-                res_id: parseInt(id).toString() === id ? parseInt(id) : id,
+                res_id: res_id,
                 context: this.dataset.get_context(),
                 title: title,
                 view_id: +this.open_popup_action,
@@ -931,7 +932,7 @@ var CalendarView = View.extend({
                     }},
 
                     {text: _t("Delete"), close: true, click: function() {
-                        self.remove_event(id);
+                        self.remove_event(res_id);
                     }},
 
                     {text: _t("Close"), close: true}

@@ -1,0 +1,35 @@
+<odoo>
+    <record model="ir.cron" id="account_sale_closing_daily">
+        <field name="name">Generate Daily Sales Closing</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'account.sale.closing'"/>
+        <field name="function" eval="'_automated_closing'"/>
+        <field name="args" eval="'(\'daily\',)'" />
+    </record>
+    
+    <record model="ir.cron" id="account_sale_closing_monthly">
+        <field name="name">Generate Monthly Sales Closing</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'account.sale.closing'"/>
+        <field name="function" eval="'_automated_closing'"/>
+        <field name="args" eval="'(\'monthly\',)'" />
+    </record>
+
+    <record model="ir.cron" id="account_sale_closing_annually">
+        <field name="name">Generate Annual Sales Closing</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'account.sale.closing'"/>
+        <field name="function" eval="'_automated_closing'"/>
+        <field name="args" eval="'(\'annually\',)'" />
+    </record>
+</odoo>
+

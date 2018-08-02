@@ -1,38 +1,231 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# amos lin <seeing@edirect168.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
+# Cécile Collart <cco@odoo.com>, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-06-13 10:08+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<b>Note:</b> Set the same email address on your employee form than\n"
+"                            the one you use are your \"From:\". Otherwise, your\n"
+"                            expenses will not be accepted by email."
+msgstr ""
+"注意事項：\n"
+"在員工表單上設置的e-mail地址與您使用的“發件人\" 相同。\n"
+"否則，您的費用將不會被e-mail所接受。"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
+" incoming receipts</i>"
+msgstr "<i class=\"text-muted oe_edit_only\">使用[單據號碼]作為收據的主題開頭</i>"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:29
+#, python-format
+msgid ""
+"<p>Managers can validate or refuse expense reports.</p><p>If you refuse a "
+"report, explain the reason using the <i>New Message</i> button in the "
+"bottom.</p>"
+msgstr "<p>經理可以驗證或退回費用申請。</p> <p>如果您要退回報告，請使用底部的<i>新建消息</i>按鈕解釋原因。</p>"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:19
+#, python-format
+msgid ""
+"<p>Once completed, you can <b>submit the expense</b> for "
+"approval.</p><p><i>Tip: from the list view, select all expenses to submit "
+"them all at once, in a single report.</i></p>"
+msgstr ""
+"<p>完成後，您可以<b>提交費用</b>以獲得批准。</p> \n"
+"<p> <i>提示：從列表視圖中選擇所有費用，一次性的批次處理全部提交申請文件。</i> </p>"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:33
+#, python-format
+msgid ""
+"<p>The accountant receive approved expense reports.</p><p>He can post "
+"journal entries in one click if taxes and accounts are right.</p>"
+msgstr "<p>會計收到已批准的費用報告。</p> <p>如果稅務設定和科目設定正確，他可以進一步創建會計分錄。</p>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
+" class=\"text-primary\">PRICE</strong>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Date:</strong>"
+msgstr "<strong>日期:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Description:</strong>"
+msgstr "<strong>說明:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Employee:</strong>"
+msgstr "<strong>員工：</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Payment By:</strong>"
+msgstr "<strong>支付人:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Total</strong>"
-msgstr "<strong>合計</strong>"
+msgstr "<strong>總計</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Validated By:</strong>"
+msgstr "<strong>驗證於:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Your email gateway is not configured.</strong> Please configure your email\n"
+"                            gateway from the Settings app, menu <i>General Settings</i>."
+msgstr ""
+"<strong>您的e-mailgateway 未配置。</strong>請配置您的e-mail\n"
+"                            從設置應用程序選單<i>通用設定</i>。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
+#, python-format
+msgid ""
+"A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
+" to your expense %s has been made."
+msgstr "已經支付  %s %s 以下費用單據%s<a href='/mail/view?%s'>%s </a>。"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
+msgid "Account"
+msgstr "科目"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_accountant
+msgid "Accountant"
+msgstr "會計人員"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Accounting"
+msgstr "會計"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_accounting_date
+msgid "Accounting Date"
+msgstr "會計日期"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Accounting Entries"
+msgstr "會計分錄"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Actual expense sheets, not the refused ones"
+msgstr "以確認的費用單據，沒有退回的"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr "飛機票"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_domain
+msgid "Alias Domain"
+msgstr "別名域"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_all
+msgid "All Expense Reports"
+msgstr "所有費用報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_all_expenses
+msgid "All Expenses"
+msgstr "所有費用"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr "需要有一個支出帳戶"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Analytic Account"
+msgstr "分析帳戶"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid "Apply"
+msgstr "應用"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Approve"
-msgstr "核准"
+msgstr "批准"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 msgid "Approved"
-msgstr "已核可"
+msgstr "已批准"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "Approved Expenses"
+msgstr "已批准的費用"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
+msgid "Bank Journal"
+msgstr "銀行日記帳"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_reference
+msgid "Bill Reference"
+msgstr "帳單參照"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
+#: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
+msgid "Can be Expensed"
+msgstr "可用於費用"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -40,6 +233,53 @@ msgstr "已核可"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Cancel"
 msgstr "取消"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr "交通費"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
+msgstr "保證誠實和符合公司規定，<br/>(日期和簽名).<br/><br/>"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+msgid "Click here to create a new expense report."
+msgstr "點擊這裡創建新費用報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
+msgid "Click here to create new expenses."
+msgstr "點擊這裡創建新費用"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:304
+#, python-format
+msgid "Click to add a new expense,"
+msgstr "點擊創建一個新費用，"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid "Click to create a new expense category."
+msgstr "點擊這裡生成新的費用類別"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:15
+#, python-format
+msgid ""
+"Click to try <b>submitting an expense by email</b>. You can attach a photo "
+"of the receipt to the mail."
+msgstr "點選<b>通過e-mail提交費用</b>。您可以將收據的照片附加到郵件中。"
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
@@ -52,15 +292,35 @@ msgid "Company"
 msgstr "公司"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_company_id
+msgid "Company related to this journal"
+msgstr "此日記帳相關的公司"
+
+#. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
-msgstr "設定"
+msgstr "配置"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
+msgid "Configure Expense"
+msgstr "配置費用"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Confirmed Expenses"
-msgstr "已確認費用報支"
+msgstr "已確認的費用"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Congratulations, you're done!"
+msgstr "恭喜您，成功了！"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Create a new expense.<br>"
+msgstr "創建新費用.<br>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_uid
@@ -69,7 +329,7 @@ msgstr "已確認費用報支"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_date
@@ -78,20 +338,25 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_currency_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_currency_id
 msgid "Currency"
-msgstr "貨幣"
+msgstr "幣別"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
 msgstr "日期"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
+msgid "Default Alias Name for Expenses"
+msgstr "費用的預設別名"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
@@ -117,7 +382,17 @@ msgstr "顯示名稱"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Documents"
-msgstr "文件"
+msgstr "文檔"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Don't hesitate to"
+msgstr "不要猶豫做"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+msgid "Draft Payment"
+msgstr "草稿付款"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_employee_id
@@ -128,11 +403,135 @@ msgid "Employee"
 msgstr "員工"
 
 #. module: hr_expense
+#: selection:hr.expense,payment_mode:0
+msgid "Employee (to reimburse)"
+msgstr "員工（待償還）"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_address_id
+msgid "Employee Home Address"
+msgstr "員工家庭地址"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "End"
+msgstr "結束"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expense"
 msgstr "費用"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
+msgid "Expense Description"
+msgstr "費用說明"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid "Expense Email Alias"
+msgstr "費用信件別名"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_journal_id
+msgid "Expense Journal"
+msgstr "費用日記帳"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_expense_line_ids
+msgid "Expense Lines"
+msgstr "費用明細行"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
+#: model:ir.ui.menu,name:hr_expense.menu_hr_product
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Expense Products"
+msgstr "費用產品"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_sheet
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id
+msgid "Expense Report"
+msgstr "費用報告"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_state
+msgid "Expense Report State"
+msgstr "費用報告狀態"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_name
+msgid "Expense Report Summary"
+msgstr "費用報告摘要"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
+#: model:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Expense Reports"
+msgstr "費用報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
+msgid "Expense Reports Analysis"
+msgstr "費用報告分析"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_approve
+msgid "Expense Reports To Approve"
+msgstr "待批准的費用報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_pay
+msgid "Expense Reports To Pay"
+msgstr "待支付的費用報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_post
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_post
+msgid "Expense Reports To Post"
+msgstr "待過帳的費用報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
+msgid "Expense Reports to Approve"
+msgstr "待批准的費用報告"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Expense Sheet"
+msgstr "費用表"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+msgid "Expense refuse reason"
+msgstr "費用否決理由"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_approved
+msgid "Expense report approved"
+msgstr "費用報告已批准"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_paid
+msgid "Expense report paid"
+msgstr "費用報告已支付"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_refused
+msgid "Expense report refused"
+msgstr "費用報告被否決"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
+msgid "Expense report submitted, waiting approval"
+msgstr "費用報告已提交，等待審查中"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -145,7 +544,7 @@ msgstr "費用"
 #: model:product.product,name:hr_expense.product_product_fixed_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
-msgstr "費用報支"
+msgstr "費用"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_action
@@ -159,8 +558,136 @@ msgstr "費用分析"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "Expenses Month"
+msgstr "費用月份："
+
+#. module: hr_expense
+#: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense_sheet
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Expenses Report"
+msgstr "費用報告"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_sheets_to_approve_count
+msgid "Expenses Reports to Approve"
+msgstr "待批准的費用報告"
+
+#. module: hr_expense
+#: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
+msgid "Expenses To Approve"
+msgstr "待批准的費用"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "Expenses by Month"
+msgstr "費用 按月份"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:399
+#, python-format
+msgid "Expenses must belong to the same Employee."
+msgstr "費用必須屬於同一個員工"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:511
+#, python-format
+msgid ""
+"Expenses must have an expense journal specified to generate accounting "
+"entries."
+msgstr "費用必須指定一個日記帳用來計入總帳"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:403
+#, python-format
+msgid "Expenses must have been paid by the same entity (Company or employee)"
+msgstr "費用必須由同一個實體支付（公司或與員工）"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "Expenses of Your Team Member"
+msgstr "您的團隊成員的費用"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "Expenses to Invoice"
+msgstr "待開立發票的費用"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
+msgid "Expenses to Submit"
+msgstr "待提交的費用"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Expenses will go through these steps:"
+msgstr "費用將通過這些步驟："
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "Former Employees"
+msgstr "正式員工"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_approved_expense
+msgid ""
+"From here the accountant will be able to approve as well as refuse the "
+"expenses which are verified by the HR Manager."
+msgstr "當經理驗證後，在此處會計可以批復或退回費用申請"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "From: Your Email"
+msgstr "來自：您的電子信件"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "General Information"
+msgstr "通用信息"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Get Mobile"
+msgstr "取得移動版"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Have a wonderful day,<br/>- The Odoo Team"
+msgstr "祝你有個美好的一天。<br/>  -  系統營運團隊"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
+msgid "Hide payment method"
+msgstr "隱藏付款方式"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.hotel_rent
+#: model:product.template,name:hr_expense.hotel_rent_product_template
+msgid "Hotel Accommodation"
+msgstr "酒店住宿"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+msgid "Hr Department"
+msgstr "HR部門"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_register_payment_wizard
+msgid "Hr Expense Register Payment wizard"
+msgstr "HR費用登記付款嚮導"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
+msgid "Hr Expense refuse Reason wizard"
+msgstr "HR費用否決理由嚮導"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_id
@@ -169,17 +696,17 @@ msgstr "分組方式"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8893
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_account_move_id
 msgid "Journal Entry"
-msgstr "帳簿分錄"
+msgstr "日記帳分錄"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
-msgstr "會計憑證行"
+msgstr "日記帳項目"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
@@ -188,7 +715,7 @@ msgstr "會計憑證行"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_write_uid
@@ -197,7 +724,7 @@ msgstr "最後修改:"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_write_date
@@ -206,40 +733,219 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: hr_expense
+#: model:res.groups,name:hr_expense.group_hr_expense_manager
+msgid "Manager"
+msgstr "管理員"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:41
+#, python-format
+msgid "Managers can get all reports to approve from this menu."
+msgstr "經理可以從這個選單中獲得所有的費用申請單據。"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_communication
+msgid "Memo"
+msgstr "備忘錄"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Expenses"
-msgstr "我的費用報支"
+msgstr "我的費用"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "My Expenses to Submit"
+msgstr "待提交的費用"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "My Reports"
+msgstr "我的費用申請單"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "My Team Expenses"
+msgstr "我的團隊費用"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "My Team Reports"
+msgstr "我團隊的報告"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "New Expense"
-msgstr "新增費用報支"
+msgstr "新費用"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "New Mail"
-msgstr "新郵件"
+msgstr "新信件"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:251
+#, python-format
+msgid ""
+"No Expense account found for the product %s (or for it's category), please "
+"configure one."
+msgstr "找不到產品 %s (或者這個產品)的費用科目，請進行設置"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:218
+#, python-format
+msgid "No Home Address found for the employee %s, please configure one."
+msgstr "員工%s的住家地址沒有找到，請設定"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:197
+#, python-format
+msgid "No credit account found for the %s journal, please configure one."
+msgstr "找不到%s日記帳的貸方科目，請進行設置"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Not Refused"
+msgstr "未否決"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+msgid "Notes..."
+msgstr "備註..."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_attachment_number
+msgid "Number of Attachments"
+msgstr "附件數量"
+
+#. module: hr_expense
+#: model:res.groups,name:hr_expense.group_hr_expense_user
+msgid "Officer"
+msgstr "主管"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Once approved, your expense report, goes to the accounting,"
+msgstr "一經批准，您的費用報告，將由會計人員後續處理，"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Once approved, your expenses report goes to the accounting,"
+msgstr "一經批准，您的費用申請將由會計人員後續處理，"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_pay_expense_sheet
+#: model:ir.actions.act_window,help:hr_expense.action_request_to_post_expense_sheet
+msgid ""
+"Once you have created your expense, submit it to your manager who will "
+"validate it."
+msgstr "一旦創建了您的費用申請，發送給您的經理，他將驗證它。"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"Once your email gateway is configured, come back to this screen\n"
+"                            to setup the next steps."
+msgstr "當您的e-mail gateway被配置，回到這個畫面進行後續的設定步驟。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:537
+#, python-format
+msgid "Only HR Officers can approve expenses"
+msgstr "只有人力資源專員可以批准費用"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:528
+#, python-format
+msgid "Only HR Officers can refuse expenses"
+msgstr "只有人力資源主管可以拒絕費用"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
 msgid "Paid"
-msgstr "已付款"
+msgstr "已支付"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_partner_id
+msgid "Partner"
+msgstr "業務夥伴"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_amount
+msgid "Payment Amount"
+msgstr "付款總額"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_payment_mode
+msgid "Payment By"
+msgstr "由...支付"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_payment_date
+msgid "Payment Date"
+msgstr "付款日期"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_journal_id
+msgid "Payment Method"
+msgstr "付款方式"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_payment_method_id
+msgid "Payment Type"
+msgstr "付款類型"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "Periodically, you submit expenses report to your manager,"
+msgstr "定期向您的經理提交費用申請單，"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_web_planner
+msgid "Planner"
+msgstr "計劃"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:255
+#, python-format
+msgid ""
+"Please configure Default Expense account for Product expense: "
+"`property_account_expense_categ_id`."
+msgstr "請給產品費用配置預設的費用科目: `property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
-msgstr "登帳"
+msgstr "日記帳分錄過帳"
+
+#. module: hr_expense
+#: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
+msgid "Posted"
+msgstr "已過帳"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -253,9 +959,14 @@ msgid "Product"
 msgstr "產品"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Product Name"
+msgstr "產品名稱"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr "產品範本"
+msgstr "產品模板"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -270,20 +981,133 @@ msgstr "數量"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_description
 msgid "Reason"
-msgstr "理由"
+msgstr "原因"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+msgid "Reason to refuse expense."
+msgstr "否決費用的理由"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Ref."
+msgstr "參考."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Refuse"
-msgstr "拒絕"
+msgstr "退回"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
+msgid "Refuse Expense"
+msgstr "退回費用申請"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 msgid "Refused"
-msgstr "遭拒"
+msgstr "已退回"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_refused_expenses
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_refused
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Refused Expenses"
+msgstr "否決的費用"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_register_payment_wizard_action
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Register Payment"
+msgstr "登記付款"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Report"
+msgstr "報表"
+
+#. module: hr_expense
+#: selection:hr.expense,state:0
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Reported"
+msgstr "已報告"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
+msgid "Reports"
+msgstr "報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
+msgid "Reports to Approve"
+msgstr "待批准的報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
+msgid "Reports to Pay"
+msgstr "待支付的報告"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_request_to_post_expense_sheet
+msgid "Reports to Post"
+msgstr "待發佈的報告"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Resubmit"
+msgstr "重新提交"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:25
+#, python-format
+msgid ""
+"Save the report, your manager will receive a notification by email to "
+"approve it."
+msgstr "保存費用申請單，您的經理將通過e-mail收到該申請，並進行後續審批。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:88
+#, python-format
+msgid ""
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
+msgstr "選擇不同類別的計量單位作為產品的計量單位"
+
+#. module: hr_expense
+#: model:web.planner,tooltip_planner:hr_expense.planner_hr_expense
+msgid "Send receipts by email to create expenses efficiently."
+msgstr "通過e-mail發送收據以有效地創建費用。"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
+msgid "Settings"
+msgstr "設定"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Setup"
+msgstr "設定"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid "Setup your domain alias"
+msgstr "設定您的域名別名"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
+#: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr "標明產品是否能夠被在人資費用中選擇"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "State"
+msgstr "狀態"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_state
@@ -291,6 +1115,32 @@ msgstr "遭拒"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "狀態"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_state
+msgid "Status of the expense."
+msgstr "費用狀態"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Subject:"
+msgstr "主題:"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
+msgid "Submit To Manager"
+msgstr "提交給經理"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+msgid "Submit to Manager"
+msgstr "提交給經理"
+
+#. module: hr_expense
+#: selection:hr.expense.sheet,state:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
+msgid "Submitted"
+msgstr "發送"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
@@ -301,18 +1151,113 @@ msgstr "小計"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_tax_ids
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Taxes"
-msgstr "稅別"
+msgstr "稅金"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
+msgid ""
+"Technical field used to hide the payment method if the selected journal has "
+"only one available which is 'manual'"
+msgstr "如果所選日記帳中只選擇“手動”，技術領域將隱藏付款方式"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should be the\n"
+"                            internal code of one of your expense product. This\n"
+"                            will set the right product automatically on your\n"
+"                            expense Odoo."
+msgstr ""
+"<strong class =“text-info”>產品代碼</ strong>是可選的，應該是\n"
+"                            你的一個費用產品的內部代碼。這個\n"
+"                            將自動在您的設置正確的產品\n"
+"                            費用Odoo。"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:37
+#, python-format
+msgid ""
+"The accountant can register a payment to reimburse the employee directly."
+msgstr "會計人員可以註冊該筆支付款項並完成此筆費用報銷。"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "The accountant validates entries and reimburse you."
+msgstr "會計人員將驗證該筆費用明細並進行報銷。"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "The accountant validates journal entries and reimburse you."
+msgstr "會計人員將進行後續會計作業並進行費用報銷。"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
+msgid "The journal used when the expense is done."
+msgstr "該字段在費用單據完成時會使用到。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
+#, python-format
+msgid "The payment amount must be strictly positive."
+msgstr "支付金額應為正數。"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
+msgid "The payment method used when the expense is paid by the company."
+msgstr "此付費方式用於當費用由公司支付時"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"The photo of the receipt and the description of the email will\n"
+"                            be attached to the expense. That way, you get everything attached\n"
+"                            to fill the remaining fields later on."
+msgstr ""
+"收據的照片和e-mail的描述將附在費用申請單上。\n"
+"這樣，你將可得到所有的資料來填入申請表單。"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "The steps to process expenses are:"
+msgstr "處理費用的步驟是："
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Approve"
-msgstr "批准"
+msgstr "待批准"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Pay"
-msgstr "應付款"
+msgstr "待支付"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
+msgid "To Post"
+msgstr "待過帳"
+
+#. module: hr_expense
+#: selection:hr.expense,state:0
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "To Submit"
+msgstr "待提交"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"To create expenses by email, take photos of your\n"
+"                            receipts and send them by email with the following\n"
+"                            information:"
+msgstr "要通過e-mail創建費用申請，請拍下您的收據，並通過e-mail發送以下信息："
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "To:"
+msgstr "至:"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
@@ -325,7 +1270,7 @@ msgstr "總計"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
-msgstr "總額"
+msgstr "金額總計"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
@@ -336,9 +1281,185 @@ msgstr "單價"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_uom_id
 msgid "Unit of Measure"
-msgstr "量度單位"
+msgstr "計量單位"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_approved_expense
+msgid "Unreported Expenses"
+msgstr "未報告的費用"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
+msgid "Validate"
+msgstr "驗證"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_responsible_id
+msgid "Validation By"
+msgstr "驗證人"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
+msgid "View Attached Documents"
+msgstr "查看附件文檔"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "View Attachments"
+msgstr "查看附件"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+msgid "View Report"
+msgstr "查看報告"
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/js/tour.js:11
+#, python-format
+msgid "Want to manage your employee expenses and receipts? <i>Start here</i>."
+msgstr "想管理你的員工費用和收據？<i>從這裡開始</i>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "We hope this feature helped you manage your expenses efficiently."
+msgstr "我們希望這個功能幫您有效率的管理您的費用"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:508
+#, python-format
+msgid "You can only generate accounting entry for approved expense(s)."
+msgstr "您只能對已批准的費用生產會計分錄"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"You can set an optionnal <strong class=\"text-primary\">PRICE</strong>\n"
+"                            at the end of the subject of your email."
+msgstr "您可以在e-mail主題的末尾設置選項<strong class=\"text-primary\">PRICE</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
+msgid ""
+"You can setup a generic email alias to create\n"
+"                                    incoming expenses easily. Write an email with the receipt\n"
+"                                    in attachment to create an expense line in one click. If the mail\n"
+"                                    subject contains the product's internal reference between brackets,\n"
+"                                    the product will be set automatically. Type the expense amount\n"
+"                                    in the mail subject to set it on the expense too."
+msgstr ""
+"您可以設置一個通用的e-mail別名來輕鬆創建費用單據。\n"
+"用附件中的收據寫一封e-mail，在一個點選中創建一個費用行。\n"
+"如果郵件主題包含括號內的產品內部參考，則會自動設置費用產品。\n"
+"在郵件主題中輸入費用金額也將自動設置於費用申請單上。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:566
+#, python-format
+msgid "You cannot add expense lines of another employee."
+msgstr "您無法添加其他員工的費用行。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:433
+#, python-format
+msgid "You cannot delete a posted expense."
+msgstr "您無法刪除已過帳的費用。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:446
+#, python-format
+msgid "You cannot delete a posted or paid expense."
+msgstr "您無法刪除已發佈或者已支付的費用。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:576
+#, python-format
+msgid ""
+"You cannot have a positive and negative amounts on the same expense report."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:106
+#, python-format
+msgid "You cannot report expenses for different employees in the same report!"
+msgstr "您不能在同一申請單中申請不同員工的費用！"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:605
+#, python-format
+msgid "You cannot report expenses with different payment modes."
+msgstr "您不能以不同的付費模式進行報支"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:105
+#, python-format
+msgid "You cannot report twice the same line!"
+msgstr "同一行您不能報告兩次！"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "You record expenses"
+msgstr "您記錄的費用"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
+msgid "You record expenses,"
+msgstr "您記錄的費用,"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Your Email Address"
+msgstr "您的電子信件地址"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:490
+#, python-format
+msgid ""
+"Your Expense %s has been refused.<br/><ul "
+"class=o_timeline_tracking_value_list><li>Reason<span> : </span><span "
+"class=o_timeline_tracking_value>%s</span></li></ul>"
+msgstr ""
+"費用申請 %s 被退回.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> :"
+" </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "e.g. Lunch"
+msgstr "例如:午餐"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
+msgid "e.g. Lunch with Customer"
+msgstr "例如：與客戶共進午餐"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "e.g. Trip to NY"
+msgstr "例如：紐約之旅程"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_config_settings
+msgid "hr.expense.config.settings"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "或"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:305
+#, python-format
+msgid "or send receipts by email to %s."
+msgstr "或通過e-mail將收據發送給 %s。"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "send us an email"
+msgstr "給我們發信件"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "to describe<br/> your experience or to suggest improvements!"
+msgstr "描述<br/>您的經歷或者給出建議!"

@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Clé marchand"
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
 msgid "Merchant Salt"
-msgstr ""
+msgstr "Salage du vendeur"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:145
@@ -41,18 +42,22 @@ msgstr "PayuMoney : erreur de rétroaction"
 #, python-format
 msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
+"PayUmoney : shasign incorrect, %s reçu, %s calculé pour les données %s"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:101
 #, python-format
 msgid "PayUmoney: received data for reference %s; multiple orders found"
 msgstr ""
+"PayUmoney : données reçues pour la référence %s ; plusieurs commandes "
+"trouvées"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:98
 #, python-format
 msgid "PayUmoney: received data for reference %s; no order found"
 msgstr ""
+"PayUmoney : données reçues pour la référence %s ; aucune commande trouvée"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:93
@@ -61,6 +66,7 @@ msgid ""
 "PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
 "shashign (%s)"
 msgstr ""
+"PayUmoney : données reçues sans référence (%s), pay_id (%s) ou shashign (%s)"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer

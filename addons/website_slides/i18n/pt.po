@@ -3,12 +3,12 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Joao Vieira <joao.f.vieira@gmail.com>, 2016
 # Manuela Silva <manuela.silva@sky.com>, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
-# Daniel Reis <dreis.pt@gmail.com>, 2016
+# Daniel Reis, 2016
 # Pedro Oliveira <plo@thinkopensolutions.pt>, 2016
 # José Gomes <jg@opencloud.pro>, 2016
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
@@ -65,6 +65,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Olá,</p>\n"
+"<p>\n"
+"    Um novo ${object.slide_type} <strong>${object.name}</strong> foi publicado em ${object.channel_id.name} às ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -923,7 +938,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_11
 msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr ""
+msgstr "CMS de Código Aberto, uma comparação de desempenho - Mantavya Gajjar"
 
 #. module: website_slides
 #. openerp-web
@@ -1096,7 +1111,7 @@ msgstr "Sequência"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share Link"
-msgstr ""
+msgstr "Partilhar Hiperligação"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1217,6 +1232,8 @@ msgstr ""
 #: model:slide.channel,access_error_msg:website_slides.channel_public
 msgid "This channel is private and its content is restricted to some users."
 msgstr ""
+"Este canal é privado e o seu conteúdo está restrito para alguns "
+"utilizadores."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:286
@@ -1287,7 +1304,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
 msgid "Upload Groups"
-msgstr ""
+msgstr "Enviar Grupos"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1295,6 +1312,8 @@ msgid ""
 "Upload PDF presentations, documents, videos or infographic using the button "
 "below."
 msgstr ""
+"Envie apresentações em PDF, documentos, vídeos ou infográfico utilizando o "
+"botão abaixo."
 
 #. module: website_slides
 #. openerp-web
@@ -1302,7 +1321,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #, python-format
 msgid "Upload Presentation"
-msgstr ""
+msgstr "Enviar Apresentação"
 
 #. module: website_slides
 #. openerp-web

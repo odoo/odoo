@@ -1,27 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_membership
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-08 10:38+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_membership
 #: model:ir.ui.view,arch_db:website_membership.index
 msgid "All"
-msgstr "所有"
+msgstr "全部"
+
+#. module: website_membership
+#: code:addons/website_membership/controllers/main.py:83
+#, python-format
+msgid "All Countries"
+msgstr "所有國家"
+
+#. module: website_membership
+#: model:ir.ui.view,arch_db:website_membership.index
+msgid "Associations"
+msgstr "協會"
+
+#. module: website_membership
+#: model:ir.ui.view,arch_db:website_membership.index
+msgid "Find a business partner"
+msgstr "找尋合作夥伴"
+
+#. module: website_membership
+#: code:addons/website_membership/controllers/main.py:126
+#, python-format
+msgid "Free Members"
+msgstr "免費會員"
 
 #. module: website_membership
 #: model:ir.ui.view,arch_db:website_membership.opt_index_country
@@ -32,4 +55,29 @@ msgstr "地點"
 #: model:ir.ui.view,arch_db:website_membership.footer_custom
 #: model:ir.ui.view,arch_db:website_membership.index
 msgid "Members"
-msgstr "成員"
+msgstr "會員"
+
+#. module: website_membership
+#: model:ir.ui.view,arch_db:website_membership.index
+msgid "No result found."
+msgstr "沒有找到結果"
+
+#. module: website_membership
+#: model:ir.ui.view,arch_db:website_membership.index
+msgid "Our Members Directory"
+msgstr "我們的會員名冊"
+
+#. module: website_membership
+#: model:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid "World Map"
+msgstr "地界地圖"
+
+#. module: website_membership
+#: model:ir.model,name:website_membership.model_membership_membership_line
+msgid "membership.membership_line"
+msgstr "membership.membership_line"
+
+#. module: website_membership
+#: model:ir.ui.view,arch_db:website_membership.index
+msgid "pull-left"
+msgstr "左拉"

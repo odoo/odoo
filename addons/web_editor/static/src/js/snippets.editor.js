@@ -1010,7 +1010,9 @@ data.Editor = Class.extend({
         this.$target.after($clone);
         this.buildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
             for (var i in editor.styles) {
-                editor.styles[i].on_clone($snippet);
+                editor.styles[i].on_clone($snippet, {
+                    isCurrent: ($snippet.is($clone)),
+                });
             }
         });
         return false;

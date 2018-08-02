@@ -87,11 +87,11 @@ options.registry["width-x"] = options.Class.extend({
 });
 
 options.registry.table_item = options.Class.extend({
-    on_clone: function ($clone) {
+    on_clone: function ($clone, options) {
         this._super.apply(this, arguments);
 
         // If we cloned a td or th element...
-        if (this.$target.is("td, th")) {
+        if (options.isCurrent && this.$target.is("td, th")) {
             // ... and that the td or th element was alone on its row ...
             if (this.$target.siblings().length === 1) {
                 var $tr = $clone.parent();

@@ -391,18 +391,14 @@ THE SOFTWARE.
             if (picker.options.calendarWeeks === true) {
                 html.append('<th class="cw">#</th>');
             }
-            if (moment().localeData()._week.dow === 0) { // starts on Sunday
-                for (i = 0; i < 7; i++) {
-                    html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
-                }
-            } else {
-                for (i = 1; i < 8; i++) {
-                    if (i === 7) {
-                        html.append('<th class="dow">' + weekdaysMin[0] + '</th>');
-                    } else {
-                        html.append('<th class="dow">' + weekdaysMin[i] + '</th>');
-                    }
-                }
+            // ODOO change so week starting not on sunday/monday have correct
+            // day name. This is solved in saas-15 by using new library version
+            var startDay = moment().localeData()._week.dow;
+            if (startDay === undefined) {
+                startDay = 1;
+            }
+            for (i = startDay; i < startDay + 7; i++) {
+                html.append('<th class="dow">' + weekdaysMin[i % 7] + '</th>');
             }
             picker.widget.find('.datepicker-days thead').append(html);
         },

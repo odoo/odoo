@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Manuela Silva <manuela.silva@sky.com>, 2016
 # Ricardo Correia <rcorreiavv@gmail.com>, 2016
 # Vitor Fernandes <vmlf01@gmail.com>, 2016
@@ -117,7 +117,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr ""
+msgstr "Este canal é privado. As pessoas devem ser convidadas para aderirem."
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -187,6 +187,15 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -3560,7 +3569,7 @@ msgstr "Canais privados"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Canais Públicos"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -4119,7 +4128,7 @@ msgid ""
 msgstr ""
 "A operação solicitada não pode ser concluída devido a restrições de segurança. Entre em contato com o administrador do sistema. \n"
 "\n"
-"(Tipo de documento:% s, Operação:% s)"
+"(Tipo de documento: %s, Operação: %s)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
@@ -4507,7 +4516,7 @@ msgstr "Utilizadores"
 #: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr ""
+msgstr "Utilizadores neste canal: %s %s e você."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:672
@@ -4597,7 +4606,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "Está no canal <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -4792,7 +4801,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "modelo %s não aceita atualização de documento"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931

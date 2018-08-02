@@ -9,11 +9,16 @@ class AccountAnalyticLine(models.Model):
 
     task_id = fields.Many2one('project.task', 'Task')
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
-    department_id = fields.Many2one('hr.department', "Department", related='user_id.employee_ids.department_id', store=True, readonly=True)
+    department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True)
 
     @api.onchange('project_id')
     def onchange_project_id(self):
         self.task_id = False
+
+    @api.depends('user_id')
+    def _compute_department_id(self):
+        for line in self:
+            line.department_id = line.user_id.employee_ids[:1].department_id
 
     @api.model
     def create(self, vals):

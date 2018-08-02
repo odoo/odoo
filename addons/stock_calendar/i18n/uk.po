@@ -3,26 +3,27 @@
 # * stock_calendar
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Bohdan Lisnenko, 2016
+# Martin Trigaux, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: stock_calendar
 #: model:ir.ui.view,arch_db:stock_calendar.view_procurement_form_stock_inherit
 msgid "Calculate dates according to Orderpoint"
-msgstr ""
+msgstr "Розрахуйте дати відповідно до Orderpoint"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
@@ -36,6 +37,9 @@ msgid ""
 "That way the scheduler will only take into account the goods needed until "
 "the second delivery and put the procurement date as the first delivery."
 msgstr ""
+"У календарі можна вказати дні доставки товару. Таким чином, планувальник "
+"буде враховувати тільки товари, необхідні до другої доставки, і поставить "
+"дату закупівлі як першу доставку."
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
@@ -89,11 +93,13 @@ msgid ""
 "The date of the next delivery for this procurement group, when this group is"
 " on the purchase calendar of the orderpoint"
 msgstr ""
+"Дата наступної доставки для цієї групи закупівель, коли ця група знаходиться"
+" в календарі замовлення на закупівлю"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
 msgid "The date the next purchase order should be sent to the vendor"
-msgstr ""
+msgstr "Дата, коли наступне замовлення на покупку слід надіслати продавцеві"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_attendance

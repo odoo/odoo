@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_vat
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2015-09-07 16:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
@@ -28,21 +29,37 @@ msgstr "公司"
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr ""
-"如果勾選此框，則業務夥伴的統編會以歐盟的 VIES 做完整檢查，否則僅會作基本格式"
-"檢查（checksum檢查）。"
+msgstr "勾選此設定，業務夥伴的增值稅編號會經由歐洲VIES服務機構線上驗證，而非僅是本地驗證編號格式(checksum)。"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr "伙伴"
+msgstr "合作夥伴"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:131
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"這個業務夥伴  [%s] 的VAT號碼 [%s]有誤。 \n"
+"備註： 預期的格式為 %s"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:130
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr "這個業務夥伴 [%s] 的VAT號碼 [%s] VIES VAT驗證依然無效或者格式%s不符合標準."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
-msgstr "VIES 統編（VAT）檢查"
+msgstr "VIES增值稅編號檢查"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr "例如BE0477472701"
+msgstr "舉例: BE0477472701"

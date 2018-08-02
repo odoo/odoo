@@ -272,7 +272,7 @@ class EventEvent(models.Model):
         return res
 
     @api.one
-    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: True):
+    def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for attendee in self.registration_ids.filtered(filter_func):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
@@ -390,9 +390,14 @@ class EventRegistration(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self).message_get_suggested_recipients()
+        public_users = self.env['res.users'].sudo()
+        public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
+        if public_groups:
+            public_users = public_groups.sudo().with_context(active_test=False).mapped("users")
         try:
             for attendee in self:
-                if attendee.partner_id:
+                is_public = attendee.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
+                if attendee.partner_id and not is_public:
                     attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
                 elif attendee.email:
                     attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))

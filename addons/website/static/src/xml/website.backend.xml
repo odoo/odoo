@@ -38,6 +38,7 @@
     <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message mb16">
         <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
         <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+        <span t-if="reason === 'not_initialized'">Google Analytics initialization failed. Maybe this domain is not whitelisted in your Google Analytics project for this client ID.</span>
     </div>
 
     <div t-name="website.ga_dialog_content">

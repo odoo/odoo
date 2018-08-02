@@ -173,7 +173,11 @@ class DateConverter(models.AbstractModel):
         locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
-            value = fields.Datetime.from_string(value[:10])
+            if len(value) > 10:  # datetime to be displayed as date
+                value = fields.Datetime.from_string(value)
+                value = fields.Datetime.context_timestamp(self, value)
+            else:
+                value = fields.Datetime.from_string(value)
 
         if options and 'format' in options:
             pattern = options['format']

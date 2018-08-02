@@ -3,24 +3,25 @@
 # * website_slides
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Bohdan Lisnenko, 2016
+# Martin Trigaux, 2016
+# Zoriana Zaiats, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
 "PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -41,6 +42,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Вітаємо,</p>\n"
+"<p>\n"
+"    ${user.name} поділився ${object.slide_type} <strong>${object.name}</strong> з вами!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Переглянути <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -61,6 +77,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Вітаємо,</p>\n"
+"<p>\n"
+"    Новий ${object.slide_type} <strong>${object.name}</strong> був опублікований у ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Переглянути <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -88,6 +119,8 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
+"(Не)архівований канал автоматично (не)архівує ці слайди. Чи хочете ви "
+"продовжити?"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -321,12 +354,12 @@ msgstr "Тільки для зареєстрованих користувачі�
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
-msgstr ""
+msgstr "Неперевершений розклад Odoo"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
 msgid "CMS"
-msgstr ""
+msgstr "CMS"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
@@ -424,6 +457,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"Не вдалося отримати дані з url. Документ або право доступу недоступні.\n"
+"Ось отримана відповідь: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:307
@@ -443,6 +478,9 @@ msgid ""
 "\n"
 "Find out more at https://www.odoo.com/page/e-commerce"
 msgstr ""
+"Створіть професійний та гарний eCommerce на вашому веб-сайті разом з Odoo. \n"
+"\n"
+"Більше можете знайти тут https://www.odoo.com/page/e-commerce"
 
 #. module: website_slides
 #. openerp-web
@@ -503,6 +541,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
+"Відкрийте для себе всеохоплююче програмне забезпечення для управління бізнесом, яке відповідає будь-якому бізнесу та використанню справ.\n"
+"\n"
+"Більше тут https://odoo.com"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
@@ -558,6 +599,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
+"Завантажте чудовий розклад Odoo та відкрийте для себе, на скільки легким може бути відстеження часу та персоналу!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
@@ -646,7 +691,7 @@ msgstr "Плавила включення"
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
+msgstr "Файл занадто великий. Розмір сайту не може перевищувати 25MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -718,13 +763,15 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
+"Внутрішня помилка серверу, будь ласка, спробуйте пізніше або зв'яжіться з адміністратором.\n"
+"Це помилкове повідомлення: %s"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:85
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
-msgstr ""
+msgstr "Недійсний тип файлу. Будь ласка, оберіть файл pdf або зображення"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
@@ -778,6 +825,8 @@ msgstr "Засіб розповсюдження"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
 msgid "Message to display when not accessible due to access rights"
 msgstr ""
+"Повідомлення відображатиметься, коли неможливо отримати доступ через права "
+"доступу"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
@@ -869,48 +918,48 @@ msgstr "Кількість відео"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr ""
+msgstr "Презентація програмного забезпечення Odoo \"Все-в-одному\""
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
 #: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
-msgstr ""
+msgstr "Дні Odoo"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
 msgid "Odoo Explained"
-msgstr ""
+msgstr "Пояснення Odoo"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
 msgid "Odoo Marketing - part 1: ATTRACT"
-msgstr ""
+msgstr "Маркетинг Odoo - частина 1: ПРИВАБЛИВІСТЬ"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
 msgid "Odoo Marketing - part 1: ATTRACT_2"
-msgstr ""
+msgstr "Маркетинг Odoo - частина 1: ПРИВАБЛИВІСТЬ_2"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
 msgid "Odoo Marketing - part 1: ATTRACT_3"
-msgstr ""
+msgstr "Маркетинг Odoo - частина 1: ПРИВАБЛИВІСТЬ_3"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
 msgid "Odoo Roadmap & Strategy - Fabien Pinckaers"
-msgstr ""
+msgstr "Дорожня карта та стратегія Odoo - Фабіен Пінкаерс"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr ""
+msgstr "Презентація знаків Odoo"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo Website & E-commerce Demonstration"
-msgstr ""
+msgstr "Презентація веб-сайту та E-commerce Odoo"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_6
@@ -919,6 +968,9 @@ msgid ""
 "close new leads. Check out our three-part video and discover more at "
 "www.odoo.com"
 msgstr ""
+"Повністю інтегрований маркетинговий додаток Odoo допоможе вам залучити, "
+"конвертувати та закрити нові ліди. Перегляньте наше відео з трьох частин і "
+"знайдіть більше на www.odoo.com"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_7
@@ -928,16 +980,19 @@ msgid ""
 "\n"
 "Video made by Miroslava Ganzarcikova and Sophia Eribo."
 msgstr ""
+"Повністю інтегрований маркетинговий додаток Odoo допоможе вам залучити, конвертувати та закрити нові ліди. Перегляньте наше відео з трьох частин і знайдіть більше на  www.odoo.com\n"
+"\n"
+"Відео Мирослави Ганзарцікової та Софії Ерібо."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
 msgid "Open Days 2014 Infographic"
-msgstr ""
+msgstr "Інфографіка відкритих днів 2014 "
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_11
 msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr ""
+msgstr "OpenSource CMS, Порівняння результатів - Mantavya Gajjar"
 
 #. module: website_slides
 #. openerp-web
@@ -1060,6 +1115,8 @@ msgid ""
 "Review your channel settings to promote your most viewed or recent published"
 " presentation"
 msgstr ""
+"Перегляньте налаштування вашого каналу, щоб рекламувати найпопулярнішу або "
+"останню опубліковану презентацію"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_0
@@ -1068,6 +1125,9 @@ msgid ""
 "\n"
 "http://odoo.com/start"
 msgstr ""
+"Запустіть свій бізнес із повним набором бізнес-додатків. Зробіть це легко з Odoo! \n"
+"\n"
+"http://odoo.com/start"
 
 #. module: website_slides
 #. openerp-web
@@ -1182,6 +1242,9 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
+"Припиніть ручне друкування та сканування. Перейдіть до електронного підпису з Підписом Odoo!\n"
+"\n"
+"Більше на https://www.odoo.com/page/sign"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
@@ -1216,6 +1279,8 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Тип документа буде встановлено автоматично на основі URL-адреси документа та"
+" властивостей (наприклад, висота та ширина для презентації та документа)."
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1301,7 +1366,7 @@ msgstr "Невідомий документ"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "Неопубліковано"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1489,7 +1554,7 @@ msgstr "результати, що задовольняють пошуковий
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "suggest_slide.name"
-msgstr ""
+msgstr "suggest_slide.name"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1509,4 +1574,4 @@ msgstr "website.config.settings"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com"
-msgstr ""
+msgstr "your-friend@domain.com"

@@ -398,7 +398,9 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
     }
-    new widgets.MediaDialog(null, {}, $editable, dom.isImg(r.sc) ? r.sc : null).open();
+    new widgets.MediaDialog(null, {}, $editable, $(r.sc).parents().addBack().filter(function (i, el) {
+        return dom.isImg(el);
+    })[0]).open();
     return new $.Deferred().reject();
 };
 $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
@@ -420,6 +422,9 @@ dom.isImg = function (node) {
 };
 var fn_is_forbidden_node = dom.isForbiddenNode || function () {};
 dom.isForbiddenNode = function (node) {
+    if (node.tagName === "BR") {
+        return false;
+    }
     return fn_is_forbidden_node(node) || $(node).is(".media_iframe_video");
 };
 var fn_is_img_font = dom.isImgFont || function () {};
@@ -471,7 +476,7 @@ function prettify_html(html) {
             while (i--) space += '  ';
             return space;
         },
-        reg = /^<\/?(a|span|font|strong|u|i|strong|b)(\s|>)/i,
+        reg = /^<\/?(a|span|font|u|em|i|strong|b)(\s|>)/i,
         inline_level = Infinity,
         tokens = _.compact(_.flatten(_.map(html.split(/</), function (value) {
             value = value.replace(/\s+/g, ' ').split(/>/);
@@ -661,9 +666,17 @@ function summernote_mousedown (event) {
     }
 
     // restore range if range lost after clicking on non-editable area
-    r = range.create();
+    try {
+        r = range.create();
+    } catch (e) {
+        // If this code is running inside an iframe-editor and that the range
+        // is outside of this iframe, this will fail as the iframe does not have
+        // the permission to check the outside content this way. In that case,
+        // we simply ignore the exception as it is as if there was no range.
+        return;
+    }
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
-    var r_editable = editables.has((r||{}).sc);
+    var r_editable = editables.has((r||{}).sc).addBack(editables.filter((r||{}).sc));
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
         var saved_editable = editables.has((remember_selection||{}).sc);
         if($editable.length && !saved_editable.closest('.o_editable, .note-editor').is($editable)) {

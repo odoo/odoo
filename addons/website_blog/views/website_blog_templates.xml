@@ -101,6 +101,7 @@
     <t t-call="website_blog.index">
         <t t-set="head">
             <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+            <meta t-if="len(active_tag_ids) > 0" name="robots" t-attf-content="#{len(active_tag_ids) > 1 and 'noindex,'} nofollow"/>
         </t>
         <div class="oe_structure"/>
         <div class="container">
@@ -552,14 +553,14 @@
     <title t-esc="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="(posts[0] if posts else blog).write_date.replace(' ', 'T') + 'Z'"/>
+    <updated t-esc="(posts[0] if posts else blog).post_date.replace(' ', 'T') + 'Z'"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
         <id t-esc="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-esc="post.sudo().author_id.name"/></author>
         <summary t-esc="html2plaintext(post.teaser)"/>
-        <updated t-esc="post.write_date.replace(' ', 'T') + 'Z'"/>
+        <updated t-esc="post.post_date.replace(' ', 'T') + 'Z'"/>
     </entry>
 </feed>
 </template>

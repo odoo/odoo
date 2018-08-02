@@ -1,32 +1,67 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# amos lin <seeing@edirect168.com>, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:35+0000\n"
-"PO-Revision-Date: 2016-02-12 10:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-19 12:35+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "(reload fonts)"
+msgstr "（重新載入字體）"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr "<span>( * )此配置與您登錄的公司有關</span>"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
 msgid "Activate the customer portal"
-msgstr "啟動客戶入口網站"
+msgstr "啟動客戶入口"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_share
 msgid "Allow documents sharing"
-msgstr "允許文件分享"
+msgstr "啟動單據分享"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr "採用多幣別功能"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr "允許使用者同步Google日曆"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr "允許用過通過 CSV/XLS/XLSX/ODS文檔導入數據"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "允許在多貨幣環境中使用"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -34,9 +69,14 @@ msgid "Apply"
 msgstr "套用"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_drive
+msgid "Attach Google documents to any record"
+msgstr "附加Google文檔到記錄中"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Authentication"
-msgstr "認證"
+msgstr "身份驗證"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -44,24 +84,46 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_custom_footer
+msgid ""
+"Check this to define the report footer manually. Otherwise it will be filled"
+" in automatically."
+msgstr "勾選以便人工定義 報告頁尾 . 否則系統將自動填寫頁尾。"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Configure outgoing email servers"
-msgstr "設定外送電子郵件伺服器"
+msgstr "配置出向信件服務器"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Configure your company data"
-msgstr "設定貴公司資料"
+msgstr "配置公司數據"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
+msgid "Custom Report Footer *"
+msgstr "自定義報表頁尾 *"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
+msgid "Custom footer *"
+msgstr "自定義頁尾 *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
@@ -70,55 +132,91 @@ msgstr "顯示名稱"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Edit default access rights for new users"
+msgstr "編輯新使用者的預設訪問權"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Email"
-msgstr "電郵"
+msgstr "Email"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
+msgid "Font *"
+msgstr "字體 *"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer_readonly
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "顯示在所有報告下方的頁尾文字。"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 #: model:ir.ui.menu,name:base_setup.menu_config
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
-msgstr "一般設定"
+msgstr "通用設定"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
 msgid "Give your customers access to their documents."
-msgstr "讓客戶存取其文件"
+msgstr "讓您的客戶訪問他們的單據"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Google Calendar"
-msgstr "Google行事曆"
+msgstr "Google日曆"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Google Drive"
+msgstr "Google網路硬碟"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Google Integration"
+msgstr "Google集成"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Import / Export"
-msgstr "匯入／匯出"
+msgstr "導入/導出"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Inter company"
+msgstr "公司間關聯交易"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr "管理公司間交易"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
-msgstr "管理多個公司"
+msgstr "管理多公司"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -127,16 +225,147 @@ msgstr "多公司"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Multi Currencies"
+msgstr "多幣別"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "New users access rights"
+msgstr "新使用者訪問權"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid ""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
+msgstr "一旦安裝。您可以為\"Google日曆\"設定您的API證書"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
+msgid "Paper Format *"
+msgstr "紙張規格 *"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Portal access"
-msgstr "入口網站存取"
+msgstr "門戶訪問"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Preview RML Report"
+msgstr "預覽RML報告"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
+msgid "RML Header *"
+msgstr "RML 頁首 *"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
+msgid "RML Internal Header *"
+msgstr "RML 內部頁首 *"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
+msgid "RML Internal Header for Landscape Reports *"
+msgstr "橫版報告的RML內部頁首 *"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "RML Report Configuration"
+msgstr "RML 報表設定"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Report Configuration"
+msgstr "報表配置"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
+msgid "Report Footer *"
+msgstr "報告頁尾 *"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_font
+msgid ""
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
+msgstr "設定報表頭字體，它將作為預設字體用於使用者公司的RML報表中"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
+msgid "Share or embed any screen of Odoo."
+msgstr "共享或嵌入odoo頁面。"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
+msgid "Share partners to all companies"
+msgstr "多公司間可應用交易夥伴"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
+msgid ""
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"公司間是否分享業務夥伴資料：\n"
+"勾選：產品隊每個公司可見，即便是某個公司只針對某一個業務夥伴不選擇：\n"
+"不勾選：每個公司只能看到自己的業務夥伴（該公司所定義的業務夥伴）。但是沒有關聯到某一公司的業務夥伴在全部的公司都可查看"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Shared resources"
+msgstr "共享的資源"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
+msgid "This installs the module google_calendar."
+msgstr "安裝模塊 google_calendar"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_drive
+msgid "This installs the module google_docs."
+msgstr "安裝模塊 google_docs"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
+msgid ""
+"This installs the module inter_company_rules.\n"
+" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+msgstr "需要安裝inter_company_rules。當其中的一個公司賣給其它另外一家公司的時候可以配置自動創建SO/PO"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "使用外部驗證提供者 (OAuth)"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid ""
+"When you send a document to a customer\n"
+"                                    (quotation, invoice), your customer will be\n"
+"                                    able to signup to get all his documents,\n"
+"                                    read your company news, check his projects,\n"
+"                                    etc."
+msgstr ""
+"當您發送單據給客戶(報價單，發票)，\n"
+"您的客戶可登錄並獲取他的單據以及閱讀您的公司內部新聞，\n"
+"並且能檢查他的專案等。"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
+msgid ""
+"Work in multi-company environments, with appropriate security access between"
+" companies."
+msgstr "在有安全訪問設定的前提下在多公司環境下運行"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
-msgstr ""
-"您可在貴公司的詳細資訊中找到更多選項，如表頭和頁尾的地址、付款過期通知等等。"
+msgstr "您能在您的公司明細裡找到多個選項：用於頁首和頁尾的地址，逾期帳款資料等"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings

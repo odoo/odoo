@@ -3,7 +3,7 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Boško Stojaković <bluesoft83@gmail.com>, 2016
 # Bojan Vrućinić <bojan.vrucinic@gmail.com>, 2016
 # Bole <bole@dajmi5.com>, 2016
@@ -1455,6 +1455,11 @@ msgid "Adjustment Tax"
 msgstr "Prilagođavanje poreza"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2128,6 +2133,12 @@ msgid "Bank Statement"
 msgstr "Izvod banke"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Stavka izvoda banke"
@@ -2409,6 +2420,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
+"Nije bilo moguće pronaći kontni plan za ovu kompaniju. Trebate je konfigurisati.\n"
+"Molimo da odete na konfiguraciju računovodstva."
 
 #. module: account
 #: code:addons/account/models/account.py:425
@@ -3810,7 +3823,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Ne ustručavajte se da"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -3991,7 +4004,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Enjoy your Odoo experience,"
-msgstr ""
+msgstr "Uživajte u Odoo iskustvu,"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -4661,7 +4674,7 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:182
 #, python-format
 msgid "INV"
-msgstr ""
+msgstr "FAK"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:386
@@ -5181,6 +5194,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5231,7 +5246,7 @@ msgstr "Statistika faktura"
 #: code:addons/account/models/account_journal_dashboard.py:172
 #, python-format
 msgid "Invoices owed to you"
-msgstr ""
+msgstr "Fakture koje duguju vama"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5802,7 +5817,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Poljednje poređenje Faktura i Uplata"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5958,7 +5973,7 @@ msgstr "Upravljanje"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Managing bank fees"
-msgstr ""
+msgstr "Upravljanje provizijama banke"
 
 #. module: account
 #: model:account.payment.method,name:account.account_payment_method_manual_in
@@ -10176,6 +10191,14 @@ msgstr ""
 "stavke zatvaranja."
 
 #. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
@@ -10658,7 +10681,7 @@ msgstr "konfigurišite vaše bankovne račune."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "the customer list"
-msgstr ""
+msgstr "lista kupaca"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10668,7 +10691,7 @@ msgstr "nadređena kompanija"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "the product list"
-msgstr ""
+msgstr "lista proizvoda"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

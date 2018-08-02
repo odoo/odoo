@@ -1,49 +1,61 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# amos lin <seeing@edirect168.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-10 09:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
 #, python-format
 msgid "Access Denied"
-msgstr "拒絕存取"
+msgstr "訪問拒絕"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_payable_id
 msgid "Account Payable"
-msgstr "應付帳款科目"
+msgstr "應付帳款"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "應收科目"
+msgstr "應收帳款"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
-msgstr "允許Google帳號登入"
+msgstr "允許使用者通過google登錄"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
-msgstr "允許的"
+msgstr "允許"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Authentication"
+msgstr "身份驗證"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
+msgid "Authentication URL"
+msgstr "身份驗證網址"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
@@ -53,7 +65,39 @@ msgstr "銀行"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_body
 msgid "Body"
-msgstr "內容"
+msgstr "正文"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
+msgid "CSS class"
+msgstr "CSS類"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on which you will be redirected."
+msgstr ""
+"檢查此申請是否已經在 <b>Web 申請</b>上被設定. \n"
+"現在您將被重定向到有權限的頁面進行配置."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr "點擊<b>創建項目</b> 輸入項目名稱和細節."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr "點擊<b>使用 Google APIs</b>"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
+msgid "Client ID"
+msgstr "客戶端 ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
@@ -61,20 +105,45 @@ msgid "Companies that refers to partner"
 msgstr "公司是指業務夥伴"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr "連接您的google帳戶並轉到"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contracts_count
 msgid "Contracts"
-msgstr "合同列表"
+msgstr "合約"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人員"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
+msgid "Currency"
+msgstr "幣別"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
+msgid "Customer Payment Terms"
+msgstr "客戶付款條款"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
+msgid "Data URL"
+msgstr "數據網址"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr "對此債務人的信任度"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -82,14 +151,36 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr "輸入您的地址, 信件和產品名稱 (例如 odoo) 然後點擊保存."
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
 msgid "Fiscal Position"
-msgstr "財務結構"
+msgstr "財政狀況"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Google Client ID:"
+msgstr "google客戶端ID："
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
+msgid "Has unreconciled entries"
+msgstr "有未調節的分錄"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr "發票"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -100,80 +191,315 @@ msgstr "發票"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_issued_total
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_journal_item_count
 msgid "Journal Items"
-msgstr "借貸項"
+msgstr "日記帳項目"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人員"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_last_time_entries_checked
+msgid ""
+"Last time the invoices & payments matching was performed for this partner. "
+"It is set either if there's not at least an unreconciled debit and an "
+"unreconciled credit or if you click the \"Done\" button."
+msgstr ""
+"該業務夥伴的賬單和付款匹配的最後時間。\n"
+"當系統中不存在至少一個未對帳的借方記錄和一個未對賬的貸方記錄時(表示無未對帳項目)，\n"
+"或者點選了“完成”按鈕時，該時間將被設置。"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
+msgid "Latest Invoices & Payments Matching Date"
+msgstr "最近的發票和付款匹配時間"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "發票消息"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
+msgid "OAuth Access Token"
+msgstr "OAuth  訪問代碼"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
-msgstr "OAuth 提供者"
+msgstr "OAuth 服務商"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr "OAuth 提供者"
+msgstr "OAuth服務商"
+
+#. module: auth_oauth
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr "每個服務商（ provider ）的OAuth UID必須是唯一的"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
+msgid "OAuth User ID"
+msgstr "OAuth 使用者ID"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_auth_oauth_provider
+msgid "OAuth2 provider"
+msgstr "OAuth2服務商"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_users_form
+msgid "Oauth"
+msgstr "Oauth"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
+msgid "Oauth Provider user_id"
+msgstr "Oauth服務商user_id"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
+msgstr ""
+"在左側選單中, 選擇子選單 <b> Credentials </b> (從 <b>API Manager</b>)開始\n"
+",然後選擇 <b>OAuth consent screen</b>."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
+"一旦完成，您將收到兩個訊息(您<b>客戶ID</b>和<b>\n"
+"                                        客戶端機密</b>.您必須嵌入<b>客戶ID</b>在\n"
+"                                        下方字段."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
-msgstr "應付帳款限額"
+msgstr "應付限額"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
+msgid "Provider name"
+msgstr "服務商名稱"
+
+#. module: auth_oauth
+#: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
+msgid "Providers"
+msgstr "服務商"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr "回到頂部"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
+msgid "Scope"
+msgstr "作用範圍"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"選擇此「警告」選項，將通知使用者此消息。\n"
+"選擇「阻擋消息」選項，將拋出一個錯誤消息並且阻擋此流程。\n"
+"該消息必須寫入下一個字段。"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "序號"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr "服務器URI"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr "顯示嚮導"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr "顯示嚮導"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
+#, python-format
+msgid "Sign up is not allowed on this database."
+msgstr "此數據庫不允許註冊"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
+msgid ""
+"The fiscal position will determine taxes and accounts used for the partner."
+msgstr "財政狀況將確定用於業務夥伴的稅金和科目。"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
+msgid ""
+"The partner has at least one unreconciled debit and credit since last time "
+"the invoices & payments matching was performed."
+msgstr "從上次這個業務夥伴的發票和付款媒合作業執行完畢。這個業務夥伴至少有一個未調節的借方和貸方"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+"然後點擊<b>新增憑證<b>並選擇第二個選項\n"
+"                                       (OAuth 2.0 客戶ID)."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr "然後點擊<b>創建</b>"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "這科目將替換當前業務夥伴的預設支付科目"
+msgstr "這個科目被用來代替當前業務夥伴的預設的應付科目"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "這科目將用於替換當前業務夥伴的預設應收帳款科目"
+msgstr "這個科目被用來替代當前業務夥伴的預設的應收科目"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
+msgid ""
+"This payment term will be used instead of the default one for purchase "
+"orders and vendor bills"
+msgstr "該付款條款將被用來代替採購訂單或者供應商帳單中預設的付款條款"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "此付款條件將取代預設值，被使用於銷售訂單及客戶發票"
+msgstr "在銷售訂單和客戶發票上，該付款方式將替換預設付款方式。"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the box"
+msgstr ""
+"為了實現這個, 完成此字段<b>Authorized redirect URIs</b>.複製\n"
+"粘貼下列連接"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr "要設置Google的登入程序，您必須先執行下列步驟."
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
+msgid "Total Invoiced"
+msgstr "已開立發票總計"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
 msgid "Total Payable"
-msgstr "應付帳款合計"
+msgstr "應付總計"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
 msgid "Total Receivable"
-msgstr "應收帳款合計"
+msgstr "應收總計"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit
 msgid "Total amount this customer owes you."
-msgstr "客戶欠款金額合計"
+msgstr "這個客戶欠款的總數量"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_debit
+msgid "Total amount you have to pay to this vendor."
+msgstr "您需要付給這個供應商的總數量"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
-msgstr "用戶"
+msgstr "使用者"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
+msgid "Utility field to express amount currency"
+msgstr "公用字段來表示金額貨幣"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
+msgid "Validation URL"
+msgstr "驗證網址"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
+msgid "Vendor Payment Terms"
+msgstr "供應商付款條款"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:101
+#, python-format
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"您無權訪問此數據庫或者您的邀請已經過期.\n"
+"請申請一個新的邀請並在您的邀請信件中確認。"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
+msgid "arch"
+msgstr "arch"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "e.g. 1234-xyz.apps.googleusercontent.com"
+msgstr "例如：1234-xyz.apps.googleusercontent.com"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_ir_config_parameter
+msgid "ir.config_parameter"
+msgstr "ir.config_parameter"

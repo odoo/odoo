@@ -3,10 +3,10 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Hamid Darabi, 2016
 # arya sadeghy <aryasadeghy@gmail.com>, 2016
-# ali alikhani <a.alikhani@gmail.com>, 2016
+# Ali Alikhani <a.alikhani@gmail.com>, 2016
 # pfp pfp <pfpour@yahoo.com>, 2016
 # hamid hvbnet <hvbnet@yahoo.com>, 2016
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016
@@ -23,13 +23,15 @@
 # Sahand Hashemi <sahand.twastica@gmail.com>, 2017
 # Maziar Niaki <maziarmn@gmail.com>, 2017
 # Hamed Mohammadi <hamed@dehongi.com>, 2017
+# mohammad azarbara <mohammadazarbara98@gmail.com>, 2017
+# Arash Sardari <arashss77@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2017\n"
+"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -617,7 +619,7 @@ msgstr "<strong>توضیحات:</strong>"
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "<strong>Company:</strong>"
-msgstr ""
+msgstr "<strong>شرکت:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1217,18 +1219,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 #: model:ir.ui.view,arch_db:account.view_account_template_tree
 msgid "Account Template"
-msgstr ""
+msgstr "الگو حساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr ""
+msgstr "الگو حساب جهت ارزیابی انبار"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
 msgid "Account Templates"
-msgstr ""
+msgstr "الگوهای حساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1265,12 +1267,12 @@ msgstr "انواع حساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr ""
+msgstr "انواع حساب مجاز"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr ""
+msgstr "حساب غیر قابل قبول"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
@@ -1468,6 +1470,11 @@ msgstr "نشانی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
 msgstr ""
 
 #. module: account
@@ -1738,7 +1745,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
 msgid "Amount in Currency"
-msgstr ""
+msgstr "مقدار به ارز"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
@@ -2133,6 +2140,12 @@ msgid "Bank Statement"
 msgstr "صورت حساب بانک"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr ""
@@ -2463,7 +2476,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Cash Control"
-msgstr ""
+msgstr "کنترل نقد"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -3049,7 +3062,7 @@ msgstr "کشور"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 msgid "Country Group"
-msgstr ""
+msgstr "گروه کشور"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -4967,6 +4980,7 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"حساب واسطه زمانی کاربرد دارد که از یک حساب نقدی به دیگری پول انتقال داده شود"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
@@ -5839,7 +5853,7 @@ msgstr "تاریخ قفل شدن"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "قفل کردن تاریخ برای غیر مشاوران"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9452,7 +9466,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr ""
+msgstr "انتقال حساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -9616,7 +9630,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Use"
-msgstr ""
+msgstr "استفاده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_use_anglo_saxon
@@ -9900,7 +9914,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Welcome"
-msgstr ""
+msgstr "خوش آمدید"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10075,6 +10089,14 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account

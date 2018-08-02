@@ -69,6 +69,10 @@ def copy_cache(records, env):
             for record_id in record_ids:
                 if record_id in src_cache:
                     # copy the cached value as such
+                    if isinstance(src_cache[record_id], FailedValue):
+                        # But not if it's a FailedValue, which often is an access error
+                        # because the other environment (eg. sudo()) is well expected to have access.
+                        continue
                     value = dst_cache[record_id] = src_cache[record_id]
                     if field.relational and isinstance(value, tuple):
                         todo[field.comodel_name].update(value)
@@ -316,6 +320,7 @@ class Field(object):
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
+        'inherited_field': None,        # the corresponding inherited field
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -643,7 +648,7 @@ class Field(object):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or ``self``. """
-        return self.related_field.base_field if self.inherited else self
+        return self.inherited_field.base_field if self.inherited_field else self
 
     #
     # Company-dependent fields
@@ -932,11 +937,11 @@ class Field(object):
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
-            record._cache[self] = value
+            env.cache[self][record.id] = value
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
                     invf._update(record[self.name], record)
-                record._set_dirty(self.name)
+                env.dirty[record].add(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -949,7 +954,7 @@ class Field(object):
             record.write({self.name: write_value})
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
-                record._cache[self] = value
+                env.cache[self][record.id] = value
 
     ############################################################################
     #
@@ -1523,6 +1528,9 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
+    def convert_to_column(self, value, record):
+        return super(Date, self).convert_to_column(value or None, record)
+
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
@@ -1591,6 +1599,9 @@ class Datetime(Field):
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
+
+    def convert_to_column(self, value, record):
+        return super(Datetime, self).convert_to_column(value or None, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:

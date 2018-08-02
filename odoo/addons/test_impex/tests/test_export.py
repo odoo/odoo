@@ -600,7 +600,54 @@ class test_m2m(CreatorCase):
                 ['', u'export.many2many.other:13'],
             ])
 
-    # essentially same as o2m, so boring
+    def test_multiple_records_subfield(self):
+        r = self.make(self.commands)
+        xid = self.env['ir.model.data'].create({
+            'name': 'whopwhopwhop',
+            'module': '__t__',
+            'model': r._name,
+            'res_id': r.id,
+        }).complete_name
+        sids = [
+            self.env['ir.model.data'].create({
+                'name': sub.str,
+                'module': '__t__',
+                'model': sub._name,
+                'res_id': sub.id,
+            }).complete_name
+            for sub in r.value
+        ]
+        r.invalidate_cache()
+
+        self.assertEqual(
+            r._export_rows([['value', 'id']]),
+            [['__t__.record000,__t__.record001,__t__.record010,__t__.record011,__t__.record100']]
+        )
+        self.assertEqual(
+            r.with_context(import_compat=True)._export_rows([['value', 'id']]),
+            [['__t__.record000,__t__.record001,__t__.record010,__t__.record011,__t__.record100']]
+        )
+
+        self.assertEqual(
+            r.with_context(import_compat=False)._export_rows([['id'], ['value', 'id'], ['value', 'value']]),
+            [
+                [xid, u'__t__.record000', u'4'],
+                [u'', u'__t__.record001', u'42'],
+                [u'', u'__t__.record010', u'36'],
+                [u'', u'__t__.record011', u'4'],
+                [u'', u'__t__.record100', u'13']
+            ]
+        )
+        self.assertEqual(
+            r.with_context(import_compat=False)._export_rows([['id'], ['value', 'value'], ['value', 'id']]),
+            [
+                [xid, u'4', u'__t__.record000'],
+                [u'', u'42', u'__t__.record001'],
+                [u'', u'36', u'__t__.record010'],
+                [u'', u'4', u'__t__.record011'],
+                [u'', u'13', u'__t__.record100']
+            ]
+        )
 
 
 class test_function(CreatorCase):

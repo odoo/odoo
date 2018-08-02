@@ -125,3 +125,6 @@ class ResUsers(models.Model):
             res = self.sudo().search([('id', '=', self.env.uid), ('oauth_access_token', '=', password)])
             if not res:
                 raise
+
+    def _get_session_token_fields(self):
+        return super(ResUsers, self)._get_session_token_fields() | {'oauth_access_token'}

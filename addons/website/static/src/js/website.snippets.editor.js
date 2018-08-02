@@ -263,9 +263,13 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend({
 
         return this.grid;
     },
-    on_clone: function ($clone) {
-        var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
-        $clone.attr("class", _class);
+    on_clone: function ($clone, options) {
+        // Below condition is added to remove offset of target element only
+        // and not its children to avoid design alteration of a container / block.
+        if (options.isCurrent) {
+            var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
+            $clone.attr("class", _class);
+        }
         return false;
     },
     on_resize: function (compass, beginClass, current) {

@@ -249,7 +249,7 @@ class ProcurementOrder(models.Model):
             self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
             # Search all confirmed stock_moves and try to assign them
-            confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
+            confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed'), ('product_uom_qty', '!=', 0.0)], limit=None, order='priority desc, date_expected asc')
             for x in xrange(0, len(confirmed_moves.ids), 100):
                 # TDE CLEANME: muf muf
                 self.env['stock.move'].browse(confirmed_moves.ids[x:x + 100]).action_assign()

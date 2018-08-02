@@ -13,9 +13,13 @@ odoo.define('website_form.animation', function (require) {
     snippet_animation.registry.form_builder_send = snippet_animation.Class.extend({
         selector: '.s_website_form',
 
-        start: function() {
+        start: function(editable_mode) {
+            if (editable_mode) {
+                this.stop();
+                return;
+            }
             var self = this;
-            qweb.add_template('/website_form/static/src/xml/website_form.xml');
+            this.templates_loaded = ajax.loadXML('/website_form/static/src/xml/website_form.xml', qweb);
             this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
 
             // Initialize datetimepickers
@@ -47,7 +51,7 @@ odoo.define('website_form.animation', function (require) {
 
         send: function(e) {
             e.preventDefault();  // Prevent the default submit behavior
-            this.$target.find('.o_website_form_send').off();  // Prevent users from crazy clicking
+            this.$target.find('.o_website_form_send').off().addClass('disabled');  // Prevent users from crazy clicking
 
             var self = this;
 
@@ -216,9 +220,12 @@ odoo.define('website_form.animation', function (require) {
         update_status: function(status) {
             var self = this;
             if (status != 'success') {  // Restore send button behavior if result is an error
-                this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
+                this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);}).removeClass('disabled');
             }
-            this.$target.find('#o_website_form_result').replaceWith(qweb.render("website_form.status_" + status))
+            var $result = this.$('#o_website_form_result');
+            this.templates_loaded.done(function () {
+                $result.replaceWith(qweb.render("website_form.status_" + status));
+            });
         },
     });
 });

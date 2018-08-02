@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # gabriele_baldessari <gabriele.baldessari@gmail.com>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 # Daniele Faraglia <daniele.faraglia@gmail.com>, 2016
-# Luca Tralli <luca.tralli@gemsrl.it>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Paolo Valier, 2016
+# Luca Tralli, 2016
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
 # Alex Comba <alex.comba@agilebg.com>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
@@ -29,13 +29,16 @@
 # Gabriele Crosa Lenz <gabrielecrosalenz@gmail.com>, 2016
 # Giuliano Lotta <giuliano.lotta@gmail.com>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2017
+# Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
+# David Minneci <david@numeko.it>, 2018
+# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2017\n"
+"Last-Translator: Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,6 +132,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Lo stato 'Bozza' è usato per impostare fatture da confermare in seguito.\n"
+" * Lo stato 'Pro-forma' serve per fatture senza una numerazione.\n"
+" * Lo stato 'Aperto' identifica fatture con importo da Incassare per intero o in parte.\n"
+" * Lo stato 'Pagato' indica fatture con importo completamente incassato.\n"
+" * Lo stato 'Annullato' indica fatture annullate."
 
 #. module: account
 #. openerp-web
@@ -243,7 +251,7 @@ msgstr "Libro Mastro generale"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr "Rimborso"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -1069,6 +1077,8 @@ msgstr "Una riga contabile selezionata è già stata riconciliata"
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
+"Una linea di istruzioni selezionata era già stata riconciliata con uno "
+"spostamento dell’account."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1570,6 +1580,11 @@ msgid "Adjustment Tax"
 msgstr "Compensazione fiscale"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1584,7 +1599,7 @@ msgstr "Impostazioni avanzate"
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model:res.groups,name:account.group_account_manager
 msgid "Adviser"
-msgstr "Contabilità"
+msgstr "Consulente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
@@ -1613,6 +1628,10 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"L' E.C. per partner storico è un report dettagliato dei crediti per "
+"intervalli. Odoo calcola una tabella del saldo del credito per data di "
+"inizio. Quindi, se tu richiedi un intervallo di 30 giorni, Odoo genera "
+"un’analisi dei creditori per il mese passato, i due mesi passati e così via."
 
 #. module: account
 #. openerp-web
@@ -2024,13 +2043,12 @@ msgstr "Applica automaticamente questa posizione fiscale."
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_group_id
 msgid "Apply only if delivery or invocing country match the group."
 msgstr ""
-"Applica solo se il paese di spedizione o fatturazione coincide con il "
-"gruppo."
+"Applica solo se il paese di consegna o fatturazione coincide con il gruppo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
 msgid "Apply only if delivery or invoicing country match."
-msgstr "Applica sono se paese di spedizione o fatturazione coincidono."
+msgstr "Applica sono se paese di consegna o fatturazione coincidono."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_vat_required
@@ -2061,7 +2079,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr "Immobilizzazioni"
+msgstr "Attività"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
@@ -2265,6 +2283,12 @@ msgstr "Scritture predefinite riconciliazione bancaria"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Estratto Conto Bancario"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr "Estratto conto bancario %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2493,7 +2517,7 @@ msgstr "Annulla registrazione"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Cancel Invoice"
-msgstr "Elimina Fattura"
+msgstr "Annulla Fattura"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
@@ -2504,7 +2528,7 @@ msgstr "Annulla fatture"
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
 msgid "Cancel Selected Invoices"
-msgstr "Cancella lefatture scelte"
+msgstr "Annulla le fatture selezionate"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -2762,7 +2786,7 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"Spuntare la casella se si vuole permettere la cancellazione delle "
+"Spuntare la casella se si vuole permettere l'annullamento delle "
 "registrazioni di questo sezionale o delle fatture collegate a questo "
 "sezionale."
 
@@ -4638,6 +4662,8 @@ msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-This installs the module account_plaid."
 msgstr ""
+"Ottieni l'estratto conto bancario dalla tua banca e importalo tramite plaid.com.\n"
+"-Questo installa il modulo account_plaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
@@ -4645,6 +4671,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .CSV format.\n"
 "-This installs the module account_bank_statement_import_csv."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali in Odoo nel formato .CSV\n"
+"-Questo installa il modulo account_bank_statement_import_csv."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -4652,6 +4680,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "-This installs the module account_bank_statement_import_ofx."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali in Odoo nel formato .OFX\n"
+"-Questo installa il modulo account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
@@ -4659,6 +4689,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "-This installs the module account_bank_statement_import_qif."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali in Odoo nel formato .QIF\n"
+"-Questo installa il modulo account_bank_statement_import_qif."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
@@ -4666,6 +4698,8 @@ msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-This installs the module account_yodlee."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali tramite yodlee.com.\n"
+"-Questo installa il modulo account_yodlee."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -4752,7 +4786,7 @@ msgstr "Gruppo di imposte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_default_company
 msgid "Has default company"
-msgstr "Ha un'azienda di default"
+msgstr "Ha l'azienda predefinita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_has_invoices
@@ -5357,7 +5391,7 @@ msgstr "La fattura deve essere in bozza al fine di impostarla come Pro-forma"
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr "La fattura deve essere cancellata al fine di reimpostarla in bozza."
+msgstr "La fattura deve essere annullata al fine di reimpostarla in bozza."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
@@ -8373,7 +8407,7 @@ msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
 msgstr ""
-"Le fatture selezionate non possono essere eliminate perché sono già in stato"
+"Le fatture selezionate non possono essere annullate perché sono già in stato"
 " 'Annullato' o 'Completato'."
 
 #. module: account
@@ -8925,8 +8959,8 @@ msgid ""
 msgstr ""
 "Campo tecnico che include il numero dato alla fattura, definito "
 "automaticamente quando la fattura è validata e gestita, da definire se si "
-"vuole avere lo stesso numero di fattura se questa è cancellata. Impostare in"
-" stato bozza e ri-validarla."
+"vuole avere lo stesso numero di fattura se questa è annullata. Impostare in "
+"stato bozza e ri-validarla."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_move_name
@@ -10640,8 +10674,16 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr ""
-"Non è possibile eliminare una fattura che è parzialmente pagata. È "
+"Non è possibile annullare una fattura che è parzialmente pagata. È "
 "necessario prima annullare la riconciliazione dei relativi pagamenti."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180
@@ -10689,8 +10731,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
-"Non è possibile cancellare una fattura che non sia bozza o annullata. Creare"
-" una nota di credito."
+"Non è possibile eliminare una fattura che non sia bozza o annullata. Creare "
+"una nota di credito."
 
 #. module: account
 #: code:addons/account/models/account.py:193
@@ -10972,7 +11014,7 @@ msgstr "account.config.settings"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "account.reconcile.model.template"
-msgstr ""
+msgstr "account.reconcile.model.template"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -11107,7 +11149,7 @@ msgstr "report.account.report_generalledger"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
 msgid "report.account.report_journal"
-msgstr ""
+msgstr "report.account.report_journal"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_overdue
