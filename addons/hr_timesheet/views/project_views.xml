@@ -61,9 +61,9 @@
             <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <field name="analytic_account_id" invisible="1"/>
+                    <field name="analytic_account_active" invisible="1"/>
                     <field name="allow_timesheets" invisible="1"/>
-                    <page string="Timesheets" attrs="{'invisible': [('analytic_account_id', '=', False)]}">
+                    <page string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <group>
                             <group>
                                 <field name="planned_hours" widget="float_time"/>
@@ -76,12 +76,12 @@
                                 <field name="progress" widget="progressbar"/>
                             </group>
                         </group>
-                        <group name="timesheet_error" attrs="{'invisible': [('allow_timesheets', '!=', False)]}">
+                        <group name="timesheet_error" attrs="{'invisible': [('analytic_account_active', '!=', False)]}">
                             <div class="alert alert-warning" role="alert">
-                                Your project is linked to an inactive analytic account. Change it, or reactivate the current one to timesheet on the project.
+                                You can not log timesheets on this project since is linked to an inactive analytic account. Please change it, or reactivate the current one to timesheet on the project.
                             </div>
                         </group>
-                    <field name="timesheet_ids" attrs="{'invisible': [('allow_timesheets', '=', False)]}" context="{'default_project_id': project_id, 'default_name':'', 'default_analytic_account_id': analytic_account_id}">
+                    <field name="timesheet_ids" attrs="{'invisible': [('analytic_account_active', '=', False)]}" context="{'default_project_id': project_id, 'default_name':''}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
                             <field name="user_id" invisible="1"/>
@@ -91,7 +91,7 @@
                             <field name="project_id" invisible="1"/>
                         </tree>
                     </field>
-                    <group attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <group attrs="{'invisible': [('analytic_account_active', '=', False)]}">
                         <group class="oe_subtotal_footer oe_right" name="project_hours">
                             <field name="effective_hours" widget="float_time" />
                             <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
