@@ -1231,10 +1231,17 @@ var BasicModel = AbstractModel.extend({
         var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
+        var write_dict;
+        if (parent.fields.x_active) {
+            write_dict = { x_active: value };
+        } else {
+            write_dict = { active: value };
+        }
+
         return this._rpc({
                 model: parent.model,
                 method: 'write',
-                args: [resIDs, { active: value }],
+                args: [resIDs, write_dict],
             })
             .then(function () {
                 // optionally clear the DataManager's cache
