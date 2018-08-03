@@ -2,7 +2,6 @@
 <odoo>
 
         <!-- Top menu item -->
-
         <menuitem id="sale_menu_root"
             name="Sales"
             web_icon="sale,static/description/icon.png"
@@ -14,28 +13,16 @@
             parent="sale_menu_root"
             sequence="2"/>
 
+        <menuitem id="report_sales_team"
+            name="Sales Teams"
+            parent="sale_order_menu"
+            action="sales_team.crm_team_salesteams_act"
+            sequence="3"/>
+
         <menuitem id="res_partner_menu"
             parent="sale_order_menu"
             action="base.action_partner_form"
             sequence="4" groups="sales_team.group_sale_salesman"/>
-
-        <menuitem id="menu_sale_config"
-            name="Configuration"
-            parent="sale_menu_root"
-            sequence="6"
-            groups="sales_team.group_sale_manager"/>
-
-        <menuitem id= "menu_sales_config"
-            parent= "menu_sale_config"
-            sequence= "3"
-            name= "Sales Orders"
-            groups= "sales_team.group_sale_manager,account.group_account_manager,account.group_account_user"/>
-
-        <menuitem id="sales_team_config"
-            name="Sales Teams"
-            parent="sale.menu_sale_config"
-            action="sales_team.sales_team_config_action"
-            sequence="2"/>
 
         <menuitem id="menu_sale_report"
             name="Reporting"
@@ -49,11 +36,22 @@
             parent="menu_sale_report"
             sequence="1"/>
 
-        <menuitem id="report_sales_team"
+        <menuitem id="menu_sale_config"
+            name="Configuration"
+            parent="sale_menu_root"
+            sequence="6"
+            groups="sales_team.group_sale_manager"/>
+
+        <menuitem id="sales_team_config"
             name="Sales Teams"
-            parent="sale_order_menu"
-            action="sales_team.crm_team_salesteams_act"
-            sequence="3"/>
+            parent="sale.menu_sale_config"
+            action="sales_team.sales_team_config_action"
+            sequence="2"/>
+
+        <menuitem id="menu_sales_config"
+            parent="menu_sale_config"
+            sequence="3"
+            name="Sales Orders"/>
 
         <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Products</field>
