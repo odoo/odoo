@@ -3,5 +3,6 @@
 
 # Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
 
-from . import res_partner
 from . import account_invoice
+from . import res_company
+from . import res_config_settings

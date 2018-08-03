@@ -17,9 +17,10 @@ account.invoice object: add support for Belgian structured communication
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    def generate_bbacomm(self, partner):
-        reference = ''
-        algorithm = partner.out_inv_comm_algorithm or 'random'
+    @api.multi
+    def generate_bbacomm(self):
+        self.ensure_one()
+        algorithm = self.company_id.l10n_be_structured_comm
         if algorithm == 'date':
             date = fields.Date.from_string(fields.Date.today())
             doy = date.strftime('%j')
@@ -39,12 +40,12 @@ class AccountInvoice(models.Model):
             mod = base % 97 or 97
             reference = '+++%s/%s/%s%02d+++' % (doy, year, seq, mod)
         elif algorithm == 'partner_ref':
-            partner_ref = partner.ref
+            partner_ref = self.partner_id.ref
             print(partner_ref)
             partner_ref_nr = re.sub('\D', '', partner_ref or '')
             if (len(partner_ref_nr) < 3) or (len(partner_ref_nr) > 7):
-                raise UserError(_('The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!'
-                                    '\nPlease correct the Partner record.'))
+                raise UserError(_('The Customer should have an Internal Reference with min 3 and max 7 digits'
+                                    '\nfor the generation of BBA Structured Communications!'))
             else:
                 partner_ref_nr = partner_ref_nr.ljust(7, '0')
                 seq = '001'
@@ -76,6 +77,6 @@ class AccountInvoice(models.Model):
     @api.multi
     def _get_computed_reference(self):
         self.ensure_one()
-        if self.company_id.invoice_reference_type == 'bba':
-            return self.generate_bbacomm(self.partner_id)
+        if self.company_id.invoice_reference_type == 'structured':
+            return self.generate_bbacomm()
         return super(AccountInvoice, self)._get_computed_reference()
