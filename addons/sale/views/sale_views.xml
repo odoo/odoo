@@ -566,7 +566,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="team_id" string="Sales Team"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
                         will not be searched as often, and if they need to be searched it's usually in the context of products
                         and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
@@ -647,6 +647,48 @@
                     Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
                 </p>
             </field>
+        </record>
+
+        <record id="sale_order_action_view_order_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale.view_order_tree"/>
+            <field name="act_window_id" ref="action_orders"/>
+        </record>
+
+        <record id="sale_order_action_view_order_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="sale.view_sale_order_kanban"/>
+            <field name="act_window_id" ref="action_orders"/>
+        </record>
+
+        <record id="sale_order_action_view_order_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale.view_order_form"/>
+            <field name="act_window_id" ref="action_orders"/>
+        </record>
+
+        <record id="sale_order_action_view_order_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="sale.view_sale_order_calendar"/>
+            <field name="act_window_id" ref="action_orders"/>
+        </record>
+
+        <record id="sale_order_action_view_order_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="sale.view_sale_order_pivot"/>
+            <field name="act_window_id" ref="action_orders"/>
+        </record>
+
+        <record id="sale_order_action_view_order_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="6"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="sale.view_sale_order_graph"/>
+            <field name="act_window_id" ref="action_orders"/>
         </record>
 
         <menuitem id="menu_sale_order"
@@ -732,9 +774,6 @@
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_quotation_tree"/>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -743,6 +782,48 @@
                 Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
+        </record>
+
+        <record id="sale_order_action_view_quotation_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="act_window_id" ref="action_quotations"/>
+        </record>
+
+        <record id="sale_order_action_view_quotation_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="sale.view_sale_order_kanban"/>
+            <field name="act_window_id" ref="action_quotations"/>
+        </record>
+
+        <record id="sale_order_action_view_quotation_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale.view_order_form"/>
+            <field name="act_window_id" ref="action_quotations"/>
+        </record>
+
+        <record id="sale_order_action_view_quotation_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="sale.view_sale_order_calendar"/>
+            <field name="act_window_id" ref="action_quotations"/>
+        </record>
+
+        <record id="sale_order_action_view_quotation_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="sale.view_sale_order_pivot"/>
+            <field name="act_window_id" ref="action_quotations"/>
+        </record>
+
+        <record id="sale_order_action_view_quotation_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="6"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="sale.view_sale_order_graph"/>
+            <field name="act_window_id" ref="action_quotations"/>
         </record>
 
         <menuitem id="menu_sale_quotations"
