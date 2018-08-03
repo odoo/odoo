@@ -12,13 +12,14 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # Bo Cao, 2017
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,9 +38,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong></p><p></p><p><strong><a "
-"href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"<data><p>您好,</p>\n"
+"<p>您已请求订阅邮件列表 <strong>${object.name}</strong></p>\n"
+"<p>需要您点击以下链接进行二次确认，请访问以下链接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如不是您本人意愿，或者您未请求执行此操作，请忽略此消息。</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -52,9 +57,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong></p><p></p><p><strong><a "
-"href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"<data><p>您好，</p>\n"
+"<p>您已请求退订邮件列表 <strong>${object.name}</strong></p>\n"
+"<p>要进行确认，请访问以下链接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如果这是一个错误，或者您未请求执行此操作，请忽略此消息。</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -154,12 +163,12 @@ msgstr "出去的邮件"
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Please confirm subscription to ${object.name}"
-msgstr ""
+msgstr "请确认订阅 ${object.name}"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
 msgid "Please confirm unsubscription to ${object.name}"
-msgstr ""
+msgstr "请确认取消订阅 ${object.name}"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:21
@@ -186,15 +195,15 @@ msgstr "订阅"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
 msgid "The address"
-msgstr ""
+msgstr "地址"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:238
+#: code:addons/website_mail_channel/controllers/main.py:245
 #, python-format
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
 "mailing list"
-msgstr ""
+msgstr "地址 %s 已经取消订阅或从未订阅任何邮件列表"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
@@ -206,7 +215,7 @@ msgstr "退订"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "You have been correctly"
-msgstr ""
+msgstr "您已正确操作"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -238,6 +247,10 @@ msgid ""
 "                    list, you may want to check that the address was\n"
 "                    correct."
 msgstr ""
+"已\n"
+" 取消订阅或从未订阅邮件\n"
+" 列表，您可能希望查看地址是否\n"
+" 正确。"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -286,7 +299,7 @@ msgstr "已订阅"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "至邮件列表。"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels

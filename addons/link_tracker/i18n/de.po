@@ -16,19 +16,25 @@
 # jonas <jonas.hillebrecht@bklynsoap.com>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
+msgid "Campaign"
+msgstr "Kampagne"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
@@ -143,6 +149,11 @@ msgid "Link Tracker"
 msgstr "Link Tracker"
 
 #. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
+msgid "Medium"
+msgstr "Medium"
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
 msgid "Number of Clicks"
 msgstr "Anzahl der Klicks"
@@ -168,6 +179,11 @@ msgid "Short URL code"
 msgstr "Kurzer URL-Code"
 
 #. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
+msgid "Source"
+msgstr "Herkunft"
+
+#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr "Klickstatistik"
@@ -176,6 +192,31 @@ msgstr "Klickstatistik"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
 msgid "Target URL"
 msgstr "Ziel-URL"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Diese Bezeichnung hilft Ihnen bei der Analyse Ihres Kampagnenerfolgs, z. B.:"
+" Herbstangebot, Weihnachtsangebot"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"Dies ist die Kommunikationsmethode: z. B. Postkarte, E-Mail oder "
+"Bannerwerbung"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Dies ist die Quelle des Links, z. B. eine Suchmaschine, andere Webdomain "
+"oder Name der E-Mail-Liste"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter

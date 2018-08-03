@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Максим Дронь <dronmax@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Collex100, 2017
 # Evgeny <transingularity@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
 "Last-Translator: Evgeny <transingularity@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -22,18 +22,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter скроллер</span>"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API Key"
 msgstr "Ключ API"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr ""
@@ -49,28 +44,28 @@ msgstr ""
 " именем экрана защищены."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
 msgid "Created by"
 msgstr "Создано"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_date
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_date
 msgid "Created on"
 msgstr "Создан"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Получать избранное с этого никнейма"
 
@@ -81,7 +76,7 @@ msgid "HTTP Error: Something is misconfigured"
 msgstr "Ошибка HTTP: Что-то неотконфигурировано"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
 msgid "ID"
 msgstr "Номер"
 
@@ -92,17 +87,17 @@ msgid "Internet connection refused"
 msgstr "Подключение к Интернету отклонено"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_uid
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
 msgid "Last Updated by"
 msgstr "Последний раз обновил"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_date
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Последнее обновление"
 
@@ -134,7 +129,7 @@ msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:35
+#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:21
 #, python-format
 msgid "Reload"
 msgstr "Перезагрузить"
@@ -149,12 +144,12 @@ msgstr ""
 "Запрос не может быть обслужен по причине исчерпания доступных ресурсов."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
 msgid "Screen Name"
 msgstr "Никнейм"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
@@ -163,7 +158,7 @@ msgstr ""
 " обязательно должен совпадать с ключом API/секретным ключом."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_tutorial
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
 msgstr "Показать мне, как получить ключ и секретный ключ к API Твиттера"
 
@@ -217,12 +212,12 @@ msgid "Tutorial"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
 msgid "Tweet ID"
 msgstr "ID твита"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
 msgid "Tweets"
 msgstr "Твиты"
 
@@ -232,38 +227,38 @@ msgid "Twitter API Credentials"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
 msgid "Twitter API Key"
 msgstr "Ключ к API Твиттера"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
 msgstr "Секретный ключ к API Твиттера"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "Twitter API key"
 msgstr "Ключ к API Твиттера"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
 msgstr "Секретный ключ к API Твиттера"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:41
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:40
 #, python-format
 msgid "Twitter Configuration"
 msgstr "Конфигурация Твиттера"
@@ -322,7 +317,7 @@ msgstr "Мы не можем достичь twitter сервер."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_website_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
 msgstr "Вебсайт"
 

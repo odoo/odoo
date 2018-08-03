@@ -7,13 +7,14 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# José Luis Sandoval Alaguna <alagunajs@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
+"Last-Translator: José Luis Sandoval Alaguna <alagunajs@gmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgid "Boolean"
 msgstr "Boolean"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:24
+#: code:addons/base_sparse_field/models/models.py:25
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "\"%s\" alanı için depolama sistemini değiştirmeye izin verilmez."
@@ -56,6 +57,11 @@ msgstr "Veri"
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
+
+#. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
+msgid "Field Type"
+msgstr "Alan Türü"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_ir_model_fields
@@ -114,7 +120,7 @@ msgid "Partner"
 msgstr "İş Ortağı"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:26
+#: code:addons/base_sparse_field/models/models.py:27
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "\"%s\" boş alanının yeniden adlandırılmasına izin verilmez"
@@ -130,7 +136,7 @@ msgid "Serialization Field"
 msgstr "Serileştirme Alanı"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:38
+#: code:addons/base_sparse_field/models/models.py:39
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
@@ -141,6 +147,86 @@ msgid "Two"
 msgstr "İki"
 
 #. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "binary"
+msgstr "ikili"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "boolean"
+msgstr "mantıksal"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "char"
+msgstr "kömür"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "date"
+msgstr "tarih"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "datetime"
+msgstr "tarih saat"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "float"
+msgstr "sayısal"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "html"
+msgstr "html"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "integer"
+msgstr "tamsayı"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "many2many"
+msgstr "many2many"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "many2one"
+msgstr "many2one"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "monetary"
+msgstr "parasal"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "one2many"
+msgstr "one2many"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "reference"
+msgstr "referans"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "selection"
+msgstr "seçim"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "serialized"
+msgstr ""
+
+#. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
 msgid "sparse_fields.test"
 msgstr "sparse_fields.test"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "text"
+msgstr "metin"

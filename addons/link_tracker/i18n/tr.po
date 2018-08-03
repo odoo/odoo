@@ -13,10 +13,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
+msgid "Campaign"
+msgstr "Kampanya"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
@@ -138,6 +143,11 @@ msgid "Link Tracker"
 msgstr "Bağlantı İzleyici"
 
 #. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
+msgid "Medium"
+msgstr "Orta"
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
 msgid "Number of Clicks"
 msgstr "Tıklanma Sayısı"
@@ -163,6 +173,11 @@ msgid "Short URL code"
 msgstr "Kısa URL kodu"
 
 #. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
+msgid "Source"
+msgstr "Kaynak"
+
+#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr "Tıklanma İstatistikleri"
@@ -170,7 +185,30 @@ msgstr "Tıklanma İstatistikleri"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
 msgid "Target URL"
+msgstr "Hedef URL"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Farklı kampanya çabalarınızı izlemenize yardımcı olacak bir isimdir Örn: "
+"Sonbahar_Sürüşü, Yılbaşı_Özel"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Banner reklamı"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Bu bağlantı kaynağıdır. örn: Arama Motoru, başka alan adı yada bir e-posta "
+"listesi adı"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
@@ -201,7 +239,7 @@ msgstr "Web Sayfasını Ziyaret Et"
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Website Link"
-msgstr ""
+msgstr "Website Linki"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form

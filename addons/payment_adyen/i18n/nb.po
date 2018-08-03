@@ -3,14 +3,14 @@
 # * payment_adyen
 # 
 # Translators:
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,37 +19,42 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:186
+#: code:addons/payment_adyen/models/payment.py:187
 #, python-format
 msgid "; multiple order found"
 msgstr "; flere ordrer funnet"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:184
+#: code:addons/payment_adyen/models/payment.py:185
 #, python-format
 msgid "; no order found"
 msgstr "; ingen ordre funnet"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:234
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:229
 #, python-format
 msgid "Adyen: feedback error"
 msgstr "Adyen: tilbakemeldingsfeil"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:196
+#: code:addons/payment_adyen/models/payment.py:197
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
 msgstr ""
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:182
+#: code:addons/payment_adyen/models/payment.py:183
 #, python-format
 msgid "Adyen: received data for reference %s"
 msgstr "Adyen: Mottatt data for referanse %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:175
+#: code:addons/payment_adyen/models/payment.py:176
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
@@ -57,14 +62,39 @@ msgid ""
 msgstr ""
 
 #. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_adyen
 #: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
 msgstr "Hvordan sette opp Adyen-kontoen din?"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuelt oppsett"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
 msgstr ""
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
@@ -77,11 +107,36 @@ msgid "Payment Transaction"
 msgstr "Betalingstransaksjon"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "PayPal"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Tilbyder"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
 msgid "Skin Code"
 msgstr ""
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
 msgid "Skin HMAC Key"
 msgstr ""
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_adyen
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Bankoverføring"

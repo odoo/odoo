@@ -7,13 +7,15 @@
 # Martin Trigaux, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Hüseyin Cem Aras <hcemaras@gmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +42,21 @@ msgstr ""
 "https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "CVC"
 msgstr "CVC"
@@ -57,7 +74,7 @@ msgstr "Kart Sahibinin Adı"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "Ödeme Resmi URL'si"
 
 #. module: payment_stripe
 #. openerp-web
@@ -86,6 +103,21 @@ msgid "Just one more second, confirming your payment..."
 msgstr "Lütfen bekleyiniz, ödemeniz onaylanıyor"
 
 #. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuel Yapılandırma"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Ödeme Alıcısı"
@@ -103,6 +135,11 @@ msgid "Payment error"
 msgstr "Ödeme hatası"
 
 #. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:175
 #, python-format
 msgid ""
@@ -113,6 +150,21 @@ msgstr ""
 " daha kontrol ederek çözülebilir? "
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
 msgstr "Stripe yayınlanabilir şifre"
@@ -120,7 +172,7 @@ msgstr "Stripe yayınlanabilir şifre"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Gizli Şifre"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:173
@@ -145,6 +197,11 @@ msgstr ""
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
 msgstr "Bu işlem başarısız olduğu için üzgünüz."
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Wire Transfer"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token

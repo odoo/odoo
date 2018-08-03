@@ -3,17 +3,17 @@
 # * auth_ldap
 # 
 # Translators:
-# Iulian Cutui <iulian.cutui@gmail.com>, 2017
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
+# Martin Trigaux, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Iulian Cutui <iulian.cutui@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Iulian Cutui <iulian.cutui@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
@@ -36,32 +36,32 @@ msgid "Companies"
 msgstr "Companii"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_company
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
 msgstr "Companie"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
 msgstr "Creați utilizator"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
 msgstr "Creat în"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
 msgid "ID"
 msgstr "ID"
 
@@ -72,8 +72,8 @@ msgid "LDAP Configuration"
 msgstr "Configurare LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings_ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
 msgstr "Parametri LDAP"
 
@@ -83,47 +83,47 @@ msgid "LDAP Server"
 msgstr ""
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
 msgstr "Adresa Server LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
 msgstr "Port Server LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
 msgstr "Baza LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
 msgstr "LDAP sistem binddn"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
 msgstr "Filtru LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
 msgstr "Parola LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
@@ -138,7 +138,7 @@ msgid "Process Parameter"
 msgstr "Parametri proces"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
 "option requires a server with STARTTLS enabled, otherwise all authentication"
@@ -149,7 +149,7 @@ msgstr ""
 "autentificare vor eșua."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
 msgstr "Secvență"
 
@@ -164,12 +164,12 @@ msgid "Setup your LDAP Server"
 msgstr "Configurati-va Serverul d-voastra LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
 msgstr "Șablon utilizator"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
@@ -178,7 +178,7 @@ msgstr ""
 "director."
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
@@ -187,7 +187,7 @@ msgstr ""
 "director. Lăsați necompletat pentru a vă conecta anonim."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "Folosește TLS"
 
@@ -197,7 +197,7 @@ msgid "User Information"
 msgstr "Informații utilizator"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "Utilizator de copiat atunci când se creează utilizatori noi"
 

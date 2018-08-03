@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * base_vat
 # 
+# Translators:
+# Martin Trigaux, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,12 +23,12 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Компаниуд"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Холбох хаяг"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -33,30 +38,34 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:134
+#: code:addons/base_vat/models/res_partner.py:154
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"НӨАТ дугаар [%s] харилцагч [%s] дээр буруу байна. \n"
+"Тэмдэглэл: шаардлагатай формат %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:133
+#: code:addons/base_vat/models/res_partner.py:153
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"НӨАТ дугаар [%s] харилцагч [%s] дээр НӨАТ-н VIES баталгаажуулах шалгалтад "
+"тэнцээгүй эсвэл шаардлагатай формат %s -г хүндлээгүй."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 #: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
-msgstr ""
+msgstr "НӨАТ"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
 msgstr ""
 
@@ -68,4 +77,4 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

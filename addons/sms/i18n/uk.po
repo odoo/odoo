@@ -3,22 +3,23 @@
 # * sms
 # 
 # Translators:
-# ТАрас <tratatuta@i.ua>, 2017
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -31,18 +32,18 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_display_name
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_display_name
+#: model:ir.model.fields,field_description:sms.field_sms_api__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -52,52 +53,54 @@ msgid "Email Thread"
 msgstr "Ланцюжки повідомлень"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_id
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_id
+#: model:ir.model.fields,field_description:sms.field_sms_api__id
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:53
 #, python-format
 msgid "Insufficient credit, unable to send SMS message: %s"
-msgstr ""
+msgstr "Недостатність кредиту, не вдається відправити SMS-повідомлення: %s"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api___last_update
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms___last_update
+#: model:ir.model.fields,field_description:sms.field_sms_api____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_message
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__message
 msgid "Message"
 msgstr "Повідомлення"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:48
+#: code:addons/sms/wizard/send_sms.py:81
 #, python-format
 msgid "Missing mobile number for %s."
-msgstr ""
+msgstr "Відсутній номер мобільного зв'язку для %s."
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:55
 #, python-format
 msgid "No mobile number defined, unable to send SMS message: %s"
 msgstr ""
+"Не визначено номер мобільного телефону, не вдається відправити SMS-"
+"повідомлення: %s"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_recipients
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
 msgstr "Отримувачі"
 
@@ -105,7 +108,7 @@ msgstr "Отримувачі"
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
-msgstr ""
+msgstr "SMS повідомлення надіслано: %s"
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -116,19 +119,19 @@ msgstr "Надіслати"
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
 msgid "Send SMS"
-msgstr ""
+msgstr "Надіслати SMS"
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "Надіслати SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "sms.api"
-msgstr ""
+msgstr "sms.api"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_send_sms
 msgid "sms.send_sms"
-msgstr ""
+msgstr "sms.send_sms"

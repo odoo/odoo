@@ -3,14 +3,17 @@
 # * account_check_printing
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
+# Bill Hsu <hcm86@icloud.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,19 +25,31 @@ msgstr ""
 #: code:addons/account_check_printing/models/account_journal.py:58
 #, python-format
 msgid " : Check Number Sequence"
-msgstr ""
+msgstr " : 支票編號序列"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:69
+#: code:addons/account_check_printing/models/account_payment.py:71
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
+msgstr "支票備註不能超過60個字元。"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_right
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_top
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_amount_in_words
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_amount_in_words
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
+#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_amount_in_words
 msgid "Amount in Words"
-msgstr ""
+msgstr "金額大寫"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -42,157 +57,201 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_number
-msgid "Check Number"
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
+msgid "Check Layout"
+msgstr "支票格式"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
+msgid "Check Left Margin"
 msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
+#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_number
+msgid "Check Number"
+msgstr "支票號碼"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr ""
+msgstr "支票列印"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
 msgid "Check Printing Payment Method Selected"
+msgstr "檢查已選擇的列印付款方式"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
+msgid "Check Right Margin"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_sequence_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
 msgid "Check Sequence"
+msgstr "支票序列"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
+msgid "Check Top Margin"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal_check_manual_sequencing
-#: model:ir.model.fields,help:account_check_printing.field_account_payment_check_manual_sequencing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_manual_sequencing
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
+#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
+msgstr "勾選此選項如果您的預先印製支票是沒有編號的。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr ""
+msgstr "待列印支票"
 
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr ""
+msgstr "支票"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 msgid "Checks To Print"
-msgstr ""
+msgstr "待列印支票"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal_check_sequence_id
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr ""
+msgstr "支票編號序列。"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:97
 #, python-format
 msgid "Checks to Print"
-msgstr ""
+msgstr "待列印支票"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
+msgstr "待列印支票"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
+msgid "Company Country code"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_uid
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_date
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_id
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:89
+#: code:addons/account_check_printing/models/account_payment.py:91
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
-msgstr ""
+msgstr "為了一次列印多張支票，它們必須為相同的銀行帳戶。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "日記帳"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks___last_update
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_write_uid
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_write_date
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_manual_sequencing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_manual_sequencing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_manual_sequencing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_manual_sequencing
 msgid "Manual Numbering"
-msgstr ""
+msgstr "手動編號"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_bank_journal_form_inherited_check_printing
 msgid "Manual Numbering of check"
+msgstr "對支票進行手動編號"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
+msgid "Multi-Pages Check Stub"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_next_number
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_next_check_number
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
+#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr ""
+msgstr "下一個支票號碼"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_number
+#: selection:res.company,account_check_printing_layout:0
+msgid "None"
+msgstr "無"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_register_payments__check_number
 msgid ""
 "Number of the check corresponding to this payment. If your pre-printed check"
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
-msgstr ""
+msgstr "與該付款相關的支票編號。如果您的預先印製支票還沒有被編號，您可以在帳戶配置頁面進行管理。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr ""
+msgstr "收付款"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:86
+#: code:addons/account_check_printing/models/account_payment.py:88
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr ""
+msgstr "要列印為支票的付款必須選擇'支票'為付款方式並且尚未被調節"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr ""
+msgstr "請輸入您將首次預先印製的支票的號碼。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -202,37 +261,65 @@ msgstr "列印"
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Print Check"
-msgstr ""
+msgstr "列印支票"
 
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
+msgstr "列印支票"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
+msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:99
+#: code:addons/account_check_printing/models/account_payment.py:101
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr ""
+msgstr "列印預先印製支票"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
 msgid "Register payments on multiple invoices"
+msgstr "登記多張發票的付款"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
+msgid "Right Margin"
 msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal_check_next_number
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
+msgid ""
+"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"In order to disable the printing feature, select 'None'."
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr ""
+msgstr "下個列印支票的序列編號。"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
+#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
 msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
+msgstr "從技術特徵可以知道是否可將列印支票作為付款方式。"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
+"ISO 國家代碼使用兩個字元。\n"
+" 您可以使用此字段進行快速搜尋。"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:26
@@ -240,36 +327,72 @@ msgstr ""
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr ""
+msgstr "最後一張支票號碼是%s。以防發票被銀行拒收，您僅可以適用一個稍大的號碼。"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
 msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
+msgstr "所選的帳簿已配置成列印支票編號。如果您的預先列印支票紙張已有了編號或目前編號是錯誤的，您可在帳簿界面去更改設定。"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:121
-#, python-format
+#: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"There is no check layout configured.\n"
-"Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
+"This option allows you to print the date label on the check as per CPA. "
+"Disable this if your pre-printed check includes the date label."
 msgstr ""
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
+msgstr "這能夠讓您節約相應的付款支票數量。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
+msgstr "無標記送出"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:123
+#, python-format
+msgid ""
+"You have to choose a check layout. For this, go in Apps, search for 'Checks "
+"layout' and install one."
 msgstr ""
+
+#. module: account_check_printing
+#: selection:res.company,account_check_printing_layout:0
+msgid "check in middle"
+msgstr ""
+
+#. module: account_check_printing
+#: selection:res.company,account_check_printing_layout:0
+msgid "check on bottom"
+msgstr ""
+
+#. module: account_check_printing
+#: selection:res.company,account_check_printing_layout:0
+msgid "check on top"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr ""
+msgstr "wizard.multi.charts.accounts"

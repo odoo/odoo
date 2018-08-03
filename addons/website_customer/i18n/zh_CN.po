@@ -3,19 +3,20 @@
 # * website_customer
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# fausthuang, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Talway <9010446@qq.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,41 +30,36 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr "<span class=\"fa fa-1x fa-tags\"/> 全部"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "有效"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:80
+#: code:addons/website_customer/controllers/main.py:100
 #, python-format
 msgid "All Countries"
 msgstr "所有国家"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:61
+#: code:addons/website_customer/controllers/main.py:81
 #, python-format
 msgid "All Sectors of Activity"
 msgstr "全部活动部门"
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr "引导类自定义颜色"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
 msgstr "类别名称"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
 msgstr "类"
-
-#. module: website_customer
-#: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Click to create a new partner tag."
-msgstr "点击创建一个新的合作伙伴的标签。"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
@@ -71,22 +67,27 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
+#: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
+msgid "Create a new contact tag"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "ID"
 
@@ -96,26 +97,26 @@ msgid "Implemented By"
 msgstr "实现者"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
-"Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the \"Customize\" menu."
-msgstr "管理合作伙伴的标签，以更好地他们对你网站分类，可以在你的网站“自定义”菜单上上添加标签的筛选。"
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
@@ -124,7 +125,6 @@ msgstr "找不到结果"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.details
-#: model:ir.ui.view,arch_db:website_customer.footer_custom
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr "我们的参考"
@@ -142,12 +142,13 @@ msgid ""
 msgstr "合作伙伴标签 - 这些标签可用于在网站按部门找客户，还是......"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
 msgstr "合作伙伴"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.references_block
+#: model:website.menu,name:website_customer.menu_customers
 msgid "References"
 msgstr "参考"
 
@@ -172,12 +173,17 @@ msgid "Search"
 msgstr "搜索"
 
 #. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full URL to access the document through the website."
+msgstr "通过网站访问单据的完整网址。"
+
+#. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
 msgstr "被全世界百万人相信"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible in Website"
 msgstr "在网站可见"
 
@@ -190,8 +196,13 @@ msgid "Website Tags"
 msgstr "网站标签"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
-#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
+msgid "Website URL"
+msgstr "网站网址"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
 msgstr "站点标签"
 

@@ -3,15 +3,16 @@
 # * base_address_city
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
+# Martin Trigaux, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,9 +21,9 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: base_address_city
-#: model:ir.model.fields,help:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
@@ -35,17 +36,19 @@ msgid "Cities"
 msgstr ""
 
 #. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:29
 #: model:ir.model,name:base_address_city.model_res_city
 #: model:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
 msgid "City"
 msgstr "Oraș"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_city_id
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_city_id
-msgid "Company"
-msgstr "Companie"
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
+msgstr ""
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
@@ -54,22 +57,22 @@ msgstr "Contact"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
 msgid "Country"
 msgstr "Țară"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
 msgstr "Creat în"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -82,34 +85,34 @@ msgid ""
 msgstr ""
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
 msgstr ""
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city___last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
 msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
 msgid "Name"
 msgstr "Nume"
 
@@ -119,11 +122,11 @@ msgid "Search City"
 msgstr ""
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
-msgstr "Județ"
+msgstr "Stare"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
 msgid "Zip"
 msgstr "Cod postal"

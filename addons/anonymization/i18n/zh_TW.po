@@ -3,15 +3,16 @@
 # * anonymization
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +23,17 @@ msgstr ""
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
 msgid "<strong>Field</strong>"
-msgstr ""
+msgstr "<strong>字段</strong>"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
 msgid "<strong>Model</strong>"
-msgstr ""
+msgstr "<strong>模型</strong>"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
 msgid "<strong>Status</strong>"
-msgstr ""
+msgstr "<strong>狀態</strong>"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
@@ -40,42 +41,42 @@ msgstr ""
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_tree
 msgid "Anonymization History"
-msgstr ""
+msgstr "隱藏歷史"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Anonymize Database"
-msgstr ""
+msgstr "隱藏資料庫"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
 msgid "Anonymize database"
-msgstr ""
+msgstr "隱藏資料庫"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Anonymized"
-msgstr ""
+msgstr "隱去名字"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_form
 msgid "Anonymized Field"
-msgstr ""
+msgstr "隱藏字段"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_tree
 msgid "Anonymized Fields"
-msgstr ""
+msgstr "隱藏的字段"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:196
 #, python-format
 msgid "Anonymized value can not be empty."
-msgstr ""
+msgstr "匿名值不能為空。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:71
@@ -83,7 +84,7 @@ msgstr ""
 msgid ""
 "Before executing the anonymization process, you should make a backup of your"
 " database."
-msgstr ""
+msgstr "在進行匿名化處理前，您需要給您的資料庫做一個備份。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:193
@@ -91,55 +92,55 @@ msgstr ""
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr ""
+msgstr "這些字段類型不能匿名化：binary, many2many, many2one, one2many, 參照。"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_create_uid
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_create_uid
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_create_uid
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_create_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__create_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__create_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__create_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_create_date
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_create_date
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_create_date
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_create_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__create_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__create_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__create_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Database Anonymization"
-msgstr ""
+msgstr "資料庫隱藏"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
 msgid "Database anonymization"
-msgstr ""
+msgstr "資料庫隱藏"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__date
 msgid "Date"
-msgstr "日期"
+msgstr "日期   "
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_direction
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__direction
 msgid "Direction"
-msgstr ""
+msgstr "方向"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_display_name
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_display_name
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_display_name
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_display_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__display_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__display_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__display_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -153,57 +154,57 @@ msgstr "完成"
 #: code:addons/anonymization/wizard/anonymize_wizard.py:263
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "錯誤！"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Exception occured"
-msgstr ""
+msgstr "出現例外"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_export
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__file_export
 msgid "Export"
-msgstr ""
+msgstr "導出"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_id
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_field_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__field_id
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__field_name
 msgid "Field"
-msgstr "欄位"
+msgstr "字段"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__field_name
 msgid "Field Name"
-msgstr ""
+msgstr "字段名稱"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__field_ids
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Fields"
-msgstr "欄位"
+msgstr "字段"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__name
 msgid "File Name"
-msgstr ""
+msgstr "文件名稱"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_filepath
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__filepath
 msgid "File path"
-msgstr ""
+msgstr "文件路徑"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_id
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_id
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_id
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_id
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__id
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__id
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__id
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_import
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__file_import
 msgid "Import"
-msgstr ""
+msgstr "導入"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:263
@@ -211,107 +212,111 @@ msgstr ""
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
+msgstr "在沒有提供匿名化導出文件前，不可能反轉匿名化的進程。"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history___last_update
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix___last_update
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard___last_update
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization____last_update
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history____last_update
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix____last_update
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_write_uid
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_write_uid
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_uid
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__write_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__write_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__write_uid
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_write_date
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_write_date
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_date
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__write_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__write_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__write_date
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_msg
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_msg
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__msg
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__msg
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Message"
-msgstr "訊息"
+msgstr "消息"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_model_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__model_name
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "New"
-msgstr "新增"
+msgstr "新建"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:155
 #, python-format
 msgid "No fields are going to be anonymized."
-msgstr ""
+msgstr "所有字段都不能匿名。"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "Not Existing"
-msgstr ""
+msgstr "不存在"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_id
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__model_id
 msgid "Object"
-msgstr ""
+msgstr "對像"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_name
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__model_name
 msgid "Object Name"
-msgstr ""
+msgstr "對像名"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query_type
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__query
 msgid "Query"
+msgstr "查詢"
+
+#. module: anonymization
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__query_type
+msgid "Query Type"
 msgstr ""
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Reverse the Database Anonymization"
-msgstr ""
+msgstr "解除資料庫隱藏"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_sequence
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__sequence
 msgid "Sequence"
 msgstr "序列"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Started"
-msgstr ""
+msgstr "已開始"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization__state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history__state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__state
 msgid "Status"
 msgstr "狀態"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_summary
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard__summary
 msgid "Summary"
 msgstr "摘要"
 
 #. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix__target_version
 msgid "Target Version"
-msgstr ""
+msgstr "目標版本"
 
 #. module: anonymization
 #: code:addons/anonymization/models/anonymization.py:56
@@ -320,7 +325,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr ""
+msgstr "此資料庫匿名化正處於不穩定狀態。有些字段已經匿名，有些還沒有。您在嘗試進行創建、寫入或者刪除這些字段前，要解決這個問題。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:122
@@ -329,7 +334,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr ""
+msgstr "此資料庫匿名化正處於不穩定狀態。有些字段已經匿名，有些沒有。您在嘗試進行其它任何操作前，要嘗試解決這個問題。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:145
@@ -339,13 +344,13 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr ""
+msgstr "資料庫匿名化當下在不穩定的狀態。 有些字段匿名了，有些則沒有。您在做任何操作前要解決這個問題。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:143
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
+msgstr "此資料庫當下已經被匿名化，您不能再次使其匿名。"
 
 #. module: anonymization
 #: code:addons/anonymization/models/anonymization.py:54
@@ -353,7 +358,7 @@ msgstr ""
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
 "fields."
-msgstr ""
+msgstr "資料庫目前已經匿名，您不能創建、更改或者刪除字段。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:257
@@ -361,61 +366,61 @@ msgstr ""
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
 "anonymization."
-msgstr ""
+msgstr "資料庫目前沒有匿名，您不能逆轉匿名。"
 
 #. module: anonymization
-#: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
+#: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard__file_import
 msgid ""
 "This is the file created by the anonymization process. It should have the "
 "extension '.json' or '.pickle'."
-msgstr ""
+msgstr "這是通過匿名流程創建的文件。該文件應具有擴展名 '.json' 或 '.pickle'。"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Unstable"
-msgstr ""
+msgstr "不穩定"
 
 #. module: anonymization
 #: sql_constraint:ir.model.fields.anonymization:0
 msgid "You cannot have two fields with the same name on the same object!"
-msgstr ""
+msgstr "早同一個對像上不能有兩個同名字段！"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "anonymized -> clear"
-msgstr ""
+msgstr "隱藏->無隱藏"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "clear -> anonymized"
-msgstr ""
+msgstr "無隱藏 -> 隱藏"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
 msgid "ir.model.fields.anonymization"
-msgstr ""
+msgstr "ir.model.fields.anonymization"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
 msgid "ir.model.fields.anonymization.history"
-msgstr ""
+msgstr "ir.model.fields.anonymization.history"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
 msgid "ir.model.fields.anonymization.migration.fix"
-msgstr ""
+msgstr "ir.model.fields.anonymization.migration.fix"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
 msgid "ir.model.fields.anonymize.wizard"
-msgstr ""
+msgstr "ir.model.fields.anonymize.wizard"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "python"
-msgstr ""
+msgstr "python"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
-msgstr ""
+msgstr "sql"

@@ -7,13 +7,18 @@
 # Gelo Joga Landoo <gj@landoo.es>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# Humberto Garza De Koster <garzadekoster@gmail.com>, 2018
+# Antonio Trueba, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +27,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
 msgid "Access Token"
 msgstr "Token de acceso"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
 msgid "Access Token Validity"
 msgstr "Validez del token de acceso"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Comisiones nacionales fijas"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Comisiones internacionales fijas"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -37,12 +67,27 @@ msgid "How to configure your paypal account?"
 msgstr "¿Cómo configurar su cuenta de Paypal?"
 
 #. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Configuración manual"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Método de pago"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid ""
 "Payment Data Transfer allows you to receive notification of successful "
 "payments as they are made."
@@ -56,24 +101,29 @@ msgid "Payment Transaction"
 msgstr "Transacción de pago"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Paypal Email ID"
 msgstr "Email ID de Paypal"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
 msgstr "Notificación de pago instantáneo de Paypal"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid "Paypal Merchant ID"
 msgstr "ID de comerciante de Paypal"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "Token de transferencia de datos de pago por Paypal"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment.py:138
@@ -82,17 +132,32 @@ msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: received data with missing reference (%s) or txn_id (%s)"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
 msgid "Rest API Password"
 msgstr "Contraseña de la API Rest"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
 msgid "Rest API Username"
 msgstr "Usuario de la API Rest"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
@@ -101,16 +166,31 @@ msgstr ""
 "provienen de Paypal son válidas y seguras."
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
 msgid "Transaction type"
 msgstr "Tipo de transacción"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
 msgstr "Usar IPN"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
 msgid "Use Rest API"
 msgstr "Usar API Rest"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Comisiones nacionales variables (en porcentaje)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Comisiones internacionales variables (en porcentaje)"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Transferencia bancaria"

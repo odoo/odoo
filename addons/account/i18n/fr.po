@@ -71,13 +71,14 @@
 # nthnnl <nathan070@me.com>, 2018
 # Saad Thaifa <saad.thaifa@gmail.com>, 2018
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018
+# LEONARD Jean-Christophe <jeanchristophe.leonard@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018\n"
+"Last-Translator: LEONARD Jean-Christophe <jeanchristophe.leonard@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,7 +182,7 @@ msgstr "15 jours"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr ""
+msgstr "2 mois"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
@@ -191,7 +192,7 @@ msgstr "30 jours nets"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr ""
+msgstr "45 jours"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -332,6 +333,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/>configurer le serveur de"
+" courriels"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:699
@@ -340,6 +343,8 @@ msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
 msgstr ""
+"<p>Vous pouvez contrôler la facture de votre base vendeurs sur ce que vous "
+"avez acheté ou reçu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -379,11 +384,13 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Seul les journaux pas encore liés à un compte en "
+"banque sont proposés.</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr ""
+msgstr "<span name=\"button_import_placeholder\"/>États"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -682,7 +689,7 @@ msgstr ""
 #: code:addons/account/models/account.py:810
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr ""
+msgstr "Un compte bancaire ne peut appartenir qu'à un seul journal."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -699,6 +706,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
 msgstr ""
+"Une ligne de l'état bancaire correspond à une transaction du compte en "
+"banque."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -874,7 +883,7 @@ msgstr "Titulaire de compte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Ancien nom du compte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1304,22 +1313,22 @@ msgstr "Ajouter un avoir"
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:20
 #, python-format
 msgid "Add a Bank Account"
-msgstr ""
+msgstr "Ajouter un compte bancaire"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
-msgstr ""
+msgstr "Ajouter un journal"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
 msgid "Add a new account"
-msgstr ""
+msgstr "Ajouter un nouveau compte"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Ajouter une nouvelle étiquette"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1353,7 +1362,7 @@ msgstr "Notes supplémentaires..."
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Adjustment"
-msgstr ""
+msgstr "Ajustement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__tax_id
@@ -1422,7 +1431,7 @@ msgstr "Alias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
 msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgstr "Pseudonyme pour la facture fournisseur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
@@ -1626,12 +1635,12 @@ msgstr "Montant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_total
 msgid "Amount (with Taxes)"
-msgstr ""
+msgstr "Montant (TTC)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_subtotal
 msgid "Amount (without Taxes)"
-msgstr ""
+msgstr "Montant (HT)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
@@ -1821,7 +1830,7 @@ msgstr "Étiquettes analytiques"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:187
 #, python-format
 msgid "Analytic Tags."
-msgstr ""
+msgstr "Étiquettes analytiques"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__account_analytic_id
@@ -1970,7 +1979,7 @@ msgstr "Génération automatique d'entrées comptables"
 #: code:addons/account/models/account_move.py:382
 #, python-format
 msgid "Automatic "
-msgstr ""
+msgstr "Automatique"
 
 #. module: account
 #: code:addons/account/models/company.py:394
