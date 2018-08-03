@@ -1515,10 +1515,10 @@ class Html(_String):
 
 class DateLike():
 
-    start_of = date_utils.start_of
-    end_of = date_utils.end_of
-    add = date_utils.add
-    subtract = date_utils.subtract
+    start_of = staticmethod(date_utils.start_of)
+    end_of = staticmethod(date_utils.end_of)
+    add = staticmethod(date_utils.add)
+    subtract = staticmethod(date_utils.subtract)
 
 
 class Date(Field, DateLike):
@@ -1567,8 +1567,8 @@ class Date(Field, DateLike):
             * A falsy object, in which case None will be returned.
             * A string representing a date or datetime.
             * A date object, in which case the object will be returned as-is.
-            * A datetime object, in which case it will be converted to a date object and all
-                datetime-specific information will be lost (HMS, TZ, ...).
+            * A datetime object, in which case it will be converted to a date object and all\
+                        datetime-specific information will be lost (HMS, TZ, ...).
 
         :param value: value to convert.
         :return: an object representing ``value``.
@@ -1643,10 +1643,9 @@ class Datetime(Field, DateLike):
 
         :param record: recordset from which the timezone will be obtained.
         :param datetime timestamp: naive datetime value (expressed in UTC)
-            to be converted to the client timezone
+            to be converted to the client timezone.
         :rtype: datetime
-        :return: timestamp converted to timezone-aware datetime in context
-                timezone
+        :return: timestamp converted to timezone-aware datetime in context timezone.
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
         tz_name = record._context.get('tz') or record.env.user.tz

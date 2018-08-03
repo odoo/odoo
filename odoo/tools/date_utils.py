@@ -109,7 +109,7 @@ def end_of(value, granularity):
     """
     Get end of a time period from a date or a datetime.
 
-    :param value: Initial date or datetime.
+    :param value: initial date or datetime.
     :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
     :return: A date/datetime object corresponding to the start of the specified period.
     """
@@ -148,6 +148,7 @@ def add(value, *args, **kwargs):
     """
     Return the sum of ``value`` and a :class:`relativedelta`.
 
+    :param value: initial date or datetime.
     :param args: positional args to pass directly to :class:`relativedelta`.
     :param kwargs: keyword args to pass directly to :class:`relativedelta`.
     :return: the resulting date/datetime.
@@ -159,6 +160,7 @@ def subtract(value, *args, **kwargs):
     """
     Return the difference between ``value`` and a :class:`relativedelta`.
 
+    :param value: initial date or datetime.
     :param args: positional args to pass directly to :class:`relativedelta`.
     :param kwargs: keyword args to pass directly to :class:`relativedelta`.
     :return: the resulting date/datetime.
