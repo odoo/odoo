@@ -70,9 +70,9 @@ def start_of(value, granularity):
     """
     Get start of a time period from a date or a datetime.
 
-    :param value: Initial date or datetime.
-    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
-    :return: A date/datetime object corresponding to the start of the specified period.
+    :param value: initial date or datetime.
+    :param granularity: type of period in string, can be year, quarter, month, week, day or hour.
+    :return: a date/datetime object corresponding to the start of the specified period.
     """
     is_datetime = isinstance(value, datetime)
     if granularity == "year":
@@ -145,10 +145,24 @@ def end_of(value, granularity):
 
 
 def add(value, *args, **kwargs):
+    """
+    Return the sum of ``value`` and a :class:`relativedelta`.
+
+    :param args: positional args to pass directly to :class:`relativedelta`.
+    :param kwargs: keyword args to pass directly to :class:`relativedelta`.
+    :return: the resulting date/datetime.
+    """
     return value + relativedelta(*args, **kwargs)
 
 
 def subtract(value, *args, **kwargs):
+    """
+    Return the difference between ``value`` and a :class:`relativedelta`.
+
+    :param args: positional args to pass directly to :class:`relativedelta`.
+    :param kwargs: keyword args to pass directly to :class:`relativedelta`.
+    :return: the resulting date/datetime.
+    """
     return value - relativedelta(*args, **kwargs)
 
 
