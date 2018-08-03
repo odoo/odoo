@@ -854,6 +854,8 @@ class AccountInvoice(models.Model):
                                                                            active_model='account.invoice',
                                                                            active_id=self.id).compute(total,
                                                                            self.date_invoice)[0][0]
+            if type(totlines) is tuple:
+                totlines = [totlines]
             res_amount_currency = total_currency
             ctx['date'] = self.date_invoice
             count = 0
