@@ -3,15 +3,15 @@
 
 import uuid
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
-
-
 from odoo.addons import decimal_precision as dp
+
+from werkzeug.urls import url_encode
 
 
 class SaleOrder(models.Model):
@@ -19,6 +19,13 @@ class SaleOrder(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Quotation"
     _order = 'date_order desc, id desc'
+
+    def _default_validity_date(self):
+        if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
+            days = self.env.user.company_id.quotation_validity_days
+            if days > 0:
+                return datetime.now() + timedelta(days=days)
+        return False
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -124,8 +131,8 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', track_sequence=3, default='draft')
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
-    validity_date = fields.Date(string='Quote Validity', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help="Validity date of the quotation, after this date, the customer won't be able to validate the quotation online.")
+    validity_date = fields.Date(string='Validity', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help="Validity date of the quotation, after this date, the customer won't be able to validate the quotation online.", default=_default_validity_date)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm", copy=False)
@@ -163,6 +170,45 @@ class SaleOrder(models.Model):
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
 
+    # TODO SEB rename this field to something better option_line_ids or whatever
+    options = fields.One2many(
+        'sale.order.option', 'order_id', 'Optional Products Lines',
+        copy=True, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+
+    def _get_default_template(self):
+        template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+        return template and template.active and template or False
+
+    def _get_default_require_signature(self):
+        default_template = self._get_default_template()
+        if default_template:
+            return default_template.require_signature
+        else:
+            return False
+
+    def _get_default_require_payment(self):
+        default_template = self._get_default_template()
+        if default_template:
+            return default_template.require_payment
+        else:
+            return False
+
+    template_id = fields.Many2one(
+        'sale.quote.template', 'Quotation Template',
+        readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        default=_get_default_template)
+
+    amount_undiscounted = fields.Float(
+        'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
+    require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature,
+                                       states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
+                                       help='Request a digital signature to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment,
+                                     states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
+                                     help='Request an electronic payment to the customer in order to confirm orders automatically.')
+
     def _compute_portal_url(self):
         super(SaleOrder, self)._compute_portal_url()
         for order in self:
@@ -175,6 +221,12 @@ class SaleOrder(models.Model):
                 order.is_expired = True
             else:
                 order.is_expired = False
+    @api.one
+    def _compute_amount_undiscounted(self):
+        total = 0.0
+        for line in self.order_line:
+            total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
+        self.amount_undiscounted = total
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -238,6 +290,7 @@ class SaleOrder(models.Model):
         if self.partner_id.team_id:
             values['team_id'] = self.partner_id.team_id.id
         self.update(values)
+        self.note = self.template_id.note or self.note
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
@@ -268,6 +321,70 @@ class SaleOrder(models.Model):
 
         if warning:
             return {'warning': warning}
+
+    @api.onchange('template_id')
+    def onchange_template_id(self):
+        if not self.template_id:
+            self.require_signature = False
+            self.require_payment = False
+            return
+        template = self.template_id.with_context(lang=self.partner_id.lang)
+
+        order_lines = [(5, 0, 0)]
+        for line in template.quote_line:
+            data = line._get_vals_to_apply_template()
+            if line.product_id:
+                discount = 0
+                if self.pricelist_id:
+                    price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                    if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
+                        discount = (line.price_unit - price) / line.price_unit * 100
+                        price = line.price_unit
+
+                else:
+                    price = line.price_unit
+
+                data.update({
+                    'price_unit': price,
+                    'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
+                    'product_uom_qty': line.product_uom_qty,
+                    'product_id': line.product_id.id,
+                    'product_uom': line.product_uom_id.id,
+                    'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
+                })
+                if self.pricelist_id:
+                    data.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
+            order_lines.append((0, 0, data))
+
+        self.order_line = order_lines
+        self.order_line._compute_tax_id()
+
+        option_lines = []
+        for option in template.options:
+            if self.pricelist_id:
+                price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
+            else:
+                price = option.price_unit
+            data = option._get_vals_to_apply_template()
+            option_lines.append((0, 0, data))
+        self.options = option_lines
+
+        if template.number_of_days > 0:
+            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
+
+        self.require_signature = template.require_signature
+        self.require_payment = template.require_payment
+
+        if template.note:
+            self.note = template.note
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default = dict(default or {})
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        return super(SaleOrder, self).copy(default=default)
 
     @api.model
     def create(self, vals):
@@ -589,6 +706,9 @@ class SaleOrder(models.Model):
         self._action_confirm()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
+        for order in self:
+            if order.template_id and order.template_id.mail_template_id:
+                self.template_id.mail_template_id.send_mail(order.id)
         return True
 
     @api.multi
@@ -630,37 +750,58 @@ class SaleOrder(models.Model):
         # TDE note: read access on sales order to portal users granted to followed sales orders
         self.ensure_one()
 
-        if self.state != 'cancel' and (self.state != 'draft' or self.env.context.get('mark_so_as_sent')):
-            user, record = self.env.user, self
-            if access_uid:
-                user = self.env['res.users'].sudo().browse(access_uid)
-                record = self.sudo(user)
-            if user.share or self.env.context.get('force_website'):
-                try:
-                    record.check_access_rule('read')
-                except AccessError:
-                    if self.env.context.get('force_website'):
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+
+        if not self.template_id or (not user.share and not self.env.context.get('force_website')):
+            if self.state != 'cancel' and (self.state != 'draft' or self.env.context.get('mark_so_as_sent')):
+                user, record = self.env.user, self
+                if access_uid:
+                    user = self.env['res.users'].sudo().browse(access_uid)
+                    record = self.sudo(user)
+                if user.share or self.env.context.get('force_website'):
+                    try:
+                        record.check_access_rule('read')
+                    except AccessError:
+                        if self.env.context.get('force_website'):
+                            return {
+                                'type': 'ir.actions.act_url',
+                                'url': '/my/orders/%s' % self.id,
+                                'target': 'self',
+                                'res_id': self.id,
+                            }
+                        else:
+                            pass
+                    else:
                         return {
                             'type': 'ir.actions.act_url',
-                            'url': '/my/orders/%s' % self.id,
+                            'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
                             'target': 'self',
                             'res_id': self.id,
                         }
-                    else:
-                        pass
-                else:
-                    return {
-                        'type': 'ir.actions.act_url',
-                        'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
-                        'target': 'self',
-                        'res_id': self.id,
-                    }
-        return super(SaleOrder, self).get_access_action(access_uid)
+            return super(SaleOrder, self).get_access_action(access_uid)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/quote/%s/%s' % (self.id, self.access_token),
+            'target': 'self',
+            'res_id': self.id,
+        }
 
     def get_mail_url(self):
+        self.ensure_one()
+        if self.state not in ['sale', 'done']:
+            auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+            return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
         return self.get_share_url()
 
     def get_portal_confirmation_action(self):
+        """ Template override default behavior of pay / sign chosen in sales settings """
+        if self.template_id:
+            if self.require_signature and not self.signature:
+                return 'sign'
+            elif self.require_payment:
+                return 'pay'
+            else:
+                return 'none'
         if self.company_id.portal_confirmation_sign and not self.signature:
             return 'sign'
         if self.company_id.portal_confirmation_pay:
@@ -669,10 +810,10 @@ class SaleOrder(models.Model):
         return 'none'
 
     def has_to_be_signed(self):
-        return self.company_id.portal_confirmation_sign
+        return self.require_signature if self.template_id else self.company_id.portal_confirmation_sign
 
     def has_to_be_paid(self):
-        return self.company_id.portal_confirmation_pay
+        return self.require_payment if self.template_id else self.company_id.portal_confirmation_pay
 
     @api.multi
     def _notify_get_groups(self, message, groups):
@@ -689,6 +830,26 @@ class SaleOrder(models.Model):
                 group_data['has_button_access'] = True
 
         return groups
+
+    @api.constrains('template_id', 'require_signature', 'require_payment')
+    def _check_portal_confirmation(self):
+        for order in self.sudo().filtered('template_id'):
+            if not order.require_signature and not order.require_payment:
+                raise ValidationError(_('Please select a confirmation mode in Other Information: Digital Signature, Electronic Payment or both.'))
+
+    @api.multi
+    def open_quotation(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/quote/%s/%s' % (self.id, self.access_token)
+        }
+
+    @api.multi
+    def _get_payment_type(self):
+        self.ensure_one()
+        return 'form_save' if self.require_payment else 'form'
 
 
 class SaleOrderLine(models.Model):
@@ -963,6 +1124,9 @@ class SaleOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
+    # TODO SEB ? rename to option_line_ids?
+    option_line_id = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
+
     @api.multi
     @api.depends('state', 'is_expense')
     def _compute_qty_delivered_method(self):
@@ -1217,6 +1381,13 @@ class SaleOrderLine(models.Model):
         if self.order_id.pricelist_id and self.order_id.partner_id:
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
         self.update(vals)
+
+        # Take the description on the order template if the product is present in it
+        if self.product_id and self.order_id.template_id:
+            for quote_line in self.order_id.template_id.quote_line:
+                if quote_line.product_id == self.product_id:
+                    self.name = quote_line.name
+                    break
 
         return result
 

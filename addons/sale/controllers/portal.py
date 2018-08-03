@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+import werkzeug
 
 from odoo import http, _
 from odoo.exceptions import AccessError
@@ -238,3 +238,18 @@ class CustomerPortal(CustomerPortal):
             'success': success_message,
             'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
         }
+
+    @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
+    def add(self, option_id, order_id, token, **post):
+        Order = request.env['sale.order'].sudo().browse(order_id)
+        if token != Order.access_token:
+            return request.render('website.404')
+        if Order.state not in ['draft', 'sent']:
+            return request.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
+        Option = request.env['sale.order.option'].sudo().browse(option_id)
+        vals = Option._get_vals_add_to_order()
+
+        OrderLine = request.env['sale.order.line'].sudo().create(vals)
+        OrderLine._compute_tax_id()
+        Option.write({'line_id': OrderLine.id})
+        return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (Order.id, token))

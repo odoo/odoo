@@ -215,6 +215,9 @@
                     <button name="action_confirm"
                         string="Confirm Sale" type="object"
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                    <button name="open_quotation" type="object"
+                        class="o_open_quotation" string="Preview"
+                        attrs="{'invisible': [('template_id', '=', False)]}"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale" class="o_sale_print"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
@@ -245,6 +248,11 @@
                             <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+                            <label for="template_id"/>
+                            <div>
+                                <field name="template_id" context="{'company_id': company_id}"
+                                    options="{'no_create': True, 'no_open': True}"/>
+                            </div>
                         </group>
                         <group>
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
@@ -512,12 +520,28 @@
                             <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
                             <div class="oe_clear"/>
                         </page>
+                        <page string="Suggested Products">
+                            <field name="options">
+                                <tree string="Sales Quotation Template Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Other Information">
                             <group>
                                 <group string="Sales Information" name="sales_person">
                                     <field name="user_id"/>
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
+                                    <field name="require_signature" attrs="{'invisible': [('template_id', '=', False)]}"/>
+                                    <field name="require_payment" attrs="{'invisible': [('template_id', '=', False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting"/>
                                 </group>

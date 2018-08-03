@@ -11,12 +11,10 @@
     'data': [
         'data/website_quote_data.xml',
         'report/sale_order_reports.xml',
-        'report/sale_order_templates.xml',
         'report/website_quote_templates.xml',
         'views/sale_order_views.xml',
         'views/sale_quote_views.xml',
         'views/website_quote_templates.xml',
-        'views/res_config_settings_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
