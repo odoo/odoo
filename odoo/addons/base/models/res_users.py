@@ -406,7 +406,6 @@ class Users(models.Model):
 
     @api.model
     def create(self, vals):
-        # import pudb; pudb.set_trace()
         user = super(Users, self).create(vals)
         user.partner_id.active = user.active
         if user.partner_id.company_id:
