@@ -2,13 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Website Sale Stock & Options',
+    'name': 'Product Availability',
     'category': 'Website',
+    'summary': 'Manage product inventory & availability',
     'description': """
-Odoo E-Commerce
-==================
-Adds stock limitations on products options.
-""",
+Manage the inventory of your products and display their availability status in your eCommerce store.
+In case of stockout, you can decide to block further sales or to keep selling.
+A default behavior can be selected in the Website settings.
+Then it can be made specific at the product level.
+    """,
     'depends': [
         'website_sale_stock',
         'website_sale_options',

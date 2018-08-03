@@ -5,7 +5,7 @@
     'name': 'Forum',
     'category': 'Website',
     'sequence': 150,
-    'summary': 'Forum, FAQ, Q&A',
+    'summary': 'Manage a forum with FAQ and Q&A',
     'version': '1.0',
     'description': """
 Ask questions, get answers, no distractions

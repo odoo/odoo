@@ -5,9 +5,9 @@
     'version': '1.0',
     'category': 'Discuss',
     'sequence': 25,
-    'summary': 'Discussions, Mailing Lists, News',
+    'summary': 'Enhance team communication with private chat and channels',
     'description': "",
-    'website': 'https://www.odoo.com/page/enterprise-social-network',
+    'website': 'https://www.odoo.com/page/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
         'wizard/invite_view.xml',

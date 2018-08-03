@@ -6,7 +6,7 @@
     'version': '1.0',
     'depends': ['base', 'web', 'decimal_precision'],
     'category': 'Human Resources',
-    'summary': 'Lunch Order, Meal, Food',
+    'summary': 'Handle lunch orders of your employees',
     'description': """
 The base module to manage lunch.
 ================================

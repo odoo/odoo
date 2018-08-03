@@ -1,7 +1,8 @@
 {
     'name': 'Website Theme Install',
-    'description': "Propose to install a theme on website installation",
-    'category': 'Website',
+    'summary': 'Select a theme for your website',
+    'description': "",
+    'category': 'Technical Settings',
     'version': '1.0',
     'data': [
         'views/assets.xml',
