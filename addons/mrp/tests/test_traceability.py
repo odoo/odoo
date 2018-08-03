@@ -5,8 +5,6 @@ from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 import uuid
 
-
-@tagged('-standard', 'mo_traceability')
 class TestTraceability(TestMrpCommon):
     TRACKING_TYPES = ['none', 'serial', 'lot']
 
