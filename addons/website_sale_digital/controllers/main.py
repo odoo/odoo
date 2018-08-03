@@ -44,7 +44,7 @@ class WebsiteSaleDigital(CustomerPortal):
             product_id = product.id
             template = product.product_tmpl_id
             att = Attachment.search_read(
-                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), '&', ('res_id', '=', template.id), ('product_downloadable', '=', True)],
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )
