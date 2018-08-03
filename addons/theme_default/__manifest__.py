@@ -3,14 +3,13 @@
 
 {
     'name': 'Default Theme',
-    'description': 'Default website theme to showcase customization possibilities.',
+    'description': 'Default website theme',
     'category': 'Theme/Corporate',
     'sequence': 1000,
     'version': '1.0',
-    'depends': ['website'],
+    'depends': ['website', 'website_theme_install'],
     'data': [
         'data/theme_default_data.xml',
-        'views/theme_default_templates.xml',
     ],
     'images': [
         'static/description/cover.png',
