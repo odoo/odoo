@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Website Mass Mailing Campaigns',
+    'name': 'Newsletter Subscribe Button',
+    'summary': 'Attract visitors to subscribe to mailing lists',
     'description': """
-Add a snippet in the website builder to subscribe a mass_mailing list
+This module brings a new building block with a mailing list widget to drop on any page of your website.
+On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.
     """,
     'version': '1.0',
-    'category': 'Marketing',
+    'category': 'Website',
     'depends': ['website', 'mass_mailing'],
     'data': [
         'security/mass_mailing_security.xml',

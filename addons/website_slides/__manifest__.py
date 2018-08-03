@@ -3,7 +3,7 @@
     'name': 'Slides',
     'version': '1.0',
     'sequence': 145,
-    'summary': 'Share and Publish Videos, Presentations and Documents',
+    'summary': 'Publish videos, presentations and documents',
     'category': 'Website',
     'description': """
 Share and Publish Videos, Presentations and Documents'

@@ -2,9 +2,9 @@
 
 {
     'name': 'Online Events',
-    'category': 'Marketing',
+    'category': 'Website',
     'sequence': 166,
-    'summary': 'Publish Events and Manage Online Registrations on your Website',
+    'summary': 'Promote events and manage online registrations',
     'website': 'https://www.odoo.com/page/website-builder',
     'description': "",
     'depends': ['website', 'website_partner', 'website_mail', 'event'],
