@@ -3,15 +3,15 @@
 # * payment_buckaroo
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,21 @@ msgstr "; s-au găsit mai multe rezultate"
 #, python-format
 msgid "; no order found"
 msgstr "; nu a fost găsit nici un rezultat"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:148
@@ -52,8 +67,18 @@ msgid ""
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Configurare manuală"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
 msgstr ""
 
 #. module: payment_buckaroo
@@ -67,11 +92,36 @@ msgid "Payment Transaction"
 msgstr "Tranzacție plată"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "PayPal"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Furnizor"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
 msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Transfer bancar"

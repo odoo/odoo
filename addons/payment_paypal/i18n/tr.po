@@ -7,13 +7,15 @@
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Hüseyin Cem Aras <hcemaras@gmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,9 +34,49 @@ msgid "Access Token Validity"
 msgstr "Access Token Geçerliliği"
 
 #. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Yerel sabit ücretler"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Uluslararası sabit ücretler"
+
+#. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
 msgstr "Paypal hesabınız nasıl ayarlanır?"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuel Yapılandırma"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -54,6 +96,11 @@ msgstr ""
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
@@ -82,6 +129,11 @@ msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
 msgid "Rest API Password"
 msgstr "Rest API Şifresi"
@@ -90,6 +142,16 @@ msgstr "Rest API Şifresi"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
 msgid "Rest API Username"
 msgstr "Rest API Kullanıcı Adı"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -112,3 +174,18 @@ msgstr "IPN Kullan"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
 msgid "Use Rest API"
 msgstr "Rest API Kullan"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Değişken yerel ücretler (yüzde olarak)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Değişken uluslararası ücretler (yüzde olarak)"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Wire Transfer"

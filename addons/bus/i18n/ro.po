@@ -3,15 +3,16 @@
 # * bus
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
+# Martin Trigaux, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgid "Away"
 msgstr "Absent"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr "Canal"
 
@@ -40,62 +41,62 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Create date"
 msgstr "Crează dată"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_id
-#: model:ir.model.fields,field_description:bus.field_bus_presence_id
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
 msgstr "ID"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_status
-#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
-#: model:ir.model.fields,field_description:bus.field_res_users_im_status
+#: model:ir.model.fields,field_description:bus.field_bus_presence__status
+#: model:ir.model.fields,field_description:bus.field_res_partner__im_status
+#: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
 msgstr "Status IM"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
+#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
+#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
 msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
 msgid "Last Poll"
 msgstr "Ultimul sondaj"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
 msgid "Last Presence"
 msgstr "Ultima prezență"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_message
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
 msgstr "Mesaj"
 
@@ -116,9 +117,15 @@ msgstr "Prezență utilizator"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
-#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Utilizatori"
+
+#. module: bus
+#: code:addons/bus/controllers/main.py:41
+#, python-format
+msgid "bus.Bus not available in test mode"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus

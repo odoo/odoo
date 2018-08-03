@@ -3,16 +3,17 @@
 # * sms
 # 
 # Translators:
+# krnkris, 2017
 # gezza <geza.nagy@oregional.hu>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# krnkris <krnkris@freemail.hu>, 2017
+# Martin Trigaux, 2017
+# Ákos Nagy <akos.nagy@oregional.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: krnkris <krnkris@freemail.hu>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,18 +32,18 @@ msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_uid
 msgid "Created by"
 msgstr "Létrehozta"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_date
 msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_display_name
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_display_name
+#: model:ir.model.fields,field_description:sms.field_sms_api__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -52,8 +53,8 @@ msgid "Email Thread"
 msgstr "E-mail összafűzés"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_id
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_id
+#: model:ir.model.fields,field_description:sms.field_sms_api__id
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
 msgstr "Azonosító"
 
@@ -64,28 +65,28 @@ msgid "Insufficient credit, unable to send SMS message: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api___last_update
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms___last_update
+#: model:ir.model.fields,field_description:sms.field_sms_api____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms____last_update
 msgid "Last Modified on"
 msgstr "Utoljára módosítva"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítette"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_message
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__message
 msgid "Message"
 msgstr "Üzenet"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:48
+#: code:addons/sms/wizard/send_sms.py:81
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr ""
@@ -97,7 +98,7 @@ msgid "No mobile number defined, unable to send SMS message: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_recipients
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
 msgstr "Címzettek"
 

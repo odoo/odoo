@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * crm_project
 # 
+# Translators:
+# Martin Trigaux, 2018
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +30,7 @@ msgstr ""
 #. module: crm_project
 #: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцлах"
 
 #. module: crm_project
 #: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
@@ -40,49 +45,74 @@ msgid "Create Task"
 msgstr ""
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "Шинэ захиалагч үүсгэх"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "Захиалагч"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "Захиалагчтай битгий холбо"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
-msgstr ""
+msgstr "Удирдах"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "Байгаа захиалагчид холбох"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
-msgstr ""
+msgstr "Төсөл"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "Холбогдох захиалагч"
 
 #. module: crm_project
 #: model:ir.model,name:crm_project.model_crm_lead_convert2task

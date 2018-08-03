@@ -3,14 +3,17 @@
 # * account_tax_python
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# Yuan Xulei <hi@yxl.name>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,13 +22,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "适用代码"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -46,7 +49,7 @@ msgstr ""
 ":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -66,7 +69,7 @@ msgstr ""
 ":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -85,7 +88,7 @@ msgstr ""
 ":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -103,8 +106,34 @@ msgstr ""
 ":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Fixed"
+msgstr "固定"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Group of Taxes"
+msgstr "税组"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price"
+msgstr "价格百分比"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price Tax Included"
+msgstr "含税价格百分比"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 msgid "Python Code"
 msgstr "Python 代码"
 
@@ -112,6 +141,12 @@ msgstr "Python 代码"
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
 msgstr "税金"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "税计算"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template

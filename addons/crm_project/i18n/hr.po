@@ -6,14 +6,15 @@
 # Bole <bole@dajmi5.com>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,49 +49,74 @@ msgid "Create Task"
 msgstr "Kreiraj zadatak"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "Kreiraj novog partnera"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
 msgstr "Kreirano"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "Kupac"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "Bez poveznice s partnerom"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
 msgid "ID"
 msgstr "ID"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
 msgstr "Potencijal"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "Veza na postojećeg partnera"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr "Projekt"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "Povezani partner"
 
 #. module: crm_project
 #: model:ir.model,name:crm_project.model_crm_lead_convert2task
