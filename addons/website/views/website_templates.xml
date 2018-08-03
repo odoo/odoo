@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- Assets -->
+<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette_body.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette_footer.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette_menu.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette_typo.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_theme_color_palette.scss"/>
+    </xpath>
+</template>
+<template id="_assets_secondary_variables" inherit_id="web._assets_secondary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
+    </xpath>
+</template>
+
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
@@ -15,6 +31,12 @@
 <template id="qunit_suite" inherit_id="web.qunit_suite">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
 
@@ -59,6 +81,7 @@
     <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
 
     <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/customize.js"/>
     <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
 
     <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
@@ -371,41 +394,200 @@
 </template>
 
 <!--
-    Customize Themes
+    XML template to be processed for theme customization modal.
 
-    Use INPUT type 'checkbox' or 'radio' or use OPTION in select box
-    'data-xmlid' (optional) xml id of the template to add if the input is checked.
-        You can set a list of xml id separate by comma (all template is enable or
-        disable in same time)
-    'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
-    'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
-    'data-reload="/"' (optional) force the reloading of the page if the url match with
-        the string ( = regexp).
-        Otherwise, only the '/web/content/web.assets_frontend' is reloaded
+    Allowed tags in the root <div/> elements:
 
-    For the sets (data-enable and/or data-disable without data-xmlid), the set is
-    automatically checked if:
-    - all related fields are enabled for data-enable
-    - all related fields are disabled for data-disable
-    else unchecked
+    <content>: Declares a new set of options (a tab pane in the dialog)
+        -> string = tab's nav text
+        -> title = tab's heading
 
-    HTML apply classes:
-    - 'checked': on the parent label when input is checked
-    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together
-       out is added)
-    - 'out': on the container 1 second before removed from ths DOM
-    - 'loading': on the container/modal when the new css is loading
+    Allowed tags in the <content/> elements:
+
+    <opt>: Declares a new toggle option
+        -> id (optional) = an ID to associate to the option
+        -> string (optional) = option's text
+        -> data-icon (optional) = an image URL to set as option's background
+        -> data-xmlid (optional) = template(s) to enable if the input is checked (list of comma-separated xml ids)
+        -> data-enable (optional) = enable other options (list of comma-separated option ids)
+        -> data-disable (optional) = disable other options (list of comma-separated option ids)
+        -> data-reload (optional) = force the reloading of the page if the url matches the value
+                                    Otherwise, only the main assets are reloaded
+        -> data-font (optional) = indicates which fonts to use to style the option and adds
+                                  default sample text if no 'string' is specified
+                                  (see $o-theme-fonts in scss)
+        -> data-color-palette (optional) = indicates which color palette to use to style the option
+                                           (see $o-theme-color-palettes in scss)
+
+    <more>: Declares a subset of options which is hidden by default (with a button to show it)
+        -> string = button's text
+
+    <list>: Declares a subset of options showed as a list
+        -> string = list's title
 -->
-<template id="website.theme_customize" name="Theme Modal for Customization">
-  <div role="dialog" id="theme_customize_modal" class="modal fade">
-      <div class="modal-dialog">
-          <div class="modal-content">
-            <header class="modal-header text-center">
-                <h4 class="modal-title">Please install a theme in order to customize your website.</h4>
-            </header>
-          </div>
-      </div>
-  </div>
+<template id="theme_customize">
+    <div>
+        <!-- Color options -->
+        <content string="Colors" title="Choose the theme colors">
+            <opt data-xmlid="website.option_color_user_variables" data-color-palette="user" string="Choose your colors"/>
+            <opt data-xmlid="" data-color-palette="1" string="Default theme colors"/>
+
+            <list string="Menu text">
+                <opt string="Dark" data-xmlid="" data-reload="/"/>
+                <opt string="Light" data-xmlid="website.option_navbar_dark" data-reload="/"/>
+            </list>
+        </content>
+
+        <!-- Layout Options -->
+        <content string="Layout" title="Choose your layout">
+            <list string="Menu">
+                <opt string="Top Bar" data-xmlid="" data-reload="/"/>
+                <opt string="Hamburger" data-xmlid="website.option_hamburger_menu, website.no_autohide_menu" data-reload="/"/>
+            </list>
+            <more data-depends="">
+                <list string="Body">
+                    <opt string="Full" data-xmlid="website.option_layout_full" data-enable="option_no_background" data-icon="/website/static/src/img/options/layout-full.png"/>
+                    <opt id="option_layout_boxed" string="Boxed" data-xmlid="website.option_layout_boxed" data-icon="/website/static/src/img/options/layout-boxed.png"/>
+                </list>
+                <list string="Background" data-depends="option_layout_boxed">
+                    <opt id="option_no_background" string="None" data-xmlid=""/>
+                    <opt string="Choose an image" data-xmlid="website.option_custom_body_image"/>
+                    <opt string="Choose a pattern" data-xmlid="website.option_custom_body_image, website.option_custom_body_pattern"/>
+                </list>
+            </more>
+        </content>
+
+        <!-- Font options -->
+        <content string="Fonts" title="Choose your fonts">
+            <list string="Title">
+                <opt id="option_font_title_01" data-xmlid="website.option_font_title_01_variables" data-font="1"/>
+                <opt id="option_font_title_02" data-xmlid="website.option_font_title_02_variables" data-font="2"/>
+                <opt id="option_font_title_03" data-xmlid="website.option_font_title_03_variables" data-font="3"/>
+                <opt id="option_font_title_04" data-xmlid="website.option_font_title_04_variables" data-font="4"/>
+                <opt id="option_font_title_05" data-xmlid="website.option_font_title_05_variables" data-font="5"/>
+                <opt id="option_font_title_06" data-xmlid="website.option_font_title_06_variables" data-font="6"/>
+            </list>
+            <list string="Body">
+                <opt id="option_font_body_01" data-xmlid="website.option_font_body_01_variables" data-font="1"/>
+                <opt id="option_font_body_02" data-xmlid="website.option_font_body_02_variables" data-font="2"/>
+                <opt id="option_font_body_03" data-xmlid="website.option_font_body_03_variables" data-font="3"/>
+                <opt id="option_font_body_04" data-xmlid="website.option_font_body_04_variables" data-font="4"/>
+                <opt id="option_font_body_05" data-xmlid="website.option_font_body_05_variables" data-font="5"/>
+                <opt id="option_font_body_06" data-xmlid="website.option_font_body_06_variables" data-font="6"/>
+            </list>
+        </content>
+    </div>
+</template>
+
+<!-- Color options -->
+<template id="option_color_user_variables" inherit_id="website._assets_secondary_variables" active="True">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_color_user_variables.scss"/>
+    </xpath>
+</template>
+
+<!-- Menu color options -->
+<template id="option_navbar_dark" inherit_id="website.layout" active="False">
+    <xpath expr="//header/nav" position="attributes">
+        <attribute name="class" remove="navbar-light" add="navbar-dark" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Menu options -->
+<template id="option_hamburger_menu" inherit_id="website.layout" active="False">
+    <xpath expr="//header/nav" position="attributes">
+        <attribute name="class" remove="navbar-expand-md" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Layout options -->
+<template id="option_layout_full" inherit_id="website.assets_frontend" active="True">
+    <xpath expr="//link[last()]" position="after"/>
+</template>
+<template id="option_layout_boxed" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_layout_boxed.scss"/>
+    </xpath>
+</template>
+
+<template id="option_custom_body_image" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <style>
+            <!-- Patched by JS option -->
+        </style>
+    </xpath>
+</template>
+
+<template id="option_custom_body_pattern" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_custom_body_pattern.scss"/>
+    </xpath>
+</template>
+
+<!-- TODO use scss customization for fonts instead (like for user colors) -->
+
+<!-- Title font options -->
+<template id="option_font_title_01_variables" inherit_id="website._assets_primary_variables" active="True">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_01_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_02_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_02_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_03_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_03_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_04_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_04_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_05_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_05_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_06_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_title_06_variables.scss"/>
+    </xpath>
+</template>
+
+<!-- Body font options -->
+<template id="option_font_body_01_variables" inherit_id="website._assets_primary_variables" active="True">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_01_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_02_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_02_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_03_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_03_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_04_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_04_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_05_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_05_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_06_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/fonts/option_font_body_06_variables.scss"/>
+    </xpath>
 </template>
 
 <template id="kanban">

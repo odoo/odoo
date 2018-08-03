@@ -2,8 +2,48 @@
 /// This file regroups the website design rules.
 ///
 
+$-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
+@if $-theme-font {
+    @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+}
+@if $o-theme-font-number != $o-theme-headings-font-number {
+    $-theme-font: nth($o-theme-font-urls, $o-theme-headings-font-number);
+    @if $-theme-font {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+    }
+}
+
+#wrapwrap {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
 font[style*='background'], font[class*='bg-'] {
     padding: 0 2px;
+}
+
+.navbar {
+    @include o-bg-color(color('menu'));
+}
+.o_footer {
+    @include o-bg-color(color('footer'));
+}
+h2, h3, h4, h5, h6 {
+    color: color('h2');
+}
+h3, h4, h5, h6 {
+    color: color('h3');
+}
+h4, h5, h6 {
+    color: color('h4');
+}
+h5, h6 {
+    color: color('h5');
+}
+h6 {
+    color: color('h6');
 }
 
 // Odoo image background classes

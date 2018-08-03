@@ -134,6 +134,19 @@
     }
 }
 
+// Function to remove all falsy values of a map
+@function o-map-omit($map) {
+    $-map: ();
+    @each $key, $value in $map {
+        @if $value {
+            $-map: map-merge($-map, (
+                $key: $value,
+            ));
+        }
+    }
+    @return $-map;
+}
+
 // ------- Kanban grouped mixins -------
 @mixin o-kanban-icon($base-opacity: 0.5) {
     display: block;

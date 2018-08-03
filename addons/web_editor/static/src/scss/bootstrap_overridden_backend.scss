@@ -1,0 +1,4 @@
+
+// Hacky way to prevent our web_editor/website themes to affect the backend UI but
+// still allow to define extra colors for backend HTML editors
+$theme-colors: map-remove($theme-colors, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');

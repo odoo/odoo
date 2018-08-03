@@ -35,7 +35,7 @@
                             </button>
                             <div class="collapse navbar-collapse" id="top_menu_collapse">
                                 <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
-                                <ul class="nav navbar-nav ml-auto" id="top_menu">
+                                <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
                                     <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
                                     <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
                                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
@@ -55,7 +55,7 @@
                 <main>
                     <t t-raw="0"/>
                 </main>
-                <footer >
+                <footer class="bg-light o_footer">
                     <div class="container mt16 mb16" id="footer">
                         <div class="float-right" t-ignore="true" t-if="not editable">
                             Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>

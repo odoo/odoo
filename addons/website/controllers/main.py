@@ -365,14 +365,18 @@ class Website(Home):
 
         if get_bundle:
             context = dict(request.context, active_test=True)
-            return request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context)
+            return {
+                'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
+                'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),
+                'website.assets_editor': request.env["ir.qweb"]._get_asset('website.assets_editor', options=context),
+            }
 
         return True
 
     @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
-    def theme_customize_reload(self, href, enable, disable):
+    def theme_customize_reload(self, href, enable, disable, tab=0):
         self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
-        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
+        return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
 
     @http.route(['/website/multi_render'], type='json', auth="public", website=True)
     def multi_render(self, ids_or_xml_ids, values=None):
