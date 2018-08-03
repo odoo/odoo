@@ -8,7 +8,8 @@ class WebsiteResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'website.seo.metadata', 'website.published.mixin']
 
-    website_description = fields.Html('Website Partner Full Description', strip_style=True)
+    website_description = fields.Html(
+        'Website Partner Full Description', sanitize=False, groups='website.group_website_publisher')
     website_short_description = fields.Text('Website Partner Short Description')
 
     @api.multi
