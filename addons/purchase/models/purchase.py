@@ -472,7 +472,7 @@ class PurchaseOrder(models.Model):
         This function returns an action that display existing picking orders of given purchase order ids.
         When only one found, show the picking immediately.
         '''
-        action = self.env.ref('stock.action_picking_tree')
+        action = self.env.ref('stock.action_picking_tree_all')
         result = action.read()[0]
 
         #override the context to get rid of the default filtering on operation type
