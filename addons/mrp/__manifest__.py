@@ -8,7 +8,7 @@
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
     'sequence': 14,
-    'summary': 'Manufacturing Orders, Bill of Materials, Routings',
+    'summary': 'Manufacture products and process work orders',
     'depends': ['product', 'stock', 'resource'],
     'description': "",
     'data': [

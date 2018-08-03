@@ -7,7 +7,7 @@
     'version': '2.0',
     'category': 'Human Resources',
     'sequence': 81,
-    'summary': 'Manage employee attendances',
+    'summary': 'Track employee attendance',
     'description': """
 This module aims to manage employee's attendances.
 ==================================================

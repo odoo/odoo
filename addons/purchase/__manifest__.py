@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Purchase Management',
+    'name': 'Purchase',
     'version': '1.2',
     'category': 'Purchases',
     'sequence': 60,
-    'summary': 'Purchase Orders, Receipts, Vendor Bills',
+    'summary': 'Manage your purchase orders and agreements with your vendors',
     'description': "",
     'website': 'https://www.odoo.com/page/purchase',
     'depends': ['account'],

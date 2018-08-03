@@ -4,7 +4,7 @@
 {
     'name': 'PosBox Software Upgrader',
     'category': 'Point of Sale',
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'sequence': 6,
     'summary': 'Allows to remotely upgrade the PosBox software',
     'description': """
