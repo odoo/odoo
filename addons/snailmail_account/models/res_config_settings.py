@@ -7,5 +7,4 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):	
     _inherit = 'res.config.settings'	
 
-    snailmail_color = fields.Boolean(string='Print In Color', related='company_id.snailmail_color')	
-    snailmail_duplex = fields.Boolean(string='Print Both sides', related='company_id.snailmail_duplex')
+    invoice_is_snailmail = fields.Boolean(string='Send by Post', related='company_id.invoice_is_snailmail')

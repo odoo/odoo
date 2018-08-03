@@ -3,8 +3,8 @@
 
 from odoo import fields, models
 
+
 class Company(models.Model):
     _inherit = "res.company"
 
-    snailmail_color = fields.Boolean(string='Color', default=False)
-    snailmail_duplex = fields.Boolean(string='Both sides', default=False)
+    invoice_is_snailmail = fields.Boolean(string='Send by Letter by default', default=True)

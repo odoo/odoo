@@ -71,6 +71,9 @@ Best Regards,'''))
     qr_code_payment_journal_id = fields.Many2one('account.journal', string='SEPA QR Code Bank Journal account')
     qr_code_valid = fields.Boolean(string='Has all required arguments', related="qr_code_payment_journal_id.bank_account_id.qr_code_valid")
 
+    invoice_is_email = fields.Boolean('Email by default', default=True)
+    invoice_is_print = fields.Boolean('Print by default', default=True)
+
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")

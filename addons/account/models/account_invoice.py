@@ -574,8 +574,7 @@ class AccountInvoice(models.Model):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
-        self.ensure_one()
-        self.sent = True
+        self.write({'sent': True})
         if self.user_has_groups('account.group_account_invoice'):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
@@ -588,7 +587,7 @@ class AccountInvoice(models.Model):
         """
         self.ensure_one()
         template = self.env.ref('account.email_template_edi_invoice', False)
-        compose_form = self.env.ref('account.multi_compose_message_wizard_form', False)
+        compose_form = self.env.ref('account.account_invoice_send_wizard_form', False)
         ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
@@ -600,11 +599,11 @@ class AccountInvoice(models.Model):
             force_email=True
         )
         return {
-            'name': _('Compose Email'),
+            'name': _('Send Invoice'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'multi.compose.message',
+            'res_model': 'account.invoice.send',
             'views': [(compose_form.id, 'form')],
             'view_id': compose_form.id,
             'target': 'new',

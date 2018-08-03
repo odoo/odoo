@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="snailmail_letter_list">
+        <field name="name">snailmail.letter.tree</field>
+        <field name="model">snailmail.letter</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state=='error'" decoration-muted="state=='sent'" string="Letters">
+                <field name="attachment_id"/>
+                <field name="model"/>
+                <field name="res_id"/>
+                <field name="company_id"/>
+                <field name="state"/>
+                <field name="info_msg" widget="html"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="snailmail_letter_form">
+        <field name="name">snailmail.letter.form</field>
+        <field name="model">snailmail.letter</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="snailmail_print" string="Send Now" type="object" states="pending,error" class="oe_highlight"/>
+                    <button name="cancel" string="Cancel" type="object" states="pending,error"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,sent,cancel"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="attachment_id"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="model"/>
+                        <field name="res_id"/>
+                        <field name="color"/>
+                        <field name="duplex"/>
+                        <field name="info_msg" widget="html" readonly="1"/>
+                        <field name="company_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mail_letters">
+        <field name="name">Letters</field>
+        <field name="res_model">snailmail.letter</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="domain">[('state', '!=', 'draft')]</field>
+        <field name="view_id" ref="snailmail_letter_list" />
+    </record>
+
+    <menuitem id="menu_snailmail_letters" parent="base.menu_email" action="action_mail_letters"
+              sequence="20"/>
+</odoo>

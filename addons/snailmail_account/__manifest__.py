@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Snail Mail",
+    'name': "snailmail_account",
     'description': """
-Allows users to send documents by post
+Allows users to send invoices by post
 =====================================================
         """,
     'category': 'Tools',
     'version': '0.1',
-    'depends': ['iap', 'base_setup'],
+    'depends': ['account', 'snailmail'],
     'data': [
-        'data/snailmail_data.xml',
         'views/res_config_settings_views.xml',
-        'views/snailmail_views.xml',
-        'security/ir.model.access.csv',
+        'wizard/account_invoice_send_views.xml',
     ],
     'auto_install': True,
 }
