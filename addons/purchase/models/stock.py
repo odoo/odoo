@@ -60,6 +60,10 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _clean_merged(self):
+        super(StockMove, self)._clean_merged()
+        self.write({'created_purchase_line_id': False})
+
     def _action_cancel(self):
         for move in self:
             if move.created_purchase_line_id:
