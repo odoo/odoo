@@ -554,6 +554,10 @@ class StockMove(models.Model):
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
         ]
 
+    def _clean_merged(self):
+        """Cleanup hook used when merging moves"""
+        self.write({'propagate': False})
+
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
@@ -591,7 +595,7 @@ class StockMove(models.Model):
 
         if moves_to_unlink:
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
-            moves_to_unlink.write({'propagate': False})
+            moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
         return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
