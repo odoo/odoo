@@ -21,8 +21,8 @@ KanbanRecord.include({
         ev.preventDefault();
 
         this.$target_input = $('<input>');
-        this.$('.o_kanban_primary_bottom').html(this.$target_input);
-        this.$('.o_kanban_primary_bottom').prepend(_t("Set an invoicing target: "));
+        this.$('.o_kanban_primary_bottom.bottom_block').html(this.$target_input);
+        this.$('.o_kanban_primary_bottom.bottom_block').prepend(_t("Set an invoicing target: "));
         this.$target_input.focus();
 
         var self = this;
@@ -31,14 +31,7 @@ KanbanRecord.include({
             if (isNaN(value)) {
                 self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
             } else {
-                self._rpc({
-                        model: 'crm.team',
-                        method: 'write',
-                        args: [[self.id], { 'invoiced_target': value }],
-                    })
-                    .done(function() {
-                        self.trigger_up('kanban_record_update', {id: self.id});
-                    });
+                self.trigger_up('kanban_record_update', {'invoiced_target': value});
             }
         });
     },
