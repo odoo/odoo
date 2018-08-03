@@ -112,8 +112,10 @@ class MrpStockReport(models.TransientModel):
     def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self._get_reference(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
-        if level > 1:  # level 1 is always foldable even if there is not SN/Lot
-            unfoldable = False if not move_line.lot_id else unfoldable
+        if level == 1:
+            unfoldable = True  # level 1 is always foldable even if there is not SN/Lot
+        else:
+            unfoldable = False if not move_line.lot_id else unfoldable  # if no lot id, its useless to unfold
         data = [{
             'level': level,
             'unfoldable': unfoldable,
