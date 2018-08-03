@@ -266,7 +266,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $container.find('a[data-event="padding"][data-value="medium"]').toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
         $container.find('a[data-event="padding"][data-value="large"]').toggleClass("active", $(oStyle.image).hasClass("padding-large"));
         $container.find('a[data-event="padding"][data-value="xl"]').toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
-        $container.find('a[data-event="padding"][data-value=""]').toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
+        $container.find('a[data-event="padding"][data-value=""]').toggleClass("active", !$container.find('li a.active[data-event="padding"]').length);
 
         $(oStyle.image).addClass('o_we_selected_image');
 
