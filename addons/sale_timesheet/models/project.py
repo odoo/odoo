@@ -109,6 +109,13 @@ class ProjectTask(models.Model):
                 self.partner_id = self.sale_line_id.order_partner_id
         return result
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        result = super(ProjectTask, self)._onchange_partner_id()
+        if self.sale_line_id.order_partner_id != self.partner_id:
+            self.sale_line_id = False
+        return result
+
     @api.multi
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
@@ -151,6 +158,28 @@ class ProjectTask(models.Model):
         if any(task.sale_line_id for task in self):
             raise ValidationError(_('You have to unlink the task from the sale order item in order to delete it.'))
         return super(ProjectTask, self).unlink()
+
+    # ---------------------------------------------------
+    # Subtasks
+    # ---------------------------------------------------
+
+    @api.model
+    def _subtask_implied_fields(self):
+        result = super(ProjectTask, self)._subtask_implied_fields()
+        return result + ['sale_line_id']
+
+    def _subtask_write_values(self, values):
+        result = super(ProjectTask, self)._subtask_write_values(values)
+        # changing the partner on a task will reset the sale line of its subtasks
+        if 'partner_id' in result:
+            result['sale_line_id'] = False
+        elif 'sale_line_id' in result:
+            result.pop('sale_line_id')
+        return result
+
+    # ---------------------------------------------------
+    # Actions
+    # ---------------------------------------------------
 
     @api.multi
     def action_view_so(self):
