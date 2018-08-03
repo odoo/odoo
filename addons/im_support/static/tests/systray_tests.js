@@ -311,7 +311,7 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         channel_ids: [supportChannelID],
     };
     var notification = [[false, 'mail.channel', 1], data];
-    messagingMenu.call('support_bus_service', 'trigger', 'notification', [notification]);
+    messagingMenu.call('support_bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.strictEqual($('.o_thread_window .o_thread_message').length, 1,
         "there should be a new message in the thread");
