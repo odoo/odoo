@@ -1,31 +1,33 @@
 odoo.define('website.theme', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
+var config = require('web.config');
 var core = require('web.core');
-var session = require('web.session');
-var Widget = require('web.Widget');
+var Dialog = require('web.Dialog');
 var weContext = require('web_editor.context');
 var websiteNavbarData = require('website.navbar');
 
-var QWeb = core.qweb;
+var _t = core._t;
 
 var templateDef = null;
 
-var ThemeCustomizeDialog = Widget.extend({
+var ThemeCustomizeDialog = Dialog.extend({
     template: 'website.theme_customize',
     events: {
-        'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
-        'mousedown label:has(input[data-xmlid],input[data-enable],input[data-disable])': function (event) {
-            var self = this;
-            this.time_select = _.defer(function () {
-                var input = $(event.target).find('input').length ? $(event.target).find('input') : $(event.target).parent().find('input');
-                self.on_select(input, event);
-            });
-        },
-        'click .close': 'close',
-        'click': 'click',
+        'change [data-xmlid], [data-enable], [data-disable]': '_onChange',
     },
+
+    /**
+     * @constructor
+     */
+    init: function (parent, options) {
+        this._super(parent, _.extend({
+            title: _t("Customize this theme"),
+        }, options || {}));
+    },
+    /**
+     * @override
+     */
     willStart: function () {
         if (templateDef === null) {
             templateDef = this._rpc({
@@ -33,246 +35,209 @@ var ThemeCustomizeDialog = Widget.extend({
                 method: 'read_template',
                 args: ['website.theme_customize', weContext.get()],
             }).then(function (data) {
-                return QWeb.add_template(data);
+                return core.qweb.add_template(data);
             });
         }
         return $.when(this._super.apply(this, arguments), templateDef);
     },
+    /**
+     * @override
+     */
     start: function () {
         var self = this;
-        this.timer = null;
-        this.reload = false;
-        this.flag = false;
-        this.active_select_tags();
-        this.$inputs = this.$('input[data-xmlid],input[data-enable],input[data-disable]');
-        setTimeout(function () {self.$el.addClass('in');}, 0);
-        this.keydown_escape = function (event) {
-            if (event.keyCode === 27) {
-                self.close();
-            }
-        };
-        $(document).on('keydown', this.keydown_escape);
-        return this.load_xml_data().then(function () {
-            self.flag = true;
-        });
+
+        this.$modal.addClass('o_theme_customize_modal');
+
+        this.$inputs = this.$('[data-xmlid], [data-enable], [data-disable]');
+
+        return $.when(
+            this._super.apply(this, arguments),
+            this._loadViews()
+        );
     },
-    active_select_tags: function () {
-        var uniqueID = 0;
+    
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _loadViews: function () {
         var self = this;
-        var $selects = this.$('select:has(option[data-xmlid],option[data-enable],option[data-disable])');
-        $selects.each(function () {
-            uniqueID++;
-            var $select = $(this);
-            var $options = $select.find('option[data-xmlid], option[data-enable], option[data-disable]');
-            $options.each(function () {
-                var $option = $(this);
-                var $input = $('<input style="display: none;" type="radio" name="theme_customize_modal-select-'+uniqueID+'"/>');
-                $input.attr('id', $option.attr('id'));
-                $input.attr('data-xmlid', $option.data('xmlid'));
-                $input.attr('data-enable', $option.data('enable'));
-                $input.attr('data-disable', $option.data('disable'));
-                $option.removeAttr('id');
-                $option.data('input', $input);
-                $input.on('update', function () {
-                    $option.attr('selected', $(this).prop('checked'));
-                });
-                self.$el.append($input);
-            });
-            $select.data('value', $options.first());
-            $options.first().attr('selected', true);
-        });
-        $selects.change(function () {
-            var $option = $(this).find('option:selected');
-            $(this).data('value').data('input').prop('checked', true).change();
-            $(this).data('value', $option);
-            $option.data('input').change();
-        });
-    },
-    load_xml_data: function () {
-        var self = this;
-        $('#theme_error').remove();
         return this._rpc({
             route: '/website/theme_customize_get',
             params: {
-                xml_ids: this.get_xml_ids(this.$inputs),
+                xml_ids: this._getXMLIDs(this.$inputs),
             },
-        }).done(function (data) {
-            self.$inputs.filter('[data-xmlid=""]').prop('checked', true).change();
-            self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
-                if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
-                    $(this).prop('checked', false).trigger('change', true);
-                }
-                if (!_.difference(self.get_xml_ids($(this)), data[0]).length) {
-                    $(this).prop('checked', true).trigger('change', true);
+        }).done(function (data) {      
+            self.$inputs.prop('checked', false);      
+            _.each(self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])'), function (input) {
+                var $input = $(input);
+                if (!_.difference(self._getXMLIDs($input), data[0]).length) {
+                    $input.prop('checked', true);
                 }
             });
+            _.each(self.$inputs.filter('[data-xmlid=""]'), function (input) {
+                var $input = $(input);
+                if (!self.$inputs.filter('[name="' + $input.attr('name') + '"]:checked').length) {
+                    $input.prop('checked', true);
+                }
+            });
+            self._setActive();
         }).fail(function (d, error) {
-            $('body').prepend($('<div id="theme_error"/>').text(error.data.message));
+            Dialog.alert(this, error.data.message)
         });
     },
-    get_inputs: function (string) {
-        return this.$inputs.filter('#'+string.split(/\s*,\s*/).join(', #'));
+    /**
+     * @private
+     */
+    _getInputs: function (string) {
+        if (!string) {
+            return $();
+        }
+        return this.$inputs.filter('#' + string.replace(/\s*,\s*/g, ', #'));
     },
-    get_xml_ids: function ($inputs) {
-        var xml_ids = [];
-        $inputs.each(function () {
-            if ($(this).data('xmlid') && $(this).data('xmlid').length) {
-                xml_ids = xml_ids.concat($(this).data('xmlid').split(/\s*,\s*/));
+    /**
+     * @private
+     */
+    _getXMLIDs: function ($inputs) {
+        var xmlIDs = [];
+        _.each($inputs, function (input) {
+            var $input = $(input);
+            var xmlID = $input.data('xmlid');
+            if (xmlID) {
+                xmlIDs = xmlIDs.concat(xmlID.split(/\s*,\s*/));
             }
         });
-        return xml_ids;
+        return xmlIDs;
     },
-    update_style: function (enable, disable, reload) {
-        if (this.$el.hasClass('loading')) {
-            return;
-        }
-        this.$el.addClass('loading');
+    /**
+     * @abstract
+     * @private
+     */
+    _processChange: function ($inputs, event) {},
+    /**
+     * @private
+     */
+    _setActive: function () {
+        var self = this;
 
-        if (!reload && session.debug !== 'assets') {
-            var self = this;
-            return this._rpc({
-                route: '/website/theme_customize',
-                params: {
-                    enable: enable,
-                    disable: disable,
-                    get_bundle: true,
-                },
-            }).then(function (bundleHTML) {
-                var $links = $('link[href*=".assets_frontend"]');
-                var $newLinks = $(bundleHTML).filter('link');
+        // Look at all options to see if they are enabled or disabled
+        var $enable = this.$inputs.filter('[data-xmlid]:checked');
+        var $disable = this.$inputs.filter('[data-xmlid]:not(:checked)');
 
-                var linksLoaded = $.Deferred();
-                var nbLoaded = 0;
-                $newLinks.on('load', function (e) {
-                    if (++nbLoaded >= $newLinks.length) {
-                        linksLoaded.resolve();
-                    }
-                });
-                $newLinks.on('error', function (e) {
-                    linksLoaded.reject();
-                    window.location.hash = 'theme=true';
-                    window.location.reload();
-                });
+        // Mark the labels as checked accordingly
+        this.$('label').removeClass('checked');
+        $enable.closest('label').addClass('checked');
 
-                $links.last().after($newLinks);
-                return linksLoaded.then(function () {
-                    $links.remove();
-                    self.$el.removeClass('loading');
-                });
+        // Mark the option sets as checked if all their option are checked/unchecked
+        var $sets = this.$inputs.filter('[data-enable], [data-disable]').not('[data-xmlid]');
+        _.each($sets, function (set) {
+            var $set = $(set);
+            var checked = true;
+            if (self._getInputs($set.data('enable')).not(':checked').length) {
+                checked = false;
+            }
+            if (self._getInputs($set.data('disable')).filter(':checked').length) {
+                checked = false;
+            }
+            $set.prop('checked', checked).closest('label').toggleClass('checked', checked);
+        });
+    },
+    /**
+     * @private
+     */
+    _updateStyle: function (enable, disable, reload) {
+        this.$modal.addClass('loading');
+
+        if (reload || config.debug === 'assets') {
+            window.location.href = $.param.querystring('/website/theme_customize_reload', {
+                href: window.location.href,
+                enable: enable.join(','),
+                disable: disable.join(','),
             });
-        } else {
-            var href = '/website/theme_customize_reload'+
-                '?href='+encodeURIComponent(window.location.href)+
-                '&enable='+encodeURIComponent(enable.join(','))+
-                '&disable='+encodeURIComponent(disable.join(','));
-            window.location.href = href;
             return $.Deferred();
         }
-    },
-    enable_disable: function ($inputs, enable) {
-        $inputs.each(function () {
-            var check = $(this).prop('checked');
-            var $label = $(this).closest('label');
-            $(this).prop('checked', enable);
-            if (enable) $label.addClass('checked');
-            else $label.removeClass('checked');
-            if (check !== enable) {
-                $(this).change();
-            }
+
+        var self = this;
+        return this._rpc({
+            route: '/website/theme_customize',
+            params: {
+                enable: enable,
+                disable: disable,
+                get_bundle: true,
+            },
+        }).then(function (bundleHTML) {
+            var frontendLinkSelector = 'link[href*=".assets_frontend"]';
+            var $links = $(frontendLinkSelector);
+            var $newLinks = $(bundleHTML).filter(frontendLinkSelector);
+
+            var linksLoaded = $.Deferred();
+            var nbLoaded = 0;
+            $newLinks.on('load', function (e) {
+                if (++nbLoaded >= $newLinks.length) {
+                    linksLoaded.resolve();
+                }
+            });
+            $newLinks.on('error', function (e) {
+                linksLoaded.reject();
+                window.location.hash = 'theme=true';
+                window.location.reload();
+            });
+
+            $links.last().after($newLinks);
+            return linksLoaded.then(function () {
+                $links.remove();
+                self.$modal.removeClass('loading');
+            });
         });
     },
-    change_selection: function (event, init_mode) {
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChange: function (ev) {
         var self = this;
-        clearTimeout(this.time_select);
 
-        if (this.$el.hasClass('loading')) return; // prevent to change selection when css is loading
+        // Checkout the option that changed
+        var $option = $(ev.target).find('input').addBack('input');
+        var $options = $option;
+        var checked = $option.is(':checked');
 
-        var $option = $(event.target).is('input') ? $(event.target) : $('input', event.target),
-            $options = $option,
-            checked = $option.prop('checked');
-
+        // If it was enabled, enable/disable the related input (see data-enable, data-disable)
+        // and retain the ones that actually changed
         if (checked) {
             var $inputs;
-            if ($option.data('enable')) {
-                $inputs = this.get_inputs($option.data('enable'));
-                $options = $options.add($inputs.filter(':not(:checked)'));
-                this.enable_disable($inputs, true);
-            }
-            if ($option.data('disable')) {
-                $inputs = this.get_inputs($option.data('disable'));
-                $options = $options.add($inputs.filter(':checked'));
-                this.enable_disable($inputs, false);
-            }
-            $option.closest('label').addClass('checked');
-        } else {
-            $option.closest('label').removeClass('checked');
+            // Input to enable
+            $inputs = this._getInputs($option.data('enable'));
+            $options = $options.add($inputs.filter(':not(:checked)'));
+            $inputs.prop('checked', true);
+            // Input to disable
+            $inputs = this._getInputs($option.data('disable'));
+            $options = $options.add($inputs.filter(':checked'));
+            $inputs.prop('checked', false);
         }
 
+        // Look at all options to see if they are enabled or disabled
         var $enable = this.$inputs.filter('[data-xmlid]:checked');
-        $enable.closest('label').addClass('checked');
         var $disable = this.$inputs.filter('[data-xmlid]:not(:checked)');
-        $disable.closest('label').removeClass('checked');
 
-        var $sets = this.$inputs.filter('input[data-enable]:not([data-xmlid]), input[data-disable]:not([data-xmlid])');
-        $sets.each(function () {
-            var $set = $(this);
-            var checked = true;
-            if ($set.data('enable')) {
-                self.get_inputs($(this).data('enable')).each(function () {
-                    if (!$(this).prop('checked')) checked = false;
-                });
-            }
-            if ($set.data('disable')) {
-                self.get_inputs($(this).data('disable')).each(function () {
-                    if ($(this).prop('checked')) checked = false;
-                });
-            }
-            if (checked) {
-                $set.prop('checked', true).closest('label').addClass('checked');
-            } else {
-                $set.prop('checked', false).closest('label').removeClass('checked');
-            }
-            $set.trigger('update');
-        });
+        this._setActive();
 
-        if (this.flag && $option.data('reload') && document.location.href.match(new RegExp( $option.data('reload') ))) {
-            this.reload = true;
-        }
-
-        clearTimeout(this.timer);
-        if (this.flag) {
-            this.timer = _.defer(function () {
-                if (!init_mode) self.on_select($options, event);
-                self.update_style(self.get_xml_ids($enable), self.get_xml_ids($disable), self.reload);
-                self.reload = false;
-            });
-        } else {
-                this.timer = _.defer(function () {
-                    if (!init_mode) self.on_select($options, event);
-                    self.reload = false;
-                });
-        }
+        // Update the style according to the whole set of options
+        self._processChange($options, ev);
+        self._updateStyle(
+            self._getXMLIDs($enable),
+            self._getXMLIDs($disable),
+            $option.data('reload') && window.location.href.match(new RegExp($option.data('reload')))
+        );
     },
-    /* Method call when the user change the selection or click on an input
-     * @values: all changed inputs
-     */
-    on_select: function ($inputs, event) {
-        clearTimeout(this.time_select);
-    },
-    click: function (event) {
-        if (!$(event.target).closest('#theme_customize_modal > *').length) {
-            this.close();
-        }
-    },
-    close: function () {
-        var self = this;
-        $(document).off('keydown', this.keydown_escape);
-        $('#theme_error').remove();
-        $('link[href*=".assets_"]').removeAttr('data-loading');
-        this.$el.removeClass('in');
-        this.$el.addClass('out');
-        setTimeout(function () {self.destroy();}, 500);
-    }
 });
 
 var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
@@ -306,7 +271,7 @@ var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     _openThemeCustomizeDialog: function () {
-        return new ThemeCustomizeDialog(this).appendTo(document.body);
+        return new ThemeCustomizeDialog(this).open();
     },
 });
 
