@@ -915,7 +915,7 @@ available by importing `odoo.tools.date_utils`.
 
 .. autoclass:: odoo.fields.Datetime
     :show-inheritance:
-    :members: now, context_timestamp, to_datetime, to_string
+    :members: now, today, context_timestamp, to_datetime, to_string
 
 .. _reference/orm/fields/relational:
 
