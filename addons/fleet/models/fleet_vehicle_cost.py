@@ -175,6 +175,13 @@ class FleetVehicleLogContract(models.Model):
             self.odometer_unit = self.vehicle_id.odometer_unit
 
     @api.multi
+    def write(self, vals):
+        res = super(FleetVehicleLogContract, self).write(vals)
+        if vals.get('expiration_date') or vals.get('user_id'):
+            self.activity_reschedule(['fleet.mail_act_fleet_contract_to_renew'], date_deadline=vals.get('expiration_date'), new_user_id=vals.get('user_id'))
+        return res
+
+    @api.multi
     def contract_close(self):
         for record in self:
             record.state = 'closed'
