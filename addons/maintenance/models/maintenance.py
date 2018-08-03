@@ -352,7 +352,11 @@ class MaintenanceRequest(models.Model):
         if self.stage_id.done and 'stage_id' in vals:
             self.write({'close_date': fields.Date.today()})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
-        if 'schedule_date' in vals:
+        if vals.get('technician_user_id') or vals.get('schedule_date'):
+            self.activity_update()
+        if vals.get('equipment_id'):
+            # need to change description of activity also so unlink old and create new activity
+            self.activity_unlink(['maintenance.mail_act_maintenance_request'])
             self.activity_update()
         return res
 
@@ -364,7 +368,8 @@ class MaintenanceRequest(models.Model):
             date_dl = fields.Datetime.from_string(request.schedule_date).date()
             updated = request.activity_reschedule(
                 ['maintenance.mail_act_maintenance_request'],
-                date_deadline=date_dl)
+                date_deadline=date_dl,
+                new_user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
             if not updated:
                 if request.equipment_id:
                     note = _('Request planned for <a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>') % (
