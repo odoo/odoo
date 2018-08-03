@@ -539,6 +539,10 @@ class TestFields(common.TransactionCase):
         self.assertEqual(start_of(_date, 'month'), date(2077, 10, 1))
         self.assertEqual(start_of(_datetime, 'month'), datetime(2077, 10, 1))
 
+        # week
+        self.assertEqual(start_of(_date, 'week'), date(2077, 10, 18))
+        self.assertEqual(start_of(_datetime, 'week'), datetime(2077, 10, 18))
+
         # day
         self.assertEqual(start_of(_date, 'day'), _date)
         self.assertEqual(start_of(_datetime, 'day'), _datetime.replace(hour=0, minute=0, second=0))
@@ -573,6 +577,11 @@ class TestFields(common.TransactionCase):
         self.assertEqual(end_of(_date, 'month'), _date.replace(day=31))
         self.assertEqual(end_of(_datetime, 'month'),
                          datetime.combine(date(2077, 10, 31), time.max))
+
+        # week
+        self.assertEqual(end_of(_date, 'week'), date(2077, 10, 24))
+        self.assertEqual(end_of(_datetime, 'week'),
+                         datetime.combine(datetime(2077, 10, 24), time.max))
 
         # day
         self.assertEqual(end_of(_date, 'day'), _date)

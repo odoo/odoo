@@ -66,16 +66,13 @@ def get_fiscal_year(date, day=31, month=12):
     return date_from, date_to
 
 
-def _get_quarter(month):
-    return int((month - 1)/3) * 3 + 1
-
-
 def start_of(value, granularity):
     """
     Get start of a time period from a date or a datetime.
 
-    :param value: Initial date or datetime
-    :param granularity: Type of period in string, can be year, quarter, month, day ou hour
+    :param value: Initial date or datetime.
+    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
+    :return: A date/datetime object corresponding to the start of the specified period.
     """
     is_datetime = isinstance(value, datetime)
     if granularity == "year":
@@ -85,17 +82,25 @@ def start_of(value, granularity):
         # Q2 = Apr 1st
         # Q3 = Jul 1st
         # Q4 = Oct 1st
-        result = value.replace(month=_get_quarter(value.month), day=1)
+        result = get_quarter(value)[0]
     elif granularity == "month":
         result = value.replace(day=1)
+    elif granularity == 'week':
+        # `calendar.weekday` uses ISO8601 for start of week reference, this means that
+        # by default MONDAY is the first day of the week and SUNDAY is the last.
+        result = value - relativedelta(days=calendar.weekday(value.year, value.month, value.day))
     elif granularity == "day":
         result = value
     elif granularity == "hour" and is_datetime:
         return datetime.combine(value, time.min).replace(hour=value.hour)
     elif is_datetime:
-        raise ValueError("Granularity must be year, quarter, month, day or hour for value %s" % value)
+        raise ValueError(
+            "Granularity must be year, quarter, month, week, day or hour for value %s" % value
+        )
     else:
-        raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
+        raise ValueError(
+            "Granularity must be year, quarter, month, week or day for value %s" % value
+        )
 
     return datetime.combine(result, time.min) if is_datetime else result
 
@@ -104,8 +109,9 @@ def end_of(value, granularity):
     """
     Get end of a time period from a date or a datetime.
 
-    :param value: Initial date or datetime
-    :param granularity: Type of period in string, can be year, quarter, month, day ou hour
+    :param value: Initial date or datetime.
+    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
+    :return: A date/datetime object corresponding to the start of the specified period.
     """
     is_datetime = isinstance(value, datetime)
     if granularity == "year":
@@ -115,18 +121,25 @@ def end_of(value, granularity):
         # Q2 = Jun 30th
         # Q3 = Sep 30th
         # Q4 = Dec 31st
-        month = _get_quarter(value.month) + 2
-        result = value.replace(month=month, day=calendar.monthrange(value.year, month)[1])
+        result = get_quarter(value)[1]
     elif granularity == "month":
         result = value + relativedelta(day=1, months=1, days=-1)
+    elif granularity == 'week':
+        # `calendar.weekday` uses ISO8601 for start of week reference, this means that
+        # by default MONDAY is the first day of the week and SUNDAY is the last.
+        result = value + relativedelta(days=6-calendar.weekday(value.year, value.month, value.day))
     elif granularity == "day":
         result = value
     elif granularity == "hour" and is_datetime:
         return datetime.combine(value, time.max).replace(hour=value.hour)
     elif is_datetime:
-        raise ValueError("Granularity must be year, quarter, month, day or hour for value %s" % value)
+        raise ValueError(
+            "Granularity must be year, quarter, month, week, day or hour for value %s" % value
+        )
     else:
-        raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
+        raise ValueError(
+            "Granularity must be year, quarter, month, week or day for value %s" % value
+        )
 
     return datetime.combine(result, time.max) if is_datetime else result
 
