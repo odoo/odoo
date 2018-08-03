@@ -5,9 +5,50 @@
         <p class="lead d-none d-md-block">Let's start designing.</p>
         <div class="o_tooltip_container d-none d-md-block">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
     </div>
-
     <div t-name="website.leaving_current_page_edition">
         <p>What do you want to do?</p>
         <p class="text-muted">Your current changes will be saved automatically.</p>
     </div>
+    <!-- All modal Content-->
+    <div t-name="website.modal_custom_theme">
+    	  <div class='o_nav_modal col-2'>
+            <ul class="o_el_nav_modal nav nav-tab"></ul>
+        </div>
+        <div class="tab-content o_container_right col-10"></div>
+    </div>
+    <!-- Multi Choice -->
+    <div t-name="website.multi_choice" t-att-id="id" t-att-class="class">
+        <h5 class="mt0 mb16"><t t-esc="title"/></h5>
+        <ul class="o_initial_list"></ul>
+    </div>
+    <!-- listing multi choice -->
+    <li t-name="website.multi_choice_content" t-att-class="liclass">
+        <label class="mx-auto relative o_multi_choice_label">
+            <input t-att-name="name" type="radio" t-att-data-xmlid="xmlid"/>
+        </label>
+    </li>
+    <!-- Theme colors list -->
+    <li t-name="website.theme_color_picker" class="o_theme_list mr0 ml0 mt0 mb8">
+      <label class="mx-auto">
+          <div class="o_color_theme_list"></div>
+          <input name="themecolorvar" type="radio" t-att-data-xmlid="xmlid"/>
+      </label>
+    </li>
+    <!-- more list -->
+    <div t-name="website.more_list" class="o_container_select pull-left col-6">
+        <h6><t t-esc="title"/></h6>
+        <div class="o_choose_list_font d-block">
+            <ul class="o_more_font_list d-block">
+                <li class="o_parent_caret d-block .dropdown-toggle"><span class="caret mr8 d-block">&#9660;</span></li>
+                <li class="default-select selected d-block"><t t-esc="selecttitle"/></li>
+            </ul>
+        </div>
+    </div>
+    <!-- font list -->
+    <li t-name="website.list_fonts"> <!-- class="o_theme_list" -->
+      <label class="mx-auto">
+          <div t-att-style="fontstyle" class="pt4 pb4"><t t-esc="fontname"/></div>
+          <input t-att-name="name" type="radio" t-att-data-xmlid="xmlid"/>
+      </label>
+    </li>
 </templates>

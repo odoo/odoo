@@ -18,117 +18,203 @@
 </template>
 
 <template id="customize_modal" inherit_id="website.theme_customize" name="theme_default modal">
-  <xpath expr="div" position="replace">
-    <div role="dialog" id="theme_customize_modal" class="modal fade">
-      <div class="modal-dialog">
-          <div class="modal-content">
-
-              <div class="loading_backdrop"></div>
-              <header class="modal-header text-center">
-                  <button type="button" class="close">×</button>
-                  <!-- <a role="button" class="btn btn-primary" href="/web#return_label=Website&amp;action=website.action_module_theme">Click here to change theme</a> -->
-                  <hr style="margin: 20px -10px 10px -10px;"/>
-                  <h4 class="modal-title">Customize this default theme</h4>
-              </header>
-              <main class="modal-body">
-                  <h5 class="modal-h5">LAYOUT</h5>
-                  <table name="layout">
-                      <tr>
-                          <td class=" text-center" width="50%">
-                              <label class=" d-block mx-auto">
-                                  <div class="text-center" style="background-image: url(/theme_default/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
-                                  <input name="layoutvar" type="radio" data-xmlid=""/>
-                              </label>
-                          </td>
-                          <td class=" text-center">
-                              <label class=" d-block mx-auto">
-                                 <div class="text-center" style="background-image: url(/theme_default/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
-                                  <input name="layoutvar" type="radio" data-xmlid="theme_default.option_layout_boxed"/>
-                              </label>
-                          </td>
-                      </tr>
-                  </table>
-
-                  <h5 class="modal-h5">MAIN COLOR</h5>
-                  <table name="color">
-                      <tr>
-                          <td>
-                              <label class="chd-color-combi">
-                                  <img src="/theme_default/static/src/img/theme/variant-stone.gif" alt="Stone" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid=""/>
-                              </label>
-                          </td>
-                          <td>
-                              <label class="chd-color-combi">
-                                  <img src="/theme_default/static/src/img/theme/variant-emerald.gif" alt="Emerald" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_emerald_variables,theme_default.option_color_emerald_bs_variables,theme_default.option_color_emerald"/>
-                              </label>
-                          </td>
-                          <td>
-                              <label class="chd-color-combi">
-                                  <img src="/theme_default/static/src/img/theme/variant-cobalt.gif" alt="Cobalt" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_cobalt_variables,theme_default.option_color_cobalt_bs_variables,theme_default.option_color_cobalt"/>
-                              </label>
-                          </td>
-                          <td>
-                              <label class="chd-color-combi">
-                                  <img src="/theme_default/static/src/img/theme/variant-amethyst.gif" alt="Amethyst" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_amethyst_variables,theme_default.option_color_amethyst_bs_variables,theme_default.option_color_amethyst"/>
-                              </label>
-                          </td>
-                          <td>
-                              <label class="chd-color-combi">
-                                  <img src="/theme_default/static/src/img/theme/variant-ruby.gif" alt="Blue" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_ruby_variables,theme_default.option_color_ruby_bs_variables,theme_default.option_color_ruby"/>
-                              </label>
-                          </td>
-                          <td>
-                              <label class="chd-color-combi">
-                                  <img src="/theme_default/static/src/img/theme/variant-gold.gif" alt="Gold" class="chd-color-combi-img"/>
-                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_gold_variables,theme_default.option_color_gold_bs_variables,theme_default.option_color_gold"/>
-                              </label>
-                          </td>
-                      </tr>
-                  </table>
-
-                  <h5 class="modal-h5">FONTS COMBINATIONS</h5>
-                  <table name="font">
-                      <tr>
-                          <td width="50%">
-                              <label>
-                                  <div>
-                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">Helvetica</span>
-                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >/ Georgia</span>
-                                  </div>
-                                  <input name="theme" type="radio" data-xmlid=""/>
-                              </label>
-                          </td>
-                          <td width="50%">
-                              <label>
-                                  <div>
-                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >Georgia</span>
-                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">/ Helvetica</span>
-                                    <input name="theme" type="radio" data-xmlid="theme_default.option_font"/>
-                                  </div>
-                              </label>
-                          </td>
-                      </tr>
-                  </table>
-              </main>
-          </div>
-      </div>
-  </div>
-  </xpath>
+    <xpath expr="div" position="replace">
+        <div role="dialog" id="theme_customize_modal" class="modal">
+            <content data-string="Format" data-id="format" data-class="o_multi_choice" data-title="Choose your layout">
+                <opt data-string="Full" data-xmlid="theme_default.option_layout_full" data-class="full" data-liclass="relative" data-name="layoutvar"></opt>
+                <opt data-string="Boxed" data-xmlid="theme_default.option_layout_boxed" data-class="o_boxed" data-liclass="relative o_add_color_choice" data-name="layoutvar"></opt>
+            </content>
+            <!-- Create a section to fonts choices -->
+            <content data-string="Fonts" data-id="fonts" data-class="" data-title="Choose your fonts">
+              <!-- Put the name of the font and the template will create example and select list -->
+                <font data-fontname="Times" data-xmlid="theme_default.option_font_title_times, theme_default.option_font_body_times" data-xmlid0="theme_default.option_font_title_times" data-xmlid1="theme_default.option_font_body_times" data-name="fontvar"></font>
+                <font data-fontname="OpenSans" data-style="'Open Sans', sans-serif;" data-xmlid="theme_default.option_font_title_openSans, theme_default.option_font_body_openSans" data-xmlid0="theme_default.option_font_title_openSans" data-xmlid1="theme_default.option_font_body_openSans" data-name="fontvar"></font>
+                <font data-fontname="Merienda" data-style="'Merienda', cursive;" data-xmlid="theme_default.option_font_title_merienda, theme_default.option_font_body_merienda" data-xmlid0="theme_default.option_font_title_merienda" data-xmlid1="theme_default.option_font_body_merienda" data-name="fontvar"></font>
+                <font data-fontname="RobotoSlab" data-style="'Roboto Slab', serif;" data-xmlid="theme_default.option_font_title_roboto_slab, theme_default.option_font_body_roboto_slab" data-xmlid0="theme_default.option_font_title_roboto_slab" data-xmlid1="theme_default.option_font_body_roboto_slab" data-name="fontvar"></font>
+                <font data-fontname="Raleway" data-style="'Raleway', sans-serif;" data-xmlid="theme_default.option_font_title_raleway, theme_default.option_font_body_raleway" data-xmlid0="theme_default.option_font_title_raleway" data-xmlid1="theme_default.option_font_body_raleway" data-name="fontvar"></font>
+                <font data-fontname="Quicksand" data-style="'Quicksand', sans-serif;" data-xmlid="theme_default.option_font_title_quicksand, theme_default.option_font_body_quicksand" data-xmlid0="theme_default.option_font_title_quicksand" data-xmlid1="theme_default.option_font_body_quicksand" data-name="fontvar"></font>
+                <font data-fontname="Baskerville" data-style="'Libre Baskerville', serif;" data-xmlid="theme_default.option_font_title_baskerville, theme_default.option_font_body_baskerville" data-xmlid0="theme_default.option_font_title_baskerville" data-xmlid1="theme_default.option_font_body_baskerville" data-name="fontvar"></font>
+                <font data-fontname="PlayFair" data-style="'Playfair Display', serif;" data-xmlid="theme_default.option_font_title_playfair, theme_default.option_font_body_playfair" data-xmlid0="theme_default.option_font_title_playfair" data-xmlid1="theme_default.option_font_body_playfair" data-name="fontvar"></font>
+                <!-- Create a more button and a section, to display the section when we click on the more button -->
+                <more data-btnstring="Custom" data-id="o_more_font">
+                    <listchoice data-title="Title" data-class="o_choose_title_font" data-choice="Choose a title font"></listchoice>
+                    <listchoice data-title="Body" data-class="o_choose_body_font" data-choice="Choose a body font"></listchoice>
+                </more>
+            </content>
+            <!-- Creat the section to themes choices -->
+            <content data-string="Colors" data-id="colors" data-class="" data-title="Choose the theme color">
+                <themecolor data-xmlid="theme_default.option_color_default_variables, theme_default.option_color_default_bs_variables, theme_default.option_color_default" data-class="o_color_theme">
+                    <!-- add a span with the color in background -->
+                    <color data-color="337ab7"></color>
+                    <color data-color="dff0d8"></color>
+                    <color data-color="d9edf7"></color>
+                    <color data-color="fcf8e3"></color>
+                    <color data-color="f2dede"></color>
+                </themecolor>
+                <themecolor data-xmlid="theme_default.option_color_emerald_variables, theme_default.option_color_emerald_bs_variables, theme_default.option_color_emerald" data-class="o_color_theme">
+                    <color data-color="f7f7f7"></color>
+                    <color data-color="BDC3C7"></color>
+                    <color data-color="27AE60"></color>
+                    <color data-color="2ECC71"></color>
+                    <color data-color="254c3a"></color>
+                </themecolor>
+                <themecolor data-xmlid="theme_default.option_color_ruby_variables, theme_default.option_color_ruby_bs_variables, theme_default.option_color_ruby" data-class="o_color_theme">
+                    <color data-color="c5bcb1"></color>
+                    <color data-color="E74C3C"></color>
+                    <color data-color="C0392B"></color>
+                    <color data-color="E67E22"></color>
+                    <color data-color="D35400"></color>
+                </themecolor>
+                <themecolor data-xmlid="theme_default.option_color_amethyst_variables, theme_default.option_color_amethyst_bs_variables, theme_default.option_color_amethyst" data-class="o_color_theme">
+                    <color data-color="ECF0F1"></color>
+                    <color data-color="9B59B6"></color>
+                    <color data-color="3b2c50"></color>
+                    <color data-color="8E44AD"></color>
+                    <color data-color="2C3E50"></color>
+                </themecolor>
+                <themecolor data-xmlid="theme_default.option_color_gold_variables, theme_default.option_color_gold_bs_variables, theme_default.option_color_gold" data-class="o_color_theme">
+                    <color data-color="c5bcb1"></color>
+                    <color data-color="F1C40F"></color>
+                    <color data-color="E67E22"></color>
+                    <color data-color="f3ac12"></color>
+                    <color data-color="D35400"></color>
+                </themecolor>
+                 <themecolor data-xmlid="theme_default.option_color_cobalt_variables, theme_default.option_color_cobalt_bs_variables, theme_default.option_color_cobalt" data-class="o_color_theme">
+                    <color data-color="f7f7f7"></color>
+                    <color data-color="BDC3C7"></color>
+                    <color data-color="3498DB"></color>
+                    <color data-color="2980B9"></color>
+                    <color data-color="34495E"></color>
+                </themecolor>
+            </content>
+        </div>
+    </xpath>
 </template>
 
 <!-- Option layout -->
+<template id="option_layout_full" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_layout_full.scss"/>
+    </xpath>
+</template>
 <template id="option_layout_boxed" inherit_id="theme_default.assets_frontend" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_layout_boxed.scss"/>
     </xpath>
 </template>
-
+<!-- Option font title -->
+<template id="option_font_title_times" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_times.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_openSans" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_openSans.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_merienda" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_merienda.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_roboto_slab" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_roboto_slab.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_raleway" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_raleway.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_quicksand" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_quicksand.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_baskerville" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_baskerville.scss"/>
+    </xpath>
+</template>
+<template id="option_font_title_playfair" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_title_playfair.scss"/>
+    </xpath>
+</template>
+<!-- Option font body -->
+<template id="option_font_body_times" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_times.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_openSans" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_openSans.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_merienda" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_merienda.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_roboto_slab" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_roboto_slab.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_raleway" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_raleway.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_quicksand" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_quicksand.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_baskerville" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_baskerville.scss"/>
+    </xpath>
+</template>
+<template id="option_font_body_playfair" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font_body_playfair.scss"/>
+    </xpath>
+</template>
 <!-- Option color -->
+<template id="option_color_default_variables" inherit_id="theme_default._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_default_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_color_default_bs_variables" inherit_id="theme_default._assets_frontend_helpers" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_default_bs_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_color_default" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_default.scss"/>
+    </xpath>
+</template>
+<template id="option_color_amethyst_variables" inherit_id="theme_default._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_amethyst_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_color_amethyst_bs_variables" inherit_id="theme_default._assets_frontend_helpers" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_amethyst_bs_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_color_amethyst" inherit_id="theme_default.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_amethyst.scss"/>
+    </xpath>
+</template>
 <template id="option_color_emerald_variables" inherit_id="theme_default._assets_primary_variables" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_emerald_variables.scss"/>
@@ -159,21 +245,6 @@
         <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_cobalt.scss"/>
     </xpath>
 </template>
-<template id="option_color_amethyst_variables" inherit_id="theme_default._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_amethyst_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_color_amethyst_bs_variables" inherit_id="theme_default._assets_frontend_helpers" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_amethyst_bs_variables.scss"/>
-    </xpath>
-</template>
-<template id="option_color_amethyst" inherit_id="theme_default.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_amethyst.scss"/>
-    </xpath>
-</template>
 <template id="option_color_ruby_variables" inherit_id="theme_default._assets_primary_variables" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_ruby_variables.scss"/>
@@ -202,13 +273,6 @@
 <template id="option_color_gold" inherit_id="theme_default.assets_frontend" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_color_gold.scss"/>
-    </xpath>
-</template>
-
-<!-- Option font -->
-<template id="option_font" inherit_id="theme_default._assets_frontend_helpers" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/theme_default/static/src/scss/option_font.scss"/>
     </xpath>
 </template>
 </odoo>

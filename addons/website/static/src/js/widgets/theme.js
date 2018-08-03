@@ -4,15 +4,16 @@ odoo.define('website.theme', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var session = require('web.session');
-var Widget = require('web.Widget');
+var Dialog = require('web.Dialog');
 var weContext = require('web_editor.context');
 var websiteNavbarData = require('website.navbar');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var templateDef = null;
 
-var ThemeCustomizeDialog = Widget.extend({
+var ThemeCustomizeDialog = Dialog.extend({
     template: 'website.theme_customize',
     events: {
         'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
@@ -25,6 +26,11 @@ var ThemeCustomizeDialog = Widget.extend({
         },
         'click .close': 'close',
         'click': 'click',
+    },
+    init: function (parent, options) {
+        this._super(parent, _.extend({
+            title: _t("Customize this theme"),
+        }, options || {}));
     },
     willStart: function () {
         if (templateDef === null) {
@@ -40,10 +46,183 @@ var ThemeCustomizeDialog = Widget.extend({
     },
     start: function () {
         var self = this;
+
+        // Theme modal
+        var $contents = this.$el.children('content');
+
+        $contents.remove();
+        this.$el.append(QWeb.render('website.modal_custom_theme'));
+        var $navContents = this.$('.o_container_right');
+        var $navLink = this.$(".o_el_nav_modal");
+
+        // The big loop, to interpret xml
+        _.each($contents, function (content) {
+            var $content = $(content);
+
+            // Build the nav of the panel (nav_modal)
+            $navLink.append($('<li/>', {
+                class: 'mb4 nav-item col-12',
+            })
+            .append($('<a/>', {
+                text: $content.data('string'),
+                href: '#' + $content.data('id'),
+                'data-toggle': 'tab',
+                class: 'd-block nav-link',
+            })))
+
+            // Build the main of the panel
+            var $navContent = $(QWeb.render('website.multi_choice', {
+                title: $content.data('title'),
+                id: $content.data('id'),
+                class: $content.data('class') + ' ' + 'tab-pane',
+            }))
+            $navContents.append($navContent);
+
+            var $initialList = $navContent.find('.o_initial_list');
+            var $options = $content.children('opt');
+
+            var $items = $content.children();
+
+            _.each($items, function (item) {
+                var $item = $(item);
+
+                if ($item.is('opt, font')) {
+                    // Build the options template
+                    var $multiChoiceLabel = $(QWeb.render('website.multi_choice_content', {
+                        string: $item.data('string'),
+                        xmlid: $item.data('xmlid'),
+                        class: $item.data('class') + ' ' + 'text-center',
+                        liclass: $item.data('liclass') + ' ' + 'mb8',
+                        name: $item.data('name'),
+                    }));
+                    $initialList.append($multiChoiceLabel);
+                    if ($item.is('opt')) {
+                        $multiChoiceLabel.find('.o_multi_choice_label').prepend($('<div/>', {
+                            class: $item.data('class') + ' ' + 'text-center pt8 pb4',
+                            text: $item.data('string'),
+                        }))
+                    } else if ($item.is('font')) {
+                        // Build the example font list
+                        $multiChoiceLabel.find('.o_multi_choice_label').prepend($('<div/>', {
+                            class: 'text-center',
+                        })
+                        .append($('<p/>', {
+                            class: 'o_title mb8 mt16',
+                            text: 'Title',
+                            style: 'font-family:' + $item.data('style'),
+                        }))
+                        .append($('<p/>', {
+                            class: 'o_body_font mb2',
+                            text: 'Lorem ipsum dolor sit amet, consectetur.',
+                            style: 'font-family:' + $item.data('style'),
+                        })))
+                    }
+
+                } else if ($item.is('themecolor')) {
+                    var $themeChildren = $item.children();
+                    // Build the theme list
+                    var $ColorPicker = $(QWeb.render('website.theme_color_picker', {
+                        xmlid: $item.data('xmlid'),
+                        name: $item.data('name'),
+                    }));
+                    $initialList.append($ColorPicker);
+
+                    var $colorThemeContainer = $ColorPicker.find('.o_color_theme_list');
+                    _.each($themeChildren, function(themeChild) {
+                        var $themeChild = $(themeChild);
+
+                        if($themeChild.is('color')) {
+                            // var $colorThemeContainer = $initialList.find('.o_color_theme_list');
+                            var $appendColorContainer = $($('<span/>',{
+                                style: 'background-color: #' + $themeChild.data('color') + ';',
+                                class: 'd-block',
+                            }));
+                            $colorThemeContainer.append($appendColorContainer);
+                        }
+                    });
+                } else if ($item.is('more')) {
+                    // add a button more and the content it will display
+                    var $itemsChildren = $item.children();
+                    var $more = $content.children('more');
+
+                    $navContent.append($('<button/>', {
+                        class: 'o_more_font o_more_btn mx-auto d-block mb16 mt32',
+                        'data-toggle': 'collapse',
+                        'data-target': "#" + $item.data('id'),
+                        text: $item.data('btnstring'),
+                        'type': 'button',
+                    }))
+                    $navContent.append($('<div/>',{
+                        id: $item.data('id'),
+                        class: 'collapse',
+                    }))
+
+                    if ($itemsChildren.is('colorchoice')) {
+                        var $moreCustomChoice = $more.children('colorchoice');
+                        var $customChoiceContainer = $navContent.find('#o_create_theme');
+                        // Build the custom theme section
+                        $customChoiceContainer.append(QWeb.render('website.create_theme'));
+                    }
+                        var name = 0;
+                    _.each($itemsChildren, function(itemChild){
+                        var $itemChild = $(itemChild);
+
+                        if ($itemChild.is('listchoice')) {
+                            var $moreList = $navContent.find('.collapse');
+                            // Build the select to choose the fonts (in the more section)
+                            var $moreUnderList = $(QWeb.render('website.more_list', {
+                                id: $itemChild.data('id'),
+                                selecttitle: $itemChild.data('choice'),
+                                title: $itemChild.data('title'),
+                                name: $itemChild.data('inputname'),
+                            }));
+                            $moreList.append($moreUnderList);
+                            var $font = $content.find('font');
+
+                            var $selectMore = $moreUnderList.find('.o_more_font_list');
+                            // Put the options on the select list
+                            _.each($font, function(fontList) {
+                                var $fontList = $(fontList);
+
+                                $selectMore.append(QWeb.render('website.list_fonts', {
+                                    fontname: $fontList.data('fontname'),
+                                    fontstyle: 'font-family:' + $fontList.data('fontname') + ";",
+                                    name: 'listfont-' + name,
+                                    xmlid: $fontList.data('xmlid' + name),
+                                }));
+                            });
+                            name ++;
+                        } else if ($itemChild.is('colorchoice')) {
+                            
+                            var $customChoice = $customChoiceContainer.find('.o_nav_theme');
+                            var $CustomColorContent = $customChoiceContainer.find('.o_element_color');
+                            // Create the navigation and the section to recive colors palets
+                            $customChoice.append($('<li/>',{
+                                class: $itemChild.data('liclass') + ' ' + 'text-center',
+                            })
+                            .append($('<a/>',{
+                                'data-toggle': 'tab',
+                                text: $itemChild.data('name'),
+                                class: 'd-block',
+                                href: '#' + $itemChild.data('link'),
+                            })))
+
+                            $CustomColorContent.append($('<div/>',{
+                                id: $itemChild.data('link'),
+                                class: 'o_content_palet tab-pane in',
+                            }))
+
+                            var $paletCustomTheme = $customChoiceContainer.find('.o_content_palet');
+                            $paletCustomTheme.first().addClass('active');
+                        }
+                    });
+                }
+            }); 
+        });
+
         this.timer = null;
         this.reload = false;
         this.flag = false;
-        this.active_select_tags();
         this.$inputs = this.$('input[data-xmlid],input[data-enable],input[data-disable]');
         setTimeout(function () {self.$el.addClass('in');}, 0);
         this.keydown_escape = function (event) {
@@ -51,41 +230,54 @@ var ThemeCustomizeDialog = Widget.extend({
                 self.close();
             }
         };
+        // click remove the checked and data of brother if more button
+        var $inputContainer = this.$('.o_more_btn').parents('.tab-pane').find('.o_initial_list');
+        var $moreSelectInput = this.$('.o_more_btn').parents('.tab-pane').find('#o_more_font');
+        var $collapseDiv = this.$('.o_more_btn').parents('.tab-pane').find('.collapse');
+
+        $inputContainer.find('input').click(function() {
+            $moreSelectInput.find('label').removeClass('active');
+            $moreSelectInput.find('input').prop('checked', false).change();
+            $collapseDiv.removeClass('show');
+        });
+        $moreSelectInput.find('input').click(function() {
+            $inputContainer.find('label').removeClass('active');
+            $inputContainer.find('input').prop('checked', false).change();
+        });
+
+        // put the first element of content and nav visible (active)
+        var $navFirstChild = this.$('.o_el_nav_modal').children('li').first().find('a');
+        var $containerFirstChild = this.$('.o_container_right').children('div').first();
+        $navFirstChild.addClass('active');
+        $containerFirstChild.addClass('active');
+
+        var $containerInput = this.$('#colors').find('.o_initial_list');
+        var $containerInputContent = $containerInput.find('input');
+
+        if($containerInputContent.length == 0) {
+            $containerInputContent.prop('checked', true).change();
+        }
+
+        var $listMore = this.$('.o_more_font_list');
+
+        $listMore.click(function(){
+            var $brotherListMore = self.$el.find('.o_container_select').find('ul');
+            if($(this).hasClass('o_hover_select')){
+                $brotherListMore.removeClass('o_hover_select');
+            } else {
+                $brotherListMore.removeClass('o_hover_select');
+                $(this).addClass('o_hover_select');
+            }
+        });
+        var $moreBtn = this.$('.o_more_btn');
+
+        $moreBtn.click(function() {
+            $(this).parents('.tab-pane').find('.o_more_font_list').removeClass('o_hover_select');
+        });
+
         $(document).on('keydown', this.keydown_escape);
         return this.load_xml_data().then(function () {
             self.flag = true;
-        });
-    },
-    active_select_tags: function () {
-        var uniqueID = 0;
-        var self = this;
-        var $selects = this.$('select:has(option[data-xmlid],option[data-enable],option[data-disable])');
-        $selects.each(function () {
-            uniqueID++;
-            var $select = $(this);
-            var $options = $select.find('option[data-xmlid], option[data-enable], option[data-disable]');
-            $options.each(function () {
-                var $option = $(this);
-                var $input = $('<input style="display: none;" type="radio" name="theme_customize_modal-select-'+uniqueID+'"/>');
-                $input.attr('id', $option.attr('id'));
-                $input.attr('data-xmlid', $option.data('xmlid'));
-                $input.attr('data-enable', $option.data('enable'));
-                $input.attr('data-disable', $option.data('disable'));
-                $option.removeAttr('id');
-                $option.data('input', $input);
-                $input.on('update', function () {
-                    $option.attr('selected', $(this).prop('checked'));
-                });
-                self.$el.append($input);
-            });
-            $select.data('value', $options.first());
-            $options.first().attr('selected', true);
-        });
-        $selects.change(function () {
-            var $option = $(this).find('option:selected');
-            $(this).data('value').data('input').prop('checked', true).change();
-            $(this).data('value', $option);
-            $option.data('input').change();
         });
     },
     load_xml_data: function () {
@@ -96,8 +288,7 @@ var ThemeCustomizeDialog = Widget.extend({
             params: {
                 xml_ids: this.get_xml_ids(this.$inputs),
             },
-        }).done(function (data) {
-            self.$inputs.filter('[data-xmlid=""]').prop('checked', true).change();
+        }).done(function (data) {            
             self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
                 if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
                     $(this).prop('checked', false).trigger('change', true);
@@ -106,6 +297,14 @@ var ThemeCustomizeDialog = Widget.extend({
                     $(this).prop('checked', true).trigger('change', true);
                 }
             });
+            // // Display the color background choice of boxed choice
+            var $addColorClick = self.$el.find('.o_add_color_choice');
+            var $labelColorClick = $addColorClick.find('label');
+            var $checkedColorClick = $addColorClick.find('.checked');
+
+            if(self.$el.find('.o_add_color_choice label').hasClass('checked')){
+                $checkedColorClick.parent('.o_add_color_choice').addClass('active');
+            }
         }).fail(function (d, error) {
             $('body').prepend($('<div id="theme_error"/>').text(error.data.message));
         });
@@ -120,6 +319,13 @@ var ThemeCustomizeDialog = Widget.extend({
                 xml_ids = xml_ids.concat($(this).data('xmlid').split(/\s*,\s*/));
             }
         });
+
+        var $moreFontsSelect = this.$('.o_container_select').find('input').filter(':checked');
+
+        if($moreFontsSelect.length >= 1){
+            var $moreFonts = this.$('#o_more_font');
+            $moreFonts.addClass('show');
+        }
         return xml_ids;
     },
     update_style: function (enable, disable, reload) {
@@ -168,6 +374,7 @@ var ThemeCustomizeDialog = Widget.extend({
             window.location.href = href;
             return $.Deferred();
         }
+
     },
     enable_disable: function ($inputs, enable) {
         $inputs.each(function () {
@@ -189,8 +396,10 @@ var ThemeCustomizeDialog = Widget.extend({
 
         var $option = $(event.target).is('input') ? $(event.target) : $('input', event.target),
             $options = $option,
-            checked = $option.prop('checked');
+            checkeds = $option.prop('checked'),
+            checked = $option.filter(':checked');  
 
+        this.$('label').removeClass('checked');
         if (checked) {
             var $inputs;
             if ($option.data('enable')) {
@@ -203,11 +412,9 @@ var ThemeCustomizeDialog = Widget.extend({
                 $options = $options.add($inputs.filter(':checked'));
                 this.enable_disable($inputs, false);
             }
-            $option.closest('label').addClass('checked');
-        } else {
-            $option.closest('label').removeClass('checked');
+            $options.filter(':checked').closest('Slabel').addClass('checked');
         }
-
+        
         var $enable = this.$inputs.filter('[data-xmlid]:checked');
         $enable.closest('label').addClass('checked');
         var $disable = this.$inputs.filter('[data-xmlid]:not(:checked)');
@@ -235,10 +442,21 @@ var ThemeCustomizeDialog = Widget.extend({
             $set.trigger('update');
         });
 
+        // // Display the color background choice of boxed choice
+        var $addColorClick = $('.o_add_color_choice');
+        var $labelColorClick = $addColorClick.find('label');
+        var $checkedColorClick = $addColorClick.find('.checked');
+
+        this.$('.o_add_color_choice').removeClass('active');
+
+        if($('.o_add_color_choice label').hasClass('checked')){
+            $checkedColorClick.parent('.o_add_color_choice').addClass('active');
+        }
+
         if (this.flag && $option.data('reload') && document.location.href.match(new RegExp( $option.data('reload') ))) {
             this.reload = true;
         }
-
+        //Reload the page  with a click to apply scss
         clearTimeout(this.timer);
         if (this.flag) {
             this.timer = _.defer(function () {
@@ -247,10 +465,10 @@ var ThemeCustomizeDialog = Widget.extend({
                 self.reload = false;
             });
         } else {
-                this.timer = _.defer(function () {
-                    if (!init_mode) self.on_select($options, event);
-                    self.reload = false;
-                });
+            this.timer = _.defer(function () {
+                if (!init_mode) self.on_select($options, event);
+                self.reload = false;
+            });
         }
     },
     /* Method call when the user change the selection or click on an input
@@ -306,11 +524,12 @@ var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     _openThemeCustomizeDialog: function () {
-        return new ThemeCustomizeDialog(this).appendTo(document.body);
+        return new ThemeCustomizeDialog(this).open();
     },
 });
 
 websiteNavbarData.websiteNavbarRegistry.add(ThemeCustomizeMenu, '#theme_customize');
 
 return ThemeCustomizeDialog;
+
 });
