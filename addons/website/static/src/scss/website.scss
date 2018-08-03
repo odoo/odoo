@@ -2,6 +2,24 @@
 /// This file regroups the website design rules.
 ///
 
+$-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
+@if $-theme-font {
+    @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+}
+@if $o-theme-font-number != $o-theme-headings-font-number {
+    $-theme-font: nth($o-theme-font-urls, $o-theme-headings-font-number);
+    @if $-theme-font {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+    }
+}
+
+#wrapwrap {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
 font[style*='background'], font[class*='bg-'] {
     padding: 0 2px;
 }

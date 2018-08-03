@@ -1,0 +1,27 @@
+// By default, all user color palette values are null. Each null value is automatically replaced
+// with corresponsing color of color palette 1.
+$o-user-color-palette: (
+    // Theme colors
+    primary: null,
+    secondary: null,
+    gamma: null,
+    epsilon: null,
+    delta: null,
+
+    // BS state colors
+    success: null,
+    info: null,
+    warning: null,
+    danger: null,    
+);
+
+// Generate default color scheme if primary is set
+$-primary: map-get($o-user-color-palette, 'primary');
+@if ($-primary) {
+    $o-user-color-palette: map-merge($o-user-color-palette, map-merge((
+        secondary: lighten(desaturate($-primary, 60%), 30%),
+        gamma: desaturate(adjust-hue($-primary, -45deg), 10%),
+        delta: desaturate(adjust-hue($-primary, 45deg), 10%),
+        epsilon: desaturate(adjust-hue($-primary, 180deg), 10%),
+    ), o-map-omit($o-user-color-palette)));
+}
