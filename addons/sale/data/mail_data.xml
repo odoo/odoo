@@ -61,10 +61,12 @@
                 <t t-set="access_code" t-value="(record._name == 'sale.order' and record.state in ('draft', 'sent') and record.get_portal_confirmation_action()) or access_code"/>
             </xpath>
             <xpath expr="//t[@t-set='access_name']" position="after">
-                <t t-set="access_name" t-value="
-(record._name == 'sale.order' and access_code == 'sign' and record.has_to_be_paid() and 'Sign and pay online') or
-(record._name == 'sale.order' and access_code != 'view' and 'Accept and sign online') or
-access_name"/>
+                <t t-if="record._name == 'sale.order' and access_code != 'view'">
+                    <t t-set="access_name">Accept and sign online</t>
+                </t>
+                <t t-if="record._name == 'sale.order' and access_code == 'sign' and record.has_to_be_paid()">
+                    <t t-set="access_name">Sign and pay online</t>
+                </t>
             </xpath>
         </template>
 
