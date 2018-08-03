@@ -72,11 +72,11 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/res_users_views.xml',
         'data/service_cron_reverse.xml',
         'views/account_fiscal_year_view.xml',
-        'wizard/multi_compose_message_views.xml',
         'views/account_incoterms_view.xml',
         'data/account_incoterms_data.xml',
         'views/res_company_view.xml',
         'views/digest_views.xml',
+        'wizard/account_invoice_send_views.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
