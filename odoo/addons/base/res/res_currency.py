@@ -6,7 +6,7 @@ import math
 import re
 import time
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, exceptions
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -210,6 +210,11 @@ class CurrencyRate(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.user.company_id)
+
+    @api.constrains('rate')
+    def _check_rate_nonzero(self):
+        if any([r.rate == 0.0 for r in self]):
+            raise exceptions.ValidationError(_('Rate cannot be equal to zero.'))
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):
