@@ -3,22 +3,23 @@
 # * hr_gamification
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2017\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -26,6 +27,8 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"Tikslas yra nustatomas pagal vartotoją ir tikslo tipą.\n"
+"Tikslai gali būti sukuriami automatiškai, naudojant iššūkius."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
@@ -33,6 +36,8 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
+"Visi darbuotojo ženkleliai, susieti su darbuotoju tiesiogiai arba per "
+"vartotoją"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -41,6 +46,9 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"Kad galėtumėte juos įvertinti, pasirinktiems vartotojams priskirkite tikslų sąrašą.\n"
+"Iššūkis gali naudoti laiko tarpą (savaitė, mėnuo...) automatiniam tikslų kūrimui.\n"
+"Tikslai yra sukuriami konkretiems nariams arba grupės nariams."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
@@ -53,6 +61,8 @@ msgstr "Pažymėjimai"
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
 msgstr ""
+"ženkleliai yra apdovanojimas už gerą darbą. Duokite juos žmonėms, kurie jų "
+"nusipelno."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
@@ -85,6 +95,7 @@ msgstr "Paspausti, norint sukurti tikslą"
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Click to grant this employee his first badge"
 msgstr ""
+"Norėdami suteikti vartotojui suteikti pirmąjį jo ženklelį, paspauskite čia."
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -111,7 +122,7 @@ msgstr "Darbuotojo pažymėjimai"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "Darbuotojo tikslai"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
@@ -212,4 +223,4 @@ msgstr "gamification.badge.user.wizard"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr ""
+msgstr "apdovanoti šį darbuotoją už gerą darbą"

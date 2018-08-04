@@ -319,6 +319,8 @@ msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
 msgstr ""
+"Susijęs pirkimo užsakymas. Automatiškai užpildoma, kai PU yra pasirenkamas "
+"tiekėjo apmokėjime."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -656,6 +658,8 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Kodavimo pagalba. Kai pasirinkta, susijusios pirkimo užsakymo eilutės yra "
+"pridedamos prie tiekėjo mokėjimo. Gali būti pasirinkti keli PU."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -841,6 +845,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Tiekėjų laiko paklaida. Kai sistema sugeneruoja pirkimo užsakymus "
+"įsigyjamiems produktams, jie bus suplanuoti tiek dienų anksčiau, kad būtų "
+"išvengta neplanuotų tiekėjų vėlavimų."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -916,11 +923,13 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Užsakytiems kiekiams: valdymo mokėjimai, paremti užsakytais kiekiais.\n"
+"Gautiems kiekiams: valdymo mokėjimai, paremti gautais kiekiais."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
-msgstr ""
+msgstr "Gautiems kiekiams"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
@@ -1383,6 +1392,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Pardavimo užsakymo arba pasiūlymo numeris, atsiųstas tiekėjo. Jis naudojamas"
+" susiejimu, kai gaunate produktus. Šis numeris įprastai užrašomas ant "
+"tiekėjo atsiųsto pristatymo užsakymo."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1589,6 +1601,9 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
+"Komercinis pasiūlymas turi diskusijos/derybų su tiekėjų istoriją.\n"
+"Kai patvirtinama, komercinio pasiūlymo užklausa yra paverčiama\n"
+"į pirkimo užsakymą."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1597,6 +1612,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Komercinio pasiūlymo užklausa yra pirmas žingsnis pirkimo procese.\n"
+"Kai jis paverčiamas į pirkimo užsakymą, jūs galėsite valdyti produktų\n"
+"kvitus ir tiekėjo mokėjimą."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1621,6 +1639,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
 msgstr ""
+"Tai pakeičia suplanuotą datą visoms užsakymo eilutėms nustatytai datai"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1782,6 +1801,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Naudokite šį meniu sąskaitų, gautų iš jūsų tiekėjo, valdymui.\n"
+"Kai registruojate naują mokėjimą, nustatykite pirkimo užsakymą\n"
+"ir \"Odoo\" užpildys mokėjimą automatiškai pagal užsakytus\n"
+"ir gautus kiekius."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1791,6 +1814,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Naudokite šį meniu paieškai jūsų pirkimo užsakymuose pagal\n"
+"numerius, tiekėjus, produktus ir t.t. Kiekvienam pirkimo užsakymui\n"
+"galite sekti diskusiją su tiekėju, valdyti gautus produktus ir \n"
+"valdyti tiekėjo mokėjimus."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1862,6 +1889,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Tiekėjo mokėjimai gali būti iš anksto sugeneruojami pagal\n"
+"pirkimo užsakymus ir kvitus. Tai leidžia jums valdyti mokėjimus,\n"
+"kuriuos gaunate iš savo tiekėjo pagal \"Odoo\" esantį dokumento\n"
+"juodraštį."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
