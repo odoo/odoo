@@ -6,14 +6,16 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # zbik2607 <darek@krokus.com.pl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Maja Stawicka <mjstwck@wp.pl>, 2018
+# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +60,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"Brak danych uwierzytelniających lub są one niepoprawne. Być może tweety na "
+"ekranie są chronione."
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
@@ -95,7 +99,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
 msgid "Get favorites from this screen name"
-msgstr ""
+msgstr "Uzyskaj ulubione od tego nicku"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:46
@@ -117,7 +121,7 @@ msgstr "ID"
 #: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
 msgid "Internet connection refused"
-msgstr ""
+msgstr "Połączenie internetowe odrzucone"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
@@ -139,7 +143,7 @@ msgstr "Data ostatniej aktualizacji"
 #: code:addons/website_twitter/models/website_twitter_config.py:60
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
-msgstr ""
+msgstr "Sprawdź dokładnie klucz do Twitter API i Secret!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:27
@@ -171,6 +175,8 @@ msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
 msgstr ""
+"Żądanie nie może zostać dostarczone z powodu wyczerpania limitu stawek "
+"aplikacji dla zasobu."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
@@ -183,6 +189,8 @@ msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
 msgstr ""
+"Nazwa ekranu konta na Twitterze, z którego chcesz wczytać ulubione. Nie musi"
+" to być klucz / klucz API API."
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
@@ -194,7 +202,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr ""
+msgstr "Pokaż, jak uzyskać klucz i tajne hasło Twitter API"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
@@ -207,6 +215,8 @@ msgstr ""
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
+"Serwery Twittera są rozbudowane, ale przeładowane żądaniami. Spróbuj "
+"ponownie później."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:20
@@ -215,6 +225,8 @@ msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
 msgstr ""
+"Serwery Twittera są ustawione, ale żądanie nie mogło zostać obsłużone z "
+"powodu awarii naszego stosu. Spróbuj ponownie później."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:15
@@ -223,6 +235,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
+"Wniosek jest zrozumiały, ale został odrzucony lub dostęp jest niedozwolony. "
+"Sprawdź klucz i tajne API na Twitterze."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:13
@@ -231,6 +245,8 @@ msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
+"Wniosek był nieprawidłowy lub nie można go podać w inny sposób. Żądania bez "
+"uwierzytelnienia są uznawane za nieważne i dadzą tą odpowiedź."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:12
@@ -297,13 +313,13 @@ msgstr "Konfiguracja Twittera"
 #: code:addons/website_twitter/models/website_twitter_config.py:60
 #, python-format
 msgid "Twitter authorization error!"
-msgstr ""
+msgstr "Błąd autoryzacji na Twitterze!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:18
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr ""
+msgstr "Twitter nie działa lub jest aktualizowany."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:17
@@ -312,6 +328,8 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
+"Twitter wydaje się być uszkodzony. Spróbuj ponownie później. Możesz "
+"opublikować problem na forach Twittera, aby uzyskać pomoc."
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -320,13 +338,15 @@ msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr ""
+"Użytkownik Twittera @%(username)s ma mniej niż 12 ulubionych tweetów. Dodaj "
+"więcej lub wybierz inny nick."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:56
 #: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr ""
+msgstr "Nie udało nam się dotrzeć do serwera Twittera."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -352,7 +372,7 @@ msgstr "website.config.settings"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
-msgstr ""
+msgstr "website.twitter.tweet"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings

@@ -11,7 +11,7 @@
 # Hwang, Geon Gu <under_09@naver.com>, 2017
 # 종현 엄 <whd5367@naver.com>, 2017
 # Goh Gangtai <gangtai.goh@gmail.com>, 2017
-# Up Link <linkup.way@gmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
@@ -144,6 +144,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>문의해 주셔서 감사합니다.<br /></p>\n"
+"<p>질문사항이 있으면 알려 주시기 바랍니다.</p>\n"
+"<p>감사합니다,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -188,7 +193,7 @@ msgstr "%s (사본)"
 msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
-msgstr ""
+msgstr "프로젝트를 자동으로 (un)아카이브하여 작업과 이슈를 보관합니다. 진행 하시겠습니까?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -242,12 +247,12 @@ msgstr "이메일로 <b>동료를 초대합니다</b>.<br/><i>한 행에 하나�
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "팀 우선 순위를 표시하는 <b>별표시 작업</b>."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> 책임자"
 
 #. module: project
 #: code:addons/project/models/project.py:122
@@ -259,12 +264,17 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        문서는 프로젝트의 작업 및 이슈에 첨부됩니다.</p><p>\n"
+"                        첨부 파일이 있는 내부메모를 작성하거나 메세지를 보내\n"
+"                        문서에 프로젝트를 연결 할 수 있습니다.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:150
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">새 프로젝트를 만들려면 클릭하십시오.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -279,7 +289,7 @@ msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 지금설치"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> 웹사이트 실시간 채팅"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -289,7 +299,7 @@ msgstr "<span class=\"fa fa-comment-o\"/> 웹사이트 라이브채팅"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
-msgstr ""
+msgstr "<span class=\"fa fa-envelope-o\"/> 우리의 프로젝트 전문가에게 이메일 보내기"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -297,13 +307,14 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
 msgstr ""
+"<span class=\"fa fa-thumbs-o-down\"/> 프로젝트를 사용 하는 <strong>잘못 된 방법</strong>:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
-msgstr ""
+msgstr "<span class=\"fa fa-thumbs-o-up\"> 프로젝트를 사용 하는 <strong>올바른 방법</strong>:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -318,6 +329,10 @@ msgid ""
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> Screen Customization</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -327,6 +342,10 @@ msgid ""
 "                                            <strong> From your Mobile phone</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-mobile\"/>\n"
+"                                            <strong> 귀하의 휴대전화에서</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -336,6 +355,10 @@ msgid ""
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> 맞춤 보고서 만들기</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -345,6 +368,10 @@ msgid ""
 "                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Chrome 확장 프로그램을 통해</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -354,6 +381,10 @@ msgid ""
 "                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> Workflow Customization</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -363,6 +394,10 @@ msgid ""
 "                                            <strong> Directly in Odoo</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-tasks\"/>\n"
+"                                            <strong> Directly in Odoo</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -373,6 +408,11 @@ msgid ""
 "                                            <span class=\"small\">Check Workload</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Exercise 1</strong><br/>\n"
+"                                            <span class=\"small\">Check Workload</span>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -392,6 +432,10 @@ msgid ""
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> 작업</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -401,6 +445,10 @@ msgid ""
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> 일정표</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -425,6 +473,9 @@ msgid ""
 "                                    We have special options for unlimited number of customizations !\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>신천서를 커스터마이즈하려면 Google에 문의하십시오:</strong><br/>\n"
+"                                    무제한의 커스터마이제이션을 위한 특별 옵션이 있습니다 !\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -432,6 +483,8 @@ msgid ""
 "<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>우리는 당신을 돕기 위해 여기 있습니다:</strong> 당신이 좋아하는 KPI를 달성하지 못하면 저희에게 연락하십시오. 당신의 커스텀 리포트를 만드는 것을 도울 수 있습니다.\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -439,6 +492,8 @@ msgid ""
 "<strong> Adjourn (5 min)</strong>\n"
 "                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
 msgstr ""
+"<strong> 휴정 (5분)</strong>\n"
+"                                프로젝트 성취에 대한 긍정적인 의견과 긍정적인 견해로 회의를 마무리하십시오. 항상 팀워크를 강화하고 모든 구성원이 프로젝트를 성공적으로 수행 할 수 있도록 서로 조심하도록 격려하십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -446,6 +501,8 @@ msgid ""
 "<strong> Critical items (10 min)</strong>\n"
 "                                Upon completing the project status review session, summarize the critical items."
 msgstr ""
+"<strong> 중요 품목 (10분)</strong>\n"
+"                                프로젝트 상태 검토 세션을 마친 후 중요한 항목을 요약하십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -457,7 +514,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong> Prepare an agenda (and keep to it)</strong>"
-msgstr ""
+msgstr "<strong> 의제 준비 (그리고 계속 유지)</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -465,6 +522,8 @@ msgid ""
 "<strong> Project plan status review (20 min) </strong>\n"
 "                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
 msgstr ""
+"<strong> 프로젝트 계획 상태 검토 (20 min) </strong>\n"
+"                                프로젝트 계획을 검토하고 각 팀 구성원이 이번주에 예정된 과제의 간략한 상태와 다음 2주 동안 계획된 과제를 제공 할 수있게 하십시오. 당신은 업무가 잘 진행되고 있는지 그리고 예상되는 마감 기한을 놓치고 있는지 알고 싶습니다. 또한 팀 구성원이 프로젝트의 다른 작업이나 구성원에게 영향을 줄 수있는 특별한 고려사항을 공유 할 수 있게 하려고 합니다. 일부 팀 구성원이 나서서 실제로 필요한 것보다 더 많은 시간을 보내고 싶어하므로 이 부분을 주의 깊게 관리하십시오. 기억하세요, 당신은 프로젝트 매니저입니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -479,6 +538,8 @@ msgid ""
 "<strong> Roll call (5 min)</strong>\n"
 "                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
 msgstr ""
+"<strong> 롤 콜 (5 분)</strong>\n"
+"                                시작하기 전에 출석한 모든 사람에게 알리십시오. 이는 전화를 건 사람이 나중에 시간을 절약할 수 있는 원격 팀원에게 중요합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -486,6 +547,8 @@ msgid ""
 "<strong> Summary and follow-up items (5 min)</strong>\n"
 "                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
 msgstr ""
+"<strong>요약 및 후속 조치 (5 분)</strong>\n"
+"                                 프로젝트를 진행하는 데 도움이되도록 프로젝트 상태 요약과 회의에서 확인 된 작업 항목 목록을 항상 마무리하십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -518,12 +581,12 @@ msgstr ""
 msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
-msgstr ""
+msgstr "정의 된 기간내에 수행되어야하는 <strong>내부 활동</strong>."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Analyze reports</strong> (every a year)"
-msgstr ""
+msgstr "<strong>보고서 분석</strong> (매년 1년)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -536,6 +599,8 @@ msgid ""
 "<strong>Ask participants to prepare</strong><br/>\n"
 "                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
+"<strong>참가자들에게 준비하라고 요청하십시오</strong><br/>\n"
+"                                효과적인 회의를 진행하려면 미리 참가자를 준비하십시오. 그들이 어떻게 기여할 것으로 예상되는지 알려주십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -543,11 +608,13 @@ msgid ""
 "<strong>Be careful about the messages you send</strong><br/>\n"
 "                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
 msgstr ""
+"<strong>보내는 메시지에 주의하십시오</strong><br/>\n"
+"                                    Odoo를 통해 메시지를 보내면 내부직원, 외부 사용자 또는 고객을 포함하여 모든 추종자에게 메시지가 포함 된 전자 메일이 자동으로 전송됩니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>결제</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -555,18 +622,20 @@ msgid ""
 "<strong>Choose the right day</strong><br/>\n"
 "                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
 msgstr ""
+"<strong>적절한 날을 선택하십시오</strong><br/>\n"
+"                                    월요일 아침을 평상시의 모임의 날로 잡지 마십시오. 회의를 그 주 후반부에 잡으면 참가자들은 회의 준비를하고 다음날 특정 목표를 향해 일할 시간을 갖게 됩니다. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Click on 'Reporting' on the main menu</strong> and generate "
 "statistics relevent to each profiles:"
-msgstr ""
+msgstr "<strong>기본 메뉴에서 '보고'를 클릭하고</strong> 각 프로필과 관련된 통계를 생성하십시오:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>지금 문의:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -581,16 +650,18 @@ msgid ""
 "<strong>Define a Naming Convention</strong><br/>\n"
 "                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
 msgstr ""
+"<strong>명명 규칙 정의</strong><br/>\n"
+"                                    '작업 제목'필드에 키워드를 추가하십시오 (예 : [고객 이름] 또는 [웹 사이트]). 이렇게하면 프로젝트의 수십 가지 작업을 탐색하고 검색 할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Enter your activities</strong> (every day)"
-msgstr ""
+msgstr "<strong>활동 입력</strong>(매일)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Example: </strong>"
-msgstr ""
+msgstr "<strong>예: </strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -604,7 +675,7 @@ msgstr ""
 msgid ""
 "<strong>Exercise:</strong> Try to get a view of the workload for this week "
 "for all your employees (planned hours)."
-msgstr ""
+msgstr "<strong>연습: </strong> 모든 직원에 대해 이번 주에 대한 작업량을 계획대로 볼 수 있습니다 (계획된 시간)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -628,19 +699,19 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>작업:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Getting reports</strong> on what your employees are working on"
-msgstr ""
+msgstr "직원이 수행중인 작업에 대한 <strong>보고서 받기</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Getting statistics</strong> on how much time a task takes to be "
 "completed"
-msgstr ""
+msgstr "작업이 완료되는데 걸리는 시간에 대한 <strong>통계 가져오기</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -648,6 +719,8 @@ msgid ""
 "<strong>Have Clear Responsibilities</strong><br/>\n"
 "                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
+"<strong>명확한 책임이 있습니다</strong><br/>\n"
+"                                    작업에 배정 된 사람이 진행 상황을 책임지고, 빠른 참조를 위해 아바타가 Kanban보기에 표시됩니다. 물론 작업에 대한 책임은 해당 단계에 따라 달라질 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -659,6 +732,9 @@ msgid ""
 "best way to work if you have diluted responsibilities for your Kanban "
 "stages."
 msgstr ""
+"<strong>'끌어오기' 모드에서는</strong>, 다음 단계로 진행할 준비가 된 작업은 현재 단계를 담당 한 사람이 '다음 단계 "
+"준비 (상태 아이콘 사용)'로 표시됩니다. 그런 다음 담당자는 다음 단계를 담당하고 다음 단계로 이동합니다. 칸반 (Kanban) 단계에"
+" 대한 책임을 희석 한 경우이 방법이 가장 효과적입니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -668,39 +744,41 @@ msgid ""
 "stage. This is a simple way to work but only functions well if you work "
 "alone."
 msgstr ""
+"<strong>'밀어내기' 모드에서는</strong>, 작업이 현재 단계의 책임자에 의해 다음 단계로 푸시됩니다 (모든 요구 사항을 "
+"충족하면). 이것은 일하는 간단한 방법이지만 혼자 일하는 경우에만 잘 작동합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr ""
+msgstr "<strong>고객에게 청구서 보내기</strong> (매월)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Invoicing your customers</strong> on Time &amp; Material projects"
-msgstr ""
+msgstr "시간 및 자재 프로젝트에서 <strong>고객에게 청구서 발행</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Need help to structure your projects?</strong><br/>"
-msgstr ""
+msgstr "<strong>프로젝트 구성에 도움이 필요하십니까?</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>일정표 관리에 도움이 필요합니까? 지금 문의하기:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
-msgstr ""
+msgstr "<strong>프로젝트 정의에 도움이 필요하십니까? 지금 문의하십시오.</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr ""
+msgstr "<strong>노트</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -708,11 +786,13 @@ msgid ""
 "<strong>Prepare yourself as well</strong><br/>\n"
 "                                As project manager, you also need to be fully prepared. There should be no surprises during the meeting. Surprises can undermine your ability to manage the project and cause team members to lose confidence in you."
 msgstr ""
+"<strong>본인도 준비하십시오</strong><br/>\n"
+"                                프로젝트 매니저로서, 당신도 완전히 준비되어야합니다. 회의도중 당황하는 일이 없어야합니다. 당황하는 것은 당신의 프로젝트관리 능력을 저하시킬 수 있으며 팀 구성원들이 당신에 대한 신뢰를 잃게 만듭니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>행동을 권장:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -731,7 +811,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Stages and Requirements</strong> for next stage:"
-msgstr ""
+msgstr "다음 단계의 <strong>단계 및 요구 사항</strong>:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -739,25 +819,27 @@ msgid ""
 "<strong>Start with an answer.</strong><br/>\n"
 "                                The worst question to ask is, \"What did you do this week?\" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week."
 msgstr ""
+"<strong>대답으로 시작하십시오.</strong><br/>\n"
+"                                최악의 질문은 \"이번 주에 무엇을 했니?\"입니다. 팀원들로부터 불필요하고 시간이 많이 걸리는 대화가 끊임없이 발생합니다. 또한 팀의 모든 사람들이 그 주 동안 무엇을했는지 이미 알고 있어야합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
-msgstr ""
+msgstr "<strong>칸반 단계를 관리하는 두 가지 방법이 있습니다:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>To increase the efficiency of your Projects</strong>, you should "
 "have a look at some of our other apps:"
-msgstr ""
+msgstr "<strong>프로젝트의 효율성을 높이려면</strong> 다음과 같은 다른 앱을 살펴 봐야합니다:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>To use Collaborative Notepads</strong>, simply activate the "
 "corresponding option in your"
-msgstr ""
+msgstr "<strong>협업 메모장을 사용하려면</strong>, 간단하게 해당 옵션을 활성화하십시오"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -776,12 +858,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What Activities</strong> would you like to manage?"
-msgstr ""
+msgstr "<strong>어떤 활동</strong>을 관리하고 싶습니까?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What do you expect</strong> from using Odoo Project?"
-msgstr ""
+msgstr "Odoo 프로젝트 사용시 <strong>기대되는 점</strong>은 무엇입니까?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -789,6 +871,8 @@ msgid ""
 "<strong>You have different users writing Tasks descriptions</strong><br/>\n"
 "                            It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone."
 msgstr ""
+"<strong>작업 설명을 작성하는 다른 사용자가 있습니다</strong><br/>\n"
+"                            모든 사람이 자신의 레이아웃을 사용하면 정리가 잘 안됩니다. Etherpad를 사용하면 몇 가지 제목과 글 머리 기호로 기분 템플릿을 만들어 모든 사람이 훨씬 쉽게 사용할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -796,6 +880,8 @@ msgid ""
 "<strong>You have to manage versions and track changes</strong><br/>\n"
 "                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
 msgstr ""
+"<strong>버젼을 관리하고 변경 사항을 추적해야합니다</strong><br/>\n"
+"                            Etherpad는 짧은 간격으로 문서를 자동 저장하므로 사용자는 언제든지 특정 버전을 영구히 저장할 수 있습니다. 또한 \"타임 슬라이더\"기능을 통해 누구나 패드 기록을 탐색 할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -803,6 +889,8 @@ msgid ""
 "<strong>You organize distant meetings</strong><br/>\n"
 "                            Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color."
 msgstr ""
+"<strong>원거리 모임 구성</strong><br/>\n"
+"                            Etherpad를 사용하면 텍스트 문서를 동사에 편집하고 모든 편집 내용을 실시간으로 볼 수 있으며 각 저자의 텍스트를 자신의 색상으로 표시 할 수 있습니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_defaults
@@ -825,6 +913,8 @@ msgid ""
 "A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>\n"
 "                    In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources."
 msgstr ""
+"프로젝트는 대개 프로젝트의 후원자, 자원, 고객 또는 외부 계약자 등 많은 이해 관계자를 포함합니다. 그러나 프로젝트에서 가장 중요한 사람은 대개 프로젝트 관리자입니다.<br/>\n"
+"                    Odoo에서 프로젝트 관리자는 칸반보기를 관리 할 책임이 있습니다. 프로젝트 관리자는 프로젝트 진행을 원활하게하고 단계 간의 중단 시간을 최소화하며 자원 간 최적의 작업 배분을 보장합니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_kanban_state
@@ -847,21 +937,21 @@ msgstr "이메일 수락"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Account Preferences"
-msgstr ""
+msgstr "계정 환경 설정"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:38
 #, python-format
 msgid "Action has a clear description"
-msgstr ""
+msgstr "행동에는 명확한 설명이 있습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
 "Settings</i>."
-msgstr ""
+msgstr "<i>인적 자원 설정</i>에서 '일정표를 기반으로 청구서 허용'을 활성화 하십시오."
 
 #. module: project
 #: model:ir.actions.server,name:project.activate_sample_project
@@ -891,7 +981,7 @@ msgstr "설명 추가..."
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
-msgstr ""
+msgstr "열을 추가하여 <b>작업에 대한 단계</b>를 구성하십시오. <br/><i>예. 사양 &gt; 개발 &gt; 완료</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -903,7 +993,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Added in current sprint"
-msgstr ""
+msgstr "현재 스프린트에 추가됨"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -946,7 +1036,7 @@ msgid ""
 "Also, lead by example. When your team members see how prepared you are it "
 "will  reinforce the need for each of them to be prepared for status "
 "meetings."
-msgstr ""
+msgstr "또한, 예제로 리드(영업제안). 팀 구성원이 자신의 준비 상태를 알게되면 각자가 현황 미팅을 준비 할 필요가 강화됩니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -954,13 +1044,14 @@ msgid ""
 "Alternatively, Timesheets can be added directly from Tasks by activating "
 "<strong>'Log work activities on tasks'</strong> in the"
 msgstr ""
+"또는, 일정표에서 <strong>'작업에 대한 작업 기록'</strong>을 활성화하여 일정표에서 작업표를 직접 추가 할 수 있습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "An internal message will not send any email notification, but your message "
 "will still be displayed to every user that has access to the page."
-msgstr ""
+msgstr "내부 메시지는 이메일 알림을 보내지 않지만 페이지에 접속 할 수있는 모든 사용자에게 메세지가 계속 표시됩니다."
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -1023,7 +1114,7 @@ msgstr "담당자"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "날짜 지정"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1032,6 +1123,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"각 단계에서 직원은 다음 단계를 위해 작업/이슈를 차단하거나 준비 할 수 있습니다.\n"
+"                                기본 레이블 대신 상태에 대해 표시 할 레이블을\n"
+"                                여기서 정의 할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1057,14 +1151,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
-msgstr ""
+msgstr "애플 스토에서 구입 가능"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Back at the office, the manager splits the customer's requests into several "
 "tasks and delegates them to several employees."
-msgstr ""
+msgstr "사무실로 돌아가서 관리자는 고객의 요청을 여러 작업으로 분할하여 여러 직원에게 위임합니다."
 
 #. module: project
 #. openerp-web
@@ -1073,7 +1167,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:63
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "백로그"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_balance
@@ -1088,14 +1182,14 @@ msgstr "기준"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Basic Management"
-msgstr ""
+msgstr "기본 관리"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Be aware of the team’s productivity and time: try to keep meetings to one "
 "hour or less."
-msgstr ""
+msgstr "팀의 생산성과 시간을 염두에 두십시오. 회의를 1시간 이내로 유지하십시오."
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1110,6 +1204,9 @@ msgid ""
 "                        For example, you'll understand why you shouldn’t use Odoo to plan but instead to\n"
 "                        collaborate, or why organizing your projects by role is wrong."
 msgstr ""
+"그러나 변경이 결코 쉬인 일은 아니기 때문에 이 가이드를 통하여 안내해드립니다.<br/>\n"
+"                        예를 들어, 왜 Odoo를 사용하여 계획을 세우닌 대신 협력해야하는지,\n"
+"                        또는 역활별로 프로젝트를 구성하는 것이 잘못된 이유를 이해하게 될 것입니다."
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -1127,7 +1224,7 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "버즈 또는 완료로 설정"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -1152,7 +1249,7 @@ msgstr "취소됨"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Change their Stages in the Project Stages tab"
-msgstr ""
+msgstr "프로젝트 단계 탭에서 단계를 변경하십시오"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
@@ -1167,26 +1264,26 @@ msgstr "이 프로젝트를 통해 내부 활동을 관리하려면이 상자를
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
-msgstr ""
+msgstr "<b>프로젝트 이름</b>을 선택하십시오. (예 : 웹 사이트 시작, 제품 개발, 오피스 파티 등)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "프로젝트 이메일 선택"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:54
 #, python-format
 msgid "Clear description and purpose"
-msgstr ""
+msgstr "명확한 설명 및 목적"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr ""
+msgstr "카드를 클릭하면 작업에 대한 세부정보를 얻을 수 있습니다."
 
 #. module: project
 #. openerp-web
@@ -1194,14 +1291,14 @@ msgstr ""
 #, python-format
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
-msgstr ""
+msgstr "카드를 클릭하여 <b>프로젝트로 이동하고</b> 작업 구성을 시작하십시오."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:67
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "작업을 수정하려면 이 단추를 클릭하십시오."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
@@ -1211,12 +1308,12 @@ msgstr "클릭해서 새로운 태그를 추가합니다."
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr ""
+msgstr "작업 파이프라인에 단계를 추가하려면 클릭하십시오."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "새 프로젝트를 만들려면 클릭하십시오.<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1233,7 +1330,7 @@ msgstr "컬러 색인"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Communication campaign"
-msgstr ""
+msgstr "커뮤니케이션 캠페인"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1279,12 +1376,12 @@ msgstr "프로젝트 구성"
 msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
 "efficiently!"
-msgstr ""
+msgstr "귀사를 보다 효율적으로 운영하는데 도움이되는 Odoo 프로젝트를 선택하신 것을 축하드립니다!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Congratulations, you're done !"
-msgstr ""
+msgstr "축하합니다. 끝났습니다!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1306,14 +1403,14 @@ msgstr "계약/분석"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Control projects quality and satisfaction"
-msgstr ""
+msgstr "프로젝트 품질 및 만족도 제어"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:33
 #, python-format
 msgid "Copywriting / Design"
-msgstr ""
+msgstr "광고 문안 작성 / 디자인"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1323,34 +1420,34 @@ msgstr "작성"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create a Gantt chart with your projects tasks and deadlines"
-msgstr ""
+msgstr "프로젝트 작업 및 마감일을 포함한 간트차트 만들기"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "프로젝트 만들기"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr ""
+msgstr "새 프로젝트를 만듭니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
-msgstr ""
+msgstr "동료 중 한명과 함께 프로젝트 별칭에 이메일을 보내 작업 작성"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create at least 3 tasks"
-msgstr ""
+msgstr "최소 3가지 작업 만들기"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create bills automatically based on Time &amp; Material."
-msgstr ""
+msgstr "시간 및 자재에따라 자동으로 청구서를 만드십시오."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1360,7 +1457,7 @@ msgstr "작성일"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create the Projects"
-msgstr ""
+msgstr "프로젝트 만들기"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_uid
@@ -1409,7 +1506,7 @@ msgstr "유통"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Current Timesheet"
-msgstr ""
+msgstr "현재 일정표"
 
 #. module: project
 #: code:addons/project/models/project.py:643
@@ -1436,38 +1533,38 @@ msgstr "고객서비스"
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Customer feedback has been requested"
-msgstr ""
+msgstr "고객 의견이 요청되었습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:91
 #, python-format
 msgid "Customer has cancelled repair"
-msgstr ""
+msgstr "고객이 배상금을 취소했습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
-msgstr ""
+msgstr "고객이 새로운 문제를 보고했습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:70
 #, python-format
 msgid "Customer service has found new issue"
-msgstr ""
+msgstr "고객 서비스에서 새로운 문제를 발견했습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr ""
+msgstr "고객 지원 티켓"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr ""
+msgstr "커스터마이제이션"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
@@ -1498,6 +1595,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"작업 작성에서부터 작업 또는 이슈 종료까지\n"
+"                프로젝트에 사용될 단계를 정의하십시오.\n"
+"                작업 또는 이슈 해결의 진행상황을 추적하기 위해\n"
+"                이 단계를 사용합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -1515,14 +1616,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Deploy"
-msgstr ""
+msgstr "배포하다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Deployment"
-msgstr ""
+msgstr "배포"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
@@ -1541,7 +1642,7 @@ msgstr "개발"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Development Process"
-msgstr ""
+msgstr "발전 과정"
 
 #. module: project
 #. openerp-web
@@ -1571,14 +1672,14 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:34
 #, python-format
 msgid "Distribute"
-msgstr ""
+msgstr "배분"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:42
 #, python-format
 msgid "Distribution is completed"
-msgstr ""
+msgstr "배분 완료"
 
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
@@ -1602,24 +1703,24 @@ msgstr "문서"
 msgid ""
 "Don't create a Project for different locations (this could isolate teams "
 "that work at different locations)."
-msgstr ""
+msgstr "다른 장소에 프로젝트를 만들지 마십시오 (다른 장소에서 근무하는 팀을 격리시킬 수 있음)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Don't create a Project for each of your customers - this will be too "
 "complicated to manage properly."
-msgstr ""
+msgstr "각 고객에 대해 프로젝트를 만들지 마십시오. 이는 너무 복잡하여 적절히 관리 할 수 없습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "주저 하지 마십시오"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to select only the events you are interested in!"
-msgstr ""
+msgstr "관심있는 이벤트 만 선택하는 것을 주저하지 마십시오!"
 
 #. module: project
 #. openerp-web
@@ -1637,19 +1738,19 @@ msgstr "완료"
 msgid ""
 "During a meeting, a customer asks a manager for a few modifications to a "
 "project."
-msgstr ""
+msgstr "회의 중 고객은 관리자에게 프로젝트에 대한 몇 가지 수정 사항을 묻습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Each employee will have his own task, while the manager will be able to "
 "follow the global progress in the Kanban view of the project."
-msgstr ""
+msgstr "관리자는 프로젝트의 칸반뷰에서 글로벌 진행 상황을 따라갈 수 있는 반면, 각 직원은 자신만의 작업을 수행합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "작업 편집"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1669,7 +1770,7 @@ msgstr "이메일"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "End"
-msgstr ""
+msgstr "종료"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_end
@@ -1686,7 +1787,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
-msgstr ""
+msgstr "오류! 프로젝트 시작일은 프로젝트 종료일보다 이전이어야 합니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_planned_hours
@@ -1701,6 +1802,8 @@ msgid ""
 "Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
 "                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
+"Odoo에 특정 필드가 없더라도 프로젝트의 각 단계를 책임지는 사람을 정의하는 것이 중요합니다.<br/>\n"
+"                        이 담당자는 각 단계의 유효성을 확인하고 다음 단계로 이동하기위한 요구 사항이 충족되는지 확인해야합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1708,6 +1811,8 @@ msgid ""
 "Every business is different.<br/>\n"
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr ""
+"모든 사업이 다릅니다.<br/>\n"
+"                    Odoo를 사용하면 모든 응용 프로그램을 커스터마이즈 할 수 있으며 프로젝트 요구에 맞게 화면을 커스터마이즈하는 것이 좋습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1719,7 +1824,7 @@ msgstr "예제"
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Expert advice has been requested"
-msgstr ""
+msgstr "전문가의 조언이 요청되었습니다"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
@@ -1731,7 +1836,7 @@ msgstr "만료일"
 msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
-msgstr ""
+msgstr "이 단계에 있는 단계 또는 문제에서 별점 및 우선 순위 메커니즘을 사용하는 사용자를 돕는 설명 문구."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1746,26 +1851,26 @@ msgstr "기타 정보"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Extra useful for when you're with a customer or in a meeting."
-msgstr ""
+msgstr "고객과 함게 또는 회의 중일 떄 유용합니다."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
 msgid "Feedback from customer requested"
-msgstr ""
+msgstr "고객이 요청한 피드백"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:26
 #, python-format
 msgid "Finally task is deployed"
-msgstr ""
+msgstr "마지막으로 작업이 배포됩니다"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "칸반 화면 접기"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1782,7 +1887,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "For employees, the"
-msgstr ""
+msgstr "직원의 경우"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1797,18 +1902,20 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"Odoo 팀의 경우,<br/>\n"
+"                            Fabien Pinckaers, 설립자"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "For the same reason, don't create a Project based on weeks or time (example:"
 " Scrum)."
-msgstr ""
+msgstr "같은 이유로 몇 주 또는 시간을 기준으로 프로젝트를 생성하지 마십시오 (예 : 스크럼)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Forecasts"
-msgstr ""
+msgstr "예측"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
@@ -1818,32 +1925,32 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Generate a timesheet report to attach to your customer invoices"
-msgstr ""
+msgstr "고객 청구서에 첨부 할 일정표 보고서 생성"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr ""
+msgstr "Odoo와 전체 동기화"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
-msgstr ""
+msgstr "구글 플레이에서 다운 받기"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get more apps"
-msgstr ""
+msgstr "더 많은 앱 다운로드"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr ""
+msgstr "프로젝트의 칸반보기에서 작업에 레이블을 지정합니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_sequence
@@ -1864,22 +1971,24 @@ msgid ""
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
 msgstr ""
+"잘 하셨습니다! 귀하는 프로젝트 관리 투어를 완료했습니다. <b>구현 가이드</b>를 계속 진행하면 회사에서 프로젝트 관리를 설정할 수 "
+"있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
-msgstr ""
+msgstr "행운을 빕니다!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
-msgstr ""
+msgstr "녹색: 작업이 다음 단계를 위해 준비되었습니다 (이 단계의 작업이 완료되었습니다)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Grey: the Task is in progress (someone is working on it)"
-msgstr ""
+msgstr "회색: 작업 진행 중 (누군가 작업 중임)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1891,12 +2000,12 @@ msgstr "그룹화"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Here are some of the <strong>available customizations</strong>"
-msgstr ""
+msgstr "다음은  <strong>사용 가능한 커스터마이제이션</strong>입니다."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr ""
+msgstr "여기에서 새 작업을 작성할 수 있습니다"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1914,6 +2023,12 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"현재 프로젝트에 속한 작업 또는 이슈의 가시성을 유지합니다:\n"
+"- 초대장에만 해당: 직원은 팔로우 한 프로젝트, 작업 뚀는 이슈만 볼 수 있습니다\n"
+"- 모든 직원이 볼 수 있음: 직원은 모든 프로젝트, 작업 또는 이슈를 볼 수 있습니다\n"
+"- 팔로잉하는 고객이 볼 수 있음: 직원은 모든 것을 볼 수 있습니다;\n"
+"   웹 사이트가 활성화되면 포털 사용자가 프로젝트, 작업 또는 이슈를 볼 수 있습니다.\n"
+"\n"
 
 #. module: project
 #: code:addons/project/models/project.py:567
@@ -1943,19 +2058,19 @@ msgstr "별칭을 담고 있는 상위 레코드의 ID (예 : 별칭을 생성�
 #: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea has been transformed into concrete actions"
-msgstr ""
+msgstr "아이디어는 구체적인 행동으로 확장되었습니다."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:102
 #, python-format
 msgid "Idea is fully explained"
-msgstr ""
+msgstr "아이디어가 충분히 설명되었습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
-msgstr ""
+msgstr "이상적으로 한 사람은 한 프로젝트에 대해서만 책임을 져야합니다."
 
 #. module: project
 #. openerp-web
@@ -1967,14 +2082,14 @@ msgstr "아이디어"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr ""
+msgstr "문제와 차단 점을 보다쉽게 식별"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
 msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
-msgstr ""
+msgstr "설정된 경우 작업 또는 이슈가 이 단계에 도달하면 이메일이 고객에게 전송됩니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -1995,7 +2110,7 @@ msgstr ""
 msgid ""
 "If you want to limit access for certain users or customers, simply use the "
 "Privacy / Visibility settings in the Project Settings."
-msgstr ""
+msgstr "특정 사용자 또는 고객의 접근을 제한하려면 프로젝트 설정의 개인 정보 / 공개 설정을 사용하십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2008,17 +2123,17 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Implement"
-msgstr ""
+msgstr "구현"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
-msgstr ""
+msgstr "개선"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr ""
+msgstr "고객과 공동 작업을 개선"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2060,13 +2175,15 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"이 프로젝트와 관련된 내부 이메일. 수신 이메일은 자동적으로 작업과 동기화됩니다(또는 이슈 추적 모듈이 설치되었으면 이슈와 동기화-"
+"선택사항)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Internal notes are messages that will appear in the Chatter but will not be "
 "notified in Odoo's Inbox."
-msgstr ""
+msgstr "내부 노트는 Chatter에 표시되지만 Odoo의 받은 편지함에는 알림이 표시되지 않는 메세지입니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2083,14 +2200,14 @@ msgstr "이슈 버전"
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Issue is being worked on"
-msgstr ""
+msgstr "문제가 해결 중입니다."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Issue is resolved"
-msgstr ""
+msgstr "문제가 해결되었습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2111,6 +2228,9 @@ msgid ""
 " as milestones that have been met or are ahead of schedule. This will make "
 "participants feel motivated to engage in the conversation."
 msgstr ""
+"\"우리는 2 주 늦었습니다\", \"우리는 계획 예산에 있습니다\" 또는 \"우리는 프로세스 모델을 50 % 완성했습니다\"와 같은 "
+"\"프로젝트 응답\"으로 시작하는 것이 좋습니다. 또한 가능하다면 만족되었거나 일정보다 앞선 마일스톤과 같은 긍정적 인 메모로 회의를 "
+"시작할 수 있습니다. 이것은 참가자들이 대화에 참여하도록 동기를 부여하게합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2125,6 +2245,8 @@ msgid ""
 "It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
 "                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
+"왜 당신이 Odoo 프로젝트를 사용하고 싶은지, 그리고 당신의 목표가 무엇인지 분명히하는 것이 중요합니다.\n"
+"                        실제로, 프로젝트를 관리하고, 당신에게 가장 적합한 것을 찾을 수있는 많은 방법이 있습니다. 당신이 원하는 것을 정확하게 알 필요가 있습니다. 그리고 나중에 우리는 당신의 목표를 당신 회사의 진정한 발전으로 바꿀 것입니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2177,12 +2299,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Keep track of messages and conversations"
-msgstr ""
+msgstr "메세지 및 대화를 추적하십시오"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr ""
+msgstr "직원이 무엇을하고 있는지 아십시오"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2234,7 +2356,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
 msgid "Let's create your first project."
-msgstr ""
+msgstr "첫 번째 프로젝트를 만들어 보겠습니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
@@ -2256,7 +2378,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr ""
+msgstr "할 일 목록 작성, 계획 및 추적"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -2274,13 +2396,13 @@ msgstr "관리자"
 msgid ""
 "Managing a group of people, a team or a department (example: R&amp;D team, "
 "HR Department, etc.)"
-msgstr ""
+msgstr "사람들, 팀 또는 부서 그룹 관리 (예:  R&amp;D 팀, HR 부서, 등)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Managing long projects that span over many months and/or need Timesheets."
-msgstr ""
+msgstr "여러 달에 걸친 긴 프로젝트 관리 및/또는 일정표가 필요합니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2291,11 +2413,14 @@ msgid ""
 "stages and tasks you want to be informed about. Fortunately, Odoo Project "
 "has many levels of notifications and messages you can choose from."
 msgstr ""
+"알림을 관리하는 것은 필수적입니다: 너무 적으면 중요한 정보가 누락 될 위험, 너무 많으면 불필요한 정보로 인해 과부하가 걸릴 수 "
+"있습니다. 트릭은 프로젝트, 단계 및 작업에 대해 알고자 하는 것에 대한 올바른 균형을 찾는 것입니다. 다행이도 Odoo 프로젝트는 "
+"다양한 수준의 알림 및 메시지를 선택할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Marketing Department"
-msgstr ""
+msgstr "마케팅 부서"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
@@ -2315,12 +2440,12 @@ msgstr "더 많은 정보"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
-msgstr ""
+msgstr "직원간의 효율적인 의사 소통"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "내 즐겨찾기"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2348,7 +2473,7 @@ msgstr "이름"
 #: model:project.task,legend_blocked:project.project_task_7
 #: model:project.task.type,legend_blocked:project.project_stage_1
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "기능적 또는 기술적 도움이 필요함"
 
 #. module: project
 #. openerp-web
@@ -2410,7 +2535,7 @@ msgstr "알림"
 #: code:addons/project/static/src/js/tour.js:43
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr ""
+msgstr "이제 프로젝트가 설정 되었으므로 <b>몇 가지 작업을 작성하십시오</b>."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2439,6 +2564,9 @@ msgid ""
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
 "                        who's in charge, all in one place."
 msgstr ""
+"Odoo 프로젝트는 회사의 모든 사람이 활동과 작업을 볼 수 있는 매우 빠르고 쉬운 방법입니다.\n"
+"                        상황이 어떻게 진행되는지, 언제 막혀 있는지, 누가 책임자인지\n"
+"                        모두 한 곳에서 확인하십시오."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_generate_project_alias
@@ -2453,13 +2581,15 @@ msgid ""
 "efficiently. You can track progress, discuss on tasks, attach documents, "
 "etc."
 msgstr ""
+"Odoo의 프로젝트 관리를 통해 작업의 파이프 라인을 효율적으로 관리 할 수 있습니다. 진행 상황을 추적하고 작업에 대해 토론하고 문서를"
+" 첨부 할 수 있습니다."
 
 #. module: project
 #: code:addons/project/models/project.py:203
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "초대장 만"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2480,7 +2610,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Or"
-msgstr ""
+msgstr "또는"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2492,20 +2622,20 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Organize meetings"
-msgstr ""
+msgstr "회의를 준비하다"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
-msgstr ""
+msgstr "내부, 개인 또는 고객 프로젝트를 위한 활동(작업 계획, 이슈 추적, 일정표 청구서)을 준비하십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Organize your company, from personal tasks to collaborative meeting minutes."
-msgstr ""
+msgstr "개인 작업부터 협업 회의록에 이르기까지 회사를 준비하십시오."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2518,7 +2648,7 @@ msgstr "시한을 넘긴 업무"
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr ""
+msgstr "작업 또는 이슈가 해당 단계에 있는 경우 칸반 선택을 위해 차단 된 상태에 대해 표시되는 기본값을 재정의하십시오."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2526,7 +2656,7 @@ msgstr ""
 msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr ""
+msgstr "작업 또는 이슈가 해당 단계에 있는 경우 칸반 선택을 위해 완료상태에 대해 표시되는 기본값을 재정의하십시오."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2534,7 +2664,7 @@ msgstr ""
 msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr ""
+msgstr "작업 또는 이슈가 해당 단계에 있는 경우 칸반 선택을 위해 일반상태에 대해 표시되는 기본값을 재정의하십시오."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -2572,12 +2702,12 @@ msgstr "파트너"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
-msgstr ""
+msgstr "오늘의 활동을 계획하십시오"
 
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "기획자"
 
 #. module: project
 #: code:addons/project/models/project.py:723
@@ -2585,7 +2715,7 @@ msgstr ""
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
-msgstr ""
+msgstr "삭제할 계정에 연결된 프로젝트의 기존 작업을 제거하십시오."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
@@ -2595,11 +2725,15 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\\n\n"
+"- 모두: 모두다 메시지 게시 가능\n"
+"- 파트너: 인증된 파트너만 가능\n"
+"- 팔로워: 관련 문서의 팔로워만 가능\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Prepare"
-msgstr ""
+msgstr "준비하다"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_priority
@@ -2610,7 +2744,7 @@ msgstr "우선 순위"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "우선순위 관리설명"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2620,7 +2754,7 @@ msgstr "개인 정보 보호"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Product or software version"
-msgstr ""
+msgstr "제품 또는 소프트웨어 버전"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -2676,7 +2810,7 @@ msgstr "프로젝트 설정"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings."
-msgstr ""
+msgstr "프로젝트 설정."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2715,7 +2849,7 @@ msgstr "프로젝트"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "프로젝트 & 작업"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -2727,7 +2861,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr ""
+msgstr "레이아웃 / 카피 라이팅 대기"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2740,28 +2874,28 @@ msgstr "다음 단계에 대한 준비"
 #: code:addons/project/static/src/js/web_planner_project.js:58
 #, python-format
 msgid "Ready for release"
-msgstr ""
+msgstr "출시 대기"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:56
 #, python-format
 msgid "Ready for testing"
-msgstr ""
+msgstr "테스트 대기"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready to be displayed, published or sent"
-msgstr ""
+msgstr "게시 또는 발송 대기"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_16
 #: model:project.task,legend_done:project.project_task_19
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
-msgstr ""
+msgstr "다시 열 준비 완료"
 
 #. module: project
 #. openerp-web
@@ -2769,7 +2903,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr ""
+msgstr "취소 사유가 문서화되었습니다"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -2784,7 +2918,7 @@ msgstr "레코드 스레드 ID"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
-msgstr ""
+msgstr "빨간색: 작업이 차단되었습니다 (문제가 있음)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -2796,7 +2930,7 @@ msgstr "참조"
 #: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Release"
-msgstr ""
+msgstr "출시"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
@@ -2808,7 +2942,7 @@ msgstr "잔여 시간"
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "표지 이미지 제거"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2820,14 +2954,14 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:87
 #, python-format
 msgid "Repair has started"
-msgstr ""
+msgstr "복구가 시작되었습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Repair is completed"
-msgstr ""
+msgstr "복구가 완료되었습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2844,7 +2978,7 @@ msgstr "보고서"
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Request for parts has been sent"
-msgstr ""
+msgstr "부품 요청이 발송되었습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2854,17 +2988,17 @@ msgstr "책임"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibility"
-msgstr ""
+msgstr "책임"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Runs outside Odoo, always available"
-msgstr ""
+msgstr "Odoo는 밖에서도 운용되며 항상 사용할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
-msgstr ""
+msgstr "스크럼 방법론"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
@@ -2886,7 +3020,7 @@ msgstr "선택하기"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Send an alert when a task is stuck in red for more than a few days"
-msgstr ""
+msgstr "작업이 몇일 이상 빨갛게 붙어있는 경우 경고를 보냅니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2905,19 +3039,19 @@ msgstr "순서"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Service Level Agreement (SLA)"
-msgstr ""
+msgstr "Service Level Agreement (SLA)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "표지 이미지 설정"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "표지 이미지 설정"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_general_settings
@@ -2929,17 +3063,17 @@ msgstr "설정"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Severity"
-msgstr ""
+msgstr "중요도"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Share files and manage versions"
-msgstr ""
+msgstr "파일 공유 및 버전 관리"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "대시 보드에 프로젝트 표시"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2951,7 +3085,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Software development"
-msgstr ""
+msgstr "소프트웨어 개발"
 
 #. module: project
 #. openerp-web
@@ -2965,21 +3099,21 @@ msgstr "명세서"
 #: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification is validated"
-msgstr ""
+msgstr "사양이 확인되었습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:22
 #, python-format
 msgid "Specification of task is written"
-msgstr ""
+msgstr "작업의 정의가 작성되었습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:48
 #, python-format
 msgid "Sprint"
-msgstr ""
+msgstr "스프린트"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
@@ -2997,7 +3131,7 @@ msgstr "단계가 변경됨"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "단계 설명 및 툴팁"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -3018,7 +3152,7 @@ msgstr "단계"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Start / Stop a timer in one click"
-msgstr ""
+msgstr "한 번의 클릭으로 타이머 시작 / 중지"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -3083,7 +3217,7 @@ msgstr "업무 순서도"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "작업 준비 완료"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3101,12 +3235,12 @@ msgstr "업무 단계 변경"
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "작업 제목"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "작업 제목..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
@@ -3123,21 +3257,21 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Task is Developed"
-msgstr ""
+msgstr "작업이 발전 되었습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Task is completed"
-msgstr ""
+msgstr "작업이 완료 었습니다"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is tested"
-msgstr ""
+msgstr "작업이 테스트 되었습니다"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -3147,7 +3281,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "다음 단계를 위해 준비된 작업"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3192,12 +3326,12 @@ msgstr "업무 단계"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr ""
+msgstr "작업 분석"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks are the main mechanism in Odoo and are activated by default."
-msgstr ""
+msgstr "작업은 Odoo의 주요 매커니즘이며 기본적으로 활성화됩니다."
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -3216,7 +3350,7 @@ msgstr "시험"
 #: code:addons/project/static/src/js/web_planner_project.js:57
 #, python-format
 msgid "Test is OK, need to document"
-msgstr ""
+msgstr "테스트는 정상이며 문서화해야합니다"
 
 #. module: project
 #. openerp-web
@@ -3235,6 +3369,9 @@ msgid ""
 " mean it's always a good idea: let's start by helping you understand what "
 "can be a good project."
 msgstr ""
+"Odoo 프로젝트 앱은 신제품 개발에서 고객 지원의 일상 업무에 이르기까지 다양한 활동을 관리하는데 사용할 수 있습니다. 창의성을 "
+"발휘하여 마케팅 커뮤니케이션이나 개인 프로젝트를 관리하는 데 사용할 수도 있습니다. 그러나 그것이 완료된다고해서 그것이 항상 좋은 "
+"아이디어라는 것을 의미하지는 않습니다. 무엇이 좋은 프로젝트가 될 수 있는지 이해할 수 있도록 시작하십시오."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model
@@ -3274,7 +3411,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "The same features as the Chrome extension, but on your mobile phone!"
-msgstr ""
+msgstr "크롬 확장 프로그램과 동일한 기능지만 휴대 전화에서!"
 
 #. module: project
 #. openerp-web
@@ -3283,7 +3420,7 @@ msgstr ""
 msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
-msgstr ""
+msgstr "표지로 설정할 이미지가 없습니다. 첨부 된 이미지로 작업에 대한 메시지를 보냅니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
@@ -3306,13 +3443,15 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"이 보고서를 통해 프로젝트 및 사용자의 성과를 분석 할 수 있습니다. 작업의 양, 계획된 시간대비 실제 소요된 시간, 작업을 열거나 닫는"
+" 평균일 수 등을 분석할 수 있습니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_fold
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr ""
+msgstr "이 단계에 표시할 레코드가 없으면 칸반 화면은 접혀 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3320,13 +3459,15 @@ msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
 "                        return to it at any time: your progress is automatically saved."
 msgstr ""
+"이 모든 과정은 몇 시간이 걸릴 수도 있지만 걱정하지 마십시오. 언제든지 휴식을\n"
+"                        취할 수 있습니다. 진행 상황은 자동으로 저장됩니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This will add an Invoice Tasks menu in the Project module, that can be used "
 "to select the Timesheet to invoice."
-msgstr ""
+msgstr "프로젝트 모듈에서 청구서 작업이 추가 될 것입니다. 그러면 일정표를 선택하여 청구할 수 있습니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
@@ -3338,6 +3479,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"프로젝트 및 작업에 사용되는 측정 단위가 설정됩니다.\n"
+"만약 프로젝트에 연결된 일정표를 사용하는 경우, 직원에게 올바른 측정 단위를 설정하는 것을 잊지 마십시오."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3347,7 +3490,7 @@ msgstr "업무 예상 시간"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "일정 계획"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
@@ -3362,11 +3505,14 @@ msgid ""
 "                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
 "                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
 msgstr ""
+"일정표는 회사 운영에 필수적입니다.<br/>\n"
+"                    인간의 실수, 반본적인 성가신 일들로 때로는 직원들에게 스트레스를 받기 쉬운 경향이 있습니다.<br/>\n"
+"                    다행이도, Odoo는 가능한 한 효율적이고 덜 고통스럽게 만들 수 있는 몇 가지 솔루션을 가지고 있습니다!<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr ""
+msgstr "일정표는 여러가지 용도로 사용할 수 있습니다:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3391,7 +3537,7 @@ msgstr "할 일"
 msgid ""
 "To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
-msgstr ""
+msgstr "칸반 상태를 구성하려면 프로젝트의 '프로젝트 단계' 탭으로 이동하십시오."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3401,7 +3547,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr ""
+msgstr "일정표를 사용하려면, 이동하십시오"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3413,7 +3559,7 @@ msgstr "전체 잔여 시간은 업무 담당자에 의해 주기적으로 재 �
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "작업에 대한 고객 만족도 추적"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3436,12 +3582,12 @@ msgstr "업무 사용"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "작업을 다음과 같이 사용"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr ""
+msgstr "일정표 사용"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3457,14 +3603,14 @@ msgstr ""
 msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
 "company."
-msgstr ""
+msgstr "<b>구현 가이드</b>를 사용하여 회사에서 프로젝트 관리를 설정하십시오."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:88
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr ""
+msgstr "이동 경로를 사용하여 <b>작업 파이프 라인으로 돌아갑니다</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -3489,6 +3635,10 @@ msgid ""
 "                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
 "                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
 msgstr ""
+"대개 프로젝트 팀 구성원은 매주 (또는 매달) 상태 회의를 통해 관리됩니다.<br/>\n"
+"                        때로는 이러한 회의가 몇 시간 동안 지속될 수 있으며 참가자에게 프로젝트에 대해 지나치게 자세한 검토가 이루어질 수 있습니다.<br/>\n"
+"                        당신의 팀원들은 아마도 그러한 종류의 회의를 피하려고하거나, 마감일을 지키기 위해 서두를 필요가 있습니다...<br/><br/>\n"
+"                        그렇다면 프로젝트 관리자로서 팀 구성원들이 프로젝트의 다음 단계에 참여하고 정보를 제공하며 기꺼이 참여할 수 있는 주간 상황 회의를 어떻게 구성 할 수 있습니까? 다음은 몇 가지 팁입니다."
 
 #. module: project
 #. openerp-web
@@ -3500,26 +3650,26 @@ msgstr "검증"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr ""
+msgstr "통계 보기 (소요 시간, 효율성 등)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr ""
+msgstr "이번 주 통계보기"
 
 #. module: project
 #: code:addons/project/models/project.py:204
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "전 직원이 볼 수 있음"
 
 #. module: project
 #: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "팔로우 한 고객이 볼 수 있음"
 
 #. module: project
 #. openerp-web
@@ -3543,38 +3693,38 @@ msgstr ""
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
+msgstr "<b>프로젝트 관리</b>를 보다 효과적으로 하고싶습니까?? <i>여기서부터 시작됩니다.</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can add fields related to your business on any screen, for example:"
-msgstr ""
+msgstr "귀하의 비즈니스와 관련된 필드를 모든 화면에 추가 할 수 있습니다, 예 :"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "작업 흐름의 단계를 자동화 할 수 있습니다. 예:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "We can implement custom reports based on your Word or GoogleDocs templates, "
 "for example:"
-msgstr ""
+msgstr "Word 또는 GoogleDocs 템플릿을 기반으로 맞춤 보고서를 구현할 수 있습니다. 예를 들면 다음과 같습니다:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "We hope this process helped you implement our project management "
 "application."
-msgstr ""
+msgstr "이 프로세스가 프로젝트 관리 응용 프로그램을 구현하는데 도움이되기를 바랍니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
-msgstr ""
+msgstr "우리는 당신의 일정표를 입력하기 위해 매우 간단하고 효율적인 크롬 확장을 개발했습니다:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3596,12 +3746,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "What is the difference between initial time estimation and final time spent?"
-msgstr ""
+msgstr "초기 시간 추정과 최종 소비 시간의 차이점은 무엇입니까?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the number of missed deadlines?"
-msgstr ""
+msgstr "누락 된 마감기한의 수는 얼마입니까?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3611,19 +3761,19 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of working hours over the year?"
-msgstr ""
+msgstr "일년 중 평균 근무 시간은 얼마나됩니까?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "이 프로젝트를 대시 보드에 표시할지 여부"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:39
 #, python-format
 msgid "Work has started"
-msgstr ""
+msgstr "일이 시작되었습니다."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
@@ -3645,46 +3795,46 @@ msgstr ""
 msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
-msgstr ""
+msgstr "동료가 단계의 의미와 목적을 이해할 수 있도록 설명을 추가 할 수도 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
-msgstr ""
+msgstr "또한 칸반 및 양식보기에서 사용할 수 있는 별표시의 사용에 대한 툴팁을 제공 할 수 있습니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can even include any report in your dashboard for permanent access!"
-msgstr ""
+msgstr "영구적 접속을 위해 대시 보드에 어떤 보고서든 포함 할 수도 있습니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
-msgstr ""
+msgstr "이 플래너의 '일정표 사용'섹션에서 일정표에 대해 자세히 알아 볼 수 있습니다."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid ""
 "You can now manage your tasks in order to get things done efficiently. Track"
 " progress, discuss, attach documents, etc."
-msgstr ""
+msgstr "이제는 효율적으로 일을 처리하기 위해 작업을 관리 할 수 있습니다. 진행상황 추적, 의논/토론, 문서 첨부 등."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can reply directly to a message from you email software; the message and"
 " its attachments will be added to the Chatter."
-msgstr ""
+msgstr "전자 메일 소프트웨어의 메시지에 직접 회신 할 수 있습니다. 메시지와 첨부 파일이 Chatter에 추가됩니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "나중에 쉽게 다시 사용할 수 있도록 보고서를 저장할 수 있습니다"
 
 #. module: project
 #: code:addons/project/models/project.py:70
@@ -3700,32 +3850,32 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Activities"
-msgstr ""
+msgstr "귀하의 활동"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr ""
+msgstr "당신의 목표"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Odoo 프로젝트 애플리케이션이 실행 중입니다"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr ""
+msgstr "귀하의 프로젝트"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects:"
-msgstr ""
+msgstr "귀하의 프로젝트:"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr ""
+msgstr "샘플 프로젝트 활성화"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3735,7 +3885,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "예: 사무실 파티"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3776,7 +3926,7 @@ msgstr "업무"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr ""
+msgstr "귀하의 경험을 설명하거나<br/> 개선을 제안하십시오!"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -3786,14 +3936,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "using the above recommendations"
-msgstr ""
+msgstr "위의 권장 사항을 사용하여"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "view of the HR module is the main tool to check, modify and confirm "
 "Timesheets."
-msgstr ""
+msgstr "HR 모듈의 보기는 일정표를 체크, 수정 및 확인하는 주요 도구입니다."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3808,7 +3958,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "with Timesheet"
-msgstr ""
+msgstr "일정표와 함께"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

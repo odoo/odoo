@@ -7,7 +7,7 @@
 # Martin Trigaux, 2017
 # Hwang, Geon Gu <under_09@naver.com>, 2017
 # 종현 엄 <whd5367@naver.com>, 2017
-# link up <link-up@naver.com>, 2018
+# Linkup <link-up@naver.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
 msgid ""
 msgstr ""
@@ -31,6 +31,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * '초안' 상태는 사용자가 새로운 미확인 전표를 기록할 때 사용합니다.\n"
+" * '견적' 상태는 전표에 전표 번호가 지정되지 않았을 때 사용합니다.\n"
+" * '전기됨' 상태는 사용자가 전표를 생성하고 전표 번호가 생성되고 계정에서 전표 항목이 생성되었을 때 사용합니다.\n"
+" * '취소됨' 상태는 사용자가 전표를 취소할 때 사용합니다."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -84,7 +88,7 @@ msgstr "계산서 정보"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "청구 참조"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -110,12 +114,12 @@ msgstr "이미 개시되었거나 지급된 전표는 삭제할 수 없습니다
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "클릭해서 판매 영수증을 생성합니다."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "클릭해서 구매 영수증을 등록합니다."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -198,7 +202,7 @@ msgstr "회계 항목에 대한 효과적인 날짜"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "전표를 표시할 때 이 라인의 순서를 제공합니다."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -217,7 +221,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr ""
+msgstr "세금에 올림 문제가 있을 경우, 이 필드를 사용하여 정정하십시오."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -296,7 +300,7 @@ msgstr "직접 지급"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "나중에 지불"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -451,12 +455,12 @@ msgstr "전표를 모두 지불했습니다."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "선택된 제품과 관련된 수입 또는 경비 계정입니다."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "해당 문서 협력사 참조"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -500,7 +504,7 @@ msgstr "공급업체"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "공급업체 전표"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:97
@@ -545,6 +549,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"구매 영수증이 확인되면 이 구매 영수증과 관련된\n"
+"                공급업체 결제를 기록할 수 있습니다."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -552,6 +558,8 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"판매 영수증이 확인되면 이 판매 영수증과 관련된\n"
+"                고객 결제를 기록할 수 있습니다."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:361
