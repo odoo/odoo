@@ -9,7 +9,7 @@ class ProjectTask(models.Model):
     _inherit = ["project.task", 'pad.common']
 
     description_pad = fields.Char('Pad URL', pad_content_field='description', copy=False)
-    use_pad = fields.Boolean(related="project_id.use_pads", string="Use collaborative pad")
+    use_pad = fields.Boolean(related="project_id.use_pads", string="Use collaborative pad", readonly=True)
 
     @api.model
     def create(self, vals):
