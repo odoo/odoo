@@ -11,8 +11,8 @@
 # Goh Gangtai <gangtai.goh@gmail.com>, 2017
 # 종현 엄 <whd5367@naver.com>, 2017
 # Hwang, Geon Gu <under_09@naver.com>, 2017
-# Up Link <linkup.way@gmail.com>, 2018
-# link up <link-up@naver.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
+# Linkup <link-up@naver.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
 msgid ""
 msgstr ""
@@ -126,11 +126,15 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"재고가있는 제품은 재고를 관리하는 제품입니다. '재고'앱을 설치해야합니다.\n"
+"반면에 소모품은 재고가 관리되지 않는 제품입니다.\n"
+"서비스는 귀하가 제공 한 무형 제품입니다.\n"
+"디지털 컨텐츠는 온라인으로 판매되는 무형 제품입니다. 제품에 첨부 된 파일은 전자 서적, 음악, 그림 등 전자 상거래에서 판매되는 파일입니다. \"디지털 제품\"모듈을 설치해야합니다."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "필요한 조치"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
@@ -281,7 +285,7 @@ msgstr "운송회사"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "카테고리 경로"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
@@ -498,7 +502,7 @@ msgstr "설명"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "선별시 설명"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -711,7 +715,7 @@ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "만약 선택하였으면, 새 메시지에 주의를 기울여야 합니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -744,6 +748,8 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"제품 종류 이미지(false일 경우, 제품 템플릿의 대형 이미지). 가로세로비는 그대로 유지되고 1024x1024px 크기로 자동 "
+"조정됩니다."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
@@ -823,7 +829,7 @@ msgstr "송장 정책"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "팔로워입니다"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
@@ -1034,12 +1040,12 @@ msgstr "패키지 수"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "조치가 필요한 메시지 수"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "읽지 않은 메시지 수"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
@@ -1532,7 +1538,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "기술 : 수량 계산에 사용됩니다."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier

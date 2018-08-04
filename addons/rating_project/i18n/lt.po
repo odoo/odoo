@@ -5,20 +5,21 @@
 # Translators:
 # Martin Trigaux, 2016
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# SButko <silvija.butko@gmail.com>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: SButko <silvija.butko@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: rating_project
 #: model:mail.template,body_html:rating_project.rating_project_request_email_template
@@ -134,6 +135,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Kliento užduočių vertinimai. Jei neturite jokių vertinimų, pakeiskite savo "
+"projekto nustatymus ir aktyvuokite juost."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -145,7 +148,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Kliento (-ų) vertinimai"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -178,21 +181,26 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Kaip gauti kliento grįžtamąjį ryšį?\n"
+"- Vertinimas, kai pakeičiama stadija: kai užduotis/problema perkeliama į kitą stadiją, bus nusiunčiamas laiškas\n"
+"- Periodinis vertinimas: laiškai bus siunčiami periodiškai\n"
+"\n"
+"Nepamirškite stadijose, kuriose norite gauti grįžtamąjį ryšį, nustatyti laiškų šablonų."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Paskutinis įvertinimas: Labai nepatenkintas"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Paskutinis įvertinimas: Nepatenkintas"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Paskutinis įvertinimas: Patenkintas"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -254,7 +262,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Vertinimas, kai keičiama stadija"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
