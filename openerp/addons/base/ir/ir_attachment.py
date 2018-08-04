@@ -250,7 +250,6 @@ class ir_attachment(osv.osv):
         for ira in self.browse(cr, uid, ids, context):
             if ira.type == 'binary' and ira.url:
                 has_group = user.has_group
-                print self.get_serving_groups()
                 if not any([has_group(g) for g in self.get_serving_groups()]):
                     return False
         return True
