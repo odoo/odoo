@@ -161,7 +161,11 @@ class ir_cron(osv.osv):
                     if not ok or job['doall']:
                         self._callback(job_cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
                     if numbercall:
-                        nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
+                        # add the interval to a naive datetime, then localize
+                        # it so DST crossover is handled correctly
+                        tzinfo = nextcall.tzinfo
+                        naive_nextcall = nextcall.replace(tzinfo=None)
+                        nextcall = tzinfo.localize(naive_nextcall + _intervalTypes[job['interval_type']](job['interval_number']))
                     ok = True
                 addsql = ''
                 if not numbercall:
