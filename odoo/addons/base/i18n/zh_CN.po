@@ -47,15 +47,16 @@
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# 木头 <mynameisshiy@gmail.com>, 2018
 # e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
+# 石家庄_老刘 <liuaiqun@sina.com>, 2018
+# John Lin <linyinhuan@139.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 14:33+0000\n"
-"PO-Revision-Date: 2018-02-19 14:33+0000\n"
-"Last-Translator: e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:47+0000\n"
+"PO-Revision-Date: 2018-08-02 09:47+0000\n"
+"Last-Translator: John Lin <linyinhuan@139.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -747,6 +748,15 @@ msgstr ""
 " 在费用开支中启用 SEPA 功能\n"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_customs
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
+msgid ""
+"\n"
+"        Generate Electronic Invoice with Customs Number\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_sepa
 msgid ""
 "\n"
@@ -1038,6 +1048,18 @@ msgid ""
 msgstr ""
 "\n"
 "甘特视图请假仪表板"
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_lock
+msgid ""
+"\n"
+"    Make the lock date irreversible:\n"
+"\n"
+"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
+"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
+"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -3855,6 +3877,14 @@ msgstr ""
 " 连接到 OnSIP 的具有所需配置的模块。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_cash_basis_base_account
+msgid ""
+"\n"
+"Move the cash basis lines to another account.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
 msgid ""
 "\n"
@@ -5752,51 +5782,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_barcodes
-msgid ""
-"\n"
-"This module adds support for barcode scanning and parsing.\n"
-"\n"
-"Scanning\n"
-"--------\n"
-"Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.\n"
-"The scanner must be configured to use no prefix and a carriage return or tab as suffix.\n"
-"The delay between each character input must be less than or equal to 50 milliseconds.\n"
-"Most barcode scanners will work out of the box.\n"
-"However, make sure the scanner uses the same keyboard layout as the device it's plugged in.\n"
-"Either by setting the device's keyboard layout to US QWERTY (default value for most readers)\n"
-"or by changing the scanner's keyboard layout (check the manual).\n"
-"\n"
-"Parsing\n"
-"-------\n"
-"The barcodes are interpreted using the rules defined by a nomenclature.\n"
-"It provides the following features:\n"
-"- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
-"- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
-"- Support for encodings EAN-13, EAN-8 and UPC-A\n"
-msgstr ""
-"\n"
-" 此模块会添加条形码扫描和解析支持。\n"
-"\n"
-" 扫描\n"
-"--------\n"
-" 为了在 Odoo 中使用条形码，请使用 USB 扫描器（模拟键盘输入）\n"
-" 必须配置扫描器以使用无前缀和客运返回或标签作为后缀。\n"
-" 每个字符输入之间的延迟必须小于或等于 50 毫秒。\n"
-" 大多数条形码扫描器科在方框外使用。\n"
-" 但是，请确保扫描器与其插入的设备使用相同的键盘布局。\n"
-" 可将设备的键盘布局设置为 US QWERTY （大多数读取器的缺省值）\n"
-" 或者更改扫描器的键盘布局（查看手册）\n"
-"\n"
-" 解析\n"
-"-------\n"
-" 使用术语所定义的规则对条形码进行解释说明。\n"
-" 其提供以下功能：\n"
-"- 识别包含数值（例如，重量、价钱）的条形码的图案\n"
-"- 允许识别具有不同条形码的相同产品的条形码别名定义\n"
-"- 支持编码 EAN-13, EAN-8 和 UPC-A\n"
-
-#. module: base
 #: model:ir.module.module,description:base.module_event_barcode
 msgid ""
 "\n"
@@ -6830,6 +6815,12 @@ msgstr ""
 "基于源讯 Worldline keys  2.0版本, 包含了源讯 SIPS的收支电子支付。"
 
 #. module: base
+#: code:addons/base/ir/ir_ui_view.py:1054
+#, python-format
+msgid " - %r in %s=%r"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
 msgid ""
 " Module for synchronization of Documents between several companies. For example, this allow you to have a Sales Order created automatically when a Purchase Order is validated with another company of the system as vendor, and inversely.\n"
@@ -6907,9 +6898,9 @@ msgstr "%p - 等价于 AM 或 PM。\""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:38
-#: code:addons/base/res/res_partner.py:296
-#: code:addons/base/res/res_users.py:145 code:addons/base/res/res_users.py:399
-#: code:addons/base/res/res_users.py:401
+#: code:addons/base/res/res_partner.py:331
+#: code:addons/base/res/res_users.py:149 code:addons/base/res/res_users.py:414
+#: code:addons/base/res/res_users.py:416
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -6925,7 +6916,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - 两位数年份[00,99]。\""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1401
+#: code:addons/base/ir/ir_model.py:1416
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -7319,12 +7310,288 @@ msgid "<u><strong>Views</strong></u>"
 msgstr "<u><strong>视图</strong></u>"
 
 #. module: base
+#: model:ir.module.module,description:base.module_barcodes
+msgid ""
+"==============================\n"
+"Barcodes module documentation\n"
+"==============================\n"
+"\n"
+"This module brings barcode encoding logic and client-side barcode scanning utilities.\n"
+"\n"
+"\n"
+"Barcodes encoding\n"
+"==============================\n"
+"\n"
+"The Barcodes module defines barcode nomenclatures whose rules identify specific type \n"
+"of items e.g. products, locations. It contains the following features:\n"
+"\n"
+"- Patterns to identify barcodes containing a numerical value (e.g. weight, price)\n"
+"- Definitin of barcode aliases that allow to identify the same product with different barcodes\n"
+"- Unlimited barcode patterns and definitions,\n"
+"- Support for encodings EAN-13, EAN-8 and UPC-A\n"
+"\n"
+"Barcode encodings\n"
+"-----------------\n"
+"\n"
+"A barcode is an arbitrary long sequence of ASCII characters. An EAN-13 barcode is a 13 digit\n"
+"barcode, whose 13th digit is the checksum. \n"
+"\n"
+"Simple barcodes and rules\n"
+"-------------------------\n"
+"\n"
+"The default nomenclature assumes an EAN-13 encoding for product barcodes. It defines a rule \n"
+"for Unit Products whose encoding is EAN-13, and whose pattern is '.', i.e. any barcode \n"
+"matches this pattern. Scanning the barcode of a product, say '5410013101703', matches this rule. \n"
+"The scanned item is thus identified as a Unit Product, and is retrieved from the product table.\n"
+"\n"
+"Note: the special character '.' in patterns is matched by any character. To explicitely specify \n"
+"the '.' character in a pattern, escape it with '\\'. The '\\' character has to be escaped as well\n"
+"('\\\\') to be explicitely specified.\n"
+"\n"
+"Let us now suppose that we identify other items with barcodes, say stock locations. We define a\n"
+"new rule in the nomenclature with the corresponding type (in our example, the type is 'Location'),\n"
+"and whose pattern is e.g. '414.', that is, any location barcode starts with '414'. Scanning a barcode\n"
+"location, say '41401', matches this Location rule, and the corresponding location is retrieved from\n"
+"the location table.\n"
+"\n"
+"Note: Rules have a sequence field which indicates the order the rules are evaluated (ASC). In our \n"
+"previous examples, the Unit Product rule should have a larger sequence that then Location rule, \n"
+"because we want the latter one to be evaluated first.\n"
+"\n"
+"Barcodes with numerical content\n"
+"--------------------------------\n"
+"\n"
+"Barcodes may encode numerical content, which is decoded by the barcodes module. To that purpose,\n"
+"one have to define a new rule for barcodes with numerical content (e.g. barcodes for Weighted \n"
+"Products). The numerical content in a pattern is specified between braces (special characters '{' and \n"
+"'}'). The content of the braces must be a sequence of 'N's (representing the whole part of the numerical \n"
+"content) followed by a sequence of 'D's (representing the decimal part of the numerical content). \n"
+"For instance, let us define a new rule for Weighted Products whose pattern is '21.....{NNDDD}.'. Since\n"
+"we assume EAN-13 encoding for product barcodes, the encoding of this rule should be EAN-13 as well.\n"
+"\n"
+"Let us now assume that we want to write a barcode for a given Weighted Product, say oranges. We first \n"
+"have to define in product oranges a barcode that will match the Weighted Product rule. This barcode \n"
+"must start with '21' and be a correct EAN-13 barcode (i.e. the 13th digit must be a correct checksum). \n"
+"Moreover, all the numerical content must be set to a '0'. For instance, let us set the barcode to \n"
+"'2100001000004'. \n"
+"\n"
+"We now want to write a barcode for 2.75kg of oranges. This barcode should be '2100001027506' (the \n"
+"numerical content of this barcode is '02750', and the correct checksum is '6'). When scanned, this \n"
+"barcode matches the Weighted Product rule (since is starts with '21'). The numerical content is extracted, \n"
+"and replaced by a sequence of '0's. The correct checksum is then computed for the obtained barcode \n"
+"('2100001000004') and the corresponding product (oranges) is retrieved from product table.\n"
+"\n"
+"Note: the special characters '{' and '}' in patterns are used to identify numerical content. To \n"
+"explicitely specify '{' or '}' in a pattern, they must be escaped.\n"
+"\n"
+"\n"
+"Strict EAN-13 field of barcode nomenclatures\n"
+"--------------------------------------------\n"
+"\n"
+"Many barcode scanners strip the leading zero when scanning EAN-13 barcodes. Barcode nomenclatures\n"
+"have a boolean field \"Use strict EAN13\". If False, when trying to match a scanned barcode with\n"
+"a rule whose encoding is EAN-13, if the barcode is of length 12 and, by prepending it by a 0,\n"
+"the last digit is the correct checksum, we automatically prepend the barcode by 0 and try to\n"
+"find a match with this new barcode. If \"Use strict EAN13\" is set to True, we look for a pattern\n"
+"matching the original, 12-digit long, barcode.\n"
+"\n"
+"\n"
+"\n"
+"Barcodes scanning\n"
+"==============================\n"
+"\n"
+"Scanning\n"
+"--------\n"
+"\n"
+"Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.\n"
+"The scanner must be configured to use no prefix and a carriage return or tab as suffix.\n"
+"The delay between each character input must be less than or equal to 50 milliseconds.\n"
+"Most barcode scanners will work out of the box.\n"
+"However, make sure the scanner uses the same keyboard layout as the device it's plugged in.\n"
+"Either by setting the device's keyboard layout to US QWERTY (default value for most readers)\n"
+"or by changing the scanner's keyboard layout (check the manual).\n"
+"\n"
+"\n"
+"Barcode events\n"
+"------------------------------\n"
+"\n"
+"When the module barcodes is installed, it instanciate a singleton of the javascript class BarcodeEvents.\n"
+"The purpose of this component is to listen to keypresses to detect barcodes, then dispatch those barcodes\n"
+"on core.bus inside a 'barcode_event'.\n"
+"All keypress events are buffered until there is no more keypress during 50ms or a carriage return / tab is\n"
+"inputted (because most barcode scanners use this as a suffix).\n"
+"If the buffered keys looks like a barcode, an event is triggered :\n"
+"core.bus.trigger('barcode_scanned', barcode);\n"
+"Otherwise, the keypresses are 'resent'. However, for security reasons, a keypress event programmatically\n"
+"crafted doesn't trigger native browser behaviors. For this reason, BarcodeEvents doesn't intercept keypresses\n"
+"whose target is an editable element (eg. input) or when ctrl/cmd/alt is pushed.\n"
+"To catch keypresses targetting an editable element, it must have the attribute barcode_events=\"true\".\n"
+"\n"
+"\n"
+"Barcode handlers\n"
+"------------------------------\n"
+"\n"
+"To keep the web client consistent, components that want to listen to barcode events should include BarcodeHandlerMixin.\n"
+"It requires method on_barcode_scanned(barcode) to be implemented and exposes methods start_listening and stop_listening\n"
+"As long as it is the descendant of a View managed by a ViewManager is only listens while the view is attached.\n"
+"\n"
+"\n"
+"Form view barcode handler\n"
+"------------------------------\n"
+"\n"
+"It is possible for a form view to listen to barcode events, handle them client side and/or server-side.\n"
+"When the barcode is handled server-side, it works like an onchange. The relevant model must include the\n"
+"BarcodeEventsMixin and redefine method on_barcode_scanned. This method receives the barcode scanned and\n"
+"the `self` is a pseudo-record representing the content of the form view, just like in @api.onchange methods.\n"
+"Barcodes prefixed with 'O-CMD' or 'O-BTN' are reserved for special features and are never passed to on_barcode_scanned.\n"
+"The form view barcode handler can be extended to add client-side handling. Please refer to the (hopefully\n"
+"well enough) documented file for more informations.\n"
+"\n"
+"\n"
+"Button barcode handler\n"
+"------------------------------\n"
+"\n"
+"Add an attribute 'barcode_trigger' to a button to be able to trigger it by scanning a barcode. Example :\n"
+"<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
+"\"O-BTN.validate\" is scanned.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_landing
+msgid ""
+"==========================================\n"
+"Odoo Mexico Localization for Stock/Landing\n"
+"==========================================\n"
+"\n"
+"This module extends the functionality of Mexican localization to support\n"
+"customs numbers related with landed costs when you generate the electronic\n"
+"invoice.\n"
+"\n"
+"Usage\n"
+"=====\n"
+"\n"
+"To use this module, you need to:\n"
+"\n"
+"* Generate a new purchase order for a product from abroad. Landed costs are\n"
+"  only possible for products configured with 'automated' valuation with\n"
+"  'FIFO' costing method. The costing method is configured in the product\n"
+"  category.\n"
+"\n"
+".. figure:: static/description/purchase_order_new.png\n"
+"\n"
+"* Receive the product of the purchase order\n"
+"\n"
+".. figure:: static/description/picking_done_purchase.png\n"
+"\n"
+"* Go to Inventory -> Inventory control -> Landed Cost\n"
+"\n"
+"* Create a new landed cost indicating the picking of the purchase order\n"
+"  and the number of the customs information (pedimento). Landed costs are\n"
+"  only possible for products configured in real time valuation with real\n"
+"  price costing method. The costing method is configured on the product\n"
+"  category\n"
+"\n"
+".. figure:: static/description/landed_cost_picking.png\n"
+"\n"
+"* Start by creating specific products to indicate your various Landed\n"
+"  Costs, such as freight, insurance or custom duties.\n"
+"\n"
+"  Go to Inventory -> Configuration -> Landed Cost types. Landed costs are\n"
+"  only possible for products configured in real time valuation with real\n"
+"  price costing method. The costing method is configured on the product\n"
+"  category.\n"
+"\n"
+".. figure:: static/description/product_landed_cost.png\n"
+"\n"
+"* Click the Compute button to see how the landed costs will be split across\n"
+"  the picking lines.\n"
+"\n"
+".. figure:: static/description/compute_landed_cost.png\n"
+"\n"
+"* To confirm the landed costs attribution, click on the Validate button.\n"
+"\n"
+".. figure:: static/description/validate_landed_cost.png\n"
+"\n"
+"* Create a sales order for the product purchased from abroad\n"
+"\n"
+".. figure:: static/description/sale_order_new.png\n"
+"\n"
+"* Delivery the product related to the sales order\n"
+"\n"
+".. figure:: static/description/picking_done_sale.png\n"
+"\n"
+"* Create and validate a new invoice associated with the sales order\n"
+"\n"
+".. figure:: static/description/validate_invoice_customs.png\n"
+"\n"
+"* The customs information is found in the lines of the invoice associated\n"
+"  with each product.\n"
+"\n"
+".. figure:: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"* Check the electronic invoice associated with the product where the node\n"
+"  of the customs information is displayed\n"
+"\n"
+".. figure:: static/description/invoice_custom_xml.png\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_customs
+msgid ""
+"=======================================================\n"
+"Odoo Mexico Localization for Invoice with Custom Number\n"
+"=======================================================\n"
+"\n"
+"This module extends the functionality of Mexican localization to support customs numbers when you generate the electronic invoice.\n"
+"\n"
+"Usage\n"
+"=====\n"
+"\n"
+"To use this module, you need to:\n"
+"\n"
+"- Create a customer invoice normally.\n"
+"- Add the personalized number related to the customs information, separated by commas, \n"
+"  if there are several numbers for each line of the invoice associated with a product.\n"
+"\n"
+"  For example, given the number of petition **16  52  3XXX  8000988**.\n"
+"\n"
+"  The number of the corresponding request to import the good must be registered, which is integrated from left to right in the following way:\n"
+"\n"
+"  Last 2 digits of the validation year followed by two spaces, 2 digits of the customs office followed by two spaces, 4 digits of the number of the patent followed by two spaces, \n"
+"  1 digit corresponding to the last digit of the current year, except that it is of a consolidated motion, initiated in the immediately preceding year or of the original motion \n"
+"  for a rectification, followed by 6 digits of the progressive numbering by customs.\n"
+"\n"
+"  +------------+------------+---------+-----------+--------+------------+-----------------------+\n"
+"  | Validation |            | Customs |           | Patent |            | Exercise and Quantity |\n"
+"  +============+============+=========+===========+========+============+=======================+\n"
+"  |     16     | Two Spaces |   52    | Two Space |  3XXX  | Two Spaces |       8000988         |\n"
+"  +------------+------------+---------+-----------+--------+------------+-----------------------+\n"
+"\n"
+"  With the previous value in the patent of our petition. These values must coincide with the SAT catalog in such a way that:\n"
+"\n"
+"  * Validation: The year of validation. The value of positions one and two must be smaller or same as the last two digits of the year of the current date and must be greater or same as the last two digits of the year of the current date minus ten.\n"
+"\n"
+"  * Customs: Code of customs clearance agent. Positions five and six must correspond to a key from the catalog of Customs (catCFDI: c_Aduana)\n"
+"\n"
+"  * Patent: Positions nine through twelve must correspond to a patent number of the catalog of customs patents (catCFDI: c_PatenteAduanal)\n"
+"\n"
+"  * Exercise: Last digit of the current year, unless it is of a consolidated motion, initiated in the immediately previous year or of the original motion for a rectification)\n"
+"\n"
+"  * Quantity: The value of the last six digits must be between the minimum value 1 and the value maximum of consecutive numbers in the catalog quantity column catCFDI: c_NumPedimentoAduana that correspond to those used by customs in that year.\n"
+"\n"
+"- Validate the invoice\n"
+"\n"
+"For more information in the `SAT page <http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/cfdv33.pdf>`_. Page 70.\n"
+"For more information in the SAT documentation\n"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
 msgid "A AGRICULTURE, FORESTRY AND FISHING"
 msgstr "A 农业、林业和渔业"
 
 #. module: base
-#: code:addons/models.py:2748
+#: code:addons/models.py:2826
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "自你上次查看过以后该单据已被修改(%s:%d)"
@@ -7393,7 +7660,7 @@ msgid "A module with dummy methods."
 msgstr "具有仿真方法的模块"
 
 #. module: base
-#: code:addons/base/ir/ir_qweb/fields.py:385
+#: code:addons/base/ir/ir_qweb/fields.py:397
 #, python-format
 msgid "A unit must be provided to duration widgets"
 msgstr "必须提供一个单位给时长挂件"
@@ -7524,6 +7791,11 @@ msgid "Access Token"
 msgstr "访问令牌"
 
 #. module: base
+#: model:res.groups,name:base.group_private_addresses
+msgid "Access to Private Addresses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
 msgstr "会计分析默认"
@@ -7592,6 +7864,11 @@ msgstr "会计"
 #: model:ir.module.category,name:base.module_category_accounting_and_finance
 msgid "Accounting & Finance"
 msgstr "会计及财务"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
+msgid "Accounting &amp; Finance"
+msgstr "会计 & 财务"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
@@ -7773,9 +8050,9 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "添加交货成本到在线销售"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "添加关注者"
+#: model:ir.module.module,summary:base.module_account_cash_basis_base_account
+msgid "Add a custom account to handle base amount lines"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -7818,6 +8095,7 @@ msgid "Add twitter scroller snippet in website builder"
 msgstr "在“网站生成器”中 添加推特滚卷条的代码段"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -7985,8 +8263,8 @@ msgid ""
 msgstr "管理国家/地区或地区的分类。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:907 code:addons/base/ir/ir_model.py:1019
-#: code:addons/base/ir/ir_model.py:1517
+#: code:addons/base/ir/ir_model.py:922 code:addons/base/ir/ir_model.py:1034
+#: code:addons/base/ir/ir_model.py:1532
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "卸载模块要求管理访问。"
@@ -8109,6 +8387,13 @@ msgid ""
 msgstr "允许你创建发票，以及跟踪付款。这是为不是会计师的管理人员准备的简化版会计模块。"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
+
+#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -8197,7 +8482,7 @@ msgid "Application"
 msgstr "应用程序"
 
 #. module: base
-#: code:addons/base/res/res_users.py:720
+#: code:addons/base/res/res_users.py:767
 #: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Application Accesses"
@@ -8219,7 +8504,7 @@ msgid "Apply"
 msgstr "应用"
 
 #. module: base
-#: code:addons/base/module/module.py:622
+#: code:addons/base/module/module.py:633
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 #, python-format
@@ -8464,11 +8749,6 @@ msgid "Automate Marketing Campaigns"
 msgstr "自动化市场营销活动"
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "自动动作"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "自动动作规则"
@@ -8489,7 +8769,7 @@ msgid "Automatic Installation"
 msgstr "自动安装"
 
 #. module: base
-#: code:addons/base/module/module.py:719
+#: code:addons/base/module/module.py:730
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
 msgstr "自动安装下载的APP，当前不可用"
@@ -8608,6 +8888,7 @@ msgstr "银行"
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.model.fields,field_description:base.field_res_company_bank_ids
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
@@ -8662,6 +8943,16 @@ msgstr "条码"
 #: model:ir.module.module,shortdesc:base.module_hw_scanner
 msgid "Barcode Scanner Hardware Driver"
 msgstr "条码扫描器的硬件驱动"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_barcodes_mobile
+msgid "Barcode in Mobile"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_barcodes_mobile
+msgid "Barcode scan in Mobile"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
@@ -8761,7 +9052,7 @@ msgid "Before Amount"
 msgstr "金额前面"
 
 #. module: base
-#: code:addons/base/res/res_users.py:954
+#: code:addons/base/res/res_users.py:1010
 #, python-format
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
@@ -9091,13 +9382,13 @@ msgid ""
 msgstr "不能间接创建 M2O （多对一）记录，分别导入字段。"
 
 #. module: base
-#: code:addons/base/module/module.py:605
+#: code:addons/base/module/module.py:616
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "不能升级模块 “%s“，因为它尚未安装。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:668
+#: code:addons/base/ir/ir_model.py:681
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "字段改名只能一次一个!"
@@ -9150,13 +9441,13 @@ msgid "Cancel Upgrade"
 msgstr "取消升级"
 
 #. module: base
-#: code:addons/base/res/res_config.py:382
+#: code:addons/base/res/res_config.py:381
 #, python-format
 msgid "Cannot duplicate configuration!"
 msgstr "不能复制配置信息！"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:568
+#: code:addons/base/ir/ir_model.py:581
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
 msgstr "无法重命名/删除还在视图中使用的字段："
@@ -9230,7 +9521,7 @@ msgid "Change the way addresses are displayed in reports"
 msgstr "更改地址在报告中的显示方式"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:309
+#: code:addons/base/res/res_partner.py:345
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -9241,13 +9532,13 @@ msgstr ""
 "如果没有被正确设置，则只能改变联系人的公司。如果一个已经存在的联系人属于新公司，则在这个新公司里一个新联系人应该被创建，你可以使用“取消”按钮来放弃这个改变。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:655
+#: code:addons/base/ir/ir_model.py:668
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "改变字段的模型是禁止的！"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:658
+#: code:addons/base/ir/ir_model.py:671
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
@@ -9370,7 +9661,7 @@ msgid "China"
 msgstr "中国"
 
 #. module: base
-#: code:addons/base/ir/ir_actions_report.py:685
+#: code:addons/base/ir/ir_actions_report.py:687
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "选择您的文档布局"
@@ -9405,6 +9696,7 @@ msgstr "圣诞岛"
 #: model:ir.model.fields,field_description:base.field_res_company_city
 #: model:ir.model.fields,field_description:base.field_res_partner_city
 #: model:ir.model.fields,field_description:base.field_res_users_city
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -9424,14 +9716,14 @@ msgid "Clean"
 msgstr "清理"
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "单击此处附加新文档。"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "单击此处创建自定义视图"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr "点击这里创建新的文档。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -9727,6 +10019,11 @@ msgid "Compute"
 msgstr "计算"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
+msgid "Compute taxes with TaxCloud after online delivery computation."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -9810,7 +10107,7 @@ msgid "Connection Security"
 msgstr "连接安全"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:164
+#: code:addons/base/ir/ir_mail_server.py:166
 #, python-format
 msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
@@ -9820,7 +10117,7 @@ msgstr ""
 "%s"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:172
+#: code:addons/base/ir/ir_mail_server.py:174
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
 msgstr "连接测试成功！所有的东西看起来正确的设置好了！"
@@ -9965,7 +10262,7 @@ msgid "Costa Rica - Accounting"
 msgstr "哥斯达黎加-会计"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:585
+#: code:addons/base/res/res_partner.py:629
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "不能建立没有电子邮件地址的联系人！"
@@ -9990,6 +10287,7 @@ msgstr "国家"
 #: model:ir.model.fields,field_description:base.field_res_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_country_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_tree
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
@@ -10051,7 +10349,6 @@ msgstr "创建上下文操作"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -10280,6 +10577,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -10582,7 +10880,7 @@ msgid "Database Structure"
 msgstr "数据库结构"
 
 #. module: base
-#: code:addons/models.py:2671
+#: code:addons/models.py:2749
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -10643,27 +10941,6 @@ msgstr "日：%(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "天"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"尊敬的先生/女士，\n"
-"    我们的记录表明，你的账户仍有到期的付款。请查找下面的明细。\n"
-"    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n"
-"    如果有任何关于账户的疑问，请联系我们。\n"
-"\n"
-"    谢谢你的合作。\n"
-"    此致 ，\n"
-"           敬礼"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -10884,7 +11161,7 @@ msgid "Directory"
 msgstr "目录"
 
 #. module: base
-#: code:addons/base/res/res_config.py:428
+#: code:addons/base/res/res_config.py:427
 #, python-format
 msgid ""
 "Disabling this option will also uninstall the following modules \n"
@@ -11096,7 +11373,7 @@ msgid "Document Template"
 msgstr "文档模板"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1174 code:addons/base/ir/ir_model.py:1177
+#: code:addons/base/ir/ir_model.py:1189 code:addons/base/ir/ir_model.py:1192
 #, python-format
 msgid "Document model"
 msgstr "单据模型"
@@ -11156,7 +11433,14 @@ msgid "Drop Shipping"
 msgstr "直运"
 
 #. module: base
-#: code:addons/base/ir/ir_qweb/fields.py:382
+#: code:addons/base/res/res_company.py:18
+#, python-format
+msgid ""
+"Duplicating a company is not allowed. Please create a new company instead."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_qweb/fields.py:394
 #, python-format
 msgid "Durations can't be negative"
 msgstr "时段不能为负数"
@@ -11165,6 +11449,27 @@ msgstr "时段不能为负数"
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
 msgid "E WATER SUPPLY;SEWERAGE,WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr "E 给水；排水；废物管理和整治行动"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_external_trade
+msgid "EDI External Trade Complement for Mexico"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment
+msgid "EDI Payment"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_payment
+msgid ""
+"EDI Payment\n"
+"===========\n"
+"\n"
+"This payment module for Mexican Localization allows satisfying the SAT indication\n"
+"which established that a payment complement can be emitted ten (10) days after,\n"
+"of the same month, when was received.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi
@@ -11251,6 +11556,14 @@ msgid ""
 "- Save the generated xml in order to make available an history of Fiscal declared documents.\n"
 "- Unit tests to increase the coverage of this module and avoid regressions in the future.\n"
 "\n"
+"Notes:\n"
+"------\n"
+"\n"
+"  - In the taxes could be set the account `Base Tax Received Account` that is the\n"
+"    account that will be set on lines created in cash basis journal entry and\n"
+"    used to keep track of the tax base amount, this account is not considered in\n"
+"    the Mexican reports.\n"
+"\n"
 "Configuration\n"
 "=============\n"
 "\n"
@@ -11265,40 +11578,9 @@ msgid ""
 "* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
 "* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
 msgstr ""
-"墨西哥电子会计和财政报告\n"
-"===================================================\n"
-"\n"
-"将财务报告添加到墨西哥电子发票\n"
-"\n"
-"- 科目表\n"
-"- 试算表\n"
-"- 日记账项目\n"
-"\n"
-"添加其他运营报告，例如 DIOT。\n"
-"\n"
-"- DIOT\n"
-"\n"
-"已知的功能漏洞：\n"
-"\n"
-"- 保存生成的 xml，以便提供财政声明文档的历史记录。\n"
-"- 单元测试可以增加此模块的覆盖范围，并避免将来出现回归。\n"
-"\n"
-"配置\n"
-"=============\n"
-"\n"
-"要配置该模块，我们强烈建议您的科目表与 l10n_mx 数据和结构相关联，\n"
-"如果您未将科目表与 l10n_mx 的功能关联，您可以在以后对此进行设置，但是您需要额外的手动操作。\n"
-"工作人员\n"
-"=======\n"
-"\n"
-"**参与者**\n"
-"\n"
-"* Nhomar Hernandez（策划者/审计员）\n"
-"* Luis Torres（开发者）\n"
-"<nhomar@vauxoo.com><luis_t@vauxoo.com>\n"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:627
+#: code:addons/base/ir/ir_ui_view.py:647
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "元素 '%s' 在父视图中没有找到"
@@ -11324,6 +11606,7 @@ msgid "Email Gateway"
 msgstr "Email 网关"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_mass_mailing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
 msgstr "Email 市场营销"
@@ -11428,7 +11711,7 @@ msgid "Error ! You can not create recursive tags."
 msgstr "错误！不可以创建递归菜单"
 
 #. module: base
-#: code:addons/base/res/res_company.py:241
+#: code:addons/base/res/res_company.py:232
 #, python-format
 msgid "Error ! You cannot create recursive companies."
 msgstr "错误！你不能创建循环的公司。"
@@ -11440,7 +11723,7 @@ msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr "错误！你不能定义页面尺寸时选择固定格式。"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:477
+#: code:addons/base/ir/ir_ui_view.py:497
 #, python-format
 msgid ""
 "Error context:\n"
@@ -11450,13 +11733,13 @@ msgstr ""
 "视图 `%(view_name)s`"
 
 #. module: base
-#: code:addons/models.py:962
+#: code:addons/models.py:1027
 #, python-format
 msgid "Error details:"
 msgstr "错误详情:"
 
 #. module: base
-#: code:addons/models.py:975
+#: code:addons/models.py:1040
 #, python-format
 msgid "Error while validating constraint"
 msgstr "constraint 检查错误"
@@ -11720,6 +12003,161 @@ msgid ""
 msgstr "External Key/Identifier  能用来跟第三方系统作数据集成"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_external_trade
+msgid "External Trade Complement for the Mexican localization"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_external_trade
+msgid ""
+"External Trade Complement for the Mexican localization\n"
+"=======================================================\n"
+"\n"
+"This module adds the External Trade Complement to CFDI version 3.3, in which\n"
+"was added the customs information of the products, it specifies the emitter\n"
+"and receiver address, and also data related to export laws.\n"
+"\n"
+"This complement is required for all invoices where goods are exported and the\n"
+"landing code is \"A1\"\n"
+"\n"
+"The following fields were added in order to comply with complement structure\n"
+"defined by the SAT.\n"
+"\n"
+"- In the invoice:\n"
+"\n"
+"  - **Need external trade?**: This field is used to indicate that in the CFDI\n"
+"    document that will be generated, must be added the external trade\n"
+"    complement. By default take this value from the partner, but could be\n"
+"    changed here if is one exception. If this field is actived, then will be\n"
+"    showed the next fields:\n"
+"\n"
+"  - **Incoterm**: It is used for the attribute *incoterm* in the External Trade\n"
+"    node, is required, and must contain a value from the SAT catalog_ to\n"
+"    incoterms.\n"
+"\n"
+"  - **Certificate Source**: If the document to be generated is a\n"
+"    Certificate of Origin, must be registered the certificate of\n"
+"    origin folio or the fiscal folio in CFDI with which the issuance of the\n"
+"    certificate of origin was paid. If this field is empty, indicate that\n"
+"    this document not funge as Certificate of Origin.\n"
+"\n"
+"\n"
+"    .. figure:: ../l10n_mx_edi_external_trade/static/src/InvoiceET.png\n"
+"\n"
+"- In the product:\n"
+"\n"
+"  - **Tariff Fraction**: This field is used to store the tariff fraction\n"
+"    that corresponds to the product to be sold, this have loaded the SAT\n"
+"    catalog \"c_FraccionArancelaria_\". If one record is not found is because\n"
+"    only was loaded the current records.\n"
+"\n"
+"  - **UMT Customs**: Field used to specify the key of the applicable unit\n"
+"    of measure for the quantity expressed in the goods at customs. This\n"
+"    unit of measure must correspond to the assigned Tariff Fraction in the\n"
+"    product, as indicated in the SAT catalog.\n"
+"\n"
+"  - **Weight**: If the *UMT Customs* is `KG`, here must be specific the weight\n"
+"    of each product.\n"
+"\n"
+"\n"
+"    .. figure:: ../l10n_mx_edi_external_trade/static/src/Product_CET.png\n"
+"\n"
+"- In Unit of measurement\n"
+"\n"
+"  - **Customs Code**: Code that corresponding to the unit of measurement in the\n"
+"    SAT's catalog. This is the code that use the aduana to the products\n"
+"    related. Link_\n"
+"\n"
+"\n"
+"    .. figure:: ../l10n_mx_edi_external_trade/static/src/Code_Aduana.png\n"
+"\n"
+"- In the invoice lines:\n"
+"\n"
+"  - **Qty UMT**: It is the quantity expressed in the unit of measure of\n"
+"    customs of the product.\n"
+"\n"
+"    It will be used for the attribute \"CantidadAduana\" in each of the\n"
+"    merchandise to sell, when the Code Customs of the product UMT is\n"
+"    different to 99.\n"
+"\n"
+"    This field is automatically filled in the invoice lines in the\n"
+"    following cases:\n"
+"\n"
+"    1. The product has the same value for UMT customs and UoM.\n"
+"           In this case, Qty UMT is set to the same value of the quantity of\n"
+"           products on the line.\n"
+"\n"
+"    2. The code of the unit of measurement in UMT of the product is equal to 06 (kilo).\n"
+"           In this case, Qty UMT will be equal to the weight defined in the\n"
+"           product multiplied by the quantity of products being sold.\n"
+"\n"
+"    In other cases, this value must be defined by the user, in each one of the\n"
+"    lines.\n"
+"\n"
+"  - **Unit Value UMT**: Represents the unit price of the merchandise in the\n"
+"    Customs UMT. It is used to set the attribute \"ValorUnitarioAduana\" in\n"
+"    each of the CFDI merchandise. It is transparent to the user.\n"
+"\n"
+"  - **UMT Adduana**: This value by default is the same that is defined in the\n"
+"    product of the line.\n"
+"\n"
+"\n"
+"    .. figure:: ../l10n_mx_edi_external_trade/static/src/invoice_line_ET.png\n"
+"      :width: 700pt\n"
+"\n"
+"- In the partner:\n"
+"\n"
+"  - **CURP**: It is used to store the unique Key of the Register of\n"
+"    Population (CURP) of the issuer of the CFDI. When it is a natural\n"
+"    person, it must contain 18 characters.\n"
+"\n"
+"  - **Need external trade?**: Field used to indicate if the customer needs\n"
+"    their invoices with external complement. If the field is equal to True,\n"
+"    then the add-on is added to the CFDIs for this client.\n"
+"\n"
+"\n"
+"    .. figure:: ../l10n_mx_edi_external_trade/static/src/partnerET2.png\n"
+"\n"
+"  - **Locality**: Field used to indicate the locality of the emitter and\n"
+"    receiver in the CFDI\n"
+"\n"
+"  - **Colony Code**: This field is used to store the emitter's code of the\n"
+"    colony. It must be a value from the ones provided by the SAT's catalog.\n"
+"    Note: This field only must be configured in the company address or in\n"
+"    the partners that are used as branch address in multi-branch enviroments.\n"
+"    c_colonia_\n"
+"\n"
+"    .. figure:: ../l10n_mx_edi_external_trade/static/src/partnerET.png\n"
+"\n"
+"- In the Company\n"
+"\n"
+"  - **Number of Reliable Exporter**: Identification of the exporter\n"
+"    according to the Article 22 of Annex 1 of the Free Trade Agreement with\n"
+"    the European Association and to the Decision of the European Community,\n"
+"    used to establish the attribute \"NumeroExportadorConfiable\" if the\n"
+"    country of the customer belongs to the Union European\n"
+"\n"
+"- In addition, the following models were added:\n"
+"\n"
+"  - **Locality**:  model used to store the localities from Mexico provided\n"
+"    by the SAT's catalog. Its fields are name, state, country and code.\n"
+"    c_localidad_\n"
+"\n"
+"In this version, the external trade complement does not support the Type of\n"
+"Transfer Proof ('T'). For this reason, the nodes \"Propietario\" and\n"
+"\"MotivodeTraslado\" are not specified in the External Trade Template. On the\n"
+"other hand, the optional node \"DescripcionesEspecificas\" will not be added\n"
+"in this version, since it needs fields that depend on the stock module.\n"
+"They will be added in a later version.\n"
+"\n"
+".. _catalog: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_INCOTERM.xls\n"
+".. _c_FraccionArancelaria: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_FraccionArancelaria.xls \n"
+".. _Link: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_UnidadMedidaAduana.xls\n"
+".. _c_colonia: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Colonia.xls\n"
+".. _c_localidad: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Localidad.xls\n"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_users_share
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
@@ -11896,7 +12334,7 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "字段\"Type\" 不能在模型上更改 。"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:1016
+#: code:addons/base/ir/ir_ui_view.py:1053
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
@@ -11928,7 +12366,7 @@ msgid "Field Type"
 msgstr "字段类型"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:918
+#: code:addons/base/ir/ir_ui_view.py:1047
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "字段`%(field_name)s`不存在"
@@ -11963,7 +12401,7 @@ msgid "Fields Description"
 msgstr "字段说明"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:569
+#: code:addons/base/ir/ir_model.py:582
 #, python-format
 msgid "Fields: %s"
 msgstr "字段: %s"
@@ -12136,13 +12574,13 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "对于关系字段，目标模型的技术名称。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:611
+#: code:addons/base/ir/ir_model.py:624
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "对于选择字段，必须给出选择选项！"
 
 #. module: base
-#: code:addons/models.py:2808
+#: code:addons/models.py:2886
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created yourself.\n"
@@ -12159,6 +12597,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Form"
 msgstr "表单"
+
+#. module: base
+#: selection:ir.actions.act_url,binding_type:0
+#: selection:ir.actions.act_window,binding_type:0
+#: selection:ir.actions.act_window_close,binding_type:0
+#: selection:ir.actions.actions,binding_type:0
+#: selection:ir.actions.client,binding_type:0
+#: selection:ir.actions.report,binding_type:0
+#: selection:ir.actions.server,binding_type:0
+msgid "Form-only"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
@@ -12457,7 +12906,7 @@ msgstr ""
 "(没有指定组)是强制的，不能被旁路。群组规则授予额外的许可，但是约束在全局规则的范围内。第一个群组规则进一步限制了全局规则，但是任何附加组规则将增加更多权限"
 
 #. module: base
-#: code:addons/base/res/res_config.py:670
+#: code:addons/base/res/res_config.py:671
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "至配置面板"
@@ -12759,6 +13208,11 @@ msgstr "HR游戏化"
 #: model:ir.module.module,shortdesc:base.module_hr_org_chart
 msgid "HR Org Chart"
 msgstr "人力资源组织图"
+
+#. module: base
+#: model:res.country,vat_label:base.ca
+msgid "HST"
+msgstr ""
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -13182,11 +13636,6 @@ msgstr "IBAN银行账号"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_id
 msgid "ID"
 msgstr "ID"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "在 XML 文件中定义的动作的 ID"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
@@ -13631,7 +14080,7 @@ msgid "Input View"
 msgstr "输入视图"
 
 #. module: base
-#: code:addons/base/module/module.py:425
+#: code:addons/base/module/module.py:436
 #: model:ir.ui.view,arch_db:base.module_form
 #: model:ir.ui.view,arch_db:base.module_view_kanban
 #, python-format
@@ -13673,13 +14122,13 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr "你可以通过即时消息总线给用户发送在线即时信息，类似QQ，但限于odoo的web框架内。"
 
 #. module: base
-#: code:addons/models.py:1198
+#: code:addons/models.py:1263
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "日历视图缺少字段！"
 
 #. module: base
-#: code:addons/models.py:1208
+#: code:addons/models.py:1273
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -13778,7 +14227,7 @@ msgid "Introspection report on objects"
 msgstr "对象的自省报告"
 
 #. module: base
-#: code:addons/models.py:3483
+#: code:addons/models.py:3575
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -13787,7 +14236,7 @@ msgid ""
 msgstr "指定了无效的“顺序”。一个有效的“顺序”是用逗号隔开的字段名列表（可以按升序/降序排列)"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:323
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "无效的“分组”参数"
@@ -13820,25 +14269,25 @@ msgid ""
 msgstr "无效继承模式：如果模式是“扩展”，视图必须拓展其他视图"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:125 code:addons/base/ir/ir_actions.py:127
+#: code:addons/base/ir/ir_actions.py:129 code:addons/base/ir/ir_actions.py:131
 #, python-format
 msgid "Invalid model name %r in action definition."
 msgstr "动作定义中使用了无效的模型名称 %r。"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:618
+#: code:addons/base/ir/ir_ui_view.py:638
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "无效的位置属性: '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:209
+#: code:addons/base/ir/ir_sequence.py:220
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "无效的序号 '%s' 前缀或后缀"
 
 #. module: base
-#: code:addons/base/res/res_users.py:319
+#: code:addons/base/res/res_users.py:331
 #, python-format
 msgid "Invalid search criterion"
 msgstr "非法搜索条件"
@@ -13856,7 +14305,7 @@ msgid "Invalid value for %s.%s: %s"
 msgstr "%s.%s: %s 的无效值"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:329
+#: code:addons/base/ir/ir_ui_view.py:343
 #, python-format
 msgid "Invalid view definition"
 msgstr "无效的视图定义"
@@ -13916,6 +14365,11 @@ msgstr "伊拉克"
 #: model:res.country,name:base.ie
 msgid "Ireland"
 msgstr "爱尔兰"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_lock
+msgid "Irreversible Lock Date"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
@@ -14794,13 +15248,13 @@ msgid "Madam"
 msgstr "女士"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:466
+#: code:addons/base/ir/ir_mail_server.py:469
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "邮件投递失败"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:464
+#: code:addons/base/ir/ir_mail_server.py:467
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -15025,7 +15479,7 @@ msgid "Many2One"
 msgstr "多对一"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:622
+#: code:addons/base/ir/ir_model.py:635
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr "多对一 %s 模型 %s 不存在！"
@@ -15077,11 +15531,6 @@ msgstr "马绍尔群岛"
 #: model:res.country,name:base.mq
 msgid "Martinique"
 msgstr "马提尼克"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_mass_mailing
-msgid "Mass Mailing"
-msgstr "群发邮件"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_themes
@@ -15191,7 +15640,7 @@ msgid "Messaging and Social"
 msgstr "消息与社交"
 
 #. module: base
-#: code:addons/base/res/res_config.py:499
+#: code:addons/base/res/res_config.py:498
 #, python-format
 msgid ""
 "Methods that start with `get_default_` are deprecated. Override `get_values`"
@@ -15199,7 +15648,7 @@ msgid ""
 msgstr "以\"get_default_\"开头的方法已被弃用。使用“get_values”覆盖（方法 %s）"
 
 #. module: base
-#: code:addons/base/res/res_config.py:543
+#: code:addons/base/res/res_config.py:544
 #, python-format
 msgid ""
 "Methods that start with `set_` are deprecated. Override `set_values` instead"
@@ -15208,6 +15657,7 @@ msgstr "以\"set_\"开头的方法已被弃用。使用“set_values”覆盖（
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_payment
 msgid "Mexican Localization for EDI documents"
 msgstr "墨西哥语本地化 EDI 文档"
 
@@ -15264,25 +15714,25 @@ msgid "Miss"
 msgstr "小姐"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:217
+#: code:addons/base/ir/ir_mail_server.py:219
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "缺少 SMTP 服务器"
 
 #. module: base
-#: code:addons/models.py:2777
+#: code:addons/models.py:2855
 #, python-format
 msgid "Missing document(s)"
 msgstr "缺失单据"
 
 #. module: base
-#: code:addons/models.py:5135
+#: code:addons/models.py:5312
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "找不到字段 '%s' (%s)所需的值"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:373
+#: code:addons/base/ir/ir_ui_view.py:387
 #, python-format
 msgid "Missing view architecture."
 msgstr "缺少视图体系结构。"
@@ -15327,7 +15777,13 @@ msgid "Model"
 msgstr "模型"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:618
+#: code:addons/base/ir/ir_model.py:471
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:631
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "模型 %s 不存在！"
@@ -15385,7 +15841,7 @@ msgid "Model name of the object to open in the view window"
 msgstr "在新窗口打开的对象的模型名称"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:757 code:addons/base/ir/ir_ui_view.py:870
+#: code:addons/base/ir/ir_ui_view.py:777 code:addons/base/ir/ir_ui_view.py:993
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "没有找到模型: %(model)s"
@@ -15468,7 +15924,7 @@ msgid "Module exclusion"
 msgstr "模块互斥"
 
 #. module: base
-#: code:addons/convert.py:829
+#: code:addons/convert.py:832
 #, python-format
 msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
@@ -15488,7 +15944,7 @@ msgid "Modules"
 msgstr "模块"
 
 #. module: base
-#: code:addons/base/module/module.py:401
+#: code:addons/base/module/module.py:410
 #, python-format
 msgid "Modules \"%s\" and \"%s\" are incompatible."
 msgstr "模块“%s”和“%s”不兼容。"
@@ -15763,7 +16219,7 @@ msgid "No Record Found"
 msgstr "没有找到记录"
 
 #. module: base
-#: code:addons/models.py:1287
+#: code:addons/models.py:1352
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr " 类型'%s' 无默认视图 !"
@@ -15774,7 +16230,7 @@ msgid "No gap"
 msgstr "无间隔"
 
 #. module: base
-#: code:addons/fields.py:2222
+#: code:addons/fields.py:2229
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "未找到%r对应的字段%r"
@@ -16958,6 +17414,16 @@ msgid "Odoo Mexican Localization Reports"
 msgstr "Odoo 墨西哥语本地化报告"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
+msgid "Odoo Mexico Localization for Invoice with customs Number"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
+msgid "Odoo Mexico Localization for Stock/Landing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
 msgid "Odoo Mobile Core module"
 msgstr "Odoo 移动核心模块"
@@ -18045,7 +18511,7 @@ msgid "On delete property for many2one fields"
 msgstr "多对一（many2one）字段的 on delete 属性"
 
 #. module: base
-#: code:addons/models.py:2777
+#: code:addons/models.py:2855
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -18053,7 +18519,7 @@ msgid ""
 msgstr "一个你试图访问的单据已经被删除，请刷新后重试。"
 
 #. module: base
-#: code:addons/models.py:3101
+#: code:addons/models.py:3193
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -18061,7 +18527,7 @@ msgid ""
 msgstr "你正尝试修改的记录已经被删除(单据类型：%s)."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:359
+#: code:addons/base/res/res_partner.py:399
 #, python-format
 msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
@@ -18094,13 +18560,13 @@ msgid "Online Subscription Quotes"
 msgstr "在线订阅报价"
 
 #. module: base
-#: code:addons/base/res/res_config.py:514
+#: code:addons/base/res/res_config.py:513
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr "只有管理员能改变设置"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:56
+#: code:addons/base/ir/ir_attachment.py:57
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "只有系统管理员可以执行此动作"
@@ -18134,7 +18600,7 @@ msgid "Only one currency rate per day allowed!"
 msgstr "每天只允许一种货币汇率！"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1174
+#: code:addons/base/ir/ir_model.py:1189
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -18677,7 +19143,8 @@ msgid "Original View"
 msgstr "原始视图"
 
 #. module: base
-#: code:addons/base/res/res_users.py:734 code:addons/base/res/res_users.py:895
+#: code:addons/base/res/res_users.py:781 code:addons/base/res/res_users.py:951
+#: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
 msgstr "其他"
@@ -18956,7 +19423,7 @@ msgid "Partners Geolocation"
 msgstr "业务伙伴地理定位"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:728
+#: code:addons/base/res/res_partner.py:774
 #, python-format
 msgid "Partners: "
 msgstr "业务伙伴："
@@ -19142,14 +19609,14 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "SNC葡萄牙的方案，决算方案（为什么会有葡萄牙语？翻译者不懂葡萄牙语，用Google翻译的）"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1177
+#: code:addons/base/ir/ir_model.py:1192
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
 msgstr "如果你认为这是一个错误，请联系你的系统管理员。"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:218
+#: code:addons/base/ir/ir_mail_server.py:220
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -19162,7 +19629,13 @@ msgid "Please set the Model to Create before choosing values"
 msgstr "在选择值之前，请将模型设置为创建"
 
 #. module: base
-#: code:addons/base/res/res_users.py:250
+#: code:addons/base/ir/ir_model.py:472
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:255
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -19355,7 +19828,17 @@ msgid "Priority"
 msgstr "优先级"
 
 #. module: base
-#: code:addons/models.py:110
+#: selection:res.partner,type:0
+msgid "Private Address"
+msgstr "家庭住址"
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
+msgid "Private Address Form"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:112
 #, python-format
 msgid "Private methods (such as %s) cannot be called remotely."
 msgstr "私有方法 (比如 %s) 不能远程调用。"
@@ -19587,7 +20070,7 @@ msgid "Properties"
 msgstr "属性"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:650
+#: code:addons/base/ir/ir_model.py:663
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -19772,7 +20255,7 @@ msgid "Quotations, Sales Orders, Invoicing"
 msgstr "报价单，销售订单，开票"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:336
+#: code:addons/base/ir/ir_ui_view.py:350
 #, python-format
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
@@ -19783,6 +20266,16 @@ msgstr "Qweb 视图不能在记录中定义“组”。在视图定义中使用�
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R ARTS, ENTERTAINMENT AND RECREATION"
 msgstr "R  艺术、娱乐和休闲"
+
+#. module: base
+#: model:res.country,vat_label:base.mx
+msgid "RFC"
+msgstr ""
+
+#. module: base
+#: model:res.country,vat_label:base.do
+msgid "RNC"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -19842,7 +20335,7 @@ msgid "Record Rules"
 msgstr "记录规则"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:236
+#: code:addons/base/ir/ir_cron.py:283
 #, python-format
 msgid ""
 "Record cannot be modified right now: This cron task is currently being "
@@ -19850,7 +20343,7 @@ msgid ""
 msgstr "现在无法修改记录：此计划任务当前正在执行，不允许被修改，请在几分钟后重试"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:230 code:addons/models.py:3876
+#: code:addons/base/ir/ir_actions.py:234 code:addons/models.py:3970
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "记录不存在或已删除"
@@ -19877,19 +20370,19 @@ msgid "Recurring invoicing, renewals"
 msgstr "经常性开票，续订"
 
 #. module: base
-#: code:addons/base/module/module.py:343
+#: code:addons/base/module/module.py:352
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "模块的依赖包含循环错误！"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:389
+#: code:addons/base/ir/ir_actions.py:393
 #, python-format
 msgid "Recursion found in child server actions"
 msgstr "服务端动作存在循环调用"
 
 #. module: base
-#: code:addons/models.py:3207
+#: code:addons/models.py:3299
 #, python-format
 msgid "Recursivity Detected."
 msgstr "检测到循环。"
@@ -20080,7 +20573,7 @@ msgid "Resellers"
 msgstr "经销商"
 
 #. module: base
-#: code:addons/models.py:791
+#: code:addons/models.py:856
 #, python-format
 msgid "Resolve other errors first"
 msgstr "先解决其它错误"
@@ -20622,11 +21115,6 @@ msgid "Sell based on timesheets"
 msgstr "基于工时表销售"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "发送电子邮件"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_account
 #: model:ir.module.module,summary:base.module_account_invoicing
 msgid "Send Invoices and Track Payments"
@@ -20833,7 +21321,7 @@ msgid ""
 msgstr "设置一个值使得这个动作在给定模型的菜单中可用。"
 
 #. module: base
-#: code:addons/base/res/res_users.py:520
+#: code:addons/base/res/res_users.py:567
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "基于安全考虑，不允许设置空密码！"
@@ -21024,26 +21512,26 @@ msgid "Sometimes called BIC or Swift."
 msgstr "有时也叫 BIC 或 Swift。"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:341
-#: code:addons/base/ir/ir_model.py:1168
+#: code:addons/base/ir/ir_attachment.py:342
+#: code:addons/base/ir/ir_model.py:1183
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "对不起，您没有访问此文档的权限。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1170
+#: code:addons/base/ir/ir_model.py:1185
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "对不起，你没有创建这种类型的文档的权限。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1171
+#: code:addons/base/ir/ir_model.py:1186
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "对不起，你没有删除这个文档的权限。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1169
+#: code:addons/base/ir/ir_model.py:1184
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "对不起，你没有修改此文档的权限。"
@@ -21054,7 +21542,7 @@ msgid "Sort"
 msgstr "排序"
 
 #. module: base
-#: code:addons/models.py:3616
+#: code:addons/models.py:3708
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "模型%s 中未找到排序字段 %s "
@@ -21168,6 +21656,7 @@ msgstr "开始配置"
 #: model:ir.model.fields,field_description:base.field_base_language_export_state
 #: model:ir.model.fields,field_description:base.field_res_partner_state_id
 #: model:ir.model.fields,field_description:base.field_res_users_state_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_state_form
 #: model:ir.ui.view,arch_db:base.view_country_state_tree
@@ -21264,6 +21753,7 @@ msgid "Street"
 msgstr "街道"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -21273,6 +21763,7 @@ msgid "Street 2..."
 msgstr "街道2..."
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -21525,6 +22016,11 @@ msgid "Target Window"
 msgstr "目标窗口"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
+msgid "Tax Cash Basis Edit Base Account"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_company_vat
 #: model:ir.model.fields,help:base.field_res_partner_vat
 #: model:ir.model.fields,help:base.field_res_users_vat
@@ -21532,6 +22028,11 @@ msgid ""
 "Tax Identification Number. Fill it if the company is subjected to taxes. "
 "Used by the some of the legal statements."
 msgstr "税务标识号。如果公司需要缴税，请填写。在一些法律声明中使用。"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
+msgid "TaxCloud and Delivery - Ecommerce"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -21567,12 +22068,11 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:760
+#: code:addons/base/ir/ir_translation.py:766
 #, python-format
 msgid "Technical Translations"
 msgstr "技术翻译"
@@ -21649,7 +22149,7 @@ msgid "Thailand - Accounting Reports"
 msgstr "泰国 - 会计报表"
 
 #. module: base
-#: code:addons/base/res/res_users.py:290
+#: code:addons/base/res/res_users.py:295
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
@@ -21695,7 +22195,7 @@ msgstr ""
 "表示为1,06,500；[1,2,-1] 将其表示为 106,50,0；[3] 将其表示为 106,500。在每种情况中提供千位分隔符。"
 
 #. module: base
-#: code:addons/base/module/module.py:747
+#: code:addons/base/module/module.py:758
 #, python-format
 msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
@@ -21703,7 +22203,7 @@ msgid ""
 msgstr "模块`%s`现在可能不能使用，请稍后再试。"
 
 #. module: base
-#: code:addons/base/module/module.py:561
+#: code:addons/base/module/module.py:572
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr "`base` 模块不能卸载"
@@ -21714,7 +22214,7 @@ msgid "The active field allows you to hide the category without removing it."
 msgstr "有效字段允许你隐藏该类别而不是删除它。"
 
 #. module: base
-#: code:addons/base/res/res_users.py:283
+#: code:addons/base/res/res_users.py:288
 #, python-format
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr "选择的公司不属于此用户允许访问的公司。"
@@ -21772,7 +22272,7 @@ msgid "The database object this attachment will be attached to."
 msgstr "该附件将附加到的数据库对象。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:556
+#: code:addons/base/ir/ir_model.py:561
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
 msgstr "字段 '%s' 不能删除，因为字段 '%s' 与其相关。"
@@ -21895,7 +22395,7 @@ msgid "The name of the country must be unique !"
 msgstr "国家/地区名必须唯一！"
 
 #. module: base
-#: code:addons/base/res/res_users.py:152
+#: code:addons/base/res/res_users.py:157
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "用户群组的名称不能以“-”开始"
@@ -21993,7 +22493,7 @@ msgid "The record id this is attached to."
 msgstr "这是附加的记录ID。"
 
 #. module: base
-#: code:addons/models.py:2678
+#: code:addons/models.py:2756
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to record rules: Document "
@@ -22001,8 +22501,8 @@ msgid ""
 msgstr "由于记录规则：文档类型：%s，操作：%s，记录：%s，用户：%s，请求的操作而无法完成"
 
 #. module: base
-#: code:addons/models.py:2473 code:addons/models.py:2682
-#: code:addons/models.py:2767
+#: code:addons/models.py:2551 code:addons/models.py:2760
+#: code:addons/models.py:2845
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -22036,7 +22536,7 @@ msgid "The state code."
 msgstr "州/省代码。"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:491
+#: code:addons/base/ir/ir_model.py:498
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr "如果该表 ％r 用于其他用途，可能会造成字段不兼容。"
@@ -22065,7 +22565,7 @@ msgid ""
 msgstr "用户的这个筛选是私有的。留空的话，这个筛选是公开，所有用户都可用。"
 
 #. module: base
-#: code:addons/models.py:5167
+#: code:addons/models.py:5344
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -22073,7 +22573,7 @@ msgid ""
 msgstr "字段 '%s' 的值已经存在（可能是当前模型中的 '%s'）。"
 
 #. module: base
-#: code:addons/models.py:5173
+#: code:addons/models.py:5350
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -22104,7 +22604,7 @@ msgid "This Window"
 msgstr "本窗口"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:584
+#: code:addons/base/ir/ir_model.py:597
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "此字段包含模块数据，不能删除！"
@@ -22166,6 +22666,13 @@ msgstr ""
 "这是Odoo中管理挪威财务报表的模块.\n"
 "\n"
 "Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
+msgid ""
+"This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -22292,7 +22799,7 @@ msgid "To be upgraded"
 msgstr "将要升级的"
 
 #. module: base
-#: code:addons/base/module/module.py:720
+#: code:addons/base/module/module.py:731
 #, python-format
 msgid ""
 "To enable it, make sure this directory exists and is writable on the server:"
@@ -22433,7 +22940,7 @@ msgid "Translation comments"
 msgstr "翻译备注"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:638
+#: code:addons/base/ir/ir_translation.py:644
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -22445,7 +22952,7 @@ msgid "Translation in Progress"
 msgstr "翻译进行中"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:559
+#: code:addons/base/ir/ir_translation.py:565
 #, python-format
 msgid ""
 "Translation is not valid:\n"
@@ -22640,20 +23147,20 @@ msgid "Ukraine"
 msgstr "乌克兰"
 
 #. module: base
-#: code:addons/models.py:2843
+#: code:addons/models.py:2921
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr "不能删除该单据，因为它被用作默认属性"
 
 #. module: base
-#: code:addons/base/ir/ir_actions_report.py:624
+#: code:addons/base/ir/ir_actions_report.py:626
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "未找到 WKhtmltopdf 系统，无法创建 PDF。"
 
 #. module: base
-#: code:addons/base/module/module.py:333
+#: code:addons/base/module/module.py:342
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: "
@@ -22661,7 +23168,7 @@ msgid ""
 msgstr "不能安装模块“%s”，因为一个外部依赖没有满足:%s"
 
 #. module: base
-#: code:addons/base/module/module.py:337
+#: code:addons/base/module/module.py:346
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: "
@@ -22669,7 +23176,7 @@ msgid ""
 msgstr "不能处理模块 \"%s\"，因为找不到外部的依赖：%s"
 
 #. module: base
-#: code:addons/base/module/module.py:335
+#: code:addons/base/module/module.py:344
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: "
@@ -22682,14 +23189,14 @@ msgid "Uncategorized"
 msgstr "未归类"
 
 #. module: base
-#: code:addons/base/module/module.py:564
+#: code:addons/base/module/module.py:575
 #: model:ir.ui.view,arch_db:base.module_form
 #, python-format
 msgid "Uninstall"
 msgstr "卸载"
 
 #. module: base
-#: code:addons/base/module/module.py:573
+#: code:addons/base/module/module.py:584
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
@@ -22734,13 +23241,13 @@ msgid "Unknown"
 msgstr "未知"
 
 #. module: base
-#: code:addons/models.py:929
+#: code:addons/models.py:994
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "未知数据库标识符 '%s'"
 
 #. module: base
-#: code:addons/models.py:790
+#: code:addons/models.py:855
 #, python-format
 msgid "Unknown error during import:"
 msgstr "导入时发生未知错误:"
@@ -23269,7 +23776,7 @@ msgid ""
 msgstr "视图类型：'树形'用于里列表类型并显示为树形结构，而'表单'用于一般的列表视图"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:570
+#: code:addons/base/ir/ir_model.py:583
 #, python-format
 msgid "View: %s"
 msgstr "视图：%s"
@@ -23349,21 +23856,21 @@ msgid "Warehouse Management: Batch Picking"
 msgstr "仓库管理：批量拣货"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:476
-#: code:addons/base/ir/ir_model.py:415 code:addons/base/ir/ir_model.py:490
-#: code:addons/base/res/res_partner.py:308
+#: code:addons/base/ir/ir_mail_server.py:479
+#: code:addons/base/ir/ir_model.py:415 code:addons/base/ir/ir_model.py:497
+#: code:addons/base/res/res_partner.py:344
 #, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: base
-#: code:addons/base/res/res_config.py:427
+#: code:addons/base/res/res_config.py:426
 #, python-format
 msgid "Warning!"
 msgstr "警告!"
 
 #. module: base
-#: code:addons/models.py:4885
+#: code:addons/models.py:4983
 #, python-format
 msgid "Warnings"
 msgstr "警告"
@@ -23665,7 +24172,7 @@ msgid "Wizards to be Launched"
 msgstr "要启动的向导"
 
 #. module: base
-#: code:addons/base/ir/ir_actions_report.py:394
+#: code:addons/base/ir/ir_actions_report.py:393
 #, python-format
 msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
@@ -23673,7 +24180,7 @@ msgid ""
 msgstr "Wkhtmltpdf 失败（错误代码：%s）。内存限制过低或已达到最大的子进程文件数。消息：%s"
 
 #. module: base
-#: code:addons/base/ir/ir_actions_report.py:397
+#: code:addons/base/ir/ir_actions_report.py:396
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf 失败 (错误代码: %s). 消息: %s"
@@ -23730,7 +24237,7 @@ msgid ""
 msgstr "你创造新用户，保存后刚创建的用户会收到一封包含关连设置口令的电子邮件。"
 
 #. module: base
-#: code:addons/base/module/module.py:418
+#: code:addons/base/module/module.py:429
 #, python-format
 msgid "You are trying to install incompatible modules in category \"%s\":"
 msgstr "您正尝试在类别“%s”中安装不兼容的模块："
@@ -23743,7 +24250,7 @@ msgid ""
 msgstr "你可以从你的电脑上传一个文件或者复制/粘贴一个 Internet 链接到你的文件."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:473
+#: code:addons/base/res/res_partner.py:513
 #, python-format
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
@@ -23756,7 +24263,7 @@ msgid "You can not have two users with the same login !"
 msgstr "用户名必须唯一！"
 
 #. module: base
-#: code:addons/base/res/res_users.py:377
+#: code:addons/base/res/res_users.py:391
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -23764,25 +24271,25 @@ msgid ""
 msgstr "你不能删除 admin 用户，因为其由 Odoo 创建并被系统内部使用(更新，模块安装－)"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:291
+#: code:addons/base/res/res_partner.py:325
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
 msgstr "你不能创建递归的合作伙伴层级。"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:343
+#: code:addons/base/ir/ir_ui_view.py:357
 #, python-format
 msgid "You cannot create recursive inherited views."
 msgstr "您不能创建递归继承视图。"
 
 #. module: base
-#: code:addons/base/res/res_users.py:336
+#: code:addons/base/res/res_users.py:348
 #, python-format
 msgid "You cannot deactivate the admin user."
 msgstr "不能禁用admin用户。"
 
 #. module: base
-#: code:addons/base/res/res_users.py:338
+#: code:addons/base/res/res_users.py:350
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "不能禁用你当前正在使用的用户。"
@@ -23809,7 +24316,7 @@ msgid "You should try other search criteria."
 msgstr "你可以尝试其他搜索条件。"
 
 #. module: base
-#: code:addons/base/module/module.py:353
+#: code:addons/base/module/module.py:362
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -23817,13 +24324,13 @@ msgid ""
 msgstr "你要安装的模块'%s'依赖于‘%s’,但后者在你系统中不可用。"
 
 #. module: base
-#: code:addons/base/module/module.py:305
+#: code:addons/base/module/module.py:306
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "你试图删除一个已安装或正要安装的模块"
 
 #. module: base
-#: code:addons/base/module/module.py:617
+#: code:addons/base/module/module.py:628
 #, python-format
 msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
@@ -23872,7 +24379,7 @@ msgstr ""
 "他们到营销活动。\n"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:224
+#: code:addons/base/ir/ir_mail_server.py:226
 #, python-format
 msgid ""
 "Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -23881,7 +24388,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:477
+#: code:addons/base/ir/ir_mail_server.py:480
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -23889,6 +24396,7 @@ msgid ""
 msgstr "你的服务器好像不支持 SSL，可试 STARTTLS。"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -23942,7 +24450,7 @@ msgid "account_plaid"
 msgstr "account_plaid"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:113
+#: code:addons/base/res/res_currency.py:117
 #, python-format
 msgid "and"
 msgstr "与"
@@ -24419,7 +24927,7 @@ msgid "monetary"
 msgstr "货币"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:474
+#: code:addons/base/ir/ir_ui_view.py:494
 #, python-format
 msgid "n/a"
 msgstr "n/a"

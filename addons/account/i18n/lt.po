@@ -15,6 +15,7 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # vaalds <vaalds@gmail.com>, 2017
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
 # Paulius Sladkevičius <paulius@versada.eu>, 2017
@@ -1235,9 +1236,9 @@ msgid ""
 "                        whether or not it is goods, consumables, or services.\n"
 "                        Choose how you want to create your products:"
 msgstr ""
-"Produktas Odoo sistemoje yra kažkas ką Jūs perkate arba parduodate \n"
-"                        nesvarbu ar tai yra prekės, žaliavos ar paslaugos.\n"
-"                        Pasirinkite kaip Jūs norite sukurti savo produktą:"
+"Produktas Odoo sistemoje yra kažkas, ką jūs perkate arba parduodate \n"
+"                        nesvarbu, tai yra prekės, žaliavos ar paslaugos.\n"
+"                        Pasirinkite, kaip jūs norite sukurti savo produktą:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:891
@@ -2895,7 +2896,7 @@ msgstr "Grynieji"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
 msgid "Cash Accounts Prefix"
-msgstr "Grynųjų pinigų sąskaitų numeracijos priešdėlis"
+msgstr "Grynųjų pinigų sąskaitų priešdėlis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_exigibility
@@ -3139,7 +3140,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "Patikrinimai"
+msgstr "Čekiai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -3268,7 +3269,7 @@ msgstr "Kodas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_code_prefix
 msgid "Code Prefix"
-msgstr "Kodo prefiksas"
+msgstr "Kodo priešdėlis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_coin_value
@@ -3490,7 +3491,7 @@ msgid ""
 "The currency of the journal should be the same than the default debit account."
 msgstr ""
 "Konfigūracijos klaida!\n"
-"Žurnalo valiuta turi sutapti su numatyta debito sąskaitos valiuta."
+"Žurnalo valiuta turi sutapti su numatyta debeto sąskaitos valiuta."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3973,7 +3974,7 @@ msgstr "Šių metų pajamos"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Customer"
-msgstr "Pirkėjas"
+msgstr "Klientas"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -4163,7 +4164,7 @@ msgstr "Debetuoti pinigų bazę"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
 msgid "Debit Methods"
-msgstr "Debito būdas"
+msgstr "Debeto būdas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_debit_move_id
@@ -5727,7 +5728,7 @@ msgstr "Pajamų sąskaita produkto šablonui"
 #: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:700
 #, python-format
 msgid "Incorrect Operation"
-msgstr "Neteisinga operacija"
+msgstr "Neteisingi veiksmai"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -6324,7 +6325,7 @@ msgstr "Žurnalai"
 #: model:ir.actions.report,name:account.action_report_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
 msgid "Journals Audit"
-msgstr "Žuranlų auditas"
+msgstr "Žurnalų auditas"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -7518,7 +7519,7 @@ msgstr "Tik mokėjimų šablonai gali būti tvirtinami."
 #: code:addons/account/models/chart_template.py:866
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr "Tiktais administratorius gali keisti nustatymus"
+msgstr "Tik administratorius gali keisti nustatymus"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_period_lock_date
@@ -7538,7 +7539,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
-msgstr "Atverti"
+msgstr "Atidaryta"
 
 #. module: account
 #. openerp-web
@@ -8071,7 +8072,7 @@ msgid ""
 "                  You can then process those payments by your own means or by using installed facilities."
 msgstr ""
 "Mokėjimai, skirti registruoti likvidaus turto judėjimui (siųsti, gauti pinigus).\n"
-"                  Po to šiuos mokėjimus galite apdirbti kaip norite, naudodami įdiegtas funkcijas."
+"                  Po to šiuos mokėjimus galite apdoroti savo nuožiūra arba naudodami įdiegtas funkcijas."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8262,17 +8263,17 @@ msgstr "Užregistruoti DK įrašai"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_res_company_bank_account_code_prefix
 msgid "Prefix of the bank accounts"
-msgstr "Banko sąskaitų prefiksas"
+msgstr "Banko sąskaitų priešdėlis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr "Grynųjų pinigų sąskaitų prefiksas"
+msgstr "Grynųjų pinigų sąskaitų priešdėlis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_cash_account_code_prefix
 msgid "Prefix of the main cash accounts"
-msgstr "Pagrindinių grynųjų pinigų sąskaitų prefiksas"
+msgstr "Pagrindinių grynųjų pinigų sąskaitų priešdėlis"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
@@ -10225,7 +10226,7 @@ msgstr "Žurnalas %s neturi sekos, prašome ją nurodyti."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "Žurnalo įrašai šiam žurnalui bus vadinami naudojant šį prefiksą."
+msgstr "Žurnalo įrašai šiam žurnalui bus pavadinami naudojant šį priešdėlį."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_opening_opening_move_id
@@ -10945,7 +10946,7 @@ msgstr "Visa suma sąskaitos valiuta, neigima jei tai kreditinės sąskaitos."
 #: model:ir.model.fields,help:account.field_res_partner_credit
 #: model:ir.model.fields,help:account.field_res_users_credit
 msgid "Total amount this customer owes you."
-msgstr "Suma, kurią pirkėjas yra skolingas jums."
+msgstr "Suma, kurią šis klientas yra skolingas jums."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_total
