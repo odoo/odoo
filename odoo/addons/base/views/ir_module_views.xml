@@ -66,7 +66,8 @@
                             By <field name="author" class="oe_inline" placeholder="Author Name"/>
                         </h3>
                         <div>
-                            <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="btn btn-primary"/>
+                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary"/>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-primary" states="uninstalled" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
                             <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
                             <button name="button_discover" string="Discover" type="object" attrs="{'invisible':['|', ('website', '=', False), ('application', '=', False)]}" class="btn btn-secondary"/>
                             <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary"/>
@@ -83,6 +84,7 @@
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
                                     <field name="category_id" widget="selection"/>
                                     <field name="summary"/>
+                                    <field name="to_buy" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="name"/>
@@ -139,6 +141,7 @@
                     <field name="shortdesc"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>
+                    <field name="website"/>
                     <field name="installed_version"/>
                     <field name="state"/>
                     <field name="category_id" invisible="1"/>
@@ -151,6 +154,7 @@
             <field name="arch" type="xml">
                 <kanban create="false">
                   <field name="icon"/>
+                  <field name="to_buy"/>
                   <field name="name"/>
                   <field name="state"/>
                   <field name="summary"/>
@@ -158,13 +162,14 @@
                   <field name="application"/>
                   <templates>
                     <t t-name="kanban-box">
-                      <div class="oe_module_vignette oe_kanban_global_click">
+                      <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <div t-if="installed or record.website.raw_value and record.application.raw_value" class="o_dropdown_kanban dropdown">
                             <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <a type="edit" class="dropdown-item">More Info</a>
                                 <a t-if="record.website.raw_value and record.application.raw_value" role="menuitem" class="dropdown-item" t-att-href="record.website.raw_value" target="_blank">Discover</a>
                                 <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item">Upgrade</a>
                                 <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item">Uninstall</a>
@@ -172,16 +177,22 @@
                         </div>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon"/>
                         <div class="oe_module_desc" t-att-title="record.shortdesc.value">
-                          <h4 class="o_kanban_record_title"><field name="shortdesc"/></h4>
+                          <h4 class="o_kanban_record_title">
+                            <field name="shortdesc"/>&amp;nbsp;
+                            <code groups="base.group_no_one"><field name="name"/></code>
+                          </h4>
                           <p class="oe_module_name">
-                             <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
+                             <t t-if="record.summary.raw_value"><field name="summary"/></t>
                           </p>
                           <div class="oe_module_action">
-                            <code groups="base.group_no_one"><small><field name="name"/></small></code>
-                            <button type="object" class="btn btn-primary float-right" name="button_immediate_install" states="uninstalled">Install</button>
-                            <span t-if="installed" class="float-right text-muted mr8">Installed</span>
-                            <button states="to remove" type="object" class="btn btn-primary float-right" name="button_uninstall_cancel">Cancel UnInstall</button>
-                            <button states="to install" type="object" class="btn btn-primary float-right" name="button_install_cancel">Cancel Install</button>
+
+                            <button name="button_discover" type="object" attrs="{'invisible':[('website', '=', False)]}" class="btn btn-secondary float-right">Discover</button>
+                            <button type="object" class="btn btn-primary" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" states="uninstalled" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
+
+                            <div t-if="installed" class="text-muted mt8 float-left">Installed</div>
+                            <button states="to remove" type="object" class="btn btn-primary" name="button_uninstall_cancel">Cancel UnInstall</button>
+                            <button states="to install" type="object" class="btn btn-primary" name="button_install_cancel">Cancel Install</button>
                           </div>
                         </div>
                       </div>

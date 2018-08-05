@@ -64,6 +64,7 @@ CREATE TABLE ir_module_module (
     license character varying(32),
     sequence integer DEFAULT 100,
     auto_install boolean default False,
+    to_buy boolean default False,
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);

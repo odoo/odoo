@@ -3,7 +3,7 @@
     'name': 'Slides',
     'version': '1.0',
     'sequence': 145,
-    'summary': 'Publish videos, presentations and documents',
+    'summary': 'Publish videos, slides and documents',
     'website': 'https://www.odoo.com/page/slides',
     'category': 'Website',
     'description': """

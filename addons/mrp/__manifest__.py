@@ -7,8 +7,8 @@
     'version': '2.0',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
-    'sequence': 14,
-    'summary': 'Manufacture products and process work orders',
+    'sequence': 16,
+    'summary': 'Manufacturing Orders & BOMs',
     'depends': ['product', 'stock', 'resource'],
     'description': "",
     'data': [
