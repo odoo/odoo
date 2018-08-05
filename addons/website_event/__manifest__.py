@@ -4,7 +4,7 @@
     'name': 'Events',
     'category': 'Website',
     'sequence': 166,
-    'summary': 'Promote events and manage online registrations',
+    'summary': 'Publish events, sell tickets',
     'website': 'https://www.odoo.com/page/events',
     'description': "",
     'depends': ['website', 'website_partner', 'website_mail', 'event'],

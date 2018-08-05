@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Invoicing Management',
+    'name' : 'Invoicing',
     'version' : '1.1',
     'summary': 'Invoices & Payments',
-    'sequence': 30,
+    'sequence': 15,
     'description': """
 Invoicing & Payments
 ====================

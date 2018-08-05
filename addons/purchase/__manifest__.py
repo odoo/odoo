@@ -6,7 +6,7 @@
     'version': '1.2',
     'category': 'Purchases',
     'sequence': 60,
-    'summary': 'Manage your purchase orders and agreements with your vendors',
+    'summary': 'Purchase orders, tenders and agreements',
     'description': "",
     'website': 'https://www.odoo.com/page/purchase',
     'depends': ['account'],

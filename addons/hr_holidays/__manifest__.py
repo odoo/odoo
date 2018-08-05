@@ -5,7 +5,6 @@
     'name': 'Leaves',
     'version': '1.5',
     'category': 'Human Resources',
-    'sequence': 27,
     'summary': 'Allocate leaves and follow leave requests',
     'website': 'https://www.odoo.com/page/leaves',
     'description': """

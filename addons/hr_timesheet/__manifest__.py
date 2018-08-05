@@ -3,11 +3,11 @@
 
 
 {
-    'name': 'Timesheets',
+    'name': 'Task Logs',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
-    'summary': 'Track and validate employee time',
+    'summary': 'Track employee time on tasks',
     'description': """
 This module implements a timesheet system.
 ==========================================
@@ -38,6 +38,6 @@ up a management by affair.
         'data/hr_timesheet_demo.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
 }

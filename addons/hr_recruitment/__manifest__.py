@@ -6,7 +6,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 90,
-    'summary': 'Handle your hiring process from applications to contracts',
+    'summary': 'Track your recruitment pipeline',
     'description': "",
     'website': 'https://www.odoo.com/page/recruitment',
     'depends': [
