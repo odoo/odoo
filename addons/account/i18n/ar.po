@@ -40,13 +40,14 @@
 # Abdulaziz Alayed <aalayed@kacst.edu.sa>, 2018
 # MOATAZ NAFIE <zizoom@outlook.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
+# Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Osoul <baruni@osoul.ly>, 2018\n"
+"Last-Translator: Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +63,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* يتم استخدام الحالة ' مسودة ' عندما يقوم المستخدم بترميز فاتورة جديده وغير مؤكده.\n"
+" * يتم استخدام الحالة ' Open ' عند قيام المستخدم بإنشاء الفاتورة ، يتم إنشاء رقم فاتورة. يبقي في حاله الفتح حتى يقوم المستخدم بدفع الفاتورة.\n"
+" * يتم تعيين الحالة ' المدفوعة ' تلقائيا عند دفع الفاتورة. قد تكون إدخالات دفتر اليومية ذات الصلة أو قد لا تكون مطابقه.\n"
+" * يتم استخدام الحالة ' الملغية ' عند إلغاء المستخدم للفاتورة."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -2133,12 +2138,12 @@ msgstr "المطابقة"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "تم التطبيق علي عنصر دفتر يوميه الائتمان"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "تم التطبيق علي عنصر دفتر يوميه الخصم"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -2208,12 +2213,12 @@ msgstr "نماذج الحساب المرتبطة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "وارد واحد على الأقل"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "صادر واحد على الاقل"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2306,7 +2311,7 @@ msgstr "الرصيد"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
 msgid "Balance Cash Basis"
-msgstr ""
+msgstr "الرصد الإجمالي - أساس نقدي"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
@@ -2521,7 +2526,7 @@ msgstr "بناء على التحصيل"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Deposits"
-msgstr ""
+msgstr "دفعات  الايداع"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2776,13 +2781,13 @@ msgstr "الأساس النقدي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr ""
+msgstr "تم التطبيق علي عنصر دفتر يوميه النقد"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:197
 #, python-format
 msgid "Cash Basis Tax Journal"
-msgstr ""
+msgstr "يوميه ضريبة الأساس النقدي"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:210
@@ -2873,7 +2878,7 @@ msgstr "تغيير"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_writeoff_label
 msgid "Change label of the counterpart that will hold the payment difference"
-msgstr ""
+msgstr "تغيير تسميه الحساب  الذي يحتوي فرق الدفع"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:146
@@ -2913,7 +2918,7 @@ msgstr "قوالب الرسم البيانى"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_coa_done
 msgid "Chart of Account Checked"
-msgstr ""
+msgstr "تثبيت شجرة الحسابات"
 
 #. module: account
 #. openerp-web
@@ -2976,6 +2981,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"حدد هذا المربع إذا كنت لا تريد مشاركه نفس التسلسل للفواتير والإشعارات "
+"الدائنة المصنوعة من دفتر اليومية هذا"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -3027,7 +3034,7 @@ msgstr "اختيار قالب المحاسبة"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "اختيار حساب  أو الشطب"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -3144,7 +3151,7 @@ msgstr "قيمة عملة/فاتورة"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service."
-msgstr ""
+msgstr "جمع مدفوعات العملاء بنقره واحده باستخدام خدمه اليورو sepa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
@@ -3249,7 +3256,7 @@ msgstr "بيانات الشركة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_company_data_done
 msgid "Company Setup Marked As Done"
-msgstr ""
+msgstr "تم الانتهاء من  اعداد الشركة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_has_chart_of_accounts
@@ -3292,7 +3299,7 @@ msgstr "رسالة جديدة"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr ""
+msgstr "حساب معدلات الضرائب علي أساس الرموز البريدية الامريكيه"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_counterpart
@@ -3684,7 +3691,7 @@ msgstr "البطاقة الإئتمانية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit_cash_basis
 msgid "Credit Cash Basis"
-msgstr ""
+msgstr "دائن بصفة نقدية"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_credit_move_id
@@ -3717,7 +3724,7 @@ msgstr "الإشعار الدائن - %s"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Credit Note Bill"
-msgstr ""
+msgstr "فاتورة الاشعار الدائن"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
@@ -3904,7 +3911,7 @@ msgstr "العملاء"
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
 msgid "DOWN"
-msgstr ""
+msgstr "أسفل"
 
 #. module: account
 #. openerp-web
@@ -3945,7 +3952,7 @@ msgstr "التاريخ"
 msgid ""
 "Date at which the opening entry of this company's accounting has been "
 "posted."
-msgstr ""
+msgstr "التاريخ الذي تم فيه ترحيل الإدخال الافتتاحي لحساب هذه الشركة."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op_opening_date
@@ -3953,6 +3960,7 @@ msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
 msgstr ""
+"التاريخ الذي تتم منه أداره الحسابات في odoo. وهو تاريخ الإدخال الافتتاحي."
 
 #. module: account
 #. openerp-web
@@ -4017,7 +4025,7 @@ msgstr "المدين"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit_cash_basis
 msgid "Debit Cash Basis"
-msgstr ""
+msgstr "الخصم النقدي الأساسي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
@@ -4052,7 +4060,7 @@ msgstr "ديسمبر"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "تسلسل الملاحظات الدائنة المخصصة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -4092,7 +4100,7 @@ msgstr "ضرائب إفتراضية"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied to local transactions"
-msgstr ""
+msgstr "الضرائب الافتراضية المطبقة علي المعاملات المحلية"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4459,16 +4467,18 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
 msgstr ""
+"تم الكشف عن مرجع المورد المكرر. من المحتمل انك قمت بترميز مرتين بنفس فاتورة "
+"البائع/اشعار الائتمان."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports
 msgid "Dynamic Reports"
-msgstr ""
+msgstr "تقارير ديناميكية"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_l10n_eu_service
 msgid "EU Digital Goods VAT"
-msgstr ""
+msgstr "ضريبة القيمة المضافة للسلع الرقمية"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:171
@@ -4609,7 +4619,7 @@ msgstr "المكسب أو الخسارة في سعر صرف دفتر اليوم�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
 msgid "Exchange Move"
-msgstr ""
+msgstr "تبادل النقل"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4720,7 +4730,7 @@ msgstr "التقارير المالية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_fy_data_done
 msgid "Financial Year Setup Marked As Done"
-msgstr ""
+msgstr "تم الانتهاء من اعداد السنه المالية"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_financial
@@ -4730,7 +4740,7 @@ msgstr "التقرير المالي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_account_setup_fy_data_done
 msgid "Financial year setup marked as done"
-msgstr ""
+msgstr "تم الانتهاء من اعداد السنه المالية"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4745,7 +4755,7 @@ msgstr "معلومات مالية"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Localization"
-msgstr ""
+msgstr "التوطين المالي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_position_id
@@ -4986,7 +4996,7 @@ msgstr "إصدار القيود"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr ""
+msgstr "البيانات العامة"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5006,6 +5016,10 @@ msgid ""
 "“Bank Synchronization” in bank account settings. Then, click “Configure” on "
 "the online account to enter your bank credentials."
 msgstr ""
+"الحصول علي البيانات المصرفية الخاصة بك تلقائيا استيراد كل 4 ساعات ، أو بنقره"
+" واحده ، وذلك باستخدام الخدمات ومنقوشة. بمجرد تثبيت ، تعيين \"البنك يغذي\" "
+"إلى \"البنك التزامن\" في إعدادات الحساب المصرفي. ثم انقر فوق \"تكوين\" علي "
+"الحساب عبر الإنترنت لإدخال بيانات اعتماد البنك الخاص بك."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -5027,7 +5041,7 @@ msgstr "تعطيك ترتيب المسلسل حين عرض القائمة للف
 #: model:ir.model.fields,help:account.field_account_payment_term_line_sequence
 msgid ""
 "Gives the sequence order when displaying a list of payment terms lines."
-msgstr ""
+msgstr "اعطي امر بالتسلسل  عند عرض قائمة من بنود الدفع الآجل"
 
 #. module: account
 #. openerp-web
@@ -5093,7 +5107,7 @@ msgstr "تجميع الشيكات المحصلة قبل إيداعهم في ال
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
 msgid "HALF-UP"
-msgstr ""
+msgstr "نصف المتابعة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_has_accounting_entries
@@ -5132,7 +5146,7 @@ msgstr "إخفاء شريط الإعداد"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr ""
+msgstr "إخفاء خيار استخدام الأساس النقدي"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5268,6 +5282,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
+"إذا تم تعيين الحقل النشط إلى خطأ، سوف تسمح لك باخفاء فريق المبيعات دون "
+"إزالته."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_group_invoice_lines
@@ -5284,12 +5300,14 @@ msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
 msgstr ""
+"إذا قمت بالتحقق من هذا المربع ، سوف تكون قادرا علي جمع المدفوعات باستخدام "
+"sepa الخصم المباشر الولايات."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
-msgstr ""
+msgstr "إذا قمت بالتحقق من هذا المربع ، ستتمكن من تسجيل الدفع باستخدام sepa."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5326,6 +5344,10 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"في حاله استخدام شروط الدفع ، سيتم حساب تاريخ الاستحقاق تلقائيا عند إنشاء "
+"إدخالات الحساب. إذا احتفظت بشروط الدفع وتاريخ الاستحقاق فارغه ، فهذا يعني "
+"الدفع المباشر. قد تحسب شروط الدفع عده تواريخ استحقاق ، علي سبيل المثال 50% "
+"الآن ، 50% في شهر واحد."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -5336,6 +5358,12 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
+"إذا كنت تستخدم طرق الدفع ، فسيتم احتساب تاريخ الاستحقاق تلقائياً في احتساب "
+"القيود المحاسبية. طريقة الدفع الآجل من المحتمل أن تحتوى على عدة تواريخ "
+"إستحقاق , على سبيل المثال ٥٠% الآن و ٥٠% فى خلال شهر , و لكن إذا كنت ترغب فى"
+" فرض تاريخ الإستحقاق , تأكد من أن طريقة  الدفع لا يظهر على الفاتورة .إذا قمت"
+" بالإستمرار على طريقة الدفع و تاريخ الاستحقاق الفارغ , فهذا يعنى أن الدفع "
+"مباشر ."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5372,6 +5400,11 @@ msgid ""
 "telecommunications, and services that are electronically supplied instead of"
 " shipped. Gift cards sent online are not included in the definition."
 msgstr ""
+"إذا كنت تبيع السلع الرقمية للعملاء في الاتحاد الأوروبي ، فيجب عليك تحميل "
+"ضريبة القيمة المضافة استنادا إلى مواقع عملائك. يتم تطبيق هذه القاعدة بغض "
+"التحديد عن موقعك. ويتم تعريف السلع الرقمية في التشريعات بأنها البث "
+"والاتصالات والخدمات التي يتم توريدها الكترونيا بدلا من شحنها. لا يتم تضمين "
+"بطاقات الهدايا المرسلة عبر إنترنت في التعريف."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_product_image
@@ -5380,6 +5413,8 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"صورة لمتغير المنتج (صورة كبيرة الحجم من قالب المنتج إذا خاطئة). يتم تغيير "
+"الحجم تلقائيا كصورة 1024x1024px، مع المحافظة على نسبة الارتفاع."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5404,7 +5439,7 @@ msgstr "استيراد بفورمات .ofx"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_bank_statement_import_camt
 msgid "Import in CAMT.053 format"
-msgstr ""
+msgstr "استيراد في شكل camt. 053"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5713,7 +5748,7 @@ msgstr "ضريبة الفاتورة"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the credit note"
-msgstr ""
+msgstr "الفاتورة التي تعتبر هذه الفاتورة هي اشعار الدائن"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:753
@@ -5833,12 +5868,12 @@ msgstr "تحرير الفواتير"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_is_unaffected_earnings_line
 msgid "Is Unaffected Earnings Line"
-msgstr ""
+msgstr "هو خط الأرباح غير متاثر"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_is_rounding_line
 msgid "Is a rounding line in case of cash rounding."
-msgstr ""
+msgstr "هو خط التقريب في حاله التقريب النقدي."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
@@ -6088,7 +6123,7 @@ msgstr "عناصر اليومية المراد مطابقتها لا تحتوي 
 msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
-msgstr ""
+msgstr "دفتر اليومية الذي تم فيه ترحيل الإدخال الافتتاحي لحساب هذه الشركة."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -6132,12 +6167,12 @@ msgstr "المبررات"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "لوحة تحكم Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "الرسم البياني للوحة تحكم Kanban"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6164,7 +6199,7 @@ msgstr "إحفظها مفتوحة"
 #: model:ir.model.fields,help:account.field_product_template_property_account_income_id
 msgid ""
 "Keep this field empty to use the default value from the product category."
-msgstr ""
+msgstr "احتفظ بهذا الحقل فارغا لاستخدام القيمة الافتراضية من فئة المنتج."
 
 #. module: account
 #. openerp-web
@@ -6649,6 +6684,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"دليل: يتقاضون رواتبهم عن طريق النقد ، والاختيار أو اي وسيله أخرى خارج odoo.\n"
+"الكترونيه: الحصول علي دفع تلقائيا من خلال مشتر الدفع عن طريق طلب المعاملة علي بطاقة المحفوظة من قبل العملاء عند شراء أو الاشتراك علي الإنترنت (الدفع الرمزية).\n"
+"إيداع دفعه: encase عده شيكات العملاء في ان واحد عن طريق توليد دفعه وديعة لتقديمها إلى البنك الخاص بك. عند ترميز البيان البنكي في odoo ، فانك تقترح التوفيق بين الحركة والوديعة الدفعي. تمكين هذا الخيار من الإعدادات."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6661,6 +6699,11 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
+"دليل: يتقاضون رواتبهم عن طريق النقد ، والاختيار أو اي وسيله أخرى خارج odoo.\n"
+"الكترونيه: الحصول علي دفع تلقائيا من خلال مشتر الدفع عن طريق طلب المعاملة علي بطاقة المحفوظة من قبل العملاء عند شراء أو الاشتراك علي الإنترنت (الدفع الرمزية).\n"
+"الاختيار: دفع الفاتورة عن طريق الاختيار وطباعته من odoo.\n"
+"إيداع دفعه: encase عده شيكات العملاء في ان واحد عن طريق توليد دفعه وديعة لتقديمها إلى البنك الخاص بك. عند ترميز البيان البنكي في odoo ، فانك تقترح التوفيق بين الحركة والوديعة الدفعي. لتمكين الإيداع الدفعي ، يجب تثبيت الوحدة النمطية account_batch_deposit.\n"
+"sepa تحويل الائتمان: فاتورة الدفع من sepa نقل الائتمان الملف الذي تقدمه إلى البنك الخاص بك. لتمكين نقل الائتمان sepa, يجب تثبيت الوحدة النمطية account_sepa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_outbound_payment_method_ids
@@ -6669,6 +6712,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"دليل: دفع الفاتورة نقدا أو اي طريقه أخرى خارج odoo.\n"
+"الاختيار: دفع الفاتورة عن طريق الاختيار وطباعته من odoo.\n"
+"sepa تحويل الائتمان: فاتورة الدفع من sepa نقل الائتمان الملف الذي تقدمه إلى البنك الخاص بك. تمكين هذا الخيار من الإعدادات."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6706,12 +6752,12 @@ msgstr "بيانات الاستاذ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
 msgid "Matched Credit"
-msgstr ""
+msgstr "مطابقه الائتمان"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_debit_ids
 msgid "Matched Debit"
-msgstr ""
+msgstr "الخصم المطابق"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
@@ -6733,7 +6779,7 @@ msgstr "رقم التطابق"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_max_date
 msgid "Max Date of Matched Lines"
-msgstr ""
+msgstr "تاريخ الحد الأقصى للخطوط المتطابقة"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6875,7 +6921,7 @@ msgstr "اسم الحركة (id): %s (%s)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_register_payments_multi
 msgid "Multi"
-msgstr ""
+msgstr "متعدد"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7064,6 +7110,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly form\n"
 "                the customer invoice, to refund it totally or partially."
 msgstr ""
+"لاحظ ان أسهل طريقه لإنشاء اشعار دائن هي ان تفعل ذلك مباشره شكل فاتورة العميل"
+" ، لاسترداده كليا أو جزئيا."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_note
@@ -7137,7 +7185,7 @@ msgstr "أكتوبر"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "تطبيق المحاسبة لديه ميزات إضافية مجانية كثيرة"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -7230,6 +7278,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
+"بمجرد تثبيت ، قم بتعيين ' التغذية البنكية ' إلى ' استيراد الملف ' في إعدادات"
+" الحساب البنكي. يؤدي هذا إلى أضافه زر للاستيراد من لوحه معلومات الحسابات."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7275,7 +7325,7 @@ msgstr "قالب رسم بيانى واحد فقط متاح"
 #: code:addons/account/models/account_payment.py:484
 #, python-format
 msgid "Only a draft payment can be posted."
-msgstr ""
+msgstr "يمكن ترحيل مسودة  الدفع فقط."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:866
@@ -7354,22 +7404,22 @@ msgstr "الرصيد الافتتاحي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_opening_credit
 msgid "Opening credit"
-msgstr ""
+msgstr "فتح الائتمان"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_opening_credit
 msgid "Opening credit value for this account."
-msgstr ""
+msgstr "فتح قيمه الائتمان لهذا الحساب."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_opening_debit
 msgid "Opening debit"
-msgstr ""
+msgstr "فتح الخصم"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_opening_debit
 msgid "Opening debit value for this account."
-msgstr ""
+msgstr "فتح قيمه المدين لهذا الحساب."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -7448,7 +7498,7 @@ msgstr "حساب المنصرف لتقييم المخزون"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
 msgid "Outstanding Credits Debits Widget"
-msgstr ""
+msgstr "الخصومات  الغير مسددة"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7538,7 +7588,7 @@ msgstr "تقرير أصلى"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_parent_state
 msgid "Parent State"
-msgstr ""
+msgstr "الحالة الام"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
@@ -7594,7 +7644,7 @@ msgstr "اسم المستفيد"
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner Type"
-msgstr ""
+msgstr "نوع الشريك"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
