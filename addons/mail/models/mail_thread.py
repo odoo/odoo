@@ -1279,7 +1279,13 @@ class MailThread(models.AbstractModel):
         html_sanitize methods located in tools. """
         if not body:
             return body, attachments
-        root = lxml.html.fromstring(body)
+        try:
+            root = lxml.html.fromstring(body)
+        except ValueError:
+            # In case the email client sent XHTML, fromstring will fail because 'Unicode strings
+            # with encoding declaration are not supported'.
+            root = lxml.html.fromstring(body.encode('utf-8'))
+
         postprocessed = False
         to_remove = []
         for node in root.iter():
