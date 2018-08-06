@@ -12,14 +12,14 @@ class Invite(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(Invite, self).default_get(fields)
-        user_name = self.env.user.name_get()[0][1]
+        user_name = self.env.user.display_name
         model = result.get('res_model')
         res_id = result.get('res_id')
         if self._context.get('mail_invite_follower_channel_only'):
             result['send_mail'] = False
         if 'message' in fields and model and res_id:
             model_name = self.env['ir.model']._get(model).display_name
-            document_name = self.env[model].browse(res_id).name_get()[0][1]
+            document_name = self.env[model].browse(res_id).display_name
             message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>') % (user_name, model_name, document_name)
             result['message'] = message
         elif 'message' in fields:
@@ -50,9 +50,9 @@ class Invite(models.TransientModel):
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
                 message = self.env['mail.message'].create({
-                    'subject': _('Invitation to follow %s: %s') % (model_name, document.name_get()[0][1]),
+                    'subject': _('Invitation to follow %s: %s') % (model_name, document.display_name),
                     'body': wizard.message,
-                    'record_name': document.name_get()[0][1],
+                    'record_name': document.display_name,
                     'email_from': email_from,
                     'reply_to': email_from,
                     'model': wizard.res_model,

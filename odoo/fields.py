@@ -1989,7 +1989,7 @@ class Reference(Selection):
         return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_export(self, value, record):
-        return value.name_get()[0][1] if value else ''
+        return value.display_name if value else ''
 
     def convert_to_display_name(self, value, record):
         return ustr(value and value.display_name)
@@ -2147,7 +2147,7 @@ class Many2one(_Relational):
         return value.id
 
     def convert_to_export(self, value, record):
-        return value.name_get()[0][1] if value else ''
+        return value.display_name if value else ''
 
     def convert_to_display_name(self, value, record):
         return ustr(value.display_name)

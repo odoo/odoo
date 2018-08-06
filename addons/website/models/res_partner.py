@@ -22,7 +22,7 @@ class Partner(models.Model):
         if not google_maps_api_key:
             return False
         params = {
-            'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
+            'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'size': "%sx%s" % (width, height),
             'zoom': zoom,
             'sensor': 'false',
@@ -33,7 +33,7 @@ class Partner(models.Model):
     @api.multi
     def google_map_link(self, zoom=10):
         params = {
-            'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
+            'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'z': zoom,
         }
         return urlplus('https://maps.google.com/maps', params)
