@@ -13,16 +13,7 @@ $theme-colors: map-merge((
 // white-50 but does not allow overridding that with variables). Also add black
 // and white ones too as they were also not added by BS4...
 $grays: () !default;
-$grays: map-merge((
-    'black-25': $color-black-25,
-    'black-50': $color-black-50,
-    'black-75': $color-black-75,
-    'white-25': $color-white-25,
-    'white-50': $color-white-50,
-    'white-75': $color-white-75,
-
-    // Note: those two needs to be redefined before bootstrap, otherwise they
-    // do not exist yet
-    'black': $black,
-    'white': $white,
-), $grays);
+$grays: map-merge(map-merge($o-transparent-grays, (
+    black: $black, // Note: those two needs to be redefined before bootstrap,
+    white: $white, // otherwise they do not exist yet
+)), $grays);
