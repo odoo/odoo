@@ -215,31 +215,6 @@ class TestPayment(AccountingTestCase):
         ])
         self.assertEqual(inv_4.state, 'paid')
 
-    def test_multiple_payments_01(self):
-        """ Create test to pay several invoices/refunds at once """
-        # One payment for inv_1 and inv_2 (same partner) but inv_2 is refund
-        inv_1 = self.create_invoice(amount=550)
-        inv_2 = self.create_invoice(amount=100, type='out_refund')
-
-        ids = [inv_1.id, inv_2.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-        })
-        register_payments.create_payments()
-        payment_id = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
-
-        self.assertEqual(len(payment_id), 1)
-        self.assertAlmostEquals(register_payments.amount, 450)
-
-        self.assertEqual(payment_id.state, 'posted')
-
-        self.assertRecordValues(payment_id.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 450.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 450.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
-
     def test_partial_payment(self):
         """ Create test to pay invoices (cust. inv + vendor bill) with partial payment """
         # Test Customer Invoice

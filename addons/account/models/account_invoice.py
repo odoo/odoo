@@ -511,9 +511,9 @@ class AccountInvoice(models.Model):
     def validate_partner_bank_id(self):
         for record in self:
             if record.partner_bank_id:
-                if record.type in ('in_invoice', 'in_refund') and record.partner_bank_id.partner_id != record.partner_id.commercial_partner_id:
+                if record.type in ('in_invoice', 'out_refund') and record.partner_bank_id.partner_id != record.partner_id.commercial_partner_id:
                     raise ValidationError(_("Commercial partner and vendor account owners must be identical."))
-                elif record.type in ('out_invoice', 'out_refund') and not record.company_id in record.partner_bank_id.partner_id.ref_company_ids:
+                elif record.type in ('out_invoice', 'in_refund') and not record.company_id in record.partner_bank_id.partner_id.ref_company_ids:
                     raise ValidationError(_("The account selected for payment does not belong to the same company as this invoice."))
 
     @api.multi
@@ -534,7 +534,7 @@ class AccountInvoice(models.Model):
         """
         res = super(AccountInvoice, self).default_get(default_fields)
 
-        if not res.get('type', False) == 'out_invoice' or not 'company_id' in res:
+        if res.get('type', False) not in ('out_invoice', 'in_refund') or not 'company_id' in res:
             return res
 
         company = self.env['res.company'].browse(res['company_id'])
