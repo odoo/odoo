@@ -232,7 +232,8 @@ MailManager.include({
      * @private
      * @param {Object[]} notifications
      */
-    _onSupportNotification: function (notifications) {
+    _onSupportNotification: function (ev) {
+        var notifications = ev.data;
         var self = this;
         if (notifications && notifications.length) {
             this._setPollTimeout();
