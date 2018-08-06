@@ -889,6 +889,12 @@ the best course of action is to pass the value to
 which will attempt to convert the value to a date or datetime object
 respectively, which can then be assigned to the field in question.
 
+.. admonition:: Example
+
+    To parse date/datetimes coming from external sources::
+
+        fields.Date.to_date(self._context.get('date_from'))
+
 Date / Datetime comparison best practices:
     * Date fields can **only** be compared to date objects.
     * Datetime fields can **only** be compared to datetime objects.
