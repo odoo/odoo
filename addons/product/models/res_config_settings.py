@@ -28,6 +28,10 @@ class ResConfigSettings(models.TransientModel):
         ('0', 'Kilogram'),
         ('1', 'Pound'),
     ], 'Weight unit of measure', config_parameter='product.weight_in_lbs', default='0')
+    product_volume_volume_in_cubic_feet = fields.Selection([
+        ('0', 'Cubic Meters'),
+        ('1', 'Cubic Feet'),
+    ], 'Volume unit of measure', config_parameter='product.volume_in_cubic_feet', default='0')
 
 
     @api.model
