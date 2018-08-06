@@ -34,12 +34,12 @@ class ResConfigSettings(models.TransientModel):
         related='website_id.twitter_api_secret',
         string='API secret',
         help='Twitter API secret you can get it from https://apps.twitter.com/')
-    twitter_tutorial = fields.Boolean(string='Show me how to obtain the Twitter API Key and Secret')
     twitter_screen_name = fields.Char(
         related='website_id.twitter_screen_name',
         string='Favorites From',
         help='Screen Name of the Twitter Account from which you want to load favorites.'
              'It does not have to match the API Key/Secret.')
+    twitter_server_uri = fields.Char(string='Twitter server uri', readonly=True)
 
     def _get_twitter_exception_message(self, error_code):
         if error_code in TWITTER_EXCEPTION:
@@ -74,3 +74,12 @@ class ResConfigSettings(models.TransientModel):
         if vals.get('twitter_api_key') or vals.get('twitter_api_secret') or vals.get('twitter_screen_name'):
             self._check_twitter_authorization()
         return TwitterConfig
+
+    @api.model
+    def get_values(self):
+        res = super(ResConfigSettings, self).get_values()
+        Params = self.env['ir.config_parameter'].sudo()
+        res.update({
+            'twitter_server_uri': '%s/' % Params.get_param('web.base.url', default='http://yourcompany.odoo.com'),
+        })
+        return res
