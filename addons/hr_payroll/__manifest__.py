@@ -7,7 +7,6 @@
     'sequence': 38,
     'summary': 'Manage your employee payroll records',
     'description': "",
-    'website': 'https://www.odoo.com/page/employees',
     'depends': [
         'hr_contract',
         'hr_holidays',

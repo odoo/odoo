@@ -6,7 +6,6 @@
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
     'category': 'Localization',
-    'website': 'https://launchpad.net/openerp-uruguay',
     'description': """
 General Chart of Accounts.
 ==========================

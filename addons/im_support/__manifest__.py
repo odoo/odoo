@@ -8,7 +8,6 @@
         of another database on which a counterpart addon is installed.
     """,
     'author': 'Odoo SA',
-    'website': 'https://www.odoo.com',
     'depends': [
         'mail',
     ],

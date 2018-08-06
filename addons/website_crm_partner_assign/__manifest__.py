@@ -4,7 +4,6 @@
 {
     'name': 'Resellers',
     'category': 'Website',
-    'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Publish your resellers/partners and forward leads to them',
     'version': '1.0',
     'description': """

@@ -7,7 +7,6 @@
 Allow shoppers of your eCommerce store to create personalized collections of products they want to buy and save them for future reference.
     """,
     'author': 'Odoo SA',
-    'website': 'https://www.odoo.com',
     'category': 'Website',
     'version': '1.0',
     'depends': ['website_sale'],
