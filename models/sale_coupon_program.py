@@ -94,7 +94,7 @@ class SaleCouponProgram(models.Model):
         program = super(SaleCouponProgram, self).create(vals)
         if not vals.get('discount_line_product_id', False):
             discount_line_product_id = self.env['product.product'].create({
-                'name': program.reward_id.name_get()[0][1],
+                'name': program.reward_id.display_name,
                 'type': 'service',
                 'taxes_id': False,
                 'supplier_taxes_id': False,
@@ -113,7 +113,7 @@ class SaleCouponProgram(models.Model):
             'discount_apply_on', 'discount_specific_product_id', 'discount_fixed_amount'
         ]
         if any(field in reward_fields for field in vals):
-            self.mapped('discount_line_product_id').write({'name': self[0].reward_id.name_get()[0][1]})
+            self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
         return res
 
     def unlink(self):
