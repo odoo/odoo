@@ -154,7 +154,7 @@
         <!--TOC ON FORUM POST-->
         <template id="forum_question_doc" inherit_id="website_forum.post_description_full" name="Forum Post to Doc">
             <xpath expr="//ul[@id='options']" position="inside">
-                <li t-if="(not question.documentation_stage_id) and user.karma&gt;=200">
+                <li t-if="(not question.documentation_stage_id) and user.karma&gt;=200" class="list-inline-item">
                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/promote" class="text-muted fa fa-bookmark-o">
                         Promote to Doc
                     </a>
