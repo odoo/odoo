@@ -22,7 +22,6 @@
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
-                                <field name="website_description" invisible="1"/>
                         </tree>
                     </field>
                 </page>
@@ -36,7 +35,6 @@
             <xpath expr="//field[@name='client_order_ref']" position="after">
                 <field name="require_signature" attrs="{'invisible': [('template_id', '=', False)]}"/>
                 <field name="require_payment" attrs="{'invisible': [('template_id', '=', False)]}"/>
-                <field name="website_description" invisible="1"/>
             </xpath>
         </field>
     </record>

@@ -71,11 +71,6 @@ class CustomerPortal(CustomerPortal):
         OrderLine.write({'product_uom_qty': quantity})
         return [str(quantity), str(Order.amount_total)]
 
-    @http.route(["/quotation/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
-    def template_view(self, quote, **post):
-        values = {'template': quote}
-        return request.render('sale.so_template', values)
-
     @http.route(["/quotation/<int:order_id>/add_line/<int:option_id>"], type='http', auth="public", website=True)
     def add(self, order_id, option_id, token=None, **post):
         try:
@@ -87,10 +82,16 @@ class CustomerPortal(CustomerPortal):
         if Order.state not in ['draft', 'sent']:
             return request.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
         Option = request.env['sale.order.option'].sudo().browse(option_id)
-        vals = {
+        vals = self._compute_vals_for_add_line(Order, Option)
+
+        OrderLine = request.env['sale.order.line'].sudo().create(vals)
+        OrderLine._compute_tax_id()
+        Option.write({'line_id': OrderLine.id})
+        return werkzeug.utils.redirect("/my/orders/%s?%s#pricing" % (Order.id, 'access_token=%' % token if token else ''))
+
+    def _compute_vals_for_add_line(self, Order, Option):
+        return {
             'price_unit': Option.price_unit,
-            # TODO SEB website_description into sale_design
-            'website_description': Option.website_description,
             'name': Option.name,
             'order_id': Order.id,
             'product_id': Option.product_id.id,
@@ -98,11 +99,6 @@ class CustomerPortal(CustomerPortal):
             'product_uom': Option.uom_id.id,
             'discount': Option.discount,
         }
-
-        OrderLine = request.env['sale.order.line'].sudo().create(vals)
-        OrderLine._compute_tax_id()
-        Option.write({'line_id': OrderLine.id})
-        return werkzeug.utils.redirect("/my/orders/%s?%s#pricing" % (Order.id, 'access_token=%' % token if token else ''))
 
     # note dbo: website_sale code
     @http.route(['/quotation/<int:order_id>/transaction/'], type='json', auth="public", website=True)
