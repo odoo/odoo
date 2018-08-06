@@ -1100,10 +1100,14 @@ var CopyClipboard = {
         var self = this;
         var $clipboardBtn = this.$('.o_clipboard_button');
         $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
-        this.clipboard = new Clipboard($clipboardBtn.get(0), {
-            text: function () {
-                return self.value.trim();
-            }
+        this.clipboard = new ClipboardJS($clipboardBtn[0], {
+            text: function (_) {
+               return self.value.trim(); 
+            },
+            // Container added because of Bootstrap modal that give the focus to another element.
+            // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
+            // https://github.com/zenorocha/clipboard.js/issues/155
+            container: self.$el[0]
         });
         this.clipboard.on('success', function () {
             _.defer(function () {
