@@ -900,22 +900,17 @@ Date / Datetime comparison best practices:
                  discouraged.
 
 Common operations with dates and datetimes such as addition, substraction or
-fetching the start/end of a period are exposed through the wrapper
-:class:`~odoo.fields.DateLike` which :class:`~odoo.fields.Date` and
-:class:`~odoo.fields.Datetime` inherit from, however these helpers are also
-available by importing `odoo.tools.date_utils`.
-
-.. autoclass:: odoo.fields.DateLike
-    :show-inheritance:
-    :members: start_of, end_of, add, subtract
+fetching the start/end of a period are exposed through both
+:class:`~odoo.fields.Date` and :class:`~odoo.fields.Datetime`.
+These helpers are also available by importing `odoo.tools.date_utils`.
 
 .. autoclass:: odoo.fields.Date
     :show-inheritance:
-    :members: today, context_today, to_date, to_string
+    :members: today, context_today, to_date, to_string, start_of, end_of, add, subtract
 
 .. autoclass:: odoo.fields.Datetime
     :show-inheritance:
-    :members: now, today, context_timestamp, to_datetime, to_string
+    :members: now, today, context_timestamp, to_datetime, to_string, start_of, end_of, add, subtract
 
 .. _reference/orm/fields/relational:
 

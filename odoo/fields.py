@@ -1513,18 +1513,15 @@ class Html(_String):
         return value
 
 
-class DateLike():
+class Date(Field):
+    type = 'date'
+    column_type = ('date', 'date')
+    column_cast_from = ('timestamp',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
     add = staticmethod(date_utils.add)
     subtract = staticmethod(date_utils.subtract)
-
-
-class Date(Field, DateLike):
-    type = 'date'
-    column_type = ('date', 'date')
-    column_cast_from = ('timestamp',)
 
     @staticmethod
     def today(*args):
@@ -1612,10 +1609,15 @@ class Date(Field, DateLike):
         return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
 
-class Datetime(Field, DateLike):
+class Datetime(Field):
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
     column_cast_from = ('date',)
+
+    start_of = staticmethod(date_utils.start_of)
+    end_of = staticmethod(date_utils.end_of)
+    add = staticmethod(date_utils.add)
+    subtract = staticmethod(date_utils.subtract)
 
     @staticmethod
     def now(*args):
