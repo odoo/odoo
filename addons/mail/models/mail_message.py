@@ -882,7 +882,7 @@ class Message(models.Model):
         res_id = values.get('res_id', self.env.context.get('default_res_id'))
         if not model or not res_id or model not in self.env:
             return False
-        return self.env[model].sudo().browse(res_id).name_get()[0][1]
+        return self.env[model].sudo().browse(res_id).display_name
 
     @api.model
     def _get_reply_to(self, values):

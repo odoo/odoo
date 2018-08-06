@@ -235,7 +235,7 @@ class ProductProduct(models.Model):
                 self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
                 break
         else:
-            self.partner_ref = self.name_get()[0][1]
+            self.partner_ref = self.display_name
 
     @api.one
     @api.depends('image_variant', 'product_tmpl_id.image')

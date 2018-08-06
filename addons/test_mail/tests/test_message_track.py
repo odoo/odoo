@@ -18,8 +18,8 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             elif value_type in ('many2one'):
                 self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
                 self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
-                self.assertEqual(tracking.old_value_char, old_value and old_value.name_get()[0][1] or '')
-                self.assertEqual(tracking.new_value_char, new_value and new_value.name_get()[0][1] or '')
+                self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
+                self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
             else:
                 self.assertEqual(1, 0)
 

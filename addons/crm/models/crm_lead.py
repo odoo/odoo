@@ -563,11 +563,11 @@ class Lead(models.Model):
                 value = next((v[1] for v in selections if v[0] == value), value)
             elif field.ttype == 'many2one':
                 if value:
-                    value = value.sudo().name_get()[0][1]
+                    value = value.sudo().display_name
             elif field.ttype == 'many2many':
                 if value:
                     value = ','.join(
-                        val.name_get()[0][1]
+                        val.display_name
                         for val in value.sudo()
                     )
             body.append("%s: %s" % (field.field_description, value or ''))
