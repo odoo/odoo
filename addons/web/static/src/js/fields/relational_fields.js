@@ -1833,6 +1833,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onDeleteTag: function (event) {
+        event.stopPropagation();
         this._removeTag($(event.target).parent().data('id'));
     },
     /**
@@ -1907,8 +1908,8 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
                 'tag_id': tagID,
             }));
 
-            $(ev.currentTarget).append(this.$color_picker);
-            this.$color_picker.dropdown('toggle');
+            $(ev.currentTarget).after(this.$color_picker);
+            this.$color_picker.dropdown();
             this.$color_picker.attr("tabindex", 1).focus();
             if (!tagColor) {
                 this.$('.custom-checkbox input').prop('checked', true);
