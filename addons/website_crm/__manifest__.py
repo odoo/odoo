@@ -2,7 +2,6 @@
     'name': 'Contact Form',
     'category': 'Website',
     'sequence': 54,
-    'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Generate leads from a contact form',
     'version': '2.0',
     'description': """

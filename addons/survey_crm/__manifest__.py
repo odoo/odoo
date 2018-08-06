@@ -5,7 +5,6 @@
     'version': '2.0',
     'category': 'Marketing',
     'complexity': 'easy',
-    'website': 'https://www.odoo.com/page/survey',
     'description': """
 Survey - CRM (bridge module)
 =================================================================================

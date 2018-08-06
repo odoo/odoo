@@ -60,7 +60,7 @@
                     <link rel="stylesheet" href="/base/static/src/css/description.css"></link>
                     <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar"/>
-                    <div class="oe_title">
+                    <div class="oe_title mb32">
                         <h1><field name="shortdesc" placeholder="Module Name"/></h1>
                         <h3 class="oe_fade">
                             By <field name="author" class="oe_inline" placeholder="Author Name"/>
@@ -69,7 +69,7 @@
                             <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary"/>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-primary" states="uninstalled" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
                             <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
-                            <button name="button_discover" string="Discover" type="object" attrs="{'invisible':['|', ('website', '=', False), ('application', '=', False)]}" class="btn btn-secondary"/>
+                            <button name="button_discover" string="Learn More" type="object" attrs="{'invisible':['|', ('website', '=', False), ('application', '=', False)]}" class="btn btn-secondary"/>
                             <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary"/>
                             <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary"/>
                             <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary"/>
@@ -164,13 +164,13 @@
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <div t-if="installed or record.website.raw_value and record.application.raw_value" class="o_dropdown_kanban dropdown">
+                        <div class="o_dropdown_kanban dropdown" tabindex="-1">
                             <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <a type="edit" class="dropdown-item">More Info</a>
-                                <a t-if="record.website.raw_value and record.application.raw_value" role="menuitem" class="dropdown-item" t-att-href="record.website.raw_value" target="_blank">Discover</a>
+                                <a type="edit" class="dropdown-item">Module Info</a>
+                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
                                 <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item">Upgrade</a>
                                 <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item">Uninstall</a>
                             </div>
@@ -182,14 +182,14 @@
                             <code groups="base.group_no_one"><field name="name"/></code>
                           </h4>
                           <p class="oe_module_name">
-                             <t t-if="record.summary.raw_value"><field name="summary"/></t>
+                             <field name="summary"/>
                           </p>
                           <div class="oe_module_action">
 
-                            <button name="button_discover" type="object" attrs="{'invisible':[('website', '=', False)]}" class="btn btn-secondary float-right">Discover</button>
+                            <button name="button_discover" type="object" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-secondary float-right">Learn More</button>
+                            <a type="edit" class="btn btn-secondary float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
                             <button type="object" class="btn btn-primary" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" states="uninstalled" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
-
                             <div t-if="installed" class="text-muted mt8 float-left">Installed</div>
                             <button states="to remove" type="object" class="btn btn-primary" name="button_uninstall_cancel">Cancel UnInstall</button>
                             <button states="to install" type="object" class="btn btn-primary" name="button_install_cancel">Cancel Install</button>

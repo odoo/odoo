@@ -22,7 +22,6 @@ The following topics are covered by this module:
     * Notes for the technician and for the final customer
 """,
     'depends': ['stock', 'sale_management', 'account'],
-    'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
         'security/ir.model.access.csv',
         'security/repair_security.xml',

@@ -4,7 +4,6 @@
 {
     'name': 'Customer References',
     'category': 'Website',
-    'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Publish your customer references',
     'version': '1.0',
     'description': """

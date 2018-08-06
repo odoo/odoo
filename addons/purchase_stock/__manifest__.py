@@ -8,7 +8,6 @@
     'sequence': 60,
     'summary': 'Purchase Orders, Receipts, Vendor Bills for Stock',
     'description': "",
-    'website': 'https://www.odoo.com/page/purchase',
     'depends': ['stock_account', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
