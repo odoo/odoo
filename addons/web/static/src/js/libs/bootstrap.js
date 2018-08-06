@@ -7,11 +7,12 @@ odoo.define('web.bootstrap.extensions', function () {
  */
 
 /* Bootstrap defaults overwrite */
-$.fn.tooltip.Constructor.Default.placement = 'top';
+$.fn.tooltip.Constructor.Default.placement = 'auto';
 $.fn.tooltip.Constructor.Default.fallbackPlacement = ['bottom', 'right', 'left', 'top'];
 $.fn.tooltip.Constructor.Default.html = true;
-$.fn.tooltip.Constructor.Default.trigger = 'hover focus click';
+$.fn.tooltip.Constructor.Default.trigger = 'hover';
 $.fn.tooltip.Constructor.Default.container = 'body';
+$.fn.tooltip.Constructor.Default.boundary = 'window';
 $.fn.tooltip.Constructor.Default.delay = { show: 1000, hide: 0 };
 
 var bootstrapShowFunction = $.fn.tooltip.Constructor.prototype.show;
