@@ -313,7 +313,7 @@ class account_register_payments(models.TransientModel):
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
         bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
         pmt_communication = self.show_communication_field and self.communication \
-                            or self.group_invoices and ' '.join(invoices.mapped('reference')) \
+                            or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
                             or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
         return {
             'journal_id': self.journal_id.id,
