@@ -338,7 +338,8 @@ class MrpStockReport(models.TransientModel):
 
     def get_pdf(self, line_data=[]):
         lines = self.with_context(print_mode=True).get_pdf_lines(line_data)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        IrConfig = self.env['ir.config_parameter'].sudo()
+        base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
