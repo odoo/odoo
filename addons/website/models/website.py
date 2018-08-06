@@ -540,7 +540,7 @@ class Website(models.Model):
             if page.view_id and page.view_id.priority != 16:
                 record['__priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             if page['write_date']:
-                record['__lastmod'] = page['write_date'][:10]
+                record['__lastmod'] = page['write_date'].date()
             yield record
 
     @api.multi
@@ -563,7 +563,7 @@ class Website(models.Model):
     def image_url(self, record, field, size=None):
         """ Returns a local url that points to the image field of a given browse record. """
         sudo_record = record.sudo()
-        sha = hashlib.sha1(getattr(sudo_record, '__last_update').encode('utf-8')).hexdigest()[0:7]
+        sha = hashlib.sha1(str(getattr(sudo_record, '__last_update')).encode('utf-8')).hexdigest()[0:7]
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 

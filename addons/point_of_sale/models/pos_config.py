@@ -6,7 +6,6 @@ from uuid import uuid4
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 
 class AccountCashboxLine(models.Model):
@@ -209,7 +208,7 @@ class PosConfig(models.Model):
                 pos_config.pos_session_username = session[0].user_id.name
                 pos_config.pos_session_state = session[0].state
                 pos_config.pos_session_duration = (
-                    datetime.now() - datetime.strptime(session[0].start_at, DATETIME_FORMAT)
+                    datetime.now() - session[0].start_at
                 ).days if session[0].start_at else 0
             else:
                 pos_config.pos_session_username = False

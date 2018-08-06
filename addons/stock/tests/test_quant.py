@@ -763,7 +763,8 @@ class StockQuant(TransactionCase):
             'product_id': product1.id,
         })
 
-        in_date1 = datetime.now()
+        from odoo.fields import Datetime
+        in_date1 = Datetime.now()
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date1)
 
         quant = self.env['stock.quant'].search([
@@ -773,10 +774,9 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 1)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        from odoo.fields import Datetime
-        self.assertEqual(quant.in_date, Datetime.to_string(in_date1))
+        self.assertEqual(quant.in_date, in_date1)
 
-        in_date2 = datetime.now() - timedelta(days=5)
+        in_date2 = Datetime.now() - timedelta(days=5)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date2)
 
         quant = self.env['stock.quant'].search([
@@ -786,4 +786,4 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        self.assertEqual(quant.in_date, Datetime.to_string(in_date2))
+        self.assertEqual(quant.in_date, in_date2)

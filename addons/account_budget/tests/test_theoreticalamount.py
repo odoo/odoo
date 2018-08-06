@@ -35,29 +35,32 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
             'account_ids': [(4, account_rev.id, 0)],
         })
         #create the budget and budget lines
-        first_january = datetime.now().replace(day=1, month=1)
+        first_january = Datetime.now().replace(day=1, month=1)
         self.last_day_of_budget = first_january + timedelta(days=364)  # will be 30th of December or 31th in case of leap year
+
+        date_from = first_january.date()
+        date_to = self.last_day_of_budget.date()
 
         crossovered_budget = self.env['crossovered.budget'].create({
             'name': 'test budget name',
-            'date_from': str(first_january.date()),
-            'date_to': str(self.last_day_of_budget.date()),
+            'date_from': date_from,
+            'date_to': date_to,
         })
         crossovered_budget_line_obj = self.env['crossovered.budget.lines']
         self.line = crossovered_budget_line_obj.create({
             'crossovered_budget_id': crossovered_budget.id,
             'general_budget_id': buget_post.id,
-            'date_from': str(first_january.date()),
-            'date_to': str(self.last_day_of_budget.date()),
+            'date_from': date_from,
+            'date_to': date_to,
             'planned_amount': -364,
         })
         self.paid_date_line = crossovered_budget_line_obj.create({
             'crossovered_budget_id': crossovered_budget.id,
             'general_budget_id': buget_post.id,
-            'date_from': str(first_january.date()),
-            'date_to': str(self.last_day_of_budget.date()),
+            'date_from': date_from,
+            'date_to': date_to,
             'planned_amount': -364,
-            'paid_date': str(datetime.now().year) + '-09-09',
+            'paid_date':  Date.today().replace(day=9, month=9),
         })
 
         self.patcher = patch('odoo.addons.account_budget.models.account_budget.fields.Date', wraps=Date)
@@ -74,7 +77,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
         ]
         for date, expected_amount in test_list:
             _logger.info("Checking theoritical amount for the date: " + date)
-            self.mock_date.today.return_value = date
+            self.mock_date.today.return_value = Date.from_string(date)
             self.assertAlmostEqual(self.line.theoritical_amount, expected_amount)
             #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
             self.line.invalidate_cache()
@@ -84,13 +87,13 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
             (str(datetime.now().year) + '-01-01', 0),
             (str(datetime.now().year) + '-01-02', 0),
             (str(datetime.now().year) + '-09-08', 0),
-            (str(datetime.now().year) + '-09-09', -364),
+            (str(datetime.now().year) + '-09-09', 0),
             (str(datetime.now().year) + '-09-10', -364),
             (str(self.last_day_of_budget.date()), -364),
         ]
         for date, expected_amount in test_list:
             _logger.info("Checking theoritical amount for the date: " + date)
-            self.mock_date.today.return_value = date
+            self.mock_date.today.return_value = Date.from_string(date)
             self.assertAlmostEqual(self.paid_date_line.theoritical_amount, expected_amount)
             #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
             self.paid_date_line.invalidate_cache()

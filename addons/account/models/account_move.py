@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+from datetime import date
 from collections import OrderedDict
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -345,10 +346,10 @@ class AccountMove(models.Model):
     @api.multi
     def _check_lock_date(self):
         for move in self:
-            lock_date = max(move.company_id.period_lock_date or '0000-00-00', move.company_id.fiscalyear_lock_date or '0000-00-00')
+            lock_date = max(move.company_id.period_lock_date or date.min, move.company_id.fiscalyear_lock_date or date.min)
             if self.user_has_groups('account.group_account_manager'):
                 lock_date = move.company_id.fiscalyear_lock_date
-            if move.date <= (lock_date or '0000-00-00'):
+            if move.date <= (lock_date or date.min):
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
                 else:
@@ -738,7 +739,7 @@ class AccountMoveLine(models.Model):
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
-        maxdate = '0000-00-00'
+        maxdate = date.min
         to_balance = {}
         for aml in amls:
             total_debit += aml.debit
@@ -947,7 +948,7 @@ class AccountMoveLine(models.Model):
             total = 0
             total_currency = 0
             writeoff_lines = []
-            date = time.strftime('%Y-%m-%d')
+            date = fields.Date.today()
             for vals in lines:
                 # Check and complete vals
                 if 'account_id' not in vals or 'journal_id' not in vals:
@@ -955,7 +956,7 @@ class AccountMoveLine(models.Model):
                 if ('debit' in vals) ^ ('credit' in vals):
                     raise UserError(_("Either pass both debit and credit or none."))
                 if 'date' not in vals:
-                    vals['date'] = self._context.get('date_p') or time.strftime('%Y-%m-%d')
+                    vals['date'] = self._context.get('date_p') or fields.Date.today()
                     if vals['date'] < date:
                         date = vals['date']
                 if 'name' not in vals:
@@ -1369,8 +1370,8 @@ class AccountPartialReconcile(models.Model):
     def _compute_max_date(self):
         for rec in self:
             rec.max_date = max(
-                fields.Datetime.from_string(rec.debit_move_id.date),
-                fields.Datetime.from_string(rec.credit_move_id.date)
+                rec.debit_move_id.date,
+                rec.credit_move_id.date
             )
 
     @api.model
@@ -1608,6 +1609,6 @@ class AccountFullReconcile(models.Model):
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
-        if move_date > (company.fiscalyear_lock_date or '0000-00-00'):
+        if move_date > (company.fiscalyear_lock_date or date.min):
             res['date'] = move_date
         return res

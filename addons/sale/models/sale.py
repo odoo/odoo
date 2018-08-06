@@ -163,9 +163,9 @@ class SaleOrder(models.Model):
             order.access_url = '/my/orders/%s' % (order.id)
 
     def _compute_is_expired(self):
-        now = datetime.now()
+        today = fields.Date.today()
         for order in self:
-            if order.validity_date and fields.Datetime.from_string(order.validity_date) < now:
+            if order.validity_date and order.validity_date < today:
                 order.is_expired = True
             else:
                 order.is_expired = False

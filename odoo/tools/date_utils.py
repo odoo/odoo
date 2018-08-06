@@ -2,8 +2,10 @@
 
 import math
 import calendar
+from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
+from . import ustr
 
 
 def get_month(date):
@@ -62,3 +64,117 @@ def get_fiscal_year(date, day=31, month=12):
         max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
         date_to = type(date)(date.year + 1, month, min(day, max_day))
     return date_from, date_to
+
+
+def start_of(value, granularity):
+    """
+    Get start of a time period from a date or a datetime.
+
+    :param value: initial date or datetime.
+    :param granularity: type of period in string, can be year, quarter, month, week, day or hour.
+    :return: a date/datetime object corresponding to the start of the specified period.
+    """
+    is_datetime = isinstance(value, datetime)
+    if granularity == "year":
+        result = value.replace(month=1, day=1)
+    elif granularity == "quarter":
+        # Q1 = Jan 1st
+        # Q2 = Apr 1st
+        # Q3 = Jul 1st
+        # Q4 = Oct 1st
+        result = get_quarter(value)[0]
+    elif granularity == "month":
+        result = value.replace(day=1)
+    elif granularity == 'week':
+        # `calendar.weekday` uses ISO8601 for start of week reference, this means that
+        # by default MONDAY is the first day of the week and SUNDAY is the last.
+        result = value - relativedelta(days=calendar.weekday(value.year, value.month, value.day))
+    elif granularity == "day":
+        result = value
+    elif granularity == "hour" and is_datetime:
+        return datetime.combine(value, time.min).replace(hour=value.hour)
+    elif is_datetime:
+        raise ValueError(
+            "Granularity must be year, quarter, month, week, day or hour for value %s" % value
+        )
+    else:
+        raise ValueError(
+            "Granularity must be year, quarter, month, week or day for value %s" % value
+        )
+
+    return datetime.combine(result, time.min) if is_datetime else result
+
+
+def end_of(value, granularity):
+    """
+    Get end of a time period from a date or a datetime.
+
+    :param value: initial date or datetime.
+    :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
+    :return: A date/datetime object corresponding to the start of the specified period.
+    """
+    is_datetime = isinstance(value, datetime)
+    if granularity == "year":
+        result = value.replace(month=12, day=31)
+    elif granularity == "quarter":
+        # Q1 = Mar 31st
+        # Q2 = Jun 30th
+        # Q3 = Sep 30th
+        # Q4 = Dec 31st
+        result = get_quarter(value)[1]
+    elif granularity == "month":
+        result = value + relativedelta(day=1, months=1, days=-1)
+    elif granularity == 'week':
+        # `calendar.weekday` uses ISO8601 for start of week reference, this means that
+        # by default MONDAY is the first day of the week and SUNDAY is the last.
+        result = value + relativedelta(days=6-calendar.weekday(value.year, value.month, value.day))
+    elif granularity == "day":
+        result = value
+    elif granularity == "hour" and is_datetime:
+        return datetime.combine(value, time.max).replace(hour=value.hour)
+    elif is_datetime:
+        raise ValueError(
+            "Granularity must be year, quarter, month, week, day or hour for value %s" % value
+        )
+    else:
+        raise ValueError(
+            "Granularity must be year, quarter, month, week or day for value %s" % value
+        )
+
+    return datetime.combine(result, time.max) if is_datetime else result
+
+
+def add(value, *args, **kwargs):
+    """
+    Return the sum of ``value`` and a :class:`relativedelta`.
+
+    :param value: initial date or datetime.
+    :param args: positional args to pass directly to :class:`relativedelta`.
+    :param kwargs: keyword args to pass directly to :class:`relativedelta`.
+    :return: the resulting date/datetime.
+    """
+    return value + relativedelta(*args, **kwargs)
+
+
+def subtract(value, *args, **kwargs):
+    """
+    Return the difference between ``value`` and a :class:`relativedelta`.
+
+    :param value: initial date or datetime.
+    :param args: positional args to pass directly to :class:`relativedelta`.
+    :param kwargs: keyword args to pass directly to :class:`relativedelta`.
+    :return: the resulting date/datetime.
+    """
+    return value - relativedelta(*args, **kwargs)
+
+
+def json_default(obj):
+    """
+    Properly serializes date and datetime objects.
+    """
+    from odoo import fields
+    if isinstance(obj, date):
+        if isinstance(obj, datetime):
+            return fields.Datetime.to_string(obj)
+        return fields.Date.to_string(obj)
+    return ustr(obj)

@@ -90,7 +90,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
 
         employee = self.env['hr.employee'].browse(self.employee_hruser_id)
         # Getting the previous work date
-        df = employee.resource_calendar_id.plan_days(-2, fields.Datetime.from_string(fields.Datetime.now())).date()
+        df = employee.resource_calendar_id.plan_days(-2, fields.Datetime.now()).date()
 
         leave_0 = Leave.create({
             'name': 'Leave for hruser',
@@ -173,7 +173,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
         """
         Allocation = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
 
-        self.set_employee_create_date(self.employee_emp_id, fields.Datetime.now())
+        self.set_employee_create_date(self.employee_emp_id, fields.Datetime.to_string(fields.Datetime.now()))
 
         alloc_0 = Allocation.create({
             'name': 'one shot one kill',

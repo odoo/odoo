@@ -93,7 +93,9 @@ class Product(models.Model):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
-        if to_date and to_date < fields.Datetime.now(): #Only to_date as to_date will correspond to qty_available
+        # only to_date as to_date will correspond to qty_available
+        to_date = fields.Datetime.to_datetime(to_date)
+        if to_date and to_date < fields.Datetime.now():
             dates_in_the_past = True
 
         domain_move_in = [('product_id', 'in', self.ids)] + domain_move_in_loc

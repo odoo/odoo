@@ -5,7 +5,7 @@ import babel.dates
 
 from odoo import api, fields, models
 
-from odoo.fields import Datetime
+from odoo.fields import Datetime, Date
 
 
 class FleetVehicle(models.Model):
@@ -80,17 +80,18 @@ class FleetVehicle(models.Model):
     def _get_acquisition_date(self):
         self.ensure_one()
         return babel.dates.format_date(
-            date=Datetime.from_string(self.acquisition_date),
+            date=self.acquisition_date,
             format='MMMM y',
             locale=self._context.get('lang') or 'en_US'
         )
 
     def _get_car_atn(self, acquisition_date, car_value, fuel_type, co2):
         # Compute the correction coefficient from the age of the car
-        now = Datetime.from_string(Datetime.now())
-        start = Datetime.from_string(acquisition_date)
-        if start:
-            number_of_month = (now.year - start.year) * 12.0 + now.month - start.month + int(bool(now.day - start.day + 1))
+        now = Date.today()
+        if acquisition_date:
+            number_of_month = ((now.year - acquisition_date.year) * 12.0 + now.month -
+                               acquisition_date.month +
+                               int(bool(now.day - acquisition_date.day + 1)))
             if number_of_month <= 12:
                 age_coefficient = 1.00
             elif number_of_month <= 24:

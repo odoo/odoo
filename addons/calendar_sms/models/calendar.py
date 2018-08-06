@@ -39,7 +39,7 @@ class AlarmManager(models.AbstractModel):
         """ Cron method, overriden here to send SMS reminders as well
         """
         result = super(AlarmManager, self).get_next_mail()
-        now = fields.Datetime.now()
+        now = fields.Datetime.to_string(fields.Datetime.now())
         last_sms_cron = self.env['ir.config_parameter'].get_param('calendar_sms.last_sms_cron', default=now)
         cron = self.env['ir.model.data'].get_object('calendar', 'ir_cron_scheduler_alarm')
 

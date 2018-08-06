@@ -136,7 +136,7 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
-        new_date = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=self.delay)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        new_date = fields.Datetime.to_string(move.date_expected + relativedelta(days=self.delay))
         if self.auto == 'transparent':
             move.write({
                 'date': new_date,
@@ -193,7 +193,9 @@ class StockRule(models.Model):
         :param procurement: browse record
         :rtype: dictionary
         '''
-        date_expected = (datetime.strptime(values['date_planned'], DEFAULT_SERVER_DATETIME_FORMAT) - relativedelta(days=self.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_expected = fields.Datetime.to_string(
+            fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
+        )
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
