@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.translate import html_translate
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import ValidationError, UserError
+
 
 class SaleQuoteTemplate(models.Model):
     _name = "sale.quote.template"
@@ -21,7 +21,6 @@ class SaleQuoteTemplate(models.Model):
         return self.env.user.company_id.portal_confirmation_pay
 
     name = fields.Char('Quotation Template', required=True)
-    website_description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     quote_line = fields.One2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True)
     note = fields.Text('Terms and conditions')
     options = fields.One2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True)
@@ -41,15 +40,6 @@ class SaleQuoteTemplate(models.Model):
             if not template.require_signature and not template.require_payment:
                 raise ValidationError(_('Please select a confirmation mode in Confirmation: Digital Signature, Electronic Payment or both.'))
 
-    @api.multi
-    def open_template(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': '/quotation/template/%d' % self.id
-        }
-
 
 class SaleQuoteLine(models.Model):
     _name = "sale.quote.line"
@@ -62,8 +52,6 @@ class SaleQuoteLine(models.Model):
         ondelete='cascade', index=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])
-    website_description = fields.Html('Line Description', related='product_id.product_tmpl_id.quote_description',
-        translate=html_translate)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
     product_uom_qty = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
@@ -83,7 +71,6 @@ class SaleQuoteLine(models.Model):
             self.name = name
             self.price_unit = self.product_id.lst_price
             self.product_uom_id = self.product_id.uom_id.id
-            self.website_description = self.product_id.quote_description or self.product_id.website_description or ''
             domain = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
             return {'domain': domain}
 
@@ -96,22 +83,13 @@ class SaleQuoteLine(models.Model):
     def create(self, values):
         if values.get('display_type', self.default_get(['display_type'])['display_type']):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False)
-        values = self._inject_quote_description(values)
         return super(SaleQuoteLine, self).create(values)
 
     @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
-        values = self._inject_quote_description(values)
         return super(SaleQuoteLine, self).write(values)
-
-    def _inject_quote_description(self, values):
-        values = dict(values or {})
-        if not values.get('website_description') and values.get('product_id'):
-            product = self.env['product.product'].browse(values['product_id'])
-            values['website_description'] = product.quote_description or product.website_description or ''
-        return values
 
     _sql_constraints = [
         ('accountable_product_id_required',
@@ -132,7 +110,6 @@ class SaleQuoteOption(models.Model):
         index=True, required=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
-    website_description = fields.Html('Option Description', translate=html_translate, sanitize_attributes=False)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
@@ -144,7 +121,6 @@ class SaleQuoteOption(models.Model):
             return
         product = self.product_id
         self.price_unit = product.list_price
-        self.website_description = product.product_tmpl_id.quote_description
         self.name = product.name
         self.uom_id = product.uom_id
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}

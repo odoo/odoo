@@ -15,7 +15,6 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     _description = "Sales Order Line"
 
-    website_description = fields.Html('Line Description', sanitize=False, translate=html_translate)
     option_line_id = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
     # Take the description on the order template if the product is present in it
@@ -28,23 +27,6 @@ class SaleOrderLine(models.Model):
                     self.name = quote_line.name
                     break
         return domain
-
-    @api.model
-    def create(self, values):
-        values = self._inject_quote_description(values)
-        return super(SaleOrderLine, self).create(values)
-
-    @api.multi
-    def write(self, values):
-        values = self._inject_quote_description(values)
-        return super(SaleOrderLine, self).write(values)
-
-    def _inject_quote_description(self, values):
-        values = dict(values or {})
-        if not values.get('website_description') and values.get('product_id'):
-            product = self.env['product.product'].browse(values['product_id'])
-            values['website_description'] = product.quote_description or product.website_description
-        return values
 
 
 class SaleOrder(models.Model):
@@ -75,7 +57,6 @@ class SaleOrder(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         default=_get_default_template)
-    website_description = fields.Html('Description', sanitize_attributes=False, translate=html_translate)
     options = fields.One2many(
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
@@ -101,13 +82,26 @@ class SaleOrder(models.Model):
         super(SaleOrder, self).onchange_partner_id()
         self.note = self.template_id.note or self.note
 
-    @api.onchange('partner_id')
-    def onchange_update_description_lang(self):
-        if not self.template_id:
-            return
+    def _compute_line_data_for_template_change(self, line):
+        return {
+            'display_type': line.display_type,
+            'name': line.name,
+            'state': 'draft',
+        }
+
+    def _compute_option_data_for_template_change(self, option):
+        if self.pricelist_id:
+            price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
         else:
-            template = self.template_id.with_context(lang=self.partner_id.lang)
-            self.website_description = template.website_description
+            price = option.price_unit
+        return {
+            'product_id': option.product_id.id,
+            'name': option.name,
+            'quantity': option.quantity,
+            'uom_id': option.uom_id.id,
+            'price_unit': price,
+            'discount': option.discount,
+        }
 
     @api.onchange('template_id')
     def onchange_template_id(self):
@@ -119,12 +113,7 @@ class SaleOrder(models.Model):
 
         order_lines = [(5, 0, 0)]
         for line in template.quote_line:
-            data = {
-                'display_type': line.display_type,
-                'name': line.name,
-                'website_description': line.website_description,
-                'state': 'draft',
-            }
+            data = self._compute_line_data_for_template_change(line)
             if line.product_id:
                 discount = 0
                 if self.pricelist_id:
@@ -138,7 +127,7 @@ class SaleOrder(models.Model):
 
                 data.update({
                     'price_unit': price,
-                    'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
+                    'discount': 100 - ((100 - discount) * (100 - line.discount) / 100),
                     'product_uom_qty': line.product_uom_qty,
                     'product_id': line.product_id.id,
                     'product_uom': line.product_uom_id.id,
@@ -153,26 +142,13 @@ class SaleOrder(models.Model):
 
         option_lines = []
         for option in template.options:
-            if self.pricelist_id:
-                price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
-            else:
-                price = option.price_unit
-            data = {
-                'product_id': option.product_id.id,
-                'name': option.name,
-                'quantity': option.quantity,
-                'uom_id': option.uom_id.id,
-                'price_unit': price,
-                'discount': option.discount,
-                'website_description': option.website_description,
-            }
+            data = self._compute_option_data_for_template_change(option)
             option_lines.append((0, 0, data))
         self.options = option_lines
 
         if template.number_of_days > 0:
             self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
 
-        self.website_description = template.website_description
         self.require_signature = template.require_signature
         self.require_payment = template.require_payment
 
@@ -259,7 +235,6 @@ class SaleOrderOption(models.Model):
     line_id = fields.Many2one('sale.order.line', on_delete="set null")
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])
-    website_description = fields.Html('Line Description', sanitize_attributes=False, translate=html_translate)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
@@ -272,7 +247,6 @@ class SaleOrderOption(models.Model):
             return
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.price_unit = product.list_price
-        self.website_description = product.quote_description or product.website_description
         self.name = product.name
         if product.description_sale:
             self.name += '\n' + product.description_sale
@@ -283,6 +257,17 @@ class SaleOrderOption(models.Model):
             self.price_unit = pricelist.with_context(uom=self.uom_id.id).get_product_price(product, self.quantity, partner_id)
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
+
+    def _compute_vals_for_add_to_order(self, order):
+        return {
+            'price_unit': self.price_unit,
+            'name': self.name,
+            'order_id': order.id,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.quantity,
+            'product_uom': self.uom_id.id,
+            'discount': self.discount,
+        }
 
     @api.multi
     def button_add_to_order(self):
@@ -296,16 +281,7 @@ class SaleOrderOption(models.Model):
             order_line = order_line[0]
             order_line.product_uom_qty += 1
         else:
-            vals = {
-                'price_unit': self.price_unit,
-                'website_description': self.website_description,
-                'name': self.name,
-                'order_id': order.id,
-                'product_id': self.product_id.id,
-                'product_uom_qty': self.quantity,
-                'product_uom': self.uom_id.id,
-                'discount': self.discount,
-            }
+            vals = self._compute_vals_for_add_to_order(order)
             order_line = self.env['sale.order.line'].create(vals)
             order_line._compute_tax_id()
 
