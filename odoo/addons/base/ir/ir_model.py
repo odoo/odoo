@@ -750,6 +750,7 @@ class IrModelFields(models.Model):
             'readonly': bool(field.readonly),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
+            'size': getattr(field, 'size', None),
             'translate': bool(field.translate),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
             'relation_table': field.relation if field.type == 'many2many' else None,
