@@ -185,13 +185,14 @@ class account_abstract_payment(models.AbstractModel):
         :param currency: If not specified, search a default currency on wizard/journal.
         :return: The total amount to pay the invoices.
         '''
-        # Get the payment currency
-        if not currency:
-            currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
 
         # Get the payment invoices
         if not invoices:
             invoices = self.invoice_ids
+
+        # Get the payment currency
+        if not currency:
+            currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
 
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
         total = 0.0
@@ -209,6 +210,14 @@ class account_register_payments(models.TransientModel):
     _name = "account.register.payments"
     _inherit = 'account.abstract.payment'
     _description = "Register payments on multiple invoices"
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        res = super(account_register_payments, self)._onchange_journal()
+        active_ids = self._context.get('active_ids')
+        invoices = self.env['account.invoice'].browse(active_ids)
+        self.amount = abs(self._compute_payment_amount(invoices))
+        return res
 
     @api.model
     def default_get(self, fields):
