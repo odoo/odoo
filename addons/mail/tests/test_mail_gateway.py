@@ -298,6 +298,246 @@ AAAAACwAAAAAAgACAAAEA3DJFQA7
 --001a11416b9e9b229a05272b7052--
 """
 
+MAIL_XHTML = """Return-Path: <xxxx@xxxx.com>
+Received: from xxxx.internal (xxxx.xxxx.internal [1.1.1.1])
+	 by xxxx (xxxx 1.1.1-111-g972eecc-slipenbois) with LMTPA;
+	 Fri, 13 Apr 2018 22:11:52 -0400
+X-Cyrus-Session-Id: sloti35d1t38-1111111-11111111111-5-11111111111111111111
+X-Sieve: CMU Sieve 1.0
+X-Spam-known-sender: no ("Email failed DMARC policy for domain"); in-addressbook
+X-Spam-score: 0.0
+X-Spam-hits: ALL_TRUSTED -1, BAYES_00 -1.9, FREEMAIL_FROM 0.001,
+  HTML_FONT_LOW_CONTRAST 0.001, HTML_MESSAGE 0.001, SPF_SOFTFAIL 0.665,
+  LANGUAGES en, BAYES_USED global, SA_VERSION 1.1.0
+X-Spam-source: IP='1.1.1.1', Host='unk', Country='unk', FromHeader='com',
+  MailFrom='com'
+X-Spam-charsets: plain='utf-8', html='utf-8'
+X-IgnoreVacation: yes ("Email failed DMARC policy for domain")
+X-Resolved-to: catchall@xxxx.xxxx
+X-Delivered-to: catchall@xxxx.xxxx
+X-Mail-from: xxxx@xxxx.com
+Received: from mx4 ([1.1.1.1])
+  by xxxx.internal (LMTPProxy); Fri, 13 Apr 2018 22:11:52 -0400
+Received: from xxxx.xxxx.com (localhost [127.0.0.1])
+	by xxxx.xxxx.internal (Postfix) with ESMTP id E1111C1111;
+	Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
+Received: from xxxx.xxxx.internal (localhost [127.0.0.1])
+    by xxxx.xxxx.com (Authentication Milter) with ESMTP
+    id BBDD1111D1A;
+    Fri, 13 Apr 2018 22:11:51 -0400
+ARC-Authentication-Results: i=1; xxxx.xxxx.com; arc=none (no signatures found);
+    dkim=pass (2048-bit rsa key sha256) header.d=xxxx.com header.i=@xxxx.com header.b=P1aaAAaa x-bits=2048 x-keytype=rsa x-algorithm=sha256 x-selector=fm2;
+    dmarc=fail (p=none,d=none) header.from=xxxx.com;
+    iprev=pass policy.iprev=1.1.1.1 (out1-smtp.xxxx.com);
+    spf=softfail smtp.mailfrom=xxxx@xxxx.com smtp.helo=out1-smtp.xxxx.com;
+    x-aligned-from=pass (Address match);
+    x-cm=none score=0;
+    x-ptr=pass x-ptr-helo=out1-smtp.xxxx.com x-ptr-lookup=out1-smtp.xxxx.com;
+    x-return-mx=pass smtp.domain=xxxx.com smtp.result=pass smtp_is_org_domain=yes header.domain=xxxx.com header.result=pass header_is_org_domain=yes;
+    x-tls=pass version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128;
+    x-vs=clean score=0 state=0
+Authentication-Results: xxxx.xxxx.com;
+    arc=none (no signatures found);
+    dkim=pass (2048-bit rsa key sha256) header.d=xxxx.com header.i=@xxxx.com header.b=P1awJPiy x-bits=2048 x-keytype=rsa x-algorithm=sha256 x-selector=fm2;
+    dmarc=fail (p=none,d=none) header.from=xxxx.com;
+    iprev=pass policy.iprev=66.111.4.25 (out1-smtp.xxxx.com);
+    spf=softfail smtp.mailfrom=xxxx@xxxx.com smtp.helo=out1-smtp.xxxx.com;
+    x-aligned-from=pass (Address match);
+    x-cm=none score=0;
+    x-ptr=pass x-ptr-helo=out1-smtp.xxxx.com x-ptr-lookup=out1-smtp.xxxx.com;
+    x-return-mx=pass smtp.domain=xxxx.com smtp.result=pass smtp_is_org_domain=yes header.domain=xxxx.com header.result=pass header_is_org_domain=yes;
+    x-tls=pass version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128;
+    x-vs=clean score=0 state=0
+X-ME-VSCategory: clean
+X-ME-CMScore: 0
+X-ME-CMCategory: none
+Received-SPF: softfail
+    (gmail.com ... _spf.xxxx.com: Sender is not authorized by default to use 'xxxx@xxxx.com' in 'mfrom' identity, however domain is not currently prepared for false failures (mechanism '~all' matched))
+    receiver=xxxx.xxxx.com;
+    identity=mailfrom;
+    envelope-from="xxxx@xxxx.com";
+    helo=out1-smtp.xxxx.com;
+    client-ip=1.1.1.1
+Received: from xxxx.xxxx.internal (gateway1.xxxx.internal [1.1.1.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by xxxx.xxxx.internal (Postfix) with ESMTPS;
+	Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
+Received: from compute3.internal (xxxx.xxxx.internal [10.202.2.43])
+	by xxxx.xxxx.internal (Postfix) with ESMTP id 8BD5B21BBD;
+	Fri, 13 Apr 2018 22:11:51 -0400 (EDT)
+Received: from xxxx ([10.202.2.163])
+  by xxxx.internal (MEProxy); Fri, 13 Apr 2018 22:11:51 -0400
+X-ME-Sender: <xms:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>
+Received: from [1.1.1.1] (unknown [1.1.1.1])
+	by mail.xxxx.com (Postfix) with ESMTPA id BF5E1111D
+	for <catchall@xxxx.xxxx>; Fri, 13 Apr 2018 22:11:50 -0400 (EDT)
+From: "xxxx xxxx" <xxxx@xxxx.com>
+To: "xxxx" <catchall@xxxx.xxxx>
+Subject: Re: xxxx (Ref PO1)
+Date: Sat, 14 Apr 2018 02:11:42 +0000
+Message-Id: <em67f5c44a-xxxx-xxxx-xxxx-69f56d618a94@wswin7hg4n4l1ce>
+In-Reply-To: <829228111124527.1111111602.256611118262939-openerp-129-xxxx.xxxx@ip-1-1-1-1>
+References: <867911111953277.1523671337.187951111160400-openerp-129-xxxx.xxxx@ip-1-1-1-1>
+ <867911111953277.1523671337.256611118262939-openerp-129-xxxx.xxxx@ip-1-1-1-1>
+Reply-To: "xxxx xxxx" <xxxx@xxxx.com>
+User-Agent: eM_Client/7.0.26687.0
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="------=_MB48E455BD-1111-42EC-1111-886CDF48905E"
+
+--------=_MB48E455BD-1111-42EC-1111-886CDF48905E
+Content-Type: text/plain; format=flowed; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+xxxx
+
+
+------ Original Message ------
+From: "xxxx" <xxxx@xxxx.com>
+To: "xxxx" <xxxx@xxxx.com>
+Sent: 4/13/2018 7:06:43 PM
+Subject: xxxx
+
+>xxxx
+
+--------=_MB48E455BD-1111-42EC-1111-886CDF48905E
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<?xml version=3D"1.0" encoding=3D"utf-16"?><html><head><style type=3D"text/=
+css"><!--blockquote.cite
+{margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
+ 0px; border-left-width: 1px; border-left-style: solid; border-left-color:=
+ rgb(204, 204, 204);}
+blockquote.cite2
+{margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
+ 0px; border-left-width: 1px; border-left-style: solid; border-left-color:=
+ rgb(204, 204, 204); margin-top: 3px; padding-top: 0px;}
+a img
+{border: 0px;}
+body
+{font-family: Tahoma; font-size: 12pt;}
+--></style></head><body><div>this is a reply to PO200109 from emClient</div=
+><div id=3D"signature_old"><div style=3D"font-family: Tahoma; font-size:=
+ 12 pt;">-- <br /><span><span class=3D"__postbox-detected-content __postbox=
+-detected-address" style=3D"TEXT-DECORATION: underline; COLOR: rgb(115,133,=
+172); PADDING-BOTTOM: 0pt; PADDING-TOP: 0pt; PADDING-LEFT: 0pt; DISPLAY:=
+ inline; PADDING-RIGHT: 0pt" __postbox-detected-content=3D"__postbox-detect=
+ed-address"></span>xxxx<br />xxxx<br /><b=
+r />xxxx</span></=
+div></div><div><br /></div><div><br /></div><div><br /></div>
+<div>------ Original Message ------</div>
+<div>From: "xxxx" &lt;<a href=3D"mailto:xxxx@xxxx.com">xxxx=
+@xxxx.com</a>&gt;</div>
+<div>To: "xxxx" &lt;<a href=3D"mailto:xxxx@xxxx.com">a=
+xxxx@xxxx.com</a>&gt;</div>
+<div>Sent: 4/13/2018 7:06:43 PM</div>
+<div>Subject: xxxx</div><div><br /></div=
+>
+<div id=3D"x00b4101ba6e64ce"><blockquote cite=3D"829228972724527.1523671602=
+.256660938262939-openerp-129-xxxx.xxxx@ip-1-1-1-1" type=3D"cite"=
+ class=3D"cite2">
+<table border=3D"0" width=3D"100%" cellpadding=3D"0" bgcolor=3D"#ededed"=
+ style=3D"padding: 20px; background-color: #ededed" summary=3D"o_mail_notif=
+ication">
+                    <tbody>
+
+                      <!-- HEADER -->
+                      <tr>
+                        <td align=3D"center" style=3D"min-width: 590px;">
+                          <table width=3D"590" border=3D"0" cellpadding=3D=
+"0" bgcolor=3D"#875A7B" style=3D"min-width: 590px; background-color: rgb(13=
+5,90,123); padding: 20px;">
+                            <tbody><tr>
+                              <td valign=3D"middle">
+                                  <span style=3D"font-size:20px; color:whit=
+e; font-weight: bold;">
+                                      mangez des saucisses
+                                  </span>
+                              </td>
+                              <td valign=3D"middle" align=3D"right">
+                                  <img src=3D"http://erp.xxxx.xxxx/logo.png=
+" style=3D"padding: 0px; margin: 0px; height: auto; width: 80px;" alt=3D=
+"xxxx" />
+                              </td>
+                            </tr>
+                          </tbody></table>
+                        </td>
+                      </tr>
+
+                      <!-- CONTENT -->
+                      <tr>
+                        <td align=3D"center" style=3D"min-width: 590px;">
+                          <table width=3D"590" border=3D"0" cellpadding=3D=
+"0" bgcolor=3D"#ffffff" style=3D"min-width: 590px; background-color: rgb(25=
+5, 255, 255); padding: 20px;">
+                            <tbody>
+                              <tr><td valign=3D"top" style=3D"font-family:A=
+rial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                                <p style=3D"margin: 0px 0px 9px 0px; font-s=
+ize: 13px; font-family: &quot;Lucida Grande&quot;, Helvetica, Verdana, Aria=
+l, sans-serif">xxxx.=20
+,</p>
+<p style=3D"margin: 0px 0px 9px 0px; font-size: 13px; font-family: &quot;Lu=
+cida Grande&quot;, Helvetica, Verdana, Arial, sans-serif">
+xxxx.
+</p>
+
+<p style=3D"margin: 0px 0px 9px 0px; font-size: 13px; font-family: &quot;Lu=
+cida Grande&quot;, Helvetica, Verdana, Arial, sans-serif">You can reply =
+to this email if you have any questions.</p>
+<p style=3D"margin: 0px 0px 9px 0px; font-size: 13px; font-family: &quot;Lu=
+cida Grande&quot;, Helvetica, Verdana, Arial, sans-serif">Thank you,</p>
+                              </td>
+                            </tr></tbody>
+                          </table>
+                        </td>
+                      </tr>
+
+                      <!-- FOOTER -->
+                      <tr>
+                        <td align=3D"center" style=3D"min-width: 590px;">
+                          <table width=3D"590" border=3D"0" cellpadding=3D=
+"0" bgcolor=3D"#875A7B" style=3D"min-width: 590px; background-color: rgb(13=
+5,90,123); padding: 20px;">
+                            <tbody><tr>
+                              <td valign=3D"middle" align=3D"left" style=
+=3D"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"=
+>
+                                xxxx<br />
+                                +1-801-980-4240
+                              </td>
+                              <td valign=3D"middle" align=3D"right" style=
+=3D"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"=
+>
+                                <a href=3D"http://erp.xxxx.xxxx/info@xxxx-a=
+aa.com" style=3D"text-decoration:none; color: white;">info@aust-mfg.com</a>=
+<br />
+                                    <a href=3D"http://www.xxxx=
+.com" style=3D"text-decoration:none; color: white;">
+                                        http://www.xxxx.com
+                                    </a>
+                              </td>
+                            </tr>
+                          </tbody></table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align=3D"center">
+                            Powered by <a href=3D"https://www.odoo.com">Odo=
+o</a>.
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+               =20
+                <pre style=3D"white-space: pre-wrap">xxxx.
+</pre>
+</blockquote></div>
+</body></html>
+--------=_MB48E455BD-2850-42EC-B1CA-886CDF48905E--"""
+
 
 class TestMailgateway(TestMail):
 
@@ -373,6 +613,12 @@ class TestMailgateway(TestMail):
             self.assertIn('/web/image/%s' % attachment.id, message.body)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_parse_xhtml(self):
+        """ Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
+        """
+        self.env['mail.thread'].message_process('mail.channel', MAIL_XHTML)
+
+    @mute_logger('openerp.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_basic(self):
         """ Incoming email on an alias creating a new record + message_new + message details """
         new_groups = self.format_and_process(MAIL_TEMPLATE, subject='My Frogs', to='groups@example.com, other@gmail.com')
