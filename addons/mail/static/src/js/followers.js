@@ -119,7 +119,7 @@ var Followers = AbstractField.extend({
             // On mouse-enter it will show the edit_subtype pencil.
             if (record.is_editable) {
                 $follower_li.on('mouseenter mouseleave', function (e) {
-                    $(e.currentTarget).find('.o_edit_subtype').toggleClass('hide', e.type === 'mouseleave');
+                    $(e.currentTarget).find('.o_edit_subtype').toggleClass('d-none', e.type === 'mouseleave');
                 });
             }
         });
