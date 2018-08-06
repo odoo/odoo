@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!--
+        STATEMENT
+         -->
+        <record id="l10n_it_intrastat_statement.account_intrastat_statement_tree_view" model="ir.ui.view">
+            <field name="name">account.intrastat.statement.tree.view</field>
+            <field name="model">account.intrastat.statement</field>
+            <field name="arch" type="xml">
+
+                <tree string="INTRASTAT Statement">
+                    <field name="number"/>
+                    <field name="date"/>
+                    <field name="sale"/>
+                    <field name="purchase"/>
+                    <field name="fiscalyear"/>
+                    <field name="period_type"/>
+                    <field name="period_number"/>
+                    <field name="company_id" groups="base.group_multi_company"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_it_intrastat_statement.account_intrastat_statement_form_view" model="ir.ui.view">
+            <field name="name">account.intrastat.statement.form.view</field>
+            <field name="model">account.intrastat.statement</field>
+            <field name="arch" type="xml">
+                <form string="INTRASTAT Statement">
+                    <header>
+                        <button name="compute_statement" string="Recompute" type="object"/>
+                        <button name="%(l10n_it_intrastat_statement.action_wizard_wizard_account_intrastat_export_file)d" string="Export File" type="action"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="company_id" widget="selection"/>
+                                <field name="vat_taxpayer" />
+                                <field name="date"/>
+                                <field name="fiscalyear"/>
+                                <field name="period_type"/>
+                                <field name="period_number" />
+                                <field name="date_start"/>
+                                <field name="date_stop"/>
+                            </group>
+                            <group>
+                                <field name="number"/>
+                                <field name="content_type"/>
+                                <field name="special_cases" />
+                                <field name="custom_id" />
+                                <field name="vat_delegate" />
+                                <field name="name_delegate" />
+                            </group>
+                        </group>
+                        <newline/>
+                        <group>
+                            <group>
+                                <field name="sale"/>
+                                <field name="purchase"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Sale" attrs="{'invisible':[('sale','=', False)]}">
+                                <group>
+                                    <group>
+                                        <field name="sale_statement_sequence" />
+                                    </group>
+                                    <newlabel/>
+                                    <group string="Goods Sale - Section 1">
+                                        <field name="sale_section1_operation_number" />
+                                        <field name="sale_section1_operation_amount" />
+                                    </group>
+                                    <group string="Goods Refund - Section 2">
+                                        <field name="sale_section2_operation_number" />
+                                        <field name="sale_section2_operation_amount" />
+                                    </group>
+                                    <newline/>
+                                    <group string="Services Sale - Section 3">
+                                        <field name="sale_section3_operation_number" />
+                                        <field name="sale_section3_operation_amount" />
+                                    </group>
+                                    <group string="Services Refund - Section 4">
+                                        <field name="sale_section4_operation_number" />
+                                        <field name="sale_section4_operation_amount" />
+                                    </group>
+                                </group>
+                                <newline/>
+                                <notebook>
+                                    <page string="Goods Sale - Section 1">
+                                        <field name="sale_section1_ids" nolabel="1"
+                                            context="{'statement_id': id}">
+                                        </field>
+                                    </page>
+                                    <page string="Goods Refund - Section 2">
+                                        <field name="sale_section2_ids" nolabel="1"
+                                            context="{'statement_id': id}">
+                                        </field>
+                                    </page>
+                                    <page string="Services Sale - Section 3">
+                                        <field name="sale_section3_ids" nolabel="1"
+                                            context="{'statement_id': id} ">
+                                        </field>
+                                    </page>
+                                    <page string="Services Refund - Section 4">
+                                        <field name="sale_section4_ids" nolabel="1"
+                                            context="{'statement_id': id} ">
+                                        </field>
+                                    </page>
+                                </notebook>
+                            </page>
+                            <page string="Purchase" attrs="{'invisible':[('purchase','=', False)]}">
+                                <group>
+                                    <group>
+                                        <field name="purchase_statement_sequence" />
+                                    </group>
+                                    <newlabel/>
+                                    <group string="Goods Purchase - Section 1">
+                                        <field name="purchase_section1_operation_number" />
+                                        <field name="purchase_section1_operation_amount" />
+                                    </group>
+                                    <group string="Goods Refund Purchase - Section 2">
+                                        <field name="purchase_section2_operation_number" />
+                                        <field name="purchase_section2_operation_amount" />
+                                    </group>
+                                    <newline/>
+                                    <group string="Services Purchase - Section 3">
+                                        <field name="purchase_section3_operation_number" />
+                                        <field name="purchase_section3_operation_amount" />
+                                    </group>
+                                    <group string="Services Refund Purchase - Section 4">
+                                        <field name="purchase_section4_operation_number" />
+                                        <field name="purchase_section4_operation_amount" />
+                                    </group>
+                                </group>
+                                <newline/>
+                                <notebook>
+                                    <page string="Goods Purchase - Section 1">
+                                        <field name="purchase_section1_ids" nolabel="1"
+                                            context="{'statement_id': id}">
+                                        </field>
+                                    </page>
+                                    <page string="Goods Refund Purchase - Section 2">
+                                        <field name="purchase_section2_ids" nolabel="1"
+                                            context="{'statement_id': id}">
+                                        </field>
+                                    </page>
+                                    <page string="Services Purchase - Section 3">
+                                        <field name="purchase_section3_ids" nolabel="1"
+                                            context="{'statement_id': id}">
+                                        </field>
+                                    </page>
+                                    <page string="Services Refund Purchase - Section 4">
+                                        <field name="purchase_section4_ids" nolabel="1"
+                                            context="{'statement_id': id}">
+                                        </field>
+                                    </page>
+                                </notebook>
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_search_account_intrastat_statement" model="ir.ui.view">
+            <field name="name">view.search.account.intrastat.statement</field>
+            <field name="model">account.intrastat.statement</field>
+            <field name="arch" type="xml">
+                <search string="Intrastat Statements">
+                    <filter icon="terp-sale" string="Sale" domain="[('sale','=',True)]"/>
+                    <filter icon="terp-purchase" string="Purchase" domain="[('purchase','=',True)]"/>
+                    <field name="company_id" groups="base.group_multi_company"></field>
+                    <group expand="0" string="Group By">
+                        <filter string="Year" icon="terp-folder-orange" domain="" context="{'group_by':'fiscalyear'}"/>
+                        <filter string="Sale" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'sale'}"/>
+                        <filter string="Purchase" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'purchase'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_intrastat_statement_action" model="ir.actions.act_window">
+            <field name="name">Intrastat Statements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.intrastat.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_intrastat_statement_tree_view"/>
+            <field name="help"></field>
+            <field name="search_view_id" ref="view_search_account_intrastat_statement" />
+        </record>
+
+        <menuitem id="menu_account_intrastat_statement"
+            action="account_intrastat_statement_action"
+            parent="account.menu_finance_entries" sequence="100"/>
+
+        <!--
+        STATEMENT - Sale section 1
+         -->
+        <record id="view_tree_statement_sale_section1" model="ir.ui.view">
+            <field name="name">views.tree.statement.sale.section1</field>
+            <field name="model">account.intrastat.statement.sale.section1</field>
+            <field name="arch" type="xml">
+                <tree>
+                   <field name="sequence"/>
+                   <field name="invoice_id"/>
+                   <field name="partner_id"/>
+                   <field name="country_partner_id"/>
+                   <field name="intrastat_code_id"/>
+                   <field name="weight_kg"/>
+                   <field name="country_destination_id"/>
+                   <field name="province_origin_id"/>
+                   <field name="amount_euro" sum="Total"/>
+               </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_sale_section1" model="ir.ui.view">
+            <field name="name">views.form.statement.sale.section1</field>
+            <field name="model">account.intrastat.statement.sale.section1</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="additional_units_required" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                            <field name="transation_nature_id" required="1"/>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1"/>
+                            <field name="weight_kg" required="1"/>
+                            <field name="additional_units"
+                                attrs="{'required':[('additional_units_required','=', True )]}"/>
+                            <field name="additional_units_uom"/>
+                            <field name="amount_euro"/>
+                            <field name="statistic_amount_euro"/>
+                        </group>
+                        <group>
+                            <field name="delivery_code_id"/>
+                            <field name="transport_code_id" required="1"/>
+                            <field name="country_destination_id" required="1"/>
+                            <field name="province_origin_id" required="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+        STATEMENT - Sale section 2
+         -->
+        <record id="view_tree_statement_sale_section2" model="ir.ui.view">
+            <field name="name">views.tree.statement.sale.section2</field>
+            <field name="model">account.intrastat.statement.sale.section2</field>
+            <field name="arch" type="xml">
+                <tree>
+                   <field name="sequence"/>
+                   <field name="year_id"/>
+                   <field name="quarterly"/>
+                   <field name="month"/>
+                   <field name="country_partner_id"/>
+                   <field name="partner_id"/>
+                   <field name="vat_code"/>
+                   <field name="intrastat_code_id"/>
+                   <field name="sign_variation"/>
+                   <field name="amount_euro" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_sale_section2" model="ir.ui.view">
+            <field name="name">views.form.statement.sale.section2</field>
+            <field name="model">account.intrastat.statement.sale.section2</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" />
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                            <field name="transation_nature_id" required="1"/>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1"/>
+                            <field name="sign_variation" required="1"/>
+                            <field name="amount_euro"/>
+                            <field name="statistic_amount_euro"/>
+                        </group>
+                        <group>
+                            <field name="year_id" required="1"/>
+                            <field name="quarterly"/>
+                            <field name="month"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+        STATEMENT - Sale section 3
+         -->
+        <record id="view_tree_statement_sale_section3" model="ir.ui.view">
+            <field name="name">views.tree.statement.sale.section3</field>
+            <field name="model">account.intrastat.statement.sale.section3</field>
+            <field name="arch" type="xml">
+                <tree>
+                   <field name="sequence"/>
+                   <field name="country_partner_id"/>
+                   <field name="partner_id"/>
+                   <field name="vat_code"/>
+                   <field name="intrastat_code_id"/>
+                   <field name="invoice_number"/>
+                   <field name="invoice_date"/>
+                   <field name="amount_euro" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_sale_section3" model="ir.ui.view">
+            <field name="name">views.form.statement.sale.section3</field>
+            <field name="model">account.intrastat.statement.sale.section3</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1"/>
+                            <field name="amount_euro"/>
+                        </group>
+                        <group>
+                            <field name="invoice_number" required="1"/>
+                            <field name="invoice_date" required="1"/>
+                            <field name="supply_method" required="1"/>
+                            <field name="payment_method" required="1"/>
+                            <field name="country_payment_id" required="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+        STATEMENT - Sale section 4
+         -->
+        <record id="view_tree_statement_sale_section4" model="ir.ui.view">
+            <field name="name">views.tree.statement.sale.section4</field>
+            <field name="model">account.intrastat.statement.sale.section4</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence"/>
+                    <field name="custom_id"/>
+                    <field name="country_partner_id"/>
+                    <field name="partner_id"/>
+                    <field name="vat_code"/>
+                    <field name="intrastat_code_id"/>
+                    <field name="invoice_number"/>
+                    <field name="invoice_date"/>
+                    <field name="amount_euro" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_sale_section4" model="ir.ui.view">
+            <field name="name">views.form.statement.sale.section4</field>
+            <field name="model">account.intrastat.statement.sale.section4</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                            <field name="custom_id" required="1"/>
+                            <field name="year_id" required="1"/>
+                            <field name="protocol" required="1"/>
+                            <field name="progressive_to_modify" required="1"/>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1"/>
+                            <field name="amount_euro"/>
+                        </group>
+                        <group>
+                            <field name="invoice_number" required="1"/>
+                            <field name="invoice_date" required="1"/>
+                            <field name="supply_method" required="1"/>
+                            <field name="payment_method" required="1"/>
+                            <field name="country_payment_id" required="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!--
+        STATEMENT - Purchase section 1
+         -->
+        <record id="view_tree_statement_purchase_section1" model="ir.ui.view">
+            <field name="name">views.tree.statement.purchase.section1</field>
+            <field name="model">account.intrastat.statement.purchase.section1</field>
+            <field name="arch" type="xml">
+                <tree>
+                   <field name="sequence"/>
+                   <field name="invoice_id"/>
+                   <field name="partner_id"/>
+                   <field name="country_partner_id"/>
+                   <field name="intrastat_code_id"/>
+                   <field name="weight_kg"/>
+                   <field name="country_origin_id"/>
+                   <field name="province_destination_id"/>
+                   <field name="amount_euro" sum="Total"/>
+               </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_purchase_section1" model="ir.ui.view">
+            <field name="name">views.form.statement.purchase.section1</field>
+            <field name="model">account.intrastat.statement.purchase.section1</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="additional_units_required" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                            <field name="transation_nature_id" required="1"/>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1"/>
+                            <field name="weight_kg" required="1"/>
+                            <field name="additional_units"
+                                attrs="{
+                                'required':[('additional_units_required','=', True )]}"
+                                />
+                            <field name="additional_units_uom"/>
+                            <field name="amount_euro"/>
+                            <field name="statistic_amount_euro"/>
+                            <field name="amount_currency"/>
+                        </group>
+                        <group>
+                            <field name="country_origin_id" required="1"/>
+                            <field name="country_good_origin_id" required="1"/>
+                            <field name="province_destination_id"/>
+                            <field name="delivery_code_id"/>
+                            <field name="transport_code_id" required="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+        STATEMENT - Purchase section 2
+         -->
+        <record id="view_tree_statement_purchase_section2" model="ir.ui.view">
+            <field name="name">views.tree.statement.purchase.section2</field>
+            <field name="model">account.intrastat.statement.purchase.section2</field>
+            <field name="arch" type="xml">
+                <tree>
+                   <field name="sequence"/>
+                   <field name="year_id"/>
+                   <field name="quarterly"/>
+                   <field name="month"/>
+                   <field name="country_partner_id"/>
+                   <field name="partner_id"/>
+                   <field name="vat_code"/>
+                   <field name="intrastat_code_id"/>
+                   <field name="sign_variation"/>
+                   <field name="amount_euro" sum="Total"/>
+               </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_purchase_section2" model="ir.ui.view">
+            <field name="name">views.form.statement.purchase.section2</field>
+            <field name="model">account.intrastat.statement.purchase.section2</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                            <field name="transation_nature_id" required="1"/>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1"/>
+                            <field name="sign_variation" required="1"/>
+                            <field name="amount_euro"/>
+                            <field name="statistic_amount_euro"/>
+                            <field name="amount_currency"/>
+                        </group>
+                        <group>
+                            <field name="year_id" required="1"/>
+                            <field name="quarterly"/>
+                            <field name="month"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+        STATEMENT - Purchase section 3
+         -->
+        <record id="view_tree_statement_purchase_section3" model="ir.ui.view">
+            <field name="name">views.tree.statement.purchase.section3</field>
+            <field name="model">account.intrastat.statement.purchase.section3</field>
+            <field name="arch" type="xml">
+                <tree>
+                   <field name="sequence"/>
+                   <field name="country_partner_id"/>
+                   <field name="partner_id"/>
+                   <field name="vat_code"/>
+                   <field name="intrastat_code_id"/>
+                   <field name="invoice_number"/>
+                   <field name="invoice_date"/>
+                   <field name="amount_euro" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_purchase_section3" model="ir.ui.view">
+            <field name="name">views.form.statement.purchase.section3</field>
+            <field name="model">account.intrastat.statement.purchase.section3</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="country_partner_id"/>
+                            <field name="vat_code"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id"/>
+                            <field name="amount_euro"/>
+                            <field name="amount_currency"/>
+                        </group>
+                        <group>
+                            <field name="invoice_number"/>
+                            <field name="invoice_date"/>
+                            <field name="supply_method"/>
+                            <field name="payment_method"/>
+                            <field name="country_payment_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+        STATEMENT - Purchase section 4
+         -->
+        <record id="view_tree_statement_purchase_section4" model="ir.ui.view">
+            <field name="name">views.tree.statement.purchase.section4</field>
+            <field name="model">account.intrastat.statement.purchase.section4</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence"/>
+                    <field name="custom_id"/>
+                    <field name="country_partner_id"/>
+                    <field name="partner_id"/>
+                    <field name="vat_code"/>
+                    <field name="intrastat_code_id"/>
+                    <field name="invoice_number"/>
+                    <field name="invoice_date"/>
+                    <field name="amount_euro" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_form_statement_purchase_section4" model="ir.ui.view">
+            <field name="name">views.form.statement.purchase.section4</field>
+            <field name="model">account.intrastat.statement.purchase.section4</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1"/>
+                            <field name="country_partner_id" required="1"/>
+                            <field name="vat_code" required="1"/>
+                        </group>
+                        <group>
+                            <field name="custom_id" required="1"/>
+                            <field name="year_id" required="1"/>
+                            <field name="protocol" required="1"/>
+                            <field name="progressive_to_modify" required="1" />
+                        </group>
+                    </group>
+                    <newline/>
+                    <group>
+                        <group>
+                            <field name="intrastat_code_id" required="1" />
+                            <field name="amount_euro"/>
+                            <field name="amount_currency"/>
+                        </group>
+                        <group>
+                            <field name="invoice_number" required="1"/>
+                            <field name="invoice_date" required="1"/>
+                            <field name="supply_method" required="1"/>
+                            <field name="payment_method" required="1"/>
+                            <field name="country_payment_id" required="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!--
+        CUSTOM
+        -->
+        <record id="account_intrastat_custom_view_tree" model="ir.ui.view">
+            <field name="name">account.intrastat.custom.view.tree</field>
+            <field name="model">account.intrastat.custom</field>
+            <field name="arch" type="xml">
+                <tree string="Custom">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_intrastat_custom_view_form" model="ir.ui.view">
+            <field name="name">account.intrastat.custom.view.form</field>
+            <field name="model">account.intrastat.custom</field>
+            <field name="arch" type="xml">
+                <form string="Custom">
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+</odoo>

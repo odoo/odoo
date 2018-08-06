@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <menuitem id="menu_account_intrastat_configuration" name="Intrastat"
+             parent="account.menu_finance_configuration" sequence="45"/>
+
+        <!--
+        CUSTOM
+        -->
+        <record id="account_intrastat_custom_view_tree" model="ir.ui.view">
+            <field name="name">account.intrastat.custom.view.tree</field>
+            <field name="model">account.intrastat.custom</field>
+            <field name="arch" type="xml">
+                <tree string="Custom">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_intrastat_custom_view_form" model="ir.ui.view">
+            <field name="name">account.intrastat.custom.view.form</field>
+            <field name="model">account.intrastat.custom</field>
+            <field name="arch" type="xml">
+                <form string="Custom">
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_intrastat_custom" model="ir.actions.act_window">
+            <field name="name">Customs</field>
+            <field name="res_model">account.intrastat.custom</field>
+            <field name="view_id" ref="account_intrastat_custom_view_tree"/>
+        </record>
+
+        <menuitem id="menu_account_intrastat_custom" name="Customs"
+            action="action_account_intrastat_custom" parent="menu_account_intrastat_configuration" sequence="10"/>
+
+        <!--
+        CODES
+        -->
+        <record id="view_tree_report_intrastat_code" model="ir.ui.view">
+            <field name="name">views.tree.report.intrastat.code</field>
+            <field name="model">report.intrastat.code</field>
+            <field name="arch" type="xml">
+                <tree string="Codes">
+                    <field name="active"/>
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="additional_unit_required"/>
+                    <field name="additional_unit_from"/>
+                    <field name="additional_unit_uom_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_form_report_intrastat_code" model="ir.ui.view">
+            <field name="name">views.form.report.intrastat.code</field>
+            <field name="model">report.intrastat.code</field>
+            <field name="inherit_id" ref="report_intrastat.view_report_intrastat_code_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="after">
+                    <group>
+                        <field name="additional_unit_required"/>
+                        <field name="additional_unit_from"/>
+                        <field name="additional_unit_uom_id"/>
+                        <field name="type"/>
+                        <field name="active"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_report_intrastat_code" model="ir.actions.act_window">
+            <field name="name">Codes</field>
+            <field name="res_model">report.intrastat.code</field>
+            <field name="view_id" ref="view_tree_report_intrastat_code"/>
+        </record>
+
+        <menuitem id="menu_report_intrastat_code" name="Codes Intrastat"
+            action="action_report_intrastat_code" parent="menu_account_intrastat_configuration" sequence="20"/>
+
+        <!--
+        TRANSPORT
+        -->
+        <record id="account_intrastat_transport_view_tree" model="ir.ui.view">
+            <field name="name">account.intrastat.transport.view.tree</field>
+            <field name="model">account.intrastat.transport</field>
+            <field name="arch" type="xml">
+                <tree string="Transport">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_intrastat_transport_view_form" model="ir.ui.view">
+            <field name="name">account.intrastat.transport.view.form</field>
+            <field name="model">account.intrastat.transport</field>
+            <field name="arch" type="xml">
+                <form string="Transport">
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_intrastat_transport" model="ir.actions.act_window">
+            <field name="name">Transport</field>
+            <field name="res_model">account.intrastat.transport</field>
+            <field name="view_id" ref="account_intrastat_transport_view_tree"/>
+        </record>
+
+        <menuitem id="menu_account_intrastat_transport" name="Transport"
+            action="action_account_intrastat_transport" parent="menu_account_intrastat_configuration" sequence="30"/>
+
+
+        <!--
+        TRANSATION NATURE
+        -->
+        <record id="account_intrastat_transation_nature_view_tree" model="ir.ui.view">
+            <field name="name">account.intrastat.transation.nature.view.tree</field>
+            <field name="model">account.intrastat.transation.nature</field>
+            <field name="arch" type="xml">
+                <tree string="Transation Nature">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_intrastat_transation_nature_view_form" model="ir.ui.view">
+            <field name="name">account.intrastat.transation.nature.view.form</field>
+            <field name="model">account.intrastat.transation.nature</field>
+            <field name="arch" type="xml">
+                <form string="Transation Nature">
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_intrastat_transation_nature_transport" model="ir.actions.act_window">
+            <field name="name">Transation Nature</field>
+            <field name="res_model">account.intrastat.transation.nature</field>
+            <field name="view_id" ref="account_intrastat_transation_nature_view_tree"/>
+        </record>
+
+        <menuitem id="menu_account_transation_nature" name="Transation Nature"
+            action="action_account_intrastat_transation_nature_transport" parent="menu_account_intrastat_configuration" sequence="40"/>
+
+</odoo>
