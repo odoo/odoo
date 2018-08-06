@@ -95,7 +95,7 @@
             max-width: 100%;
         }
 
-        > .badge {
+        .badge {
             flex: 0 0 auto;
             border: 0;
             font-size: 12px;
@@ -107,51 +107,51 @@
                 max-width: 200px;
             }
 
-            // o-kanban-colorpicker without customizing
-            // '&:first-child > a::before' (transparent red-crossed colorpick)
-            @mixin o-tag-colorpicker {
-                $o-tag-colorpicker-padding-right: $o-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
-
-                max-width: 100%;
-                padding: 3px $o-tag-colorpicker-padding-right 3px $o-dropdown-hpadding;
-
-                > li {
-                    display: inline-block;
-                    margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
-                    border: 1px solid white;
-                    box-shadow: 0 0 0 1px gray('300');
-
-                    > a {
-                        display: block;
-
-                        &::after {
-                            content: "";
-                            display: block;
-                            width: 20px;
-                            height: 15px;
-                        }
-                    }
-
-                    &:last-of-type {
-                        box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
-                        color: $o-main-text-color;
-                    }
-                }
-            }
-
-            > .tagcolor_dropdown_menu {
-                min-width: 150px; // down from 160px of .dropdown-menu
-                margin-right: 0px; // cancel right margin of .dropdown-menu
-            }
-
-            > .o_colorpicker > ul {
-                @include o-tag-colorpicker;
-                white-space: normal;
-            }
-
             .o_delete {
                 cursor: pointer;
             }
+        }
+
+        // o-kanban-colorpicker without customizing
+        // '&:first-child > a::before' (transparent red-crossed colorpick)
+        @mixin o-tag-colorpicker {
+            $o-tag-colorpicker-padding-right: $o-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
+
+            max-width: 100%;
+            padding: 3px $o-tag-colorpicker-padding-right 3px $o-dropdown-hpadding;
+
+            > li {
+                display: inline-block;
+                margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
+                border: 1px solid white;
+                box-shadow: 0 0 0 1px gray('300');
+
+                > a {
+                    display: block;
+
+                    &::after {
+                        content: "";
+                        display: block;
+                        width: 20px;
+                        height: 15px;
+                    }
+                }
+
+                &:last-of-type {
+                    box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
+                    color: $o-main-text-color;
+                }
+            }
+        }
+
+        .tagcolor_dropdown_menu {
+            min-width: 150px; // down from 160px of .dropdown-menu
+            margin-right: 0px; // cancel right margin of .dropdown-menu
+        }
+
+        .o_colorpicker > ul {
+            @include o-tag-colorpicker;
+            white-space: normal;
         }
 
         @for $size from 1 through length($o-colors) {
