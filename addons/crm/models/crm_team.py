@@ -149,14 +149,22 @@ class Team(models.Model):
         tree_view_id = self.env.ref('crm.crm_case_tree_view_oppor').id
         form_view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         kanb_view_id = self.env.ref('crm.crm_case_kanban_view_leads').id
-        action['views'] = [
-                [kanb_view_id, 'kanban'],
-                [tree_view_id, 'tree'],
-                [form_view_id, 'form'],
-                [False, 'graph'],
-                [False, 'calendar'],
-                [False, 'pivot']
-            ]
+
+        mode_string = action.get('view_mode', '')
+        view_mode = mode_string.split(',') if mode_string else ['kanban', 'tree', 'form', 'graph', 'calendar', 'pivot']
+        dict_views = {
+            'kanban': kanb_view_id,
+            'tree': tree_view_id,
+            'form': form_view_id,
+            'graph': False,
+            'calendar': False,
+            'pivot': False,
+        }
+
+        # Sort the views according to the view mode of the action
+        # which can be modified via studio, or technical menu for that matter
+        action['views'] = [[dict_views.get(view_type, False), view_type] for view_type in view_mode]
+
         action['context'] = action_context
         return action
 
