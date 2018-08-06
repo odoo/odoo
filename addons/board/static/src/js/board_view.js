@@ -248,7 +248,7 @@ var BoardRenderer = FormRenderer.extend({
                 }
                 var view = _.find(action.views, function (descr) {
                     return descr[1] === params.viewType;
-                });
+                }) || [false, params.viewType];
                 return self.loadViews(action.res_model, context, [view])
                            .then(function (viewsInfo) {
                     var viewInfo = viewsInfo[params.viewType];

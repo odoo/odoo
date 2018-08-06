@@ -106,7 +106,7 @@ The purpose of this component is to listen to keypresses to detect barcodes, the
 on core.bus inside a 'barcode_event'.
 All keypress events are buffered until there is no more keypress during 50ms or a carriage return / tab is
 inputted (because most barcode scanners use this as a suffix).
-If the buffered keys looks like a barcode (match the the regexp /.{3,}[\n\r\t]*), an event is triggered :
+If the buffered keys looks like a barcode, an event is triggered :
 core.bus.trigger('barcode_scanned', barcode);
 Otherwise, the keypresses are 'resent'. However, for security reasons, a keypress event programmatically
 crafted doesn't trigger native browser behaviors. For this reason, BarcodeEvents doesn't intercept keypresses
