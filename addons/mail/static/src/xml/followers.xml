@@ -36,12 +36,12 @@
     -->
     <t t-name="mail.Followers.partner">
         <div role="menuitem" class="o_partner">
-            <img t-att-src="record.avatar_url" alt="Avatar"/>
             <a class="dropdown-item o_mail_redirect"
                href="#"
                t-att-title="record.name"
                t-att-data-oe-model="record.res_model"
                t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
+            <img t-att-src="record.avatar_url" alt="Avatar"/>
             <i t-if="record.is_editable" class="fa fa-pencil o_edit_subtype d-none"
                title="Edit subscription"
                aria-label="Edit subscription" role="img"
