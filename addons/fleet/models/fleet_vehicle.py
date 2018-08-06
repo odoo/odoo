@@ -299,9 +299,9 @@ class FleetVehicleOdometer(models.Model):
         for record in self:
             name = record.vehicle_id.name
             if not name:
-                name = record.date
+                name = str(record.date)
             elif record.date:
-                name += ' / ' + record.date
+                name += ' / ' + str(record.date)
             record.name = name
 
     @api.onchange('vehicle_id')

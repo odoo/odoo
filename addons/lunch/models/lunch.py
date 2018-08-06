@@ -123,9 +123,9 @@ class LunchOrder(models.Model):
         """
         Prevents the user to create an order in the past
         """
-        date_order = datetime.datetime.strptime(self.date, '%Y-%m-%d')
-        date_today = datetime.datetime.strptime(fields.Date.context_today(self), '%Y-%m-%d')
-        if (date_order < date_today):
+        date_order = self.date
+        date_today = fields.Date.context_today(self)
+        if date_order < date_today:
             raise ValidationError(_('The date of your order is in the past.'))
 
     @api.one

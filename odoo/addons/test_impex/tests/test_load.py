@@ -5,6 +5,7 @@ import json
 import pkgutil
 import re
 
+from odoo import fields
 from odoo.tests import common
 from odoo.tools.misc import mute_logger
 
@@ -1065,7 +1066,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Kiritimati'})
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-02 21:11:11'])
 
         # UTC-0930
@@ -1073,7 +1074,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Marquesas'})
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-03 20:41:11'])
 
     def test_usertz(self):
@@ -1087,7 +1088,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-03 01:11:11'])
 
     def test_notz(self):
@@ -1099,7 +1100,7 @@ class test_datetime(ImporterCase):
         result = self.import_(['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-03 11:11:11'])
 
 

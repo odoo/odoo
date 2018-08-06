@@ -9,7 +9,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_round, float_is_zero
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, date_utils
+from odoo.tools import date_utils
 
 
 class ResCompany(models.Model):
@@ -110,16 +110,15 @@ Best Regards,'''))
         :param vals: The values passed to the write method.
         '''
         period_lock_date = vals.get('period_lock_date') and\
-            time.strptime(vals['period_lock_date'], DEFAULT_SERVER_DATE_FORMAT)
+            fields.Date.from_string(vals['period_lock_date'])
         fiscalyear_lock_date = vals.get('fiscalyear_lock_date') and\
-            time.strptime(vals['fiscalyear_lock_date'], DEFAULT_SERVER_DATE_FORMAT)
+            fields.Date.from_string(vals['fiscalyear_lock_date'])
 
-        previous_month = datetime.strptime(fields.Date.today(), DEFAULT_SERVER_DATE_FORMAT) + relativedelta(months=-1)
+        previous_month = fields.Date.today() + relativedelta(months=-1)
         days_previous_month = calendar.monthrange(previous_month.year, previous_month.month)
-        previous_month = previous_month.replace(day=days_previous_month[1]).timetuple()
+        previous_month = previous_month.replace(day=days_previous_month[1])
         for company in self:
-            old_fiscalyear_lock_date = company.fiscalyear_lock_date and\
-                time.strptime(company.fiscalyear_lock_date, DEFAULT_SERVER_DATE_FORMAT)
+            old_fiscalyear_lock_date = company.fiscalyear_lock_date
 
             # The user attempts to remove the lock date for advisors
             if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:
@@ -143,7 +142,7 @@ Best Regards,'''))
             # In case of no new period lock date in vals, fallback to the one defined in the company
             if not period_lock_date:
                 if company.period_lock_date:
-                    period_lock_date = time.strptime(company.period_lock_date, DEFAULT_SERVER_DATE_FORMAT)
+                    period_lock_date = company.period_lock_date
                 else:
                     continue
 
@@ -182,8 +181,8 @@ Best Regards,'''))
         ], limit=1)
         if fiscalyear:
             return {
-                'date_from': datetime.strptime(fiscalyear.date_from, DEFAULT_SERVER_DATE_FORMAT).date(),
-                'date_to': datetime.strptime(fiscalyear.date_to, DEFAULT_SERVER_DATE_FORMAT).date(),
+                'date_from': fiscalyear.date_from,
+                'date_to': fiscalyear.date_to,
                 'record': fiscalyear,
             }
 
@@ -204,7 +203,7 @@ Best Regards,'''))
             ('date_to', '>=', date_from_str),
         ], limit=1)
         if fiscalyear_from:
-            date_from = datetime.strptime(fiscalyear_from.date_to, DEFAULT_SERVER_DATE_FORMAT).date() + timedelta(days=1)
+            date_from = fiscalyear_from.date_to + timedelta(days=1)
 
         fiscalyear_to = self.env['account.fiscal.year'].search([
             ('company_id', '=', self.id),
@@ -212,7 +211,7 @@ Best Regards,'''))
             ('date_to', '>=', date_to_str),
         ], limit=1)
         if fiscalyear_to:
-            date_to = datetime.strptime(fiscalyear_to.date_from, DEFAULT_SERVER_DATE_FORMAT).date() - timedelta(days=1)
+            date_to = fiscalyear_to.date_from - timedelta(days=1)
 
         return {'date_from': date_from, 'date_to': date_to}
 

@@ -120,6 +120,7 @@ import traceback
 from functools import partial
 from zlib import crc32
 
+from datetime import date, datetime, time
 import odoo.modules
 from odoo.tools import pycompat
 from ..models import MAGIC_COLUMNS, BaseModel
@@ -1095,12 +1096,22 @@ class expression(object):
             # -------------------------------------------------
 
             else:
-                if field.type == 'datetime' and right and len(right) == 10:
-                    if operator in ('>', '<='):
-                        right += ' 23:59:59'
+                if field.type == 'datetime' and right:
+                    if isinstance(right, pycompat.string_types) and len(right) == 10:
+                        if operator in ('>', '<='):
+                            right += ' 23:59:59'
+                        else:
+                            right += ' 00:00:00'
+                        push(create_substitution_leaf(leaf, (left, operator, right), model))
+                    elif isinstance(right, date) and not isinstance(right, datetime):
+                        if operator in ('>', '<='):
+                            right = datetime.combine(right, time.max)
+                        else:
+                            right = datetime.combine(right, time.min)
+                        push(create_substitution_leaf(leaf, (left, operator, right), model))
                     else:
-                        right += ' 00:00:00'
-                    push(create_substitution_leaf(leaf, (left, operator, right), model))
+                        push_result(leaf)
+
 
                 elif field.translate is True and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')

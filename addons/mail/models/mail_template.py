@@ -30,7 +30,7 @@ def format_date(env, date, pattern=False):
 
 def format_tz(env, dt, tz=False, format=False):
     record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
-    timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+    timestamp = fields.Datetime.from_string(dt)
 
     ts = fields.Datetime.context_timestamp(record_user_timestamp, timestamp)
 

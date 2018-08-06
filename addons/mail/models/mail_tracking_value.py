@@ -46,8 +46,8 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'date':
             values.update({
-                'old_value_datetime': initial_value and datetime.strftime(datetime.combine(datetime.strptime(initial_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
-                'new_value_datetime': new_value and datetime.strftime(datetime.combine(datetime.strptime(new_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
+                'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
+                'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
             })
         elif col_info['type'] == 'boolean':
             values.update({
@@ -88,8 +88,8 @@ class MailTracking(models.Model):
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'date':
                 if record['%s_value_datetime' % type]:
-                    new_date = datetime.strptime(record['%s_value_datetime' % type], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                    result.append(new_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
+                    new_date = record['%s_value_datetime' % type]
+                    result.append(fields.Date.to_string(new_date))
                 else:
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'boolean':

@@ -1,4 +1,4 @@
-from odoo import api
+from odoo import api, fields
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
 import time

@@ -347,7 +347,7 @@ class EventRegistration(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Contact',
         states={'done': [('readonly', True)]})
-    date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.datetime.now())  # weird crash is directly now
+    date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(string='Attended Date', readonly=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
@@ -515,8 +515,8 @@ class EventRegistration(models.Model):
     @api.multi
     def get_date_range_str(self):
         self.ensure_one()
-        today = fields.Datetime.from_string(fields.Datetime.now())
-        event_date = fields.Datetime.from_string(self.event_begin_date)
+        today = fields.Datetime.now()
+        event_date = self.event_begin_date
         diff = (event_date.date() - today.date())
         if diff.days <= 0:
             return _('today')

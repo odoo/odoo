@@ -376,12 +376,12 @@ class HolidaysRequest(models.Model):
     def _check_leave_type_validity(self):
         for leave in self:
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
-                vstart = fields.Datetime.from_string(leave.holiday_status_id.validity_start)
-                vstop  = fields.Datetime.from_string(leave.holiday_status_id.validity_stop)
-                dfrom  = fields.Datetime.from_string(leave.date_from)
-                dto    = fields.Datetime.from_string(leave.date_to)
+                vstart = leave.holiday_status_id.validity_start
+                vstop  = leave.holiday_status_id.validity_stop
+                dfrom  = leave.date_from
+                dto    = leave.date_to
 
-                if dfrom and dto and (dfrom < vstart or dto > vstop):
+                if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
                     raise UserError(_('You can take %s only between %s and %s') % (leave.holiday_status_id.display_name, \
                                                                                   leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
 

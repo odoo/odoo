@@ -351,7 +351,7 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def get_next_mail(self):
-        now = fields.Datetime.now()
+        now = fields.Datetime.to_string(fields.Datetime.now())
         last_notif_mail = self.env['ir.config_parameter'].sudo().get_param('calendar.last_notif_mail', default=now)
 
         try:
@@ -391,7 +391,7 @@ class AlarmManager(models.AbstractModel):
                     if at_least_one and not last_found:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
-                in_date_format = datetime.strptime(meeting.start, DEFAULT_SERVER_DATETIME_FORMAT)
+                in_date_format = meeting.start
                 last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                 for alert in last_found:
                     self.do_mail_reminder(alert)
@@ -873,9 +873,9 @@ class Meeting(models.Model):
         """
         for meeting in self:
             if meeting.allday:
-                meeting.start_date = meeting.start
+                meeting.start_date = meeting.start.date()
                 meeting.start_datetime = False
-                meeting.stop_date = meeting.stop
+                meeting.stop_date = meeting.stop.date()
                 meeting.stop_datetime = False
 
                 meeting.duration = 0.0
@@ -897,13 +897,13 @@ class Meeting(models.Model):
                 enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
                 enddate = enddate.astimezone(pytz.utc)
-                meeting.stop = fields.Datetime.to_string(enddate)
+                meeting.stop = enddate
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
                 startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
-                meeting.start = fields.Datetime.to_string(startdate)
+                meeting.start = startdate
             else:
                 meeting.write({'start': meeting.start_datetime,
                                'stop': meeting.stop_datetime})
@@ -945,9 +945,9 @@ class Meeting(models.Model):
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
         if self.start_datetime:
-            start = fields.Datetime.from_string(self.start_datetime)
+            start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = fields.Datetime.to_string(start + timedelta(hours=self.duration))
+            self.stop = start + timedelta(hours=self.duration)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
@@ -971,9 +971,9 @@ class Meeting(models.Model):
         def ics_datetime(idate, allday=False):
             if idate:
                 if allday:
-                    return fields.Date.from_string(idate)
+                    return idate
                 else:
-                    return fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
+                    return idate.replace(tzinfo=pytz.timezone('UTC'))
             return False
 
         try:
@@ -989,7 +989,7 @@ class Meeting(models.Model):
 
             if not meeting.start or not meeting.stop:
                 raise UserError(_("First you have to specify the date of the invitation."))
-            event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            event.add('created').value = ics_datetime(fields.Datetime.now())
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting.name
@@ -1245,7 +1245,8 @@ class Meeting(models.Model):
             return ''
 
         def get_end_date():
-            end_date_new = ''.join((re.compile('\d')).findall(self.final_date)) + 'T235959Z' if self.final_date else False
+            final_date = fields.Date.to_string(self.final_date)
+            end_date_new = ''.join((re.compile('\d')).findall(final_date)) + 'T235959Z' if final_date else False
             return (self.end_type == 'count' and (';COUNT=' + str(self.count)) or '') +\
                 ((end_date_new and self.end_type == 'end_date' and (';UNTIL=' + end_date_new)) or '')
 
@@ -1379,6 +1380,7 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
+        d_class = fields.Date if data['allday'] else fields.Datetime
         if data.get('rrule'):
             data.update(
                 values,
@@ -1387,7 +1389,8 @@ class Meeting(models.Model):
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=d_class.from_string(data.get('start')) \
+                    + timedelta(hours=values.get('duration', False) or data.get('duration'))
             )
 
             # do not copy the id

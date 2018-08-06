@@ -4,7 +4,8 @@
 """ High-level objects for fields. """
 
 from collections import OrderedDict, defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import attrgetter
 import itertools
@@ -21,7 +22,8 @@ except ImportError:
 import psycopg2
 
 from .sql_db import LazyCursor
-from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat, sql
+from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar,\
+    ustr, OrderedSet, pycompat, sql, date_utils
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -1516,23 +1518,30 @@ class Date(Field):
     column_type = ('date', 'date')
     column_cast_from = ('timestamp',)
 
+    start_of = staticmethod(date_utils.start_of)
+    end_of = staticmethod(date_utils.end_of)
+    add = staticmethod(date_utils.add)
+    subtract = staticmethod(date_utils.subtract)
+
     @staticmethod
     def today(*args):
         """ Return the current day in the format expected by the ORM.
             This function may be used to compute default values.
         """
-        return date.today().strftime(DATE_FORMAT)
+        return date.today()
 
     @staticmethod
     def context_today(record, timestamp=None):
-        """ Return the current date as seen in the client's timezone in a format
-            fit for date fields. This method may be used to compute default
-            values.
+        """
+        Return the current date as seen in the client's timezone in a format
+        fit for date fields. This method may be used to compute default
+        values.
 
-            :param datetime timestamp: optional datetime value to use instead of
-                the current date and time (must be a datetime, regular dates
-                can't be converted between timezones.)
-            :rtype: str
+        :param record: recordset from which the timezone will be obtained.
+        :param datetime timestamp: optional datetime value to use instead of
+            the current date and time (must be a datetime, regular dates
+            can't be converted between timezones).
+        :rtype: date
         """
         today = timestamp or datetime.now()
         context_today = None
@@ -1544,33 +1553,55 @@ class Date(Field):
             except Exception:
                 _logger.debug("failed to compute context/client-specific today date, using UTC value for `today`",
                               exc_info=True)
-        return (context_today or today).strftime(DATE_FORMAT)
+        return (context_today or today).date()
 
     @staticmethod
-    def from_string(value):
-        """ Convert an ORM ``value`` into a :class:`date` value. """
+    def to_date(value):
+        """
+        Attempt to convert ``value`` to a :class:`date` object.
+
+        This function can take as input different kinds of types:
+            * A falsy object, in which case None will be returned.
+            * A string representing a date or datetime.
+            * A date object, in which case the object will be returned as-is.
+            * A datetime object, in which case it will be converted to a date object and all\
+                        datetime-specific information will be lost (HMS, TZ, ...).
+
+        :param value: value to convert.
+        :return: an object representing ``value``.
+        :rtype: date
+        """
         if not value:
             return None
+        if isinstance(value, date):
+            if isinstance(value, datetime):
+                return value.date()
+            return value
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
 
+    # kept for backwards compatibility, but consider `from_string` as deprecated, will probably
+    # be removed after V12
+    from_string = to_date
+
     @staticmethod
     def to_string(value):
-        """ Convert a :class:`date` value into the format expected by the ORM. """
-        return value.strftime(DATE_FORMAT) if value else False
+        """
+        Convert a :class:`date` or :class:`datetime` object to a string.
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        return super(Date, self).convert_to_column(value or None, record, values, validate)
+        :param value: value to convert.
+        :return: a string representing ``value`` in the server's date format, if ``value`` is of
+            type :class:`datetime`, the hours, minute, seconds, tzinfo will be truncated.
+        :rtype: str
+        """
+        return value.strftime(DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, pycompat.string_types):
-            if validate:
-                # force parsing for validation
-                self.from_string(value)
-            return value[:DATE_LENGTH]
-        return self.to_string(value)
+        if isinstance(value, datetime):
+            raise TypeError("%s (field %s) must be string or date, not datetime." % (value, self))
+        return self.from_string(value)
 
     def convert_to_export(self, value, record):
         if not value:
@@ -1583,26 +1614,40 @@ class Datetime(Field):
     column_type = ('timestamp', 'timestamp')
     column_cast_from = ('date',)
 
+    start_of = staticmethod(date_utils.start_of)
+    end_of = staticmethod(date_utils.end_of)
+    add = staticmethod(date_utils.add)
+    subtract = staticmethod(date_utils.subtract)
+
     @staticmethod
     def now(*args):
         """ Return the current day and time in the format expected by the ORM.
             This function may be used to compute default values.
         """
-        return datetime.now().strftime(DATETIME_FORMAT)
+        # microseconds must be annihilated as they don't comply with the server datetime format
+        return datetime.now().replace(microsecond=0)
+
+    @staticmethod
+    def today(*args):
+        """
+        Return the current day, at midnight (00:00:00).
+        """
+        return Datetime.now().replace(hour=0, minute=0, second=0)
 
     @staticmethod
     def context_timestamp(record, timestamp):
-        """Returns the given timestamp converted to the client's timezone.
-           This method is *not* meant for use as a default initializer,
-           because datetime fields are automatically converted upon
-           display on client side. For default values :meth:`fields.datetime.now`
-           should be used instead.
+        """
+        Returns the given timestamp converted to the client's timezone.
+        This method is *not* meant for use as a default initializer,
+        because datetime fields are automatically converted upon
+        display on client side. For default values, :meth:`fields.Datetime.now`
+        should be used instead.
 
-           :param datetime timestamp: naive datetime value (expressed in UTC)
-                                      to be converted to the client timezone
-           :rtype: datetime
-           :return: timestamp converted to timezone-aware datetime in context
-                    timezone
+        :param record: recordset from which the timezone will be obtained.
+        :param datetime timestamp: naive datetime value (expressed in UTC)
+            to be converted to the client timezone.
+        :rtype: datetime
+        :return: timestamp converted to timezone-aware datetime in context timezone.
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
         tz_name = record._context.get('tz') or record.env.user.tz
@@ -1618,35 +1663,53 @@ class Datetime(Field):
         return utc_timestamp
 
     @staticmethod
-    def from_string(value):
-        """ Convert an ORM ``value`` into a :class:`datetime` value. """
+    def to_datetime(value):
+        """
+        Convert an ORM ``value`` into a :class:`datetime` value.
+
+        This function can take as input different kinds of types:
+            * A falsy object, in which case None will be returned.
+            * A string representing a date or datetime.
+            * A datetime object, in which case the object will be returned as-is.
+            * A date object, in which case it will be converted to a datetime object.
+
+        :param value: value to convert.
+        :return: an object representing ``value``.
+        :rtype: datetime
+        """
         if not value:
             return None
-        value = value[:DATETIME_LENGTH]
-        if len(value) == DATE_LENGTH:
-            value += " 00:00:00"
-        return datetime.strptime(value, DATETIME_FORMAT)
+        if isinstance(value, date):
+            if isinstance(value, datetime):
+                return value
+            return datetime.combine(value, time.min)
+        try:
+            return datetime.strptime(value[:DATETIME_LENGTH], DATETIME_FORMAT)
+        except ValueError:
+            return datetime.strptime(value, DATE_FORMAT)
+
+    # kept for backwards compatibility, but consider `from_string` as deprecated, will probably
+    # be removed after V12
+    from_string = to_datetime
 
     @staticmethod
     def to_string(value):
-        """ Convert a :class:`datetime` value into the format expected by the ORM. """
-        return value.strftime(DATETIME_FORMAT) if value else False
+        """
+        Convert a :class:`datetime` or :class:`date` object to a string.
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        return super(Datetime, self).convert_to_column(value or None, record, values, validate)
+        :param value: value to convert.
+        :return: a string representing ``value`` in the server's datetime format, if ``value`` is
+            of type :class:`date`, the time portion will be midnight (00:00:00).
+        :rtype: str
+        """
+        return value.strftime(DATETIME_FORMAT) if value else False
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, pycompat.string_types):
-            if validate:
-                # force parsing for validation
-                self.from_string(value)
-            value = value[:DATETIME_LENGTH]
-            if len(value) == DATE_LENGTH:
-                value += " 00:00:00"
-            return value
-        return self.to_string(value)
+        if isinstance(value, date) and not isinstance(value, datetime):
+            raise TypeError("%s (field %s) must be string or datetime, not date." % (value, self))
+        return self.from_string(value)
 
     def convert_to_export(self, value, record):
         if not value:

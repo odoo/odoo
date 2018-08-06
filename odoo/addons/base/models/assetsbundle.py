@@ -358,7 +358,7 @@ class AssetsBundle(object):
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
                 for attachment in attachments:
                     asset = assets[attachment.url]
-                    if asset.last_modified > fields.Datetime.from_string(attachment['__last_update']):
+                    if asset.last_modified > attachment['__last_update']:
                         outdated = True
                         break
                     if asset._content is None:
@@ -539,12 +539,7 @@ class WebAsset(object):
             if self._filename:
                 return datetime.fromtimestamp(os.path.getmtime(self._filename))
             elif self._ir_attach:
-                server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-                last_update = self._ir_attach['__last_update']
-                try:
-                    return datetime.strptime(last_update, server_format + '.%f')
-                except ValueError:
-                    return datetime.strptime(last_update, server_format)
+                return self._ir_attach['__last_update']
         except Exception:
             pass
         return datetime(1970, 1, 1)

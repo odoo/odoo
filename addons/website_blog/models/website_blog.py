@@ -221,7 +221,8 @@ class BlogPost(models.Model):
         result = True
         for post in self:
             copy_vals = dict(vals)
-            if 'website_published' in vals and 'published_date' not in vals and (post.published_date or '') <= fields.Datetime.now():
+            if ('website_published' in vals and 'published_date' not in vals and
+                    (not post.published_date or post.published_date <= fields.Datetime.now())):
                 copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)

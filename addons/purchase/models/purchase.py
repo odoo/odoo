@@ -171,7 +171,7 @@ class PurchaseOrder(models.Model):
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id, quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order[:10], uom_id=line.product_uom)
+                date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
             line.date_planned = line._get_date_planned(seller)
         return new_po
 
@@ -526,7 +526,7 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
@@ -590,7 +590,7 @@ class PurchaseOrderLine(models.Model):
         seller = self.product_id._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
-            date=self.order_id.date_order and self.order_id.date_order[:10],
+            date=self.order_id.date_order and self.order_id.date_order.date(),
             uom_id=self.product_uom,
             params=params)
 

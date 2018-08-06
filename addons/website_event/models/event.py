@@ -150,7 +150,7 @@ class Event(models.Model):
 
             if not event.date_begin or not event.date_end:
                 raise UserError(_("No date has been specified for the event, no file will be generated."))
-            cal_event.add('created').value = fields.Datetime.from_string(fields.Datetime.now()).replace(tzinfo=pytz.timezone('UTC'))
+            cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
             cal_event.add('dtstart').value = fields.Datetime.from_string(event.date_begin).replace(tzinfo=pytz.timezone('UTC'))
             cal_event.add('dtend').value = fields.Datetime.from_string(event.date_end).replace(tzinfo=pytz.timezone('UTC'))
             cal_event.add('summary').value = event.name
