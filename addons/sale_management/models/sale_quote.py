@@ -47,7 +47,7 @@ class SaleQuoteTemplate(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/template/%d' % self.id
+            'url': '/quotation/template/%d' % self.id
         }
 
 

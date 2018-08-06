@@ -35,47 +35,6 @@ class CustomerPortal(CustomerPortal):
     # Quotations and Sales Orders
     #
 
-    def _order_get_page_view_values(self, order, access_token, **kwargs):
-        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
-        values = {
-            'order': order,
-            'order_invoice_lines': order_invoice_lines,
-            'portal_confirmation': order.get_portal_confirmation_action(),
-        }
-
-        values = self._get_page_view_values(order, access_token, values, 'my_orders_history', True, **kwargs)
-
-        if access_token:
-            values['no_breadcrumbs'] = True
-            values['access_token'] = access_token
-        values['portal_confirmation'] = order.get_portal_confirmation_action()
-
-        if kwargs.get('error'):
-            values['error'] = kwargs['error']
-        if kwargs.get('warning'):
-            values['warning'] = kwargs['warning']
-        if kwargs.get('success'):
-            values['success'] = kwargs['success']
-
-        history = request.session.get('my_orders_history', [])
-        values.update(get_records_pager(history, order))
-
-        if values['portal_confirmation'] == 'pay':
-            payment_inputs = request.env['payment.acquirer']._get_available_payment_input(order.partner_id, order.company_id)
-            # if not connected (using public user), the method _get_available_payment_input will return public user tokens
-            is_public_user = request.env.ref('base.public_user') == request.env.user
-            if is_public_user:
-                # we should not display payment tokens owned by the public user
-                payment_inputs.pop('pms', None)
-                token_count = request.env['payment.token'].sudo().search_count([
-                    ('acquirer_id.company_id', '=', order.company_id.id),
-                    ('partner_id', '=', order.partner_id.id),
-                ])
-                values['existing_token'] = token_count > 0
-            values.update(payment_inputs)
-            values['partner_id'] = order.partner_id if is_public_user else request.env.user.partner_id
-        return values
-
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
@@ -183,10 +142,6 @@ class CustomerPortal(CustomerPortal):
         days = 0
         if order_sudo.validity_date:
             days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
-        if pdf:
-            pdf = request.env.ref('sale.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-            return request.make_response(pdf, headers=pdfhttpheaders)
         transaction = order_sudo.get_portal_last_transaction()
 
         values = {
@@ -231,6 +186,11 @@ class CustomerPortal(CustomerPortal):
         except AccessError:
             return request.redirect('/my')
 
+        if pdf:
+            pdf = request.env.ref('sale.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token
         now = fields.Date.today()
@@ -244,7 +204,7 @@ class CustomerPortal(CustomerPortal):
             body = _('Quotation viewed by customer')
             _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=Order.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)
         if not Order:
-            return request.render('website.404')
+            return request.redirect('/my')
 
         # Token or not, sudo the order, since portal user has not access on
         # taxes, required to compute the total_amout of SO.

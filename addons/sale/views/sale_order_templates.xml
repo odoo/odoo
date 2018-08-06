@@ -26,10 +26,12 @@
           <t t-set="display_taxamount" t-value="any([line.tax_id for line in quotation.order_line])"/>
           <t t-set="display_discount" t-value="True in [line.discount > 0 for line in quotation.order_line]"/>
 
-          <table class="table wq-table">
+        <div style="overflow-x:auto;">
+          <table class="table" id="sales_order_table">
             <thead>
               <tr>
-                  <t t-set="colspan" t-value="5"/>
+                  <t t-set="colspan" t-value="6"/>
+                  <th></th>
                   <th>Products</th>
                   <th>Quantity</th>
                   <th t-if="display_taxamount">
@@ -58,7 +60,12 @@
 
                 <tr t-attf-class="{{ 'o_is_' + line.display_type if line.display_type else '' }}">
                   <t t-if="not line.display_type">
-                    <td><span t-field="line.name"/></td>
+                    <td class="text-center">
+                        <div class="d-none d-xl-block">
+                            <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'rounded', 'style':'width: 48px;height:48px'}" />
+                        </div>
+                    </td>
+                    <td id="product_name"><span t-field="line.name"/></td>
                     <td>
                       <div id="quote_qty">
                         <span t-field="line.product_uom_qty"/>
@@ -124,6 +131,7 @@
               </t>
             </tbody>
           </table>
+        </div>
 
           <div class="clearfix">
             <div id="total" class="row" name="total">
@@ -328,10 +336,6 @@
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           Your message has been successfully sent!
                       </div>
-                      <div class="alert alert-warning alert-dismissable" t-if="message==2" role="alert">
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-                          This quotation has been rejected. <a href="#discussion">Contact us</a> if you want a new one.
-                      </div>
                       <div class="alert alert-warning alert-dismissable" t-if="message==3" role="status">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This order has been validated. Thanks for your trust
@@ -400,8 +404,8 @@
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
-                                    <t t-set="form_action" t-value="'/quote/' + str(quotation.id) + '/transaction/token'"/>
-                                    <t t-set="prepare_tx_url" t-value="'/quote/' + str(quotation.id) + '/transaction/'"/>
+                                    <t t-set="form_action" t-value="'/quotation/' + str(quotation.id) + '/transaction/token'"/>
+                                    <t t-set="prepare_tx_url" t-value="'/quotation/' + str(quotation.id) + '/transaction/'"/>
                                     <t t-set="access_token" t-value="quotation.access_token"/>
                                 </t>
                             </div>
@@ -411,7 +415,7 @@
 
                       <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
-                          <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
+                          <form id="decline" method="POST" t-attf-action="/quotation/#{quotation.id}/decline?access_token=#{quotation.access_token}" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
                               <h4 class="modal-title">Reject This Quote</h4>
@@ -490,8 +494,8 @@
       <!-- Intro -->
       <div id="introduction" class="page-header mt16">
         <h1>
-            <t t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</t>
-            <t t-if="quotation.state not in ('draft','sent','cancel')">Your Order</t>
+            <t t-if="quotation.state in ('draft','sent','cancel')">Quotation</t>
+            <t t-if="quotation.state not in ('draft','sent','cancel')">Order</t>
             <em t-esc="quotation.name"/>
             <small t-field="quotation.state"/>
             <div t-ignore="true" class="float-right css_editable_mode_hidden d-print-none">
@@ -501,79 +505,66 @@
                     <a role="button" t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
                   </li>
                   <li class="list-inline-item">
-                     <a role="button" class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
+                     <a role="button" class="btn btn-info" target="_blank" t-att-href="'/my/orders/%s?access_token=%s&amp;pdf=True' % (quotation.id, quotation.access_token)">Print</a>
                   </li>
                </ul>
             </div>
         </h1>
       </div>
-      <!-- Informations -->
-      <div class="row mt32">
-          <div class="col-md-6 col-12">
-              <div class="row">
-                  <label class="col-md-4 col-4 text-right">Customer:</label>
-                  <div class="col-md-8 col-8">
-                      <div t-field="quotation.partner_id"/>
-                  </div>
-              </div>
-              <div class="row">
-                  <label class="col-md-4 col-4 text-right">Bill To:</label>
-                  <div class="col-md-8 col-8">
-                      <div t-field="quotation.partner_invoice_id" t-options='{
-                          "widget": "contact",
-                          "fields": ["address", "name", "phone", "email"]
-                          }'/>
-                  </div>
-              </div>
-              <div t-if="quotation.partner_shipping_id.id != quotation.partner_invoice_id.id" class="row">
-                  <label class="col-md-4 col-4 text-right">Ship To:</label>
-                  <div class="col-md-8 col-8">
-                      <div t-field="quotation.partner_shipping_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["address", "name", "phone"]
-                        }'/>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6 col-12">
-              <div class="row">
-                  <label class="col-md-5 col-4 text-right">Your Contact:</label>
-                  <div class="col-md-7 col-8">
-                      <div t-field="quotation.user_id" t-options='{
-                          "widget": "contact",
-                          "fields": ["name", "phone", "email"]
-                          }'/>
-                  </div>
-              </div>
-              <div class="row">
-                  <label class="col-md-5 col-4 text-right">Quote Date:</label>
-                  <div class="col-md-7 col-8">
-                      <span t-field="quotation.date_order"/>
-                  </div>
-                  <div class="clearfix"/>
-                  <div t-if="quotation.validity_date and quotation.state in ['draft', 'sent']">
-                    <label class="col-md-5 col-4 text-right">Expiration Date:</label>
-                    <div class="col-md-7 col-8">
-                        <span t-field="quotation.validity_date"/>
+        <!-- Informations -->
+        <div id="informations">
+            <t t-if="error or warning" t-call="sale.portal_order_error"/>
+            <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
+            <div t-if="quotation.transaction_ids and not invoices and quotation.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="quotation.id">
+                <t t-set="payment_tx_id" t-value="quotation.get_portal_last_transaction()"/>
+                <t t-call="payment.payment_confirmation_status"/>
+            </div>
+            <div class="mb8">
+                <strong>Date:</strong> <span t-field="quotation.create_date" t-options='{"widget": "date"}'/>
+            </div>
+            <div class="mb8" t-if="quotation.validity_date">
+                <strong>Expiration Date:</strong> <span t-field="quotation.validity_date" t-options='{"widget": "date"}'/>
+            </div>
+            <div class='row'>
+                <div class="col-lg-6">
+                    <div>
+                        <strong>Invoicing Address</strong>
                     </div>
-                  </div>
-                  <div class="clearfix"/>
-                  <div t-if="quotation.client_order_ref">
-                      <label class="col-md-5 col-4 text-right">Your Reference:</label>
-                      <div class="col-md-7 col-8">
-                          <span t-field="quotation.client_order_ref"/>
-                      </div>
-                  </div>
-                  <div class="clearfix"/>
-                  <div t-if="quotation.payment_term_id">
-                      <label class="col-md-5 col-4 text-right">Payment Terms:</label>
-                      <div class="col-md-7 col-8">
-                          <span t-field="quotation.payment_term_id"/>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+                    <div>
+                        <address t-field="quotation.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                    <t t-set="tx_ids" t-value="quotation.transaction_ids.filtered(lambda tx: tx.state != 'draft')"/>
+                    <t t-if="tx_ids">
+                        <div>
+                            <strong>Transactions</strong>
+                        </div>
+                        <div>
+                            <t t-foreach="tx_ids" t-as="tx">
+                                <div>
+                                    <span t-esc="tx.reference"/>
+                                    <span class="text-muted" t-field="tx.create_date"/>
+                                    <t t-if="tx.state == 'done'">
+                                        <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
+                                    </t>
+                                    <t t-if="tx.state != 'done'">
+                                        <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                                        <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+                <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
+                    <div>
+                        <strong>Shipping Address</strong>
+                    </div>
+                    <div>
+                        <address t-field="quotation.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                </div>
+            </div>
+        </div>
       <!-- Descriptions -->
       <div t-field="quotation.website_description" class="oe_no_empty"/>
       <t t-set="product_tmpl_ids" t-value="[]"/>
@@ -589,8 +580,6 @@
       <t t-call="sale.pricing"/>
       <!-- Signature -->
       <t t-call="sale.signature"/>
-      <!-- Options -->
-      <t t-call="sale.optional_products"/>
   </template>
 
   <!-- Template to edit the quotation template with the website editor -->
@@ -675,14 +664,4 @@
   </template>
   -->
 
-    <template id="portal_my_quotations_inherit_quote" inherit_id="sale.portal_my_quotations">
-        <xpath expr="//t[@t-foreach='quotations']/tr/td/a" position="replace">
-            <t t-if="quotation.template_id and quotation.template_id.active">
-                <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
-            </t>
-            <t t-else="">
-                <a t-attf-href="/my/orders/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
-            </t>
-        </xpath>
-    </template>
 </odoo>

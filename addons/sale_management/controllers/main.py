@@ -3,26 +3,14 @@
 
 import werkzeug
 
-from odoo import exceptions, fields, http, _
+from odoo import http, _
+from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.addons.portal.controllers.portal import get_records_pager
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.portal.controllers.mail import _message_post_helper
-from odoo.osv import expression
 
 
 class CustomerPortal(CustomerPortal):
-
-    @http.route()
-    def portal_order_page(self, order_id=None, access_token=None, **kw):
-        try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
-        except exceptions.AccessError:
-            pass
-        else:
-            if order_sudo.template_id and order_sudo.template_id.active:
-                return request.redirect('/quote/%s/%s' % (order_id, access_token or ''))
-        return super(CustomerPortal, self).portal_order_page(order_id=order_id, access_token=access_token, **kw)
 
     def _portal_quote_user_can_accept(self, order):
         result = super(CustomerPortal, self)._portal_quote_user_can_accept(order)
@@ -34,96 +22,44 @@ class CustomerPortal(CustomerPortal):
         values.update(option=any(not x.line_id for x in order_sudo.options))
         return values
 
-
-class sale_quote(http.Controller):
-
     @http.route("/quote/<int:order_id>", type='http', auth="user", website=True)
     def view_user(self, *args, **kwargs):
         return self.view(*args, **kwargs)
 
     @http.route("/quote/<int:order_id>/<token>", type='http', auth="public", website=True)
     def view(self, order_id, pdf=None, token=None, message=False, **post):
-        # use sudo to allow accessing/viewing orders for public user
-        # only if he knows the private token
-        now = fields.Date.today()
-        if token:
-            Order = request.env['sale.order'].sudo().search([('id', '=', order_id), ('access_token', '=', token)])
-        else:
-            Order = request.env['sale.order'].search([('id', '=', order_id)])
-        # Log only once a day
-        if Order and request.session.get('view_quote_%s' % Order.id) != now and request.env.user.share and token:
-            request.session['view_quote_%s' % Order.id] = now
-            body = _('Quotation viewed by customer')
-            _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=Order.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)
-        if not Order:
-            return request.render('website.404')
+        # /quote/ is an older route that we want to keep to not break previous links.
+        return request.redirect('/my/orders/%s?%s%s%s' % (
+            order_id,
+            '?access_token=' + token if token else '',
+            '&message=' + message if message else '',
+            '&pdf=' + pdf if pdf else '',
+        ))
 
-        # Token or not, sudo the order, since portal user has not access on
-        # taxes, required to compute the total_amout of SO.
-        order_sudo = Order.sudo()
+    @http.route(['/quotation/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
+    def decline(self, order_id, token=None, **post):
+        try:
+            self._document_check_access('sale.order', order_id, access_token=token)
+        except AccessError:
+            return request.redirect('/my')
 
-        days = 0
-        if order_sudo.validity_date:
-            days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
-        if pdf:
-            pdf = request.env.ref('sale.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-            return request.make_response(pdf, headers=pdfhttpheaders)
-        transaction = order_sudo.get_portal_last_transaction()
-        values = {
-            'quotation': order_sudo,
-            'message': message and int(message) or False,
-            'option': any(not x.line_id for x in order_sudo.options),
-            'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
-            'days_valid': days,
-            'action': request.env.ref('sale.action_quotations').id,
-            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
-            'tx_id': transaction.id if transaction else False,
-            'tx_state': transaction.state if transaction else False,
-            'payment_tx': transaction,
-            'tx_post_msg': transaction.acquirer_id.post_msg if transaction else False,
-            'need_payment': order_sudo.invoice_status == 'to invoice' and transaction.state in ['draft', 'cancel'],
-            'token': token,
-            'return_url': '/shop/payment/validate',
-            'bootstrap_formatting': True,
-            'partner_id': order_sudo.partner_id.id,
-        }
-
-        if order_sudo.has_to_be_paid() or values['need_payment']:
-            domain = expression.AND([
-                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
-                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
-            ])
-            acquirers = request.env['payment.acquirer'].sudo().search(domain)
-
-            values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
-            values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
-            values['pms'] = request.env['payment.token'].search(
-                [('partner_id', '=', order_sudo.partner_id.id),
-                ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
-
-        history = request.session.get('my_quotes_history', [])
-        values.update(get_records_pager(history, order_sudo))
-        return request.render('sale.so_quotation', values)
-
-    @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", methods=['POST'], website=True)
-    def decline(self, order_id, token, **post):
         Order = request.env['sale.order'].sudo().browse(order_id)
-        if token != Order.access_token:
-            return request.render('website.404')
         if Order.state != 'sent':
-            return werkzeug.utils.redirect("/quote/%s/%s?message=4" % (order_id, token))
+            return werkzeug.utils.redirect("/my/orders/%s?access_token=%s&message=4" % (order_id, token))
         Order.action_cancel()
         message = post.get('decline_message')
         if message:
             _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': token} if token else {})
-        return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
+        return werkzeug.utils.redirect("/my/orders/%s%s" % (order_id, '?access_token=%s' % token if token else ''))
 
-    @http.route(['/quote/update_line'], type='json', auth="public", website=True)
+    @http.route(['/quotation/<int:order_id>/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
+        try:
+            self._document_check_access('sale.order', order_id, access_token=token)
+        except AccessError:
+            return request.redirect('/my')
+
         Order = request.env['sale.order'].sudo().browse(int(order_id))
-        if token != Order.access_token:
-            return request.render('website.404')
         if Order.state not in ('draft', 'sent'):
             return False
         OrderLine = request.env['sale.order.line'].sudo().browse(int(line_id))
@@ -135,21 +71,25 @@ class sale_quote(http.Controller):
         OrderLine.write({'product_uom_qty': quantity})
         return [str(quantity), str(Order.amount_total)]
 
-    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
+    @http.route(["/quotation/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = {'template': quote}
         return request.render('sale.so_template', values)
 
-    @http.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public", website=True)
-    def add(self, option_id, order_id, token, **post):
+    @http.route(["/quotation/<int:order_id>/add_line/<int:option_id>"], type='http', auth="public", website=True)
+    def add(self, order_id, option_id, token=None, **post):
+        try:
+            self._document_check_access('sale.order', order_id, access_token=token)
+        except AccessError:
+            return request.redirect('/my')
+
         Order = request.env['sale.order'].sudo().browse(order_id)
-        if token != Order.access_token:
-            return request.render('website.404')
         if Order.state not in ['draft', 'sent']:
             return request.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
         Option = request.env['sale.order.option'].sudo().browse(option_id)
         vals = {
             'price_unit': Option.price_unit,
+            # TODO SEB website_description into sale_design
             'website_description': Option.website_description,
             'name': Option.name,
             'order_id': Order.id,
@@ -162,10 +102,10 @@ class sale_quote(http.Controller):
         OrderLine = request.env['sale.order.line'].sudo().create(vals)
         OrderLine._compute_tax_id()
         Option.write({'line_id': OrderLine.id})
-        return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (Order.id, token))
+        return werkzeug.utils.redirect("/my/orders/%s?%s#pricing" % (Order.id, 'access_token=%' % token if token else ''))
 
     # note dbo: website_sale code
-    @http.route(['/quote/<int:order_id>/transaction/'], type='json', auth="public", website=True)
+    @http.route(['/quotation/<int:order_id>/transaction/'], type='json', auth="public", website=True)
     def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
@@ -198,7 +138,7 @@ class sale_quote(http.Controller):
 
         return transaction.render_sale_button(
             order,
-            '/quote/%s/%s' % (order_id, access_token) if access_token else '/quote/%s' % order_id,
+            '/my/orders/%s%s' % (order_id, '?access_token=%s' % access_token if access_token else ''),
              submit_txt=_('Pay & Confirm'),
             render_values={
                  'type': order._get_payment_type(),
@@ -206,18 +146,18 @@ class sale_quote(http.Controller):
              }
         )
 
-    @http.route('/quote/<int:order_id>/transaction/token', type='http', auth='public', website=True)
+    @http.route('/quotation/<int:order_id>/transaction/token', type='http', auth='public', website=True)
     def payment_token(self, order_id, pm_id=None, **kwargs):
 
         order = request.env['sale.order'].sudo().browse(order_id)
         if not order or not order.order_line or pm_id is None:
-            return request.redirect("/quote/%s" % order_id)
+            return request.redirect("/my/orders/%s" % order_id)
 
         # try to convert pm_id into an integer, if it doesn't work redirect the user to the quote
         try:
             pm_id = int(pm_id)
         except ValueError:
-            return request.redirect('/quote/%s' % order_id)
+            return request.redirect('/my/orders/%s' % order_id)
 
         # Create transaction
         vals = {
@@ -227,4 +167,4 @@ class sale_quote(http.Controller):
 
         order._create_payment_transaction(vals)
 
-        return request.redirect('/quote/%s/%s' % (order_id, order.access_token))
+        return request.redirect('/my/orders/%s?access_token=%s' % (order_id, order.access_token))
