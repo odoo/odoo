@@ -14,13 +14,13 @@ from operator import itemgetter
 from odoo import api, fields, models, _
 from odoo.addons.base.res.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 
 
 def float_to_time(float_hour):
     if float_hour == 24.0:
         return datetime.time.max
-    return datetime.time(int(math.modf(float_hour)[1]), int(60 * math.modf(float_hour)[0]), 0)
+    return datetime.time(int(math.modf(float_hour)[1]), int(float_round(60 * math.modf(float_hour)[0], precision_digits=0)), 0)
 
 
 def to_naive_user_tz(datetime, record):
