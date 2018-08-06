@@ -174,7 +174,7 @@
             </div>
         </t>
         <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_sortby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+            <button id="portal_searchbar_sortby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown" t-att-title="searchbar_sortings[sortby].get('label', 'Newest')">
                 <span class="fa fa-sort fa-lg" />
                 <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                 <span class="caret"></span>
@@ -188,7 +188,7 @@
             </ul>
         </div>
         <div t-if="searchbar_filters" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_filters" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+            <button id="portal_searchbar_filters" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown" t-att-title="searchbar_filters[filterby].get('label', 'All')">
                 <span class="fa fa-filter fa-lg" />
                 <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
                 <span class="caret"></span>
@@ -202,7 +202,7 @@
             </ul>
         </div>
         <div t-if="searchbar_groupby" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_groupby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+            <button id="portal_searchbar_groupby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown" t-att-title="searchbar_groupby[groupby].get('label', 'None')">
                 <span class="fa fa-bars fa-lg" />
                 <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
                 <span class="caret"></span>
