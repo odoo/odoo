@@ -495,6 +495,19 @@ class MailActivityMixin(models.AbstractModel):
             ]).unlink()
         return super(MailActivityMixin, self).toggle_active()
 
+    def activity_send_mail(self, template_id):
+        """ Automatically send an email based on the given mail.template, given
+        its ID. """
+        template = self.env['mail.template'].browse(template_id).exists()
+        if not template:
+            return False
+        for record in self:
+            record.message_post_with_template(
+                template_id,
+                composition_mode='comment'
+            )
+        return True
+
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
         """ Schedule an activity on each record of the current record set.
         This method allow to provide as parameter act_type_xmlid. This is an
