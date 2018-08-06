@@ -41,7 +41,7 @@ class HolidaysType(models.Model):
         ('wheat', 'Wheat'),
         ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
         help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
-    limit = fields.Boolean('Unlimited',
+    limit = fields.Boolean('Exceed Allocation',
         help="If you select this check box, the system will allow the employees to ask"
              "for leaves without allocating some beforehand")
     active = fields.Boolean('Active', default=True,
@@ -58,16 +58,16 @@ class HolidaysType(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
 
-    validation_type = fields.Selection([('hr', 'Human Resource Responsible'),
-                                      ('manager', 'Manager'),
+    validation_type = fields.Selection([('hr', 'Human Resource officer'),
+                                      ('manager', 'Employee Manager'),
                                       ('both', 'Double Validation')],
                                      default='hr',
                                      string='Validation By')
 
-    employee_applicability = fields.Selection([('both', 'On Leave As Well As On Allocation'),
-                                            ('leave', 'Only On Leave'),
-                                            ('allocation', 'Only On Allocation')],
-                                           default=lambda self: 'leave' if self.limit else 'both', string='Available For Employee :',
+    employee_applicability = fields.Selection([('both', 'Both'),
+                                            ('leave', 'Can be requested'),
+                                            ('allocation', 'Can be allocated')],
+                                           default=lambda self: 'leave' if self.limit else 'both', string='Mode',
                                            help='This leave type will be available on Leave / Allocation request based on selected value')
 
     validity_start = fields.Date("Start Date", default=fields.Date.today,
@@ -84,7 +84,7 @@ class HolidaysType(models.Model):
                                ('half', 'Half-day'),
                                ('hour', 'Hours')], default='day', string='Take Leaves in', required=True)
 
-    accrual = fields.Boolean('Is Accrual', default=False,
+    accrual = fields.Boolean('Accrual', default=False,
                              help='This option forces this type of leave to be allocated accrually')
 
     unpaid = fields.Boolean('Is Unpaid', default=False)
