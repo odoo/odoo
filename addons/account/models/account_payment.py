@@ -205,6 +205,12 @@ class account_abstract_payment(models.AbstractModel):
                 total += payment_currency.with_context(date=self.payment_date).compute(amount_total, currency)
         return total
 
+
+class account_register_payments(models.TransientModel):
+    _name = "account.register.payments"
+    _inherit = 'account.abstract.payment'
+    _description = "Register payments on multiple invoices"
+
     @api.onchange('journal_id')
     def _onchange_journal(self):
         res = super(account_register_payments, self)._onchange_journal()
@@ -212,12 +218,6 @@ class account_abstract_payment(models.AbstractModel):
         invoices = self.env['account.invoice'].browse(active_ids)
         self.amount = abs(self._compute_payment_amount(invoices))
         return res
-
-
-class account_register_payments(models.TransientModel):
-    _name = "account.register.payments"
-    _inherit = 'account.abstract.payment'
-    _description = "Register payments on multiple invoices"
 
     @api.model
     def default_get(self, fields):
