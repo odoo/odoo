@@ -192,7 +192,7 @@ class SaleOrder(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/%s/%s' % (self.id, self.access_token)
+            'url': '/my/orders/%s?%s' % (self.id, 'access_token=%s' % self.access_token if self.access_token else '')
         }
 
     @api.multi
@@ -205,7 +205,7 @@ class SaleOrder(models.Model):
             return super(SaleOrder, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s/%s' % (self.id, self.access_token),
+            'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
             'target': 'self',
             'res_id': self.id,
         }
@@ -214,7 +214,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in ['sale', 'done']:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-            return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
+            return '/my/orders/%s?access_token=%s&%s' % (self.id, self.access_token, auth_param)
         return super(SaleOrder, self)._get_share_url(redirect)
 
     def get_portal_confirmation_action(self):

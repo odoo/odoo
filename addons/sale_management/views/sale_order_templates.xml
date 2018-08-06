@@ -7,6 +7,28 @@
         </xpath>
     </template>
 
+    <template id="pricing_inherit_sale_management" name="Sale Management Pricing" inherit_id="sale.pricing">
+
+        <xpath expr="//t[@t-set='display_discount']" position="after">
+            <t t-set="display_remove" t-value="any([line.option_line_id for line in quotation.order_line])"/>
+        </xpath>
+
+        <xpath expr="//table[@id='sales_order_table']/thead/tr" position="inside">
+            <th t-if="display_remove">
+                <t t-set="colspan" t-value="colspan+1"/>
+            </th>
+        </xpath>
+
+        <xpath expr="//t[@t-if='not line.display_type']" position="inside">
+            <td class="text-center" t-if="display_remove">
+                <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.option_line_id" aria-label="Remove" title="Remove">
+                    <span class="fa fa-trash-o"></span>
+                </a>
+            </td>
+        </xpath>
+
+    </template>
+
     <template id="so_quotation_content_inherit_sale_management" name="Order Options" inherit_id="sale.so_quotation_content">
         <xpath expr="//t[@t-call='sale.signature']" position="after">
             <t t-if="any([(not option.line_id) for option in quotation.options])">
@@ -14,13 +36,14 @@
                     <h1 class="page-header">Suggested Products</h1>
                 </section>
                 <section>
-                    <table class="table table-hover wq-table">
+                    <div style="overflow-x:auto;">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Product</th>
                                 <th></th>
                                 <th class="text-right">Price</th>
-                                <th></th>
+                                <th t-if="quotation.state in ['draft', 'sent']"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,6 +77,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                 </section>
             </t>
         </xpath>

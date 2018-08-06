@@ -1624,8 +1624,8 @@
         </xpath>
     </template>
 
-    <template id="portal_order_page_products_links" name="Orders Followup Products Links" inherit_id="sale.portal_order_page">
-        <xpath expr="//div[@id='product_name']/*" position="replace">
+    <template id="portal_order_page_products_links" name="Orders Followup Products Links" inherit_id="sale.pricing">
+        <xpath expr="//td[@id='product_name']/*" position="replace">
             <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">
                 <span t-field="line.name" />
             </a>

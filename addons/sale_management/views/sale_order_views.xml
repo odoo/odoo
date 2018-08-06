@@ -7,8 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_confirm'][1]" position="after">
                 <button name="open_quotation" type="object" 
-                    class="o_open_quotation" string="Preview"
-                    attrs="{'invisible': [('template_id', '=', False)]}"/>
+                    class="o_open_quotation" string="Preview"/>
             </xpath>
             <xpath expr="//page/field[@name='order_line']/.." position="after">
                 <page string="Suggested Products">
