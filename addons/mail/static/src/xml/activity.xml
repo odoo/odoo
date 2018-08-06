@@ -61,10 +61,16 @@
                         <div t-if="activity.note" t-attf-class="o_thread_message_#{activity.activity_decoration ? activity.activity_decoration : 'note'} #{activity.activity_decoration ? 'alert alert-' + activity.activity_decoration : ''} small">
                             <t t-raw="activity.note"/>
                         </div>
-                        <t t-if="activity.mail_template_ids">
-                            <div t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]"><b>Email:</b>
+                        <t t-if="activity.mail_template_ids &amp;&amp; activity.mail_template_ids.length &gt; 0">
+                            <div class="mt16" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                                 <t t-foreach="activity.mail_template_ids" t-as="mail_template">
-                                    <span class="o_mail_template" t-att-data-template-id="mail_template.id"><t t-esc="mail_template.name"/></span>
+                                    <div>
+                                        <i class="fa fa-envelope-o" aria-label="Mail" title="Mail" role="img"></i>
+                                        <span t-esc="mail_template.name"/>:
+                                        <span class="o_activity_template_preview" t-att-data-template-id="mail_template.id">Preview</span>
+                                        <span class="text-muted">or</span>
+                                        <span class="o_activity_template_send" t-att-data-template-id="mail_template.id">Send Now</span>
+                                    </div>
                                 </t>
                             </div>
                         </t>

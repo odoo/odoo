@@ -1272,9 +1272,9 @@ QUnit.test('form activity widget: clic mail template', function (assert) {
     });
     assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
         "we should have one activity");
-    assert.strictEqual(form.$('.o_mail_template').length, 1,
-        "Activity should contains two mail templates");
-    form.$('.o_mail_template[data-template-id=100]').click();
+    assert.strictEqual(form.$('.o_activity_template_preview').length, 1,
+        "Activity should contains one mail template");
+    form.$('.o_activity_template_preview[data-template-id=100]').click();
     assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
         "activity should still be there");
     form.destroy();

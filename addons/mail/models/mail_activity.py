@@ -501,7 +501,7 @@ class MailActivityMixin(models.AbstractModel):
         template = self.env['mail.template'].browse(template_id).exists()
         if not template:
             return False
-        for record in self:
+        for record in self.with_context(mail_post_autofollow=True):
             record.message_post_with_template(
                 template_id,
                 composition_mode='comment'
