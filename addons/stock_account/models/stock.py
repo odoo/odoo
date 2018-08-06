@@ -578,6 +578,11 @@ class StockMove(models.Model):
             res.append((0, 0, price_diff_line))
         return res
 
+    def _prepare_move_split_vals(self, uom_qty):
+        vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
+        vals['to_refund'] = self.to_refund
+        return vals
+
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
         self.ensure_one()
         AccountMove = self.env['account.move']
