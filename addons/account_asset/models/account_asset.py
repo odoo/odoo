@@ -333,6 +333,8 @@ class AccountAssetAsset(models.Model):
                 'target': 'current',
                 'res_id': move_ids[0],
             }
+        # Fallback, as if we just clicked on the smartbutton
+        return self.open_entries()
 
     @api.multi
     def set_to_draft(self):
