@@ -218,7 +218,7 @@ class PosOrder(models.Model):
 
     def _action_create_invoice_line(self, line=False, invoice_id=False):
         InvoiceLine = self.env['account.invoice.line']
-        inv_name = line.product_id.name_get()[0][1]
+        inv_name = line.product_id.display_name
         inv_line = {
             'invoice_id': invoice_id,
             'product_id': line.product_id.id,
