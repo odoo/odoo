@@ -48,13 +48,13 @@ class SaleCoupon(models.Model):
 
     def _compute_expiration_date(self):
         for coupon in self.filtered(lambda x: x.program_id.validity_duration > 0):
-            coupon.expiration_date = fields.Date.from_string(coupon.create_date) + relativedelta(days=coupon.program_id.validity_duration)
+            coupon.expiration_date = (coupon.create_date + relativedelta(days=coupon.program_id.validity_duration)).date()
 
     def _check_coupon_code(self, order):
         message = {}
         applicable_programs = order._get_applicable_programs()
         if self.state in ('used', 'expired') or \
-           (self.expiration_date and self.expiration_date < order.date_order):
+           (self.expiration_date and self.expiration_date < order.date_order.date()):
             message = {'error': _('This coupon %s has been used or is expired.') % (self.code)}
         elif self.state == 'reserved':
             message = {'error': _('This coupon %s exists but the origin sales order is not validated yet.') % (self.code)}
