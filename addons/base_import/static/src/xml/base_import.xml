@@ -130,7 +130,7 @@
     </t>
     <ul t-name="ImportView.error">
         <li t-foreach="errors" t-as="error"
-            t-attf-class="oe_import_report bg-#{error_value[0].type} text-#{error_value[0].type}">
+            t-attf-class="oe_import_report bg-#{error_value[0].type}">
             <t t-call="ImportView.error.each">
                 <t t-set="error" t-value="error_value[0]"/>
             </t>
