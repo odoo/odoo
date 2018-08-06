@@ -339,7 +339,8 @@ class ProcurementGroup(models.Model):
 
             for orderpoint in orderpoints:
                 key = self._procurement_from_orderpoint_get_grouping_key([orderpoint.id])
-                location_data[key] = makedefault()
+                if not location_data.get(key):
+                    location_data[key] = makedefault()
                 location_data[key]['products'] += orderpoint.product_id
                 location_data[key]['orderpoints'] += orderpoint
                 location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
