@@ -4,7 +4,6 @@
     'name': "Online Event Ticketing",
     'category': 'Website',
     'summary': "Sell event tickets online",
-    'website': 'https://www.odoo.com/page/events',
     'description': """
 Sell event tickets through eCommerce app.
     """,

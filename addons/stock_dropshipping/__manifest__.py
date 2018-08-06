@@ -20,7 +20,6 @@ going through the retailer's warehouse. In this case no
 internal transfer document is needed.
 
 """,
-    'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['purchase_stock', 'sale_stock'],
     'data': ['data/stock_data.xml'],
     'installable': True,

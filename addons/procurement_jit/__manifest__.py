@@ -21,7 +21,6 @@ will take into account the expected date and the priority.
 If this automatic reservation would reserve too much, you can
 still unreserve a picking.
     """,
-    'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['sale_stock'],
     'data': [],
     'demo': [],
