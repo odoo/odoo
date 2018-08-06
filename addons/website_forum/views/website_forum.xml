@@ -25,7 +25,7 @@
 <template id="link_button">
     <form method="POST" t-att-action="url" t-attf-class="#{form_classes}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <button t-attf-class="fa btn-link #{classes} #{karma and 'karma_required text-muted' or ''}" t-attf-data-karma="#{karma}">
+        <button t-attf-class="fa btn btn-link #{classes} #{karma and 'karma_required text-muted' or ''}" t-attf-data-karma="#{karma}">
             <t t-esc="label"/></button>
     </form>
 </template>
