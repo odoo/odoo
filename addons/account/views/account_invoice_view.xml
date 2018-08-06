@@ -286,8 +286,6 @@
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_company_type': 'company'}"
                               domain="[('supplier', '=', True)]" required="1"/>
                             <field name="reference" string="Vendor Reference"/>
-                            <field name="commercial_partner_id" invisible="1"/>
-                            <field domain="[('partner_id', '=', commercial_partner_id)]" name="partner_bank_id" string="Vendor Account" context="{'default_partner_id': commercial_partner_id}"/>
                             <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
                               domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','paid')), ('type','=','in_invoice')]"
                               string="Auto-Complete" placeholder="Select an old vendor bill"
@@ -301,6 +299,8 @@
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
+                            <field name="commercial_partner_id" invisible="1"/>
+                            <field domain="[('partner_id', '=', commercial_partner_id)]" name="partner_bank_id" string="Bank Account" context="{'default_partner_id': commercial_partner_id}"/>
                         </group>
                     </group>
                     <notebook>
