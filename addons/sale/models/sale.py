@@ -735,7 +735,11 @@ class SaleOrderLine(models.Model):
             # Total invoiced amount
             invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
             # Total refunded amount
-            refund_amount_total = sum(refund_invoices.mapped('amount_total'))
+            # Please find a real implementation in Master, with a proper field of some sort
+            # pointing to refund invoice_lines
+            alleged_refund_lines = (refund_invoices.mapped('invoice_line_ids')
+                                                   .filtered(lambda l: line.product_id.id == l.product_id.id))
+            refund_amount_total = sum(alleged_refund_lines.mapped('price_total'))
             # Total of remaining amount to invoice on the sale ordered (and draft invoice included) to support upsell (when
             # delivered quantity is higher than ordered one). Draft invoice are ignored on purpose, the 'to invoice' should
             # come only from the SO lines.
