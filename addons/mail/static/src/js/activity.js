@@ -194,7 +194,8 @@ var Activity = AbstractActivityField.extend({
         'click .o_activity_edit': '_onEditActivity',
         'click .o_activity_unlink': '_onUnlinkActivity',
         'click .o_activity_done': '_onMarkActivityDone',
-        'click .o_mail_template': '_onClickMailTemplate',
+        'click .o_activity_template_preview': '_onPreviewMailTemplate',
+        'click .o_activity_template_send': '_onSendMailTemplate',
     },
     specialData: '_fetchSpecialActivity',
 
@@ -280,28 +281,6 @@ var Activity = AbstractActivityField.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickMailTemplate: function (ev) {
-        var templateID = $(ev.target).data('template-id');
-        var action = {
-            name: _t('Compose Email'),
-            type: 'ir.actions.act_window',
-            res_model: 'mail.compose.message',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_model: this.model,
-                default_use_template: true,
-                default_template_id: templateID,
-                force_email: true,
-            },
-        };
-        return this.do_action(action, { on_close: function(){}});
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickRedirect: function (ev) {
         var id = $(ev.target).data('oe-id');
         if (id) {
@@ -340,6 +319,41 @@ var Activity = AbstractActivityField.extend({
                 self._reload({activity: true, thread: true});
             },
         });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onPreviewMailTemplate: function (ev) {
+        var templateID = $(ev.target).data('template-id');
+        var action = {
+            name: _t('Compose Email'),
+            type: 'ir.actions.act_window',
+            res_model: 'mail.compose.message',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: this.res_id,
+                default_model: this.model,
+                default_use_template: true,
+                default_template_id: templateID,
+                force_email: true,
+            },
+        };
+        return this.do_action(action, { on_close: function(){}});
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSendMailTemplate: function (ev) {
+        var templateID = $(ev.target).data('template-id');
+        return this._rpc({
+                model: this.model,
+                method: 'activity_send_mail',
+                args: [[this.res_id], templateID],
+            })
+            .then(this._reload.bind(this, {activity: true, thread: true, followers: true}));
     },
     /**
      * @private
