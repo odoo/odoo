@@ -15,7 +15,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     """,
     'author': 'Ahmet Altınışık',
     'maintainer':'https://launchpad.net/~openerp-turkey',
-    'website':'https://launchpad.net/openerp-turkey',
     'depends': [
         'account',
     ],

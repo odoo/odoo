@@ -13,7 +13,6 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
 
     """,
     "author": "Cubic ERP",
-    "website": "https://cubicERP.com",
     'category': 'Localization',
     "depends": ["account"],
     "data": [

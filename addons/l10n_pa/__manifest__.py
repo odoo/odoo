@@ -15,7 +15,6 @@ Con la Colaboración de
 
     """,
     "author": "Cubic ERP",
-    "website": "http://cubicERP.com",
     'category': 'Localization',
     "depends": ["account"],
     "data": [

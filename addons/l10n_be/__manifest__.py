@@ -57,6 +57,5 @@ Wizards provided by this module:
     'demo': [
         'demo/l10n_be_demo.xml',
     ],
-    'website': 'https://www.odoo.com/page/accounting',
     'post_init_hook': 'load_translations',
 }

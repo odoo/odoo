@@ -6,7 +6,6 @@
     'category': 'Website',
     'summary': 'Suggest optional products when adding to cart',
     'version': '1.0',
-    'website': 'https://www.odoo.com/page/e-commerce',
     'description': """
 Suggest optional products when shoppers add products to their cart (e.g. for computers: warranty, OS software, extra components).
 Optional products are defined in the product form.

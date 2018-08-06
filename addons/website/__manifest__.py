@@ -5,7 +5,7 @@
     'name': 'Website',
     'category': 'Website',
     'sequence': 7,
-    'summary': 'Build a website fully integrated with your operations',
+    'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': "",

@@ -5,7 +5,6 @@
     'name': 'Twitter Roller',
     'category': 'Website',
     'summary': 'Twitter scroller snippet in website',
-    'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': """
 This module adds a Twitter roller building block to the website builder, so that you can display Twitter feeds on any page of your website.

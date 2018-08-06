@@ -8,7 +8,6 @@
 This module adds a PAD in all project form views.
 =================================================
     """,
-    'website': 'https://www.odoo.com/page/project-management',
     'depends': [
         'project',
         'pad'

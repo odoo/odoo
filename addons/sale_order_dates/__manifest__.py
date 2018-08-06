@@ -11,7 +11,6 @@ Manage delivery dates from sales orders.
 ===================================================
    This option introduces extra fields in the sales order to easily schedule product deliveries on your own: expected date, commitment date, effective date.
 """,
-    'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale_stock'],
     'data': ['views/sale_order_views.xml'],
 }

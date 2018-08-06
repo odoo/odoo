@@ -11,7 +11,6 @@ Manage assets owned by a company or a person.
 Keeps track of depreciations, and creates corresponding journal entries.
 
     """,
-    'website': 'https://www.odoo.com/page/accounting',
     'category': 'Accounting',
     'sequence': 32,
     'data': [
