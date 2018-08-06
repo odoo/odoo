@@ -1,8 +1,8 @@
 
 .tooltip {
-    padding: 0;
-    margin: 0;
-    opacity: 1;
+    &.show {
+        opacity: 1;
+    }
 
     .tooltip-inner {
         max-width: 300px; // fallback for browsers which do not support "vw" unit
@@ -37,23 +37,16 @@
         }
     }
 
-    .tooltip-arrow {
-        -moz-transform: scale(0.9999);
+    &.bs-tooltip-top .arrow::before {
+        border-top-color: $o-tooltip-arrow-color!important;
     }
-    &.top, &.top-left, &.top-right {
-        .tooltip-arrow {
-            border-top-color: $o-tooltip-arrow-color!important;
-        }
+    &.bs-tooltip-bottom .arrow::before {
+        border-bottom-color: $o-tooltip-arrow-color!important;
     }
-    &.bottom, &.bottom-left, &.bottom-right {
-        .tooltip-arrow {
-            border-bottom-color: $o-tooltip-arrow-color!important;
-        }
-    }
-    &.left .tooltip-arrow {
+    &.bs-tooltip-left .arrow::before {
         border-left-color: $o-tooltip-arrow-color!important;
     }
-    &.right .tooltip-arrow {
+    &.bs-tooltip-right .arrow::before {
         border-right-color: $o-tooltip-arrow-color!important;
     }
 }
