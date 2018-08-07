@@ -90,6 +90,20 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [7, 'search'],
+        }, {
+            id: 9,
+            name: 'Partners Action 9',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            search_view_id: [5, 'search'],
+        }, {
+            id: 10,
+            name: 'Partners Action 10',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            search_view_id: [8, 'search'],
         }
         ];
 
@@ -108,6 +122,12 @@ QUnit.module('Search View', {
                         '<field name="date_field" type="row" interval="day"/>' +
                         '<field name="float_field" type="measure"/>' +
                     '</graph>',
+
+            // pivot views
+            'partner,false,pivot': '<pivot>' +
+                        '<field name="date_field" type="row" interval="day"/>' +
+                        '<field name="float_field" type="measure"/>' +
+                '</pivot>',
 
             // search views
             'partner,false,search': '<search>'+
@@ -153,6 +173,15 @@ QUnit.module('Search View', {
                     '<filter string="10" name="coolName10" domain="[]"/>' +
                     '<separator/>' +
                     '<filter string="11" name="coolName11" domain="[]"/>' +
+                '</search>',
+            'partner,8,search': '<search>'+
+                    '<field name="foo"/>' +
+                    '<field name="date_field"/>' +
+                    '<field name="birthday"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="float_field"/>' +
+                    '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
+                    '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
                 '</search>',
         };
     },
@@ -319,7 +348,7 @@ QUnit.module('Search View', {
         assert.strictEqual($('.o_content tr.o_group_header').length, 4);
         actionManager.destroy();
     });
-    
+
     QUnit.test('a separator in groupbys does not cause problems', function (assert) {
         assert.expect(6);
 
@@ -521,6 +550,89 @@ QUnit.module('Search View', {
         for (var i = 0;  i < 11; i++) {
             assert.strictEqual($('.o_filters_menu .o_menu_item').eq(i).text().trim(), (i+1).toString());
         }
+        actionManager.destroy();
+    });
+
+    QUnit.test('selection via autocompletion modifies appropriately submenus', function (assert) {
+        assert.expect(4);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(9);
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 97,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 103,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "Date Field Filter: This Month",
+            "There should be a filter facet with label 'Date Field Filter: This Month'");
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "Date Field Groupby: Day",
+            "There should be a filter facet with label 'Date Field Groupby: Day'");
+
+        $('button .fa-filter').click();
+        $('.o_filters_menu .o_menu_item').eq(0).click();
+        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "This Month",
+            "The item 'This Month' should be selected in the filters menu");
+
+        $('button .fa-bars').click();
+        $('.o_group_by_menu .o_menu_item').eq(0).click();
+        assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
+            "The item 'Day' should be selected in the groupby menu");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('save filters created via autocompletion works', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                create_filter: function (ev) {
+                    assert.ok(ev.data.filter.domain === "[['foo', 'ilike', 'a']]");
+                },
+            },
+        });
+
+        actionManager.doAction(10);
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 97,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values span').text().trim(), "a");
+
+        $('button .fa-star').click();
+        $('.o_favorites_menu a.o_save_search').click();
+        $('.o_favorites_menu div.o_save_name button').click();
+
         actionManager.destroy();
     });
 });

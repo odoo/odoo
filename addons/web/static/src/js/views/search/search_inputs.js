@@ -128,7 +128,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             __contexts: contexts
         });
     },
-    get_groupby: function () { },
+    get_groupby: function () {},
     /**
      * Function creating the returned domain for the field, override this
      * methods in children if you only need to customize the field's domain
@@ -143,7 +143,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
     make_domain: function (name, operator, facet) {
         return [[name, operator, this.value_from(facet)]];
     },
-    get_domain: function (facet) {
+    get_domain: function (facet, noDomainEvaluation) {
         if (!facet.values.length) { return; }
 
         var value_to_domain;
@@ -166,10 +166,15 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             };
         }
         var domains = facet.values.map(value_to_domain);
+
+        // here 'noDomainEvaluation' means 'string representation'
+        if (noDomainEvaluation) {
+            domains = domains.map(Domain.prototype.arrayToString);
+            return pyUtils.assembleDomains(domains, 'OR');
+        }
         if (domains.length === 1) {
             return domains[0];
         }
-
         _.each(domains, Domain.prototype.normalizeArray);
         var ors = _.times(domains.length - 1, _.constant("|"));
         return ors.concat.apply(ors, domains);

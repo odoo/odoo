@@ -14,6 +14,8 @@ var _t = core._t;
 
 var PERIOD_OPTIONS = TimeRangeMenuOptions.PeriodOptions;
 
+var DEFAULT_PERIOD = 'this_month';
+
 var FiltersMenu = DropdownMenu.extend({
     custom_events: {
         remove_proposition: '_onRemoveProposition',
@@ -54,6 +56,7 @@ var FiltersMenu = DropdownMenu.extend({
         this.isMobile = config.device.isMobile;
         // determines list of options used by filter of type 'date'
         this.periodOptions = PERIOD_OPTIONS;
+        this.defaultOptionId = DEFAULT_PERIOD;
         // determines when the 'Add custom filter' submenu is open
         this.generatorMenuIsOpen = false;
         this.propositions = [];
@@ -146,9 +149,6 @@ var FiltersMenu = DropdownMenu.extend({
         if (item.isPeriod) {
             item.options = this.periodOptions;
         }
-        // super has to be called here because we need to add options to groupby
-        // before to call it since some keys in a groupby are initialized using
-        // the keys 'options' and 'defaultOptionId'
         this._super.apply(this, arguments);
     },
     /**

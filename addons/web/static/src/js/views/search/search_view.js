@@ -380,7 +380,7 @@ var SearchView = Widget.extend({
                 break;
             }
         }
-        this.selectedGroupIds = {
+        this.activeItemIds = {
             groupByCategory: [],
             filterCategory: []
         };
@@ -627,9 +627,10 @@ var SearchView = Widget.extend({
      * @param {Object} ui.item selected completion item
      */
     select_completion: function (e, ui) {
+        var facet = ui.item.facet;
         e.preventDefault();
-        if(ui.item.facet && ui.item.facet.values && ui.item.facet.values.length && String(ui.item.facet.values[0].value).trim() !== "") {
-            this.query.add(ui.item.facet);
+        if(facet && facet.values && facet.values.length && String(facet.values[0].value).trim() !== "") {
+            this.query.add(facet);
         } else {
             this.query.trigger('add');
         }
@@ -666,7 +667,7 @@ var SearchView = Widget.extend({
         _.invoke(this.input_subviews, 'destroy');
         this.input_subviews = [];
 
-        var selectedGroupIds = {
+        var activeItemIds = {
             groupByCategory: [],
             filterCategory: [],
         };
@@ -674,29 +675,31 @@ var SearchView = Widget.extend({
         this.query.each(function (facet) {
             var values = facet.get('values');
             if (facet.attributes.cat === "groupByCategory") {
-                selectedGroupIds.groupByCategory = _.uniq(
-                    values.reduce(
-                        function (acc, value) {
-                            var groupby = value.value;
-                            var description = _.findWhere(self.groupbysMapping, {groupby: groupby});
-                            if (description) {
-                                acc.push(description.groupId);
-                            }
-                            return acc;
-                        },
-                        []
+                activeItemIds.groupByCategory = activeItemIds.groupByCategory.concat(
+                    _.uniq(
+                        values.reduce(
+                            function (acc, value) {
+                                var groupby = value.value;
+                                var description = _.findWhere(self.groupbysMapping, {groupby: groupby});
+                                if (description) {
+                                    acc.push(description.groupbyId);
+                                }
+                                return acc;
+                            },
+                            []
+                        )
                     )
                 );
             }
             if (facet.attributes.cat === "filterCategory") {
-                selectedGroupIds.filterCategory = selectedGroupIds.filterCategory.concat(
+                activeItemIds.filterCategory = activeItemIds.filterCategory.concat(
                     _.uniq(
                         values.reduce(
                             function (acc, value) {
                                 var filter = value.value;
                                 var description = _.findWhere(self.filtersMapping, {filter: filter});
                                 if (description) {
-                                    acc.push(description.groupId);
+                                    acc.push(description.filterId);
                                 }
                                 return acc;
                             },
@@ -729,11 +732,10 @@ var SearchView = Widget.extend({
                 _.last(self.input_subviews).$el.focus();
             }
             if (self.groupby_menu) {
-                self._unsetUnusedGroupbys(selectedGroupIds.groupByCategory);
+                self.groupby_menu.updateItemsStatus(activeItemIds.groupByCategory);
             }
             if (self.filters_menu) {
-                self._unsetUnusedFilters(selectedGroupIds.filterCategory);
-            }
+                self.filters_menu.updateItemsStatus(activeItemIds.filterCategory);            }
             if (self.timeRangeMenu && !timeRangeMenuIsActive) {
                 self.timeRangeMenu.deactivate();
             }
@@ -903,6 +905,7 @@ var SearchView = Widget.extend({
                     var filterId = _.uniqueId('__filter__');
                     var isPeriod = filter.attrs.isPeriod;
                     var defaultPeriod = filter.attrs.default_period;
+                    var isActive = !self.hasFavorites && !!self.search_defaults[filter.attrs.name];
                     filters.push({
                         itemId: filterId,
                         description: filter.attrs.string || filter.attrs.help ||
@@ -910,8 +913,8 @@ var SearchView = Widget.extend({
                         domain: filter.attrs.domain,
                         fieldName: filter.attrs.date,
                         isPeriod: isPeriod,
-                        currentOptionId: defaultPeriod,
-                        isActive: !self.hasFavorites && !!self.search_defaults[filter.attrs.name],
+                        defaultOptionId: defaultPeriod,
+                        isActive: isActive,
                         groupId: groupId,
                     });
                     self.filtersMapping.push({filterId: filterId, filter: filter, groupId: groupId});
@@ -945,14 +948,15 @@ var SearchView = Widget.extend({
                     var fieldName = groupby.attrs.fieldName;
                     var isDate = groupby.attrs.isDate;
                     var defaultInterval = groupby.attrs.defaultInterval || DEFAULT_INTERVAL;
+                    var isActive = !self.hasFavorites && !!self.search_defaults[groupby.attrs.name];
                     groupbys.push({
                         itemId: groupbyId,
                         description: groupby.attrs.string || groupby.attrs.help || groupby.attrs.name
                             || groupby.attrs.fieldName || 'Ω',
                         isDate: isDate,
                         fieldName: fieldName,
-                        currentOptionId: defaultInterval,
-                        isActive: !self.hasFavorites && !!self.search_defaults[groupby.attrs.name],
+                        defaultOptionId: defaultInterval,
+                        isActive: isActive,
                         groupId: groupId,
                     });
                     if (isDate) {
@@ -990,6 +994,9 @@ var SearchView = Widget.extend({
         fv.arch = utils.xml_to_json(doc, true);
         return fv;
     },
+    /**
+     * @returns {Deferred}
+     */
     _searchDefaultTimeRange: function () {
         if (this.timeRanges) {
             var timeRange = "[]";
@@ -1063,50 +1070,6 @@ var SearchView = Widget.extend({
         } else {
             return $.when();
         }
-    },
-
-    /**
-     * This function ask the groupby menu to deactive all groupbys if no
-     * groupby is used.
-     *
-     * @param {string[]]} selectedGroupIds list of group ids to deactivate
-     */
-    _unsetUnusedGroupbys: function (selectedGroupIds) {
-        var groupIds = this.groupsMapping.reduce(
-            function (acc, triple) {
-                if (triple.category === 'Group By') {
-                    acc.push(triple.groupId);
-                }
-                return acc;
-            },
-            []
-        );
-        this.selectedGroupIds.groupByCategory = selectedGroupIds;
-        if (selectedGroupIds.length === 0) {
-            this.groupby_menu.unsetGroups(groupIds);
-        }
-    },
-    /**
-     * This function ask the filters menu to deactive all filters with
-     * corresponding groupId in the list selectedGroupIds.
-     *
-     * @private
-     * @param {string[]]} selectedGroupIds
-     */
-    _unsetUnusedFilters: function (selectedGroupIds) {
-        var groupIds = this.groupsMapping.reduce(
-            function (acc, triple) {
-                if (triple.category === 'Filters') {
-                    if (!_.contains(selectedGroupIds, triple.groupId)) {
-                        acc.push(triple.groupId);
-                    }
-                }
-                return acc;
-            },
-            []
-        );
-        this.selectedGroupIds.filterCategory = selectedGroupIds;
-        this.filters_menu.unsetGroups(groupIds);
     },
 
     //--------------------------------------------------------------------------
