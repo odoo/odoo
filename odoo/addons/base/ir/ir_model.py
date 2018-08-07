@@ -549,7 +549,11 @@ class IrModelFields(models.Model):
         failed_dependencies = []
         for rec in self:
             model = self.env[rec.model]
-            field = model._fields[rec.name]
+            if rec.name in model._fields:
+                field = model._fields[rec.name]
+            else:
+                # field hasn't been loaded (yet?)
+                continue
             for dependant, path in model._field_triggers.get(field, ()):
                 if dependant.manual:
                     failed_dependencies.append((field, dependant))
