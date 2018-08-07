@@ -452,23 +452,6 @@ class test_convert_import_data(TransactionCase):
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
 
-    def test_parse_float(self):
-        w = self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.float',
-        })
-        data = w._parse_import_data(
-            [
-                ['1.62'], ['-1.62'], ['+1.62'], ['  +1.62  '], ['(1.62)'],
-                ["1'234'567,89"], ["1.234.567'89"]
-            ],
-            ['value'], {}
-        )
-        self.assertEqual(
-            [d[0] for d in data],
-            ['1.62', '-1.62', '+1.62', '+1.62', '-1.62',
-             '1234567.89', '1234567.89']
-        )
-
     def test_filtered(self):
         """ If ``False`` is provided as field mapping for a column,
         that column should be removed from importable data

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import codecs
 import collections
 import unicodedata
 
@@ -311,8 +312,12 @@ class Import(models.TransientModel):
             :throws csv.Error: if an error is detected during CSV parsing
         """
         csv_data = self.file
-        encoding = chardet.detect(csv_data)['encoding']
-        csv_data = csv_data.decode(encoding).encode('utf-8')
+        encoding = options.get('encoding')
+        if not encoding:
+            encoding = options['encoding'] = chardet.detect(csv_data)['encoding'].lower()
+
+        if encoding != 'utf-8':
+            csv_data = csv_data.decode(encoding).encode('utf-8')
 
         csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
