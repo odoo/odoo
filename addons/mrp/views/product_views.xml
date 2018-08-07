@@ -58,8 +58,16 @@
             action="product_template_action"
             parent="menu_mrp_bom" sequence="1"/>
 
+        <record id="mrp_product_variant_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="mrp_product_product_search_view"/>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
         <menuitem id="product_variant_mrp" name="Product Variants"
-            action="product.product_normal_action"
+            action="mrp_product_variant_action"
             parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2"/>
 
 
