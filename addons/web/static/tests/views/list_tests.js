@@ -616,6 +616,45 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection is kept on render without reload', function (assert) {
+        assert.expect(5);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            viewOptions: {sidebar: true},
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        // open blip grouping and check all lines
+        list.$('.o_group_header:contains("blip (2)")').click();
+        list.$('.o_data_row input').click();
+        assert.strictEqual(true, list.sidebar.$el.is(':visible'),
+            "element checked so sidebar")
+
+        // open yop grouping and verify blip are still checked
+        list.$('.o_group_header:contains("yop (1)")').click()
+        assert.strictEqual(2, list.$('.o_data_row input:checked').length,
+            "opening a grouping does not uncheck others");
+        assert.strictEqual(true, list.sidebar.$el.is(':visible'),
+            "element checked so sidebar")
+
+        // close and open blip grouping and verify blip are unchecked
+        list.$('.o_group_header:contains("blip (2)")').click();
+        list.$('.o_group_header:contains("blip (2)")').click();
+        assert.strictEqual(0, list.$('.o_data_row input:checked').length,
+            "opening and closing a grouping uncheck its elements");
+        assert.strictEqual(false, list.sidebar.$el.is(':visible'),
+            "no element checked so no sidebar")
+
+        list.destroy();
+    });
+
     QUnit.test('aggregates are computed correctly', function (assert) {
         assert.expect(4);
 
