@@ -22,26 +22,24 @@
                         </button>
                     </div>
                 </div>
-                <xpath expr="//group[@name='action_wrapper']" position="inside">
-                    <group>
-                        <field name="trigger"/>
+                <xpath expr="//group[@name='action_content']" position="inside">
+                    <field name="trigger"/>
 
-                        <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}"/>
-                        <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                    <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}"/>
+                    <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
 
-                        <field name="on_change_fields"
-                            attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}"/>
-                        <field name="trg_date_id"
-                            attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
-                        <label for="trg_date_range"
-                            attrs="{'invisible': [('trigger', '!=', 'on_time')]}"/>
-                        <div class="o_row" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
-                            <field name="trg_date_range" attrs="{'required': [('trigger','=','on_time')]}"/>
-                            <field name="trg_date_range_type" attrs="{'required': [('trigger','=','on_time')]}"/>
-                        </div>
-                        <field name="trg_date_calendar_id" 
-                            attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
-                    </group>
+                    <field name="on_change_fields"
+                        attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}"/>
+                    <field name="trg_date_id"
+                        attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
+                    <label for="trg_date_range"
+                        attrs="{'invisible': [('trigger', '!=', 'on_time')]}"/>
+                    <div class="o_row" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
+                        <field name="trg_date_range" attrs="{'required': [('trigger','=','on_time')]}"/>
+                        <field name="trg_date_range_type" attrs="{'required': [('trigger','=','on_time')]}"/>
+                    </div>
+                    <field name="trg_date_calendar_id"
+                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
                 </xpath>
             </field>
         </record>
