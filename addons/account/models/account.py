@@ -1145,7 +1145,7 @@ class AccountReconcileModel(models.Model):
         ], required=True, default='percentage')
     is_tax_price_included = fields.Boolean(string='Is Tax Included in Price', related='tax_id.price_include',
         help='Technical field used inside the view to make the force_tax_included field readonly if the tax is already price included.')
-    tax_amount_type = fields.Selection(related='tax_id.amount_type',
+    tax_amount_type = fields.Selection(string='Tax Amount Type', related='tax_id.amount_type',
         help='Technical field used inside the view to make the force_tax_included field invisible if the tax is a group.')
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
@@ -1163,7 +1163,7 @@ class AccountReconcileModel(models.Model):
         ], string="Second Amount type",required=True, default='percentage')
     is_second_tax_price_included = fields.Boolean(string='Is Second Tax Included in Price', related='second_tax_id.price_include',
         help='Technical field used inside the view to make the force_second_tax_included field readonly if the tax is already price included.')
-    second_tax_amount_type = fields.Selection(related='second_tax_id.amount_type',
+    second_tax_amount_type = fields.Selection(string='Second Tax Amount Type', related='second_tax_id.amount_type',
         help='Technical field used inside the view to make the force_second_tax_included field invisible if the tax is a group.')
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
