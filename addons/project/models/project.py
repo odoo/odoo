@@ -505,6 +505,8 @@ class Task(models.Model):
     partner_email = fields.Char(related='partner_id.email', string='Customer Email')
     partner_phone = fields.Char(related='partner_id.phone')
     partner_city = fields.Char(related='partner_id.city', readonly=False)
+    commercial_partner_id = fields.Many2one(
+        'res.partner', related='partner_id.commercial_partner_id', readonly=True, store=True)    
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
