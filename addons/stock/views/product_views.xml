@@ -62,17 +62,17 @@
         <record id="product_template_search_form_view_stock" model="ir.ui.view">
             <field name="name">product.template.search.stock.form</field>
             <field name="model">product.template</field>
+            <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <field name="pricelist_id" position="after">
+                <xpath expr="//field[@name='pricelist_id']" position="after">
                     <separator/>
                     <field name="location_id" widget="selection" context="{'location': self}"/>
                     <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
-                    <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0),('type','not in',('service', 'consu'))]"/>
-                    <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
-                </field>
+                    <filter name="real_stock_negative" string="Negative Forecasted Quantity" domain="[('virtual_available','&lt;',0)]"/>
+                </xpath>
             </field>
         </record>
 
@@ -82,23 +82,21 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='packaging']" position="before">
-                    <group name="inventory">
-                        <group string="Operations" name="operations">
-                            <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
-                            <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
-                            <label for="sale_delay"/>
-                            <div>
-                                <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
-                            </div>
-                        </group>
-                        <group string="Traceability" name="traceability" groups="stock.group_production_lot">
-                            <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
-                        </group>
-                         <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
-                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
-                        </group>
+                <xpath expr="//group[@name='group_lots_and_weight']" position="before">
+                    <group string="Operations" name="operations">
+                        <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
+                        <label for="sale_delay" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
+                        <div attrs="{'invisible': [('sale_ok', '=', False)]}">
+                            <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
+                        </div>
+                    </group>
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot">
+                        <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                    </group>
+                     <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
+                        <field name="property_stock_production" domain="[('usage', '=', 'production')]"/>
+                        <field name="property_stock_inventory" domain="[('usage', '=', 'inventory')]"/>
                     </group>
                 </xpath>
                 <page name="inventory" position="inside">

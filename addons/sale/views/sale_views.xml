@@ -929,17 +929,14 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="sale" position="inside">
+                <xpath expr="//group[@name='email_template_and_project']" position="before">
                     <group string="Invoicing" name="invoicing">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
+                        <field name="hide_expense_policy" invisible="1"/>
+                        <field name="expense_policy" widget="radio" attrs="{'invisible': [('hide_expense_policy', '=', True)]}"/>
                     </group>
-                </group>
-                <group name="purchase" position="inside">
-                    <group string="Invoicing" name="invoicing">
-                        <field name="expense_policy" widget="radio"/>
-                    </group>
-                </group>
+                </xpath>
             </field>
         </record>
 
