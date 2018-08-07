@@ -246,6 +246,8 @@ class ir_attachment(osv.osv):
     def _check_serving_attachments(self, cr, uid, ids, context=None):
         # restrict writing on attachments that could be served by the
         # ir.http's dispatch exception handling
+        if uid == SUPERUSER_ID:
+            return True
         user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         for ira in self.browse(cr, uid, ids, context):
             if ira.type == 'binary' and ira.url:
