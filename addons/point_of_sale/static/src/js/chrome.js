@@ -614,7 +614,6 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
 
     build_chrome: function() { 
         var self = this;
-        FastClick.attach(document.body);
 
         if ($.browser.chrome) {
             var chrome_version = $.browser.version.split('.')[0];
