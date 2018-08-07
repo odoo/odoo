@@ -1247,7 +1247,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     // what happens when we've just pushed modifications for a partner of id partner_id
     saved_client_details: function(partner_id){
         var self = this;
-        this.reload_partners().then(function(){
+        return this.reload_partners().then(function(){
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;
