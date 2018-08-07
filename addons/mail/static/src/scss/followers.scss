@@ -95,6 +95,10 @@
                     text-overflow: ellipsis;
                     height: $o-mail-partner-avatar-size;
                     padding: 3px $o-mail-partner-avatar-size + 8px;
+
+                    &.dropdown-item:hover {
+                        position: initial;
+                    }
                 }
                 > img {
                     @include o-position-absolute($top: 0, $left: 0);
