@@ -322,10 +322,30 @@ class Import(models.TransientModel):
         if encoding != 'utf-8':
             csv_data = csv_data.decode(encoding).encode('utf-8')
 
+        separator = options.get('separator')
+        if not separator:
+            # default for unspecified separator so user gets a message about
+            # having to specify it
+            separator = ','
+            for candidate in (',', ';', '\t', ' ', '|', unicodedata.lookup('unit separator')):
+                # pass through the CSV and check if all rows are the same
+                # length & at least 2-wide assume it's the correct one
+                it = pycompat.csv_reader(io.BytesIO(csv_data), quotechar=options['quoting'], delimiter=candidate)
+                w = None
+                for row in it:
+                    width = len(row)
+                    if w is None:
+                        w = width
+                    if width == 1 or width != w:
+                        break # next candidate
+                else: # nobreak
+                    separator = options['separator'] = candidate
+                    break
+
         csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
-            quotechar=str(options['quoting']),
-            delimiter=str(options['separator']))
+            quotechar=options['quoting'],
+            delimiter=separator)
 
         return (
             row for row in csv_iterator

@@ -6,7 +6,17 @@ import codecs
 
 from odoo.tests import common
 
-class TestEncoding(common.TransactionCase):
+class ImportCase(common.TransactionCase):
+    def _make_import(self, contents):
+        return self.env['base_import.import'].create({
+            'res_model': 'base_import.tests.models.complex',
+            'file_name': 'f',
+            'file_type': 'text/csv',
+            'file': contents,
+        })
+
+
+class TestEncoding(ImportCase):
     """
     create + parse_preview -> check result options
     """
@@ -47,13 +57,83 @@ class TestEncoding(common.TransactionCase):
         self.assertEqual(r['options']['encoding'], 'iso-8859-1')
         self.assertEqual(r['preview'], [['text'], [s.decode('iso-8859-1')]])
 
-    def _make_import(self, contents):
-        return self.env['base_import.import'].create({
-            'res_model': 'base_import.tests.models.complex',
-            'file_name': 'f',
-            'file_type': 'text/csv',
-            'file': contents,
+class TestFileSeparator(ImportCase):
+
+    def setUp(self):
+        super().setUp()
+        self.imp = self._make_import(
+"""c|f
+a|1
+b|2
+c|3
+d|4
+""")
+
+    def test_explicit_success(self):
+        r = self.imp.parse_preview({
+            'separator': '|',
+            'headers': True,
+            'quoting': '"',
         })
+        self.assertEqual(r['headers'], ['c', 'f'])
+        self.assertEqual(r['preview'], [
+            ['a', '1'],
+            ['b', '2'],
+            ['c', '3'],
+            ['d', '4'],
+        ])
+        self.assertEqual(r['options']['separator'], '|')
+
+    def test_explicit_fail(self):
+        """ Don't protect user against making mistakes
+        """
+        r = self.imp.parse_preview({
+            'separator': ',',
+            'headers': True,
+            'quoting': '"',
+        })
+        self.assertEqual(r['headers'], ['c|f'])
+        self.assertEqual(r['preview'], [
+            ['a|1'],
+            ['b|2'],
+            ['c|3'],
+            ['d|4'],
+        ])
+        self.assertEqual(r['options']['separator'], ',')
+
+    def test_guess_ok(self):
+        r = self.imp.parse_preview({
+            'separator': '',
+            'headers': True,
+            'quoting': '"',
+        })
+        self.assertEqual(r['headers'], ['c', 'f'])
+        self.assertEqual(r['preview'], [
+            ['a', '1'],
+            ['b', '2'],
+            ['c', '3'],
+            ['d', '4'],
+        ])
+        self.assertEqual(r['options']['separator'], '|')
+
+    def test_noguess(self):
+        """ If the guesser has no idea what the separator is, it defaults to
+        "," but should not set that value
+        """
+        imp = self._make_import('c\na\nb\nc\nd')
+        r = imp.parse_preview({
+            'separator': '',
+            'headers': True,
+            'quoting': '"',
+        })
+        self.assertEqual(r['headers'], ['c'])
+        self.assertEqual(r['preview'], [
+            ['a'],
+            ['b'],
+            ['c'],
+            ['d'],
+        ])
+        self.assertEqual(r['options']['separator'], '')
 
 class TestNumberSeparators(common.TransactionCase):
     def test_parse_float(self):
