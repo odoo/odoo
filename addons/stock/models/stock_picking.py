@@ -923,7 +923,7 @@ class Picking(models.Model):
             note = render_method(rendering_context)
 
             self.env['mail.activity'].create({
-                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
                 'note': note,
                 'user_id': responsible.id,
                 'res_id': parent.id,
