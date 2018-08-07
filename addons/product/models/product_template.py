@@ -103,6 +103,7 @@ class ProductTemplate(models.Model):
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default Unit of Measure used for all stock operation.")
+    uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,

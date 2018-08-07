@@ -62,6 +62,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product.product_template_kanban_view"/>
+            <field name="search_view_id" ref="product.product_template_search_view"/>
             <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -871,14 +872,6 @@
             </field>
         </record>
 
-        <record id="action_product_sale_list" model="ir.actions.act_window">
-            <field name="name">Sales Order Lines</field>
-            <field name="res_model">sale.order.line</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
-            <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
-        </record>
-
         <record model="ir.ui.view" id="product_form_view_sale_order_button">
             <field name="name">product.product.sale.order</field>
             <field name="model">product.product</field>
@@ -886,9 +879,15 @@
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
-                    <button class="oe_stat_button" name="%(action_product_sale_list)d"
-                        type="action" icon="fa-usd" groups="sales_team.group_sale_salesman">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
+                    <button class="oe_stat_button" name="action_view_sales"
+                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Sold</span>
+                        </div>
                     </button>
                 </button>
                 <group name="description" position="after">
@@ -909,9 +908,14 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}"
-                        groups="sales_team.group_sale_salesman">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
+                        type="object" icon="fa-signal" groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Sold</span>
+                        </div>
                     </button>
                 </button>
                 <group name="description" position="after">
@@ -929,17 +933,14 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="sale" position="inside">
+                <xpath expr="//group[@name='email_template_and_project']" position="before">
                     <group string="Invoicing" name="invoicing">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
+                        <field name="hide_expense_policy" invisible="1"/>
+                        <field name="expense_policy" widget="radio" attrs="{'invisible': [('hide_expense_policy', '=', True)]}"/>
                     </group>
-                </group>
-                <group name="purchase" position="inside">
-                    <group string="Invoicing" name="invoicing">
-                        <field name="expense_policy" widget="radio"/>
-                    </group>
-                </group>
+                </xpath>
             </field>
         </record>
 

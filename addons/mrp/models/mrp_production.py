@@ -62,6 +62,7 @@ class MrpProduction(models.Model):
         'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
+    product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         default=_get_default_picking_type, required=True)
@@ -83,7 +84,7 @@ class MrpProduction(models.Model):
         states={'confirmed': [('readonly', False)]}, oldname="date_planned")
     date_planned_finished = fields.Datetime(
         'Deadline End', copy=False, default=fields.Datetime.now,
-        index=True, 
+        index=True,
         states={'confirmed': [('readonly', False)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
@@ -99,11 +100,11 @@ class MrpProduction(models.Model):
              "work centers based on production planning.")
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Raw Materials', oldname='move_lines',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
@@ -146,7 +147,7 @@ class MrpProduction(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('mrp.production'),
         required=True)
 
-    check_to_done = fields.Boolean(compute="_get_produced_qty", string="Check Produced Qty", 
+    check_to_done = fields.Boolean(compute="_get_produced_qty", string="Check Produced Qty",
         help="Technical Field to see if we can show 'Mark as Done' button")
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
     procurement_group_id = fields.Many2one(
@@ -163,6 +164,14 @@ class MrpProduction(models.Model):
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+
+    @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
+    def _compute_product_uom_qty(self):
+        for production in self:
+            if production.product_id.uom_id != production.product_uom_id:
+                production.product_uom_qty = production.product_uom_id._compute_quantity(production.product_qty, production.product_id.uom_id)
+            else:
+                production.product_uom_qty = production.product_qty
 
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
@@ -648,7 +657,7 @@ class MrpProduction(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('production_id', '=', self.id)]
         return action
-    
+
     @api.model
     def get_empty_list_help(self, help):
         self = self.with_context(
