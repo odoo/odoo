@@ -1,15 +1,15 @@
 <odoo>
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_layout" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'quote' or sales_order and sales_order.state in ('sent', 'cancel')">
+            <li t-if="page_name == 'quote' or sales_order and sales_order.state in ('sent', 'cancel')" class="breadcrumb-item">
                 <a t-if="sales_order" t-attf-href="/my/quotes?{{ keep_query() }}">Quotations</a>
                 <t t-else="">Quotations</t>
             </li>
-            <li t-if="page_name == 'order' or sales_order and sales_order.state not in ('sent', 'cancel')">
+            <li t-if="page_name == 'order' or sales_order and sales_order.state not in ('sent', 'cancel')" class="breadcrumb-item">
                 <a t-if="sales_order" t-attf-href="/my/orders?{{ keep_query() }}">Sales Orders</a>
                 <t t-else="">Sales Orders</t>
             </li>
-            <li t-if="sales_order">
+            <li t-if="sales_order" class="breadcrumb-item">
                 <t t-if="sales_order.state in ('sent', 'cancel')">Quotation</t>
                 <t t-else="">Order</t>
                 <t t-esc="sales_order.name"/>

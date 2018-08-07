@@ -34,12 +34,6 @@ class SaleQuoteTemplate(models.Model):
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
 
-    @api.constrains('require_signature', 'require_payment')
-    def _check_confirmation(self):
-        for template in self:
-            if not template.require_signature and not template.require_payment:
-                raise ValidationError(_('Please select a confirmation mode in Confirmation: Digital Signature, Electronic Payment or both.'))
-
 
 class SaleQuoteLine(models.Model):
     _name = "sale.quote.line"

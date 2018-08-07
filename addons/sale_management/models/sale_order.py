@@ -3,10 +3,8 @@
 
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models, _
-from odoo.tools.translate import html_translate
+from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import ValidationError
 
 from werkzeug.urls import url_encode
 
@@ -154,12 +152,6 @@ class SaleOrder(models.Model):
 
         if template.note:
             self.note = template.note
-
-    @api.constrains('template_id', 'require_signature', 'require_payment')
-    def _check_portal_confirmation(self):
-        for order in self.sudo().filtered('template_id'):
-            if not order.require_signature and not order.require_payment:
-                raise ValidationError(_('Please select a confirmation mode in Other Information: Digital Signature, Electronic Payment or both.'))
 
     @api.multi
     def open_quotation(self):
