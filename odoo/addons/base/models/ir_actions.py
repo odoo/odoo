@@ -583,7 +583,42 @@ class IrServerObjectLines(models.Model):
                                             "When Formula type is selected, this field may be a Python expression "
                                             " that can use the same values as for the code field on the server action.\n"
                                             "If Value type is selected, the value will be used directly without evaluation.")
-    type = fields.Selection([('value', 'Value'), ('equation', 'Python expression')], 'Evaluation Type', default='value', required=True, change_default=True)
+    type = fields.Selection([
+        ('value', 'Value'),
+        ('reference', 'Reference'),
+        ('equation', 'Python expression')
+    ], 'Evaluation Type', default='value', required=True, change_default=True)
+    resource_ref = fields.Reference(
+        string='Record', selection='_selection_target_model',
+        compute='_compute_resource_ref', inverse='_set_resource_ref')
+
+    @api.model
+    def _selection_target_model(self):
+        models = self.env['ir.model'].search([])
+        return [(model.model, model.name) for model in models]
+
+    @api.depends('col1.relation', 'value', 'type')
+    def _compute_resource_ref(self):
+        for line in self:
+            if line.type in ['reference', 'value'] and line.col1 and line.col1.relation:
+                value = line.value or ''
+                try:
+                    value = int(value)
+                    if not self.env[line.col1.relation].browse(value).exists():
+                        record = self.env[line.col1.relation]._search([], limit=1)
+                        value = record[0] if record else 0
+                except ValueError:
+                    record = self.env[line.col1.relation]._search([], limit=1)
+                    value = record[0] if record else 0
+                line.resource_ref = '%s,%s' % (line.col1.relation, value)
+            else:
+                line.resource_ref = False
+
+    @api.onchange('resource_ref')
+    def _set_resource_ref(self):
+        for line in self.filtered(lambda line: line.type == 'reference'):
+            if line.resource_ref:
+                line.value = str(line.resource_ref.id)
 
     @api.multi
     def eval_value(self, eval_context=None):
