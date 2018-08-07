@@ -101,7 +101,7 @@ function getMatchedCSSRules(a) {
         }
     });
 
-    if (style.display === 'block') {
+    if (a.tagName !== "IMG" && style.display === 'block') {
         delete style.display;
     }
 
