@@ -911,6 +911,7 @@ class PosOrderLine(models.Model):
     _rec_name = "product_id"
 
     def _order_line_fields(self, line, session_id=None):
+        Product = self.env['product.product']
         if line and 'name' not in line[2]:
             session = self.env['pos.session'].browse(session_id).exists() if session_id else None
             if session and session.config_id.sequence_line_id:
@@ -920,8 +921,19 @@ class PosOrderLine(models.Model):
                 # fallback on any pos.order.line sequence
                 line[2]['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
 
+        if not Product.browse(line[2]['product_id']).exists():
+            _logger.warning("Order created with product %s but no longer exists")
+            product = self.env.ref('point_of_sale.product_unknown', raise_if_not_found=False)
+            if not product:
+                line[2]['product_id'] = self.env['ir.model.data'].sudo()._update('product.product', 'point_of_sale', {
+                    'name': _("Missing Product"),
+                    'active': False,
+                }, xml_id='product_unknown')
+            else:
+                line[2]['product_id'] = product.id
+
         if line and 'tax_ids' not in line[2]:
-            product = self.env['product.product'].browse(line[2]['product_id'])
+            product = Product.browse(line[2]['product_id'])
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
