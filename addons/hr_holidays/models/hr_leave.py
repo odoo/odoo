@@ -158,13 +158,13 @@ class HolidaysRequest(models.Model):
             if self.date_from:
                 date_from = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_from), fields.Datetime.from_string(self.date_from).time()))
             else:
-                date_from = self.request_date_from
+                date_from = datetime.combine(self.request_date_from, time.min)
 
         if self.request_date_to:
             if self.date_to:
                 date_to = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_to), fields.Datetime.from_string(self.date_to).time()))
             else:
-                date_to = self.request_date_to
+                date_to = datetime.combine(self.request_date_to, time.max)
 
         if not self.request_date_from or not self.request_date_to:
             if date_from:
@@ -247,8 +247,8 @@ class HolidaysRequest(models.Model):
             date_to = date_from + timedelta(hours=self.employee_id.resource_calendar_id.hours_per_day)
             self.date_to = date_to
 
-        self.request_date_from = date_from.date()
-        self.request_date_to = date_to.date()
+        self.request_date_from = date_from.date() if date_from else False
+        self.request_date_to = date_to.date() if date_to else False
 
         if (date_from and date_to) and (date_from.day < date_to.day):
             self.request_unit_all = 'period'
@@ -266,8 +266,8 @@ class HolidaysRequest(models.Model):
         date_from = fields.Datetime.from_string(self.date_from)
         date_to = fields.Datetime.from_string(self.date_to)
 
-        self.request_date_from = date_from.date()
-        self.request_date_to = date_to.date()
+        self.request_date_from = date_from.date() if date_from else False
+        self.request_date_to = date_to.date() if date_to else False
 
         if (date_from and date_to) and (date_from.day < date_to.day):
             self.request_unit_all = 'period'
