@@ -40,13 +40,14 @@
             <h3 t-if="widget.title"><t t-esc="widget.title"/></h3>
             <div class="o_calendar_filter_items">
                 <div t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display" class="o_calendar_filter_item" t-att-data-value="filter.value" t-att-data-id="filter.id">
-                    <div class="custom-control custom-checkbox">
+                    <t t-set="id_for_label" t-value="_.uniqueId('o_calendar_filter_item_')"/>
+                    <div class="custom-control custom-control-inline custom-checkbox">
                         <input type="checkbox"
-                            t-attf-id="o_calendar_filter_item_#{filter_index}"
+                            t-att-id="id_for_label"
                             name="selection"
                             class="custom-control-input"
                             t-att-checked="(filter.active ? true : undefined)"/>
-                        <label t-attf-for="o_calendar_filter_item_#{filter_index}"
+                        <label t-att-for="id_for_label"
                             class="custom-control-label">
                             <t t-if="filter.value == 'all'">
                                 <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
