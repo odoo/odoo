@@ -1674,6 +1674,79 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
     def.resolve();
 });
 
+QUnit.test('chatter: do not duplicate messages on (un)star message', function (assert) {
+    assert.expect(4);
+
+    this.data.partner.records[0].message_ids = [1];
+    this.data['mail.message'].records = [{
+        author_id: ["1", "John Doe"],
+        body: "A message",
+        date: "2016-12-20 09:35:40",
+        id: 1,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'toggle_message_starred') {
+                var messageData = _.findWhere(
+                    this.data['mail.message'].records,
+                    { id: args.args[0][0] }
+                );
+                messageData.is_starred = !messageData.is_starred;
+                // simulate notification received by mail_service from longpoll
+                var data = {
+                    info: false,
+                    message_ids: [messageData.id],
+                    starred: messageData.is_starred,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                form.call('bus_service', 'trigger', 'notification', [notification]);
+                return $.when();
+            }
+            return this._super(route, args);
+        },
+        session: {},
+    });
+
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should be a single message in the chatter");
+    assert.ok(form.$('.o_thread_message .o_thread_message_star.fa-star-o').length,
+        "message should not be starred");
+
+    // star message
+    form.$('.o_thread_message .o_thread_message_star').click();
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should still be a single message in the chatter after starring the message");
+
+    // unstar message
+    form.$('.o_thread_message .o_thread_message_star').click();
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should still be a single message in the chatter after unstarring the message");
+
+    //cleanup
+    form.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {
