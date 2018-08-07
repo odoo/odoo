@@ -25,7 +25,7 @@ HOURS_PER_DAY = 8
 def float_to_time(float_hour):
     if float_hour == 24.0:
         return datetime.time.max
-    return datetime.time(int(math.modf(float_hour)[1]), int(60 * math.modf(float_hour)[0]), 0)
+    return datetime.time(int(math.modf(float_hour)[1]), int(float_round(60 * math.modf(float_hour)[0], precision_digits=0)), 0)
 
 
 def to_naive_user_tz(datetime, record):
