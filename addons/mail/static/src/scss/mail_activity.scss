@@ -159,18 +159,20 @@
 
         .o_activity_link_kanban {
             visibility: hidden;
+            @include media-breakpoint-down(sm) {
+                visibility: visible;
+            }
         }
 
-        ul.o_activity {
+        div.o_activity {
             width: 290px;
             padding: 0px 0px;
 
-            & > li:last-child {
+            > :last-child {
                 background-color: $o-brand-lightsecondary;
-                color: gray('900');
                 line-height: 3em;
             }
-            li > ul.o_activity_log {
+            ul.o_activity_log {
                 max-height: 300px;
                 overflow-y: auto;
                 color: $body-color;
