@@ -549,7 +549,11 @@ class IrModelFields(models.Model):
         failed_dependencies = []
         for rec in self:
             model = self.env[rec.model]
-            field = model._fields[rec.name]
+            if rec.name in model._fields:
+                field = model._fields[rec.name]
+            else:
+                # field hasn't been loaded (yet?)
+                continue
             for dependant, path in model._field_triggers.get(field, ()):
                 if dependant.manual:
                     failed_dependencies.append((field, dependant))
@@ -746,6 +750,7 @@ class IrModelFields(models.Model):
             'readonly': bool(field.readonly),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
+            'size': getattr(field, 'size', None),
             'translate': bool(field.translate),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
             'relation_table': field.relation if field.type == 'many2many' else None,

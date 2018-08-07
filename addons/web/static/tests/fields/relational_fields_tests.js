@@ -10483,6 +10483,31 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_tags', function (assert) {
+        assert.expect(1);
+        this.data.turtle.records[0].partner_ids = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch:'<form string="Turtles">' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="partner_ids" widget="many2many_tags"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.deepEqual(
+            form.$('.o_field_many2manytags.o_field_widget .badge .o_badge_text').attr('title'),
+            'second record', 'the title should be filled in'
+        );
+
+        form.destroy();
+    });
+
     QUnit.module('FieldStatus');
 
     QUnit.test('static statusbar widget on many2one field', function (assert) {
