@@ -76,7 +76,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
         {name: 'encoding', label: _lt("Encoding:"), value: ''},
-        {name: 'separator', label: _lt("Separator:"), value: ','},
+        {name: 'separator', label: _lt("Separator:"), value: ''},
         {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
     parse_opts: [
