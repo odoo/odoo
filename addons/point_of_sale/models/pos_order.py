@@ -179,7 +179,7 @@ class PosOrder(models.Model):
         }
 
     @api.model
-    def _get_account_move_line_group_data_type_key(self, data_type, values):
+    def _get_account_move_line_group_data_type_key(self, data_type, values, options={}):
         """
         Return a tuple which will be used as a key for grouping account
         move lines in _create_account_move_line method.
@@ -194,10 +194,16 @@ class PosOrder(models.Model):
                     values['analytic_account_id'],
                     values['debit'] > 0)
         elif data_type == 'tax':
-            return ('tax',
-                    values['partner_id'],
-                    values['tax_line_id'],
-                    values['debit'] > 0)
+            order_id = values.pop('order_id', False)
+            tax_key = ('tax',
+                       values['partner_id'],
+                       values['tax_line_id'],
+                       values['debit'] > 0)
+            if options.get('rounding_method') == 'round_globally':
+                tax_key = ('tax',
+                           values['tax_line_id'],
+                           order_id)
+            return tax_key
         elif data_type == 'counter_part':
             return ('counter_part',
                     values['partner_id'],
@@ -307,7 +313,7 @@ class PosOrder(models.Model):
                     'move_id': move.id,
                 })
 
-                key = self._get_account_move_line_group_data_type_key(data_type, values)
+                key = self._get_account_move_line_group_data_type_key(data_type, values, {'rounding_method': rounding_method})
                 if not key:
                     return
 
@@ -321,6 +327,14 @@ class PosOrder(models.Model):
                         current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
                         current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                        if key[0] == 'tax' and rounding_method == 'round_globally':
+                            if current_value['debit'] - current_value['credit'] > 0:
+                                current_value['debit'] = current_value['debit'] - current_value['credit']
+                                current_value['credit'] = 0
+                            else:
+                                current_value['credit'] = current_value['credit'] - current_value['debit']
+                                current_value['debit'] = 0
+
                 else:
                     grouped_data[key].append(values)
 
@@ -380,7 +394,8 @@ class PosOrder(models.Model):
                         'credit': ((tax['amount'] > 0) and tax['amount']) or 0.0,
                         'debit': ((tax['amount'] < 0) and -tax['amount']) or 0.0,
                         'tax_line_id': tax['id'],
-                        'partner_id': partner_id
+                        'partner_id': partner_id,
+                        'order_id': order.id
                     })
 
             # round tax lines per order
