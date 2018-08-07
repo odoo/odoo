@@ -34,3 +34,16 @@ class TestServerActionsEmail(TestServerActionsBase):
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_root') | self.env.ref('base.partner_demo'))
         self.assertEqual(self.test_partner.message_channel_ids, self.env.ref('mail.channel_all_employees'))
+
+    def test_action_next_activity(self):
+        self.action.write({
+            'state': 'next_activity',
+            'activity_user_type': 'specific',
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'activity_summary': 'TestNew',
+        })
+        before_count = self.env['mail.activity'].search_count([])
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: create next activity action correctly finished should return False')
+        self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 1)
+        self.assertEqual(self.env['mail.activity'].search_count([('summary', '=', 'TestNew')]), 1)
