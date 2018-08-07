@@ -71,7 +71,7 @@ class StockRule(models.Model):
             'bom_id': bom.id,
             'date_planned_start': fields.Datetime.to_string(self._get_date_planned(product_id, values)),
             'date_planned_finished': values['date_planned'],
-            'procurement_group_id': values.get('group_id').id if values.get('group_id', False) else False,
+            'procurement_group_id': False,
             'propagate': self.propagate,
             'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
             'company_id': values['company_id'].id,
