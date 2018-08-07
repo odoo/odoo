@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.tools.float_utils import float_round
 
 
 class ProductTemplate(models.Model):
@@ -43,27 +44,20 @@ class ProductTemplate(models.Model):
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
-    def _sales_count(self):
+    def _compute_sales_count(self):
         for product in self:
-            product.sales_count = sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids])
+            product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
 
     @api.multi
     def action_view_sales(self):
-        self.ensure_one()
-        action = self.env.ref('sale.action_product_sale_list')
-        product_ids = self.with_context(active_test=False).product_variant_ids.ids
-
-        return {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'target': action.target,
-            'context': "{'default_product_id': " + str(product_ids[0]) + "}",
-            'res_model': action.res_model,
-            'domain': [('state', 'in', ['sale', 'done']), ('product_id.product_tmpl_id', '=', self.id)],
+        action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
+        action['domain'] = [('product_tmpl_id', 'in', self.ids)]
+        action['context'] = {
+            'search_default_last_year': 1,
+            'pivot_measures': ['product_qty'],
+            'search_default_team_id': 1
         }
+        return action
 
     @api.onchange('type')
     def _onchange_type(self):
