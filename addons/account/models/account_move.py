@@ -118,6 +118,11 @@ class AccountMove(models.Model):
     reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
 
+    @api.constrains('line_ids', 'journal_id', 'date', 'ref', 'name', 'auto_reverse', 'reverse_date')
+    def _validate_move_modification(self):
+        if 'posted' in self.mapped('line_ids.payment_id.state'):
+            raise ValidationError(_("You cannot modify a journal entry linked to a posted payment."))
+
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
         self.tax_type_domain = self.journal_id.type if self.journal_id.type in ('sale', 'purchase') else None
@@ -314,6 +319,10 @@ class AccountMove(models.Model):
 
     @api.multi
     def action_post(self):
+        if self.mapped('line_ids.payment_id'):
+            if self.journal_id.post_at_bank_rec:
+                raise UserError(_("This journal entry has been generated for a payment made in a journal configured so that only the payments reconciled with a bank statement have posted entries. It will be posted automatically after performing bank reconciliation."))
+            raise UserError(_("You cannot post a journal entry linked to a payment manually."))
         return self.post()
 
     @api.multi

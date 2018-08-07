@@ -59,7 +59,7 @@ class CrmTeam(models.Model):
     @api.multi
     def _compute_invoiced(self):
         invoice_data = self.env['account.invoice'].read_group([
-            ('state', 'in', ['open', 'paid']),
+            ('state', 'in', ['open', 'in_payment', 'paid']),
             ('team_id', 'in', self.ids),
             ('date', '<=', date.today()),
             ('date', '>=', date.today().replace(day=1)),
@@ -86,7 +86,7 @@ class CrmTeam(models.Model):
         if self.dashboard_graph_model == 'sale.report':
             return "AND state in ('sale', 'done')"
         elif self.dashboard_graph_model == 'account.invoice.report':
-            return "AND state in ('open', 'paid')"
+            return "AND state in ('open', 'in_payment', 'paid')"
         return super(CrmTeam, self)._extra_sql_conditions()
 
     def _graph_title_and_key(self):

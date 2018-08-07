@@ -30,7 +30,7 @@ class PurchaseBillUnion(models.Model):
                     id as vendor_bill_id, NULL as purchase_order_id
                 FROM account_invoice
                 WHERE
-                    type='in_invoice' and state in ('open','paid','cancel')
+                    type='in_invoice' and state in ('open','in_payment','paid','cancel')
             UNION
                 SELECT
                     -id, name, partner_ref, partner_id, date_order as date, amount_untaxed as amount, currency_id, company_id,

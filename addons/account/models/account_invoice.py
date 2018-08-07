@@ -255,12 +255,14 @@ class AccountInvoice(models.Model):
     state = fields.Selection([
             ('draft','Draft'),
             ('open', 'Open'),
+            ('in_payment', 'In Payment'),
             ('paid', 'Paid'),
             ('cancel', 'Cancelled'),
         ], string='Status', index=True, readonly=True, default='draft',
         track_visibility='onchange', copy=False,
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
              " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
+             " * The 'In Payment' status is used when payments have been registered for the entirety of the invoice in a journal configured to post entries at bank reconciliation only, and some of them haven't been reconciled with a bank statement line yet.\n"
              " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
              " * The 'Cancelled' status is used when user cancel invoice.")
     sent = fields.Boolean(readonly=True, default=False, copy=False,
@@ -480,11 +482,11 @@ class AccountInvoice(models.Model):
     def _get_printed_report_name(self):
         self.ensure_one()
         return  self.type == 'out_invoice' and self.state == 'draft' and _('Draft Invoice') or \
-                self.type == 'out_invoice' and self.state in ('open','paid') and _('Invoice - %s') % (self.number) or \
+                self.type == 'out_invoice' and self.state in ('open','in_payment','paid') and _('Invoice - %s') % (self.number) or \
                 self.type == 'out_refund' and self.state == 'draft' and _('Credit Note') or \
                 self.type == 'out_refund' and _('Credit Note - %s') % (self.number) or \
                 self.type == 'in_invoice' and self.state == 'draft' and _('Vendor Bill') or \
-                self.type == 'in_invoice' and self.state in ('open','paid') and _('Vendor Bill - %s') % (self.number) or \
+                self.type == 'in_invoice' and self.state in ('open','in_payment','paid') and _('Vendor Bill - %s') % (self.number) or \
                 self.type == 'in_refund' and self.state == 'draft' and _('Vendor Credit Note') or \
                 self.type == 'in_refund' and _('Vendor Credit Note - %s') % (self.number)
 
@@ -902,11 +904,16 @@ class AccountInvoice(models.Model):
     def action_invoice_paid(self):
         # lots of duplicate calls to action_invoice_paid, so we remove those already paid
         to_pay_invoices = self.filtered(lambda inv: inv.state != 'paid')
-        if to_pay_invoices.filtered(lambda inv: inv.state != 'open'):
+        if to_pay_invoices.filtered(lambda inv: inv.state not in ('open', 'in_payment')):
             raise UserError(_('Invoice must be validated in order to set it to register payment.'))
         if to_pay_invoices.filtered(lambda inv: not inv.reconciled):
             raise UserError(_('You cannot pay an invoice which is partially paid. You need to reconcile payment entries first.'))
-        return to_pay_invoices.write({'state': 'paid'})
+
+        for invoice in to_pay_invoices:
+            if any([move.journal_id.post_at_bank_rec and move.state == 'draft' for move in invoice.payment_move_line_ids.mapped('move_id')]):
+                invoice.write({'state': 'in_payment'})
+            else:
+                invoice.write({'state': 'paid'})
 
     @api.multi
     def action_invoice_re_open(self):

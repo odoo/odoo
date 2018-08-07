@@ -32,7 +32,7 @@ class AccountInvoiceLine(models.Model):
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = sum([x.uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                qty_done = sum([x.uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'in_payment', 'paid')])
                 quantity = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = s_line.move_ids.sorted(lambda x: x.date)
