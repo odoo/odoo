@@ -222,15 +222,15 @@
                         <field name="move_ids">
                             <tree decoration-muted="scrapped == True" string="Stock Moves">
                                 <field name="product_id"/>
-                                <field name="product_uom_qty"/>
-                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                 <field name="picking_id" invisible="1" />
                                 <field name="create_date" invisible="1" />
                                 <field name="date_expected" invisible="1" />
                                 <field name="scrapped" invisible="1"/>
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="state"/>
+                                <field name="state" invisible="1"/>
+                                <field name="location_id" string="From"/>
+                                <field name="location_dest_id" string="To"/>
+                                <field name="quantity_done"/>
+                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </tree>
                         </field>
                     </page>
