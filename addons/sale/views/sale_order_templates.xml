@@ -3,6 +3,7 @@
 
     <template id="assets_frontend" inherit_id="web.assets_frontend" name="Sale frontend assets">
         <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale.scss"/>
             <script type="text/javascript" src="/sale/static/src/js/sale_portal_sidebar.js"></script>
         </xpath>
     </template>
@@ -13,15 +14,9 @@
         </xpath>
     </template>
 
-    <template id="assets_editor" inherit_id="web_editor.assets_editor" name="Website Quote Editor assets">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale.scss"/>
-        </xpath>
-    </template>
-
   <template id="pricing" name="Price">
       <section id="quote">
-          <h1 class="page-header">Pricing</h1>
+          <h1 class="page-header" id="pricing">Pricing</h1>
 
           <t t-set="display_taxamount" t-value="any([line.tax_id for line in quotation.order_line])"/>
           <t t-set="display_discount" t-value="True in [line.discount > 0 for line in quotation.order_line]"/>
@@ -135,8 +130,8 @@
 
           <div class="clearfix">
             <div id="total" class="row" name="total">
-              <div t-attf-class="col-md-4 float-right #{'col-4' if not type_html else ''}">
-                <table class="table table-sm" style="min-width: 250px;max-width: 400px;">
+              <div class="col-8 col-sm-6 col-md-4 ml-auto">
+                <table class="table table-sm">
                   <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                     <td><strong>Subtotal</strong></td>
                     <td class="text-right">
@@ -254,41 +249,45 @@
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-          <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
+            <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
               <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                   <div class="col-lg-3 d-print-none">
                       <div class="bs-sidebar">
-                          <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
-                              <a role="button" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"/> Accept Order
-                              </a>
-                              <a role="button" t-elif="order_valid and quotation.has_to_be_paid()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"/> <t t-if="not quotation.signature">Accept &amp; </t>Pay
-                              </a>
-                              <a role="button" t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
-                                  <strong>This offer expired!</strong><br/>
-                                  Contact us for new quote.
-                              </a>
-                              <div class="mt8" t-if="order_valid">
-                                  <a data-toggle="modal" data-target="#modaldecline">
-                                      Reject
+                          <t t-if="sales_order.team_id.team_type != 'website'">
+                              <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
+                                  <t t-set="show_hr" t-value="False"/>
+                                  <a role="button" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                      <i class="fa fa-check"/> Accept
+                                      <t t-set="show_hr" t-value="True"/>
                                   </a>
+                                  <a role="button" t-elif="order_valid and quotation.has_to_be_paid()" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                      <i class="fa fa-check"/> <t t-if="not quotation.signature">Accept &amp; </t>Pay
+                                      <t t-set="show_hr" t-value="True"/>
+                                  </a>
+                                  <a role="button" t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
+                                      <strong>This offer expired!</strong><br/>
+                                      Contact us for new quotation.
+                                      <t t-set="show_hr" t-value="True"/>
+                                  </a>
+                                  <hr class="mb0" t-if="show_hr"/>
                               </div>
-                          </div>
-                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
-                              <a role="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Pay Now
-                              </a>
-                          </div>
-                          <hr class="mt0 mb0"/>
+                              <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
+                                  <a role="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                      <i class="fa fa-check"></i> Pay Now
+                                  </a>
+                                  <hr class="mb0"/>
+                              </div>
+                          </t>
+
                           <div class="navspy" t-ignore="true" role="complementary">
                               <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
                           </div>
-                          <hr class="mt0 mb0"/>
-                          <div t-if="order_valid and quotation.state in ['draft', 'sent']" class="text-center">
+
+                          <div t-if="order_valid and quotation.state in ['draft', 'sent']" class="pl-3 pr-3">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
                               <div class="mt8" t-if="days_valid &gt; 0">
+                                  <hr class="mb0"/>
                                   <strong>This offer expires in</strong>
                                   <div class="day_counter mt8 mb16">
                                       <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
@@ -303,7 +302,8 @@
                               </div>
 
 
-                              <div class="text-center mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_untaxed">
+                              <div class="mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_untaxed">
+                                  <hr class="mb0"/>
                                   <p class="text-muted mb8">Your advantage:</p>
                                   <t t-if="quotation.amount_untaxed == quotation.amount_total">
                                       <strong t-field="quotation.amount_total"
@@ -326,6 +326,15 @@
                                   </t>
                               </div>
                          </div>
+
+                         <div class="pb8 ml16 mr16" t-if="quotation.user_id">
+                              <hr class="mb0"/>
+                              <div><strong>Your Contact:</strong></div>
+                              <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="quotation.user_id.image" t-attf-src="data:image/png;base64,#{quotation.user_id.image}" alt="Contact"/>
+                              <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not quotation.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
+                              <span t-field="quotation.user_id" t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                              <a href="#discussion"><i class="fa fa-comment"></i> Contact us</a>
+                        </div>
                       </div>
                   </div>
                   <!-- Page content -->
@@ -417,7 +426,7 @@
                           <form id="decline" method="POST" t-attf-action="/quotation/#{quotation.id}/decline?access_token=#{quotation.access_token}" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
-                              <h4 class="modal-title">Reject This Quote</h4>
+                              <h4 class="modal-title">Reject This Quotation</h4>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             </header>
                             <main class="modal-body">
@@ -436,27 +445,33 @@
 
                       <div class="alert alert-warning alert-dismissable d-print-none" t-if="quotation.state == 'cancel'" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
-                          <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
+                          <strong>This quotation has been canceled.</strong> Contact us to get a new quotation.
                       </div>
 
                       <t t-call="sale.so_quotation_content"/>
 
-                      <div class="text-center d-print-none mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                          <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.has_to_be_paid()">
-                              <i class="fa fa-check"></i> Accept
-                          </a>
-                          <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.has_to_be_paid()">
-                              <i class="fa fa-check"></i> Accept &amp; Pay
-                          </a>
-                          <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
-                              <i class="fa fa-times"></i> Reject
-                          </a>
-                      </div>
-                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
-                          <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
-                              <i class="fa fa-check"></i> Pay Now
-                          </a>
-                      </div>
+                      <t t-if="sales_order.team_id.team_type != 'website'">
+
+                          <div class="text-center d-print-none mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+                              <t t-set="show_buttons" t-value="False"/>
+                              <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" href="#">
+                                  <i class="fa fa-check"></i> Accept
+                                  <t t-set="show_buttons" t-value="True"/>
+                              </a>
+                              <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-elif="order_valid and quotation.has_to_be_paid()" href="#">
+                                  <i class="fa fa-check"/> <t t-if="not quotation.signature">Accept &amp; </t>Pay
+                                  <t t-set="show_buttons" t-value="True"/>
+                              </a>
+                              <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#" t-if="show_buttons">
+                                  <i class="fa fa-times"></i> Reject
+                              </a>
+                          </div>
+                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
+                              <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#">
+                                  <i class="fa fa-check"></i> Pay Now
+                              </a>
+                          </div>
+                      </t>
 
                   </div><!-- //col-lg-9 -->
               </div>
@@ -471,13 +486,8 @@
             <t t-set="object" t-value="quotation"/>
           </t>
       </xpath>
-      <xpath expr="//a[@data-target='#modaldecline']" position="before">
-          <a type="submit" href="#discussion">
-              Ask Changes
-          </a>
-      </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
-          <a role="button" class="btn btn-info" type="submit" href="#discussion">
+          <a role="button" class="btn btn-info" type="submit" href="#discussion" t-if="show_buttons">
               <i class="fa fa-comment"></i> Feedback
           </a>
       </xpath>
@@ -495,11 +505,10 @@
             <t t-if="quotation.state in ('draft','sent','cancel')">Quotation</t>
             <t t-if="quotation.state not in ('draft','sent','cancel')">Order</t>
             <em t-esc="quotation.name"/>
-            <small t-field="quotation.state"/>
-            <div t-ignore="true" class="float-right css_editable_mode_hidden d-print-none">
+            <div t-ignore="true" class="float-md-right css_editable_mode_hidden d-print-none">
                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman" class="list-inline-item">
-                    <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
+                    <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quotation</a>
                     <a role="button" t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
                   </li>
                   <li class="list-inline-item">
@@ -531,27 +540,6 @@
                     <div>
                         <address t-field="quotation.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
-                    <t t-set="tx_ids" t-value="quotation.transaction_ids.filtered(lambda tx: tx.state != 'draft')"/>
-                    <t t-if="tx_ids">
-                        <div>
-                            <strong>Transactions</strong>
-                        </div>
-                        <div>
-                            <t t-foreach="tx_ids" t-as="tx">
-                                <div>
-                                    <span t-esc="tx.reference"/>
-                                    <span class="text-muted" t-field="tx.create_date"/>
-                                    <t t-if="tx.state == 'done'">
-                                        <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
-                                    </t>
-                                    <t t-if="tx.state != 'done'">
-                                        <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
-                                        <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
-                                    </t>
-                                </div>
-                            </t>
-                        </div>
-                    </t>
                 </div>
                 <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
                     <div>
@@ -560,6 +548,32 @@
                     <div>
                         <address t-field="quotation.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <t t-set="invoices" t-value="[i for i in quotation.invoice_ids if i.state not in ['draft', 'cancel']]"/>
+                    <t t-if="invoices">
+                        <div>
+                            <strong>Invoices</strong>
+                        </div>
+                        <div>
+                            <t t-foreach="invoices" t-as="i">
+                                <t t-set="report_url" t-value="'/my/invoices/pdf/%s?%s' % (i.id, 'access_token=%s' % i.access_token if access_token else '')"/>
+                                <div>
+                                    <a t-att-href="report_url"><span class="fa fa-download" role="img" aria-label="Download" title="Download"/></a>
+                                    <a t-att-href="report_url"><span t-esc="i.number"/></a>
+                                    <span class="text-muted" t-field="i.date_invoice"/>
+                                    <t t-if="i.state == 'paid'">
+                                        <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
+                                    </t>
+                                    <t t-if="i.state != 'paid'">
+                                        <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting Payment</span>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
                 </div>
             </div>
         </div>
