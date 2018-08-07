@@ -206,7 +206,7 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: A list of string representing the wkhtmltopdf process command args.
         '''
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
