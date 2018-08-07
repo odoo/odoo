@@ -21,13 +21,38 @@ class PosOrder(models.Model):
     _description = "Point of Sale Orders"
     _order = "id desc"
 
+    # In master: Wrap the 3 following methods into one
+    # The logic is to round the sum for each tax of the order
+    # Then sum each rounded tax to have the the order's tax amount
+    # compute_all decides whether the original tax amounts are already
+    # rounded or not
     @api.model
-    def _amount_line_tax(self, line, fiscal_position_id):
+    def _amount_all_lines_taxes(self):
+        all_taxes = []
+        for line in self.lines:
+            all_taxes += self._line_tax_compute(line, self.fiscal_position_id)
+
+        grouped_tax = {}
+        for tax in all_taxes:
+            grouped_tax.setdefault(tax['id'], 0)
+            grouped_tax[tax['id']] += tax['amount']
+
+        currency = self.pricelist_id.currency_id
+        return sum([currency.round(amount) for id, amount in grouped_tax.items()])
+
+    @api.model
+    def _line_tax_compute(self, line, fiscal_position_id):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         if fiscal_position_id:
             taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
+        return taxes
+
+    # Essentially maintaining API
+    @api.model
+    def _amount_line_tax(self, line, fiscal_position_id):
+        taxes = self._line_tax_compute(line, fiscal_position_id)
         return sum(tax.get('amount', 0.0) for tax in taxes)
 
     @api.model
@@ -524,7 +549,7 @@ class PosOrder(models.Model):
             currency = order.pricelist_id.currency_id
             order.amount_paid = sum(payment.amount for payment in order.statement_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
-            order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
+            order.amount_tax = order._amount_all_lines_taxes()
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 
