@@ -2,23 +2,23 @@
 from odoo import api, fields, models
 
 
-class WizardMultiChartsAccounts(models.TransientModel):
-    _inherit = 'wizard.multi.charts.accounts'
+class AccountChartTemplate(models.Model):
+    _inherit = 'account.chart.template'
 
     @api.model
-    def _prepare_transfer_account(self, name, company):
-        res = super(WizardMultiChartsAccounts, self)._prepare_transfer_account(name, company)
+    def _prepare_transfer_account_for_direct_creation(self, name, company):
+        res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
         xml_id = self.env.ref('l10n_de.tag_de_asset_bs_B_III_2').id
         existing_tags = [x[-1:] for x in res.get('tag_ids', [])]
         res['tag_ids'] = [(6, 0, existing_tags + [xml_id])]
         return res
 
     # Write paperformat and report template used on company
-    @api.model
-    def execute(self):
-        res = super(WizardMultiChartsAccounts, self).execute()
-        if self.company_id.country_id.code == 'DE':
-            self.company_id.write({'external_report_layout': 'din5008', 'paperformat_id': self.env.ref('l10n_de.paperformat_euro_din').id})
+    def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
+        res = super(AccountChartTemplate, self).load_for_current_company(sale_tax_rate, purchase_tax_rate)
+        company = self.env.user.company_id
+        if company.country_id.code == 'DE':
+            company.write({'external_report_layout': 'din5008', 'paperformat_id': self.env.ref('l10n_de.paperformat_euro_din').id})
         return res
 
 class Company(models.Model):
