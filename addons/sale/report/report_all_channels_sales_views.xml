@@ -17,7 +17,9 @@
         <field name="arch" type="xml">
             <search string="Sales by Channel Analysis">
                 <field name="date_order"/>
+                <field name="product_id"/>
                 <filter string="Date" name="current_year" date="date_order" default_period="this_year"/>
+                <filter string="Last 365 Days" name="last_year" domain="[('date_order', '&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-%m-%d'))]"/>
                 <group expand="1" string="Group By">
                     <filter string="Sales Team" name="team_id" context="{'group_by':'team_id'}"/>
                 </group>

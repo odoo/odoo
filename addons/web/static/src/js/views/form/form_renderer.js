@@ -596,6 +596,9 @@ var FormRenderer = BasicRenderer.extend({
             extraClass: 'oe_stat_button',
         });
         $button.append(_.map(node.children, this._renderNode.bind(this)));
+        if (node.attrs.help) {
+            this._addButtonTooltip(node, $button);
+        }
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);

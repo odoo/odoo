@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         ('ordered_timesheet', 'Ordered quantities'),
         ('delivered_timesheet', 'Timesheets on tasks'),
         ('delivered_manual', 'Milestones (manually set quantities on order)')
-    ], string="Invoice based on", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ])
