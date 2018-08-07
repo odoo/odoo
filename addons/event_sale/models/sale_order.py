@@ -8,11 +8,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.ensure_one()
         res = super(SaleOrder, self).action_confirm()
-        self.order_line._update_registrations(confirm=True)
-        if any(self.order_line.filtered(lambda line: line.event_id)):
-            return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
+        for order in self:
+            order.order_line._update_registrations(confirm=True)
+            if any(order.order_line.filtered(lambda line: line.event_id)):
+                return self.env['ir.actions.act_window'].with_context(default_sale_order_id=order.id).for_xml_id(
+                    'event_sale', 'action_sale_order_event_registration')
         return res
 
 
