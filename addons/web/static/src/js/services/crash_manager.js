@@ -127,7 +127,7 @@ var CrashManager = core.Class.extend({
 
             $clipboardBtn = dialog.$(".o_clipboard_button");
             $clipboardBtn.tooltip({title: _t("Copied !"), trigger: "manual", placement: "left"});
-            clipboard = new window.Clipboard($clipboardBtn[0], {
+            clipboard = new window.ClipboardJS($clipboardBtn[0], {
                 text: function () {
                     return (_t("Error") + ":\n" + error.message + "\n\n" + error.data.debug).trim();
                 }
