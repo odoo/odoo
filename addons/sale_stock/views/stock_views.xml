@@ -92,9 +92,15 @@
             <field name="arch" type="xml">
                 <button name="action_view_orderpoints" position="after">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}"
-                        groups="sales_team.group_sale_salesman">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
+                        type="object" icon="fa-signal" attrs="{'invisible': [('sale_ok', '=', False)]}"
+                        groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Sold</span>
+                        </div>
                     </button>
                 </button>
             </field>

@@ -405,6 +405,7 @@ class PurchaseOrderLine(models.Model):
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Product Unit of Measure', required=True)
@@ -609,6 +610,15 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
+
+    @api.multi
+    @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
+    def _compute_product_uom_qty(self):
+        for line in self:
+            if line.product_id.uom_id != line.product_uom:
+                line.product_uom_qty = line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_id)
+            else:
+                line.product_uom_qty = line.product_qty
 
     def _suggest_quantity(self):
         '''
