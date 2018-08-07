@@ -60,10 +60,15 @@ var DocumentThread = Thread.extend({
     /**
      * Add this message to this document thread.
      *
+     * This is ignored if the message is already linked to this document thread.
+     *
      * @override
      * @param {mail.model.Message} message
      */
     addMessage: function (message) {
+        if (_.contains(this._messages, message)) {
+            return;
+        }
         // update internal list of messages
         this._messages.push(message);
         this._messages = _.sortBy(this._messages, function (msg) {
