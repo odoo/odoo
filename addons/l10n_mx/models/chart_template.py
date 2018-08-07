@@ -41,13 +41,9 @@ class AccountChartTemplate(models.Model):
         })
         return res
 
-
-class WizardMultiChartsAccounts(models.TransientModel):
-    _inherit = 'wizard.multi.charts.accounts'
-
     @api.model
-    def _prepare_transfer_account(self, name, company):
-        res = super(WizardMultiChartsAccounts, self)._prepare_transfer_account(name, company)
+    def _get_default_bank_journals_data(self, name, company):
+        res = super(AccountChartTemplate, self)._get_default_bank_journals_data(name, company)
         xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
         existing_tags = [x[-1:] for x in res.get('tag_ids', [])]
         res['tag_ids'] = [(6, 0, existing_tags + [xml_id])]
