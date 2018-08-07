@@ -35,6 +35,7 @@ class res_users(osv.osv):
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if value:
+            self.write(cr, uid, [id], {})  # force update of write_date
             self._set_password(cr, uid, id, value, context=context)
             self.invalidate_cache(cr, uid, context=context)
 

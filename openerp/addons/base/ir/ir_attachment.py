@@ -235,6 +235,30 @@ class ir_attachment(osv.osv):
                 index_content = ustr("\n".join(words))
         return index_content
 
+    def get_serving_groups(self):
+        """ An ir.attachment record may be used as a fallback in the
+        http dispatch if its type field is set to "binary" and its url
+        field is set as the request's url. Only the groups returned by
+        this method are allowed to create and write on such records.
+        """
+        return ['base.group_system']
+
+    def _check_serving_attachments(self, cr, uid, ids, context=None):
+        # restrict writing on attachments that could be served by the
+        # ir.http's dispatch exception handling
+        if uid == SUPERUSER_ID:
+            return True
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        for ira in self.browse(cr, uid, ids, context):
+            if ira.type == 'binary' and ira.url:
+                has_group = user.has_group
+                if not any([has_group(g) for g in self.get_serving_groups()]):
+                    return False
+        return True
+
+    _constraints = [
+        (_check_serving_attachments, 'Sorry, you are not allowed to write on this document', ['type', 'url'])
+    ]
 
     _name = 'ir.attachment'
     _columns = {

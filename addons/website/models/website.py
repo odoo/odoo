@@ -646,6 +646,9 @@ class ir_attachment(osv.osv):
         'website_url': fields.related("local_url", string="Attachment URL", type='char', deprecated=True), # related for backward compatibility with saas-6
     }
 
+    def get_serving_groups(self):
+        return super(ir_attachment, self).get_serving_groups() + ['base.group_website_designer']
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
 
