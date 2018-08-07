@@ -20,14 +20,14 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         optional keywords arguments:
         :param string token: access token if the object's model uses some kind of public access
                              using tokens (usually a uuid4) to bypass access rules
-        :param string token_field: name of the field that contains the token on the object (defaults to 'token')
+        :param string token_field: name of the field that contains the token on the object (deprecated, use _mail_post_token_field)
         :param bool nosubscribe: set False if you want the partner to be set as follower of the object when posting (default to True)
 
         The rest of the kwargs are passed on to message_post()
     """
     record = request.env[res_model].browse(res_id)
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
-    if token and record and token == getattr(record.sudo(), token_field, None):
+    if token and record and token == getattr(record.sudo(), record._mail_post_token_field, None):
         record = record.sudo()
         if request.env.user == request.env.ref('base.public_user'):
             author_id = record.partner_id.id if hasattr(record, 'partner_id') else author_id
@@ -35,6 +35,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
             if not author_id:
                 raise NotFound()
     kw.pop('csrf_token', None)
+    kw.pop('attachment_ids', None)
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
                                                                                    subtype=kw.pop('subtype', "mt_comment"),
