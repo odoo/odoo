@@ -56,3 +56,9 @@ class MailMessage(models.Model):
             if self.env.cr.fetchall():
                 raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
         return super(MailMessage, self).check_access_rule(operation=operation)
+
+
+class MailThread(models.AbstractModel):
+    _inherit = 'mail.thread'
+
+    _mail_post_token_field = 'access_token' # token field for external posts, to be overridden
