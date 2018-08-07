@@ -76,7 +76,9 @@ class Groups(models.Model):
     _order = 'name'
 
     name = fields.Char(required=True, translate=True)
-    users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
+    users = fields.Many2many(
+        'res.users', 'res_groups_users_rel', 'gid', 'uid',
+        domain=['|', ('active', '=', True), ('active', '=', False)])
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
         'group_id', 'rule_group_id', string='Rules', domain=[('global', '=', False)])

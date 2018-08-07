@@ -224,7 +224,8 @@
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <tree string="Users">
+                <tree string="Users" decoration-muted="active == False">
+                    <field name="active" invisible="1"/>
                     <field name="name"/>
                     <field name="login"/>
                     <field name="lang"/>
