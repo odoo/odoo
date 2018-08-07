@@ -306,9 +306,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @param {string} resModel
      * @param {integer} resID
      */
-    _onRedirect: function (resModel, resID) {
+    _onRedirect: function (ev) {
         var callback = this._open.bind(this);
-        this.call('mail_service', 'redirect', resModel, resID, callback);
+        this.call('mail_service', 'redirect', ev.data.resModel, ev.data.resID, ev.data.callback);
     },
     /**
      * @private
