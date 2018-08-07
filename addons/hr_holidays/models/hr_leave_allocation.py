@@ -248,7 +248,7 @@ class HolidaysAllocation(models.Model):
 
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
-        self.date_to = self.holiday_status_id.validity_stop
+        self.date_to = datetime.combine(self.holiday_status_id.validity_stop, datetime.max.time())
 
         if self.accrual:
             self.number_of_days_temp = 0
