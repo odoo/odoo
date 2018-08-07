@@ -54,6 +54,7 @@ var GroupByMenu = DropdownMenu.extend({
             {description: 'Quarter', optionId: 'quarter', groupId: 1},
             {description: 'Year', optionId: 'year', groupId: 1},
         ];
+        this.defaultOptionId = DEFAULT_INTERVAL;
         this.groupableFields = [];
         _.each(fields, function (field, name) {
             if (field.sortable && _.contains(GROUPABLE_TYPES, field.type)) {
@@ -131,6 +132,7 @@ var GroupByMenu = DropdownMenu.extend({
         var eventData = _.clone(groupby);
         this._prepareItem(groupby);
         if (groupby.hasOptions) {
+            groupby.defaultOptionId = DEFAULT_INTERVAL;
             groupby.currentOptionId = DEFAULT_INTERVAL;
             groupby.isDate = true;
             eventData.optionId = groupby.currentOptionId;
