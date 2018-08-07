@@ -220,7 +220,7 @@ class Import(models.TransientModel):
         """
         self.ensure_one()
         # guess mimetype from file content
-        mimetype = guess_mimetype(self.file)
+        mimetype = guess_mimetype(self.file or b'')
         (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
         if handler:
             try:
@@ -254,7 +254,7 @@ class Import(models.TransientModel):
     @api.multi
     def _read_xls(self, options):
         """ Read file content, using xlrd lib """
-        book = xlrd.open_workbook(file_contents=self.file)
+        book = xlrd.open_workbook(file_contents=self.file or b'')
         return self._read_xls_book(book)
 
     def _read_xls_book(self, book):
@@ -298,7 +298,7 @@ class Import(models.TransientModel):
     @api.multi
     def _read_ods(self, options):
         """ Read file content using ODSReader custom lib """
-        doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file))
+        doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
 
         return (
             row
@@ -311,7 +311,10 @@ class Import(models.TransientModel):
         """ Returns a CSV-parsed iterator of all non-empty lines in the file
             :throws csv.Error: if an error is detected during CSV parsing
         """
-        csv_data = self.file
+        csv_data = self.file or b''
+        if not csv_data:
+            return iter([])
+
         encoding = options.get('encoding')
         if not encoding:
             encoding = options['encoding'] = chardet.detect(csv_data)['encoding'].lower()
@@ -514,7 +517,10 @@ class Import(models.TransientModel):
         if not options.get('headers'):
             return [], {}
 
-        headers = next(rows)
+        headers = next(rows, None)
+        if not headers:
+            return [], {}
+
         matches = {}
         mapping_records = self.env['base_import.mapping'].search_read([('res_model', '=', self.res_model)], ['column_name', 'field_name'])
         mapping_fields = {rec['column_name']: rec['field_name'] for rec in mapping_records}
