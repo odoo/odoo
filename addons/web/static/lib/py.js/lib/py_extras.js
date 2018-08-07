@@ -112,6 +112,24 @@ function ymd2ord(year, month, day) {
            day;
 }
 
+function get_quarter_number(month) {
+    return Math.ceil(month);
+}
+
+function get_quarter(year, month) {
+    quarter_number = get_quarter_number(month);
+    month_from = ((quarter_number - 1) * 3) + 1
+    date_from = {year: year, month: month_from, day: 1}
+    date_to = {year: year, month: month_from + 2, day: days_in_month(year, month)}
+    return [date_from, date_to];
+}
+
+function get_day_of_week(year, month, day) {
+    var d = new Date(year, month, day);
+    // Convert to ISO8601: Monday = 0 ... Sunday = 6
+    return (d.getDay() + 6) % 7;
+}
+
 var DI400Y = days_before_year(401);
 var DI100Y = days_before_year(101);
 var DI4Y = days_before_year(5);
@@ -428,6 +446,62 @@ datetime.datetime = py.type('datetime', null, {
         }
         return py.PY_call(datetime.datetime, params);
     },
+    start_of: function() {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        if (granularity === 'year') {
+            return py.PY_call(datetime.datetime, [this.year, 1, 1]);
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[0];
+            return py.PY_call(datetime.datetime, [quarter.year, quarter.month, quarter.day]);
+        } else if (granularity === 'month') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, 1]);
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day - dow]);
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day]);
+        } else if (granularity === 'hour') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day, this.hour]);
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week, day and hour.'
+            )
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        var min = [23, 59, 59];
+        if (granularity === 'year') {
+            return py.PY_call(datetime.datetime, [this.year, 12, 31].concat(min));
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[1];
+            return py.PY_call(
+                datetime.datetime, [quarter.year, quarter.month, quarter.day].concat(min)
+            );
+        } else if (granularity === 'month') {
+            var dom = days_in_month(this.month);
+            return py.PY_call(datetime.datetime, [this.year, this.month, dom].concat(min));
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(
+                datetime.datetime, [this.year, this.month, this.day + (6 - dow)].concat(min)
+            );
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day].concat(min));
+        } else if (granularity === 'hour') {
+            return py.PY_call(
+                datetime.datetime, [this.year, this.month, this.day, this.hour, 59, 59]
+            );
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week, day and hour.'
+            )
+        }
+    },
     strftime: function () {
         var self = this;
         var args = py.PY_parseArgs(arguments, 'format');
@@ -548,6 +622,51 @@ datetime.date = py.type('date', null, {
             params[key] = (arg === py.None ? this[key] : asJS(arg));
         }
         return py.PY_call(datetime.date, params);
+    },
+    start_of: function() {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        if (granularity === 'year') {
+            return py.PY_call(datetime.date, [this.year, 1, 1]);
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[0];
+            return py.PY_call(datetime.date, [quarter.year, quarter.month, quarter.day]);
+        } else if (granularity === 'month') {
+            return py.PY_call(datetime.date, [this.year, this.month, 1]);
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(datetime.date, [this.year, this.month, this.day - dow]);
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week and day.'
+            )
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        if (granularity === 'year') {
+            return py.PY_call(datetime.date, [this.year, 12, 31]);
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[1];
+            return py.PY_call(datetime.date, [quarter.year, quarter.month, quarter.day]);
+        } else if (granularity === 'month') {
+            var dom = days_in_month(this.month);
+            return py.PY_call(datetime.date, [this.year, this.month, dom]);
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(datetime.date, [this.year, this.month, this.day + (6 - dow)]);
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week and day.'
+            )
+        }
     },
     __add__: function (other) {
         if (!py.PY_isInstance(other, datetime.timedelta)) {
