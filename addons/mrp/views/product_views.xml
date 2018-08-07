@@ -48,7 +48,6 @@
             name="Products"
             action="product_template_action"
             parent="menu_mrp_bom" sequence="1"/>
-
         <menuitem id="product_variant_mrp" name="Product Variants"
             action="product.product_normal_action"
             parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2"/>
@@ -70,8 +69,14 @@
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
-                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
-                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                        attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="mrp_product_qty" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Manufactured</span>
+                        </div>
                     </button>
                 </button>
             </field>
@@ -92,9 +97,15 @@
                         attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_bom_count', '=', 0)]}" icon="fa-level-up">
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
-                    <button class="oe_stat_button" name="%(act_product_mrp_production)d" type="action"
-                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
-                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                    <button class="oe_stat_button" name="action_view_mos" type="object"
+                        attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="mrp_product_qty" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Manufactured</span>
+                        </div>
                     </button>
                 </button>
             </field>

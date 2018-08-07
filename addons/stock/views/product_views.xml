@@ -182,18 +182,25 @@
                                name="%(product_open_quants)d"
                                icon="fa-building-o"
                                type="action" attrs="{'invisible':[('type', '!=', 'product')]}">
-                            <field name="qty_available" widget="statinfo" string="On Hand"/>
+                               <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
+                                        <field name="uom_name"/>
+                                    </span>
+                                    <span class="o_stat_text">On Hand</span>
+                               </div>
                         </button>
                         <button type="action"
                             name="%(stock.action_stock_level_forecast_report_product)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="virtual_available" widget="statinfo" nolabel="1"/>
-                                    <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}">
-                                        (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>
-                                        +<field name="incoming_qty" widget="statinfo" nolabel="1"/>)
+                                <span class="o_stat_value">
+                                    <field name="virtual_available" widget="statinfo" nolabel="1"/>
+                                    <span attrs="{'invisible': [('outgoing_qty', '=', 0), ('incoming_qty', '=', 0)]}" groups="base.group_no_one">
+                                        (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>+<field name="incoming_qty" widget="statinfo" nolabel="1"/>)
                                     </span>
+                                    <field name="uom_name" class="ml4"/>
                                 </span>
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
@@ -255,17 +262,25 @@
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
-                            <field name="qty_available" widget="statinfo" string="On Hand"/>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value" widget="statinfo">
+                                    <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
+                                    <field name="uom_name"/>
+                                </span>
+                                <span class="o_stat_text">On Hand</span>
+                            </div>
                         </button>
                         <button type="action"
                             name="%(stock.action_stock_level_forecast_report_template)d"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-building-o">
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="virtual_available" widget="statinfo" nolabel="1"/>
+                                <span class="o_stat_value">
+                                    <field name="virtual_available" widget="statinfo" nolabel="1"/>
                                     <span attrs="{'invisible':[('outgoing_qty', '=', 0),('incoming_qty','=',0)]}" groups="base.group_no_one">
                                         (-<field name="outgoing_qty" widget="statinfo" nolabel="1"/>+<field name="incoming_qty" widget="statinfo" nolabel="1"/>)
                                     </span>
+                                    <field name="uom_name" class="ml4"/>
                                 </span>
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
