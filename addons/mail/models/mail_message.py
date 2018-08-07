@@ -976,64 +976,115 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
-        """ Compute recipients to notify based on specified recipients and document
-        followers. Delegate notification to partners to send emails and bus notifications
-        and to channels to broadcast messages on channels """
-        group_user = self.env.ref('base.group_user')
-        # have a sudoed copy to manipulate partners (public can go here with website modules like forum / blog / ... )
-        self_sudo = self.sudo()
+    def _notify(self, record, msg_vals, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
+        """ Main notification method. This method basically does two things
 
+         * call ``_notify_compute_recipients`` that computes recipients to
+           notify based on message record or message creation values if given
+           (to optimize performance if we already have data computed);
+         * call ``_notify_recipients`` that performs the notification process;
+
+        :param record: record on which the message is posted, if any;
+        :param msg_vals: dictionary of values used to create the message. If given
+          it is used instead of accessing ``self`` to lesen query count in some
+          simple cases where no notification is actually required;
+        :param force_send: tells whether to send notification emails within the
+          current transaction or to use the email queue;
+        :param send_after_commit: if force_send, tells whether to send emails after
+          the transaction has been committed using a post-commit hook;
+        :param model_description: optional data used in notification process (see
+          notification templates);
+        :param mail_auto_delete: delete notification emails once sent;
+        """
+        msg_vals = msg_vals if msg_vals else {}
+        rdata = self._notify_compute_recipients(record, msg_vals)
+        return self._notify_recipients(
+            rdata, record, msg_vals,
+            force_send=force_send, send_after_commit=send_after_commit,
+            model_description=model_description, mail_auto_delete=mail_auto_delete)
+
+    @api.multi
+    def _notify_compute_recipients(self, record, msg_vals):
+        """ Compute recipients to notify based on subtype and followers. This
+        method returns data structured as expected for ``_notify_recipients``. """
+        msg_sudo = self.sudo()
+
+        pids = [x[1] for x in msg_vals.get('partner_ids')] if 'partner_ids' in msg_vals else msg_sudo.partner_ids.ids
+        cids = [x[1] for x in msg_vals.get('channel_ids')] if 'channel_ids' in msg_vals else msg_sudo.channel_ids.ids
+        subtype_id = msg_vals.get('subtype_id') if 'subtype_id' in msg_vals else msg_sudo.subtype_id.id
+
+        recipient_data = {
+            'partners': [],
+            'channels': [],
+        }
+        res = self.env['mail.followers']._get_recipient_data(record, subtype_id, pids, cids)
+        author_id = msg_vals.get('author_id') or self.author_id.id if res else False
+        for pid, cid, active, pshare, ctype, notif, groups in res:
+            if pid and pid == author_id:  # do not notify the author of its own messages
+                continue
+            if pid:
+                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
+                if notif == 'inbox':
+                    recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
+                else:
+                    if not pshare and notif:  # has an user and is not shared, is therefore user
+                        recipient_data['partners'].append(dict(pdata, notif='email', type='user'))
+                    elif pshare and notif:  # has an user but is shared, is therefore portal
+                        recipient_data['partners'].append(dict(pdata, notif='email', type='portal'))
+                    else:  # has no user, is therefore customer
+                        recipient_data['partners'].append(dict(pdata, notif='email', type='customer'))
+            elif cid:
+                recipient_data['channels'].append({'id': cid, 'notif': notif, 'type': ctype})
+        return recipient_data
+
+    @api.multi
+    def _notify_recipients(self, rdata, record, msg_vals,
+                           force_send=False, send_after_commit=True,
+                           model_description=False, mail_auto_delete=True):
+        """ Main method implementing the notification process.
+
+        :param rdata: dict containing recipients data: {
+            'partners': list of dict containing partner data: id, share status (boolean),
+            notification type ('email' or 'inbox'), type (main classification group used
+            in notification process), groups (user groups)
+            'channels': list of dict containing channel data: id, notification type
+            ('email' for mailing list otherwise 'inbox'), type (channel_type)
+        }
+        """
         self.ensure_one()
-        partners_sudo = self_sudo.partner_ids
-        channels_sudo = self_sudo.channel_ids
 
-        # all followers of the mail.message document have to be added as partners and notified
-        # and filter to employees only if the subtype is internal
-        if self_sudo.subtype_id and self.model and self.res_id:
-            followers = self_sudo.env['mail.followers'].search([
-                ('res_model', '=', self.model),
-                ('res_id', '=', self.res_id),
-                ('subtype_ids', 'in', self_sudo.subtype_id.id),
-            ])
-            if self_sudo.subtype_id.internal:
-                followers = followers.filtered(lambda fol: fol.channel_id or (fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id')))
-            channels_sudo |= followers.mapped('channel_id')
-            partners_sudo |= followers.mapped('partner_id')
+        email_cids = [r['id'] for r in rdata['channels'] if r['notif'] == 'email']
+        inbox_pids = [r['id'] for r in rdata['partners'] if r['notif'] == 'inbox']
 
-        # remove author from notified partners
-        if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
-            partners_sudo = partners_sudo - self_sudo.author_id
-            
-        # list channels and partner by notification type
-        email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
-        notif_partners = partners_sudo.filtered(lambda partner: 'inbox' in partner.mapped('user_ids.notification_type'))
-        email_partner = partners_sudo - notif_partners
-
-        #update message, with maybe custom values
         message_values = {}
-        if channels_sudo:
-            message_values['channel_ids'] = [(6, 0, channels_sudo.ids)]
-        if partners_sudo:
-            message_values['needaction_partner_ids'] = [(6, 0, partners_sudo.ids)]
-        if self.model and self.res_id and hasattr(self.env[self.model], 'message_get_message_notify_values'):
-            message_values.update(self.env[self.model].browse(self.res_id).message_get_message_notify_values(self, message_values))
+        if rdata['channels']:
+            message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
+        if rdata['partners']:
+            message_values['needaction_partner_ids'] = [(6, 0, [r['id'] for r in rdata['partners']])]
+        if message_values and record and hasattr(record, '_notify_customize_recipients'):
+            message_values.update(record._notify_customize_recipients(self, message_values, rdata))
         if message_values:
             self.write(message_values)
 
         # notify partners and channels
-        # those methods are called as SUPERUSER because portal users posting messages
-        # have no access to partner model. Maybe propagating a real uid could be necessary.
-        if email_channels or email_partner:
-            partners_sudo.search([
-                '|',
-                ('id', 'in', (email_partner).ids),
-                ('channel_ids', 'in', email_channels.ids),
-                ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, model_description=model_description, mail_auto_delete=mail_auto_delete)
+        if email_cids:
+            new_pids = self.env['res.partner'].sudo().search([
+                ('id', 'not in', [r['id'] for r in rdata['partners']]),
+                ('channel_ids', 'in', email_cids),
+                ('email', 'not in', [self.author_id.email, self.email_from]),
+            ])
+            for partner in new_pids:
+                rdata['partners'].append({'id': partner.id, 'share': True, 'notif': 'email', 'type': 'customer', 'groups': []})
 
-        notif_partners._notify_by_chat(self)
-        channels_sudo._notify(self)
+        partner_email_rdata = [r for r in rdata['partners'] if r['notif'] == 'email']
+        if partner_email_rdata:
+            self.env['res.partner']._notify(self, partner_email_rdata, record, force_send=force_send, send_after_commit=send_after_commit, model_description=model_description, mail_auto_delete=mail_auto_delete)
+
+        if inbox_pids:
+            self.env['res.partner'].browse(inbox_pids)._notify_by_chat(self)
+
+        if rdata['channels']:
+            self.env['mail.channel'].sudo().browse([r['id'] for r in rdata['channels']])._notify(self)
 
         return True
 
@@ -1098,7 +1149,8 @@ class Message(models.Model):
         })
         # proceed with notification process to send notification emails and Inbox messages
         for message in self:
-            message._notify()
+            record = self.env[message.model].browse(message.res_id) if message.model and message.res_id else None
+            message._notify(record, {})
 
     @api.multi
     def _moderate_send_reject_email(self, subject, comment):

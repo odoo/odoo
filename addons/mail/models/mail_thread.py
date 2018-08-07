@@ -707,7 +707,7 @@ class MailThread(models.AbstractModel):
         return groups
 
     @api.multi
-    def _notify_classify_recipients(self, message, recipients):
+    def _notify_classify_recipients(self, message, recipient_data):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
         have access to buttons customers should not have in their emails.
@@ -716,7 +716,7 @@ class MailThread(models.AbstractModel):
         method defined here-under.
 
         :param message: mail.message record about to be notified
-        :param recipients: res.partner recordset to notify
+        :param recipients: res.partner recordset to notify UPDATE ME
         """
         result = {}
 
@@ -729,11 +729,11 @@ class MailThread(models.AbstractModel):
             view_title = _('View')
 
         default_groups = [
-            ('user', lambda partner: bool(partner.user_ids) and not any(user.share for user in partner.user_ids), {}),
-            ('portal', lambda partner: bool(partner.user_ids) and all(user.share for user in partner.user_ids), {
+            ('user', lambda pdata: pdata['type'] == 'user', {}),
+            ('portal', lambda pdata: pdata['type'] == 'portal', {
                 'has_button_access': False,
             }),
-            ('customer', lambda partner: True, {
+            ('customer', lambda pdata: True, {
                 'has_button_access': False,
             })
         ]
@@ -746,12 +746,12 @@ class MailThread(models.AbstractModel):
                 'url': access_link,
                 'title': view_title})
             group_data.setdefault('actions', list())
-            group_data.setdefault('recipients', self.env['res.partner'])
+            group_data.setdefault('recipients', list())
 
-        for recipient in recipients:
+        for recipient in recipient_data:
             for group_name, group_func, group_data in groups:
                 if group_func(recipient):
-                    group_data['recipients'] |= recipient
+                    group_data['recipients'].append(recipient['id'])
                     break
 
         for group_name, group_method, group_data in groups:
@@ -759,13 +759,13 @@ class MailThread(models.AbstractModel):
 
         return result
 
-    def _notify_classify_recipients_on_records(self, message, recipients, records=None):
+    def _notify_classify_recipients_on_records(self, message, recipient_data, records=None):
         """ Generic wrapper on ``_notify_classify_recipients`` checking mail.thread
         inheritance and allowing to call model-specific implementation in a one liner.
         This method should not be overridden. """
         if records and hasattr(records, '_notify_classify_recipients'):
-            return records._notify_classify_recipients(message, recipients)
-        return self._notify_classify_recipients(message, recipients)
+            return records._notify_classify_recipients(message, recipient_data)
+        return self._notify_classify_recipients(message, recipient_data)
 
     @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
@@ -2014,6 +2014,7 @@ class MailThread(models.AbstractModel):
             'parent_id': parent_id,
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
+            'channel_ids': kwargs.get('channel_ids', []),
             'add_sign': add_sign
         })
         if notif_layout:
@@ -2033,16 +2034,23 @@ class MailThread(models.AbstractModel):
         self._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
         return new_message
 
-    def _message_post_after_hook(self, message, values, model_description=False, mail_auto_delete=True):
+    def _message_post_after_hook(self, message, msg_vals, model_description=False, mail_auto_delete=True):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
         # Notify recipients of the newly-created message (Inbox / Email + channels)
-        if values.get('moderation_status') != 'pending_moderation':
-            message._notify(force_send=self.env.context.get('mail_notify_force_send', True), model_description=model_description, mail_auto_delete=mail_auto_delete)
+        if msg_vals.get('moderation_status') != 'pending_moderation':
+            message._notify(
+                self, msg_vals,
+                force_send=self.env.context.get('mail_notify_force_send', True),
+                send_after_commit=True,
+                model_description=model_description,
+                mail_auto_delete=mail_auto_delete,
+            )
+
             # Post-process: subscribe author
-            if values['author_id'] and values['model'] and self.ids and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-                self._message_subscribe([values['author_id']])
+            if msg_vals['author_id'] and msg_vals['model'] and self.ids and msg_vals['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
+                self._message_subscribe([msg_vals['author_id']])
         else:
             message._notify_pending_by_chat()
 
