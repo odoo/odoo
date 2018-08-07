@@ -23,7 +23,7 @@
                <search string="Tasks">
                     <field name="name" string="Tasks"/>
                     <field name="tag_ids"/>
-                    <field name="partner_id"/>
+                    <field name="commercial_partner_id"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
@@ -470,6 +470,7 @@
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="partner_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="commercial_partner_id"/>
                                     <field name="email_from" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="parent_id" attrs="{'invisible' : [('subtask_count', '>', 0)]}" groups="project.group_subtask_project"/>
