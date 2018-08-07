@@ -26,12 +26,12 @@
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
         <label class="label-optional" t-field="delivery.name" t-att-for="'delivery_%i' % delivery.id"/>
         <t t-if="delivery.delivery_type == 'fixed'">
-            <span t-if="delivery.fixed_price > 0.0" class="badge" t-field="delivery.fixed_price" t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
-            <span t-else="" class="badge">Free</span>
+            <span t-if="delivery.fixed_price > 0.0" class="float-right badge badge-secondary" t-field="delivery.fixed_price" t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
+            <span t-else="" class="float-right badge badge-secondary">Free</span>
         </t>
         <t t-else="">
-            <span class="badge d-none" t-field="delivery.fixed_price" t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
-            <span class="badge o_delivery_compute">Select to compute delivery rate</span>
+            <span class="float-right badge badge-secondary d-none" t-field="delivery.fixed_price" t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
+            <span class="float-right badge badge-secondary o_delivery_compute">Select to compute delivery rate</span>
         </t>
         <t t-if="delivery.website_description">
             <div t-field="delivery.website_description" class="text-muted mt8"/>
@@ -49,10 +49,10 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="col-lg-12" id="delivery_carrier">
+            <div t-if="deliveries" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>
                 <h3 t-if="delivery_nb &gt; 1" class="mb24">Choose a delivery method</h3>
-                <div t-if="delivery_nb &gt; 1" class="card" id="delivery_method">
+                <div t-if="delivery_nb &gt; 1" class="card border-0" id="delivery_method">
                     <ul class="list-group">
                     <t t-foreach="deliveries" t-as="delivery">
                         <li class="list-group-item">
