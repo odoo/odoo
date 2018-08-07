@@ -26,9 +26,9 @@ def now(**kwargs):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    signup_token = fields.Char(copy=False)
-    signup_type = fields.Char(string='Signup Token Type', copy=False)
-    signup_expiration = fields.Datetime(copy=False)
+    signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
+    signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
+    signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
     signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
@@ -36,15 +36,17 @@ class ResPartner(models.Model):
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self:
+        for partner in self.sudo():
             partner.signup_valid = bool(partner.signup_token) and \
             (not partner.signup_expiration or dt <= partner.signup_expiration)
 
     @api.multi
     def _compute_signup_url(self):
         """ proxy for function field towards actual implementation """
-        result = self._get_signup_url_for_action()
+        result = self.sudo()._get_signup_url_for_action()
         for partner in self:
+            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+                self.env['res.users'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
 
     @api.multi

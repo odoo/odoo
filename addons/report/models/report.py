@@ -511,7 +511,7 @@ class Report(models.Model):
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
         :returns: list of string representing the wkhtmltopdf arguments
         """
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if paperformat.format and paperformat.format != 'custom':
             command_args.extend(['--page-size', paperformat.format])
 
