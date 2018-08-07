@@ -1333,7 +1333,6 @@
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="card">
-                                <div class="card-header"></div>
                                 <div class="card-body" id="shipping_and_billing">
                                     <a class='float-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
@@ -1512,7 +1511,6 @@
                                 </table>
                                 <t t-call="website_sale.payment_confirmation_status"/>
                                 <div class="card mt-3">
-                                  <div class="card-header"></div>
                                   <div class="card-body">
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>

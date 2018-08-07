@@ -1,6 +1,6 @@
 .o_payment_form {
     label > input[type="radio"], input[type="checkbox"]{
-        vertical-align: top;
+        vertical-align: middle;
         margin-right: 5px;
     }
 
@@ -17,20 +17,20 @@
         margin-top: 5px;
     }
 
-    .panel-body:first-child {
+    .card-body:first-child {
         border-top: 0px;
     }
 
-    .panel {
+    .card {
         border-radius: 10px;
     }
 
-    .panel-footer:last-child {
+    .card-footer:last-child {
         border-bottom-right-radius: 10px !important;
         border-bottom-left-radius: 10px !important;
     }
 
-    .panel-body {
+    .card-body {
         border-top: 1px solid #ddd;
         padding: 1.14em !important;
     }
@@ -43,7 +43,7 @@
         }
 
         .more_option {
-            @include o-position-absolute($right: 0px, $bottom: -10px);
+            @include o-position-absolute($right: 10px);
             font-size:10px;
         }
 
