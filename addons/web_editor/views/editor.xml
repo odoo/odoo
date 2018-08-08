@@ -160,29 +160,6 @@
             <button data-color="delta">Delta</button>
             <button data-color="epsilon">Epsilon</button>
         </div>
-        <div class="o_colorpicker_section" data-name="grayscale" data-icon-class="fa fa-database">
-            <button data-color="white">White</button>
-            <t t-foreach="[100, 200, 300, 400, 500, 600, 700, 800, 900]" t-as="gray">
-                <button t-att-data-color="gray">Gray <t t-esc="gray"/></button>
-            </t>
-            <button data-color="black">Black</button>
-        </div>
-        <div class="o_colorpicker_section" data-name="ui" data-icon-class="fa fa-paint-brush">
-            <button data-color="primary">Primary</button>
-            <button data-color="success">Success</button>
-            <button data-color="info">Info</button>
-            <button data-color="warning">Warning</button>
-            <button data-color="danger">Danger</button>
-        </div>
-        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-icon-class="fa fa-eye-slash">
-            <button class="o_btn_transparent">Transparent</button>
-            <button data-color="black-25">25% Black</button>
-            <button data-color="black-50">50% Black</button>
-            <button data-color="black-75">75% Black</button>
-            <button data-color="white-25">25% White</button>
-            <button data-color="white-50">50% White</button>
-            <button data-color="white-75">75% White</button>
-        </div>
     </colorpicker>
 </template>
 </odoo>

@@ -789,11 +789,20 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             min-width: 228px;
         }
 
-        #colors_preview {
-            padding: 4px;
+        #font_color_preview, #back_color_preview {
+            padding: 4px 0px;
             border-radius: 2px;
             border: 1px solid #989898;
             border-color: fade-out($o-we-color-text-normal, 0.5);
+            background-image: url('/web_editor/static/src/img/transparent.png');
+            &::before {
+                padding: 4px;
+                background-color: rgba(0, 0, 0, 0.25);
+            }
+        }
+        #back_color_preview:before {
+            color: gray('800');
+            background-color: inherit;
         }
         .note-color-palette .note-color-row {
             height: auto!important;
@@ -843,7 +852,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
     .note-color {
         .dropdown-toggle {
-            width: auto;
+            width: auto !important;
         }
         .o_foreground_toggle > button:before {
             font-family: FontAwesome;
@@ -854,7 +863,10 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             content: '\f0c3';
         }
         .dropdown-menu {
-            min-width: 353px!important;
+            min-width: 180px!important;
+            .btn-group .note-color-reset {
+                font-size: 14px !important;
+            }
         }
     }
 }
