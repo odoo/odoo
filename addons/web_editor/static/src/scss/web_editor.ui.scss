@@ -789,7 +789,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             min-width: 228px;
         }
 
-        .note-color-palette .note-color-row {
+        .note-color-palette .note-color-row, .note-custom-color-palette .note-color-row {
             height: auto!important;
 
             &::after {
@@ -800,8 +800,10 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
             .note-color-btn {
                 float: left;
+                height: 20px;
+                width: 20px;
                 margin: 1px 1px 0 0;
-                border-color: black;
+                border: 1px solid black;
                 @include o-alpha-button-preview;
 
                 &.o_small {
@@ -858,8 +860,13 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
         .dropdown-menu {
             min-width: 180px!important;
-            .btn-group .note-color-reset {
-                font-size: 14px !important;
+            .note-custom-color {
+                cursor: pointer;
+                border-radius: 5px;
+                &:hover {
+                    background-color: gray('400');
+                    color: black
+                }
             }
         }
     }
