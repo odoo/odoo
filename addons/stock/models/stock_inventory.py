@@ -336,9 +336,6 @@ class InventoryLine(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
-    # TDE FIXME: necessary ? -> replace by location_id
-    state = fields.Selection(
-        'Status',  related='inventory_id.state', readonly=True)
     theoretical_qty = fields.Float(
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
