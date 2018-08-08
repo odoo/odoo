@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools
+from odoo.tools import email_re
 
 
 class MailComposeMessage(models.TransientModel):
@@ -65,7 +66,8 @@ class MailComposeMessage(models.TransientModel):
                 else:
                     recips = tools.email_split(partners_email.get(res_id))
                 mail_to = recips[0].lower() if recips else False
-                if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list):
+                if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
+                        or (not mail_to or not email_re.findall(mail_to)):
                     # prevent sending to blocked addresses that were included by mistake
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
