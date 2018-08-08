@@ -54,6 +54,9 @@ class ReportBomStructure(models.AbstractModel):
         }
         return self.env.ref('mrp.report_mrp_operation_line').render({'data': values})
 
+    def _get_bom_reference(self, bom):
+        return bom.display_name
+
     @api.model
     def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):
         lines = {}
@@ -98,6 +101,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom_prod_name': product.display_name,
             'currency': self.env.user.company_id.currency_id,
             'product': product,
+            'code': bom and self._get_bom_reference(bom) or '',
             'price': product.uom_id._compute_price(product.standard_price, bom.product_uom_id) * bom_quantity,
             'total': sum([op['total'] for op in operations]),
             'level': level or 0,
@@ -128,6 +132,7 @@ class ReportBomStructure(models.AbstractModel):
             components.append({
                 'prod_id': line.product_id.id,
                 'prod_name': line.product_id.display_name,
+                'code': line.child_bom_id and self._get_bom_reference(line.child_bom_id) or '',
                 'prod_qty': line_quantity,
                 'prod_uom': line.product_uom_id.name,
                 'prod_cost': price,
@@ -192,6 +197,7 @@ class ReportBomStructure(models.AbstractModel):
                     'prod_cost': bom_line['prod_cost'],
                     'bom_cost': bom_line['total'],
                     'level': bom_line['level'],
+                    'code': bom_line['code']
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
