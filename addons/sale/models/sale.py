@@ -1201,7 +1201,7 @@ class SaleOrderLine(models.Model):
                         amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
             line.untaxed_amount_invoiced = amount_invoiced
 
-    @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered')
+    @api.depends('state', 'price_reduce', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered')
     def _compute_untaxed_amount_to_invoice(self):
         """ Total of remaining amount to invoice on the sale order line (taxes excl.) as
                 total_sol - amount already invoiced
@@ -1217,12 +1217,12 @@ class SaleOrderLine(models.Model):
                 # zero. It causes problem for expense line (e.i.: ordered qty = 0, deli qty = 4,
                 # price_unit = 20 ; subtotal is zero), but when you can invoice the line, you see an
                 # amount and not zero. Since we compute untaxed amount, we can use directly the price
-                # unit without using `compute_all()` method on taxes.
+                # reduce (to include discount) without using `compute_all()` method on taxes.
                 price_subtotal = 0.0
                 if line.product_id.invoice_policy == 'delivery':
-                    price_subtotal = line.price_unit * line.qty_delivered
+                    price_subtotal = line.price_reduce * line.qty_delivered
                 else:
-                    price_subtotal = line.price_unit * line.product_uom_qty
+                    price_subtotal = line.price_reduce * line.product_uom_qty
 
                 amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
             line.untaxed_amount_to_invoice = amount_to_invoice
