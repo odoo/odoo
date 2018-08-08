@@ -625,8 +625,13 @@ registry.colorpicker = SnippetOption.extend({
         }
 
         if (!this.$el.find('.colorpicker').length) {
+            // TODO remove old UI's code that survived
             var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
             var $clpicker = $(qweb.render('web_editor.colorpicker'));
+
+            _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
+                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>")
+            });
 
             // Retrieve excluded palettes list
             var excluded = [];
@@ -638,52 +643,30 @@ registry.colorpicker = SnippetOption.extend({
                 $pt.find('.note-palette-title').text(this.data.paletteTitle);
             }
 
-            var $toggles = $pt.find('.o_colorpicker_section_menu');
-            var $tabs = $pt.find('.o_colorpicker_section_tabs');
-
             // Remove excluded palettes
             _.each(excluded, function (exc) {
                 $clpicker.find('[data-name="' + exc + '"]').remove();
             });
 
-            var $sections = $clpicker.find('.o_colorpicker_section');
-
-            if ($sections.length > 1) { // Multi-palette layout
-                $sections.each(function () {
-                    var $section = $(this);
-                    var id = 'o_palette_' + $section.data('name') + _.uniqueId();
-
-                    var $li = $('<li/>')
-                                .append($('<a/>', {href: '#' + id})
-                                    .append($('<i/>', {'class': $section.data('iconClass') || '', html: $section.data('iconContent') || ''})));
-                    $toggles.append($li);
-
-                    $tabs.append($section.addClass('tab-pane').attr('id', id));
+            // Add common colors to palettes if not excluded
+            if (!('common' in excluded)) {
+                var colors = [
+                    '#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF',
+                    '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF',
+                    '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE',
+                    '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD',
+                    '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5',
+                    '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B',
+                    '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842',
+                    '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031'
+                ];
+                var $commonColorSection = $clpicker.find('[data-name="common"]');
+                _.each(colors, function (color) {
+                    $commonColorSection.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
                 });
-
-                // If a default palette is defined, make it active
-                if (this.data.paletteDefault) {
-                    var $palette_def = $tabs.find('div[data-name="' + self.data.paletteDefault + '"]');
-                    var pos = $tabs.find('> div').index($palette_def);
-
-                    $toggles.children('li').eq(pos).find('a').addClass('active');
-                    $palette_def.addClass('active');
-                } else {
-                    $toggles.find('li').first().find('a').addClass('active');
-                    $tabs.find('div').first().addClass('active');
-                }
-
-                $toggles.on('click mouseover', '> li > a', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $(this).tab('show');
-                });
-            } else if ($sections.length === 1) { // Unique palette layout
-                $tabs.addClass('o_unique_palette').append($sections.addClass('tab-pane active'));
-            } else {
-                $toggles.parent().empty().append($clpicker);
             }
 
+            $pt.find('.o_colorpicker_section_tabs').append($clpicker);
             this.$el.find('.dropdown-menu').append($pt);
         }
 
@@ -734,6 +717,10 @@ registry.colorpicker = SnippetOption.extend({
         var color = $(ev.currentTarget).data('color');
         if (color) {
             this.$target.addClass(this.colorPrefix + color);
+        } else if ($(ev.target).hasClass('o_custom_color')) {
+            this.$target
+                .removeClass(this.classes)
+                .css('background-color', ev.currentTarget.style.backgroundColor);
         }
         this.$target.trigger('background-color-event', true);
     },
@@ -745,10 +732,14 @@ registry.colorpicker = SnippetOption.extend({
      */
     _onColorButtonLeave: function (ev) {
         this.$target.removeClass(this.classes);
+        this.$target.css('background-color', '');
         var $selected = this.$el.find('.colorpicker button.selected');
-        var color = $selected.length && $selected.data('color');
-        if (color) {
-            this.$target.addClass(this.colorPrefix + color);
+        if ($selected.length) {
+            if ($selected.data('color')) {
+                this.$target.addClass(this.colorPrefix + $selected.data('color'));
+            } else {
+                this.$target.css('background-color', $selected.css('background-color'));
+            }
         }
         this.$target.trigger('background-color-event', 'reset');
     },
@@ -759,7 +750,7 @@ registry.colorpicker = SnippetOption.extend({
      * @private
      */
     _onColorResetButtonClick: function () {
-        this.$target.removeClass(this.classes);
+        this.$target.removeClass(this.classes).css('background-color', '');
         this.$el.find('.colorpicker button.selected').removeClass('selected');
     },
 });

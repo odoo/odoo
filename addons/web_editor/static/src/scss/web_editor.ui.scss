@@ -893,57 +893,11 @@ table.colorpicker {
 
     .o_colorpicker_sections {
         border: 1px solid darken($o-we-color-dark, 12%);
-        border-width: 1px 0 0;
         font-size: 14px;
 
-        .o_colorpicker_section_menu {
-            width: 50px;
-            height: 100%;
-            float: left;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            text-align: center;
-
-            > li {
-                display: block;
-                float: none;
-                margin: 0;
-                background-color: transparent;
-                > a {
-                    display: block;
-                    padding: 5px 10px!important;
-                    border-radius: 0;
-                    background-color: transparent;
-                    color: darken($o-we-color-text-light, 10%);
-                    > i.fa {
-                        font-size: 20px;
-                    }
-
-                    &:focus, &:active, &:focus:active {
-                        outline: none;
-                    }
-                    &.active {
-                        background-color: $o-we-tab-active-bg!important;
-                        color: white;
-                    }
-                }
-                &:hover > a {
-                    color: white;
-                }
-            }
-        }
         .o_colorpicker_section_tabs {
-            width: 200px;
+            width: 225px;
             height: 100%;
-            margin-left: 50px;
-            .tab-pane {
-                padding: 5px 10px;
-                background-color: $o-we-tab-active-bg;
-            }
-            &.o_unique_palette {
-                margin-left: 0;
-            }
         }
     }
     .o_colorpicker_section {
@@ -954,52 +908,36 @@ table.colorpicker {
         }
 
         > button {
-            position: relative;
-            display: block;
-            width: 100%;
-            height: 30px;
-            border: 1px solid $o-we-color-dark;
-            border-radius: 3px;
-            margin: 0 0 5px;
-            padding: 0 20px;
-            line-height: 28px;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: left;
+            float: left;
+            height: 25px;
+            width: 25px;
+            margin: 1px 1px 0 2px;
+            border: 1px solid black;
             @include o-alpha-button-preview;
+
+            &.o_small {
+                width: 23px;
+                height: 23px;
+                margin: 2px;
+                border-radius: 50%;
+            }
 
             &:hover, &.selected {
                 box-shadow: 0px 0px 2px 2px $o-we-color-light;
             }
 
-            &:after {
-                content: "A";
-                @include o-position-absolute(0, 0);
-                width: 25px;
-                text-align: center;
-                font-size: 13px;
-                line-height: 28px;
-                font-weight: normal;
-            }
-            &.selected:after {
+            &.selected:before {
                 content: "\f00c";
                 font-family: "FontAwesome";
+                padding-top: 1px;
                 color: theme-color('success');
             }
 
             &[data-event="foreColor"] {
                 background-color: $o-we-color-normal;
-                &:after {
+                &:before {
                     background-color: rgba(white, 0.3);
                 }
-            }
-
-            &.o_small {
-                float: left;
-                width: auto;
-                min-width: 27px;
-                padding: 0;
-                margin-right: 5px;
             }
 
             &.o_btn_transparent::before {
