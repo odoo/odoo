@@ -136,14 +136,12 @@ If you have development competencies, we can propose you specific traineeships</
     <!--Employees-->
 
       <record id="employee_root" model="hr.employee">
-          <field name="name">Aiden Hughes</field>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">(237)-125-2389</field>
           <field name="work_email">aiden.hughes71@example.com</field>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_3')])]"/>
           <field name="job_id" ref="hr.job_ceo"/>
           <field name="department_id" ref="dep_management"/>
-          <field name="image" type="base64" file="hr/static/img/employee_fp-image.jpg"/>
       </record>
 
       <record id="employee_al" model="hr.employee">
