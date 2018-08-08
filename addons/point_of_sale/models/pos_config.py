@@ -195,7 +195,7 @@ class PosConfig(models.Model):
                 order="stop_at desc", limit=1)
             if session:
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                pos_config.last_session_closing_date = session[0]['stop_at']
+                pos_config.last_session_closing_date = session[0]['stop_at'].date()
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
