@@ -40,6 +40,11 @@ class StockMove(models.Model):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return result
 
+    def _prepare_move_split_vals(self, defaults):
+        defaults = super(StockMove, self)._prepare_move_split_vals(defaults)
+        defaults['to_refund_so'] = self.to_refund_so
+        return defaults
+
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
