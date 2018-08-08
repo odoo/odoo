@@ -92,7 +92,10 @@ odoo.define('payment_stripe.stripe', function(require) {
                     so_id: so_id,
                     so_token: so_token
                 }, {'async': false}).then(function (data) {
+                var $pay_stripe = $('#pay_stripe').detach();
                 $form.html(data);
+                // Restore 'Pay Now' button HTML since data might have changed it.
+                $form.find('#pay_stripe').replaceWith($pay_stripe);
                 handler.open({
                     name: $("input[name='merchant']").val(),
                     email: $("input[name='email']").val(),
