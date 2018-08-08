@@ -103,9 +103,16 @@
                         <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                         <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}"/>
 
-                        <field name="number_of_days_temp" attrs="{'invisible': [('leave_type_request_unit', '=', 'hour')]}"/>
-                        <field name="number_of_hours" attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}"/>
+                        <label for="number_of_days_temp" string="Duration"/>
                         <div>
+                            <div attrs="{'invisible': [('leave_type_request_unit', '=', 'hour')]}">
+                                <field name="number_of_days_temp" nolabel="1" class="oe_inline"/>
+                                <span class="ml8">Days</span>
+                            </div>
+                            <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}">
+                                <field name="number_of_hours" nolabel="1" class="oe_inline"/>
+                                <span class="ml8">Hours</span>
+                            </div>
                             <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
                             <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
 
@@ -202,13 +209,13 @@
         id="menu_hr_holidays_my_leaves"
         name="My Leaves"
         parent="menu_hr_holidays_root"
-        sequence="2"/>
+        sequence="3"/>
 
     <menuitem
         id="menu_hr_holidays_approvals"
         name="Managers"
         parent="menu_hr_holidays_root"
-        sequence="3"
+        sequence="4"
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
 
     <menuitem
@@ -219,9 +226,10 @@
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
 
     <record id="open_ask_holidays" model="ir.actions.act_window">
-        <field name="name">Leaves Request</field>
+        <field name="name">New Request</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
+        <field name="view_mode">calendar,tree,form</field>
         <field name="view_id" ref="edit_holiday_new_request"/>
         <field name="context">{}</field>
         <field name="domain">[('user_id', '=', uid)]</field>
@@ -259,10 +267,57 @@
         <field name="act_window_id" ref="open_ask_holidays"/>
     </record>
 
+    <record id="hr_leave_action_my_tree" model="ir.actions.act_window">
+        <field name="name">Leaves Request</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="edit_holiday_new_request"/>
+        <field name="context">{}</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal leaves, sickness) and the exact
+                number of open days related to your leave.
+            </p>
+        </field>
+    </record>
+
     <menuitem
         id="menu_open_ask_holidays_new"
-        parent="menu_hr_holidays_my_leaves"
+        parent="menu_hr_holidays_root"
         action="open_ask_holidays"
+        sequence="2"/>
+
+    <record id="hr_leave_action_view_my_tree_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_holiday"/>
+        <field name="act_window_id" ref="hr_leave_action_my_tree"/>
+    </record>
+
+    <record id="hr_leave_action_view_my_tree_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="edit_holiday_new_request"/>
+        <field name="act_window_id" ref="hr_leave_action_my_tree"/>
+    </record>
+
+    <record id="hr_leave_action_view_my_tree_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_holiday_new_calendar"/>
+        <field name="act_window_id" ref="hr_leave_action_my_tree"/>
+    </record>
+    <menuitem
+        id="hr_leave_menu_my"
+        parent="menu_hr_holidays_my_leaves"
+        action="hr_leave_action_my_tree"
         sequence="22"/>
 
     <record id="open_employee_leaves" model="ir.actions.act_window">
