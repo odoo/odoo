@@ -35,7 +35,7 @@
         <field name="model">mail.mail.statistics</field>
         <field name="arch" type="xml">
             <tree string="Mail Statistics" create="0">
-                <field name="recipient"/>
+                <field name="email"/>
                 <field name="message_id"/>
                 <field name="sent"/>
                 <field name="exception"/>
@@ -58,7 +58,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="recipient"/>
+                            <field name="email"/>
                             <field name="mass_mailing_id"/>
                             <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                         </group>

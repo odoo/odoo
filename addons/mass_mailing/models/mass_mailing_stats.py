@@ -56,7 +56,6 @@ class MailMailStats(models.Model):
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
                                     help='Last state update of the mail',
                                     store=True)
-    recipient = fields.Char(compute="_compute_recipient")
     email = fields.Char(string="Recipient email address")
 
     @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'ignored')
@@ -77,20 +76,6 @@ class MailMailStats(models.Model):
                 stat.state = 'bounced'
             else:
                 stat.state = 'outgoing'
-
-    def _compute_recipient(self):
-        for stat in self:
-            if stat.model not in self.env:
-                continue
-            target = self.env[stat.model].browse(stat.res_id)
-            if not target or not target.exists():
-                continue
-            email = ''
-            for email_field in ('email', 'email_from'):
-                if email_field in target and target[email_field]:
-                    email = ' <%s>' % target[email_field]
-                    break
-            stat.recipient = '%s%s' % (target.display_name, email)
 
     @api.model
     def create(self, values):
