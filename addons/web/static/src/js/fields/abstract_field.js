@@ -107,6 +107,9 @@ var AbstractField = Widget.extend({
         var fieldsInfo = record.fieldsInfo[this.viewType];
         this.attrs = options.attrs || (fieldsInfo && fieldsInfo[name]) || {};
 
+        // the 'additionalContext' property contains the attributes to pass through the context.
+        this.additionalContext = options.additionalContext || {};
+
         // this property tracks the current (parsed if needed) value of the field.
         // Note that we don't use an event system anymore, using this.get('value')
         // is no longer valid.

@@ -648,11 +648,13 @@ class AccountChartTemplate(models.Model):
                 'account_id': acc_template_ref[account_reconcile_model.account_id.id],
                 'label': account_reconcile_model.label,
                 'amount_type': account_reconcile_model.amount_type,
+                'force_tax_included': account_reconcile_model.force_tax_included,
                 'amount': account_reconcile_model.amount,
                 'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
                 'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
                 'second_label': account_reconcile_model.second_label,
                 'second_amount_type': account_reconcile_model.second_amount_type,
+                'force_second_tax_included': account_reconcile_model.force_second_tax_included,
                 'second_amount': account_reconcile_model.second_amount,
                 'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
             }
@@ -904,6 +906,8 @@ class AccountReconcileModelTemplate(models.Model):
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    force_tax_included = fields.Boolean(string='Tax Included in Price',
+        help='Force the tax to be managed as a price included tax.')
     tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
     second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_label = fields.Char(string='Second Journal Item Label')
@@ -912,4 +916,6 @@ class AccountReconcileModelTemplate(models.Model):
         ('percentage', 'Percentage of amount')
         ], string="Second Amount type",required=True, default='percentage')
     second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
+        help='Force the second tax to be managed as a price included tax.')
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])

@@ -391,6 +391,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         });
 
         var targetLineAmount = state.st_line.amount;
+
         _.each(props, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
@@ -467,10 +468,22 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                             if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
                                 field.reset(record);
                             }
+                            if (fieldName === 'tax_id') {
+                                if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
+                                    $('.create_force_tax_included').addClass('d-none');
+                                }
+                                else {
+                                    $('.create_force_tax_included').removeClass('d-none');
+                                }
+                            } 
                         });
                     });
                 });
             });
+            if(state.createForm.tax_id){
+                // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
+                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
+            }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
@@ -546,6 +559,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'many2many',
             name: 'analytic_tag_ids',
         }, {
+            type: 'boolean',
+            name: 'force_tax_included',
+        }, {
             type: 'char',
             name: 'label',
         }, {
@@ -566,13 +582,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 'journal_id', record, {mode: 'edit'});
 
             self.fields.tax_id = new relational_fields.FieldMany2One(self,
-                'tax_id', record, {mode: 'edit'});
+                'tax_id', record, {mode: 'edit', additionalContext: {append_type_to_tax_name: true}});
 
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
 
             self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
                 'analytic_tag_ids', record, {mode: 'edit'});
+
+            self.fields.force_tax_included = new basic_fields.FieldBoolean(self,
+                'force_tax_included', record, {mode: 'edit'});
 
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
@@ -587,6 +606,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
             self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
+            self.fields.force_tax_included.appendTo($create.find('.create_force_tax_included .o_td_field'))
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))

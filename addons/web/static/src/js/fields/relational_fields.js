@@ -366,6 +366,9 @@ var FieldMany2One = AbstractField.extend({
         var context = this.record.getContext(this.recordParams);
         var domain = this.record.getDomain(this.recordParams);
 
+        // Add the additionalContext
+        _.extend(context, this.additionalContext)
+
         var blacklisted_ids = this._getSearchBlacklist();
         if (blacklisted_ids.length > 0) {
             domain.push(['id', 'not in', blacklisted_ids]);
