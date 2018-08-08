@@ -43,11 +43,6 @@ class StockMove(models.Model):
                         line.qty_delivered = line._get_delivered_qty()
         return res
 
-    def _prepare_move_split_vals(self, defaults):
-        defaults = super(StockMove, self)._prepare_move_split_vals(defaults)
-        defaults['to_refund_so'] = self.to_refund_so
-        return defaults
-
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
