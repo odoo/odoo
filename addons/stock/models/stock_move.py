@@ -1161,10 +1161,6 @@ class StockMove(models.Model):
             vals['product_uom'] = self.env.context['force_split_uom_id']
         return vals
 
-    def _prepare_move_split_vals(self, defaults):
-        # hook to add values in default vals in other modules
-        return defaults
-
     def _split(self, qty, restrict_partner_id=False):
         """ Splits qty from move move into a new move
 
@@ -1193,9 +1189,6 @@ class StockMove(models.Model):
             defaults = self._prepare_move_split_vals(uom_qty)
         else:
             defaults = self.with_context(force_split_uom_id=self.product_id.uom_id.id)._prepare_move_split_vals(qty)
-
-
-        defaults = self._prepare_move_split_vals(defaults)
 
         if restrict_partner_id:
             defaults['restrict_partner_id'] = restrict_partner_id
