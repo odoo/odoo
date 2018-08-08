@@ -4,6 +4,7 @@ odoo.define('web_editor.rte.summernote', function (require) {
 var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
+var ColorpickerDialog = require('web.colorpicker');
 var mixins = require('web.mixins');
 var base = require('web_editor.base');
 var weContext = require('web_editor.context');
@@ -30,6 +31,22 @@ var renderer = $.summernote.renderer;
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
+
+function _rgbToHex(rgb) {
+    var rgb = rgb.match(/rgb\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)/);
+    if (!rgb) {
+        return rgb;
+    }
+    var hex = ColorpickerDialog.prototype.convertRgbToHex(
+        parseInt(rgb[1]),
+        parseInt(rgb[2]),
+        parseInt(rgb[3])
+    );
+    if (!hex) {
+        return rgb; // TODO handle error
+    }
+    return hex.hex;
+};
 
 // Update and change the popovers content, and add history button
 var fn_createPalette = renderer.createPalette;
@@ -63,17 +80,41 @@ renderer.createPalette = function ($container, options) {
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
+    // Find the custom colors which are used in the page and add them to the color palette
+    var colors = [];
+    var $editable = window.__EditorMenuBar_$editable || $();
+    _.each($editable.find('[style*="color"]'), function (element) {
+        if (element.style.color) {
+            colors.push(element.style.color);
+        }
+        if (element.style.backgroundColor) {
+            colors.push(element.style.backgroundColor);
+        }
+    });
+
+    var $customColorPalettes = $container.find('.note-color .note-custom-color-palette').append($('<div/>', {class: "note-color-row"}));
+    var $customColorRows = $customColorPalettes.find('.note-color-row');
+    _.each(_.uniq(colors), function (color) {
+        var hexColor = _rgbToHex(color);
+        if (_.indexOf(_.flatten(options.colors), hexColor) < 0) {
+            // Create button for used custom color for backColor and foreColor both and add them into palette
+            $customColorRows.append('<button type="button" class="o_custom_color" data-color="' + color + '" style="background-color:' + color + ';" />');
+        }
+    });
+
+    $palettes.push.apply($palettes, $customColorPalettes);
+
     var $fore = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
     var $bg = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
     $fore.each(function () {
         var $el = $(this);
-        var className = 'text-' + $el.data('color');
-        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
+        var className = $el.hasClass('o_custom_color') ? $el.data('color') : 'text-' + $el.data('color');
+        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass($el.hasClass('o_custom_color') ? '' : 'bg-' + $el.data('color'));
     });
     $bg.each(function () {
         var $el = $(this);
-        var className = 'bg-' + $el.data('color');
-        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
+        var className = $el.hasClass('o_custom_color') ? $el.data('color') : 'bg-' + $el.data('color');
+        $el.attr('data-event', 'backColor').attr('data-value', className).addClass($el.hasClass('o_custom_color') ? '' : className);
     });
 };
 
@@ -230,6 +271,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
+            $container.find('[data-event="customColor"][data-value="foreColor"]').attr('data-color', $(oStyle.image).css('color'));
+            $container.find('[data-event="customColor"][data-value="backColor"]').attr('data-color', $(oStyle.image).css('background-color'));
             $container.find('.note-fore-color-preview > button').css('border-bottom-color', $(oStyle.image).css('color'));
             $container.find('.note-back-color-preview > button').css('border-bottom-color', $(oStyle.image).css('background-color'));
 
@@ -271,6 +314,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         $(oStyle.image).trigger('attributes_change');
     } else {
+        $container.find('[data-event="customColor"][data-value="foreColor"]').attr('data-color', oStyle.color);
+        $container.find('[data-event="customColor"][data-value="backColor"]').attr('data-color', oStyle['background-color']);
         $container.find('.note-fore-color-preview > button').css('border-bottom-color', oStyle.color);
         $container.find('.note-back-color-preview > button').css('border-bottom-color', oStyle['background-color']);
     }
@@ -416,6 +461,25 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     core.bus.trigger('alt_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
+    });
+};
+$.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, customColor) {
+    var defaultColor = event.target.dataset.color;
+    core.bus.trigger('color_picker_dialog_demand', {
+        color: defaultColor === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 0, 0)' : defaultColor,
+        onSave: function (color) {
+            var $palettes = $(event.currentTarget).find('.note-custom-color-palette > .note-color-row')
+                .append(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
+            $palettes.filter(':even').find('button:not([data-event])').attr('data-event', 'backColor');
+            $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'foreColor');
+            if (customColor === 'foreColor') {
+                $(event.currentTarget).find('.note-fore-color-preview > button').css('border-bottom-color', color);
+                $.summernote.pluginEvents.foreColor(event, editor, layoutInfo, color);
+            } else {
+                $(event.currentTarget).find('.note-back-color-preview > button').css('border-bottom-color', color);
+                $.summernote.pluginEvents.backColor(event, editor, layoutInfo, color);
+            }
+        }
     });
 };
 $.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
@@ -996,6 +1060,7 @@ $.summernote.lang.odoo = {
       justify: _t('Justify full')
     },
     color: {
+      custom: _t('Custom Color'),
       background: _t('Background Color'),
       foreground: _t('Font Color'),
       transparent: _t('Transparent'),
@@ -1031,6 +1096,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         this.setParent(parent);
 
         core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.on('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
         core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
@@ -1042,6 +1108,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.destroy.call(this);
 
         core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.off('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
         core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
@@ -1075,7 +1142,27 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         }
         altDialog.open();
     },
-
+/**
+     * Called when a demand to open a color picker dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onColorPickerDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var colorpicker = new ColorpickerDialog(this, {
+            defaultColor: data.color,
+        });
+        if (data.onSave) {
+            colorpicker.on('colorpicker:saved', this, function (ev) {
+                data.onSave(ev.data.hex);
+            });
+        }
+        colorpicker.open();
+    },
     /**
      * Called when a demand to open a crop dialog is received on the bus.
      *
