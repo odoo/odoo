@@ -789,12 +789,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             min-width: 228px;
         }
 
-        #colors_preview {
-            padding: 4px;
-            border-radius: 2px;
-            border: 1px solid #989898;
-            border-color: fade-out($o-we-color-text-normal, 0.5);
-        }
         .note-color-palette .note-color-row {
             height: auto!important;
 
@@ -842,8 +836,17 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     }
 
     .note-color {
-        .dropdown-toggle {
-            width: auto;
+        .note-back-color-preview, .note-fore-color-preview {
+            .dropdown-toggle {
+                padding: 0px 7px;
+                height: 35px;
+                width: auto;
+                border-top: none !important;
+                border-bottom: 3px solid;
+                &:after {
+                    display: none;
+                }
+            }
         }
         .o_foreground_toggle > button:before {
             font-family: FontAwesome;
@@ -854,7 +857,10 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             content: '\f0c3';
         }
         .dropdown-menu {
-            min-width: 353px!important;
+            min-width: 180px!important;
+            .btn-group .note-color-reset {
+                font-size: 14px !important;
+            }
         }
     }
 }
