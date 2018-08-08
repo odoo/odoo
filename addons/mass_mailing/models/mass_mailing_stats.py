@@ -37,15 +37,20 @@ class MailMailStats(osv.Model):
         for stat in self.browse(cr, uid, ids, context=context):
             if not self.pool.get(stat.model):
                 continue
-            target = self.pool[stat.model].browse(cr, uid, stat.res_id, context=context)
-            if not target or not target.exists():
-                continue
-            email = ''
-            for email_field in ('email', 'email_from'):
-                if email_field in target and target[email_field]:
-                    email = ' <%s>' % target[email_field]
-                    break
-            res[stat.id] = '%s%s' % (target.display_name, email)
+            if stat.model=='res.partner':
+                partner_ids = self.pool['res.partner'].read(cr, uid, [stat.res_id], ['email', 'name'], context=context)
+                if partner_ids:
+                    res[stat.id] = '%s <%s>' % (partner_ids[0]['name'], partner_ids[0]['email'])
+            else:
+                target = self.pool[stat.model].browse(cr, uid, stat.res_id, context=context)
+                if not target or not target.exists():
+                    continue
+                email = ''
+                for email_field in ('email', 'email_from'):
+                    if email_field in target and target[email_field]:
+                        email = ' <%s>' % target[email_field]
+                        break
+                res[stat.id] = '%s%s' % (target.display_name, email)
         return res
 
     __store = {_name: ((lambda s, c, u, i, t: i), ['exception', 'sent', 'opened', 'replied', 'bounced'], 10)}
