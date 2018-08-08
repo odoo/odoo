@@ -786,13 +786,15 @@ time.strftime = py.PY_def.fromJSON(function () {
     return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
 });
 
-var args = _.map(('year month day '
-                + 'years months weeks days '
+var args = _.map(('year month day hour minute second '
+                + 'years months weeks days hours minutes seconds '
                 + 'weekday leapdays yearday nlyearday').split(' '), function (arg) {
     switch (arg) {
-    case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+        case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+        case 'hours':case 'minutes':case 'seconds':
         return [arg, zero];
     case 'year':case 'month':case 'day':case 'weekday':
+    case 'hour':case 'minute':case 'second':
     case 'yearday':case 'nlyearday':
         return [arg, null];
     default:
@@ -875,7 +877,8 @@ var relativedelta = py.type('relativedelta', null, {
         this._has_time = 0;
     },
     __add__: function (other) {
-        if (!py.PY_isInstance(other, datetime.date)) {
+        if (!(py.PY_isInstance(other, datetime.date) ||
+            py.PY_isInstance(other, datetime.datetime))) {
             return py.NotImplemented;
         }
         // TODO: test this whole mess
@@ -906,6 +909,12 @@ var relativedelta = py.type('relativedelta', null, {
             day: py.float.fromJSON(day)
         };
 
+        if (py.PY_isInstance(other, datetime.datetime)) {
+            repl.hour = py.float.fromJSON(asJS(this.ops.hour) || asJS(other.hour));
+            repl.minute = py.float.fromJSON(asJS(this.ops.minute) || asJS(other.minute));
+            repl.second = py.float.fromJSON(asJS(this.ops.second) || asJS(other.second));
+        }
+
         var days = asJS(this.ops.days);
         if (py.PY_isTrue(this.ops.leapdays) && month > 2 && _utils.isleap(year)) {
             days += asJS(this.ops.leapdays);
@@ -914,7 +923,10 @@ var relativedelta = py.type('relativedelta', null, {
         var ret = py.PY_add(
             py.PY_call(py.PY_getAttr(other, 'replace'), repl),
             py.PY_call(datetime.timedelta, {
-                days: py.float.fromJSON(days)
+                days: py.float.fromJSON(days),
+                hours: py.float.fromJSON(asJS(this.ops.hours)),
+                minutes: py.float.fromJSON(asJS(this.ops.minutes)),
+                seconds: py.float.fromJSON(asJS(this.ops.seconds))
             })
         );
 
@@ -952,10 +964,16 @@ var relativedelta = py.type('relativedelta', null, {
             months: py.PY_negative(this.ops.months),
             days: py.PY_negative(this.ops.days),
             leapdays: this.ops.leapdays,
+            hours: py.PY_negative(this.ops.hours),
+            minutes: py.PY_negative(this.ops.minutes),
+            seconds: py.PY_negative(this.ops.seconds),
             year: this.ops.year,
             month: this.ops.month,
             day: this.ops.day,
-            weekday: this.ops.weekday
+            weekday: this.ops.weekday,
+            hour: this.ops.hour,
+            minute: this.ops.minute,
+            second: this.ops.second
         });
     }
 });

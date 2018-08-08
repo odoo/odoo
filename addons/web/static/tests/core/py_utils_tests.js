@@ -340,6 +340,34 @@ QUnit.module('core', function () {
 
     });
 
+    QUnit.test('add', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 4, 18, 9, 32, 15).add(hours=2, minutes=30, " +
+                "seconds=10)).strftime('%Y-%m-%d %H:%M:%S')", pyUtils.context()),
+            '2017-04-18 12:02:25'
+        );
+        assert.strictEqual(
+            py.eval("(datetime.date(2017, 4, 18).add(months=1, years=3, days=5))" +
+                ".strftime('%Y-%m-%d')", pyUtils.context()),
+            '2020-05-23'
+        );
+    });
+
+    QUnit.test('subtract', function(assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 4, 18, 9, 32, 15).subtract(hours=1, minutes=5, " +
+                "seconds=33)).strftime('%Y-%m-%d %H:%M:%S')", pyUtils.context()),
+            '2017-04-18 08:26:42'
+        );
+        assert.strictEqual(
+            py.eval("(datetime.date(2017, 4, 18).subtract(years=5, months=1, days=1))" +
+                ".strftime('%Y-%m-%d')", pyUtils.context()),
+            '2012-03-17'
+        );
+    })
+
     QUnit.test('start_of/end_of', function (assert) {
         assert.expect(26);
 
