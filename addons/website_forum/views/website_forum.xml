@@ -154,7 +154,7 @@
                             </t>
                         </div>
                     </div>
-                    <div class="card" id="about_forum">
+                    <div class="card mt-2" id="about_forum">
                         <h3 class="card-header">About This Community</h3>
                         <div class="card-body">
                             <span t-field="forum.description"/>
@@ -162,7 +162,7 @@
                             <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}"><i class="fa fa-arrow-right"/> Back to <span t-field="forum.name"/></a>
                         </div>
                     </div>
-                    <div class="card" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
+                    <div class="card mt-2" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
                         <h3 class="card-header">Moderation Tools</h3>
                         <div class="card-body text-center">
                             <a t-attf-href="/forum/#{slug(forum)}/validation_queue"><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     <div t-if="header.get('question_data')">
-                        <div class="card">
+                        <div class="card mt-2">
                             <h3 class="card-header text-center">Question tools</h3>
                             <div class="card-body text-center">
                                 <t t-call="website_mail.follow"><t t-set="object" t-value="question"/></t>
