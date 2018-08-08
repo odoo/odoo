@@ -18,7 +18,7 @@ MailManager.include({
 
     start: function () {
         this._super.apply(this, arguments);
-        this._busBus.on('notification', this, this._onNotification);
+        this.call('bus_service', 'onNotification', this, this._onNotification);
     },
 
     //--------------------------------------------------------------------------

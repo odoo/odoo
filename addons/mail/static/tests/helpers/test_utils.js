@@ -1,12 +1,13 @@
 odoo.define('mail.testUtils', function (require) {
 "use strict";
 
+var BusService = require('bus.BusService');
+
 var Discuss = require('mail.Discuss');
 var MailService = require('mail.Service');
 
 var AbstractService = require('web.AbstractService');
 var AbstractStorageService = require('web.AbstractStorageService');
-var Bus = require('web.Bus');
 var Class = require('web.Class');
 var ControlPanel = require('web.ControlPanel');
 var RamStorage = require('web.RamStorage');
@@ -63,26 +64,9 @@ function createDiscuss(params) {
 
 var MockMailService = Class.extend({
     bus_service: function () {
-        var MockBus = Bus.extend({
-            /**
-             * Do nothing
-             */
-            startPolling: function () {},
+        return BusService.extend({
+            _poll: function () {}, // Do nothing
             isOdooFocused: function () { return true; },
-        });
-        return AbstractService.extend({
-            bus: new MockBus(this),
-
-            //--------------------------------------------------------------------------
-            // Public
-            //--------------------------------------------------------------------------
-
-            /**
-             * @returns {Bus}
-             */
-            getBus: function () {
-                return this.bus;
-            }
         });
     },
     mail_service: function () {

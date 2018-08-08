@@ -146,7 +146,6 @@ QUnit.test('@ mention in channel', function (assert) {
     assert.expect(34);
     var done = assert.async();
 
-    var bus = this.services.bus_service.prototype.bus;
     var fetchListenersDef = $.Deferred();
     var receiveMessageDef = $.Deferred();
 
@@ -160,6 +159,7 @@ QUnit.test('@ mention in channel', function (assert) {
         },
     };
 
+    var objectDiscuss;
     createDiscuss({
         id: 1,
         context: {},
@@ -182,7 +182,7 @@ QUnit.test('@ mention in channel', function (assert) {
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel'], data];
-                bus.trigger('notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
                 receiveMessageDef.resolve();
                 return $.when(42);
             }
@@ -190,6 +190,8 @@ QUnit.test('@ mention in channel', function (assert) {
         },
     })
     .then(function (discuss) {
+        objectDiscuss = discuss;
+
         var $general = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
         assert.strictEqual($general.length, 1,
@@ -432,7 +434,6 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
     assert.expect(2);
     var done = assert.async();
 
-    var bus = this.services.bus_service.prototype.bus;
     var messageData = [];
     _.each(_.range(1, 41), function (num) {
         messageData.push({
@@ -458,6 +459,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
     };
     this.data['mail.message'].records = messageData;
 
+    var objectDiscuss;
     createDiscuss({
         id: 1,
         context: {},
@@ -472,7 +474,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                bus.trigger('notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
                 return $.when(42);
             }
             return this._super.apply(this, arguments);
@@ -480,6 +482,8 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         session: {partner_id: 1},
     })
     .then(function (discuss) {
+        objectDiscuss = discuss;
+
         var $starred = discuss.$('.o_mail_discuss_sidebar').find('.o_mail_mailbox_title_starred');
         var $starredCounter = $('.o_mail_mailbox_title_starred > .o_mail_sidebar_needaction');
 
@@ -624,7 +628,6 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
     assert.expect(2);
     var done = assert.async();
 
-    var bus = this.services.bus_service.prototype.bus;
     var receiveMessageDef = $.Deferred();
 
     this.data.initMessaging = {
@@ -637,6 +640,7 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
         },
     };
 
+    var objectDiscuss;
     createDiscuss({
         id: 1,
         context: {},
@@ -654,7 +658,7 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
                     channel_ids: [1],
                 };
                 var notification = [[false, 'mail.channel'], data];
-                bus.trigger('notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
                 receiveMessageDef.resolve();
                 return $.when(42);
             }
@@ -662,6 +666,8 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
         },
     })
     .then(function (discuss) {
+        objectDiscuss= discuss;
+
         var $general = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
 

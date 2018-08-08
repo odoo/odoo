@@ -201,7 +201,7 @@ QUnit.test('post messages in a document thread window', function (assert) {
     testUtils.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage' && ev.data.method === 'setItem' &&
             ev.data.args[0] === 'mail.document_threads_last_message') {
-            assert.strictEqual(ev.data.args[1], JSON.stringify(newMessage),
+            assert.deepEqual(ev.data.args[1], newMessage,
                 "should write sent message in local storage, to share info with other tabs");
         }
     }, true);
@@ -262,10 +262,10 @@ QUnit.test('open, fold, unfold and close a document thread window', function (as
     $('.o_thread_window .o_thread_window_close').click();
 
     assert.verifySteps([
-        ['mail.document_threads_state', "{\"some.res.model_1\":{\"name\":\"Some Record\",\"windowState\":\"open\"}}"],
-        ['mail.document_threads_state', "{\"some.res.model_1\":{\"name\":\"Some Record\",\"windowState\":\"folded\"}}"],
-        ['mail.document_threads_state', "{\"some.res.model_1\":{\"name\":\"Some Record\",\"windowState\":\"open\"}}"],
-        ['mail.document_threads_state', "{\"some.res.model_1\":{\"name\":\"Some Record\",\"windowState\":\"closed\"}}"],
+        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "open"}}],
+        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "folded"}}],
+        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "open"}}],
+        ['mail.document_threads_state', {"some.res.model_1": {"name": "Some Record", "windowState": "closed"}}],
     ]);
 
     messagingMenu.destroy();

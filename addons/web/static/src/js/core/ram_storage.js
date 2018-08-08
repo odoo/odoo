@@ -8,13 +8,18 @@ odoo.define('web.RamStorage', function (require) {
  */
 
 var Class = require('web.Class');
+var mixins = require('web.mixins');
 
-var RamStorage = Class.extend({
+
+var RamStorage = Class.extend(mixins.EventDispatcherMixin, {
     /**
      * @constructor
      */
     init: function () {
-        this.storage = Object.create(null);
+        mixins.EventDispatcherMixin.init.call(this);
+        if (!this.storage) {
+            this.clear();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -25,7 +30,7 @@ var RamStorage = Class.extend({
      * Removes all data from the storage
      */
     clear: function () {
-        this.init();
+        this.storage = Object.create(null);
     },
     /**
      * Returns the value associated with a given key in the storage
@@ -43,6 +48,7 @@ var RamStorage = Class.extend({
      */
     removeItem: function (key) {
         delete this.storage[key];
+        this.trigger('storage', {key: key, newValue: null});
     },
     /**
      * Adds a given key-value pair to the storage, or update the value of the
@@ -53,6 +59,7 @@ var RamStorage = Class.extend({
      */
     setItem: function (key, value) {
         this.storage[key] = value;
+        this.trigger('storage', {key: key, newValue: value});
     },
 });
 
