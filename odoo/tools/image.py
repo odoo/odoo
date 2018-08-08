@@ -297,24 +297,32 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small, size=size_small)
     return return_dict
 
-def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small', sizes={}):
+def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small', raw_name=None, sizes={}):
     """ Update ``vals`` with image fields resized as expected. """
     if vals.get(big_name):
+        if raw_name:
+            vals[raw_name] = vals[big_name]
         vals.update(image_get_resized_images(vals[big_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
                         avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes=sizes))
     elif vals.get(medium_name):
+        if raw_name:
+            vals[raw_name] = vals[medium_name]
         vals.update(image_get_resized_images(vals[medium_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
                         avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False, sizes=sizes))
     elif vals.get(small_name):
+        if raw_name:
+            vals[raw_name] = vals[small_name]
         vals.update(image_get_resized_images(vals[small_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
                         avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True, sizes=sizes))
     elif big_name in vals or medium_name in vals or small_name in vals:
+        if raw_name:
+            vals[raw_name] = False
         vals[big_name] = vals[medium_name] = vals[small_name] = False
 
 def limited_image_resize(content, width=None, height=None, crop=False, upper_limit=False, avoid_if_small=False):
