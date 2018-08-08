@@ -132,10 +132,6 @@
                         </div>
                         <field name="is_produced" invisible="1"/>
                     </group>
-                    <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('production_messages', '=', False)]}">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-                        <field name="production_messages"/>
-                    </div>
                 </group>
                 <notebook>
                 <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
