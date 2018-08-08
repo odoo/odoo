@@ -44,14 +44,14 @@ renderer.createPalette = function ($container, options) {
 
     var groups;
     if ($clpicker.is("colorpicker")) {
-        groups = _.map($clpicker.children(), function (el) {
+        groups = _.map($clpicker.find('[data-name="theme"]'), function (el) {
             return $(el).find("button").empty();
         });
     } else {
         groups = [$clpicker.find("button").empty()];
     }
 
-    var html = "<h6>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
+    var html = "<h6 class='mt-2'>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
         var $row = $("<div/>", {"class": "note-color-row mb8"}).append($group);
         var $after_breaks = $row.find(".o_small + :not(.o_small)");
         if ($after_breaks.length === 0) {
@@ -59,21 +59,21 @@ renderer.createPalette = function ($container, options) {
         }
         $after_breaks.addClass("o_clear");
         return $row[0].outerHTML;
-    }).join("") + "<h6>" + _t("Common colors") + "</h6>";
+    }).join("") + "<h6 class='mt-2'>" + _t("Common colors") + "</h6>";
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
-    var $bg = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
-    var $fore = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
-    $bg.each(function () {
-        var $el = $(this);
-        var className = 'bg-' + $el.data('color');
-        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
-    });
+    var $fore = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $bg = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
     $fore.each(function () {
         var $el = $(this);
         var className = 'text-' + $el.data('color');
         $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
+    });
+    $bg.each(function () {
+        var $el = $(this);
+        var className = 'bg-' + $el.data('color');
+        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
     });
 };
 
@@ -230,6 +230,9 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
+            $container.find('.note-fore-color-preview > button').css('border-bottom-color', $(oStyle.image).css('color'));
+            $container.find('.note-back-color-preview > button').css('border-bottom-color', $(oStyle.image).css('background-color'));
+
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
             $container.find('.only_fa').removeClass('d-none');
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
@@ -242,7 +245,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
         } else {
-            $container.find('.d-none:not(.only_fa)').removeClass('d-none');
+            $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
             $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
@@ -267,6 +270,9 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("float-right"));
 
         $(oStyle.image).trigger('attributes_change');
+    } else {
+        $container.find('.note-fore-color-preview > button').css('border-bottom-color', oStyle.color);
+        $container.find('.note-back-color-preview > button').css('border-bottom-color', oStyle['background-color']);
     }
 };
 
@@ -990,14 +996,10 @@ $.summernote.lang.odoo = {
       justify: _t('Justify full')
     },
     color: {
-      recent: _t('Recent Color'),
-      more: _t('More Color'),
       background: _t('Background Color'),
       foreground: _t('Font Color'),
       transparent: _t('Transparent'),
-      setTransparent: _t('Set transparent'),
-      reset: _t('Reset'),
-      resetToDefault: _t('Reset to default')
+      setTransparent: _t('None'),
     },
     shortcut: {
       shortcuts: _t('Keyboard shortcuts'),
