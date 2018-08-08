@@ -282,8 +282,8 @@ class SaleTimesheetController(http.Controller):
         return query, query_params
 
     def _table_rows_get_employee_lines(self, projects, data_from_db):
-        initial_date = fields.Date.from_string(fields.Date.today())
-        ts_months = sorted([fields.Date.to_string(initial_date - relativedelta(months=i, day=1)) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
+        initial_date = fields.Date.today()
+        ts_months = sorted([initial_date - relativedelta(months=i, day=1) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
         default_row_vals = self._table_row_default(projects)
 
         # extract employee names
