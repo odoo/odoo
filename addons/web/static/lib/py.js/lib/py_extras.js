@@ -113,19 +113,20 @@ function ymd2ord(year, month, day) {
 }
 
 function get_quarter_number(month) {
-    return Math.ceil(month);
+    return Math.ceil(month / 3);
 }
 
 function get_quarter(year, month) {
-    quarter_number = get_quarter_number(month);
-    month_from = ((quarter_number - 1) * 3) + 1
-    date_from = {year: year, month: month_from, day: 1}
-    date_to = {year: year, month: month_from + 2, day: days_in_month(year, month)}
+    var quarter_number = get_quarter_number(month);
+    var month_from = ((quarter_number - 1) * 3) + 1
+    var date_from = {year: year, month: month_from, day: 1}
+    var date_to = {year: year, month: month_from + 2, day: days_in_month(year, month)}
     return [date_from, date_to];
 }
 
 function get_day_of_week(year, month, day) {
-    var d = new Date(year, month, day);
+    // Since JavaScript is a piece of garbage, months start at 0
+    var d = new Date(year, month - 1, day);
     // Convert to ISO8601: Monday = 0 ... Sunday = 6
     return (d.getDay() + 6) % 7;
 }
