@@ -432,6 +432,17 @@ datetime.datetime = py.type('datetime', null, {
             this[key] = asJS(args[key]);
         }
     },
+    __eq__: function (other) {
+        return (this.year === other.year
+             && this.month === other.month
+             && this.day === other.day
+             && this.hour === other.hour
+             && this.minute === other.minute
+             && this.second === other.second
+             && this.microsecond === other.microsecond
+             && this.tzinfo === other.tzinfo)
+            ? py.True : py.False;
+    },
     replace: function () {
         var args = py.PY_parseArgs(arguments, [
             ['year', py.None], ['month', py.None], ['day', py.None],
@@ -483,7 +494,7 @@ datetime.datetime = py.type('datetime', null, {
                 datetime.datetime, [quarter.year, quarter.month, quarter.day].concat(min)
             );
         } else if (granularity === 'month') {
-            var dom = days_in_month(this.month);
+            var dom = days_in_month(this.year, this.month);
             return py.PY_call(datetime.datetime, [this.year, this.month, dom].concat(min));
         } else if (granularity === 'week') {
             var dow = get_day_of_week(this.year, this.month, this.day);
@@ -680,7 +691,7 @@ datetime.date = py.type('date', null, {
             var quarter = get_quarter(this.year, this.month)[1];
             return py.PY_call(datetime.date, [quarter.year, quarter.month, quarter.day]);
         } else if (granularity === 'month') {
-            var dom = days_in_month(this.month);
+            var dom = days_in_month(this.year, this.month);
             return py.PY_call(datetime.date, [this.year, this.month, dom]);
         } else if (granularity === 'week') {
             var dow = get_day_of_week(this.year, this.month, this.day);

@@ -384,7 +384,7 @@ QUnit.module('core', function () {
         assert.ok(py.eval('_date.end_of("week") == date(2281, 10, 16)', ctx));
         assert.ok(py.eval('_date.end_of("day") == date(2281, 10, 11)', ctx));
         assert.throws(function () {
-            py.eval('_datetime.start_of("hour")', ctx);
+            py.eval('_date.start_of("hour")', ctx);
         }, /^Error: ValueError:/);
 
         // Datetimes
