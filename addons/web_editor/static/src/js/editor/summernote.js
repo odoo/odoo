@@ -970,6 +970,43 @@ renderer.tplButtonInfo.fontsize = function (lang, options) {
     });
 };
 
+renderer.tplButtonInfo.color = function (lang, options) {
+    var foreColorButtonLabel = '<i class="' + options.iconPrefix + options.icons.color.recent + '"></i>';
+    var backColorButtonLabel = '<i class="' + options.iconPrefix + 'paint-brush"></i>';
+    // TODO Remove recent color button if possible.
+    // It is still put to avoid JS errors when clicking other buttons as the
+    // editor still expects it to exist.
+    var recentColorButton = renderer.getTemplate().button(foreColorButtonLabel, {
+        className: 'note-recent-color d-none',
+        title: lang.color.foreground,
+        event: 'color',
+        value: '{"backColor":"#B35E9B"}'
+    });
+    var foreColorItems = [
+        '<li><div class="btn-group flex-column">',
+        '<div class="note-color-palette" data-target-event="foreColor"></div>',
+        '</div></li>',
+    ];
+    var backColorItems = [
+        '<li><div class="btn-group flex-column">',
+        '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
+        lang.color.setTransparent + '</div>',
+        '<div class="note-color-palette" data-target-event="backColor"></div>',
+        '</div></li>',
+    ];
+    var foreColorButton = renderer.getTemplate().button(foreColorButtonLabel, {
+        className: 'note-fore-color-preview mx-1',
+        title: lang.color.foreground,
+        dropdown: renderer.getTemplate().dropdown(foreColorItems)
+    });
+    var backColorButton = renderer.getTemplate().button(backColorButtonLabel, {
+        className: 'note-back-color-preview mx-1',
+        title: lang.color.background,
+        dropdown: renderer.getTemplate().dropdown(backColorItems)
+    });
+    return recentColorButton + foreColorButton + backColorButton;
+},
+
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 key.nameFromCode[46] = 'DELETE';
@@ -1922,65 +1959,21 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
     event.preventDefault();
     return false;
 };
-var fn_boutton_updateRecentColor = eventHandler.modules.toolbar.button.updateRecentColor;
-eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue) {
-    fn_boutton_updateRecentColor.call(this, elBtn, sEvent, sValue);
-    var $recentcolor = $.find('.note-recent-color i');
-    var $recentcolorbtn = $.find('.note-recent-color');
-
-    //find last used color for fonts or for icons
-    //set this color into recentcolor button of both font and icon
-    for (var i in $recentcolor) {
-        var $font = $recentcolor[i];
-        var $button = $($recentcolorbtn[i]);
-        var className = $font.className.split(/\s+/);
-        var k;
-        if (sEvent === "foreColor") {
-            //set class for forecolor to recentcolor button font-icon
-            for (k=2; k<className.length; k++) {
-                if (className[k].length && className[k].slice(0,5) === "text-") {
-                  className.splice(k,1);
-                  k--;
-                }
-            }
-            if (sValue.indexOf('text-') !== -1) {
-                $font.className = className.join(' ') + ' ' + sValue;
-                $font.style.color = '';
-            } else {
-                $font.className = $font.className.replace(/(^|\s+)text-\S+/, '');
-                $font.style.color = sValue !== 'inherit' ? sValue : "";
-            }
-        } else {
-            //set class for backcolor to recentcolor button font-icon
-            for (k=2; k<className.length; k++) {
-                if (className[k].length && className[k].slice(0,3) === "bg-") {
-                  className.splice(k,1);
-                  k--;
-                }
-            }
-            if (sValue.indexOf('bg-') !== -1) {
-                $font.className =className.join(' ') + ' ' + sValue;
-                $font.style.backgroundColor = "";
-            } else {
-                $font.className = $font.className.replace(/(^|\s+)bg-\S+/, '');
-                $font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
-            }
-        }
-        if (sValue !== 'inherit') {
-            //set attribute for color to the recentcolor button
-            var colorInfo = JSON.parse($button.attr('data-value'));
-            colorInfo[sEvent] = sValue;
-            $button.attr('data-value', JSON.stringify(colorInfo));
-        }
-    }
-    return false;
-};
 
 eventHandler.modules.editor.undo = function ($popover) {
     if (!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
 };
 eventHandler.modules.editor.redo = function ($popover) {
     if (!$popover.attr('disabled'))  $popover.data('NoteHistory').redo();
+};
+
+// Get color and background color of node to update recent color button
+var fn_from_node = eventHandler.modules.editor.style.fromNode;
+eventHandler.modules.editor.style.fromNode = function ($node) {
+    var styleInfo = fn_from_node.apply(this, arguments);
+    styleInfo['color'] = $node.css('color');
+    styleInfo['background-color'] = $node.css('background-color');
+    return styleInfo;
 };
 
 // use image toolbar if current range is on image
