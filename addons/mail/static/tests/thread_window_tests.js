@@ -40,7 +40,6 @@ QUnit.module('mail', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            params.services = _.clone(params.services);
             testUtils.addMockEnvironment(widget, params);
             return widget;
         };

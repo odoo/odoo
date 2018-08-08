@@ -424,8 +424,6 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
     assert.expect(27);
 
-    var bus = this.services.bus_service.prototype.bus;
-
     this.data.partner.records[0].message_ids = [1];
     this.data['mail.message'].records = [{
         author_id: ["1", "John Doe"],
@@ -499,7 +497,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                bus.trigger('notification', [notification]);
+                form.call('bus_service', 'trigger', 'notification', [notification]);
                 return $.when();
             }
             return this._super(route, args);
@@ -784,7 +782,6 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     var getSuggestionsDef = $.Deferred();
 
     var messages = [];
-    var bus = this.services.bus_service.prototype.bus;
     var form = createView({
         View: FormView,
         model: 'partner',
@@ -1664,7 +1661,7 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
         intercepts: {
             get_session: function (event) {
                 event.stopPropagation();
-                event.data.callback({uid: 1});
+                event.data.callback({uid: 1, origin: 'http://web'});
             },
         },
     });

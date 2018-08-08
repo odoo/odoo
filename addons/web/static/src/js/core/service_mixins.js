@@ -135,7 +135,8 @@ var ServicesMixin = {
         var query = rpc.buildQuery(params);
         var def = this.call('ajax', 'rpc', query.route, query.params, options) || $.Deferred();
         var promise = def.promise();
-        promise.abort = def.abort ? def.abort.bind(def) : function abort () {def.reject();};
+        var abort = (def.abort ? def.abort : def.reject) || function () {};
+        promise.abort = abort.bind(def);
         return promise;
     },
     loadFieldView: function (dataset, view_id, view_type, options) {

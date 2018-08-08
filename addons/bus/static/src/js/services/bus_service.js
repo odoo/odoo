@@ -1,33 +1,26 @@
 odoo.define('bus.BusService', function (require) {
 "use strict";
 
-var bus = require('bus.bus').bus;
-
-var AbstractService = require('web.AbstractService');
+var CrossTab = require('bus.CrossTab');
 var core = require('web.core');
+var ServicesMixin = require('web.ServicesMixin');
 
-var BusService =  AbstractService.extend({
+var BusService =  CrossTab.extend(ServicesMixin, {
+    dependencies : ['local_storage'],
+
+    // properties
+    _audio: null,
+
     /**
-     * @override
+     * This method is necessary in order for this Class to be used to instantiate services
+     *
+     * @abstract
      */
-    start: function () {
-        this._super.apply(this, arguments);
-        this.bus = bus;
-        this._audio = null;
-    },
+    start: function () {},
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * Get the bus
-     *
-     * @return {web.Bus} the longpoll bus
-     */
-    getBus: function () {
-        return this.bus;
-    },
 
     /**
      * Send a notification, and notify once per browser's tab
@@ -37,15 +30,24 @@ var BusService =  AbstractService.extend({
      */
     sendNotification: function (title, content) {
         if (window.Notification && Notification.permission === "granted") {
-            if (this.bus.is_master) {
+            if (this.isMasterTab()) {
                 this._sendNativeNotification(title, content);
             }
         } else {
             this.do_notify(title, content);
-            if (this.bus.is_master) {
+            if (this.isMasterTab()) {
                 this._beep();
             }
         }
+    },
+    /**
+     * Register listeners on notifications received on this bus service
+     *
+     * @param {Object} receiver
+     * @param {function} func
+     */
+    onNotification: function () {
+        this.on.apply(this, ["notification"].concat(Array.prototype.slice.call(arguments)));
     },
 
     //--------------------------------------------------------------------------

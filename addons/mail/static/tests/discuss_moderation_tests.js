@@ -533,8 +533,6 @@ QUnit.test('author: send message in moderated channel', function (assert) {
     assert.expect(4);
     var done = assert.async();
 
-    var bus = this.services.bus_service.prototype.bus;
-
     var messagePostDef = $.Deferred();
 
     this.data.initMessaging = {
@@ -548,6 +546,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
         },
     };
 
+    var objectDiscuss;
     createDiscuss({
         id: 1,
         context: {},
@@ -571,7 +570,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
                     message: message,
                 };
                 var notification = [metaData, notifData];
-                bus.trigger('notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
 
                 messagePostDef.resolve();
                 return $.when(message.id);
@@ -583,6 +582,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
         },
     })
     .then(function (discuss) {
+        objectDiscuss = discuss;
 
         // go to channel 'general'
         discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
@@ -612,8 +612,6 @@ QUnit.test('author: send message in moderated channel', function (assert) {
 QUnit.test('author: sent message accepted in moderated channel', function (assert) {
     assert.expect(8);
     var done = assert.async();
-
-    var bus = this.services.bus_service.prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -674,7 +672,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         };
         var metaData = [dbName, 'mail.channel'];
         var notification = [metaData, messageData];
-        bus.trigger('notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', [notification]);
 
         // check message is accepted
         $message = discuss.$('.o_thread_message');
@@ -695,8 +693,6 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
 QUnit.test('author: sent message rejected in moderated channel', function (assert) {
     assert.expect(5);
     var done = assert.async();
-
-    var bus = this.services.bus_service.prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -753,7 +749,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         };
         var metaData = [dbName, 'res.partner'];
         var notification = [metaData, notifData];
-        bus.trigger('notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', [notification]);
 
         // // check no message
         assert.strictEqual(discuss.$('.o_thread_message').length, 0,
