@@ -305,23 +305,23 @@
 
                 <h2>Orders</h2>
                 <div class="row mt16 o_settings_container" id="sale_checkout_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Send a recovery email to authenticated shoppers">
+                    <div class="col-xs-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Abandoned carts are all carts for which no transaction has been confirmed while the customer has filled in their address. You can find them in *Website > Orders > Abandoned Carts*. From there you can send a recovery email to stimulate the customers to resume their order.">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
-                            <span class="o_form_label">Email for Abandoned carts</span>
+                            <span class="o_form_label">Abandoned Carts</span>
                             <div class="text-muted">
-                                Default recovery email to send when a cart is abandoned
+                                Send a recovery email when a cart is abandoned
                             </div>
-                            <div class="content-group">
+                            <div class="content-group" title="This email template is suggested by default when you send a recovery email.">
                                 <div class="row mt16">
                                     <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-3 o_light_label"/>
                                     <field name="cart_recovery_mail_template" class="oe_inline"/>
                                 </div>
                             </div>
-                            <div class="content-group">
+                            <div class="content-group" title="Carts are flagged as abandoned after this delay.">
                                 <div class="row mt16">
-                                  <label for="cart_abandoned_delay" string="Cart are considered abandoned after" class="col-lg-6 o_light_label"/>
-                                  <span class="col-lg-3"><field name="cart_abandoned_delay"/>hours</span>
+                                  <label for="cart_abandoned_delay" string="Cart is abandoned after" class="col-lg-6 o_light_label"/>
+                                  <span class="col-lg-3"><field name="cart_abandoned_delay"/>hour(s).</span>
                                 </div>
                             </div>
                         </div>
