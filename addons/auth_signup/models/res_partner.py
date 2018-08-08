@@ -106,7 +106,7 @@ class ResPartner(models.Model):
         res = defaultdict(dict)
 
         allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
-        for partner in self:
+        for partner in self.sudo():
             if allow_signup and not partner.user_ids:
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
@@ -123,7 +123,7 @@ class ResPartner(models.Model):
         """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)
         """
-        for partner in self:
+        for partner in self.sudo():
             if expiration or not partner.signup_valid:
                 token = random_token()
                 while self._signup_retrieve_partner(token):
