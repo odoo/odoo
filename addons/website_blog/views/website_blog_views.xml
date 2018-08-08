@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-        <menuitem name="Blog"
-            id="menu_website_blog_root"
-            sequence="20"
-            parent="website.menu_website_configuration"
-            groups="website.group_website_designer"/>
 
         <!-- Blog views -->
         <record id="view_blog_blog_list" model="ir.ui.view">
@@ -163,7 +158,6 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_page" parent="menu_website_blog_root" name="Blog Posts" action="action_blog_post" sequence="10"/>
 
         <record id="blog_blog_view_search" model="ir.ui.view">
             <field name="name">blog.blog.search</field>
@@ -181,7 +175,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_blog" parent="menu_website_blog_root" name="Blogs" action="action_blog_blog" sequence="20"/>
 
         <record id="blog_tag_tree" model="ir.ui.view">
             <field name="name">blog_tag_tree</field>
@@ -220,8 +213,6 @@
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
 
-        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Tags" action="action_tags" sequence="40" />
-
         <record id="blog_tag_category_form" model="ir.ui.view">
             <field name="name">blog_tag_category_form</field>
             <field name="model">blog.tag.category</field>
@@ -254,7 +245,23 @@
             <field name="view_id" ref="blog_tag_category_tree"/>
         </record>
 
-        <menuitem id="menu_website_blog_tag_category" parent="menu_website_blog_root"
+        <menuitem name="Blogs"
+            id="menu_website_blog_root"
+            sequence="20"
+            parent="website.menu_website_configuration"
+            groups="website.group_website_designer"
+            action="action_blog_post"/>
+
+        <menuitem name="Blogs"
+            id="menu_website_blog_root_global"
+            sequence="100"
+            parent="website.menu_website_global_configuration" 
+            groups="website.group_website_designer"/>
+
+        <menuitem id="menu_website_blog_tag_category_global" parent="menu_website_blog_root_global"
                   name="Tag Categories" action="action_tag_category" sequence="50" />
 
+        <menuitem id="menu_blog_tag_global" parent="menu_website_blog_root_global" name="Tags" action="action_tags" sequence="40" />
+
+        <menuitem id="menu_blog_global" parent="menu_website_blog_root_global" name="Blogs" action="action_blog_blog" sequence="20"/>
 </odoo>

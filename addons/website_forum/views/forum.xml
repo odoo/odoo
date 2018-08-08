@@ -5,6 +5,8 @@
         <menuitem name="Forum" id="menu_website_forum"
             parent="website.menu_website_configuration" sequence="50" groups="website.group_website_designer"/>
 
+        <menuitem name="Forum" id="menu_website_forum_global"
+            parent="website.menu_website_global_configuration" sequence="170" groups="website.group_website_designer"/>
 
         <!-- FORUM VIEWS -->
         <record id="view_forum_forum_list" model="ir.ui.view">
@@ -125,7 +127,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_forum" parent="menu_website_forum" name="Forums" action="action_forum_forum" sequence="10"/>
+        <menuitem id="menu_forum_global" parent="menu_website_forum_global" name="Forums" action="action_forum_forum" sequence="10"/>
 
         <!-- POST VIEWS -->
         <record id="view_forum_post_list" model="ir.ui.view">
@@ -293,7 +295,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_forum_tag" parent="menu_website_forum" name="Tag" action="forum_tag_action" sequence="30"/>
+        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tag" action="forum_tag_action" sequence="30"/>
 
     </data>
 </odoo>

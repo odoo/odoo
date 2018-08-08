@@ -42,8 +42,7 @@
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="domain">[('team_id.team_type', '=', 'website')]</field>
-        <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1}</field>
+        <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
@@ -137,7 +136,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('team_id.team_type', '=', 'website'), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
-        <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner')}"/>
+        <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
@@ -155,7 +154,7 @@
     <menuitem id="menu_orders" name="Orders"
         parent="website.menu_website_configuration" sequence="2"
         groups="sales_team.group_sale_salesman"/>
-    <menuitem id="menu_catalog" name="Catalog"
+    <menuitem id="menu_catalog" name="Products"
         parent="website.menu_website_configuration" sequence="3"
         groups="sales_team.group_sale_salesman"/>
     <menuitem id="menu_reporting" name="Reporting"
@@ -165,9 +164,9 @@
         parent="website.menu_website_configuration" sequence="100"
         groups="base.group_system,sales_team.group_sale_manager"/>
 
-    <menuitem id="menu_ecommerce_settings" name="eCommerce"
+    <menuitem id="menu_ecommerce_settings" name="eCommerce" sequence="50"
         parent="website.menu_website_global_configuration"/>
-    <menuitem id="menu_product_settings" name="Products"
+    <menuitem id="menu_product_settings" name="Products" sequence="80"
         parent="website.menu_website_global_configuration"/>
 
     <!-- Orders sub-menus -->

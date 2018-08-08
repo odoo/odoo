@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
     # when multi-website is implemented
     google_maps_api_key = fields.Char(string='Google Maps API Key', config_parameter='google_maps_api_key', default='')
     has_google_analytics = fields.Boolean("Google Analytics", config_parameter='website.has_google_analytics')
-    has_google_analytics_dashboard = fields.Boolean("Google Analytics in Dashboard", config_parameter='website.has_google_analytics_dashboard')
+    has_google_analytics_dashboard = fields.Boolean("Embedded Google Analytics", config_parameter='website.has_google_analytics_dashboard')
     has_google_maps = fields.Boolean("Google Maps", config_parameter='website.has_google_maps')
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation (B2B)'),

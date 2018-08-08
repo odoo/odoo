@@ -83,7 +83,7 @@
                                     <div class="o_setting_right_pane">
                                         <label for="has_google_analytics_dashboard"/>
                                         <div class="text-muted">
-                                            See Google Analytics data on your Website Dashboard
+                                            Follow your website traffic in Odoo.
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
                                             <div class="row mt16">
@@ -197,6 +197,14 @@
             </field>
         </record>
 
+        <record id="action_website_add_features" model="ir.actions.act_window">
+            <field name="name">Add Features</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website')}"/>
+        </record>
+
         <record id="action_website_configuration" model="ir.actions.act_window">
             <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
@@ -208,31 +216,36 @@
 
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
             sequence="100" name="Configuration" groups="base.group_system"/>
+
         <menuitem name="Settings"
             id="menu_website_website_settings"
             action="action_website_configuration"
             parent="menu_website_global_configuration"
-            groups="base.group_system"/>
+            groups="base.group_system"
+            sequence="10"/>
+
+        <menuitem id="menu_website_add_features" parent="website.menu_website_global_configuration"
+            sequence="20" name="Apps" groups="base.group_system" action="action_website_add_features"/>
 
         <menuitem name="Pages"
             id="menu_website_pages_list"
             action="action_website_pages_list"
             parent="menu_website_global_configuration"
-            sequence="20"
+            sequence="30"
             />
 
         <menuitem name="Redirects"
             id="menu_website_redirect_list"
             action="action_website_redirect_list"
             parent="menu_website_global_configuration"
-            sequence="30"
+            sequence="40"
             />
 
         <menuitem name="Menus"
             id="menu_website_menu_list"
             action="action_website_menu"
             parent="menu_website_global_configuration"
-            sequence="40"
+            sequence="45"
             groups="base.group_no_one"/>
 
 </odoo>
