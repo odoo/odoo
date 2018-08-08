@@ -29,8 +29,9 @@ var AbstractStorageService = AbstractService.extend({
      * @param {string} key
      * @returns {string}
      */
-    getItem: function(key) {
-        return this.storage.getItem(key);
+    getItem: function(key, defaultValue) {
+        var val = this.storage.getItem(key);
+        return val ? JSON.parse(val) : defaultValue;
     },
     /**
      * Removes the given key from the storage
@@ -47,7 +48,14 @@ var AbstractStorageService = AbstractService.extend({
      * @param {string} value
      */
     setItem: function(key, value) {
-        this.storage.setItem(key,value);
+        this.storage.setItem(key, JSON.stringify(value));
+    },
+    /**
+     * Add an handler on storage event
+     *
+     */
+    onStorage: function () {
+        this.storage.on.apply(this.storage, ["storage"].concat(Array.prototype.slice.call(arguments)));
     },
 });
 

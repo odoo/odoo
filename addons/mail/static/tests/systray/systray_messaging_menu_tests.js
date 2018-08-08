@@ -149,8 +149,6 @@ QUnit.test('messaging menu widget: messaging menu with 1 record', function (asse
 QUnit.test('messaging menu widget: no crash when clicking on inbox notification not associated to a document', function (assert) {
     assert.expect(3);
 
-    var bus = this.services.bus_service.prototype.bus;
-
     var messagingMenu = new MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
         services: this.services,
@@ -185,7 +183,7 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
     var notifications = [
         [['myDB', 'ir.needaction'], message]
     ];
-    bus.trigger('notification', notifications);
+    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
 
     // Open messaging menu
     messagingMenu.$('.dropdown-toggle').click();

@@ -1,7 +1,7 @@
 odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
-var bus = require('bus.bus').bus;
+require('bus.BusService');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
@@ -63,7 +63,6 @@ var LivechatButton = Widget.extend({
         this._chatWindow = null;
         this._messages = [];
         this._serverURL = serverURL;
-        this._busBus = bus;
     },
     willStart: function () {
         var self = this;
@@ -98,7 +97,7 @@ var LivechatButton = Widget.extend({
                     setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer*1000);
             }
         }
-        this._busBus.on('notification', this, this._onNotification);
+        this.call('bus_service', 'onNotification', this, this._onNotification);
         return this._super();
     },
 
@@ -210,8 +209,8 @@ var LivechatButton = Widget.extend({
                 self._sendWelcomeMessage();
                 self._renderMessages();
 
-                self._busBus.add_channel(self._livechat.getUUID());
-                self._busBus.start_polling();
+                self.busBus.addChannel(self._livechat.getUUID());
+                self.busBus.startPolling();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
                 utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);

@@ -100,7 +100,7 @@ WebClient.include({
         // in which the current user is involved is created, edited or deleted
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
-        this.call('bus_service', 'getBus').on('notification', this, function (notifications) {
+        this.call('bus_service', 'onNotification', this, function (notifications) {
             _.each(notifications, (function (notification) {
                 if (notification[0][1] === 'calendar.alarm') {
                     this.display_calendar_notif(notification[1]);

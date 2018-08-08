@@ -1,7 +1,6 @@
 odoo.define('im_support.systray_tests', function (require) {
 "use strict";
 
-var supportBus = require('im_support.SupportBus');
 var imSupportTestUtils = require('im_support.test_utils');
 
 var mailTestUtils = require('mail.testUtils');
@@ -21,6 +20,7 @@ QUnit.module('systray', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+
         this.supportParams = {
             db_uuid: 'some_uuid',
             support_token: 'ABCDEFGHIJ',
@@ -316,7 +316,7 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         channel_ids: [supportChannelID],
     };
     var notification = [[false, 'mail.channel'], data];
-    supportBus.trigger('notification', [notification]);
+    messagingMenu.call('support_bus_service', 'trigger', 'notification', [notification]);
 
     assert.strictEqual($('.o_thread_window .o_thread_message').length, 1,
         "there should be a new message in the thread");
