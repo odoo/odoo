@@ -938,6 +938,10 @@ class StockMove(models.Model):
             new_move_prop = self.move_dest_id.split(qty)
             new_move.write({'move_dest_id': new_move_prop})
 
+    def _prepare_move_split_vals(self, defaults):
+        # hook to add values in default vals in other modules
+        return defaults
+
     @api.multi
     def split(self, qty, restrict_lot_id=False, restrict_partner_id=False):
         """ Splits qty from move move into a new move
@@ -967,6 +971,9 @@ class StockMove(models.Model):
             'move_dest_id': self.move_dest_id.id,
             'origin_returned_move_id': self.origin_returned_move_id.id,
         }
+
+        defaults = self._prepare_move_split_vals(defaults)
+
         if restrict_partner_id:
             defaults['restrict_partner_id'] = restrict_partner_id
 
