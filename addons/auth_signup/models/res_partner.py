@@ -123,7 +123,7 @@ class ResPartner(models.Model):
         """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)
         """
-        for partner in self:
+        for partner in self.sudo():
             if expiration or not partner.signup_valid:
                 token = random_token()
                 while self._signup_retrieve_partner(token):
