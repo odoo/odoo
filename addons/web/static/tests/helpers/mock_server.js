@@ -335,7 +335,7 @@ var MockServer = Class.extend({
                 activeInDomain = activeInDomain || subdomain[0] === 'active';
             });
             if (!activeInDomain) {
-                domain.unshift(['active', '=', true]);
+                domain = [['active', '=', true]].concat(domain);
             }
         }
 
