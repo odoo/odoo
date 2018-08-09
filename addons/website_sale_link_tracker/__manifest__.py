@@ -13,6 +13,9 @@ View Link Tracker Statistics on eCommerce dashboard
         'views/sale_order_views.xml',
         'views/assets.xml',
     ],
+    'demo': [
+        'data/sale_order_demo.xml',
+    ],
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': True,
 }
