@@ -471,7 +471,7 @@ class Channel(models.Model):
             'is_minimized': minimized
         }
         domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.uuid', '=', uuid)]
-        channel_partners = self.env['mail.channel.partner'].search(domain)
+        channel_partners = self.env['mail.channel.partner'].search(domain, limit=1)
         channel_partners.write(values)
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_partners.channel_id.channel_info()[0])
 
