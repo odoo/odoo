@@ -38,6 +38,7 @@ class LeaveReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report')
+
         self._cr.execute("""
             CREATE or REPLACE view hr_leave_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
@@ -61,7 +62,7 @@ class LeaveReport(models.Model):
                     FALSE as payslip_status,
                     'allocation' as type
                 from hr_leave_allocation as allocation
-                union select
+                union all select
                     request.employee_id as employee_id,
                     request.name as name,
                     request.number_of_days as number_of_days,

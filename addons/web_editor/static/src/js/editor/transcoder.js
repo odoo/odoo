@@ -248,6 +248,10 @@ function applyOverDescendants(node, func) {
             func(node);
             applyOverDescendants(node, func);
         }
+        var $node = $(node);
+        if (node.nodeName === 'A' && $node.hasClass('btn') && !$node.children().length && $(node).parents('.o_outlook_hack').length)  {
+            node = $(node).parents('.o_outlook_hack')[0];
+        }
         node = node.nextSibling;
     }
 }
@@ -283,7 +287,7 @@ function classToStyle($editable) {
 
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
-            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;"><tr><td></td></tr></table>');
+            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;vertical-align:middle"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
                 .css({

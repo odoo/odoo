@@ -309,8 +309,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields = {
                 partner_id : new relational_fields.FieldMany2One(self,
                     'partner_id',
-                    self.model.get(recordID),
-                    {mode: 'edit'}
+                    self.model.get(recordID), {
+                        mode: 'edit',
+                        attrs: {
+                            placeholder: self._initialState.st_line.communication_partner_name || '',
+                        }
+                    }
                 )
             };
             self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
