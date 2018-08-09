@@ -446,7 +446,7 @@ var KanbanActivity = AbstractActivityField.extend({
     events: {
         'show.bs.dropdown': '_onDropdownShow',
         'click .o_schedule_activity': '_onScheduleActivity',
-        'click .o_activity_done': '_onMarkActivityDone',
+        'click .o_mark_as_done': '_onMarkActivityDone',
         'click .o_activity_template_preview': '_onPreviewMailTemplate',
         'click .o_activity_template_send': '_onSendMailTemplate',
     },
