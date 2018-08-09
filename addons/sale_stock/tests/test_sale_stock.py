@@ -428,8 +428,8 @@ class TestSaleStock(TestSale):
         the picking, create new move lines (through the detailed operations view). See that the move
         lines are correctly dispatched through the moves.
         """
-        uom_unit = self.env.ref('product.product_uom_unit')
-        uom_dozen = self.env.ref('product.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
         item1 = self.products['prod_order']
 
         self.assertEqual(item1.uom_id.id, uom_unit.id)
@@ -495,4 +495,3 @@ class TestSaleStock(TestSale):
         so1.picking_ids.button_validate()
         self.assertEqual(so1.picking_ids.state, 'done')
         self.assertEqual(so1.order_line.mapped('qty_delivered'), [1, 1, 1])
-
