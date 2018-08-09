@@ -9,8 +9,8 @@
             <div class="oe_import_box col-lg-12 d-none">
                 <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
                       name="file" class="oe_import_file" type="file" style="display:none;"/>
-                <div class="oe_import_with_file">
-                    <a href="#" class="oe_import_toggle">
+                <div class="oe_import_with_file row">
+                    <a href="#" class="oe_import_toggle col-sm-12">
                         Formatting Options…</a>
                     <div class="oe_import_toggled oe_import_options js_import_options col-sm-5">
                         <p t-foreach="widget.opts" t-as="option">
