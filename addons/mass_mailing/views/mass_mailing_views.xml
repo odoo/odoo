@@ -449,38 +449,44 @@
                         </strong></p>
                     </div>
                     <sheet>
-                        <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
+                        <div class="oe_button_box" name="button_box">
                             <button name="%(action_view_mail_mail_statistics_mailing_list)d" type="action"
                                 context="{'search_default_filter_sent': True}"
-                                icon="fa-envelope-o" class="oe_stat_button"
-                                attrs="{'invisible': [('sent', '=', 0)]}" >
+                                icon="fa-envelope-o" class="oe_stat_button o_mass_mailing_button"
+                                attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft','test'))]}" >
                                 <field name="sent" string="Emails Sent" widget="statinfo"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_received': True}"
+                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                     type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_opened': True}"
+                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                     type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_replied': True}"
+                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                     type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mass_mailing_links_statistics)d"
+                                attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                 type="action" class="oe_stat_button">
                                 <field name="clicks_ratio" string="Clicks" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                 context="{'search_default_filter_bounced': True}"
+                                attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                 type="action" class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>
                             <button name="toggle_active" type="object"
+                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
@@ -534,10 +540,21 @@
                                         <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
                                         <field name="sent_date" readonly="1" attrs="{'invisible': [('sent_date', '=', False)]}"/>
                                     </group>
-                                    <group string="Campaign" groups="mass_mailing.group_mass_mailing_campaign">
-                                        <field name="mass_mailing_campaign_id" string="Campaign"/>
-                                        <label for="contact_ab_pc"/>
-                                        <div>
+                                    <group string="Campaign" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
+                                        <field name="mass_mailing_campaign_id"
+                                            string="Campaign"
+                                            groups="mass_mailing.group_mass_mailing_campaign"/>
+                                        <field name="campaign_id" invisible="1"
+                                            groups="base.group_no_one"/>
+                                        <field name="source_id"
+                                            string="Source"
+                                            required="False"
+                                            groups="base.group_no_one"/>
+                                        <field name="medium_id"
+                                             string="Medium"
+                                            groups="base.group_no_one"/>
+                                        <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                        <div groups="mass_mailing.group_mass_mailing_campaign">
                                             <field name="contact_ab_pc" class="oe_inline"/> %
                                         </div>
                                     </group>
