@@ -16,7 +16,7 @@
   <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="portal.portal_my_home" priority="25">
     <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
         <li t-if="purchase_count" class="list-group-item">
-          <span class="badge badge-pill" t-esc="purchase_count"/>
+          <span class="badge badge-secondary badge-pill float-right" t-esc="purchase_count"/>
           <a href="/my/purchase">Purchase Orders</a>
         </li>
     </xpath>
