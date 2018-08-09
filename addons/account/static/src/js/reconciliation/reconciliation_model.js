@@ -855,8 +855,14 @@ var StatementModel = BasicModel.extend({
                     }
                 }
             });
-            total = Math.round(total*1000)/1000 || 0;
-            amount_currency = Math.round(amount_currency);
+            var company_currency = session.get_currency(line.st_line.currency_id);
+            var company_precision = company_currency && company_currency.digits[1] || 2;
+            total = utils.round_precision(total*1000, company_precision)/1000 || 0;
+            if(isOtherCurrencyId){
+                var other_currency = session.get_currency(isOtherCurrencyId);
+                var other_precision = other_currency && other_currency.digits[1] || 2;
+                amount_currency = utils.round_precision(amount_currency, other_precision)
+            }
             line.balance = {
                 amount: total,
                 amount_str: field_utils.format.monetary(Math.abs(total), {}, formatOptions),
