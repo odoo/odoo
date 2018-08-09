@@ -209,7 +209,7 @@ class IrActionsReport(models.Model):
         if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
             landscape = specific_paperformat_args.get('data-report-landscape')
 
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 

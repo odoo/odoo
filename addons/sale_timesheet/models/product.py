@@ -83,3 +83,5 @@ class ProductTemplate(models.Model):
         if self.type == 'service':
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
+        elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
+            self.invoice_policy = 'order'
