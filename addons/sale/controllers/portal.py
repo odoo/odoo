@@ -141,7 +141,7 @@ class CustomerPortal(CustomerPortal):
     def _compute_values(self, order_sudo, pdf, access_token, message, now):
         days = 0
         if order_sudo.validity_date:
-            days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
+            days = (order_sudo.validity_date - fields.Date.today()).days + 1
         transaction = order_sudo.get_portal_last_transaction()
 
         values = {

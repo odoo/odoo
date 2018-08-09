@@ -12,10 +12,10 @@ class SaleOrder(models.Model):
 
     @api.onchange('partner_id')
     def onchange_update_description_lang(self):
-        if not self.template_id:
+        if not self.sale_order_template_id:
             return
         else:
-            template = self.template_id.with_context(lang=self.partner_id.lang)
+            template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
             self.website_description = template.website_description
 
     def _compute_line_data_for_template_change(self, line):
@@ -28,11 +28,11 @@ class SaleOrder(models.Model):
         vals.update(website_description=option.website_description)
         return vals
 
-    @api.onchange('template_id')
-    def onchange_template_id(self):
-        ret = super(SaleOrder, self).onchange_template_id()
-        if self.template_id:
-            template = self.template_id.with_context(lang=self.partner_id.lang)
+    @api.onchange('sale_order_template_id')
+    def onchange_sale_order_template_id(self):
+        ret = super(SaleOrder, self).onchange_sale_order_template_id()
+        if self.sale_order_template_id:
+            template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
             self.website_description = template.website_description
         return ret
 
@@ -45,19 +45,19 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, values):
-        values = self._inject_quote_description(values)
+        values = self._inject_quotation_description(values)
         return super(SaleOrderLine, self).create(values)
 
     @api.multi
     def write(self, values):
-        values = self._inject_quote_description(values)
+        values = self._inject_quotation_description(values)
         return super(SaleOrderLine, self).write(values)
 
-    def _inject_quote_description(self, values):
+    def _inject_quotation_description(self, values):
         values = dict(values or {})
         if not values.get('website_description') and values.get('product_id'):
             product = self.env['product.product'].browse(values['product_id'])
-            values.update(website_description=product.get_quote_description_or_website_description())
+            values.update(website_description=product.quotation_description)
         return values
 
 
@@ -71,7 +71,7 @@ class SaleOrderOption(models.Model):
         ret = super(SaleOrderOption, self)._onchange_product_id()
         if self.product_id:
             product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
-            self.website_description = product.get_quote_description_or_website_description()
+            self.website_description = product.quotation_description
         return ret
 
     def _compute_vals_for_add_to_order(self, order):

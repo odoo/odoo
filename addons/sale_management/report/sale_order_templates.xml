@@ -2,7 +2,7 @@
 <odoo>
 <template id="report_saleorder_validity_date" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[hasclass('page')]/p[@id='fiscal_position_remark']" position="after">
-        <div t-if="doc.options and doc.state in ['draft', 'sent']" style="page-break-before:always;">
+        <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']" style="page-break-before:always;">
             <h2>
                 <span>Suggested Products</span>
             </h2>
@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody class="sale_tbody">
-                    <tr t-foreach="doc.options" t-as="option">
+                    <tr t-foreach="doc.sale_order_option_ids" t-as="option">
                         <td>
                             <span t-field="option.product_id.name"/>
                         </td>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Online Proposals',
+    'name': 'Quotation Builder',
     'category': 'Website',
     'summary': 'Sales',
     'website': 'https://www.odoo.com/page/quote-builder',

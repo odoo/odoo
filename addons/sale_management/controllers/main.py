@@ -15,11 +15,11 @@ class CustomerPortal(CustomerPortal):
     def _portal_quote_user_can_accept(self, order):
         result = super(CustomerPortal, self)._portal_quote_user_can_accept(order)
         # either use quote template settings or fallback on default behavior
-        return order.require_signature if order.template_id else result
+        return order.require_signature if order.sale_order_template_id else result
 
     def _compute_values(self, order_sudo, pdf, access_token, message, now):
         values = super(CustomerPortal, self)._compute_values(order_sudo, pdf, access_token, message, now)
-        values.update(option=any(not x.line_id for x in order_sudo.options))
+        values.update(option=any(not x.line_id for x in order_sudo.sale_order_option_ids))
         return values
 
     @http.route("/quote/<int:order_id>", type='http', auth="user", website=True)

@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//page/field[@name='order_line']/.." position="after">
                 <page string="Suggested Products">
-                    <field name="options">
+                    <field name="sale_order_option_ids">
                         <tree string="Sales Quotation Template Lines" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
@@ -26,14 +26,14 @@
                 </page>
             </xpath>
             <xpath expr="//field[@name='partner_shipping_id']" position="after">
-                <field name="template_id" context="{'company_id': company_id}"
+                <field name="sale_order_template_id" context="{'company_id': company_id}"
                     options="{'no_create': True, 'no_open': True}"
-                    groups="sale_management.group_quotation_template"
+                    groups="sale_management.group_sale_order_template"
                 />
             </xpath>
             <xpath expr="//field[@name='client_order_ref']" position="after">
-                <field name="require_signature" attrs="{'invisible': [('template_id', '=', False)]}"/>
-                <field name="require_payment" attrs="{'invisible': [('template_id', '=', False)]}"/>
+                <field name="require_signature" attrs="{'invisible': [('sale_order_template_id', '=', False)]}"/>
+                <field name="require_payment" attrs="{'invisible': [('sale_order_template_id', '=', False)]}"/>
             </xpath>
         </field>
     </record>

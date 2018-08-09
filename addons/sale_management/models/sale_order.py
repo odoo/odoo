@@ -13,16 +13,16 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     _description = "Sales Order Line"
 
-    option_line_id = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
+    sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
     # Take the description on the order template if the product is present in it
     @api.onchange('product_id')
     def product_id_change(self):
         domain = super(SaleOrderLine, self).product_id_change()
-        if self.product_id and self.order_id.template_id:
-            for quote_line in self.order_id.template_id.quote_line:
-                if quote_line.product_id == self.product_id:
-                    self.name = quote_line.name
+        if self.product_id and self.order_id.sale_order_template_id:
+            for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
+                if line.product_id == self.product_id:
+                    self.name = line.name
                     break
         return domain
 
@@ -30,32 +30,32 @@ class SaleOrderLine(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _get_default_template(self):
-        if not self.env.user.has_group('sale_management.group_quotation_template'):
+    def _get_default_sale_order_template(self):
+        if not self.env.user.has_group('sale_management.group_sale_order_template'):
             return False
-        template = self.env.ref('sale_management.sale_management_template_default', raise_if_not_found=False)
-        return template and template.active and template or False
+        template = self.env.ref('sale_management.sale_order_template_default', raise_if_not_found=False)
+        return template if template and template.active else False
 
     def _get_default_require_signature(self):
-        default_template = self._get_default_template()
+        default_template = self._get_default_sale_order_template()
         if default_template:
             return default_template.require_signature
         else:
             return False
 
     def _get_default_require_payment(self):
-        default_template = self._get_default_template()
+        default_template = self._get_default_sale_order_template()
         if default_template:
             return default_template.require_payment
         else:
             return False
 
-    template_id = fields.Many2one(
-        'sale.quote.template', 'Quotation Template',
+    sale_order_template_id = fields.Many2one(
+        'sale.order.template', 'Quotation Template',
         readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_get_default_template)
-    options = fields.One2many(
+        default=_get_default_sale_order_template)
+    sale_order_option_ids = fields.One2many(
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
@@ -69,15 +69,15 @@ class SaleOrder(models.Model):
     @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        if self.template_id and self.template_id.number_of_days > 0:
+        if self.sale_order_template_id and self.sale_order_template_id.number_of_days > 0:
             default = dict(default or {})
-            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.sale_order_template_id.number_of_days))
         return super(SaleOrder, self).copy(default=default)
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         super(SaleOrder, self).onchange_partner_id()
-        self.note = self.template_id.note or self.note
+        self.note = self.sale_order_template_id.note or self.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
@@ -100,16 +100,16 @@ class SaleOrder(models.Model):
             'discount': option.discount,
         }
 
-    @api.onchange('template_id')
-    def onchange_template_id(self):
-        if not self.template_id:
+    @api.onchange('sale_order_template_id')
+    def onchange_sale_order_template_id(self):
+        if not self.sale_order_template_id:
             self.require_signature = False
             self.require_payment = False
             return
-        template = self.template_id.with_context(lang=self.partner_id.lang)
+        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
         order_lines = [(5, 0, 0)]
-        for line in template.quote_line:
+        for line in template.sale_order_template_line_ids:
             data = self._compute_line_data_for_template_change(line)
             if line.product_id:
                 discount = 0
@@ -138,10 +138,10 @@ class SaleOrder(models.Model):
         self.order_line._compute_tax_id()
 
         option_lines = []
-        for option in template.options:
+        for option in template.sale_order_template_option_ids:
             data = self._compute_option_data_for_template_change(option)
             option_lines.append((0, 0, data))
-        self.options = option_lines
+        self.sale_order_option_ids = option_lines
 
         if template.number_of_days > 0:
             self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
@@ -167,7 +167,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
 
-        if not self.template_id or (not user.share and not self.env.context.get('force_website')):
+        if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
             return super(SaleOrder, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
@@ -185,7 +185,7 @@ class SaleOrder(models.Model):
 
     def get_portal_confirmation_action(self):
         """ Template override default behavior of pay / sign chosen in sales settings """
-        if self.template_id:
+        if self.sale_order_template_id:
             if self.require_signature and not self.signature:
                 return 'sign'
             elif self.require_payment:
@@ -196,18 +196,18 @@ class SaleOrder(models.Model):
 
     def has_to_be_signed(self):
         res = super(SaleOrder, self).has_to_be_signed()
-        return self.require_signature if self.template_id else res
+        return self.require_signature if self.sale_order_template_id else res
 
     def has_to_be_paid(self):
         res = super(SaleOrder, self).has_to_be_paid()
-        return self.require_payment if self.template_id else res
+        return self.require_payment if self.sale_order_template_id else res
 
     @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
-            if order.template_id and order.template_id.mail_template_id:
-                self.template_id.mail_template_id.send_mail(order.id)
+            if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
+                self.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
     @api.multi

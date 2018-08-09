@@ -7,11 +7,11 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    group_quotation_template = fields.Boolean("Quotation Templates", implied_group='sale_management.group_quotation_template')
-    default_template_id = fields.Many2one('sale.quote.template', default_model='sale.order', string='Default Template')
-    module_sale_design = fields.Boolean("Quotation Builder")
+    group_sale_order_template = fields.Boolean("Quotation Templates", implied_group='sale_management.group_sale_order_template')
+    default_sale_order_template_id = fields.Many2one('sale.order.template', string='Default Template')
+    module_sale_quotation_builder = fields.Boolean("Quotation Builder")
 
-    @api.onchange('group_quotation_template')
-    def _onchange_group_quotation_template(self):
-        if not self.group_quotation_template:
-            self.module_sale_design = False
+    @api.onchange('group_sale_order_template')
+    def _onchange_group_sale_order_template(self):
+        if not self.group_sale_order_template:
+            self.module_sale_quotation_builder = False

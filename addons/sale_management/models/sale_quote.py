@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 
 
-class SaleQuoteTemplate(models.Model):
-    _name = "sale.quote.template"
-    _description = "Sale Quotation Template"
+
+class SaleOrderTemplate(models.Model):
+    _name = "sale.order.template"
+    _description = "Quotation Template"
 
     def _get_default_require_signature(self):
         # A confirmation mode (sign or pay) is mandatory on a quotation template
@@ -21,13 +22,13 @@ class SaleQuoteTemplate(models.Model):
         return self.env.user.company_id.portal_confirmation_pay
 
     name = fields.Char('Quotation Template', required=True)
-    quote_line = fields.One2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True)
+    sale_order_template_line_ids = fields.One2many('sale.order.template.line', 'sale_order_template_id', 'Lines', copy=True)
     note = fields.Text('Terms and conditions')
-    options = fields.One2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True)
+    sale_order_template_option_ids = fields.One2many('sale.order.template.option', 'sale_order_template_id', 'Optional Lines', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
     require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature, help='Request a digital signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment,help='Request an electronic payment to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment, help='Request an electronic payment to the customer in order to confirm orders automatically.')
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
@@ -35,14 +36,14 @@ class SaleQuoteTemplate(models.Model):
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
 
 
-class SaleQuoteLine(models.Model):
-    _name = "sale.quote.line"
-    _description = "Quotation Template Lines"
-    _order = 'quote_id, sequence, id'
+class SaleOrderTemplateLine(models.Model):
+    _name = "sale.order.template.line"
+    _description = "Quotation Template Line"
+    _order = 'sale_order_template_id, sequence, id'
 
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of sale quote lines.",
         default=10)
-    quote_id = fields.Many2one('sale.quote.template', 'Quotation Template Reference', required=True,
+    sale_order_template_id = fields.Many2one('sale.order.template', 'Quotation Template Reference', required=True,
         ondelete='cascade', index=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])
@@ -77,13 +78,13 @@ class SaleQuoteLine(models.Model):
     def create(self, values):
         if values.get('display_type', self.default_get(['display_type'])['display_type']):
             values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False)
-        return super(SaleQuoteLine, self).create(values)
+        return super(SaleOrderTemplateLine, self).create(values)
 
     @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
-        return super(SaleQuoteLine, self).write(values)
+        return super(SaleOrderTemplateLine, self).write(values)
 
     _sql_constraints = [
         ('accountable_product_id_required',
@@ -96,11 +97,11 @@ class SaleQuoteLine(models.Model):
     ]
 
 
-class SaleQuoteOption(models.Model):
-    _name = "sale.quote.option"
-    _description = "Quotation Option"
+class SaleOrderTemplateOption(models.Model):
+    _name = "sale.order.template.option"
+    _description = "Quotation Template Option"
 
-    template_id = fields.Many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade',
+    sale_order_template_id = fields.Many2one('sale.order.template', 'Quotation Template Reference', ondelete='cascade',
         index=True, required=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
