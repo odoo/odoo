@@ -31,6 +31,15 @@ var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
+// [TODO]: use method from widget
+function RGBtoHEX (rgb) {
+    if (rgb.indexOf("#") !== -1) {
+        return rgb;
+    }
+    rgb = rgb.replace(/[^\d,]/g,"").split(",");
+    return ("#" + ((1 << 24) + (+rgb[0] << 16) + (+rgb[1] << 8) + +rgb[2]).toString(16).slice(1)).toUpperCase();
+};
+
 // Update and change the popovers content, and add history button
 var fn_createPalette = renderer.createPalette;
 renderer.createPalette = function ($container, options) {
@@ -63,17 +72,45 @@ renderer.createPalette = function ($container, options) {
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
+    // Find the custom color from page which are used and add them to custon color palettes.
+    var rteWidget = new rte.Class();
+    var $customColors = rteWidget.editable().find('font, span');
+    var colors = [];
+    $customColors.each(function () {
+        if (this.style.color) { // find font color
+            colors.push(this.style.color);
+        }
+        if (this.style.backgroundColor){ // find background color
+            colors.push(this.style.backgroundColor);
+        }
+    });
+
+    var $customColorBtn = [];
+    _.each(_.uniq(colors), function (color) {
+        var hexColor = RGBtoHEX(color);
+        if (_.indexOf(_.flatten(options.colors), hexColor) === -1) {
+            // Create button for used custom color for backColor and foreColor both and add them into palette
+            $customColorBtn.push('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />');
+        }
+    })
+    $container.find('.note-color .note-custom-color-palette').append($('<div/>', {class: "note-color-row"}).append($customColorBtn));
+    var $customColorPalettes = $container.find('.note-color .note-custom-color-palette');
+
     var $bg = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    $bg.push($customColorPalettes.filter(":even").find("button"));
+
     var $fore = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    $fore.push($customColorPalettes.filter(":odd").find("button"));
+
     $bg.each(function () {
         var $el = $(this);
-        var className = 'bg-' + $el.data('color');
-        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
+        var className = $el.data('value') || 'bg-' + $el.data('color');
+        $el.attr('data-event', 'backColor').attr('data-value', className).addClass($el.data('color') ? className : '');
     });
     $fore.each(function () {
         var $el = $(this);
-        var className = 'text-' + $el.data('color');
-        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
+        var className = $el.data("value") || 'text-' + $el.data('color');
+        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass($el.data('color') ? 'bg-' + $el.data('color') : '');
     });
 };
 
@@ -230,6 +267,11 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
+            $container.find('[data-event="customColor"][data-value="foreColor"]').attr({'data-color': $(oStyle.image).css('color')});
+            $container.find('[data-event="customColor"][data-value="backColor"]').attr({'data-color': $(oStyle.image).css('background-color')});
+            $container.find('i#font_color_preview').css({'color': $(oStyle.image).css('color')});
+            $container.find('i#back_color_preview').css({'background-color': $(oStyle.image).css('background-color')});
+
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
             $container.find('.only_fa').removeClass('d-none');
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
@@ -242,7 +284,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
         } else {
-            $container.find('.d-none:not(.only_fa)').removeClass('d-none');
+            $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
             $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
@@ -267,6 +309,11 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("float-right"));
 
         $(oStyle.image).trigger('attributes_change');
+    } else {
+        $container.find('[data-event="customColor"][data-value="foreColor"]').attr({'data-color': oStyle.color});
+        $container.find('[data-event="customColor"][data-value="backColor"]').attr({'data-color': oStyle['background-color']});
+        $container.find('i#font_color_preview').css({'color': oStyle.color});
+        $container.find('i#back_color_preview').css({'background-color': oStyle['background-color']});
     }
 };
 
@@ -410,6 +457,23 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     core.bus.trigger('alt_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
+    });
+};
+$.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, customColor) {
+    var defaultColor = event.target.dataset.color;
+    core.bus.trigger('color_picker_dialog_demand', {
+        color: defaultColor === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 0, 0)' : defaultColor,
+        onSave: function (color) {
+            var $palettes = $(event.currentTarget).find('.note-custom-color-palette > .note-color-row')
+                .append(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
+            $palettes.filter(':even').find('button:not([data-event])').attr('data-event', 'backColor');
+            $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'foreColor');
+            if (customColor === 'foreColor') {
+                $.summernote.pluginEvents.foreColor(event, editor, layoutInfo, color);
+            } else {
+                $.summernote.pluginEvents.backColor(event, editor, layoutInfo, color);
+            }
+        }
     });
 };
 $.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
@@ -909,6 +973,10 @@ eventHandler.detach = function (oLayoutInfo, options) {
     $(document).off("keyup", reRangeSelectKey);
 };
 
+$.summernote.options.icons.color = {
+    foreColor: 'font',
+    backColor: 'paint-brush',
+};
 // Translation for odoo
 $.summernote.lang.odoo = {
     font: {
@@ -990,14 +1058,11 @@ $.summernote.lang.odoo = {
       justify: _t('Justify full')
     },
     color: {
-      recent: _t('Recent Color'),
-      more: _t('More Color'),
+      custom: _t('Custom Color'),
       background: _t('Background Color'),
       foreground: _t('Font Color'),
       transparent: _t('Transparent'),
-      setTransparent: _t('Set transparent'),
-      reset: _t('Reset'),
-      resetToDefault: _t('Reset to default')
+      setTransparent: _t('None'),
     },
     shortcut: {
       shortcuts: _t('Keyboard shortcuts'),
@@ -1029,6 +1094,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         this.setParent(parent);
 
         core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.on('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
         core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
@@ -1040,6 +1106,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.destroy.call(this);
 
         core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.off('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
         core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
@@ -1073,7 +1140,28 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         }
         altDialog.open();
     },
-
+/**
+     * Called when a demand to open a color picker dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onColorPickerDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var colorPickerDialog = new weWidgets.ColorPickerDialog(this, {color: data.color});
+        if (data.onSave) {
+            colorPickerDialog.on('save', this, function () {
+                data.onSave(colorPickerDialog.colorPicker.colors.hex);
+            });
+        }
+        if (data.onCancel) {
+            colorPickerDialog.on('cancel', this, data.onCancel);
+        }
+        colorPickerDialog.open();
+    },
     /**
      * Called when a demand to open a crop dialog is received on the bus.
      *

@@ -3,6 +3,7 @@ odoo.define('web_editor.widget', function (require) {
 
 var ajax = require('web.ajax');
 var base = require('web_editor.base');
+var colorPicker = require("web_editor.colorpicker");
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
@@ -1761,6 +1762,28 @@ var CropImageDialog = Dialog.extend({
         }
     },
 });
+/**
+ * Color picker widget. use custom color for text/font-icon.
+ */
+var ColorPickerDialog = Dialog.extend({
+    init: function (parent, options) {
+        this.color = options.color;
+        this._super(parent, _.extend({
+            title: _t("Color Picker"),
+            size: 'medium',
+        }, options || {}));
+    },
+    start: function () {
+        var self = this;
+        this.colorPicker = new colorPicker(this, {
+            defaultRGB: this.color
+        });
+        this.opened().then(function () {
+            self.colorPicker.appendTo(self.$el);
+        });
+        return this._super.apply(this, arguments);
+    },
+});
 
 return {
     Dialog: Dialog,
@@ -1769,5 +1792,6 @@ return {
     LinkDialog: LinkDialog,
     CropImageDialog: CropImageDialog,
     ImageWidget: ImageWidget,
+    ColorPickerDialog: ColorPickerDialog,
 };
 });
