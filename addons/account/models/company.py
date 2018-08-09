@@ -16,7 +16,7 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     def _get_invoice_reference_types(self):
-        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Partner')), ('none', _('Free Communication'))]
+        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Customer'))]
 
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)

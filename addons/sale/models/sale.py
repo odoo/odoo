@@ -110,6 +110,8 @@ class SaleOrder(models.Model):
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
+    reference = fields.Char(string='Payment Ref.', copy=False,
+        help='The payment communication of this sale order.')
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
@@ -441,6 +443,9 @@ class SaleOrder(models.Model):
         for group_key in invoices:
             invoices[group_key].write({'name': ', '.join(invoices_name[group_key]),
                                        'origin': ', '.join(invoices_origin[group_key])})
+            sale_orders = references[invoices[group_key]]
+            if len(sale_orders) == 1:
+                invoices[group_key].reference = sale_orders.reference
 
         if not invoices:
             raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
