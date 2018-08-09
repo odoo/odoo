@@ -24,7 +24,7 @@ class Location(models.Model):
             res['barcode'] = res['complete_name']
         return res
 
-    name = fields.Char('Location Name', required=True, translate=True)
+    name = fields.Char('Location Name', required=True)
     complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
