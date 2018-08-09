@@ -81,10 +81,11 @@ var db = {
             price_include: {string: "Included in Price", type: 'boolean'},
             account_id: {string: "partner", type: 'many2one', relation: 'account.account'},
             company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
+            amount_type: {string: "type", type: 'selection'}
         },
         records: [
-            {id: 6, display_name: "Tax 20.00%", amount: 20, price_include: false, company_id: 1},
-            {id: 7, display_name: "Tax 10.00% include", amount: 10, price_include: true, account_id: 288, company_id: 1},
+            {id: 6, display_name: "Tax 20.00%", amount: 20, amount_type: 'percent', price_include: false, company_id: 1},
+            {id: 7, display_name: "Tax 10.00% include", amount: 10, amount_type: 'percent', price_include: true, account_id: 288, company_id: 1},
         ],
         json_friendly_compute_all: function (args) {
             var tax = _.find(db['account.tax'].records, {'id': args[0][0]});
