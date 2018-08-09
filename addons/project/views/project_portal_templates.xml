@@ -22,11 +22,11 @@
     <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="portal.portal_my_home" priority="40">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="project_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="project_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="project_count"/>
                 <a href="/my/projects">Projects</a>
             </li>
             <li t-if="task_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="task_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="task_count"/>
                 <a href="/my/tasks">Tasks</a>
             </li>
         </xpath>

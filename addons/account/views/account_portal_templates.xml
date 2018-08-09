@@ -14,7 +14,7 @@
     <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="portal.portal_my_home" priority="30">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="invoice_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="invoice_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="invoice_count"/>
                 <a href="/my/invoices">Invoices</a>
             </li>
         </xpath>
