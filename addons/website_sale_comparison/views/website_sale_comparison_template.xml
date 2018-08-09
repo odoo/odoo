@@ -39,7 +39,7 @@
                                             <th t-att-colspan="2"><t t-esc="spec"/></th>
                                         </tr>
                                     </t>
-                                    <tr t-foreach="atts[spec]" t-as="att" t-att-class="'collapse in ' + spec.split()[0]">
+                                    <tr t-foreach="atts[spec]" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">
                                         <td t-esc="att.attribute_id.name"/>
                                         <td>
                                             <t t-set='or_separator'>or</t>
@@ -107,7 +107,7 @@
                                         <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
                                     </tr>
                                 </t>
-                                <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in ' + spec.split()[0]">
+                                <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">
                                     <td t-esc="att"/>
                                     <td t-foreach="specs[spec][att]" t-as="val"><t t-esc="val"/></td>
                                 </tr>
