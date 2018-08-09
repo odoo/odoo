@@ -48,9 +48,8 @@ class SaleOrder(models.Model):
         if (self.commitment_date and self.expected_date and self.commitment_date < self.expected_date):
             return {'warning': {
                 'title': _('Requested date is too soon.'),
-                'message': _("The date requested by the customer is "
-                             "sooner than the commitment date. You may be "
-                             "unable to honor the customer's request.")
+                'message': _("The commitment date is sooner than the expected date."
+                             "You may be unable to honor the commitment date.")
                 }
             }
 
