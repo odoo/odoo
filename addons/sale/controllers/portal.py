@@ -146,9 +146,9 @@ class CustomerPortal(CustomerPortal):
 
         values = {
             'quotation': order_sudo,
-            'message': message and int(message) or False,
             'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
             'days_valid': days,
+            'message': int(message) if message else False,
             'action': request.env.ref('sale.action_quotations').id,
             'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
             'tx_id': transaction.id if transaction else False,
@@ -210,7 +210,7 @@ class CustomerPortal(CustomerPortal):
         # taxes, required to compute the total_amout of SO.
         order_sudo = Order.sudo()
         values = self._compute_values(order_sudo, pdf, access_token, message, now)
-        return request.render('sale.so_quotation', values)
+        return request.render('sale.sale_order_portal_template', values)
 
     @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_report(self, order_id, access_token=None, **kw):

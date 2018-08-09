@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="so_quotation_content_inherit_sale_design" name="Order Design" inherit_id="sale.so_quotation_content">
+    <template id="sale_order_portal_content_inherit_sale_design" name="Order Design" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//div[@id='informations']" position="after">
             <div t-field="quotation.website_description" class="oe_no_empty"/>
             <t t-set="product_tmpl_ids" t-value="[]"/>

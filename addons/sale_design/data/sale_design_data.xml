@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Mails & quote templates is done in a NOUPDATE block
-         so users can freely customize/delete them -->
-    <data noupdate="1">
+
         <record id="sale_management.sale_order_template_default" model="sale.order.template">
             <field name="website_description" type="xml">
                 <section data-snippet-id="title">
@@ -82,9 +80,4 @@
             <field name="customize_show" eval="True"/>
         </record>
 
-        <record id="sale.chatter" model="ir.ui.view">
-            <field name="customize_show" eval="True"/>
-        </record>
-
-    </data>
 </odoo>
