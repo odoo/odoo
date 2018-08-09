@@ -26,7 +26,7 @@ class ImportInvoiceImportWizard(models.TransientModel):
 
         # type/journal_id must be inside the context to get the right behavior of _default_journal
         self_ctx = self.with_context(type='in_invoice')
-        journal_id = self_ctx._default_journal().id
+        journal_id = self_ctx.env['account.invoice']._default_journal().id
         self_ctx = self_ctx.with_context(journal_id=journal_id)
 
         invoices = self.env['account.invoice']

@@ -1469,6 +1469,7 @@ var FieldMany2Many = FieldX2Many.extend({
  */
 var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
     template: "FieldBinaryFileUploader",
+    template_files: "FieldBinaryFileUploader.files",
     supportedFieldTypes: ['many2many'],
     fieldsToFetch: {
         name: {type: 'char'},
@@ -1543,7 +1544,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         // _setValue, we put the rendering here to ensure they will be updated
         this._generatedMetadata();
         this.$('.oe_placeholder_files, .oe_attachments')
-            .replaceWith($(qweb.render('FieldBinaryFileUploader.files', {
+            .replaceWith($(qweb.render(this.template_files, {
                 widget: this,
             })));
         this.$('.oe_fileupload').show();

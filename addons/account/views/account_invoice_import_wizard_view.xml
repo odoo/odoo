@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="account_invoice_xml_import_form_view" model="ir.ui.view">
+        <record id="account_invoice_import_wizard_form_view" model="ir.ui.view">
             <field name="name">account.invoice.import.wizard.form</field>
             <field name="model">account.invoice.import.wizard</field>
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="attachment_ids" widget="account_invoice_import_wizard_widget" colspan="2"
+                        <field name="attachment_ids" widget="many2many_binary" colspan="2"
                                string="Upload Files" nolabel="1"/>
                     </group>
                     <footer>
@@ -18,7 +18,7 @@
             </field>
         </record>
 
-        <record id="account_invoice_xml_import_action" model="ir.actions.act_window">
+        <record id="account_invoice_import_wizard_action" model="ir.actions.act_window">
             <field name="name">Import Vendor Bills</field>
             <field name="res_model">account.invoice.import.wizard</field>
             <field name="view_mode">form</field>

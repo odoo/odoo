@@ -25,9 +25,6 @@
                                             <button type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'view_no_maturity': 1}" class="btn btn-primary">
                                                 <span>Journal Entries</span>
                                             </button>
-                                            <button type="action" name="%(account_invoice_xml_import_action)d" class="btn btn-primary">
-                                                <span>Import Bills</span>
-                                            </button>
                                         </div>
                                     </t>
                                 </div>
@@ -273,6 +270,9 @@
                             <t t-if="journal_type == 'purchase'">
                                 <button type="object" name="action_create_new" class="btn btn-primary">
                                     <span>New Bill</span>
+                                </button>
+                                <button type="action" name="%(account_invoice_import_wizard_action)d" class="btn btn-primary">
+                                    <span>Import Bills</span>
                                 </button>
                             </t>
                         </div>
