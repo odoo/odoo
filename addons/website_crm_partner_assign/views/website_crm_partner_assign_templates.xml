@@ -217,11 +217,11 @@
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="lead_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="lead_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="lead_count"/>
                 <a href="/my/leads">My Leads</a>
             </li>
             <li class="list-group-item">
-                <span class="badge badge-pill" t-esc="opp_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="opp_count"/>
                 <a href="/my/opportunities">My Opportunities</a>
             </li>
         </xpath>
