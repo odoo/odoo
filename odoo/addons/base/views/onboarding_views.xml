@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="onboarding_container">
-        <div class="o_onboarding_container collapse in">
+        <div class="o_onboarding_container collapse in show">
             <t t-call-assets="base.assets_onboarding" />
-            <div t-att-class="'o_onboarding ' + classes + (' collapse' if folded_by_default else ' collapse in')"
+            <div t-att-class="'o_onboarding ' + classes + (' collapse' if folded_by_default else ' collapse in show')"
                  t-att-style="'background-image:url(' + bg_image + ')'">
                 <div class="o_onboarding_wrap">
                     <a t-if="not no_close_btn" href="#" data-toggle="modal" data-target=".o_onboarding_modal"
