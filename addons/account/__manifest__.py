@@ -24,7 +24,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/digest_data.xml',
         'views/account_menuitem.xml',
         'views/account_payment_view.xml',
-        'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_move_reversal_view.xml',
         'views/account_view.xml',
