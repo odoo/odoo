@@ -409,6 +409,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 
     // mark activity as done
     $record.find('.o_mark_as_done').click();
+    $record.find('.o_activity_popover_done').click();
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
     assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
@@ -416,6 +417,63 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
     assert.strictEqual($record.find('.o_mail_activity.show').length, 1,
         "dropdown should remain open when marking an activity as done");
     assert.strictEqual($record.find('.o_no_activity').length, 1, "should have no activity scheduled");
+
+    kanban.destroy();
+});
+
+QUnit.test('kanban activity widget popover test', function (assert) {
+    assert.expect(3);
+
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 1,
+    }];
+    var rpcCount = 0;
+    var kanban = createView({
+        View: KanbanView,
+        model: 'partner',
+        data: this.data,
+        arch: '<kanban>' +
+                    '<field name="activity_state"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="activity_ids" widget="kanban_activity"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
+                rpcCount++;
+
+                var current_ids = this.data.partner.records[0].activity_ids;
+                var done_ids = args.args[0];
+                this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
+                this.data.partner.records[0].activity_state = false;
+                return $.when();
+            }
+            return this._super(route, args);
+        },
+    });
+
+    var $record = kanban.$('.o_kanban_record').first();
+
+    $record.find('.o_activity_btn').click();
+
+    // Click on button and see popover no RPC call
+    $record.find('.o_mark_as_done').click();
+    assert.equal(rpcCount, 0, "");
+    // Click on discard no RPC call
+    $record.find('.o_activity_popover_discard').click();
+    assert.equal(rpcCount, 0, "");
+    // Click on button and then on done and schedule next
+    // RPC call
+    $record.find('.o_activity_popover_done_next').click();
+    assert.equal(rpcCount, 1, "");
 
     kanban.destroy();
 });

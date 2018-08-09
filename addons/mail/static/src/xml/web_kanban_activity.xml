@@ -38,6 +38,19 @@
                         <div>
                             <span class="fa fa-clock-o fa-fw" role="img" aria-label="Deadline" title="Deadline"/>
                             <span t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></span>
+                            <div class="mt16" t-att-data-activity-id="log.id" t-att-data-previous-activity-type-id="log.activity_type_id[0]">
+                                <t t-if="log.mail_template_ids">
+                                    <t t-foreach="log.mail_template_ids" t-as="mail_template">
+                                        <div>
+                                            <i class="fa fa-envelope-o" aria-label="Mail" title="Mail" role="img"></i>
+                                            <span t-esc="mail_template.name"/>:
+                                            <span class="o_activity_template_preview" t-att-data-template-id="mail_template.id">Preview</span>
+                                            <span class="text-muted">or</span>
+                                            <span class="o_activity_template_send" t-att-data-template-id="mail_template.id">Send Now</span>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
                             <t t-if="log.user_id[0] != uid">
                                 <span class="ml4 fa fa-user" role="img" aria-label="User" title="User"/>
                                 <span><t t-esc="log.user_id[1]" /></span>
@@ -45,7 +58,7 @@
                         </div>
                     </div>
                     <div class="float-right">
-                        <span class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle fa-2x mt4" t-att-data-activity-id="log.id" title="Mark as done" role="img" aria-label="Mark as done"/>
+                        <span class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle fa-2x mt4" t-att-data-previous-activity-type-id="log.activity_type_id[0]" t-att-data-activity-id="log.id" title="Mark as done" role="img" aria-label="Mark as done"/>
                     </div>
                 </li>
             </t>
