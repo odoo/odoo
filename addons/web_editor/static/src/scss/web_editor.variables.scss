@@ -220,19 +220,27 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 // Edition colors
 
 // Colors
-$color-alpha: #1cc1a9 !default;
-$color-beta: #875A7B !default;
-$color-gamma: #BA3C3D !default;
-$color-delta: #0D6759 !default;
-$color-epsilon: #0B2E59 !default;
+$o-theme-color-palettes: (
+    (
+        primary: #007bff, // BS default here but needed for compatibility (see bootstrap_overridden)
+        secondary: #6c757d, // BS default here but needed for compatibility (see bootstrap_overridden)
+        gamma: #BA3C3D,
+        delta: #0D6759,
+        epsilon: #0B2E59,
+    ),
+) !default;
+$o-theme-color-palette-number: 1;
 
 // Greyscale transparent colours
-$color-black-25: rgba(black, 0.25) !default;
-$color-black-50: rgba(black, 0.5) !default;
-$color-black-75: rgba(black, 0.75) !default;
-$color-white-25: rgba(white, 0.25) !default;
-$color-white-50: rgba(white, 0.5) !default;
-$color-white-75: rgba(white, 0.75) !default;
+$o-transparent-grays: (
+    black-25: rgba(black, 0.25),
+    black-50: rgba(black, 0.5),
+    black-75: rgba(black, 0.75),
+    white-25: rgba(white, 0.25),
+    white-50: rgba(white, 0.5),
+    white-75: rgba(white, 0.75),
+) !default;
+
 
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;
