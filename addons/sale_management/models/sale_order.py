@@ -59,7 +59,6 @@ class SaleOrder(models.Model):
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    quote_viewed = fields.Boolean('Quotation Viewed')
     require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature,
                                        states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
                                        help='Request a digital signature to the customer in order to confirm orders automatically.')
@@ -156,7 +155,6 @@ class SaleOrder(models.Model):
     @api.multi
     def open_quotation(self):
         self.ensure_one()
-        self.write({'quote_viewed': True})
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
