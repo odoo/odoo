@@ -1605,6 +1605,10 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var files = ev.target.files;
         var attachment_ids = this.value.res_ids;
 
+        // Don't create an attachment if the upload window is cancelled.
+        if(files.length == 0)
+            return;
+
         _.each(files, function (file) {
             var record = _.find(self.value.data, function (attachment) {
                 return attachment.data.name === file.name;

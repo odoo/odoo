@@ -78,6 +78,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'data/account_incoterms_data.xml',
         'views/res_company_view.xml',
         'views/digest_views.xml',
+        'views/account_invoice_import_wizard_view.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
