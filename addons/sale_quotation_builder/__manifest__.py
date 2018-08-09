@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Quotation Builder',
     'category': 'Website',
@@ -9,7 +10,7 @@
     'description': "",
     'depends': ['website', 'sale_management', 'website_mail'],
     'data': [
-        'data/sale_design_data.xml',
+        'data/sale_management_data.xml',
         'views/sale_order_template.xml',
         'views/sale_quote_views.xml',
         'views/sale_order_views.xml',
