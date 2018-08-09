@@ -29,6 +29,7 @@ class TestEncoding(ImportCase):
             preview = self._make_import(
                 test_text.encode(encoding)).parse_preview(dict(options))
 
+            self.assertIsNone(preview.get('error'))
             guessed = preview['options']['encoding']
             self.assertIsNotNone(guessed, encoding)
             self.assertEqual(codecs.lookup(guessed).name, codecs.lookup(encoding).name)
@@ -54,6 +55,7 @@ class TestEncoding(ImportCase):
             'separator': '\t',
             'encoding': 'iso-8859-1',
         })
+        self.assertIsNone(r.get('error'))
         self.assertEqual(r['options']['encoding'], 'iso-8859-1')
         self.assertEqual(r['preview'], [['text'], [s.decode('iso-8859-1')]])
 
@@ -75,6 +77,7 @@ d|4
             'headers': True,
             'quoting': '"',
         })
+        self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c', 'f'])
         self.assertEqual(r['preview'], [
             ['a', '1'],
@@ -92,6 +95,7 @@ d|4
             'headers': True,
             'quoting': '"',
         })
+        self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c|f'])
         self.assertEqual(r['preview'], [
             ['a|1'],
@@ -107,6 +111,7 @@ d|4
             'headers': True,
             'quoting': '"',
         })
+        self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c', 'f'])
         self.assertEqual(r['preview'], [
             ['a', '1'],
@@ -126,6 +131,7 @@ d|4
             'headers': True,
             'quoting': '"',
         })
+        self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c'])
         self.assertEqual(r['preview'], [
             ['a'],
