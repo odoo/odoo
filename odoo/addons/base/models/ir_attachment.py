@@ -313,6 +313,8 @@ class IrAttachment(models.Model):
     def _check_serving_attachments(self):
         # restrict writing on attachments that could be served by the
         # ir.http's dispatch exception handling
+        if self.env.user._is_superuser():
+            return
         if self.type == 'binary' and self.url:
             has_group = self.env.user.has_group
             if not any([has_group(g) for g in self.get_serving_groups()]):
