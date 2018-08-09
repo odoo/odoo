@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Quote frontend assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_management/static/src/js/sale_management.js"></script>
+        </xpath>
+    </template>
+
+    <template id="pricing_inherit_sale_management" name="Sale Management Pricing" inherit_id="sale.pricing">
+
+        <xpath expr="//t[@t-set='display_discount']" position="after">
+            <t t-set="display_remove" t-value="any([line.option_line_id for line in quotation.order_line])"/>
+        </xpath>
+
+        <xpath expr="//table[@id='sales_order_table']/thead/tr" position="inside">
+            <th t-if="display_remove">
+                <t t-set="colspan" t-value="colspan+1"/>
+            </th>
+        </xpath>
+
+        <xpath expr="//t[@t-if='not line.display_type']" position="inside">
+            <td class="text-center" t-if="display_remove">
+                <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.option_line_id" aria-label="Remove" title="Remove">
+                    <span class="fa fa-trash-o"></span>
+                </a>
+            </td>
+        </xpath>
+
+    </template>
+
+    <template id="so_quotation_content_inherit_sale_management" name="Order Options" inherit_id="sale.so_quotation_content">
+        <xpath expr="//t[@t-call='sale.signature']" position="after">
+            <t t-if="any([(not option.line_id) for option in quotation.options])">
+                <section>
+                    <h1 class="page-header">Suggested Products</h1>
+                </section>
+                <section>
+                    <div style="overflow-x:auto;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th></th>
+                                <th class="text-right">Price</th>
+                                <th t-if="quotation.state in ['draft', 'sent']"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="quotation.options" t-as="option">
+                                <t t-if="not option.line_id">
+                                    <td>
+                                        <div t-field="option.name"/>
+                                    </td>
+                                    <td>
+                                        <strong t-if="option.discount" class="text-info">
+                                            <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>% discount
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong class="text-right">
+                                            <div t-field="option.price_unit"
+                                                t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                                                t-att-style="option.discount and 'text-decoration: line-through' or None"
+                                                t-att-class="option.discount and 'text-danger' or None"/>
+                                            <div t-if="option.discount">
+                                                <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                                            </div>
+                                        </strong>
+                                    </td>
+                                    <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
+                                        <a t-attf-href="/quotation/#{ quotation.id }/add_line/#{ option.id }?access_token=#{ quotation.access_token }" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
+                                            <span class="fa fa-shopping-cart"/>
+                                        </a>
+                                    </td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -3,10 +3,10 @@
 
 import uuid
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
 
@@ -19,6 +19,13 @@ class SaleOrder(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Quotation"
     _order = 'date_order desc, id desc'
+
+    def _default_validity_date(self):
+        if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
+            days = self.env.user.company_id.quotation_validity_days
+            if days > 0:
+                return fields.Date.to_string(datetime.now() + timedelta(days))
+        return False
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -118,8 +125,8 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', track_sequence=3, default='draft')
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
-    validity_date = fields.Date(string='Quote Validity', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help="Validity date of the quotation, after this date, the customer won't be able to validate the quotation online.")
+    validity_date = fields.Date(string='Validity', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help="Validity date of the quotation, after this date, the customer won't be able to validate the quotation online.", default=_default_validity_date)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm", copy=False)
@@ -157,10 +164,17 @@ class SaleOrder(models.Model):
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
 
+    amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
+
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
         for order in self:
             order.access_url = '/my/orders/%s' % (order.id)
+
+    transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
+                                       string='Transactions', copy=False, readonly=True)
+    authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
+                                                  string='Authorized Transactions', copy=False, readonly=True)
 
     def _compute_is_expired(self):
         today = fields.Date.today()
@@ -169,6 +183,23 @@ class SaleOrder(models.Model):
                 order.is_expired = True
             else:
                 order.is_expired = False
+
+    @api.depends('transaction_ids')
+    def _compute_authorized_transaction_ids(self):
+        for trans in self:
+            trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
+
+    @api.one
+    def _compute_amount_undiscounted(self):
+        total = 0.0
+        for line in self.order_line:
+            total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
+        self.amount_undiscounted = total
+
+    @api.multi
+    def get_portal_last_transaction(self):
+        self.ensure_one()
+        return self.transaction_ids.get_last_transaction()
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -363,7 +394,8 @@ class SaleOrder(models.Model):
             'fiscal_position_id': self.fiscal_position_id.id or self.partner_invoice_id.property_account_position_id.id,
             'company_id': self.company_id.id,
             'user_id': self.user_id and self.user_id.id,
-            'team_id': self.team_id.id
+            'team_id': self.team_id.id,
+            'transaction_ids': [(6, 0, self.transaction_ids.ids)],
         }
         return invoice_vals
 
@@ -625,6 +657,87 @@ class SaleOrder(models.Model):
                 group_data['has_button_access'] = True
 
         return groups
+
+    @api.multi
+    def _create_payment_transaction(self, vals):
+        '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
+        current sales orders fields (e.g. the partner or the currency).
+        :param vals: The values to create a new payment.transaction.
+        :return: The newly created payment.transaction record.
+        '''
+        # Ensure the currencies are the same.
+        currency = self[0].pricelist_id.currency_id
+        if any([so.pricelist_id.currency_id != currency for so in self]):
+            raise ValidationError(_('A transaction can\'t be linked to sales orders having different currencies.'))
+
+        # Ensure the partner are the same.
+        partner = self[0].partner_id
+        if any([so.partner_id != partner for so in self]):
+            raise ValidationError(_('A transaction can\'t be linked to sales orders having different partners.'))
+
+        # Try to retrieve the acquirer. However, fallback to the token's acquirer.
+        acquirer_id = vals.get('acquirer_id')
+        acquirer = False
+        payment_token_id = vals.get('payment_token_id')
+
+        if payment_token_id:
+            payment_token = self.env['payment.token'].sudo().browse(payment_token_id)
+
+            # Check payment_token/acquirer matching or take the acquirer from token
+            if acquirer_id:
+                acquirer = self.env['payment.acquirer'].browse(acquirer_id)
+                if payment_token and payment_token.acquirer_id != acquirer:
+                    raise ValidationError(_('Invalid token found! Token acquirer %s != %s') % (
+                    payment_token.acquirer_id.name, acquirer.name))
+                if payment_token and payment_token.partner_id != partner:
+                    raise ValidationError(_('Invalid token found! Token partner %s != %s') % (
+                    payment_token.partner.name, partner.name))
+            else:
+                acquirer = payment_token.acquirer_id
+
+        # Check an acquirer is there.
+        if not acquirer_id and not acquirer:
+            raise ValidationError(_('A payment acquirer is required to create a transaction.'))
+
+        if not acquirer:
+            acquirer = self.env['payment.acquirer'].browse(acquirer_id)
+
+        # Check a journal is set on acquirer.
+        if not acquirer.journal_id:
+            raise ValidationError(_('A journal must be specified of the acquirer %s.' % acquirer.name))
+
+        if not acquirer_id and acquirer:
+            vals['acquirer_id'] = acquirer.id
+
+        vals.update({
+            'amount': sum(self.mapped('amount_total')),
+            'currency_id': currency.id,
+            'partner_id': partner.id,
+            'sale_order_ids': [(6, 0, self.ids)],
+        })
+
+        transaction = self.env['payment.transaction'].create(vals)
+
+        # Process directly if payment_token
+        if transaction.payment_token_id:
+            transaction.s2s_do_transaction()
+
+        return transaction
+
+    def _force_lines_to_invoice_policy_order(self):
+        for line in self.order_line:
+            if self.state in ['sale', 'done']:
+                line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+            else:
+                line.qty_to_invoice = 0
+
+    @api.multi
+    def payment_action_capture(self):
+        self.authorized_transaction_ids.s2s_capture_transaction()
+
+    @api.multi
+    def payment_action_void(self):
+        self.authorized_transaction_ids.s2s_void_transaction()
 
 
 class SaleOrderLine(models.Model):
