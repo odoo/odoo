@@ -5,6 +5,7 @@ from odoo import api, fields, models
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
+# TODO SEB rename the file sale_order_template.py
 
 
 class SaleOrderTemplate(models.Model):
