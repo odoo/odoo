@@ -216,34 +216,6 @@
       </xpath>
   </template>
 
-    <!-- duplicata of the template payment.payment_confirmation_status.
-        The duplication avoid to break an existing installation in stable version-->
-    <template id="payment_confirmation_status">
-        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable" role="status">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
-            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
-            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable" role="status">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-            Your payment has been authorized.
-            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-        </div>
-    </template>
-
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
       <t t-call="portal.portal_layout">
@@ -340,7 +312,7 @@
                       </div>
                       <t t-if="payment_tx">
                           <t t-set="payment_tx_id" t-value="payment_tx"/>
-                          <t t-call="website_quote.payment_confirmation_status"/>
+                          <t t-call="website_sale.payment_confirmation_status"/>
                       </t>
                       <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>

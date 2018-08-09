@@ -16,7 +16,9 @@
         <xpath expr="//t[@t-call='sale.portal_order_success']" position="after">
             <div t-if="order.transaction_ids and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" class="o_sale_payment_tx_status" t-att-data-order-id="order.id">
                 <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
-                <t t-call="payment.payment_confirmation_status"/>
+                <t t-call="payment.payment_confirmation_status">
+                    <t t-set="reference" t-value="order.reference"/>
+                </t>
             </div>
         </xpath>
         <xpath expr="//div[@id='portal_sign']" position="after">
@@ -105,6 +107,9 @@
                 <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
                 <span t-if='payment_tx_id and payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
                 <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+                <div t-if="payment_tx_id.acquirer_id.post_msg and payment_tx_id.acquirer_id.provider == 'transfer' and order.reference">
+                    <b>Communication: </b><span t-esc='order.reference'/>
+                </div>
             </t>
         </xpath>
     </template>
