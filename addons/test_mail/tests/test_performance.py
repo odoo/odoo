@@ -151,7 +151,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(admin=8, emp=8):  # test_mail only: 8 - 8
+        with self.assertQueryCount(admin=9, emp=9):  # test_mail only: 8 - 8
             model.create({'name': 'Test'})
 
     @users('admin', 'emp')
