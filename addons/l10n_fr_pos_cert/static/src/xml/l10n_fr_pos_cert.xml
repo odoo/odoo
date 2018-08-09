@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+
+    <!-- Non Proxy Bill -->
+    <t t-extend="PosTicket">
+        <t t-jquery="[t-if='receipt.footer']" t-operation="after">
+            <t t-if="order.get('certification_text')">
+                <br />
+                <div style='text-align:center'>
+                    <t t-esc="order.get('certification_text')"/>
+                </div>
+            </t>
+        </t>
+    </t>
+
+<!--     Proxy Bill -->
+    <t t-extend="XmlReceipt">
+        <t t-jquery="[class='after-footer']" t-operation="after">
+            <t t-if='receipt.certification_text'>
+                <br /><t t-esc='receipt.certification_text' /><br/>
+            </t>
+        </t>
+    </t>
+
+</template>

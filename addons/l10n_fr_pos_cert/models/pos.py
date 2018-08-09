@@ -32,6 +32,17 @@ class pos_config(models.Model):
                 config.current_session_id._check_session_timing()
         return super(pos_config, self).open_ui()
 
+    # TODO. Remove this function in upstream version, replacing it by
+    # l10n_fr_print_hash = fields.Selection(_compute=_compute_l10n_fr_print_hash)
+    # to remove the overload of the function load_server_data() in the JS
+    # file.
+    @api.multi
+    def get_setting_l10n_fr_print_hash(self):
+        for config in self:
+            if config.company_id._is_accounting_unalterable():
+                return 'print_hash_or_warning'
+            else:
+                return 'no_print'
 
 class pos_session(models.Model):
     _inherit = 'pos.session'
@@ -181,6 +192,10 @@ class pos_order(models.Model):
                          For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
                          ) % report_dict)
 
+    @api.multi
+    def get_certification_information(self):
+        """This function is made to allow overload"""
+        return self.read(['pos_reference', 'l10n_fr_hash'])
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"

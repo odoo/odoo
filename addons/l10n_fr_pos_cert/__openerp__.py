@@ -3,7 +3,7 @@
 
 {
     'name': 'France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Localization',
     'description': """
 This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).
@@ -15,7 +15,9 @@ The module adds following features:
 
     Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries
 
-    Security: chaining algorithm to verify the inalterability
+    Security:
+        chaining algorithm to verify the inalterability
+        Print the hash of the order on the bill
 
     Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)
 
@@ -28,6 +30,15 @@ The module adds following features:
     'data': [
         'data/pos_inalterability.xml',
         'views/account_views.xml',
+        "views/templates.xml",
     ],
+    'qweb': [
+        'static/src/xml/l10n_fr_pos_cert.xml',
+    ],
+    'images': [
+        'static/description/bill_warning.png',
+        'static/description/bill_with_hash.png',
+    ],
+    'author': 'Odoo SA,GRAP',
     'post_init_hook': '_setup_inalterability',
 }
