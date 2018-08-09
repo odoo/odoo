@@ -293,3 +293,8 @@ class WebsiteBlog(http.Controller):
         if not post_id:
             return False
         return request.env['blog.post'].browse(int(post_id)).write({'cover_properties': json.dumps(cover_properties)})
+
+    @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
+    def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
+        posts = request.env['blog.post'].search(domain, limit=limit, order=order)
+        return request.env.ref(template).render({'posts': posts})

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
+    <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]/t" position="before">
+        <t t-snippet="website_blog.s_latest_posts" t-thumbnail="/website_blog/static/src/img/s_latest_posts.jpg"/>
+        <t t-snippet="website_blog.s_latest_posts_big_picture" t-thumbnail="/website_blog/static/src/img/s_latest_posts_big_picture.jpg"/>
+    </xpath>
+
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <div data-js="blog_cover" data-selector=".website_blog .o_blog_cover_container" data-no-check="true">
             <a href="#" class="dropdown-item" data-change="true" data-no-preview="true">Change Cover</a>
@@ -34,6 +39,39 @@
                     <a role="menuitem" href="#" class="dropdown-item" data-filter_color="oe_green">Green</a>
                 </div>
             </li>
+        </div>
+    </xpath>
+</template>
+
+<!-- Snippets' Options -->
+<template id="s_latest_posts_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='background']" position="before">
+        <div data-js="js_get_posts_selectBlog" data-selector=".js_get_posts">
+            <div class="dropdown-submenu">
+                <a tabindex="-1" href="#" class="dropdown-item">Choose a blog</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-filter-by-blog-id="0" data-no-preview="true">All blogs</a>
+                    <!-- the blog list will be generated in js -->
+                </div>
+            </div>
+        </div>
+
+        <div data-js="js_get_posts_limit" data-selector=".js_get_posts">
+            <div class="dropdown-submenu">
+                <a tabindex="-1" href="#" class="dropdown-item">Number of posts</a>
+                <div class="dropdown-menu" data-no-preview="true">
+                    <a href="#" class="dropdown-item" data-posts-limit="1">1 post</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="2">2 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="3">3 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="4">4 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="5">5 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="6">6 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="7">7 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="8">8 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="9">9 posts</a>
+                    <a href="#" class="dropdown-item" data-posts-limit="10">10 posts</a>
+                </div>
+            </div>
         </div>
     </xpath>
 </template>

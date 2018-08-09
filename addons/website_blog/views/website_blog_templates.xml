@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_blog/static/src/scss/primary_variables.scss"/>
+    </xpath>
+</template>
+
 <template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/s_latest_posts_editor.js"/>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
     </xpath>
 </template>
@@ -14,6 +21,7 @@
 
         <script type="text/javascript" src="/website_blog/static/src/js/contentshare.js"/>
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
+        <script type="text/javascript" src="/website_blog/static/src/js/s_latest_posts_frontend.js"/>
     </xpath>
 </template>
 
@@ -583,6 +591,64 @@
             Access post
         </a>
     </p>
+</template>
+
+<template id="s_latest_posts" name="Latest Posts - List">
+    <section class="s_latest_posts">
+        <div class="container">
+            <h2 class="text-center">Latest Posts</h2>
+            <div class="row js_get_posts"
+                data-loading="true"
+                data-template="website_blog.s_latest_posts_list_template"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_latest_posts_big_picture" name="Latest Posts - Big Images">
+    <section class="s_latest_posts_big_picture">
+        <div class="container-fluid">
+            <h2 class="text-center">Latest Posts</h2>
+            <div class="row js_get_posts"
+                data-loading="true"
+                data-template="website_blog.s_latest_posts_big_picture_template"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_latest_posts_list_template">
+    <t t-foreach="posts" t-as="p">
+        <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
+        <div class="col-12 media mt-3 s_latest_posts_post">
+            <a t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">
+                <t t-call="website_blog.blog_cover">
+                    <t t-set="cover_properties" t-value="properties"/>
+                    <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
+                </t>
+            </a>
+            <div class="media-body ml-3">
+                <h4 t-field="p.name"/>
+                <p t-field="p.subtitle"/>
+                <a class="btn btn-sm btn-secondary" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">Read More</a>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="s_latest_posts_big_picture_template">
+    <t t-foreach="posts" t-as="p">
+        <t t-set="properties" t-value="json.loads(p.cover_properties)"/>
+        <div class="col-12 col-md-6 my-3 loading_container s_latest_posts_post">
+            <t t-call="website_blog.blog_cover">
+                <t t-set="cover_properties" t-value="properties"/>
+                <t t-set="additionnal_classes" t-value="'thumb'"/>
+            </t>
+            <div>
+                <h2 t-field="p.name"/>
+                <p t-field="p.subtitle"/>
+                <a t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">Read More</a>
+            </div>
+        </div>
+    </t>
 </template>
 
 </odoo>
