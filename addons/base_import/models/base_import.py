@@ -358,28 +358,28 @@ class Import(models.TransientModel):
             :param preview_values : list of value for the column to determine
             :param options : parsing options
         """
+        values = set(preview_values)
         # If all values are empty in preview than can be any field
-        if all([v == '' for v in preview_values]):
+        if values == {''}:
             return ['all']
+
         # If all values starts with __export__ this is probably an id
-        if all(v.startswith('__export__') for v in preview_values):
+        if all(v.startswith('__export__') for v in values):
             return ['id', 'many2many', 'many2one', 'one2many']
+
         # If all values can be cast to int type is either id, float or monetary
         # Exception: if we only have 1 and 0, it can also be a boolean
-        try:
+        if all(v.isdigit() for v in values if v):
             field_type = ['id', 'integer', 'char', 'float', 'monetary', 'many2one', 'many2many', 'one2many']
-            res = set(int(v) for v in preview_values if v)
-            if {0, 1}.issuperset(res):
+            if {'0', '1', ''}.issuperset(values):
                 field_type.append('boolean')
             return field_type
-        except ValueError:
-            pass
+
         # If all values are either True or False, type is boolean
         if all(val.lower() in ('true', 'false', 't', 'f', '') for val in preview_values):
             return ['boolean']
+
         # If all values can be cast to float, type is either float or monetary
-        # Or a date/datetime if it matches the pattern
-        results = []
         try:
             thousand_separator = decimal_separator = False
             for val in preview_values:
@@ -412,52 +412,59 @@ class Import(models.TransientModel):
             if thousand_separator and not options.get('float_decimal_separator'):
                 options['float_thousand_separator'] = thousand_separator
                 options['float_decimal_separator'] = decimal_separator
-            results  = ['float', 'monetary']
+            return ['float', 'monetary']
         except ValueError:
             pass
-        # Try to see if all values are a date or datetime
+
+        results = self._try_match_date_time(preview_values, options)
+        if results:
+            return results
+
+        return ['id', 'text', 'boolean', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
+
+
+    def _try_match_date_time(self, preview_values, options):
+        # Or a date/datetime if it matches the pattern
         dt = datetime.datetime
-        separator = [' ', '/', '-']
-        date_format = ['%mr%dr%Y', '%dr%mr%Y', '%Yr%mr%d', '%Yr%dr%m']
-        date_patterns = [options['date_format']] if options.get('date_format') else []
-        if not date_patterns:
-            date_patterns = [pattern.replace('r', sep) for sep in separator for pattern in date_format]
-            date_patterns.extend([p.replace('Y', 'y') for p in date_patterns])
-        datetime_patterns = [options['datetime_format']] if options.get('datetime_format') else []
-        if not datetime_patterns:
-            datetime_patterns = [pattern + ' %H:%M:%S' for pattern in date_patterns]
 
-        current_date_pattern = False
-        current_datetime_pattern = False
+        date_patterns = [options['date_format']] if options.get(
+            'date_format') else []
+        date_patterns.extend(DATE_PATTERNS)
 
-        def check_patterns(patterns, preview_values):
+        datetime_patterns = [options['datetime_format']] if options.get(
+            'datetime_format') else []
+        datetime_patterns.extend(
+            "%s %s" % (d, t)
+            for d in date_patterns
+            for t in TIME_PATTERNS
+        )
+
+        def check_patterns(patterns):
             for pattern in patterns:
-                match = True
                 for val in preview_values:
                     if not val:
                         continue
+
                     try:
                         dt.strptime(val, pattern)
                     except ValueError:
-                        match = False
                         break
-                if match:
+                else: # no break, all match
                     return pattern
-            return False
 
-        current_date_pattern = check_patterns(date_patterns, preview_values)
-        if current_date_pattern:
-            options['date_format'] = current_date_pattern
-            results += ['date']
+            return None
 
-        current_datetime_pattern = check_patterns(datetime_patterns, preview_values)
-        if current_datetime_pattern:
-            options['datetime_format'] = current_datetime_pattern
-            results += ['datetime']
+        match = check_patterns(date_patterns)
+        if match:
+            options['date_format'] = match
+            return ['date', 'datetime']
 
-        if results:
-            return results
-        return ['id', 'text', 'boolean', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
+        match = check_patterns(datetime_patterns)
+        if match:
+            options['datetime_format'] = match
+            return ['datetime']
+
+        return []
 
     @api.model
     def _find_type_from_preview(self, options, preview):
@@ -745,31 +752,8 @@ class Import(models.TransientModel):
         for name, field in all_fields.items():
             name = prefix + name
             if field['type'] in ('date', 'datetime') and name in import_fields:
-                # Parse date
                 index = import_fields.index(name)
-                dt = datetime.datetime
-                server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
-
-                if options.get('%s_format' % field['type'], server_format) != server_format:
-                    # datetime.str[fp]time takes *native strings* in both
-                    # versions, for both data and pattern
-                    user_format = pycompat.to_native(options.get('%s_format' % field['type']))
-                    for num, line in enumerate(data):
-                        if line[index]:
-                            line[index] = line[index].strip()
-                        if line[index]:
-                            try:
-                                line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index]), user_format), server_format)
-                            except ValueError as e:
-                                try:
-                                    # Allow to import date in datetime fields
-                                    if field['type'] == 'datetime':
-                                        user_format = pycompat.to_native(options.get('date_format'))
-                                        line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index]), user_format), server_format)
-                                except ValueError as e:
-                                    raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
-                            except Exception as e:
-                                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, e))
+                self._parse_date_from_data(data, index, name, field['type'], options)
             # Check if the field is in import_field and is a relational (followed by /)
             # Also verify that the field name exactly match the import_field at the correct level.
             elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
@@ -794,6 +778,32 @@ class Import(models.TransientModel):
                             line[index] = self._import_image_by_url(line[index], session, name, num)
 
         return data
+
+    def _parse_date_from_data(self, data, index, name, field_type, options):
+        dt = datetime.datetime
+        fmt = fields.Date.to_string if field_type == 'date' else fields.Datetime.to_string
+        d_fmt = options.get('date_format')
+        dt_fmt = options.get('datetime_format')
+        for num, line in enumerate(data):
+            if not line[index]:
+                continue
+
+            v = line[index].strip()
+            try:
+                # first try parsing as a datetime if it's one
+                if dt_fmt and field_type == 'datetime':
+                    try:
+                        line[index] = fmt(dt.strptime(v, dt_fmt))
+                        continue
+                    except ValueError:
+                        pass
+                # otherwise try parsing as a date whether it's a date
+                # or datetime
+                line[index] = fmt(dt.strptime(v, d_fmt))
+            except ValueError as e:
+                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
+            except Exception as e:
+                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, e))
 
     def _import_image_by_url(self, url, session, field, line_number):
         """ Imports an image by URL
@@ -912,3 +922,33 @@ class Import(models.TransientModel):
                         })
 
         return import_result
+
+_SEPARATORS = [' ', '/', '-', '']
+_PATTERN_BASELINE = [
+    ('%m', '%d', '%Y'),
+    ('%d', '%m', '%Y'),
+    ('%Y', '%m', '%d'),
+    ('%Y', '%d', '%m'),
+]
+DATE_FORMATS = []
+# take the baseline format and duplicate performing the following
+# substitution: long year -> short year, numerical month -> short
+# month, numerical month -> long month. Each substitution builds on
+# the previous two
+for ps in _PATTERN_BASELINE:
+    patterns = {ps}
+    for s, t in [('%Y', '%y'), ('%m', '%b'), ('%m', '%B')]:
+        patterns.update([ # need listcomp: with genexpr "set changed size during iteration"
+            tuple(t if it == s else it for it in f)
+            for f in patterns
+        ])
+    DATE_FORMATS.extend(patterns)
+DATE_PATTERNS = [
+    sep.join(fmt)
+    for sep in _SEPARATORS
+    for fmt in DATE_FORMATS
+]
+TIME_PATTERNS = [
+    '%H:%M:%s', '%H:%M', '%H', # 24h
+    '%I:%M:%s %p', '%I:%M %p', '%I %p', # 12h
+]

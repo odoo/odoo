@@ -156,6 +156,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         this.setup_encoding_picker();
         this.setup_separator_picker();
         this.setup_float_format_picker();
+        this.setup_date_format_picker();
 
         return $.when(
             this._super(),
@@ -243,6 +244,36 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             }
         });
     },
+    setup_date_format_picker: function () {
+        var data = _([
+            'YYYY-MM-DD',
+            'DD/MM/YY',
+            'DD/MM/YYYY',
+            'DD-MM-YYYY',
+            'DD-MMM-YY',
+            'DD-MMM-YYYY',
+            'MM/DD/YY',
+            'MM/DD/YYYY',
+            'MM-DD-YY',
+            'MM-DD-YYYY',
+            'DDMMYY',
+            'DDMMYYYY',
+            'YYMMDD',
+            'YYYYMMDD',
+            'YY/MM/DD',
+            'YYYY/MM/DD',
+            'MMDDYY',
+            'MMDDYYYY',
+        ]).map(_make_option);
+        this.$('input.oe_import_date_format').select2({
+            width: '160px',
+            data: data,
+            query: dataFilteredQuery,
+            initSelection: function ($e, c) {
+                c(_from_data(data, $e.val()) || _make_option($e.val()));
+            }
+        })
+    },
 
     import_options: function () {
         var self = this;
@@ -277,7 +308,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     onfile_loaded: function () {
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
-        this.$('.oe_import_date_format').val('');
+        this.$('.oe_import_date_format').select2('val', '');
         this.$('.oe_import_datetime_format').val('');
 
         this.$el.removeClass('oe_import_preview oe_import_error');
@@ -345,7 +376,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         _.each(['encoding', 'separator', 'float_thousand_separator', 'float_decimal_separator'], function (id) {
             self.$('.oe_import_' + id).select2('val', result.options[id])
         });
-        this.$('.oe_import_date_format').val(time.strftime_to_moment_format(result.options.date_format)).change();
+        this.$('.oe_import_date_format').select2('val', time.strftime_to_moment_format(result.options.date_format));
         this.$('.oe_import_datetime_format').val(time.strftime_to_moment_format(result.options.datetime_format));
         if (result.debug === false){
             this.$('.oe_import_tracking').hide();
