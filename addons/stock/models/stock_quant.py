@@ -353,6 +353,10 @@ class QuantPackage(models.Model):
             values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
             if package.quant_ids:
                 values['location_id'] = package.quant_ids[0].location_id
+                if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):
+                    values['owner_id'] = package.quant_ids[0].owner_id
+                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
+                    values['company_id'] = package.quant_ids[0].company_id
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
