@@ -60,6 +60,7 @@ class AssetAssetReport(models.Model):
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
                     left join (select min(d.id) as id,ac.id as ac_id from account_asset_depreciation_line as d inner join account_asset_asset as ac ON (ac.id=d.asset_id) group by ac_id) as dlmin on dlmin.ac_id=a.id
+                where a.active is true 
                 group by
                     dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
                     a.date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
