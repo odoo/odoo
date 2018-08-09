@@ -27,11 +27,10 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         // Handle events for the collapse menus
         _.each(this.$headerClone.find('[data-toggle="collapse"]'), function (el) {
             var $source = $(el);
-            var targetClass = $source.attr('data-target');
-            var $target = self.$headerClone.find(targetClass);
-            var className = targetClass.substring(1);
-            $source.attr('data-target', targetClass + '_clone');
-            $target.removeClass(className).addClass(className + '_clone');
+            var targetIDSelector = $source.attr('data-target');
+            var $target = self.$headerClone.find(targetIDSelector);
+            $source.attr('data-target', targetIDSelector + '_clone');
+            $target.attr('id', targetIDSelector.substr(1) + '_clone');
         });
 
         // Window Handlers
