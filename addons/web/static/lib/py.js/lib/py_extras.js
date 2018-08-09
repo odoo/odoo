@@ -112,6 +112,25 @@ function ymd2ord(year, month, day) {
            day;
 }
 
+function get_quarter_number(month) {
+    return Math.ceil(month / 3);
+}
+
+function get_quarter(year, month) {
+    var quarter_number = get_quarter_number(month);
+    var month_from = ((quarter_number - 1) * 3) + 1
+    var date_from = {year: year, month: month_from, day: 1}
+    var date_to = {year: year, month: month_from + 2, day: days_in_month(year, month)}
+    return [date_from, date_to];
+}
+
+function get_day_of_week(year, month, day) {
+    // Since JavaScript is a piece of garbage, months start at 0
+    var d = new Date(year, month - 1, day);
+    // Convert to ISO8601: Monday = 0 ... Sunday = 6
+    return (d.getDay() + 6) % 7;
+}
+
 var DI400Y = days_before_year(401);
 var DI100Y = days_before_year(101);
 var DI4Y = days_before_year(5);
@@ -413,6 +432,17 @@ datetime.datetime = py.type('datetime', null, {
             this[key] = asJS(args[key]);
         }
     },
+    __eq__: function (other) {
+        return (this.year === other.year
+             && this.month === other.month
+             && this.day === other.day
+             && this.hour === other.hour
+             && this.minute === other.minute
+             && this.second === other.second
+             && this.microsecond === other.microsecond
+             && this.tzinfo === other.tzinfo)
+            ? py.True : py.False;
+    },
     replace: function () {
         var args = py.PY_parseArgs(arguments, [
             ['year', py.None], ['month', py.None], ['day', py.None],
@@ -427,6 +457,87 @@ datetime.datetime = py.type('datetime', null, {
             params[key] = (arg === py.None ? this[key] : asJS(arg));
         }
         return py.PY_call(datetime.datetime, params);
+    },
+    start_of: function() {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        if (granularity === 'year') {
+            return py.PY_call(datetime.datetime, [this.year, 1, 1]);
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[0];
+            return py.PY_call(datetime.datetime, [quarter.year, quarter.month, quarter.day]);
+        } else if (granularity === 'month') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, 1]);
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day - dow]);
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day]);
+        } else if (granularity === 'hour') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day, this.hour]);
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week, day and hour.'
+            )
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        var min = [23, 59, 59];
+        if (granularity === 'year') {
+            return py.PY_call(datetime.datetime, [this.year, 12, 31].concat(min));
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[1];
+            return py.PY_call(
+                datetime.datetime, [quarter.year, quarter.month, quarter.day].concat(min)
+            );
+        } else if (granularity === 'month') {
+            var dom = days_in_month(this.year, this.month);
+            return py.PY_call(datetime.datetime, [this.year, this.month, dom].concat(min));
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(
+                datetime.datetime, [this.year, this.month, this.day + (6 - dow)].concat(min)
+            );
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day].concat(min));
+        } else if (granularity === 'hour') {
+            return py.PY_call(
+                datetime.datetime, [this.year, this.month, this.day, this.hour, 59, 59]
+            );
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week, day and hour.'
+            )
+        }
+    },
+    add: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+            ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': args.years,
+            'months': args.months,
+            'days': args.days,
+            'hours': args.hours,
+            'minutes': args.minutes,
+            'seconds': args.seconds,
+        }));
+    },
+    subtract: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+            ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
+        ]);
+        var params = {};
+        for (var key in args) {
+            params[key] = (args[key] === py.None ? args[key] : py.float.fromJSON(-asJS(args[key])));
+        }
+        return py.PY_add(this, py.PY_call(relativedelta, params));
     },
     strftime: function () {
         var self = this;
@@ -549,6 +660,71 @@ datetime.date = py.type('date', null, {
         }
         return py.PY_call(datetime.date, params);
     },
+    start_of: function() {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        if (granularity === 'year') {
+            return py.PY_call(datetime.date, [this.year, 1, 1]);
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[0];
+            return py.PY_call(datetime.date, [quarter.year, quarter.month, quarter.day]);
+        } else if (granularity === 'month') {
+            return py.PY_call(datetime.date, [this.year, this.month, 1]);
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(datetime.date, [this.year, this.month, this.day - dow]);
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week and day.'
+            )
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'granularity');
+        var granularity = args.granularity.toJSON();
+        if (granularity === 'year') {
+            return py.PY_call(datetime.date, [this.year, 12, 31]);
+        } else if (granularity === 'quarter') {
+            var quarter = get_quarter(this.year, this.month)[1];
+            return py.PY_call(datetime.date, [quarter.year, quarter.month, quarter.day]);
+        } else if (granularity === 'month') {
+            var dom = days_in_month(this.year, this.month);
+            return py.PY_call(datetime.date, [this.year, this.month, dom]);
+        } else if (granularity === 'week') {
+            var dow = get_day_of_week(this.year, this.month, this.day);
+            return py.PY_call(datetime.date, [this.year, this.month, this.day + (6 - dow)]);
+        } else if (granularity === 'day') {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else {
+            throw new Error(
+                'ValueError: ' + granularity + ' is not a supported granularity, supported ' +
+                ' granularities are: year, quarter, month, week and day.'
+            )
+        }
+    },
+    add: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': args.years,
+            'months': args.months,
+            'days': args.days,
+        }));
+    },
+    subtract: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+        ]);
+        var params = {};
+        for (var key in args) {
+            params[key] = (args[key] === py.None ? args[key] : py.float.fromJSON(-asJS(args[key])));
+        }
+        return py.PY_add(this, py.PY_call(relativedelta, params));
+    },
     __add__: function (other) {
         if (!py.PY_isInstance(other, datetime.timedelta)) {
             return py.NotImplemented;
@@ -610,13 +786,15 @@ time.strftime = py.PY_def.fromJSON(function () {
     return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
 });
 
-var args = _.map(('year month day '
-                + 'years months weeks days '
+var args = _.map(('year month day hour minute second '
+                + 'years months weeks days hours minutes seconds '
                 + 'weekday leapdays yearday nlyearday').split(' '), function (arg) {
     switch (arg) {
-    case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+        case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+        case 'hours':case 'minutes':case 'seconds':
         return [arg, zero];
     case 'year':case 'month':case 'day':case 'weekday':
+    case 'hour':case 'minute':case 'second':
     case 'yearday':case 'nlyearday':
         return [arg, null];
     default:
@@ -699,7 +877,8 @@ var relativedelta = py.type('relativedelta', null, {
         this._has_time = 0;
     },
     __add__: function (other) {
-        if (!py.PY_isInstance(other, datetime.date)) {
+        if (!(py.PY_isInstance(other, datetime.date) ||
+            py.PY_isInstance(other, datetime.datetime))) {
             return py.NotImplemented;
         }
         // TODO: test this whole mess
@@ -730,6 +909,12 @@ var relativedelta = py.type('relativedelta', null, {
             day: py.float.fromJSON(day)
         };
 
+        if (py.PY_isInstance(other, datetime.datetime)) {
+            repl.hour = py.float.fromJSON(asJS(this.ops.hour) || asJS(other.hour));
+            repl.minute = py.float.fromJSON(asJS(this.ops.minute) || asJS(other.minute));
+            repl.second = py.float.fromJSON(asJS(this.ops.second) || asJS(other.second));
+        }
+
         var days = asJS(this.ops.days);
         if (py.PY_isTrue(this.ops.leapdays) && month > 2 && _utils.isleap(year)) {
             days += asJS(this.ops.leapdays);
@@ -738,7 +923,10 @@ var relativedelta = py.type('relativedelta', null, {
         var ret = py.PY_add(
             py.PY_call(py.PY_getAttr(other, 'replace'), repl),
             py.PY_call(datetime.timedelta, {
-                days: py.float.fromJSON(days)
+                days: py.float.fromJSON(days),
+                hours: py.float.fromJSON(asJS(this.ops.hours)),
+                minutes: py.float.fromJSON(asJS(this.ops.minutes)),
+                seconds: py.float.fromJSON(asJS(this.ops.seconds))
             })
         );
 
@@ -776,10 +964,16 @@ var relativedelta = py.type('relativedelta', null, {
             months: py.PY_negative(this.ops.months),
             days: py.PY_negative(this.ops.days),
             leapdays: this.ops.leapdays,
+            hours: py.PY_negative(this.ops.hours),
+            minutes: py.PY_negative(this.ops.minutes),
+            seconds: py.PY_negative(this.ops.seconds),
             year: this.ops.year,
             month: this.ops.month,
             day: this.ops.day,
-            weekday: this.ops.weekday
+            weekday: this.ops.weekday,
+            hour: this.ops.hour,
+            minute: this.ops.minute,
+            second: this.ops.second
         });
     }
 });
