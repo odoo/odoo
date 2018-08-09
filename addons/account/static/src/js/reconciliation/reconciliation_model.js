@@ -842,7 +842,6 @@ var StatementModel = BasicModel.extend({
 
                 var args = [[prop.tax_id.id], prop.base_amount, formatOptions.currency_id];
                 var add_context = {'round': true};
-                debugger;
                 if(line.createForm.force_tax_included && prop.tax_id.amount_type !== "group")
                     add_context.force_price_include = true;
                 tax_defs.push(self._rpc({
