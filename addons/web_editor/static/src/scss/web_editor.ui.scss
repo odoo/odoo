@@ -790,12 +790,19 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         #colors_preview {
-            padding: 4px;
+            padding: 4px 0px;
             border-radius: 2px;
             border: 1px solid #989898;
             border-color: fade-out($o-we-color-text-normal, 0.5);
+            &.bg-transparent {
+                background-image: url('/web_editor/static/src/img/transparent.png');
+            }
+            &::before {
+                padding: 4px;
+                background-color: rgba(0, 0, 0, 0.25);
+            }
         }
-        .note-color-palette .note-color-row {
+        .note-color-palette .note-color-row, .note-custom-color-palette .note-color-row {
             height: auto!important;
 
             &::after {
@@ -841,9 +848,25 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
     }
 
+    .note-custom-color-palette .note-color-btn {
+        height: 20px;
+        width: 20px;
+        border: 1px solid white;
+    }
+    .note-custom-color {
+        margin: 3px 0px;
+        padding: 4px 0px;
+        font-weight: bold;
+        cursor: pointer;
+        &:hover {
+            background: gray('600');
+            color: gray('800');
+        }
+    }
+
     .note-color {
         .dropdown-toggle {
-            width: auto;
+            width: auto !important;
         }
         .o_foreground_toggle > button:before {
             font-family: FontAwesome;
@@ -854,7 +877,23 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             content: '\f0c3';
         }
         .dropdown-menu {
-            min-width: 353px!important;
+            min-width: 181px !important;
+            > div > .btn {
+                height: auto;
+                border-top: 0px;
+                &:not(.active):hover{
+                    background-color: transparent;
+                }
+                &.active:before {
+                    font-family: FontAwesome;
+                    content: '\f00c';
+                    margin-right: 3px;
+                    color: $o-brand-primary;
+                }
+            }
+            > li .btn-group {
+                margin: 0 5px !important;
+            }
         }
     }
 }
@@ -938,6 +977,14 @@ table.colorpicker {
             content: "";
             display: table;
             clear: both;
+        }
+
+        .o_custom_color {
+            color: $o-we-color-text-light;
+            padding: 3px 1px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid $o-we-color-text-normal;
+            cursor: pointer;
         }
 
         > button {
@@ -1697,4 +1744,70 @@ img.o_we_selected_image {
 }
 .fa.o_we_selected_image::before {
     @extend %o-we-selected-image;
+}
+
+
+
+@mixin o-color-picker-arrow ($position, $margin_top: auto, $margin_left: auto) {
+    position: absolute;
+    border: 5px solid transparent;
+    margin-top: $margin_top;
+    margin-left: $margin_left;
+    @if ($position == down) {
+        border-top-width: 0px;
+        border-bottom-color: black;
+    }
+    @if ($position == up) {
+        border-bottom-width: 0px;
+        border-top-color: black;
+    }
+}
+
+.colpick {
+    padding: 4% 0;
+    .preview {
+        span {
+            padding: 5px;
+        }
+        .previewColor {
+            margin: 5px 0 5px 44px;
+            height: 55px;
+            box-shadow: 1px 3px 5px -2px #555555;
+        }
+        .hexInput, .hslInput {
+            width: 100%;
+            margin-top: 10px;
+            input.form-control {
+                height: 30px;
+                margin-right: 1px;
+            }
+        }
+        .hexInput {
+            display: flex;
+        }
+        .hslInput {
+            span {
+                padding: 2px 13%;
+            }
+            .hslVal {
+                display: flex;
+            }
+        }
+    }
+    .upArrow {
+        @include o-color-picker-arrow(up, -1%, -4px);
+    }
+    .downArrow {
+        @include o-color-picker-arrow(down, 4.7%, -4px);
+    }
+    .colorContainer {
+        display: table-row;
+        height: 25px;
+        .huetable, .saturationtable, .lightnesstable {
+            margin: 10px 5px 25px;
+            td {
+                height: 25px;
+            }
+        }
+    }
 }

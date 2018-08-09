@@ -610,6 +610,7 @@ registry.colorpicker = SnippetOption.extend({
         'mouseenter .colorpicker button': '_onColorButtonEnter',
         'mouseleave .colorpicker button': '_onColorButtonLeave',
         'click .note-color-reset': '_onColorResetButtonClick',
+        'click .o_custom_color': '_onCustomColorButtonClick',
     }),
     colorPrefix: 'bg-',
 
@@ -647,6 +648,7 @@ registry.colorpicker = SnippetOption.extend({
             });
 
             var $sections = $clpicker.find('.o_colorpicker_section');
+            $sections.last().append($('<div class="o_custom_color"><i class="fa fa-plus"/> Custom Color</div>'));
 
             if ($sections.length > 1) { // Multi-palette layout
                 $sections.each(function () {
@@ -703,6 +705,14 @@ registry.colorpicker = SnippetOption.extend({
             classes.push(className);
         });
         this.classes = classes.join(' ');
+
+        // add custom color which used for current snippet
+        if (this.$target[0].style.backgroundColor) {
+            $sections.last().append($('<button/>', {
+                style: 'background-color:' + this.$target.css('background-color'),
+                class: 'selected',
+            }));
+        }
 
         return res;
     },
@@ -761,6 +771,27 @@ registry.colorpicker = SnippetOption.extend({
     _onColorResetButtonClick: function () {
         this.$target.removeClass(this.classes);
         this.$el.find('.colorpicker button.selected').removeClass('selected');
+    },
+
+
+    _onCustomColorButtonClick: function (ev) {
+        var colorPickerDialog = new weWidgets.ColorPickerDialog(this).open();
+        colorPickerDialog.on('save', this, function (event) {
+            var color = colorPickerDialog.customColor.hex;
+            this._setCustomColor(color);
+            this.trigger_up('active_snippet', {$snippet: this.$target});
+            $('[data-name="custom_color"]').append($('<button/>', {
+                style: 'background-color:' + color,
+                class: 'selected o_custom_color_btn',
+            }));
+        });
+    },
+
+    _setCustomColor: function (color) {
+        this.$el.find('.colorpicker button.selected').removeClass('selected');
+        this.$target.closest('.o_editable').trigger('content_changed');
+        this.$target.removeClass(this.classes).css('background-color', color);
+        this.$target.trigger('background-color-event', false);
     },
 });
 

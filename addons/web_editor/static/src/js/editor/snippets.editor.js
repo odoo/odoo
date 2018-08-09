@@ -512,6 +512,7 @@ var SnippetsMenu = Widget.extend({
         go_to_parent: '_onGoToParent',
         remove_snippet: '_onRemoveSnippet',
         snippet_removed: '_onSnippetRemoved',
+        active_snippet: '_onActivateSnippet',
     },
 
     /**
@@ -764,6 +765,10 @@ var SnippetsMenu = Widget.extend({
                 zone.remove();
             }
         });
+    },
+    _onActivateSnippet: function (ev) {
+        ev.stopPropagation();
+        this._activateSnippet(ev.data.$snippet)
     },
     /**
      * Disable the overlay editor of the active snippet and activate the new one
