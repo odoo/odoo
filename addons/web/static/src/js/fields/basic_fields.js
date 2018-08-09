@@ -1890,7 +1890,7 @@ var FavoriteWidget = AbstractField.extend({
      */
     _render: function () {
         var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
-        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"> %s</i></a>';
+        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"></i> %s</a>';
         this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
     },
 
