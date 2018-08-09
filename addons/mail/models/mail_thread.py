@@ -32,6 +32,8 @@ from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
+BOUNCE_REGEX = "%s\+(\d+)-?([\w.]+)?-?(\d+)?"
+
 
 class MailThread(models.AbstractModel):
     ''' mail_thread model is meant to be inherited by any model that needs to
@@ -1110,7 +1112,6 @@ class MailThread(models.AbstractModel):
         fallback_model = model
 
         # get email.message.Message variables for future processing
-        local_hostname = socket.gethostname()
         message_id = message.get('Message-Id')
 
         # compute references to find if message is a reply to an existing thread
@@ -1139,13 +1140,19 @@ class MailThread(models.AbstractModel):
         if bounce_alias and bounce_alias in email_to_localpart:
             # Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
             # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
-            bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
+            bounce_re = re.compile(BOUNCE_REGEX % re.escape(bounce_alias), re.UNICODE)
+            email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+            if email_part:
+                email = email_part.get_payload()[0]
+                for return_email in email.get_all('Return-Path'):
+                    match = bounce_re.match(return_email)
+                    if match:
+                        email_to = match.group()
             bounce_match = bounce_re.search(email_to)
 
             if bounce_match:
                 bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
 
-                email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
                 dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
                 partners, partner_address = self.env['res.partner'], False
@@ -1160,7 +1167,6 @@ class MailThread(models.AbstractModel):
 
                 mail_message = self.env['mail.message']
                 if email_part:
-                    email = email_part.get_payload()[0]
                     bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
                     mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
 
