@@ -161,6 +161,8 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals):
+        Quant = self.env['stock.quant']
+
         vals['ordered_qty'] = vals.get('product_uom_qty')
 
         # If the move line is directly create on the picking view.
@@ -186,7 +188,6 @@ class StockMoveLine(models.Model):
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
             if ml.product_id.type == 'product':
-                Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
                 in_date = None
                 available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
@@ -201,6 +202,8 @@ class StockMoveLine(models.Model):
             next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
             next_moves._do_unreserve()
             next_moves._action_assign()
+
+        Quant.delete_empty_quants()
         return ml
 
     def write(self, vals):
@@ -330,6 +333,8 @@ class StockMoveLine(models.Model):
                 move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()
         next_moves._action_assign()
+
+        Quant.delete_empty_quants()
         return res
 
     def unlink(self):

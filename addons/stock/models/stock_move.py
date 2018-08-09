@@ -1090,6 +1090,8 @@ class StockMove(models.Model):
         pass
 
     def _action_done(self):
+        Quant = self.env['stock.quant']
+
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
 
         moves = self.filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -1136,7 +1138,7 @@ class StockMove(models.Model):
         for result_package in moves_todo\
                 .mapped('move_line_ids.result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
-            if len(result_package.quant_ids.mapped('location_id')) > 1:
+            if len(result_package.quant_ids.filtered(lambda quant: quant.quantity > 0).mapped('location_id')) > 1:
                 raise UserError(_('You should not put the contents of a package in different locations.'))
         picking = moves_todo and moves_todo[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
@@ -1149,6 +1151,7 @@ class StockMove(models.Model):
         if picking:
             picking._create_backorder()
 
+        Quant.delete_empty_quants()
         return moves_todo
 
     def unlink(self):
