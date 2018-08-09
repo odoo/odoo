@@ -108,6 +108,7 @@ class ResPartner(models.Model):
         allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c'
         for partner in self:
             if allow_signup and not partner.user_ids:
+                partner = partner.sudo()
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
             elif partner.user_ids:

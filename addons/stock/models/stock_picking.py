@@ -631,8 +631,9 @@ class Picking(models.Model):
             # # Link existing moves or add moves when no one is related
             for ops in pick.move_line_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
-                moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id) 
-                if moves: #could search move that needs it the most (that has some quantities left)
+                moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id)
+                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
+                if moves:
                     ops.move_id = moves[0].id
                 else:
                     new_move = self.env['stock.move'].create({
@@ -802,7 +803,7 @@ class Picking(models.Model):
                 quantity_done[quant.product_id.id] += quant.qty
         for pack in self.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
             quantity_done.setdefault(pack.product_id.id, 0)
-            quantity_done[pack.product_id.id] += pack.qty_done
+            quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
     @api.multi
