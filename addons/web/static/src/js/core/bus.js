@@ -29,10 +29,10 @@ return Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
     },
-    trigger: function () {
-        this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
-        return this;
-    },
+    // trigger: function () {
+    //     this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
+    //     return this;
+    // },
 });
 
 });
