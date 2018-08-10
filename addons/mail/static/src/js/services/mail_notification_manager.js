@@ -165,13 +165,13 @@ MailManager.include({
      * Add or remove failure when receiving a failure update message
      *
      * @private
-     * @param {Object} data
-     * @param {Object[]} data.elements list of mail failure data
-     * @param {string} data.elements[].message_id ID of related message that
+     * @param {Object} datas
+     * @param {Object[]} datas.elements list of mail failure data
+     * @param {string} datas.elements[].message_id ID of related message that
      *   has a mail failure.
-     * @param {Array} data.elements[].notifications list of notifications
+     * @param {Array} datas.elements[].notifications list of notifications
      *   that is related to a mail failure.
-     * @param {string} data.elements[].notifications[0] sending state of a mail
+     * @param {string} datas.elements[].notifications[0] sending state of a mail
      *   failure (e.g. 'exception').
      */
     _handlePartnerMailFailureNotification: function (datas) {
@@ -313,6 +313,8 @@ MailManager.include({
             this._handlePartnerActivityUpdateNotification(data);
         } else if (data.type === 'mail_failure') {
             this._handlePartnerMailFailureNotification(data);
+        } else if (data.type === 'user_connection') {
+            this._handlePartnerUserConnectionNotification(data);
         } else {
             this._handlePartnerChannelNotification(data);
         }
@@ -403,7 +405,24 @@ MailManager.include({
             this.do_notify(_("Unsubscribed"), message);
         }
     },
+     /**
+     * Shows a popup to notify a user connection
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object[]} data.partner_id id of the connected partner
+     * @param {string} data.title title to display on notification
+     * @param {Array} data.messages message to display on notification
+     */
+    _handlePartnerUserConnectionNotification: function (data) {
+        var self=this;
+        var partner_id = data.partner_id;
+        this.call('bus_service', 'sendNotification', data.title, data.message, function(){
+            self.call('mail_service', 'openDmWindow', partner_id);
+        });
+    },
     /**
+     * 
      * On receiving an update on user status (e.g. becoming 'online', 'offline',
      * 'idle', etc.).
      *

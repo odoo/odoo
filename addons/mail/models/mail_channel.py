@@ -828,6 +828,9 @@ class Channel(models.Model):
             WHERE C.uuid = %s""", (uuid,))
         return self._cr.dictfetchall()
 
+    def _channel_fetch_listeners_where_clause(self, uuid):
+        return ("C.uuid = %s", (uuid,))
+
     @api.multi
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
@@ -888,7 +891,8 @@ class Channel(models.Model):
             if self.public == 'private':
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
-            channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
+            all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
+            channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
             msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
