@@ -902,7 +902,7 @@ class WebsiteSale(http.Controller):
 
         return {
             'recall': order.get_portal_last_transaction().state == 'pending',
-            'message': request.env['ir.ui.view'].render_template("website_sale.payment_confirmation_status", {
+            'message': request.env['ir.ui.view'].render_template("payment.payment_confirmation_status", {
                 'order': order
             })
         }
