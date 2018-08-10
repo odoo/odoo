@@ -311,7 +311,7 @@ class LunchAlert(models.Model):
                       '5': 'friday',
                       '6': 'saturday'}
         can_display_alert = {
-            'specific': (self.specific_day == fields.Date.context_today(self)),
+            'specific': (str(self.specific_day) == fields.Date.context_today(self)),
             'week': self[days_codes[datetime.datetime.now().strftime('%w')]],
             'days': True
         }
