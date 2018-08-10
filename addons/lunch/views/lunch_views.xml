@@ -477,7 +477,7 @@
                         <separator string='Select your order'/>
                         <field name='order_line_ids'>
                             <tree string='List' editable='bottom'>
-                                <field name='product_id'/>
+                                <field name='product_id' context="{'lunch_date': parent.date}"/>
                                 <field name='note' />
                                 <field name='price'/>
                                 <field name='supplier' invisible="1"/>
@@ -485,7 +485,7 @@
                             </tree>
                             <form string='Lunch Order Form'>
                                 <group>
-                                    <field name='product_id'/>
+                                    <field name='product_id' context="{'lunch_date': parent.date}"/>
                                     <field name='note' />
                                     <field name='price'/>
                                 </group>
@@ -660,37 +660,52 @@
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
-                    <group>
-                        <group string="Schedule Date">
-                            <field name="alert_type"/>
-                            <field name="specific_day" attrs="{'invisible': [('alert_type','!=','specific')], 'required':[('alert_type','=','specific')]}"/>
-                        </group>
-                        <group string="Schedule Hour">
-                            <field name='start_hour' widget='float_time'/>
-                            <field name='end_hour' widget='float_time'/>
-                        </group>
-                        <group attrs="{'invisible': [('alert_type','!=','week')]}">
-                            <group col="4">
-                                <field name="monday"/>
-                                <field name="tuesday"/>
-                                <field name="wednesday"/>
-                                <field name="thursday"/>
-                                <field name="friday"/>
-                                <field name="saturday"/>
-                                <field name="sunday"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group string="Schedule">
+                                <group colspan="4">
+                                    <field name="alert_type"/>
+                                    <field name="specific_day"
+                                           attrs="{'invisible': [('alert_type','!=','specific')], 'required':[('alert_type','=','specific')]}"/>
+                                    <field name='start_hour' widget='float_time' />
+                                    <field name='end_hour' widget='float_time' />
+                                </group>
+                                <group col="4" attrs="{'invisible': [('alert_type','!=','week')]}">
+                                    <field name="monday"/>
+                                    <field name="tuesday"/>
+                                    <field name="wednesday"/>
+                                    <field name="thursday"/>
+                                    <field name="friday"/>
+                                    <field name="saturday"/>
+                                    <field name="sunday"/>
+                                </group>
+                            </group>
+                            <group string="Vendor">
+                                <group colspan="4">
+                                    <field name="partner_id"/>
+                                    <field name="display" invisible="True"/>
+                                </group>
+                                <div class="oe_grey" colspan="4"
+                                    attrs="{'invisible': ['|', ('partner_id', '=', False), ('display', '=', True)]}">
+                                    Products from this vendor can <strong>not</strong> be order at the moment.
+                                </div>
+                                <div class="oe_grey" colspan="4"
+                                    attrs="{'invisible': ['|', ('partner_id', '=', False), ('display', '=', False)]}">
+                                    Products from this vendor can be order at the moment.
+                                </div>
                             </group>
                         </group>
-                    </group>
-                    <group string='Message'>
-                        <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
-                    </group>
+                        <group string='Message'>
+                            <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
