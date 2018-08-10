@@ -10,24 +10,6 @@ from odoo.exceptions import UserError
 from werkzeug.urls import url_encode
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-    _description = "Sales Order Line"
-
-    sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
-
-    # Take the description on the order template if the product is present in it
-    @api.onchange('product_id')
-    def product_id_change(self):
-        domain = super(SaleOrderLine, self).product_id_change()
-        if self.product_id and self.order_id.sale_order_template_id:
-            for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
-                if line.product_id == self.product_id:
-                    self.name = line.name
-                    break
-        return domain
-
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -215,6 +197,24 @@ class SaleOrder(models.Model):
     def _get_payment_type(self):
         self.ensure_one()
         return 'form_save' if self.require_payment else 'form'
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+    _description = "Sales Order Line"
+
+    sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
+
+    # Take the description on the order template if the product is present in it
+    @api.onchange('product_id')
+    def product_id_change(self):
+        domain = super(SaleOrderLine, self).product_id_change()
+        if self.product_id and self.order_id.sale_order_template_id:
+            for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
+                if line.product_id == self.product_id:
+                    self.name = line.name
+                    break
+        return domain
 
 
 class SaleOrderOption(models.Model):

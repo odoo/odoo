@@ -10,9 +10,9 @@
     'description': "",
     'depends': ['website', 'sale_management', 'website_mail'],
     'data': [
-        'data/sale_management_data.xml',
-        'views/sale_order_template.xml',
-        'views/sale_quote_views.xml',
+        'data/sale_order_template_data.xml',
+        'views/sale_portal_templates.xml',
+        'views/sale_order_template_views.xml',
         'views/sale_order_views.xml',
     ],
     'demo': [

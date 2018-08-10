@@ -9,6 +9,7 @@
 
     <template id="pricing_inherit_sale_management" name="Sale Management Pricing" inherit_id="sale.pricing">
 
+        <!-- TODO SEB inherit into section pricing -> details (that is inline) -->
         <xpath expr="//t[@t-set='display_discount']" position="after">
             <t t-set="display_remove" t-value="any([line.sale_order_option_ids for line in sale_order.order_line])"/>
         </xpath>
@@ -21,6 +22,7 @@
 
         <xpath expr="//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
+                <!-- TODO SEB change this url -->
                 <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ sale_order.id }&amp;unlink=True&amp;token=#{ sale_order.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
                     <span class="fa fa-trash-o"></span>
                 </a>
