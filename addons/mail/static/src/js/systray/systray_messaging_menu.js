@@ -151,6 +151,27 @@ var MessagingMenu = Widget.extend({
         }));
     },
     /**
+     * Display the browser notification request dialog when the user clicks on systray's corresponding notification
+     *
+     * @private
+     */
+    _requestNotificationPermission: function () {
+        var self = this;
+        var def = window.Notification && window.Notification.requestPermission();
+        if (def) {
+            def.then(function (value) {
+                if (value !== 'granted') {
+                    self.call('bus_service', 'sendNotification', self, _t('Permission denied'),
+                        _t('Odoo will not have the permission to send native notifications on this device.'));
+                } else {
+                    self.call('bus_service', 'sendNotification', self, _t('Permission granted'),
+                        _t('Odoo has now the permission to send you native notifications on this device.'));
+                }
+            });
+        }
+        this.$(".o_mail_navbar_request_permission").slideUp();
+    },
+    /**
      * Get and render list of previews, based on the selected filter
      *
      * preview shows the last message of a channel with inline format.
@@ -269,6 +290,8 @@ var MessagingMenu = Widget.extend({
             var documentID = $target.data('document-id');
             var documentModel = $target.data('document-model');
             this._openDocument(documentModel, documentID);
+        } else if (previewID === 'request_notification') {
+            this._requestNotificationPermission();
         } else {
             // preview of thread
             this.call('mail_service', 'openThread', previewID);

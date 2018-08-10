@@ -9,7 +9,7 @@
     'description': """This module contains tests related to mail. Those are
 contained in a separate module as it contains models used only to perform
 tests independently to functional aspects of other models. """,
-    'depends': ['test_performance', 'mail'],
+    'depends': ['test_performance', 'mail', 'mail_bot'],
     'data': [
         'security/ir.model.access.csv',
         'data/data.xml',

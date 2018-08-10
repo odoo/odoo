@@ -81,6 +81,8 @@ class ResUsers(models.Model):
                 values.pop('login', None)
                 values.pop('name', None)
                 partner_user.write(values)
+                if not partner_user.login_date:
+                    partner_user._notify_inviter()
                 return (self.env.cr.dbname, partner_user.login, values.get('password'))
             else:
                 # user does not exist: sign up invited user
@@ -92,7 +94,8 @@ class ResUsers(models.Model):
                 if partner.company_id:
                     values['company_id'] = partner.company_id.id
                     values['company_ids'] = [(6, 0, [partner.company_id.id])]
-                self._signup_create_user(values)
+                partner_user = self._signup_create_user(values)
+                partner_user._notify_inviter()
         else:
             # no token, sign up an external user
             values['email'] = values.get('email') or values.get('login')
@@ -109,6 +112,20 @@ class ResUsers(models.Model):
             if self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') != 'b2c':
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
+
+    @api.multi
+    def _notify_inviter(self):
+        for user in self:
+            invite_partner = user.create_uid.partner_id
+            if invite_partner:
+                # notify invite user that new user is connected
+                title = _("%s connected") % user.name
+                message = _("This is his first connection. Wish him welcome")
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', invite_partner.id),
+                    {'type': 'user_connection', 'title': title,
+                     'message': message, 'partner_id': user.partner_id.id}
+                )
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))

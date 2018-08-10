@@ -84,7 +84,12 @@ QUnit.module('DocumentThreadWindow', {
             partner_id: partnerID, // so that needaction messages are treated as needactions
         };
         this.services = mailTestUtils.getMailServices();
+        this.MailService = this.services.mail_service;
+        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = false;
     },
+    afterEach: function () {
+        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = true;
+    }
 });
 
 QUnit.test('open a document thread in a thread window', function (assert) {
