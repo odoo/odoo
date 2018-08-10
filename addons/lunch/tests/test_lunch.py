@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import ValidationError
 from odoo.tests import common
 
+from datetime import date, datetime
+from unittest.mock import patch
 
 class Test_Lunch(common.TransactionCase):
 
@@ -11,18 +14,17 @@ class Test_Lunch(common.TransactionCase):
         super(Test_Lunch, self).setUp()
 
         self.demo_user = self.env['res.users'].search([('name', '=', 'Marc Brown')])
-        self.product_bolognese_ref = self.env['ir.model.data'].get_object_reference('lunch', 'product_Bolognese')
-        self.product_Bolognese_id = self.product_bolognese_ref and self.product_bolognese_ref[1] or False
+        self.product_Bolognese_id = self.env.ref('lunch.product_Bolognese')
         self.new_id_order = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,
             'order_line_ids': '[]',
             })
         self.new_id_order_line = self.env['lunch.order.line'].create({
             'order_id': self.new_id_order.id,
-            'product_id': self.product_Bolognese_id,
+            'product_id': self.product_Bolognese_id.id,
             'note': '+Emmental',
             'cashmove': [],
-            'price': self.env['lunch.product'].browse(self.product_Bolognese_id).price,
+            'price': self.product_Bolognese_id.price,
             })
 
     def test_00_lunch_order(self):
@@ -60,3 +62,88 @@ class Test_Lunch(common.TransactionCase):
         #We check that the state is cancelled and that the cashmove has been deleted
         self.assertEqual(self.order_one.state, 'cancelled')
         self.assertFalse(self.order_one.cashmove)
+
+    def test_03_lunch_alert(self):
+        """ specify a lunch alert and make sure it is not possible to make an
+        order that day
+        """
+        alert_01 = self.env['lunch.alert'].create({
+            'message': 'Order Bolognese only on Tuesday',
+            'partner_id': self.product_Bolognese_id.supplier.id,
+            'alert_type': 'week',
+            'tuesday': True
+        })
+
+        patcher_date = patch('odoo.addons.lunch.models.lunch.datetime.date', wraps=date)
+        patcher_datetime = patch('odoo.addons.lunch.models.lunch.datetime.datetime', wraps=datetime)
+        mock_date = patcher_date.start()
+        mock_datetime = patcher_datetime.start()
+
+        mock_date.today.return_value = date(2018, 8, 14)  # a Tuesday
+        mock_datetime.now.return_value = datetime(2018, 8, 14, 9, 0, 0)
+
+        # We check that we can make an order on a Tuesday
+        order_01 = self.env['lunch.order'].create({
+            'user_id': self.demo_user.id,
+            'order_line_ids': [(0, 0, {
+                'product_id': self.product_Bolognese_id.id,
+            })]
+        })
+        order_01.order_line_ids.order()
+
+        with self.assertRaises(ValidationError):
+            # Planning an order to an non-authorized day must not be possible
+            order_02 = self.env['lunch.order'].create({
+                'user_id': self.demo_user.id,
+                'date': "2018-08-15",
+                'order_line_ids': [(0, 0, {
+                    'product_id': self.product_Bolognese_id.id,
+                })]
+            })
+
+        alert_02 = self.env['lunch.alert'].create({
+            'message': 'Working one more day',
+            'partner_id': self.product_Bolognese_id.supplier.id,
+            'alert_type': 'specific',
+            'specific_day': date(2018, 8, 15)
+        })
+
+        # should now be possible to order tomorrow
+        order_03 = self.env['lunch.order'].create({
+            'user_id': self.demo_user.id,
+            'date': "2018-08-15",
+            'order_line_ids': [(0, 0, {
+                'product_id': self.product_Bolognese_id.id,
+            })]
+        })
+
+        # should be possible to planned on an allowed day
+        order_04 = self.env['lunch.order'].create({
+            'user_id': self.demo_user.id,
+            'date': "2018-08-21",  # next Tuesday
+            'order_line_ids': [(0, 0, {
+                'product_id': self.product_Bolognese_id.id,
+            })]
+        })
+        order_04.order_line_ids.order()
+
+        # combinaision of alerts should work
+        alert_03 = self.env['lunch.alert'].create({
+            'message': 'Order Bolognese also on Wednesday',
+            'partner_id': self.product_Bolognese_id.supplier.id,
+            'alert_type': 'week',
+            'wednesday': True
+        })
+        # Planning an order Wednesday must now be possible
+        order_05 = self.env['lunch.order'].create({
+            'user_id': self.demo_user.id,
+            'date': "2018-08-22",  # next Wednesday
+            'order_line_ids': [(0, 0, {
+                'product_id': self.product_Bolognese_id.id,
+            })]
+        })
+        order_05.order_line_ids.order()
+
+
+        patcher_date.stop()
+        patcher_datetime.stop()
