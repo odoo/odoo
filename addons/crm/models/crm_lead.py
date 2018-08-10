@@ -66,6 +66,7 @@ class Lead(models.Model):
     name = fields.Char('Opportunity', required=True, index=True)
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
         help="Linked partner (optional). Usually created when converting the lead.")
+    partner_child_ids = fields.One2many(related='partner_id.commercial_partner_id.child_ids', string='Contacts')
     active = fields.Boolean('Active', default=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
