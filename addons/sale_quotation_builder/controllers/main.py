@@ -12,8 +12,3 @@ class CustomerPortal(CustomerPortal):
     def sale_quotation_builder_template_view(self, template, **post):
         values = {'template': template}
         return request.render('sale_design.so_template', values)
-
-    def _compute_vals_for_add_line(self, Order, Option):
-        vals = super(CustomerPortal, self)._compute_vals_for_add_line(Order, Option)
-        vals.update(website_description=Option.website_description)
-        return vals

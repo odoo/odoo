@@ -138,47 +138,6 @@ class CustomerPortal(CustomerPortal):
         })
         return request.render("sale.portal_my_orders", values)
 
-    def _compute_values(self, order_sudo, pdf, access_token, message, now):
-        days = 0
-        if order_sudo.validity_date:
-            days = (order_sudo.validity_date - fields.Date.today()).days + 1
-        transaction = order_sudo.get_portal_last_transaction()
-
-        values = {
-            'quotation': order_sudo,
-            'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
-            'days_valid': days,
-            'message': int(message) if message else False,
-            'action': request.env.ref('sale.action_quotations').id,
-            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
-            'tx_id': transaction.id if transaction else False,
-            'tx_state': transaction.state if transaction else False,
-            'payment_tx': transaction,
-            'tx_post_msg': transaction.acquirer_id.post_msg if transaction else False,
-            'need_payment': order_sudo.invoice_status == 'to invoice' and transaction.state in ['draft', 'cancel'],
-            'token': access_token,
-            'return_url': '/shop/payment/validate',
-            'bootstrap_formatting': True,
-            'partner_id': order_sudo.partner_id.id,
-        }
-
-        if order_sudo.has_to_be_paid() or values['need_payment']:
-            domain = expression.AND([
-                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
-                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
-            ])
-            acquirers = request.env['payment.acquirer'].sudo().search(domain)
-
-            values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
-            values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
-            values['pms'] = request.env['payment.token'].search(
-                [('partner_id', '=', order_sudo.partner_id.id),
-                ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
-
-        history = request.session.get('my_quotes_history', [])
-        values.update(get_records_pager(history, order_sudo))
-        return values
-
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_page(self, order_id, pdf=None, access_token=None, message=False, **kw):
         try:
@@ -209,7 +168,41 @@ class CustomerPortal(CustomerPortal):
         # Token or not, sudo the order, since portal user has not access on
         # taxes, required to compute the total_amout of SO.
         order_sudo = Order.sudo()
-        values = self._compute_values(order_sudo, pdf, access_token, message, now)
+
+        transaction = order_sudo.get_portal_last_transaction()
+
+        values = {
+            'sale_order': order_sudo,
+            'message': int(message) if message else False,
+            'action': request.env.ref('sale.action_quotations').id,
+            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
+            'tx_id': transaction.id if transaction else False,
+            'tx_state': transaction.state if transaction else False,
+            'payment_tx': transaction,
+            'tx_post_msg': transaction.acquirer_id.post_msg if transaction else False,
+            'need_payment': order_sudo.invoice_status == 'to invoice' and transaction.state in ['draft', 'cancel'],
+            'token': access_token,
+            'return_url': '/shop/payment/validate',
+            'bootstrap_formatting': True,
+            'partner_id': order_sudo.partner_id.id,
+        }
+
+        if order_sudo.has_to_be_paid() or values['need_payment']:
+            domain = expression.AND([
+                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
+                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
+            ])
+            acquirers = request.env['payment.acquirer'].sudo().search(domain)
+
+            values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
+            values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
+            values['pms'] = request.env['payment.token'].search(
+                [('partner_id', '=', order_sudo.partner_id.id),
+                ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
+
+        history = request.session.get('my_quotes_history', [])
+        values.update(get_records_pager(history, order_sudo))
+
         return request.render('sale.sale_order_portal_template', values)
 
     @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
@@ -264,5 +257,5 @@ class CustomerPortal(CustomerPortal):
 
         return {
             'success': success_message,
-            'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
+            'redirect_url': order_sudo.get_portal_url(with_access_token=True, force_access_token=access_token),
         }

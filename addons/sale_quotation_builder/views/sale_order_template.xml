@@ -3,9 +3,9 @@
 
     <template id="sale_order_portal_content_inherit_sale_design" name="Order Design" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//div[@id='informations']" position="after">
-            <div t-field="quotation.website_description" class="oe_no_empty"/>
+            <div t-field="sale_order.website_description" class="oe_no_empty"/>
             <t t-set="product_tmpl_ids" t-value="[]"/>
-            <t t-foreach="quotation.order_line" t-as="line">
+            <t t-foreach="sale_order.order_line" t-as="line">
                 <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
                     <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
                     <a t-att-id="line.id"/>

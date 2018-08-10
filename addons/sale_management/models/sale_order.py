@@ -3,8 +3,9 @@
 
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
 
 from werkzeug.urls import url_encode
 
@@ -158,7 +159,7 @@ class SaleOrder(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/my/orders/%s?%s' % (self.id, 'access_token=%s' % self.access_token if self.access_token else '')
+            'url': self.get_portal_url(with_access_token=True),
         }
 
     @api.multi
@@ -171,7 +172,7 @@ class SaleOrder(models.Model):
             return super(SaleOrder, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
+            'url': self.get_portal_url(with_access_token=True),
             'target': 'self',
             'res_id': self.id,
         }
@@ -180,7 +181,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in ['sale', 'done']:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-            return '/my/orders/%s?access_token=%s&%s' % (self.id, self.access_token, auth_param)
+            return self.get_portal_url(with_access_token=True) + '&%s' % auth_param
         return super(SaleOrder, self)._get_share_url(redirect)
 
     def get_portal_confirmation_action(self):
@@ -248,32 +249,40 @@ class SaleOrderOption(models.Model):
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
 
-    def _compute_vals_for_add_to_order(self, order):
+    @api.multi
+    def button_add_to_order(self):
+        self.add_option_to_order()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    @api.multi
+    def add_option_to_order(self, from_portal=False):
+        self.ensure_one()
+
+        sale_order = self.order_id
+
+        if sale_order.state not in ['draft', 'sent']:
+            raise UserError(_('You cannot add options to a confirmed order.'))
+
+        # TODO SEB fix this, there is problem between back end and front end feature (backend add to existing line if possible, frontend always create new
+        # because price might be different etc)
+        values = self._get_values_to_add_to_order()
+        order_line = self.env['sale.order.line']
+        if from_portal:
+            order_line = order_line.sudo()
+        order_line.create(values)
+        order_line._compute_tax_id()
+
+        self.write({'line_id': order_line.id})
+
+    @api.multi
+    def _get_values_to_add_to_order(self):
+        self.ensure_one()
         return {
+            'order_id': self.order_id,
             'price_unit': self.price_unit,
             'name': self.name,
-            'order_id': order.id,
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
             'product_uom': self.uom_id.id,
             'discount': self.discount,
         }
-
-    @api.multi
-    def button_add_to_order(self):
-        self.ensure_one()
-        order = self.order_id
-        if order.state not in ['draft', 'sent']:
-            return False
-
-        order_line = order.order_line.filtered(lambda line: line.product_id == self.product_id)
-        if order_line:
-            order_line = order_line[0]
-            order_line.product_uom_qty += 1
-        else:
-            vals = self._compute_vals_for_add_to_order(order)
-            order_line = self.env['sale.order.line'].create(vals)
-            order_line._compute_tax_id()
-
-        self.write({'line_id': order_line.id})
-        return {'type': 'ir.actions.client', 'tag': 'reload'}

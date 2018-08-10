@@ -52,7 +52,7 @@
                 <t t-foreach="quotations" t-as="quotation">
                     <tr>
                         <td>
-                            <a t-attf-href="/my/orders/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                            <a t-att-href="quotation.get_portal_url() + keep_query()"><t t-esc="quotation.name"/></a>
                         </td>
                         <td><span t-field="quotation.date_order"/></td>
                         <td><span t-field="quotation.validity_date"/></td>
@@ -100,7 +100,7 @@
                 <t t-foreach="orders" t-as="order">
                     <tr>
                         <td>
-                            <a t-attf-href="/my/orders/{{order.id}}?{{keep_query()}}"><t t-esc="order.name"/></a>
+                            <a t-attf-href="quotation.get_portal_url() + keep_query()"><t t-esc="order.name"/></a>
                         </td>
                         <td>
                           <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;

@@ -128,6 +128,7 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(string='Validity', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Validity date of the quotation, after this date, the customer won't be able to validate the quotation online.", default=_default_validity_date)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
+    remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Validity Days")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm", copy=False)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', track_sequence=2, default=lambda self: self.env.user)
@@ -178,6 +179,24 @@ class SaleOrder(models.Model):
         for order in self:
             order.access_url = '/my/orders/%s' % (order.id)
 
+    @api.multi
+    def get_portal_url(self, suffix=None, with_access_token=False, force_access_token=None):
+        """
+            Get a portal url for this sale order.
+            - suffix: string to append to the url, before the query string
+            - with_access_token: if set to true, try to read the access token from the model and add it to the url
+            - force_access_token: string with the access token to use (override with_access_token)
+            The method doesn't add the access_token query string if it is empty.
+        """
+        self.ensure_one()
+        url = self.access_url + '%s?' % suffix if suffix else ''
+        access_token = ''
+        if force_access_token:
+            access_token = force_access_token
+        elif with_access_token and self.access_token:
+            access_token = self.access_token
+        return url + ('access_token=%s' % access_token) if access_token else ''
+
     transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
@@ -205,6 +224,13 @@ class SaleOrder(models.Model):
                 dates_list.append(dt)
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
+
+    def _compute_remaining_validity_days(self):
+        for record in self:
+            if self.validity_date:
+                self.remaining_validity_days = (self.validity_date - fields.Date.today()).days + 1
+            else:
+                self.remaining_validity_days = 0
 
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):

@@ -16,10 +16,10 @@
 
   <template id="pricing" name="Price">
       <section id="quote">
-          <h1 class="page-header" id="pricing">Pricing</h1>
+          <h1 class="page-header" id="pricing">Details</h1>
 
-          <t t-set="display_taxamount" t-value="any([line.tax_id for line in quotation.order_line])"/>
-          <t t-set="display_discount" t-value="True in [line.discount > 0 for line in quotation.order_line]"/>
+          <t t-set="display_taxamount" t-value="any([line.tax_id for line in sale_order.order_line])"/>
+          <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
 
         <div style="overflow-x:auto;">
           <table class="table" id="sales_order_table">
@@ -48,7 +48,7 @@
 
               <t t-set="current_subtotal" t-value="0"/>
 
-              <t t-foreach="quotation.order_line" t-as="line">
+              <t t-foreach="sale_order.order_line" t-as="line">
 
                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
@@ -78,23 +78,23 @@
                     <td class="text-right">
                       <div
                         t-field="line.price_unit"
-                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                         t-att-style="line.discount and 'text-decoration: line-through' or None"
                         t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"
                       />
                       <div t-if="line.discount">
-                        <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                        <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
                       </div>
                     </td>
                     <td class="text-right">
                       <span
                         t-field="line.price_subtotal"
-                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                         groups="account.group_show_line_subtotals_tax_excluded"
                       />
                       <span
                         t-field="line.price_total"
-                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                         groups="account.group_show_line_subtotals_tax_included"
                       />
                     </td>
@@ -113,12 +113,12 @@
                   </t>
                 </tr>
 
-                <t t-if="current_section and (line_last or quotation.order_line[line_index+1].display_type == 'line_section')">
+                <t t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')">
                   <tr class="is-subtotal text-right">
                     <td t-att-colspan="colspan">
                       <strong>Subtotal:</strong> <span
                         t-esc="current_subtotal"
-                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                       />
                     </td>
                   </tr>
@@ -137,21 +137,21 @@
                     <td class="text-right">
                         <span
                           data-id="total_amount"
-                          t-field="quotation.amount_untaxed"
-                          t-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'
+                          t-field="sale_order.amount_untaxed"
+                          t-options='{"widget": "monetary","display_currency": sale_order.pricelist_id.currency_id}'
                         />
                     </td>
                 </tr>
-                <t t-foreach="quotation._get_tax_amount_by_group()" t-as="amount_by_group">
+                <t t-foreach="sale_order._get_tax_amount_by_group()" t-as="amount_by_group">
                     <tr style="border-bottom:1px solid #dddddd;">
-                      <t t-if="amount_by_group[3] == 1 and quotation.amount_untaxed == amount_by_group[2]">
+                      <t t-if="amount_by_group[3] == 1 and sale_order.amount_untaxed == amount_by_group[2]">
                         <td>
                           <span t-esc="amount_by_group[0]"/>
-                          <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/></span>
+                          <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/></span>
                         </td>
                         <td class="text-right">
                           <span t-esc="amount_by_group[1]"
-                              t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                              t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
                         </td>
                       </t>
                       <t t-else ="">
@@ -160,7 +160,7 @@
                         </td>
                         <td class="text-right">
                           <span t-esc="amount_by_group[1]"
-                              t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                              t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
                         </td>
                       </t>
                     </tr>
@@ -168,7 +168,7 @@
                 <tr class="border-black">
                   <td><strong>Total</strong></td>
                   <td class="text-right">
-                    <span data-id="total_amount" t-field="quotation.amount_total" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                    <span data-id="total_amount" t-field="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
                   </td>
                 </tr>
               </table>
@@ -176,22 +176,22 @@
           </div>
         </div>
       </section>
-      <section id="terms" class="container" t-if="quotation.note">
+      <section id="terms" class="container" t-if="sale_order.note">
           <h2 class="page-header">Terms &amp; Conditions</h2>
-          <p t-field="quotation.note"/>
+          <p t-field="sale_order.note"/>
       </section>
   </template>
 
   <template id="signature" name="Signature">
-      <div t-if="quotation.signature" class="row mt64" name="signature">
+      <div t-if="sale_order.signature" class="row mt64" name="signature">
           <div class="offset-8 col-4">
               <strong>Signature</strong>
           </div>
           <div class="offset-8 col-4">
-              <img t-att-src="'data:image/png;base64,%s' % to_text(quotation.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+              <img t-att-src="'data:image/png;base64,%s' % to_text(sale_order.signature)" style="max-height: 4cm; max-width: 8cm;"/>
           </div>
           <div class="offset-8 col-4 text-center">
-              <p t-field="quotation.signed_by"/>
+              <p t-field="sale_order.signed_by"/>
           </div>
       </div>
   </template>
@@ -201,7 +201,7 @@
           <div class="input-group oe_website_spinner">
               <div class="input-group-prepend d-print-none">
                   <span class="input-group-text">
-                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Remove one" title="Remove one">
+                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ sale_order.id }&amp;remove=True&amp;token=#{ sale_order.access_token }" class="mb8 js_update_line_json" aria-label="Remove one" title="Remove one">
                           <span class="fa fa-minus"/>
                       </a>
                   </span>
@@ -209,7 +209,7 @@
               <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
               <div class="input-group-append d-print-none">
                   <span class="input-group-text">
-                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Add one" title="Add one">
+                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ sale_order.id }&amp;token=#{ sale_order.access_token }" class="mb8 js_update_line_json" aria-label="Add one" title="Add one">
                           <span class="fa fa-plus"/>
                       </a>
                   </span>
@@ -246,33 +246,32 @@
         </div>
     </template>
 
-  <!-- Complete page of the quotation -->
-  <template id="so_quotation" name="Product Quotation" inherit_id="portal.portal_sidebar" primary="True">
+  <!-- Complete page of the sale_order -->
+  <template id="sale_order_portal_template" name="Sales Order Portal Template" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
               <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                   <div class="col-lg-3 d-print-none">
                       <div class="bs-sidebar">
-                          <t t-if="sales_order.team_id.team_type != 'website'">
-                              <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
+                          <t t-if="sale_order.team_id.team_type != 'website'">
+                              <div class="text-center" t-if="sale_order.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
                                   <t t-set="show_hr" t-value="False"/>
-                                  <a role="button" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                  <a role="button" t-if="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
                                       <i class="fa fa-check"/> Accept
                                       <t t-set="show_hr" t-value="True"/>
                                   </a>
-                                  <a role="button" t-elif="order_valid and quotation.has_to_be_paid()" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                      <i class="fa fa-check"/> <t t-if="not quotation.signature">Accept &amp; </t>Pay
+                                  <a role="button" t-elif="not sale_order.is_expired and sale_order.has_to_be_paid()" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                      <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay
                                       <t t-set="show_hr" t-value="True"/>
                                   </a>
-                                  <a role="button" t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
+                                  <a role="button" t-if="sale_order.is_expired" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                       <strong>This offer expired!</strong><br/>
                                       Contact us for new quotation.
                                       <t t-set="show_hr" t-value="True"/>
                                   </a>
                                   <hr class="mb0" t-if="show_hr"/>
                               </div>
-                              <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
+                              <div class="text-center" t-if="need_payment or (sale_order.state in ('sale') and sale_order.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
                                   <a role="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
                                       <i class="fa fa-check"></i> Pay Now
                                   </a>
@@ -284,55 +283,55 @@
                               <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
                           </div>
 
-                          <div t-if="order_valid and quotation.state in ['draft', 'sent']" class="pl-3 pr-3">
-                              <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
-                              <div class="mt8" t-if="days_valid &gt; 0">
+                          <div t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']" class="pl-3 pr-3">
+                              <input type="hidden" t-att-value="sale_order.validity_date" id="validity_date"/>
+                              <div class="mt8" t-if="remaining_validity_days &gt; 0">
                                   <hr class="mb0"/>
                                   <strong>This offer expires in</strong>
                                   <div class="day_counter mt8 mb16">
                                       <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
-                                      <t t-esc="days_valid"/>
-                                      <t t-if="days_valid &gt; 1">
+                                      <t t-esc="remaining_validity_days"/>
+                                      <t t-if="remaining_validity_days &gt; 1">
                                           days
                                       </t>
-                                      <t t-if="days_valid &lt;= 1">
+                                      <t t-if="remaining_validity_days &lt;= 1">
                                           day
                                       </t>
                                   </div>
                               </div>
 
 
-                              <div class="mb16" t-if="quotation.amount_undiscounted &gt; quotation.amount_untaxed">
+                              <div class="mb16" t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed">
                                   <hr class="mb0"/>
                                   <p class="text-muted mb8">Your advantage:</p>
-                                  <t t-if="quotation.amount_untaxed == quotation.amount_total">
-                                      <strong t-field="quotation.amount_total"
-                                          t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                      <strong t-field="quotation.amount_undiscounted"
-                                          t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                                  <t t-if="sale_order.amount_untaxed == sale_order.amount_total">
+                                      <strong t-field="sale_order.amount_total"
+                                          t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                      <strong t-field="sale_order.amount_undiscounted"
+                                          t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                           style="text-decoration: line-through"
                                           class="text-danger"/>
                                   </t>
-                                  <t t-if="quotation.amount_untaxed != quotation.amount_total">
-                                      <strong t-field="quotation.amount_untaxed"
-                                          t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                      <strong t-field="quotation.amount_undiscounted"
-                                          t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                                  <t t-if="sale_order.amount_untaxed != sale_order.amount_total">
+                                      <strong t-field="sale_order.amount_untaxed"
+                                          t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                      <strong t-field="sale_order.amount_undiscounted"
+                                          t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                           style="text-decoration: line-through"
                                           class="text-danger"/>
                                       <br />
-                                      (<span t-field="quotation.amount_total"
-                                          t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/> Incl. tax)
+                                      (<span t-field="sale_order.amount_total"
+                                          t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/> Incl. tax)
                                   </t>
                               </div>
                          </div>
 
-                         <div class="pb8 ml16 mr16" t-if="quotation.user_id">
+                         <div class="pb8 ml16 mr16" t-if="sale_order.user_id">
                               <hr class="mb0"/>
                               <div><strong>Your Contact:</strong></div>
-                              <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="quotation.user_id.image" t-attf-src="data:image/png;base64,#{quotation.user_id.image}" alt="Contact"/>
-                              <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not quotation.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
-                              <span t-field="quotation.user_id" t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                              <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.image" t-attf-src="data:image/png;base64,#{sale_order.user_id.image}" alt="Contact"/>
+                              <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sale_order.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
+                              <span t-field="sale_order.user_id" t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
                               <a href="#discussion"><i class="fa fa-comment"></i> Contact us</a>
                         </div>
                       </div>
@@ -354,20 +353,20 @@
                           <t t-set="payment_tx_id" t-value="payment_tx"/>
                           <t t-call="sale.payment_confirmation_status"/>
                       </t>
-                      <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'" role="alert">
+                      <div class="alert alert-warning alert-dismissable" t-if="message==4 and sale_order.state != 'sent'" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This order
-                            <t t-if="quotation.state=='draft'">has not yet been sent!</t>
-                            <t t-if="quotation.state=='cancel'">has already been cancelled!</t>
-                            <t t-if="quotation.state not in ('cancel','draft')">has already been validated!</t>
+                            <t t-if="sale_order.state=='draft'">has not yet been sent!</t>
+                            <t t-if="sale_order.state=='cancel'">has already been cancelled!</t>
+                            <t t-if="sale_order.state not in ('cancel','draft')">has already been validated!</t>
                           You can <a href="#discussion">contact us</a> for
                           any questions.
                       </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div role="dialog" class="modal fade" id="modalaccept">
-                        <div class="modal-dialog" t-if="not quotation.signature and quotation.has_to_be_signed()">
-                           <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
+                        <div class="modal-dialog" t-if="not sale_order.signature and sale_order.has_to_be_signed()">
+                           <form id="accept" method="POST" t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
                               <h4 class="modal-title">Validate Order</h4>
@@ -376,22 +375,22 @@
                             <main class="modal-body" id="sign-dialog">
                                 <p>
                                     <span>I agree that by signing this proposal, I
-                                    accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
-                                    <b data-id="total_amount" t-field="quotation.amount_total"
-                                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                    <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                    accept it on the behalf of </span><b t-field="sale_order.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                                    <b data-id="total_amount" t-field="sale_order.amount_total"
+                                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                    <span>with payment terms: </span><b t-field="sale_order.payment_term_id"/>.
                                 </p>
                                 <t t-call="portal.portal_signature">
-                                    <t t-set="object" t-value="quotation"/>
-                                    <t t-set="partner_name" t-value="quotation.partner_id.name"/>
+                                    <t t-set="object" t-value="sale_order"/>
+                                    <t t-set="partner_name" t-value="sale_order.partner_id.name"/>
                                     <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
-                                    <t t-set="accessToken" t-value="quotation.access_token"/>
+                                    <t t-set="accessToken" t-value="sale_order.access_token"/>
                                 </t>
                             </main>
                           </form>
                         </div>
 
-                        <div class="modal-dialog modal-content" t-if="not (quotation.has_to_be_signed() and not quotation.signature) and (quotation.has_to_be_paid() or need_payment)">
+                        <div class="modal-dialog modal-content" t-if="not (sale_order.has_to_be_signed() and not sale_order.signature) and (sale_order.has_to_be_paid() or need_payment)">
                           <header class="modal-header">
                             <h4 class="modal-title">Validate Order</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
@@ -399,10 +398,10 @@
                           <main class="modal-body" id="sign-dialog">
                             <p>
                                 <span>I agree that by paying this proposal, I
-                                accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
-                                <b data-id="total_amount" t-field="quotation.amount_total"
-                                  t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                accept it on the behalf of </span><b t-field="sale_order.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                                <b data-id="total_amount" t-field="sale_order.amount_total"
+                                  t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
+                                <span>with payment terms: </span><b t-field="sale_order.payment_term_id"/>.
                             </p>
                         </main>
                         <footer class="modal-footer">
@@ -412,9 +411,9 @@
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
-                                    <t t-set="form_action" t-value="'/quotation/' + str(quotation.id) + '/transaction/token'"/>
-                                    <t t-set="prepare_tx_url" t-value="'/quotation/' + str(quotation.id) + '/transaction/'"/>
-                                    <t t-set="access_token" t-value="quotation.access_token"/>
+                                    <t t-set="form_action" t-value="'/quotation/' + str(sale_order.id) + '/transaction/token'"/>
+                                    <t t-set="prepare_tx_url" t-value="'/quotation/' + str(sale_order.id) + '/transaction/'"/>
+                                    <t t-set="access_token" t-value="sale_order.access_token"/>
                                 </t>
                             </div>
                           </footer>
@@ -423,7 +422,7 @@
 
                       <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
-                          <form id="decline" method="POST" t-attf-action="/quotation/#{quotation.id}/decline?access_token=#{quotation.access_token}" class="modal-content">
+                          <form id="decline" method="POST" t-attf-action="/quotation/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
                               <h4 class="modal-title">Reject This Quotation</h4>
@@ -436,83 +435,77 @@
                               <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
                             </main>
                             <footer class="modal-footer">
-                                <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button>
+                                <button type="submit" t-att-id="sale_order.id" class="btn btn-primary">Reject</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             </footer>
                           </form>
                         </div>
                       </div>
 
-                      <div class="alert alert-warning alert-dismissable d-print-none" t-if="quotation.state == 'cancel'" role="alert">
+                      <div class="alert alert-warning alert-dismissable d-print-none" t-if="sale_order.state == 'cancel'" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quotation.
                       </div>
 
-                      <t t-call="sale.so_quotation_content"/>
+                      <t t-call="sale.sale_order_portal_content"/>
 
-                      <t t-if="sales_order.team_id.team_type != 'website'">
+                      <t t-if="sale_order.team_id.team_type != 'website'">
 
-                          <div class="text-center d-print-none mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+                          <div class="text-center d-print-none mt16 mb16" id="quotation_toolbar" t-if="sale_order.state in ('draft', 'sent', 'waiting_date')">
                               <t t-set="show_buttons" t-value="False"/>
-                              <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" href="#">
+                              <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()" href="#">
                                   <i class="fa fa-check"></i> Accept
                                   <t t-set="show_buttons" t-value="True"/>
                               </a>
-                              <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-elif="order_valid and quotation.has_to_be_paid()" href="#">
-                                  <i class="fa fa-check"/> <t t-if="not quotation.signature">Accept &amp; </t>Pay
+                              <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-elif="not sale_order.is_expired and sale_order.has_to_be_paid()" href="#">
+                                  <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay
                                   <t t-set="show_buttons" t-value="True"/>
+                              </a>
+                              <a role="button" class="btn btn-info" type="submit" href="#discussion" t-if="show_buttons">
+                                <i class="fa fa-comment"></i> Feedback
                               </a>
                               <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#" t-if="show_buttons">
                                   <i class="fa fa-times"></i> Reject
                               </a>
                           </div>
-                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
+                          <div class="text-center" t-if="need_payment or (sale_order.state in ('sale') and sale_order.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
                               <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#">
                                   <i class="fa fa-check"></i> Pay Now
                               </a>
                           </div>
                       </t>
 
+                      <div id="sale_order_communication">
+                          <h1 class="page-header">Communication</h1>
+                          <t t-call="portal.message_thread">
+                              <t t-set="object" t-value="sale_order"/>
+                          </t>
+                      </div>
                   </div><!-- //col-lg-9 -->
               </div>
             </xpath>
   </template>
 
-  <template id="chatter" name="Allow Comments &amp; History" inherit_id="sale.so_quotation">
-      <xpath expr="//div[@id='quote_content']" position="inside">
-          <h1 class="page-header">History</h1>
-          <!-- Options:Quotation Chatter: user can reply -->
-          <t t-call="portal.message_thread">
-            <t t-set="object" t-value="quotation"/>
-          </t>
-      </xpath>
-      <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
-          <a role="button" class="btn btn-info" type="submit" href="#discussion" t-if="show_buttons">
-              <i class="fa fa-comment"></i> Feedback
-          </a>
-      </xpath>
-  </template>
-
   <!--
-      Quotation content : intro, informations, order lines, remarks, descriptions ....
+      Sales Order content : intro, informations, order lines, remarks, descriptions ....
       This template should contains all the printable element of the SO. This is the
       template rendered in PDF with the report engine.
   -->
-  <template id="so_quotation_content" name="Quotation Content">
+  <template id="sale_order_portal_content" name="Sales Order Portal Content">
       <!-- Intro -->
       <div id="introduction" class="page-header mt16">
         <h1>
-            <t t-if="quotation.state in ('draft','sent','cancel')">Quotation</t>
-            <t t-if="quotation.state not in ('draft','sent','cancel')">Order</t>
-            <em t-esc="quotation.name"/>
+            <t t-if="sale_order.state in ('draft','sent','cancel')">Quotation</t>
+            <t t-if="sale_order.state not in ('draft','sent','cancel')">Sales Order</t>
+            <em t-esc="sale_order.name"/>
             <div t-ignore="true" class="float-md-right css_editable_mode_hidden d-print-none">
                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman" class="list-inline-item">
-                    <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quotation</a>
-                    <a role="button" t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
+                    <a role="button" t-if="sale_order.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, action)">Edit Quotation</a>
+                    <a role="button" t-if="sale_order.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, action)">Back to Sales Order</a>
                   </li>
                   <li class="list-inline-item">
-                     <a role="button" class="btn btn-info" target="_blank" t-att-href="'/my/orders/%s?access_token=%s&amp;pdf=True' % (quotation.id, quotation.access_token)">Print</a>
+                     <a role="button" class="btn btn-info" target="_blank" t-att-href="sale_order.get_portal_url(with_access_token=True) + '&amp;pdf=True'">Print</a>
                   </li>
                </ul>
             </div>
@@ -522,15 +515,15 @@
         <div id="informations">
             <t t-if="error or warning" t-call="sale.portal_order_error"/>
             <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
-            <div t-if="quotation.transaction_ids and not invoices and quotation.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="quotation.id">
-                <t t-set="payment_tx_id" t-value="quotation.get_portal_last_transaction()"/>
+            <div t-if="sale_order.transaction_ids and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" t-att-data-order-id="sale_order.id">
+                <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
                 <t t-call="payment.payment_confirmation_status"/>
             </div>
             <div class="mb8">
-                <strong>Date:</strong> <span t-field="quotation.create_date" t-options='{"widget": "date"}'/>
+                <strong>Date:</strong> <span t-field="sale_order.create_date" t-options='{"widget": "date"}'/>
             </div>
-            <div class="mb8" t-if="quotation.validity_date">
-                <strong>Expiration Date:</strong> <span t-field="quotation.validity_date" t-options='{"widget": "date"}'/>
+            <div class="mb8" t-if="sale_order.validity_date">
+                <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
             </div>
             <div class='row'>
                 <div class="col-lg-6">
@@ -538,7 +531,7 @@
                         <strong>Invoicing Address</strong>
                     </div>
                     <div>
-                        <address t-field="quotation.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        <address t-field="sale_order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
                 </div>
                 <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
@@ -546,13 +539,13 @@
                         <strong>Shipping Address</strong>
                     </div>
                     <div>
-                        <address t-field="quotation.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-6">
-                    <t t-set="invoices" t-value="[i for i in quotation.invoice_ids if i.state not in ['draft', 'cancel']]"/>
+                    <t t-set="invoices" t-value="[i for i in sale_order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
                     <t t-if="invoices">
                         <div>
                             <strong>Invoices</strong>

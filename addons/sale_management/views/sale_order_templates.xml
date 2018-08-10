@@ -10,7 +10,7 @@
     <template id="pricing_inherit_sale_management" name="Sale Management Pricing" inherit_id="sale.pricing">
 
         <xpath expr="//t[@t-set='display_discount']" position="after">
-            <t t-set="display_remove" t-value="any([line.sale_order_option_ids for line in quotation.order_line])"/>
+            <t t-set="display_remove" t-value="any([line.sale_order_option_ids for line in sale_order.order_line])"/>
         </xpath>
 
         <xpath expr="//table[@id='sales_order_table']/thead/tr" position="inside">
@@ -21,7 +21,7 @@
 
         <xpath expr="//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
-                <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
+                <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ sale_order.id }&amp;unlink=True&amp;token=#{ sale_order.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
                     <span class="fa fa-trash-o"></span>
                 </a>
             </td>
@@ -31,7 +31,7 @@
 
     <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//t[@t-call='sale.signature']" position="after">
-            <t t-if="any([(not option.line_id) for option in quotation.sale_order_option_ids])">
+            <t t-if="any([(not option.line_id) for option in sale_order.sale_order_option_ids])">
                 <section>
                     <h1 class="page-header">Suggested Products</h1>
                 </section>
@@ -43,11 +43,11 @@
                                 <th>Product</th>
                                 <th></th>
                                 <th class="text-right">Price</th>
-                                <th t-if="quotation.state in ['draft', 'sent']"></th>
+                                <th t-if="sale_order.state in ['draft', 'sent']"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="quotation.sale_order_option_ids" t-as="option">
+                            <tr t-foreach="sale_order.sale_order_option_ids" t-as="option">
                                 <t t-if="not option.line_id">
                                     <td>
                                         <div t-field="option.name"/>
@@ -60,16 +60,16 @@
                                     <td>
                                         <strong class="text-right">
                                             <div t-field="option.price_unit"
-                                                t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
+                                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                                 t-att-style="option.discount and 'text-decoration: line-through' or None"
                                                 t-att-class="option.discount and 'text-danger' or None"/>
                                             <div t-if="option.discount">
-                                                <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                                                <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
                                             </div>
                                         </strong>
                                     </td>
-                                    <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
-                                        <a t-attf-href="/quotation/#{ quotation.id }/add_line/#{ option.id }?access_token=#{ quotation.access_token }" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
+                                    <td class="text-center" t-if="sale_order.state in ['draft', 'sent']">
+                                        <a t-att-href="sale_order.get_portal_url(suffix='/add_option/%s' % option.id) + keep_query()" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
                                             <span class="fa fa-shopping-cart"/>
                                         </a>
                                     </td>
