@@ -24,6 +24,12 @@
     }
 }
 
+// Allow to change data-toggle="collapse" text according to status
+:not(.collapsed) > .o-collapsed-label,
+.collapsed > .o-not-collapsed-label {
+    display: none;
+}
+
 // This is rtl language specific fix
 // It will fix the extra space in ui-autocomplete class
 // and flip the next and previous symbols of jquery ui.

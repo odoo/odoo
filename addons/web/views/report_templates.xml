@@ -5,24 +5,26 @@
     <template id="report_assets_common">
         <t t-call="web._assets_helpers"/>
 
+        <!-- FIXME remove web_editor / portal / website dependency ..? -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
+
         <t t-call="web._assets_bootstrap"/>
         <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
 
+        <!-- FIXME remove web_editor / portal / website dependency ..? -->
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/>
-
-        <!-- FIXME remove website / portal dependency ..? -->
         <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/portal.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
 
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
-
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_standard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_background.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_boxed.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_clean.scss"/>
-
     </template>
 
     <template id="report_assets_pdf">

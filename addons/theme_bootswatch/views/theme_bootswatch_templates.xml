@@ -1,87 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="theme_customize" inherit_id="website.theme_customize">
-        <xpath expr="div" position="replace">
-            <div role="dialog" id="theme_customize_modal" class="modal fade bs-example-modal-sm">
-                <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="loading_backdrop"></div>
-                        <header class="modal-header">
-                            <h4 class="modal-title">Customize your theme</h4>
-                            <button type="button" class="close">×</button>
-                        </header>
-                        <main class="modal-body">
-                            <div class="row">
-                                <div class="col-4 offset-4">
-                                    <label class="checked">
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/bootswatch_default_thumbnail.png" alt="Default Theme"/>
-                                        <input name="theme" type="radio" data-xmlid="" checked="checked"/>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/cerulean_thumbnail.png" alt="Cerulean"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_cerulean_bs_variables,theme_bootswatch.theme_cerulean"/>
-                                    </label>
-                                </div>
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/cosmo_thumbnail.png" alt="Cosmo"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_cosmo_bs_variables,theme_bootswatch.theme_cosmo" data-disable="ee"/>
-                                    </label>
-                                </div>
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/cyborg_thumbnail.png" alt="Cyborg"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_cyborg_bs_variables,theme_bootswatch.theme_cyborg"/>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/flatly_thumbnail.png" alt="Flatly"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_flatly_bs_variables,theme_bootswatch.theme_flatly"/>
-                                    </label>
-                                </div>
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/journal_thumbnail.png" alt="Journal"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_journal_bs_variables,theme_bootswatch.theme_journal"/>
-                                    </label>
-                                </div>
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/simplex_thumbnail.png" alt="Simplex"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_simplex_bs_variables,theme_bootswatch.theme_simplex"/>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/slate_thumbnail.png" alt="Slate"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_slate_bs_variables,theme_bootswatch.theme_slate"/>
-                                    </label>
-                                </div>
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/spacelab_thumbnail.png" alt="Spacelab"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_spacelab_bs_variables,theme_bootswatch.theme_spacelab"/>
-                                    </label>
-                                </div>
-                                <div class="col-4">
-                                    <label>
-                                        <img style="width: 120px; height: 70px;" src="/theme_bootswatch/static/src/img/united_thumbnail.png" alt="United"/>
-                                        <input name="theme" type="radio" data-xmlid="theme_bootswatch.theme_united_bs_variables,theme_bootswatch.theme_united"/>
-                                    </label>
-                                </div>
-                            </div>
-                        </main>
-                    </div>
-                </div>
+        <xpath expr="//div" position="replace">
+            <div>
+                <content data-string="Themes" data-title="Bootswatch Themes">
+                    <opt data-xmlid="" data-icon="/theme_bootswatch/static/src/img/bootswatch_default_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_cerulean_bs_variables,theme_bootswatch.theme_cerulean" data-icon="/theme_bootswatch/static/src/img/cerulean_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_cosmo_bs_variables,theme_bootswatch.theme_cosmo" data-disable="ee" data-icon="/theme_bootswatch/static/src/img/cosmo_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_cyborg_bs_variables,theme_bootswatch.theme_cyborg" data-icon="/theme_bootswatch/static/src/img/cyborg_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_flatly_bs_variables,theme_bootswatch.theme_flatly" data-icon="/theme_bootswatch/static/src/img/flatly_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_journal_bs_variables,theme_bootswatch.theme_journal" data-icon="/theme_bootswatch/static/src/img/journal_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_simplex_bs_variables,theme_bootswatch.theme_simplex" data-icon="/theme_bootswatch/static/src/img/simplex_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_slate_bs_variables,theme_bootswatch.theme_slate" data-icon="/theme_bootswatch/static/src/img/slate_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_spacelab_bs_variables,theme_bootswatch.theme_spacelab" data-icon="/theme_bootswatch/static/src/img/spacelab_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_united_bs_variables,theme_bootswatch.theme_united" data-icon="/theme_bootswatch/static/src/img/united_thumbnail.png"/>
+                </content>
             </div>
         </xpath>
     </template>
