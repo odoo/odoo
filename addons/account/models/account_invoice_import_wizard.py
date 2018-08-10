@@ -24,14 +24,9 @@ class ImportInvoiceImportWizard(models.TransientModel):
         if not self.attachment_ids:
             return
 
-        # type/journal_id must be inside the context to get the right behavior of _default_journal
-        self_ctx = self.with_context(type='in_invoice')
-        journal_id = self_ctx.env['account.invoice']._default_journal().id
-        self_ctx = self_ctx.with_context(journal_id=journal_id)
-
         invoices = self.env['account.invoice']
         for attachment in self.attachment_ids:
-            invoices +=self_ctx._create_invoice_from_file(attachment)
+            invoices += self._create_invoice_from_file(attachment)
 
         action_vals = {
             'name': _('Invoices'),
