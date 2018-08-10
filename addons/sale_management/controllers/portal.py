@@ -75,6 +75,7 @@ class CustomerPortal(CustomerPortal):
         except AccessError:
             return request.redirect('/my')
 
+        # todo seb make sure line belongs to order
         Order = request.env['sale.order'].sudo().browse(int(order_id))
         if Order.state not in ('draft', 'sent'):
             return False

@@ -22,7 +22,6 @@
 
         <xpath expr="//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
-                <!-- TODO SEB change this url -->
                 <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ sale_order.id }&amp;unlink=True&amp;token=#{ sale_order.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
                     <span class="fa fa-trash-o"></span>
                 </a>
