@@ -85,8 +85,7 @@ class PosOrderReport(models.Model):
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
-                ps.config_id,
-                pc.stock_location_id
+                ps.config_id
         """
 
     def _having(self):
