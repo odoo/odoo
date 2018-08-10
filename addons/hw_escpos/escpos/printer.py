@@ -5,11 +5,27 @@ import serial
 import socket
 import usb.core
 import usb.util
+import usb
 
 from .escpos import *
 from .constants import *
 from .exceptions import *
 from time import sleep
+from odoo.tools import pycompat
+
+
+def _pyusb_rw_api():
+    if not usb.version_info:
+        return 'iface'
+    if usb.version_info[:3] >= (1, 0, 1):
+        return 'no_iface'
+    elif isinstance(usb.version_info[-1], pycompat.string_types) and usb.version_info[-1] < "b2":
+        return 'iface'
+    return 'no_iface'
+
+
+pyusb_rw_api = _pyusb_rw_api()
+
 
 class Usb(Escpos):
     """ Define USB printer """
@@ -81,12 +97,26 @@ class Usb(Escpos):
         
             sleep(0.1)
 
+    # Wrapper around pyusb changing API
+    def _device_write(self, msg, timeout=None):
+        if pyusb_rw_api == 'no_iface':
+            return self.device.write(self.out_ep, msg, timeout)
+        else:
+            return self.device.write(self.out_ep, msg, self.interface, timeout)
+
+    # Wrapper around pyusb changing API
+    def _device_read(self, size, timeout=None):
+        if pyusb_rw_api == 'no_iface':
+            return self.device.read(self.in_ep, size, timeout)
+        else:
+            return self.device.read(self.in_ep, size, self.interface, timeout)
+
     def _raw(self, msg):
         """ Print any command sent in raw format """
-        if len(msg) != self.device.write(self.out_ep, msg, self.interface, timeout=5000):
-            self.device.write(self.out_ep, self.errorText, self.interface)
+        if len(msg) != self._device_write(msg, timeout=5000):
+            self._device_write(self.errorText)
             raise TicketNotPrinted()
-    
+
     def __extract_status(self):
         maxiterate = 0
         rep = None
@@ -94,7 +124,7 @@ class Usb(Escpos):
             maxiterate += 1
             if maxiterate > 10000:
                 raise NoStatusError()
-            r = self.device.read(self.in_ep, 20, self.interface).tolist()
+            r = self._device_read(20).tolist()
             while len(r):
                 rep = r.pop()
         return rep
@@ -107,13 +137,13 @@ class Usb(Escpos):
             'paper'  : {},
         }
 
-        self.device.write(self.out_ep, DLE_EOT_PRINTER, self.interface)
+        self._device_write(DLE_EOT_PRINTER)
         printer = self.__extract_status()    
-        self.device.write(self.out_ep, DLE_EOT_OFFLINE, self.interface)
+        self._device_write(DLE_EOT_OFFLINE)
         offline = self.__extract_status()
-        self.device.write(self.out_ep, DLE_EOT_ERROR, self.interface)
+        self._device_write(DLE_EOT_ERROR)
         error = self.__extract_status()
-        self.device.write(self.out_ep, DLE_EOT_PAPER, self.interface)
+        self._device_write(DLE_EOT_PAPER)
         paper = self.__extract_status()
             
         status['printer']['status_code']     = printer
