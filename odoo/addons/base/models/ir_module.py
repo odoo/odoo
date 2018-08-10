@@ -446,13 +446,6 @@ class Module(models.Model):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
 
-    @api.multi
-    def button_discover(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.website,
-        }
-
     @assert_log_admin_access
     @api.multi
     def module_uninstall(self):
