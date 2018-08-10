@@ -230,7 +230,9 @@ var LivechatButton = Widget.extend({
         };
         this._chatWindow = new WebsiteLivechatWindow(this, this._livechat, options);
         this._chatWindow.appendTo($('body')).then(function () {
-            self._chatWindow.$el.css({right: 0, bottom: 0});
+            var cssProps = {bottom: 0};
+            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
+            self._chatWindow.$el.css(cssProps);
             self.$el.hide();
         });
         this._chatWindow.on('close', this, function () {
