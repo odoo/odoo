@@ -79,9 +79,11 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         {name: 'separator', label: _lt("Separator:"), value: ''},
         {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
-    parse_opts: [
+    parse_opts_formats: [
         {name: 'date_format', label: _lt("Date Format:"), value: ''},
         {name: 'datetime_format', label: _lt("Datetime Format:"), value: ''},
+    ],
+    parse_opts_separators: [
         {name: 'float_thousand_separator', label: _lt("Thousands Separator:"), value: ','},
         {name: 'float_decimal_separator', label: _lt("Decimal Separator:"), value: '.'}
     ],
@@ -287,13 +289,11 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             options[opt.name] =
                 self.$('input.oe_import_' + opt.name).val();
         });
-        _(this.parse_opts).each(function (opt) {
-            if (opt.name === 'date_format' || opt.name === 'datetime_format') {
-                options[opt.name] = time.moment_to_strftime_format(self.$('input.oe_import_' + opt.name).val());
-            }
-            else {
-                options[opt.name] = self.$('input.oe_import_' + opt.name).val();
-            }
+        _(this.parse_opts_formats).each(function (opt) {
+            options[opt.name] = time.moment_to_strftime_format(self.$('input.oe_import_' + opt.name).val());
+        });
+        _(this.parse_opts_separators).each(function (opt) {
+            options[opt.name] = self.$('input.oe_import_' + opt.name).val();
         });
         options['fields'] = [];
         if (this.do_not_change_match) {
