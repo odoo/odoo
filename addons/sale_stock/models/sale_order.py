@@ -34,6 +34,27 @@ class SaleOrder(models.Model):
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Pickings')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    effective_date = fields.Date("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
+
+    @api.depends('picking_ids.date_done')
+    def _compute_effective_date(self):
+        for order in self:
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
+            dates_list = [date for date in pickings.mapped('date_done') if date]
+            order.effective_date = dates_list and min(dates_list).date()
+
+    @api.depends('picking_policy')
+    def _compute_expected_date(self):
+        super(SaleOrder, self)._compute_expected_date()
+        for order in self:
+            dates_list = []
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state == 'sale' else fields.Datetime.now())
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
+                dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
+                dates_list.append(dt)
+            if dates_list:
+                expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
+                order.expected_date = fields.Datetime.to_string(expected_date)
 
     @api.multi
     def write(self, values):
@@ -54,9 +75,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        super(SaleOrder, self)._action_confirm()
         for order in self:
             order.order_line._action_launch_stock_rule()
+        super(SaleOrder, self)._action_confirm()
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
@@ -291,6 +312,11 @@ class SaleOrderLine(models.Model):
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_dest_id': self.order_id.partner_shipping_id
         })
+        for line in self.filtered("order_id.commitment_date"):
+            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
+            values.update({
+                'date_planned': fields.Datetime.to_string(date_planned),
+            })
         return values
 
     @api.multi

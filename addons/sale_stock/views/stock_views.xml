@@ -8,7 +8,7 @@
         </template>
 
         <template id="exception_on_so">
-            <div class="alert alert-warning" role="alert"> 
+            <div>
                 Exception(s) occurred on the sale order(s):
                 <t t-foreach="sale_order_ids" t-as="sale_order">
                     <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>.
@@ -42,7 +42,7 @@
         </template>
 
         <template id="exception_on_picking">
-            <div class="alert alert-warning" role="alert"> 
+            <div>
                 Exception(s) occurred on the picking:
                 <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-esc="origin_picking.name"/></a>.
                 Manual actions may be needed.

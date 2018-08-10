@@ -10,7 +10,6 @@ class ResConfigSettings(models.TransientModel):
     security_lead = fields.Float(related='company_id.security_lead', string="Security Lead Time")
     group_route_so_lines = fields.Boolean("Order-Specific Routes",
         implied_group='sale_stock.group_route_so_lines')
-    module_sale_order_dates = fields.Boolean("Delivery Date")
     group_display_incoterm = fields.Boolean("Incoterms", implied_group='sale_stock.group_display_incoterm')
     use_security_lead = fields.Boolean(
         string="Security Lead Time for Sales",

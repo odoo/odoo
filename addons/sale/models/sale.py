@@ -3,7 +3,7 @@
 
 import uuid
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
@@ -157,6 +157,14 @@ class SaleOrder(models.Model):
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
     signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
 
+    commitment_date = fields.Datetime('Commitment Date',
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        copy=False, oldname='requested_date', readonly=True,
+        help="This is the delivery date promised to the customer. If set, the delivery order "
+             "will be scheduled based on this date rather than product lead times.")
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False, oldname='commitment_date',  # Note: can not be stored since depends on today()
+        help="Delivery date you can promise to the customer, computed from product lead times and from the shipping policy of the order.")
+
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
         for order in self:
@@ -169,6 +177,21 @@ class SaleOrder(models.Model):
                 order.is_expired = True
             else:
                 order.is_expired = False
+
+    @api.multi
+    @api.depends('order_line.customer_lead', 'confirmation_date', 'order_line.state')
+    def _compute_expected_date(self):
+        """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
+            take the picking_policy of SO into account.
+        """
+        for order in self:
+            dates_list = []
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state == 'sale' else fields.Datetime.now())
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
+                dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
+                dates_list.append(dt)
+            if dates_list:
+                order.expected_date = fields.Datetime.to_string(min(dates_list))
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -262,6 +285,17 @@ class SaleOrder(models.Model):
 
         if warning:
             return {'warning': warning}
+
+    @api.onchange('commitment_date')
+    def _onchange_commitment_date(self):
+        """ Warn if the commitment dates is sooner than the expected date """
+        if (self.commitment_date and self.expected_date and self.commitment_date < self.expected_date):
+            return {
+                'warning': {
+                    'title': _('Requested date is too soon.'),
+                    'message': _("The date requested by the customer is sooner than the commitment date. You may be unable to honor the customer's request.")
+                }
+            }
 
     @api.model
     def create(self, vals):
@@ -542,12 +576,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
-            order.message_subscribe([order.partner_id.id])
-        self.write({
-            'state': 'sale',
-            'confirmation_date': fields.Datetime.now()
-        })
+        """ Implementation of additionnal mecanism of Sales Order confirmation.
+            This method should be extended when the confirmation should generated
+            other documents. In this method, the SO are in 'sale' state (not yet 'done').
+        """
         if self.env.context.get('send_email'):
             self.force_quotation_send()
 
@@ -560,6 +592,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
+        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
+            order.message_subscribe([order.partner_id.id])
+        self.write({
+            'state': 'sale',
+            'confirmation_date': fields.Datetime.now()
+        })
         self._action_confirm()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()

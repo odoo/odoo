@@ -7,8 +7,8 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     @api.multi
-    def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
+    def _action_confirm(self):
+        res = super(SaleOrder, self)._action_confirm()
         for so in self:
             # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
             so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
