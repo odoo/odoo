@@ -11,11 +11,48 @@ from odoo.addons.portal.controllers.mail import _message_post_helper
 class CustomerPortal(CustomerPortal):
 
     def _portal_quote_user_can_accept(self, order):
-        result = super(CustomerPortal, self)._portal_quote_user_can_accept(order)
-        # either use quote template settings or fallback on default behavior
-        return order.require_signature if order.sale_order_template_id else result
+        if order.sale_order_template_id:
+            return order.require_signature
+        else:
+            return order.company_id.portal_confirmation_sign or order.company_id.portal_confirmation_pay
 
-    @http.route(['/quotation/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
+    def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
+        try:
+            order_sudo = self._document_check_access('sale.order', res_id, access_token=access_token)
+        except AccessError:
+            return {'error': _('Invalid order')}
+        if order_sudo.state != 'sent':
+            return {'error': _('Order is not in a state requiring customer validation.')}
+
+        if not self._portal_quote_user_can_accept(order_sudo):
+            return {'error': _('Operation not allowed')}
+        if not signature:
+            return {'error': _('Signature is missing.')}
+
+        success_message = _('Your order has been signed but still needs to be paid to be confirmed.')
+
+        if not order_sudo.has_to_be_paid():
+            order_sudo.action_confirm()
+            success_message = _('Your order has been confirmed.')
+
+        order_sudo.signature = signature
+        order_sudo.signed_by = partner_name
+
+        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
+        _message_post_helper(
+            res_model='sale.order',
+            res_id=order_sudo.id,
+            message=_('Order signed by %s') % (partner_name,),
+            attachments=[('%s.pdf' % order_sudo.name, pdf)],
+            **({'token': access_token} if access_token else {}))
+
+        return {
+            'success': success_message,
+            'redirect_url': order_sudo.get_portal_url(with_access_token=True, force_access_token=access_token),
+        }
+
+    @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def decline(self, order_id, access_token=None, **post):
         try:
             self._document_check_access('sale.order', order_id, access_token=access_token)
@@ -31,7 +68,7 @@ class CustomerPortal(CustomerPortal):
             _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': access_token} if access_token else {})
         return request.redirect(Order.get_portal_url(force_access_token=access_token))
 
-    @http.route(['/quotation/<int:order_id>/update_line'], type='json', auth="public", website=True)
+    @http.route(['/my/orders/<int:order_id>/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
         try:
             self._document_check_access('sale.order', order_id, access_token=token)
@@ -67,7 +104,7 @@ class CustomerPortal(CustomerPortal):
         return request.redirect(option_sudo.order_id.get_portal_url(force_access_token=access_token) + "#details")
 
     # note dbo: website_sale code
-    @http.route(['/quotation/<int:order_id>/transaction/'], type='json', auth="public", website=True)
+    @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)
     def payment_transaction_token(self, acquirer_id, order_id, save_token=False, access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
@@ -108,7 +145,7 @@ class CustomerPortal(CustomerPortal):
             }
         )
 
-    @http.route('/quotation/<int:order_id>/transaction/token', type='http', auth='public', website=True)
+    @http.route('/my/orders/<int:order_id>/transaction/token', type='http', auth='public', website=True)
     def payment_token(self, order_id, pm_id=None, **kwargs):
 
         order = request.env['sale.order'].sudo().browse(order_id)

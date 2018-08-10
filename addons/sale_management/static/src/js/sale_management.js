@@ -30,7 +30,7 @@ if (!$('.o_portal_sale_sidebar').length) {
             if (token) {
                 params.access_token = token;
             }
-            ajax.jsonRpc("/quotation/" + parseInt(order_id[1]) + "/update_line", 'call', params).then(function (data) {
+            ajax.jsonRpc("/my/orders/" + parseInt(order_id[1]) + "/update_line", 'call', params).then(function (data) {
                 if(!data){
                     window.location.reload();
                 }

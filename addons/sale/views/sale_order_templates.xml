@@ -411,8 +411,8 @@
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
-                                    <t t-set="form_action" t-value="'/quotation/' + str(sale_order.id) + '/transaction/token'"/>
-                                    <t t-set="prepare_tx_url" t-value="'/quotation/' + str(sale_order.id) + '/transaction/'"/>
+                                    <t t-set="form_action" t-value="'/my/orders/' + str(sale_order.id) + '/transaction/token'"/>
+                                    <t t-set="prepare_tx_url" t-value="'/my/orders/' + str(sale_order.id) + '/transaction/'"/>
                                     <t t-set="access_token" t-value="sale_order.access_token"/>
                                 </t>
                             </div>
@@ -422,7 +422,7 @@
 
                       <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
-                          <form id="decline" method="POST" t-attf-action="/quotation/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
+                          <form id="decline" method="POST" t-attf-action="/my+orders/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <header class="modal-header">
                               <h4 class="modal-title">Reject This Quotation</h4>
