@@ -23,7 +23,6 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.misc import ustr
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
 FIELDS_RECURSION_LIMIT = 2
@@ -160,7 +159,7 @@ class Import(models.TransientModel):
                 sub-fields.
 
         :param str model: name of the model to get fields form
-        :param int landing: depth of recursion into o2m fields
+        :param int depth: depth of recursion into o2m fields
         """
         Model = self.env[model]
         importable_fields = [{
@@ -171,6 +170,9 @@ class Import(models.TransientModel):
             'fields': [],
             'type': 'id',
         }]
+        if not depth:
+            return importable_fields
+
         model_fields = Model.fields_get()
         blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
         for name, field in model_fields.items():
@@ -203,7 +205,7 @@ class Import(models.TransientModel):
                     dict(field_value, name='id', string=_("External ID"), type='id'),
                     dict(field_value, name='.id', string=_("Database ID"), type='id'),
                 ]
-            elif field['type'] == 'one2many' and depth:
+            elif field['type'] == 'one2many':
                 field_value['fields'] = self.get_fields(field['relation'], depth=depth-1)
                 if self.user_has_groups('base.group_no_one'):
                     field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
