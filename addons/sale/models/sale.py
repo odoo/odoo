@@ -180,22 +180,13 @@ class SaleOrder(models.Model):
             order.access_url = '/my/orders/%s' % (order.id)
 
     @api.multi
-    def get_portal_url(self, suffix=None, with_access_token=False, force_access_token=None):
+    def get_portal_url(self, suffix=None):
         """
-            Get a portal url for this sale order.
+            Get a portal url for this sale order, including access_token.
             - suffix: string to append to the url, before the query string
-            - with_access_token: if set to true, try to read the access token from the model and add it to the url
-            - force_access_token: string with the access token to use (override with_access_token)
-            The method doesn't add the access_token query string if it is empty.
         """
         self.ensure_one()
-        url = self.access_url + '%s?' % suffix if suffix else ''
-        access_token = ''
-        if force_access_token:
-            access_token = force_access_token
-        elif with_access_token and self.access_token:
-            access_token = self.access_token
-        return url + ('access_token=%s' % access_token) if access_token else ''
+        return self.access_url + '%s?access_token=%s' % (suffix if suffix else '', self._portal_ensure_token())
 
     transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
                                        string='Transactions', copy=False, readonly=True)

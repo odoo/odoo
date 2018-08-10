@@ -53,7 +53,7 @@
                 <t t-foreach="quotations" t-as="quotation">
                     <tr>
                         <td>
-                            <a t-att-href="quotation.get_portal_url() + keep_query()"><t t-esc="quotation.name"/></a>
+                            <a t-att-href="quotation.get_portal_url()"><t t-esc="quotation.name"/></a>
                         </td>
                         <td><span t-field="quotation.date_order"/></td>
                         <td><span t-field="quotation.validity_date"/></td>
@@ -101,7 +101,7 @@
                 <t t-foreach="orders" t-as="order">
                     <tr>
                         <td>
-                            <a t-attf-href="quotation.get_portal_url() + keep_query()"><t t-esc="order.name"/></a>
+                            <a t-attf-href="quotation.get_portal_url()"><t t-esc="order.name"/></a>
                         </td>
                         <td>
                           <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
@@ -534,8 +534,8 @@
                                     <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
                                     <!-- TODO SEB change url -->
-                                    <t t-set="form_action" t-value="'/my/orders/' + str(sale_order.id) + '/transaction/token'"/>
-                                    <t t-set="prepare_tx_url" t-value="'/my/orders/' + str(sale_order.id) + '/transaction/'"/>
+                                    <t t-set="form_action" t-value="sale_order.get_portal_url('/transaction/token')"/>
+                                    <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url('/transaction/')"/>
                                     <t t-set="access_token" t-value="sale_order.access_token"/>
                                 </t>
                             </div>
@@ -628,7 +628,7 @@
                     <a role="button" t-if="sale_order.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, action)">Back to Sales Order</a>
                   </li>
                   <li class="list-inline-item">
-                     <a role="button" class="btn btn-info" target="_blank" t-att-href="sale_order.get_portal_url(with_access_token=True) + '&amp;pdf=True'">Print</a>
+                     <a role="button" class="btn btn-info" target="_blank" t-att-href="sale_order.get_portal_url() + '&amp;pdf=True'">Print</a>
                   </li>
                </ul>
             </div>

@@ -49,7 +49,7 @@ class CustomerPortal(CustomerPortal):
 
         return {
             'success': success_message,
-            'redirect_url': order_sudo.get_portal_url(with_access_token=True, force_access_token=access_token),
+            'redirect_url': order_sudo.get_portal_url(),
         }
 
     @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
@@ -61,12 +61,12 @@ class CustomerPortal(CustomerPortal):
 
         Order = request.env['sale.order'].sudo().browse(order_id)
         if Order.state != 'sent':
-            return request.redirect(Order.get_portal_url(force_access_token=access_token) + "&message=4")
+            return request.redirect(Order.get_portal_url() + "&message=4")
         Order.action_cancel()
         message = post.get('decline_message')
         if message:
             _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': access_token} if access_token else {})
-        return request.redirect(Order.get_portal_url(force_access_token=access_token))
+        return request.redirect(Order.get_portal_url())
 
     @http.route(['/my/orders/<int:order_id>/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
@@ -97,11 +97,11 @@ class CustomerPortal(CustomerPortal):
         option_sudo = self.env['sale.order.option'].sudo().browse(option_id)
 
         if order_id != option_sudo.order_id:
-            return request.redirect(option_sudo.order_id.get_portal_url(force_access_token=access_token))
+            return request.redirect(option_sudo.order_id.get_portal_url())
 
-        option_sudo.add_option_to_order(from_portal=True)
+        option_sudo.add_option_to_order()
 
-        return request.redirect(option_sudo.order_id.get_portal_url(force_access_token=access_token) + "#details")
+        return request.redirect(option_sudo.order_id.get_portal_url() + "#details")
 
     # note dbo: website_sale code
     @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)
@@ -137,7 +137,7 @@ class CustomerPortal(CustomerPortal):
 
         return transaction.render_sale_button(
             order,
-            order.get_portal_url(force_access_token=access_token),
+            order.get_portal_url(),
             submit_txt=_('Pay & Confirm'),
             render_values={
                 'type': order._get_payment_type(),
@@ -168,4 +168,4 @@ class CustomerPortal(CustomerPortal):
 
         order._create_payment_transaction(vals)
 
-        return request.redirect(order.get_portal_url(with_access_token=True))
+        return request.redirect(order.get_portal_url())

@@ -75,7 +75,7 @@ class SaleOrderOption(models.Model):
         return ret
 
     @api.multi
-    def get_values_to_add_to_order(self):
-        values = super(SaleOrderOption, self).get_values_to_add_to_order()
+    def _get_values_to_add_to_order(self):
+        values = super(SaleOrderOption, self)._get_values_to_add_to_order()
         values.update(website_description=self.website_description)
         return values

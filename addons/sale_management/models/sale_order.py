@@ -141,7 +141,7 @@ class SaleOrder(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': self.get_portal_url(with_access_token=True),
+            'url': self.get_portal_url(),
         }
 
     @api.multi
@@ -154,7 +154,7 @@ class SaleOrder(models.Model):
             return super(SaleOrder, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
-            'url': self.get_portal_url(with_access_token=True),
+            'url': self.get_portal_url(),
             'target': 'self',
             'res_id': self.id,
         }
@@ -163,7 +163,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in ['sale', 'done']:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-            return self.get_portal_url(with_access_token=True) + '&%s' % auth_param
+            return self.get_portal_url() + '&%s' % auth_param
         return super(SaleOrder, self)._get_share_url(redirect)
 
     def get_portal_confirmation_action(self):
@@ -255,7 +255,7 @@ class SaleOrderOption(models.Model):
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     @api.multi
-    def add_option_to_order(self, from_portal=False):
+    def add_option_to_order(self):
         self.ensure_one()
 
         sale_order = self.order_id
@@ -263,13 +263,8 @@ class SaleOrderOption(models.Model):
         if sale_order.state not in ['draft', 'sent']:
             raise UserError(_('You cannot add options to a confirmed order.'))
 
-        # TODO SEB fix this, there is problem between back end and front end feature (backend add to existing line if possible, frontend always create new
-        # because price might be different etc)
         values = self._get_values_to_add_to_order()
-        order_line = self.env['sale.order.line']
-        if from_portal:
-            order_line = order_line.sudo()
-        order_line.create(values)
+        order_line = self.env['sale.order.line'].create(values)
         order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})

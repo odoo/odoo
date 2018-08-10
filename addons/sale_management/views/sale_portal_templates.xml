@@ -71,7 +71,7 @@
                                         </strong>
                                     </td>
                                     <td class="text-center" t-if="sale_order.state in ['draft', 'sent']">
-                                        <a t-att-href="sale_order.get_portal_url(suffix='/add_option/%s' % option.id) + keep_query()" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
+                                        <a t-att-href="sale_order.get_portal_url('/add_option/%s' % option.id)" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
                                             <span class="fa fa-shopping-cart"/>
                                         </a>
                                     </td>

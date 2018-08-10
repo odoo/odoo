@@ -3,7 +3,6 @@ odoo.define('sale_management.sale_management', function (require) {
 
 require('web.dom_ready');
 var ajax = require('web.ajax');
-var config = require('web.config');
 var Widget = require('web.Widget');
 
 if (!$('.o_portal_sale_sidebar').length) {
@@ -15,7 +14,7 @@ if (!$('.o_portal_sale_sidebar').length) {
         events: {
             'click' : 'onClick',
         },
-        onClick: function(ev){
+        onClick: function (ev) {
             ev.preventDefault();
             var self = this;
             var href = this.$el.attr("href");
@@ -30,8 +29,9 @@ if (!$('.o_portal_sale_sidebar').length) {
             if (token) {
                 params.access_token = token;
             }
-            ajax.jsonRpc("/my/orders/" + parseInt(order_id[1]) + "/update_line", 'call', params).then(function (data) {
-                if(!data){
+            var url = "/my/orders/" + parseInt(order_id[1]) + "/update_line";
+            ajax.jsonRpc(url, 'call', params).then(function (data) {
+                if (!data) {
                     window.location.reload();
                 }
                 self.$el.parents('.input-group:first').find('.js_quantity').val(data[0]);
@@ -42,7 +42,7 @@ if (!$('.o_portal_sale_sidebar').length) {
     });
 
     var update_button_list = [];
-    $('a.js_update_line_json').each(function(index) {
+    $('a.js_update_line_json').each(function (index) {
         var button = new UpdateLineButton();
         button.setElement($(this)).start();
         update_button_list.push(button);
