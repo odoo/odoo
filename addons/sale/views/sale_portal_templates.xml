@@ -533,7 +533,6 @@
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
-                                    <!-- TODO SEB change url -->
                                     <t t-set="form_action" t-value="sale_order.get_portal_url('/transaction/token')"/>
                                     <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url('/transaction/')"/>
                                     <t t-set="access_token" t-value="sale_order.access_token"/>
