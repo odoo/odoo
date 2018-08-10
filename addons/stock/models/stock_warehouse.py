@@ -405,7 +405,6 @@ class Warehouse(models.Model):
                     'active': self.reception_steps != 'one_step' and self.delivery_steps != 'ship_only'
                 },
                 'route_create_values': {
-                    'warehouse_selectable': True,
                     'product_selectable': True,
                     'product_categ_selectable': True,
                     'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
