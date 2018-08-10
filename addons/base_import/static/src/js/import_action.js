@@ -43,11 +43,40 @@ function jsonp(form, attributes, callback) {
     });
     $(form).ajaxSubmit(attributes);
 }
+function _make_option(term) { return {id: term, text: term }; }
+function _from_data(data, term) {
+    return _.findWhere(data, {id: term}) || _make_option(term);
+}
+
+/**
+ * query returns a list of suggestion select2 objects, this function:
+ *
+ * * returns data exactly matching query by either id or text if those exist
+ * * otherwise it returns a select2 option matching the term and any data
+ *   option whose id or text matches (by substring)
+ */
+function dataFilteredQuery(q) {
+    var suggestions = _.clone(this.data);
+    if (q.term) {
+        var exact = _.filter(suggestions, function (s) {
+            return s.id === q.term || s.text === q.term;
+        });
+        if (exact.length) {
+            suggestions = exact;
+        } else {
+            suggestions = [_make_option(q.term)].concat(_.filter(suggestions, function (s) {
+                return s.id.indexOf(q.term) !== -1 || s.text.indexOf(q.term) !== -1
+            }));
+        }
+    }
+    q.callback({results: suggestions});
+}
 
 var DataImport = AbstractAction.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
-        {name: 'separator', label: _lt("Separator:"), value: ','},
+        {name: 'encoding', label: _lt("Encoding:"), value: ''},
+        {name: 'separator', label: _lt("Separator:"), value: ''},
         {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
     parse_opts: [
@@ -124,8 +153,10 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     start: function () {
         var self = this;
+        this.setup_encoding_picker();
         this.setup_separator_picker();
         this.setup_float_format_picker();
+        this.setup_date_format_picker();
 
         return $.when(
             this._super(),
@@ -163,58 +194,85 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             self.exit();
         });
     },
+    setup_encoding_picker: function () {
+        this.$('input.oe_import_encoding').select2({
+            width: '160px',
+            data: _.map(('utf-8 utf-16 windows-1252 latin1 latin2 big5 gb18030 shift_jis windows-1251 koir8_r').split(/\s+/), _make_option),
+            query: dataFilteredQuery,
+            initSelection: function ($e, c) {
+                return c(_make_option($e.val()));
+            }
+        });
+    },
     setup_separator_picker: function () {
+        var data = [
+            {id: ',', text: _t("Comma")},
+            {id: ';', text: _t("Semicolon")},
+            {id: '\t', text: _t("Tab")},
+            {id: ' ', text: _t("Space")}
+        ];
         this.$('input.oe_import_separator').select2({
             width: '160px',
-            query: function (q) {
-                var suggestions = [
-                    {id: ',', text: _t("Comma")},
-                    {id: ';', text: _t("Semicolon")},
-                    {id: '\t', text: _t("Tab")},
-                    {id: ' ', text: _t("Space")}
-                ];
-                if (q.term) {
-                    suggestions.unshift({id: q.term, text: q.term});
-                }
-                q.callback({results: suggestions});
-            },
-            initSelection: function (e, c) {
-                return c({id: ',', text: _t("Comma")});
-            },
+            data: data,
+            query: dataFilteredQuery,
+            // this is not provided to initSelection so can't use this.data
+            initSelection: function ($e, c) {
+                c(_from_data(data, $e.val()) || _make_option($e.val()))
+            }
         });
     },
     setup_float_format_picker: function () {
-        var sub_query = function (q, options) {
-            var suggestions = [
-                {id: ',', text: _t("Comma")},
-                {id: '.', text: _t("Dot")},
-            ];
-            if (options && options.no_separator) {
-                suggestions.push({id: '', text: _t("No Separator")});
-            }
-            if (q.term) {
-                suggestions.unshift({id: q.term, text: q.term});
-            }
-            q.callback({results: suggestions});
-        };
+        var data_decimal = [
+            {id: ',', text: _t("Comma")},
+            {id: '.', text: _t("Dot")},
+        ];
+        var data_digits = data_decimal.concat([{id: '', text: _t("No Separator")}]);
         this.$('input.oe_import_float_thousand_separator').select2({
             width: '160px',
-            query: function (q) {
-                sub_query(q, {no_separator: true})
-            },
-            initSelection: function (e, c) {
-                return c({id: ',', text: _t("Comma")});
-            },
+            data: data_digits,
+            query: dataFilteredQuery,
+            initSelection: function ($e, c) {
+                c(_from_data(data_digits, $e.val()) || _make_option($e.val()))
+            }
         });
         this.$('input.oe_import_float_decimal_separator').select2({
             width: '160px',
-            query: function (q) {
-                sub_query(q);
-            },
-            initSelection: function (e, c) {
-                return c({id: ',', text: _t("Dot")});
-            },
+            data: data_decimal,
+            query: dataFilteredQuery,
+            initSelection: function ($e, c) {
+                c(_from_data(data_decimal, $e.val()) || _make_option($e.val()))
+            }
         });
+    },
+    setup_date_format_picker: function () {
+        var data = _([
+            'YYYY-MM-DD',
+            'DD/MM/YY',
+            'DD/MM/YYYY',
+            'DD-MM-YYYY',
+            'DD-MMM-YY',
+            'DD-MMM-YYYY',
+            'MM/DD/YY',
+            'MM/DD/YYYY',
+            'MM-DD-YY',
+            'MM-DD-YYYY',
+            'DDMMYY',
+            'DDMMYYYY',
+            'YYMMDD',
+            'YYYYMMDD',
+            'YY/MM/DD',
+            'YYYY/MM/DD',
+            'MMDDYY',
+            'MMDDYYYY',
+        ]).map(_make_option);
+        this.$('input.oe_import_date_format').select2({
+            width: '160px',
+            data: data,
+            query: dataFilteredQuery,
+            initSelection: function ($e, c) {
+                c(_from_data(data, $e.val()) || _make_option($e.val()));
+            }
+        })
     },
 
     import_options: function () {
@@ -248,10 +306,9 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
 
     //- File & settings change section
     onfile_loaded: function () {
-        var file = this.$('.oe_import_file')[0].files[0];
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
-        this.$('.oe_import_date_format').val('');
+        this.$('.oe_import_date_format').select2('val', '');
         this.$('.oe_import_datetime_format').val('');
 
         this.$el.removeClass('oe_import_preview oe_import_error');
@@ -315,10 +372,12 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             }]});
         }
 
-        this.$('.oe_import_date_format').val(time.strftime_to_moment_format(result.options.date_format));
+        // merge option values back in case they were updated/guessed
+        _.each(['encoding', 'separator', 'float_thousand_separator', 'float_decimal_separator'], function (id) {
+            self.$('.oe_import_' + id).select2('val', result.options[id])
+        });
+        this.$('.oe_import_date_format').select2('val', time.strftime_to_moment_format(result.options.date_format));
         this.$('.oe_import_datetime_format').val(time.strftime_to_moment_format(result.options.datetime_format));
-        this.$('.oe_import_float_thousand_separator').val(result.options.float_thousand_separator).change();
-        this.$('.oe_import_float_decimal_separator').val(result.options.float_decimal_separator).change();
         if (result.debug === false){
             this.$('.oe_import_tracking').hide();
             this.$('.oe_import_deferparentstore').hide();

@@ -74,3 +74,20 @@ class PreviewModel(models.Model):
     name = fields.Char('Name')
     somevalue = fields.Integer(string='Some Value', required=True)
     othervalue = fields.Integer(string='Other Variable')
+
+class FloatModel(models.Model):
+    _name = name('float')
+
+    value = fields.Float()
+    value2 = fields.Monetary()
+    currency_id = fields.Many2one('res.currency')
+
+class ComplexModel(models.Model):
+    _name = name('complex')
+
+    f = fields.Float()
+    m = fields.Monetary()
+    c = fields.Char()
+    currency_id = fields.Many2one('res.currency')
+    d = fields.Date()
+    dt = fields.Datetime()
