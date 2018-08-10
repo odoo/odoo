@@ -57,7 +57,7 @@ index_template = """
         </p>
         %s
         <p>
-        The PosBox software installed on this posbox is <b>version 16</b>,
+        The PosBox software installed on this posbox is <b>version 17</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
