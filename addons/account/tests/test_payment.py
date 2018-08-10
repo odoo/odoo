@@ -168,6 +168,7 @@ class TestPayment(AccountingTestCase):
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
         })
         register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
@@ -213,31 +214,6 @@ class TestPayment(AccountingTestCase):
             {'account_id': inv_1.account_id.id, 'debit': 50.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         ])
         self.assertEqual(inv_4.state, 'paid')
-
-    def test_multiple_payments_01(self):
-        """ Create test to pay several invoices/refunds at once """
-        # One payment for inv_1 and inv_2 (same partner) but inv_2 is refund
-        inv_1 = self.create_invoice(amount=550)
-        inv_2 = self.create_invoice(amount=100, type='out_refund')
-
-        ids = [inv_1.id, inv_2.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
-            'journal_id': self.bank_journal_euro.id,
-            'payment_method_id': self.payment_method_manual_in.id,
-        })
-        register_payments.create_payments()
-        payment_id = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
-
-        self.assertEqual(len(payment_id), 1)
-        self.assertAlmostEquals(register_payments.amount, 450)
-
-        self.assertEqual(payment_id.state, 'posted')
-
-        self.assertRecordValues(payment_id.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 450.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 450.0, 'amount_currency': 0.0, 'currency_id': False},
-        ])
 
     def test_partial_payment(self):
         """ Create test to pay invoices (cust. inv + vendor bill) with partial payment """
@@ -309,6 +285,7 @@ class TestPayment(AccountingTestCase):
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
         })
         register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
@@ -331,6 +308,49 @@ class TestPayment(AccountingTestCase):
             {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': inv_3.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 0.0, 'currency_id': False},
         ])
+
+    def test_register_payment_group_invoices(self):
+        """ Tests the 'group invoices' option of the payment registering wizard
+        """
+
+        account_receivable_id_1 = self.account_receivable.id
+        account_receivable_id_2 = self.account_receivable.copy(default={
+            'code': '%s (%s)' % (self.account_receivable.code, 'duplicate 1')
+        }).id
+
+        inv_1 = self.create_invoice(amount=100, account_id=account_receivable_id_1)
+        inv_2 = self.create_invoice(amount=150, account_id=account_receivable_id_1)
+        inv_3 = self.create_invoice(amount=300, account_id=account_receivable_id_2)
+        inv_4 = self.create_invoice(amount=300, account_id=account_receivable_id_2, partner=self.partner_china_exp.id)
+
+        inv_5 = self.create_invoice(amount=42, account_id=account_receivable_id_1)
+        inv_6 = self.create_invoice(amount=1111, account_id=account_receivable_id_1)
+        inv_7 = self.create_invoice(amount=666, account_id=account_receivable_id_2)
+        inv_8 = self.create_invoice(amount=300, account_id=account_receivable_id_2, partner=self.partner_china_exp.id)
+
+        # When grouping invoices, we should have one payment per receivable account
+        ids1 = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
+        register_payments1 = self.register_payments_model.with_context(active_ids=ids1).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
+        })
+        register_payments1.create_payments()
+        payment_ids1 = self.payment_model.search([('invoice_ids', 'in', ids1)], order="id desc")
+        self.assertEqual(len(payment_ids1), 3, "3 payments should have been created, one fo each (partner, receivable account).")
+
+        # When not grouping, we should have one payment per invoice
+        ids2 = [inv_5.id, inv_6.id, inv_7.id, inv_8.id]
+        register_payments2 = self.register_payments_model.with_context(active_ids=ids2).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': False,
+        })
+        register_payments2.create_payments()
+        payment_ids2 = self.payment_model.search([('invoice_ids', 'in', ids2)], order="id desc")
+        self.assertEqual(len(payment_ids2), 4, "Not grouping payments should always create a distinct payment per invoice.")
 
     def test_payment_and_writeoff_in_other_currency_1(self):
         # Use case:

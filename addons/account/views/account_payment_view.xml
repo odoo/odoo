@@ -335,7 +335,10 @@
                         </group>
                         <group>
                             <field name="payment_date"/>
-                            <field name="communication"/>
+                            <field name="group_invoices"/>
+                            <field name="show_communication_field" invisible="1"/>
+                            <field name="communication" attrs="{'invisible': [('show_communication_field', '=', False)]}"/>
+                            <p colspan="2" attrs="{'invisible': [('show_communication_field', '=', True)]}">Memo will be computed from invoices</p>
                         </group>
                         <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
                             <label for="payment_difference"/>
