@@ -205,17 +205,12 @@
                 <field name="message_needaction_counter"/>
                 <templates>
                     <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
-                        <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)" alt="Employee"/>
-                            <div class="o_employee_summary_icons">
-                                <t t-if="record.message_needaction_counter.raw_value">
-                                    <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                </t>
-                                <span title='Messages'><i class='fa fa-comments' role="img" aria-label="Messages"/><t t-esc="record.message_ids.raw_value.length"/></span>
-                                <span title='Followers'><i class='fa fa-users' role="img" aria-label="Followers"/><t t-esc="record.message_follower_ids.raw_value.length"/></span>
-                            </div>
-                        </div>
+                    <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                        <!-- Medium employee's picture -->
+                        <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_medium', record.id.raw_value)})" role="img"/>
+                        <!-- Employee's picture optimized for mobile -->
+                        <div class="o_kanban_image d-md-none rounded-circle" t-attf-style="background-image: url(#{kanban_image('hr.employee', 'image_small', record.id.raw_value)})" role="img"/>
+
                         <div class="oe_kanban_details">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
@@ -229,9 +224,6 @@
                             <ul>
                                 <li id="last_login"/>
                                 <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                                <li t-if="record.work_email.raw_value"><i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> <field name="work_email"/></li>
-                                <li t-if="record.work_phone.raw_value"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <field name="work_phone"/></li>
-                                <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"></i> <field name="mobile_phone"/></li>
                             </ul>
                         </div>
                     </div>
