@@ -17,11 +17,11 @@ class ResCompany(models.Model):
     sale_onboarding_sample_quotation_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sample quotation step", default='not_done')
 
     sale_onboarding_payment_method = fields.Selection([
-        ('digital_signature', 'Digital signature, without payment'),
+        ('digital_signature', 'Sign online'),
         ('paypal', 'PayPal'),
         ('stripe', 'Stripe'),
+        ('other', 'Pay with another payment acquirer'),
         ('manual', 'Wire Transfer'),
-        ('none', 'No digital signature or payment'),
     ], string="Sale onboarding selected payment method")
 
     @api.model

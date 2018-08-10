@@ -28,20 +28,13 @@
             <form string="Choose a payment method" class="o_onboarding_payment_acquirer_wizard">
                 <div class="container">
                     <div class="row align-items-start">
-                        <div class="col col-2" name="left-column">
-                            <field name="payment_method" widget="radio"/>
+                        <div class="col col-4" name="left-column">
+                            <group>
+                                <field name="payment_method" widget="radio" nolabel="1"/>
+                            </group>
                         </div>
                         <div class="col offset-md-1" name="right-column">
                             <div attrs="{'invisible': [('payment_method', '!=', 'paypal')]}">
-                                <p>
-                                    <a href="https://www.paypal.com" target="_blank">PayPal</a>
-                                    is the easiest way to accept payments. It's easy to configure
-                                    and it offers
-                                    <a href="https://www.paypal.com/us/webapps/mpp/merchant-fees"
-                                       target="_blank">
-                                        a transparent fee structure.
-                                    </a>
-                                </p>
                                 <group>
                                     <field name="paypal_email_account" attrs="{'required': [('payment_method', '=', 'paypal')]}" />
                                     <field name="paypal_seller_account" attrs="{'required': [('payment_method', '=', 'paypal')]}" />
@@ -49,19 +42,11 @@
                                 </group>
                                 <p>
                                     <a href="https://www.paypal.com/ca/webapps/mpp/product-selection" target="_blank">
-                                        <span class="fa fa-arrow-right"> Create a PayPal Account</span>
+                                        <span class="fa fa-arrow-right"> Create a PayPal account</span>
                                     </a>
                                 </p>
                             </div>
                             <div attrs="{'invisible': [('payment_method', '!=', 'stripe')]}">
-                                <p>
-                                   <a href="https://stripe.com" target="_blank">Stripe</a>
-                                    is a payment provider with-->
-                                    <a href="https://stripe.com/pricing" target="_blank">
-                                        a simple fee structure and no hidden costs.
-                                    </a>
-                                    We recommend it to manage credit card payments.
-                                </p>
                                 <group>
                                     <field name="stripe_secret_key"
                                        attrs="{'required': [('payment_method', '=', 'stripe')]}" />
@@ -74,8 +59,16 @@
                                     </a>
                                 </p>
                             </div>
+
+                            <div attrs="{'invisible': [('payment_method', '!=', 'other')]}">
+                                <a type="action" role="button" name="payment.action_payment_acquirer">
+                                    Check here
+                                </a>
+                                to choose another payment method.
+                            </div>
                             <div attrs="{'invisible': [('payment_method', '!=', 'manual')]}">
                                 <group>
+                                    <field name="manual_name" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
                                     <field name="journal_name" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
                                     <field name="acc_number" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
                                     <field name="manual_post_msg" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
