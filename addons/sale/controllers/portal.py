@@ -153,21 +153,14 @@ class CustomerPortal(CustomerPortal):
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token
         now = fields.Date.today()
-        if access_token:
-            Order = request.env['sale.order'].sudo().search([('id', '=', order_id), ('access_token', '=', access_token)])
-        else:
-            Order = request.env['sale.order'].search([('id', '=', order_id)])
-        # Log only once a day
-        if Order and request.session.get('view_quote_%s' % Order.id) != now and request.env.user.share and access_token:
-            request.session['view_quote_%s' % Order.id] = now
-            body = _('Quotation viewed by customer')
-            _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=Order.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)
-        if not Order:
-            return request.redirect('/my')
 
-        # Token or not, sudo the order, since portal user has not access on
-        # taxes, required to compute the total_amout of SO.
-        order_sudo = Order.sudo()
+        # Log only once a day
+        if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
+            request.session['view_quote_%s' % order_sudo.id] = now
+            body = _('Quotation viewed by customer')
+            _message_post_helper(res_model='sale.order', res_id=order_sudo.id, message=body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
+        if not order_sudo:
+            return request.redirect('/my')
 
         transaction = order_sudo.get_portal_last_transaction()
 

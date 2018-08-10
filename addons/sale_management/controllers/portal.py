@@ -10,12 +10,6 @@ from odoo.addons.portal.controllers.mail import _message_post_helper
 
 class CustomerPortal(CustomerPortal):
 
-    def _portal_quote_user_can_accept(self, order):
-        if order.sale_order_template_id:
-            return order.require_signature
-        else:
-            return order.company_id.portal_confirmation_sign or order.company_id.portal_confirmation_pay
-
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
         try:
@@ -25,7 +19,7 @@ class CustomerPortal(CustomerPortal):
         if order_sudo.state != 'sent':
             return {'error': _('Order is not in a state requiring customer validation.')}
 
-        if not self._portal_quote_user_can_accept(order_sudo):
+        if not order_sudo.has_to_be_signed() and not order_sudo.has_to_be_paid():
             return {'error': _('Operation not allowed')}
         if not signature:
             return {'error': _('Signature is missing.')}
@@ -55,50 +49,49 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def decline(self, order_id, access_token=None, **post):
         try:
-            self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
 
-        Order = request.env['sale.order'].sudo().browse(order_id)
-        if Order.state != 'sent':
-            return request.redirect(Order.get_portal_url() + "&message=4")
-        Order.action_cancel()
+        if order_sudo.state != 'sent':
+            return request.redirect(order_sudo.get_portal_url() + "&message=4")
+        order_sudo.action_cancel()
         message = post.get('decline_message')
         if message:
             _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': access_token} if access_token else {})
-        return request.redirect(Order.get_portal_url())
+        return request.redirect(order_sudo.get_portal_url())
 
     @http.route(['/my/orders/<int:order_id>/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
         try:
-            self._document_check_access('sale.order', order_id, access_token=token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=token)
         except AccessError:
             return request.redirect('/my')
 
-        # todo seb make sure line belongs to order
-        Order = request.env['sale.order'].sudo().browse(int(order_id))
-        if Order.state not in ('draft', 'sent'):
+        if order_sudo.state not in ('draft', 'sent'):
             return False
-        OrderLine = request.env['sale.order.line'].sudo().browse(int(line_id))
+        order_line = request.env['sale.order.line'].sudo().browse(int(line_id))
+        if order_line.order_id != order_sudo:
+            return False
         if unlink:
-            OrderLine.unlink()
+            order_line.unlink()
             return False
         number = -1 if remove else 1
-        quantity = OrderLine.product_uom_qty + number
-        OrderLine.write({'product_uom_qty': quantity})
-        return [str(quantity), str(Order.amount_total)]
+        quantity = order_line.product_uom_qty + number
+        order_line.write({'product_uom_qty': quantity})
+        return [str(quantity), str(order_sudo.amount_total)]
 
     @http.route(["/my/orders/<int:order_id>/add_option/<int:option_id>"], type='http', auth="public", website=True)
     def add(self, order_id, option_id, access_token=None, **post):
         try:
-            self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
 
         option_sudo = self.env['sale.order.option'].sudo().browse(option_id)
 
-        if order_id != option_sudo.order_id:
-            return request.redirect(option_sudo.order_id.get_portal_url())
+        if order_sudo != option_sudo.order_id:
+            return request.redirect(order_sudo.get_portal_url())
 
         option_sudo.add_option_to_order()
 
