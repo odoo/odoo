@@ -101,7 +101,7 @@ class LunchOrder(models.Model):
                     'supplier': line.supplier.name,
                     'note': line.note,
                     'price': line.price,
-                    'date': line.date,
+                    'date': fields.Date.to_string(line.date),
                     'currency_id': line.currency_id.id,
                 }
             # sort the old lunch orders by (date, id)
