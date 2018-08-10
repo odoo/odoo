@@ -10,10 +10,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,11 @@ msgstr "Boekhouddatum"
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Boekhouding betaalbewijzen"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
@@ -110,7 +115,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:193
+#: code:addons/account_voucher/models/account_voucher.py:172
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -132,7 +137,7 @@ msgstr "Bedrijf gerelateerd aan dit dagboek"
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Create a new sale receipt"
-msgstr ""
+msgstr "Maak een nieuw betaalbewijs"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
@@ -201,6 +206,21 @@ msgid "Effective date for accounting entries"
 msgstr "Boek datum voor financiële boekingen"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Volgers (Kanalen)"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Relaties)"
+
+#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr "Geeft de volgorde van deze regel aan bij het tonen van het bewijs."
@@ -219,6 +239,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
@@ -231,6 +266,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
 msgstr "Interne notities"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
@@ -270,13 +310,23 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:101
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error
+msgid "Message Delivery error"
+msgstr "Bericht aflever fout"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:109
 #, python-format
 msgid "Missing Company"
 msgstr "Bedrijf ontbreekt"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:103
+#: code:addons/account_voucher/models/account_voucher.py:111
 #, python-format
 msgid "Missing Currency"
 msgstr "Valuta ontbreekt"
@@ -290,6 +340,31 @@ msgstr "Opmerkingen"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__number
 msgid "Number"
 msgstr "Nummer"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of error"
+msgstr "Aantal foutmeldingen"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met leveringsfout"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Aantal ongelezen berichten"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
@@ -323,23 +398,23 @@ msgid "Payment"
 msgstr "Betaling"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
+msgid "Payment Memo"
+msgstr "Betalingsmemo"
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
 msgid "Payment Method"
 msgstr "Betaalmethode"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
-msgid "Payment Reference"
-msgstr "Betaalreferentie"
-
-#. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:230
+#: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Activeer de reeks van het geselecteerde dagboek!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:233
+#: code:addons/account_voucher/models/account_voucher.py:211
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Definieer een reeks voor dit dagboek."
@@ -398,7 +473,7 @@ msgstr "Hoeveelheid"
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Register a new purchase receipt"
-msgstr ""
+msgstr "Registreer een nieuw inkoopbewijs"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -514,6 +589,16 @@ msgid "Unit Price"
 msgstr "Prijs"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Aantal ongelezen berichten"
+
+#. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Validate"
@@ -532,7 +617,7 @@ msgid "Vendor Voucher"
 msgstr "Inkoopbewijs"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:108
+#: code:addons/account_voucher/models/account_voucher.py:116
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -569,6 +654,16 @@ msgid "Vouchers Entries"
 msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__website_message_ids
+msgid "Website Messages"
+msgstr "Website berichten"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
+
+#. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -587,7 +682,7 @@ msgstr ""
 "de klant koppelen aan dit verkoopbewijs."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:445
+#: code:addons/account_voucher/models/account_voucher.py:456
 #, python-format
-msgid "You must first select a partner!"
-msgstr "U moet eerst een relatie te selecteren!"
+msgid "You must first select a partner."
+msgstr "U moet eerst een relatie selecteren."

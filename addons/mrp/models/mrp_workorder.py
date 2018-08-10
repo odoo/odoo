@@ -120,7 +120,6 @@ class MrpWorkorder(models.Model):
         help="Technical field indicating whether the current user is working. ")
     working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
     last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
-    production_messages = fields.Html('Workorder Message', compute='_compute_production_messages')
 
     next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
@@ -163,21 +162,6 @@ class MrpWorkorder(models.Model):
                 order.is_user_working = True
             else:
                 order.is_user_working = False
-
-    @api.depends('production_id', 'workcenter_id', 'production_id.bom_id')
-    def _compute_production_messages(self):
-        ProductionMessage = self.env['mrp.message']
-        for workorder in self:
-            domain = [
-                ('valid_until', '>=', fields.Date.today()),
-                '|', ('workcenter_id', '=', False), ('workcenter_id', '=', workorder.workcenter_id.id),
-                '|', '|', '|',
-                ('product_id', '=', workorder.product_id.id),
-                '&', ('product_id', '=', False), ('product_tmpl_id', '=', workorder.product_id.product_tmpl_id.id),
-                ('bom_id', '=', workorder.production_id.bom_id.id),
-                ('routing_id', '=', workorder.operation_id.routing_id.id)]
-            messages = ProductionMessage.search(domain).mapped('message')
-            workorder.production_messages = "<br/>".join(messages) or False
 
     @api.multi
     def _compute_scrap_move_count(self):

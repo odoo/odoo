@@ -1,0 +1,416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * uom
+# 
+# Translators:
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_form_action
+msgid "Add a new unit of measure"
+msgstr ""
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid "Add a new unit of measure category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
+msgid "Bigger Ratio"
+msgstr "Більший коефіцієнт"
+
+#. module: uom
+#: selection:uom.uom,uom_type:0
+msgid "Bigger than the reference Unit of Measure"
+msgstr "Більша за основну одиницю виміру категорії"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+msgid "Category"
+msgstr "Категорія"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку,"
+" якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"здійснюватися на основі співвідношення."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:138
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr ""
+"Конвертація з товару UoM %s до UoM за замовчуванням%s не можлива, оскільки y"
+" обоє належать до різних категорій!."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_day
+msgid "Day(s)"
+msgstr "День(і)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozen(s)"
+msgstr "Дюжина(и)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_hour
+msgid "Hour(s)"
+msgstr "Година (и)"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Скільки разів ця одиниця вимірювання більша, ніж еталонна одиниця виміру в "
+"цій категорії: 1 * (ця одиниця) = співвідношення * (контрольна одиниця)"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Наскільки більшою чи меншою є ця одиниця, порівняно з контрольною одиницею "
+"виміру для цієї категорії: 1 * (контрольна одиниця) = співвідношення * (ця "
+"одиниця)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__id
+#: model:ir.model.fields,field_description:uom.field_uom_uom__id
+msgid "ID"
+msgstr "ID"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
+#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Length"
+msgstr "Довжина"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_length
+msgid "Length / Distance"
+msgstr "Довжина / Відстань"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "Liter(s)"
+msgstr "Літр(и)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_res_users__has_group_uom
+#: model:res.groups,name:uom.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "Керування різними одиницями віміру"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__name
+msgid "Name"
+msgstr "Назва"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Одиниця виміру товару"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_category
+msgid "Product UoM Categories"
+msgstr "Категорії товару UoM"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+msgid "Ratio"
+msgstr "Співвідношення"
+
+#. module: uom
+#: selection:uom.uom,uom_type:0
+msgid "Reference Unit of Measure for this category"
+msgstr "Основна одиниця виміру для цієї категорії"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
+msgid "Rounding Precision"
+msgstr "Точність округлення"
+
+#. module: uom
+#: selection:uom.uom,uom_type:0
+msgid "Smaller than the reference Unit of Measure"
+msgstr "Менша за основну одиницю виміру категорії"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__rounding
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"Обчисленої кількості буде кілька цього значення. Використовуйте 1.0 для для "
+"одиниці вимірювання, яку ще не можна розділити, наприклад, шматок."
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "Коефіцієнт конверсії одиниці виміру не може бути 0!"
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The rounding precision must be greater than 0!"
+msgstr "Точність округлення повинна бути більше 0!"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Time"
+msgstr "Час"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
+msgid "Type"
+msgstr "Тип"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
+msgid "Type of Measure"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
+msgid "Type of measurement category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__active
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr ""
+"Зніміть позначку з активного поля, щоби вимкнути одиницю вимірювання, не "
+"видаляючи її."
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_unit
+msgid "Unit"
+msgstr "Одиниці"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__name
+msgid "Unit of Measure"
+msgstr "Одиниця виміру"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "Категорії одиниць виміру"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_unit
+msgid "Unit(s)"
+msgstr "шт"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Units"
+msgstr ""
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model:ir.ui.view,arch_db:uom.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "Одиниці виміру"
+
+#. module: uom
+#: model:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+msgid "Units of Measure categories"
+msgstr "Категорії одиниць виміру"
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid ""
+"Units of measure belonging to the same category can be\n"
+"            converted between each others. For example, in the category\n"
+"            <i>'Time'</i>, you will have the following units of measure:\n"
+"            Hours, Days."
+msgstr ""
+"Одиниці виміру, що належать до тієї ж категорії, можуть бути\n"
+"перетворені між собою. Наприклад, у категорії\n"
+"<i>'Час'</i>, у вас будуть такі одиниці виміру:\n"
+"Години, дні."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:86
+#, python-format
+msgid ""
+"UoM category %s should have a reference unit of measure. If you just created"
+" a new category, please record the 'reference' unit first."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:88
+#, python-format
+msgid "UoM category %s should only have one reference unit of measure."
+msgstr ""
+
+#. module: uom
+#: model:ir.model,name:uom.model_res_users
+msgid "Users"
+msgstr "Користувачі"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+#: model:uom.category,name:uom.product_uom_categ_vol
+msgid "Volume"
+msgstr "Об'єм"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+#: model:uom.category,name:uom.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Вага"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_wtime
+msgid "Working Time"
+msgstr "Робочий час"
+
+#. module: uom
+#: sql_constraint:uom.category:0
+msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: model:ir.actions.act_window,help:uom.product_uom_form_action
+msgid ""
+"You must define a conversion rate between several Units of\n"
+"            Measure within the same category."
+msgstr ""
+"Ви повинні визначити коефіцієнт конверсії між кількома одиницями\n"
+"вимірювання в межах однієї категорії."
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cm
+msgid "cm"
+msgstr "см"
+
+#. module: uom
+#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr "приклад: 1 х (ця одиниця) = співвідношення х (основна одиниця)"
+
+#. module: uom
+#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr "приклад: 1 х (ця одиниця) = співвідношення х (основна одиниця)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_floz
+msgid "fl oz"
+msgstr "рідка унція"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_foot
+msgid "foot(ft)"
+msgstr "футів (фут)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal(s)"
+msgstr "галон(и)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_inch
+msgid "inch(es)"
+msgstr "дюйм(и)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kgm
+msgid "kg"
+msgstr "кг"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_km
+msgid "km"
+msgstr "км"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_lb
+msgid "lb(s)"
+msgstr "фунт(и)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_mile
+msgid "mile(s)"
+msgstr "миля(і)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_oz
+msgid "oz(s)"
+msgstr "унції(й)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_qt
+msgid "qt"
+msgstr "qt"

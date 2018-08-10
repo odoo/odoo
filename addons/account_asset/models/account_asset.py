@@ -347,7 +347,9 @@ class AccountAssetAsset(models.Model):
     def set_to_close(self):
         move_ids = self._get_disposal_moves()
         if move_ids:
-            self._return_disposal_view(move_ids)
+            return self._return_disposal_view(move_ids)
+        # Fallback, as if we just clicked on the smartbutton
+        return self.open_entries()
 
     @api.multi
     def set_to_draft(self):

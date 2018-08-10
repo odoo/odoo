@@ -1,0 +1,208 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_payment
+# 
+# Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__sale_order_ids_nbr
+msgid "# of Sales Orders"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> 現在付款"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "<i class=\"fa fa-check-circle\"/> Done"
+msgstr "<i class=\"fa fa-check-circle\"/>完成"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Waiting</span>"
+msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> 等待</span>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Done</span>"
+msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> 完成</span>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "<strong>Transactions</strong>"
+msgstr "<strong>交易</strong>"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/sale_order.py:72
+#, python-format
+msgid "A journal must be specified of the acquirer %s."
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/sale_order.py:65
+#, python-format
+msgid "A payment acquirer is required to create a transaction."
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/sale_order.py:36
+#, python-format
+msgid ""
+"A transaction can't be linked to sales orders having different currencies."
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/sale_order.py:41
+#, python-format
+msgid ""
+"A transaction can't be linked to sales orders having different partners."
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form_inherit_sale_payment
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__authorized_transaction_ids
+msgid "Authorized Transactions"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form_inherit_sale_payment
+msgid "Capture Transaction"
+msgstr "捕捉交易"
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:49
+#, python-format
+msgid ""
+"If we store your payment information on our server, subscription payments "
+"will be made automatically."
+msgstr "如果我們在伺服器存儲您的支付信息，將自動支付訂閱。"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/sale_order.py:55
+#, python-format
+msgid "Invalid token found! Token acquirer %s != %s"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/sale_order.py:58
+#, python-format
+msgid "Invalid token found! Token partner %s != %s"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:46
+#, python-format
+msgid "Pay"
+msgstr "付款"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:116
+#, python-format
+msgid "Pay Now"
+msgstr "立即支付"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "Pay with"
+msgstr "支付以"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
+msgid "Payment Acquirers"
+msgstr "收單"
+
+#. module: sale_payment
+#: model:ir.model,name:sale_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: sale_payment
+#: model:ir.model,name:sale_payment.model_sale_order
+msgid "Quotation"
+msgstr "報價"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:88
+#: model:ir.ui.view,arch_db:sale_payment.transaction_form_inherit_sale_payment
+#, python-format
+msgid "Sales Order(s)"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__sale_order_ids
+msgid "Sales Orders"
+msgstr "銷售訂單"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: invalid order."
+msgstr "處理您的付款有一個錯誤：無效的訂單狀態。"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr "處理您的付款時有一個錯誤：信用卡身份驗證問題。"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: transaction failed.<br/>"
+msgstr "處理您的付款時有一個錯誤：交易失敗。<br/>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: transaction issue.<br/>"
+msgstr "處理您的付款時有一個錯誤：交易問題。<br/>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was en error processing your payment: invalid credit card ID."
+msgstr "您有一個付款的錯誤：無效的信用卡號。"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__transaction_ids
+msgid "Transactions"
+msgstr "交易"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form_inherit_sale_payment
+msgid "Void Transaction"
+msgstr "無效交易"

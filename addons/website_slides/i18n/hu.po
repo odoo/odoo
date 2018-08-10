@@ -3,15 +3,15 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux, 2016
+# krnkris, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -61,17 +61,17 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
 msgid "# Views"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_views
 msgid "# of Embedded Views"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
 msgid "# of Website Views"
 msgstr ""
 
@@ -146,7 +146,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-code\"/> Embeded Views"
+msgid "<i class=\"fa fa-code\"/> Embedded Views"
 msgstr ""
 
 #. module: website_slides
@@ -208,6 +208,13 @@ msgstr "<i class=\"fa fa-thumbs-down\"/> Nemkedvelések"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:107
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
 msgstr ""
 
 #. module: website_slides
@@ -278,15 +285,26 @@ msgid "API Key"
 msgstr "API kulcs"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "Műveletek"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
 msgstr "Aktív"
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_slides_slides
+msgid "Add a new slide"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -296,32 +314,22 @@ msgstr "Archivált"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
-msgid "Authentified Users Only"
+msgid "Authenticated Users Only"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_5
-msgid "Awesome Timesheet by Odoo"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.tag,name:website_slides.tag1
-msgid "CMS"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see
 msgid "Can See"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_upload
 msgid "Can Upload"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Categories"
@@ -329,9 +337,9 @@ msgstr "Kategóriák"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:250
+#: code:addons/website_slides/static/src/js/slides_upload.js:252
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
@@ -340,8 +348,8 @@ msgid "Category"
 msgstr "Kategória"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -349,7 +357,7 @@ msgid "Channel"
 msgstr "Csatorna"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
 msgid "Channel Groups"
 msgstr ""
 
@@ -360,7 +368,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:170
+#: code:addons/website_slides/static/src/js/slides_upload.js:172
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
@@ -385,12 +393,7 @@ msgid "Channels"
 msgstr "Csatornák"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_10
-msgid "Company Culture"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
 msgid "Content"
 msgstr "Tartalom"
 
@@ -402,7 +405,7 @@ msgid "Content Preview"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:255
+#: code:addons/website_slides/controllers/main.py:256
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
@@ -410,7 +413,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:322
+#: code:addons/website_slides/models/slides.py:325
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -423,27 +426,37 @@ msgid "Create a Google Project and Get a Key"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_slide_channels
+msgid "Create a channel"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_ir_slide_category
+msgid "Create a new category"
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:219
+#: code:addons/website_slides/static/src/js/slides_upload.js:221
 #, python-format
 msgid "Create new tag '%s'"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
@@ -458,8 +471,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:60
 #: code:addons/website_slides/static/src/xml/website_slides.xml:62
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__description
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
@@ -473,50 +486,22 @@ msgid "Discard"
 msgstr "Elvetés"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_6
-msgid "Discover how easy marketing your business can be with Odoo"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_0
-msgid ""
-"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
-"\n"
-"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
-"\n"
-"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_1
-msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_2
-msgid ""
-"Discover the all-in-one business management software solution that fits any business size and use case.\n"
-"\n"
-"Learn more at https://odoo.com"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
 msgid "Dislikes"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_category__sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel__sequence
 msgid "Display order"
 msgstr "Sorrend megjelenítés"
 
@@ -527,12 +512,12 @@ msgid "Document"
 msgstr "Dokumentum"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_id
 msgid "Document ID"
 msgstr "Documentum azonosító ID"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "Document URL"
 msgstr ""
 
@@ -547,36 +532,27 @@ msgid "Download"
 msgstr "Letöltés"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_5
-msgid ""
-"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
-"\n"
-"Chrome: http://bit.ly/2613LcY\n"
-"iOS: http://bit.ly/1ZUZsZD"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
 msgid "Download Security"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid "Email template to send slide publication through email"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
 msgid "Email template used when sharing a slide"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
 msgid "Embed Code"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embedcount_ids
 msgid "Embed Count"
 msgstr ""
 
@@ -601,7 +577,7 @@ msgid "Employee Channel"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_error_msg
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Error Message"
 msgstr "Hibaüzenet"
@@ -617,30 +593,43 @@ msgid "Featured Presentation"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_1
-msgid "Featured Presentations"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Featuring Policy"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/controllers/main.py:263
+#: code:addons/website_slides/controllers/main.py:266
 #: code:addons/website_slides/static/src/js/slides_upload.js:89
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_channel_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Követők (Csatornák)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see_full
 msgid "Full Access"
 msgstr "Teljes hozzáférés"
 
@@ -650,7 +639,7 @@ msgid "General"
 msgstr "Általános"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
 msgid "Google Doc Key"
 msgstr ""
 
@@ -670,28 +659,46 @@ msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
+#: model:ir.model.fields,help:website_slides.field_slide_channel__group_ids
 msgid "Groups allowed to see presentations in this channel"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
 msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
 msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
 msgid "Image"
 msgstr "Kép"
 
@@ -706,7 +713,7 @@ msgid "Infographics"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:285
+#: code:addons/website_slides/controllers/main.py:288
 #, python-format
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
@@ -721,29 +728,35 @@ msgid "Invalid file type. Please select pdf or image file"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
+msgid "Is Follower"
+msgstr "Ő egy követő"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag____last_update
 msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítette"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
@@ -753,33 +766,35 @@ msgid "Latest Published"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_8
-msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.tag,name:website_slides.tag2
-msgid "Marketing"
-msgstr "Marketing"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
 msgid "Medium"
 msgstr "Közepes"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
 msgid "Message to display when not accessible due to access rights"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
 msgid "Mime-type"
 msgstr ""
 
@@ -797,9 +812,9 @@ msgid "Most Voted"
 msgstr "Legtöbb szavazatot kapott"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__name
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
@@ -841,79 +856,58 @@ msgid "No presentation published yet."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_documents
 msgid "Number of Documents"
 msgstr "Dokumentumok száma"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographics
 msgid "Number of Infographics"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentations
 msgid "Number of Presentations"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_videos
 msgid "Number of Videos"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_2
-msgid "Odoo All-in-One Software Demonstration"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of error"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_1
-msgid "Odoo CRM"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_2
-#: model:slide.tag,name:website_slides.tag5
-msgid "Odoo Days"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_7
-msgid "Odoo Inventory"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_0
-msgid "Odoo MRP"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_6
-msgid "Odoo Marketing"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_8
-msgid "Odoo Sales"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_3
-msgid "Odoo Sign Demonstration"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_9
-msgid "Open Days 2014 Infographic"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_11
-msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr ""
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: website_slides
 #. openerp-web
@@ -940,20 +934,20 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
-#: code:addons/website_slides/models/slides.py:545
+#: code:addons/website_slides/models/slides.py:328
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:247
+#: code:addons/website_slides/controllers/main.py:248
 #, python-format
 msgid "Please enter valid youtube or google doc url"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
 msgstr ""
@@ -965,7 +959,6 @@ msgid "Presentation Published"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_footer
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
@@ -992,7 +985,7 @@ msgid "Public Channel"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
 msgid "Publish Date"
 msgstr ""
 
@@ -1002,7 +995,7 @@ msgid "Published"
 msgstr "Közzétett"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "Published Template"
 msgstr ""
 
@@ -1058,8 +1051,8 @@ msgid "Select page to start with"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
@@ -1084,7 +1077,7 @@ msgid "Share with a friend"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
 msgid "Shared Template"
 msgstr ""
 
@@ -1104,15 +1097,15 @@ msgid "Slide Tag"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
 msgid "Slide to Promote"
 msgstr ""
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
 #: model:ir.model,name:website_slides.model_slide_slide
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
 #: model:ir.ui.menu,name:website_slides.menu_website_slides_root
 #: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1131,24 +1124,16 @@ msgid "Sorry, but nothing matches your search criteria"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_3
-msgid ""
-"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
-"\n"
-"Discover more at https://www.odoo.com/page/sign"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "Címke"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:273
+#: code:addons/website_slides/static/src/js/slides_upload.js:275
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
 #: model:ir.ui.menu,name:website_slides.menu_slide_tag
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
@@ -1166,11 +1151,18 @@ msgid "The"
 msgstr "A"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1178,7 +1170,7 @@ msgid "The slide name must be unique within a channel"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
 msgstr ""
 
@@ -1190,7 +1182,7 @@ msgid "This channel is private and its content is restricted to some users."
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:251
+#: code:addons/website_slides/controllers/main.py:252
 #, python-format
 msgid ""
 "This video already exists in this channel <a target=\"_blank\" "
@@ -1198,7 +1190,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_thumb
 msgid "Thumbnail"
 msgstr "Hüvelykujj"
 
@@ -1206,29 +1198,29 @@ msgstr "Hüvelykujj"
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:42
 #: code:addons/website_slides/static/src/xml/website_slides.xml:44
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 #, python-format
 msgid "Title"
 msgstr "Megsz."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__total
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total
 msgid "Total"
 msgstr "Összesen"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 msgid "Total # Views"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__index_content
 msgid "Transcript"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
 msgstr "Típus"
@@ -1245,7 +1237,7 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:534
+#: code:addons/website_slides/models/slides.py:540
 #, python-format
 msgid "Unknown document"
 msgstr ""
@@ -1256,7 +1248,19 @@ msgid "Unpublished"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Olvasatlan üzenetek számlálója"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
 msgstr ""
 
@@ -1314,9 +1318,15 @@ msgid "Views ."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
 msgid "Visibility"
 msgstr "Láthatóság"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_published
+msgid "Visible in Website"
+msgstr "Látható a weboldalon"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1324,17 +1334,45 @@ msgid "Waiting for validation"
 msgstr "Jóváhagyásra vár"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_7
-msgid ""
-"Warehouse management software for the 21st century.\n"
-"\n"
-"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
 msgstr "Weboldal"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_message_ids
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
+msgid "Website URL"
+msgstr "Honlap URL"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_description
+msgid "Website meta description"
+msgstr "Honlap meta leírás"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_keywords
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Honlap meta kulcsszavak"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_title
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_title
+msgid "Website meta title"
+msgstr "Honlap meta cím"
 
 #. module: website_slides
 #. openerp-web
@@ -1365,12 +1403,12 @@ msgid "Youtube or Google Doc URL"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
 msgid "Youtube or Google Document ID"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
 msgstr ""
 

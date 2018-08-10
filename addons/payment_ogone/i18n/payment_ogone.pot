@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,8 +38,23 @@ msgid "API User Password"
 msgstr ""
 
 #. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_alias_usage
 msgid "Alias Usage"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
 msgstr ""
 
 #. module: payment_ogone
@@ -73,6 +88,16 @@ msgid "If you want to use Ogone Aliases, this default Alias Usage will be presen
 msgstr ""
 
 #. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:249
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
@@ -96,6 +121,11 @@ msgid "PSPID"
 msgstr ""
 
 #. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr ""
@@ -106,6 +136,16 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
+msgid "Provider"
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr ""
@@ -113,6 +153,21 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
 msgstr ""
 
 #. module: payment_ogone

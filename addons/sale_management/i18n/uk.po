@@ -3,57 +3,40 @@
 # * sale_management
 # 
 # Translators:
-# Олександр Воронюк <pactallc@gmail.com>, 2017
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# Bohdan Lisnenko, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:09+0000\n"
+"PO-Revision-Date: 2018-03-22 14:09+0000\n"
+"Last-Translator: Bohdan Lisnenko, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: sale_management
 #. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:79
-#, python-format
-msgid ""
-"<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
-"line.</i>"
-msgstr ""
-"<b>Запросіть продавців або менеджерів з продажу</b>  через "
-"email.<br/><i>Введіть одну електронну пошту рядок.</i>"
-
-#. module: sale_management
-#. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:60
+#: code:addons/sale_management/static/src/js/tour.js:64
 #, python-format
 msgid ""
 "<p><b>Print this quotation.</b> If not yet done, you will be requested to "
 "set your company data and to select a document layout.</p>"
 msgstr ""
+"<p><b>Надрукуйте цю комерційну пропозицію.</b> Якщо це ще не зроблено, вам "
+"буде запропоновано встановити дані вашої компанії та вибрати макет "
+"документа.</p>"
 
 #. module: sale_management
 #. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:33
+#: code:addons/sale_management/static/src/js/tour.js:35
 #, python-format
-msgid "Click here to add some lines to your quotations."
+msgid "Click here to add some products or services to your quotation."
 msgstr ""
-"Натисніть тут, щоб додати деякі рядки до вашої комерційної пропозиції."
-
-#. module: sale_management
-#. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:75
-#, python-format
-msgid "Configuration options are available in the Settings app."
-msgstr "Параметри конфігурації доступні в застосунку Налаштування"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_view_form
@@ -68,10 +51,12 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually point"
 " to the next logical actions.</i>"
 msgstr ""
+"Давайте створимо нову комерційну пропозицію.<br/><i>Зауважте, що кольорові "
+"кнопки зазвичай вказують на наступні логічні дії.</i>"
 
 #. module: sale_management
 #. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:55
+#: code:addons/sale_management/static/src/js/tour.js:59
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
@@ -84,20 +69,18 @@ msgstr ""
 #, python-format
 msgid "Organize your sales activities with the <b>Sales Management app</b>."
 msgstr ""
+"Організовуйте свої продажі за допомогою <b>додатку Управління продажами</b>."
 
 #. module: sale_management
 #. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:38
+#: code:addons/sale_management/static/src/js/tour.js:40
 #, python-format
-msgid ""
-"Select a product, or create a new one on the fly. The product will define "
-"the default sales price (that you can change), taxes and description "
-"automatically."
+msgid "Select a product, or create a new one on the fly."
 msgstr ""
 
 #. module: sale_management
 #. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:65
+#: code:addons/sale_management/static/src/js/tour.js:69
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
@@ -105,7 +88,7 @@ msgstr ""
 
 #. module: sale_management
 #. openerp-web
-#: code:addons/sale_management/static/src/js/tour.js:69
+#: code:addons/sale_management/static/src/js/tour.js:73
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""

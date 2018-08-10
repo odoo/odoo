@@ -5,13 +5,16 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,9 +33,49 @@ msgid "Access Token Validity"
 msgstr "Geldigheid toegangstoken"
 
 #. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Vaste huishoudelijke toeslagen"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Vaste internationale vergoedingen"
+
+#. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
 msgstr "Hoe uw Paypal account te configureren?"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Handmatige instellingen"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -52,6 +95,11 @@ msgstr ""
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
@@ -80,6 +128,11 @@ msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr "Paypal: data ontvangen met missende referentie (%s) of txn_id (%s)"
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Provider"
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
 msgid "Rest API Password"
 msgstr "Rest API wachtwoord"
@@ -88,6 +141,16 @@ msgstr "Rest API wachtwoord"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
 msgid "Rest API Username"
 msgstr "Rest API gebruikersnaam"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
@@ -112,3 +175,18 @@ msgstr "Gebruik IPN"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
 msgid "Use Rest API"
 msgstr "Gebruik Rest API"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Variabele binnenlandse kosten (in percentage)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Variabele internationale vergoedingen (in percentage)"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Overschrijving"

@@ -18,10 +18,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -391,12 +391,12 @@ msgstr "Kendimi şanslı hissediyorum."
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky today !"
-msgstr ""
+msgstr "Bugün kendimi şanslı hissediyorum."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "I'm not feeling rich"
-msgstr ""
+msgstr "Kendimi zengin hissetmiyorum"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -412,7 +412,7 @@ msgstr "ID"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__state
 msgid "Is an order or a payment"
-msgstr ""
+msgstr "Sipariş ya da ödeme"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert____last_update
@@ -453,6 +453,7 @@ msgid "List"
 msgstr "Liste"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__group_lunch_user
 #: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
 msgid "Lunch"
@@ -622,8 +623,8 @@ msgstr "Sipariş"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Order Month"
-msgstr "Sipariş Ay"
+msgid "Order Date"
+msgstr "Sipariş Tarihi"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -809,7 +810,7 @@ msgstr "Siparişini seç"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Select your vendor"
-msgstr ""
+msgstr "Tedarikçinizi seçin"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -902,6 +903,11 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: lunch
+#: model:ir.model,name:lunch.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier
@@ -911,8 +917,8 @@ msgstr "Tedarikçi"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Vendor Orders by Month"
-msgstr "Aylara Göre Siparişlerin Tedarikçisi"
+msgid "Vendor Orders by Date"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday

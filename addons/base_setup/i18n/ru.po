@@ -4,23 +4,24 @@
 # 
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Collex100 <manyatovskiy@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Collex100, 2017
 # KingOPl Slav <87slava13@gmail.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
 # Андрей Гусев <gaussgss@gmail.com>, 2017
 # VItaly Skopin <skopin@lab49.ru>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Yuriy Ney <k_wizard@mail.ru>, 2018
+# Denis Trepalin <zekarious@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
+"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,8 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Сохраните</strong> эту страницу и возвращайтесь, чтобы активировать "
+"функцию"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -40,37 +43,37 @@ msgid "Access Rights"
 msgstr "Права доступа"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_calendar
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Add fun feedback and motivate your employees"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr ""
 "Разрешить пользователям синхронизировать свой календарь с календарём Google"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_import
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr ""
 "Позволяет пользователям импортировать данные из файлов CSV, XLS, XLSX, ODS"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
 msgstr "Разрешена работа в мультивалютной среде."
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
 msgid "Asterisk (VoIP)"
 msgstr "Астериск (VoIP)"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_drive
 msgid "Attach Google documents to any record"
 msgstr "Прилагать документы Google к любой записи"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automate inter-company transactions"
-msgstr "Автоматизация межфирменных транзакций"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -91,7 +94,7 @@ msgid "Change Document Template"
 msgstr "Изменить шаблон документа"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:100
+#: code:addons/base_setup/models/res_config_settings.py:98
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Выберите шаблон документа"
@@ -102,7 +105,7 @@ msgid "Choose your document's header and footer layout"
 msgstr "Выберите расположение заголовка и нижнего колонтитула"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
 msgid "Collaborative Pads"
 msgstr "Совместные планшеты"
 
@@ -117,7 +120,7 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
 msgstr "Компания"
 
@@ -137,19 +140,18 @@ msgid "Create and attach Google Drive documents to any record"
 msgstr "Создание и прикрепление документов Google Drive к любой записи"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
 msgstr "Пользовательский колонтитул отчета"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
 msgstr "Права доступа по умолчанию"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Template"
 msgstr "Шаблон документа"
@@ -160,7 +162,7 @@ msgid "Edit Header"
 msgstr "Редактировать Заголовок"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
 msgid "External Email Servers"
 msgstr "Внешние Почтовые Сервера"
 
@@ -170,7 +172,7 @@ msgid "Extract and analyze Odoo data from Google Spreadsheet"
 msgstr "Извлечь и проанализировать данные Odoo из Google Spreadsheet"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
 msgid "Footer text displayed at the bottom of all reports."
 msgstr "Текст подвала отображается в нижней части всех отчётов."
 
@@ -201,9 +203,14 @@ msgid "Google Drive"
 msgstr "Диск Google"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_spreadsheet
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_spreadsheet
 msgid "Google Spreadsheet"
 msgstr "Google Электронные таблицы"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP маршрутизация"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -217,22 +224,22 @@ msgstr "Интеграции"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Inter-Company Transactions"
-msgstr "Внутренние транзакции"
+msgid "Inter Company Flows"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
 msgstr "LDAP Авторизация"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
 msgid "Manage Inter Company"
 msgstr "Управление межфирменным взаимодействием"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_company
 msgid "Manage multiple companies"
 msgstr "Управление несколькими компаниями"
 
@@ -242,7 +249,7 @@ msgid "Manage multiple legal entities with separate accounting"
 msgstr "Управление несколькими юридическими лицами с раздельным учётом"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
 msgid "Multi-Currencies"
 msgstr "Мультивалютность"
 
@@ -257,7 +264,7 @@ msgid "OAuth Authentication"
 msgstr "OAuth Авторизация"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__paperformat_id
 msgid "Paper format"
 msgstr "Размер бумаги"
 
@@ -282,12 +289,12 @@ msgid "Settings"
 msgstr "Настройки"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_share_partner
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_share_partner
 msgid "Share partners to all companies"
 msgstr "Поделиться партнерами со всеми компаниями"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_res_config_settings_company_share_partner
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
@@ -296,6 +303,11 @@ msgstr ""
 "Поделитесь своими партнёрами со всеми компаниями, определёнными в вашем экземпляре.\n"
 "* Установлено: Партнёры являются видимыми для каждой компании, даже если компания определена у партнёра.\n"
 "* Снято: Каждая компания может видеть только своего партнёра (партнёров компании, где определена). Партнёры, не относящиеся к какой-нибудь компании, видимы для всех компаний."
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -308,7 +320,7 @@ msgid "Template"
 msgstr "Шаблон"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
 msgid "Translate Your Website with Gengo"
 msgstr ""
 
@@ -330,7 +342,7 @@ msgstr ""
 "...)."
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
 msgstr "Использовать внешние аутентификационные сервисы (OAuth)"
 
@@ -348,3 +360,8 @@ msgstr "Пользователи"
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "the creation of documents between your companies"
+msgstr ""

@@ -900,6 +900,7 @@ var StatementModel = BasicModel.extend({
                 }
             });
             total = Math.round(total*1000)/1000 || 0;
+            amount_currency = Math.round(amount_currency);
             line.balance = {
                 amount: total,
                 amount_str: field_utils.format.monetary(Math.abs(total), {}, formatOptions),

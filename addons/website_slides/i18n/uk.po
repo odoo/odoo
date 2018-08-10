@@ -3,24 +3,24 @@
 # * website_slides
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Martin Trigaux, 2018
+# Zoriana Zaiats, 2018
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -41,6 +41,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Вітаємо,</p>\n"
+"<p>\n"
+"    ${user.name} поділився ${object.slide_type} <strong>${object.name}</strong> з вами!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Переглянути <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -61,19 +76,34 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Вітаємо,</p>\n"
+"<p>\n"
+"    Новий ${object.slide_type} <strong>${object.name}</strong> був опублікований у ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Переглянути <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
 msgid "# Views"
 msgstr "К-сть переглядів"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_views
 msgid "# of Embedded Views"
 msgstr "к-сть вбудованих переглядів"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
 msgid "# of Website Views"
 msgstr "к-сть переглядів на сайті"
 
@@ -88,6 +118,8 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
+"(Не)архівований канал автоматично (не)архівує ці слайди. Чи хочете ви "
+"продовжити?"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -154,8 +186,8 @@ msgstr "<i class=\"fa fa-cloud-upload\"/> Завантажити"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-code\"/> Embeded Views"
-msgstr "<i class=\"fa fa-code\"/> Вбудовані перегляди"
+msgid "<i class=\"fa fa-code\"/> Embedded Views"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -223,6 +255,13 @@ msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgstr "<i class=\"fa fa-thumbs-up\"/> Сподобалось"
 
 #. module: website_slides
+#: code:addons/website_slides/models/slides.py:107
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
@@ -238,7 +277,7 @@ msgid ""
 "                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Ґуґл+"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Гугл+"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -299,7 +338,13 @@ msgstr "Мітка повинна бути унікальною!"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "Ключ API "
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
+msgid "Action Needed"
+msgstr "Дія необхідна"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -307,10 +352,15 @@ msgid "Actions"
 msgstr "Дії"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
 msgstr "Активно"
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_slides_slides
+msgid "Add a new slide"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -320,32 +370,22 @@ msgstr "Заархівовано"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
-msgid "Authentified Users Only"
-msgstr "Тільки для зареєстрованих користувачів"
+msgid "Authenticated Users Only"
+msgstr "Тільки аутентифіковані користувачі"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_5
-msgid "Awesome Timesheet by Odoo"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.tag,name:website_slides.tag1
-msgid "CMS"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see
 msgid "Can See"
 msgstr "Можна переглядати"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_upload
 msgid "Can Upload"
 msgstr "Можна завантажувати"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Categories"
@@ -353,9 +393,9 @@ msgstr "Категорії"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:250
+#: code:addons/website_slides/static/src/js/slides_upload.js:252
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
@@ -364,8 +404,8 @@ msgid "Category"
 msgstr "Категорія"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -373,7 +413,7 @@ msgid "Channel"
 msgstr "Канал"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
 msgid "Channel Groups"
 msgstr "Групи каналу"
 
@@ -384,7 +424,7 @@ msgstr "Налаштування каналу"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:170
+#: code:addons/website_slides/static/src/js/slides_upload.js:172
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
@@ -411,12 +451,7 @@ msgid "Channels"
 msgstr "Канали"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_10
-msgid "Company Culture"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
 msgid "Content"
 msgstr "Вміст"
 
@@ -428,15 +463,17 @@ msgid "Content Preview"
 msgstr "Попередній перегляд"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:255
+#: code:addons/website_slides/controllers/main.py:256
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"Не вдалося отримати дані з url. Документ або право доступу недоступні.\n"
+"Ось отримана відповідь: %s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:322
+#: code:addons/website_slides/models/slides.py:325
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -449,32 +486,42 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
+msgstr "Створіть проект Google і отримайте ключ"
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_slide_channels
+msgid "Create a channel"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.actions.act_window,help:website_slides.action_ir_slide_category
+msgid "Create a new category"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:219
+#: code:addons/website_slides/static/src/js/slides_upload.js:221
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "Створити нову мітку '%s'"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_public
@@ -489,8 +536,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:60
 #: code:addons/website_slides/static/src/xml/website_slides.xml:62
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__description
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
@@ -504,50 +551,22 @@ msgid "Discard"
 msgstr "Відмінити"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_6
-msgid "Discover how easy marketing your business can be with Odoo"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_0
-msgid ""
-"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
-"\n"
-"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
-"\n"
-"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_1
-msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_2
-msgid ""
-"Discover the all-in-one business management software solution that fits any business size and use case.\n"
-"\n"
-"Learn more at https://odoo.com"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
 msgid "Dislikes"
 msgstr "Несподобалось"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_category__sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel__sequence
 msgid "Display order"
 msgstr "Порядок відображення"
 
@@ -558,12 +577,12 @@ msgid "Document"
 msgstr "Документ"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_id
 msgid "Document ID"
-msgstr "ІД документу"
+msgstr "ID документу"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "Document URL"
 msgstr "URL документу"
 
@@ -578,36 +597,27 @@ msgid "Download"
 msgstr "Завантажити"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_5
-msgid ""
-"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
-"\n"
-"Chrome: http://bit.ly/2613LcY\n"
-"iOS: http://bit.ly/1ZUZsZD"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
 msgid "Download Security"
 msgstr "Безпека завантаження"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid "Email template to send slide publication through email"
 msgstr "Шаблон листа для надсилання нових публікацій по ел. пошті"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
 msgid "Email template used when sharing a slide"
 msgstr "Шаблон листа для поширення відео"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
 msgid "Embed Code"
 msgstr "Код для влаштування"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embedcount_ids
 msgid "Embed Count"
 msgstr "Лічильник влаштувань"
 
@@ -632,7 +642,7 @@ msgid "Employee Channel"
 msgstr "Канал для співробітників"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_error_msg
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Error Message"
 msgstr "Повідомлення про помилку"
@@ -648,47 +658,60 @@ msgid "Featured Presentation"
 msgstr "Наявна презентація"
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_1
-msgid "Featured Presentations"
-msgstr "Наявні презентації"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
 msgstr "Наявний слайд"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Featuring Policy"
 msgstr "Плавила включення"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/controllers/main.py:263
+#: code:addons/website_slides/controllers/main.py:266
 #: code:addons/website_slides/static/src/js/slides_upload.js:89
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
+msgstr "Файл занадто великий. Розмір сайту не може перевищувати 25MB"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_channel_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Підписники (Канали)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see_full
 msgid "Full Access"
 msgstr "Повний доступ"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "General"
-msgstr "Загальне"
+msgstr "Загальний"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
 msgid "Google Doc Key"
 msgstr "Ключ Google Doc"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Google Drive API ключ "
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -701,12 +724,12 @@ msgid "Group By"
 msgstr "Групувати за"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
+#: model:ir.model.fields,help:website_slides.field_slide_channel__group_ids
 msgid "Groups allowed to see presentations in this channel"
 msgstr "Групи мають доступ до перегляду вмісту каналу"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
 msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
@@ -715,16 +738,34 @@ msgstr ""
 "користувач може завантажувати вміст."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
 msgid "Image"
 msgstr "Зображення"
 
@@ -739,44 +780,52 @@ msgid "Infographics"
 msgstr "Інфографіки"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:285
+#: code:addons/website_slides/controllers/main.py:288
 #, python-format
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
+"Внутрішня помилка серверу, будь ласка, спробуйте пізніше або зв'яжіться з адміністратором.\n"
+"Це помилкове повідомлення: %s"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:84
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
-msgstr ""
+msgstr "Недійсний тип файлу. Будь ласка, оберіть файл pdf або зображення"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
@@ -786,33 +835,37 @@ msgid "Latest Published"
 msgstr "Найсвіжіша публікація"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_8
-msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
 msgstr "Сподобалось"
 
 #. module: website_slides
-#: model:slide.tag,name:website_slides.tag2
-msgid "Marketing"
-msgstr "Маркетинг"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
 msgid "Medium"
-msgstr "Засіб розповсюдження"
+msgstr "Середній"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
-msgid "Message to display when not accessible due to access rights"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
+msgid "Message Delivery error"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+#: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
+msgid "Message to display when not accessible due to access rights"
+msgstr ""
+"Повідомлення відображатиметься, коли неможливо отримати доступ через права "
+"доступу"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
 msgid "Mime-type"
 msgstr "Mime-тип"
 
@@ -830,9 +883,9 @@ msgid "Most Voted"
 msgstr "Найбільше голосів"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__name
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
@@ -841,8 +894,7 @@ msgstr "Назва"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr ""
-"Нова публікація ${object.slide_type} на каналі ${object.channel_id.name}"
+msgstr "Новеий ${object.slide_type} опубліковано на ${object.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -875,79 +927,58 @@ msgid "No presentation published yet."
 msgstr "Жодної презентації поки що не опубліковано."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_documents
 msgid "Number of Documents"
 msgstr "Кількість документів"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographics
 msgid "Number of Infographics"
 msgstr "Кількість інфографік"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentations
 msgid "Number of Presentations"
 msgstr "Кількість перезентацій"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_videos
 msgid "Number of Videos"
 msgstr "Кількість відео"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_2
-msgid "Odoo All-in-One Software Demonstration"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of error"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_1
-msgid "Odoo CRM"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, які потебують дії"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_2
-#: model:slide.tag,name:website_slides.tag5
-msgid "Odoo Days"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_7
-msgid "Odoo Inventory"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_0
-msgid "Odoo MRP"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_6
-msgid "Odoo Marketing"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_8
-msgid "Odoo Sales"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_3
-msgid "Odoo Sign Demonstration"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_9
-msgid "Open Days 2014 Infographic"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_11
-msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr ""
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
 
 #. module: website_slides
 #. openerp-web
@@ -974,20 +1005,20 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr "Будь ласка <a href=\"/web?redirect=%s\">увійдіть</a>, щоб проголосувати"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
-#: code:addons/website_slides/models/slides.py:545
+#: code:addons/website_slides/models/slides.py:328
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Будь ласка введіть посилання на Youtube чи Google Doc"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:247
+#: code:addons/website_slides/controllers/main.py:248
 #, python-format
 msgid "Please enter valid youtube or google doc url"
 msgstr "Будь ласка введіть посилання на Youtube чи Google Doc"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
 msgstr "Презентація"
@@ -999,7 +1030,6 @@ msgid "Presentation Published"
 msgstr "Презентацію опубліковано"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_footer
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
@@ -1026,7 +1056,7 @@ msgid "Public Channel"
 msgstr "Публічний канал"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
 msgid "Publish Date"
 msgstr "Дата публікації"
 
@@ -1036,7 +1066,7 @@ msgid "Published"
 msgstr "Опубліковано"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "Published Template"
 msgstr "Шаблон опублікування"
 
@@ -1056,6 +1086,8 @@ msgid ""
 "Review your channel settings to promote your most viewed or recent published"
 " presentation"
 msgstr ""
+"Перегляньте налаштування вашого каналу, щоб рекламувати найпопулярнішу або "
+"останню опубліковану презентацію"
 
 #. module: website_slides
 #. openerp-web
@@ -1092,8 +1124,8 @@ msgid "Select page to start with"
 msgstr "Для початку оберіть сторінку"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
 msgid "Sequence"
 msgstr "Послідовність"
 
@@ -1118,7 +1150,7 @@ msgid "Share with a friend"
 msgstr "Поділитися з другом"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
 msgid "Shared Template"
 msgstr "Шаблон поширення"
 
@@ -1138,15 +1170,15 @@ msgid "Slide Tag"
 msgstr "Мітка слайду"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
 msgid "Slide to Promote"
 msgstr "Рекламувати слайд"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
 #: model:ir.model,name:website_slides.model_slide_slide
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
 #: model:ir.ui.menu,name:website_slides.menu_website_slides_root
 #: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1165,24 +1197,16 @@ msgid "Sorry, but nothing matches your search criteria"
 msgstr "Вибачте але нічого не знайдено по вашому запиту"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_3
-msgid ""
-"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
-"\n"
-"Discover more at https://www.odoo.com/page/sign"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "Мітка"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:273
+#: code:addons/website_slides/static/src/js/slides_upload.js:275
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
 #: model:ir.ui.menu,name:website_slides.menu_slide_tag
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
@@ -1200,11 +1224,19 @@ msgid "The"
 msgstr "В"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Тип документа буде встановлено автоматично на основі URL-адреси документа та"
+" властивостей (наприклад, висота та ширина для презентації та документа)."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL-адреса повністю, для доступу до документації через сайт"
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1212,7 +1244,7 @@ msgid "The slide name must be unique within a channel"
 msgstr "Назва слайду повинна бути унікальною у каналі"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
 msgstr "URL іншого сайту"
 
@@ -1225,7 +1257,7 @@ msgstr ""
 "Канал є приватним і його вміст є обмеженим для певного кола користувачів."
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:251
+#: code:addons/website_slides/controllers/main.py:252
 #, python-format
 msgid ""
 "This video already exists in this channel <a target=\"_blank\" "
@@ -1235,7 +1267,7 @@ msgstr ""
 "href=\"/slides/slide/%s\">натисніть тут, щоб переглянути його </a>"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_thumb
 msgid "Thumbnail"
 msgstr "Мініатюра"
 
@@ -1243,29 +1275,29 @@ msgstr "Мініатюра"
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:42
 #: code:addons/website_slides/static/src/xml/website_slides.xml:44
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
 #, python-format
 msgid "Title"
 msgstr "Заголовок"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+#: model:ir.model.fields,field_description:website_slides.field_slide_category__total
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total
 msgid "Total"
 msgstr "Разом"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 msgid "Total # Views"
 msgstr "Всього к-сть переглядів"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__index_content
 msgid "Transcript"
 msgstr "Транскрипція"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
 msgstr "Тип"
@@ -1282,7 +1314,7 @@ msgid "Uncategorized presentation"
 msgstr "Презентація без категорії"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:534
+#: code:addons/website_slides/models/slides.py:540
 #, python-format
 msgid "Unknown document"
 msgstr "Невідомий документ"
@@ -1290,10 +1322,22 @@ msgstr "Невідомий документ"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "Неопубліковано"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
 msgstr "Групи завантаження"
 
@@ -1354,9 +1398,15 @@ msgid "Views ."
 msgstr "Переглядів ."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
 msgid "Visibility"
 msgstr "Доступність"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_published
+msgid "Visible in Website"
+msgstr "Видимий на сайті"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1364,17 +1414,45 @@ msgid "Waiting for validation"
 msgstr "Очікує на підтвердження"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_7
-msgid ""
-"Warehouse management software for the 21st century.\n"
-"\n"
-"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "Веб-сайт"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з вебсайту"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
+msgid "Website URL"
+msgstr "URL сайту"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на сайті"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_description
+msgid "Website meta description"
+msgstr "Мета-опис сайту"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_keywords
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Мета-ключі сайту"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_title
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_title
+msgid "Website meta title"
+msgstr "Мета-заголовок сайту"
 
 #. module: website_slides
 #. openerp-web
@@ -1405,12 +1483,12 @@ msgid "Youtube or Google Doc URL"
 msgstr "Youtube або Google Doc URL"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
 msgid "Youtube or Google Document ID"
 msgstr "Youtube або Google Document ID"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
 msgstr "Youtube або Google Document URL"
 
@@ -1453,7 +1531,7 @@ msgstr "результати, що задовольняють пошуковий
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "suggest_slide.name"
-msgstr ""
+msgstr "suggest_slide.name"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1463,4 +1541,4 @@ msgstr "щоб відправити це"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com"
-msgstr ""
+msgstr "your-friend@domain.com"

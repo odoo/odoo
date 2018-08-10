@@ -8,10 +8,10 @@
 # gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,15 @@ msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr "%(empl_name)s ettől %(check_in)s eddig %(check_out)s"
 
 #. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:109
+#, python-format
+msgid ""
+"<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
+"right, please contact Human Resource staff"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
 msgstr ""
@@ -52,14 +61,14 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:117
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:124
 #, python-format
 msgid "An apple a day keeps the doctor away"
 msgstr "Egy alma naponta segít elkerülni a doktort"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:106
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr "Ismét egy jó munkanap! Nemsokára találkozunk!"
@@ -68,6 +77,7 @@ msgstr "Ismét egy jó munkanap! Nemsokára találkozunk!"
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__group_hr_attendance_user
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -123,7 +133,7 @@ msgstr ""
 "kijelentkezett ekkor %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:108
+#: code:addons/hr_attendance/models/hr_employee.py:109
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
@@ -131,7 +141,7 @@ msgstr ""
 "egyszerre."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:122
+#: code:addons/hr_attendance/models/hr_employee.py:123
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -158,20 +168,6 @@ msgid "Check Out"
 msgstr "Kilépés"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:53
-#, python-format
-msgid "Check in"
-msgstr "Belépés"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:49
-#, python-format
-msgid "Check out"
-msgstr "Kilépés"
-
-#. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
 msgstr ""
@@ -183,7 +179,7 @@ msgstr "Belépett"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:109
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:122
 #, python-format
 msgid "Checked in at"
 msgstr "Ekkor lépett be"
@@ -195,28 +191,22 @@ msgstr "Kilépett"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:97
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:113
 #, python-format
 msgid "Checked out at"
 msgstr "Ekkor lépett ki"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:27
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
 #, python-format
-msgid "Click to check in"
-msgstr "Kattintson belépéshez"
+msgid "Click to"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:31
-#, python-format
-msgid "Click to check out"
-msgstr "Kattintson kilépéshez"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:12
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 #, python-format
 msgid "Company Logo"
@@ -248,6 +238,11 @@ msgid "Current Month"
 msgstr "Jelenlegi hónap"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Date"
+msgstr "Dátum"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 msgid "Department"
 msgstr "Osztály, részleg"
@@ -259,7 +254,7 @@ msgstr "Megjelenített név"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:123
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:130
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
@@ -268,7 +263,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:115
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:122
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr ""
@@ -311,6 +306,7 @@ msgid "Employees"
 msgstr "Alkalmazottak"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__has_group_hr_attendance_use_pin
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "PIN használatának engedélyezése"
@@ -324,64 +320,73 @@ msgstr "Hiba : Nem találja a felhasználóhoz kapcsolt alkalmazottat"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:35
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:48
 #, python-format
 msgid "Error : Could not find employee linked to user."
 msgstr "Hiba : Nem találja a felhasználóhoz kapcsolt alkalmazottat."
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:81
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
 #, python-format
 msgid "Error: could not find corresponding employee."
 msgstr "Hiba : Nem találja az ide vonatkozó alkalmazottat"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:70
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:77
 #, python-format
 msgid "First come, first served"
 msgstr "Először jön, először kap kiszolgálást"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:92
 #, python-format
 msgid "Glad to have you back, it's been a while!"
 msgstr "Örülünk, hogy ismét itt van, már eltelt egy kis idő!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:76
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:135
+#, python-format
+msgid "Go back"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:83
 #, python-format
 msgid "Good afternoon"
 msgstr "Kellemes délutánt"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:78
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Good evening"
 msgstr "Jó estét"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:73
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
 #, python-format
 msgid "Good morning"
 msgstr "Jó reggelt"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:64
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:71
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:87
 #, python-format
 msgid "Good night"
 msgstr "Jó éjt"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:100
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:111
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:129
 #, python-format
 msgid "Goodbye"
 msgstr "Viszontlátásra"
@@ -393,28 +398,28 @@ msgstr "Csoportosítás"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:127
 #, python-format
 msgid "Have a good afternoon"
 msgstr "Legyen jó délutánja"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:118
 #, python-format
 msgid "Have a good day!"
 msgstr "Szép napot kívánok!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:125
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:132
 #, python-format
 msgid "Have a good evening"
 msgstr "Jó estét kívánok"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
 #, python-format
 msgid "Have a nice lunch!"
 msgstr "Jó étvágyat kívánok!"
@@ -436,14 +441,14 @@ msgstr "ID azonosító az azonosításához."
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:88
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:95
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
 msgstr "Ha egy munkát megéri végrehajtani, megéri jól csinálni!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:134
 #, python-format
 msgid "Invalid request, please return to the main menu."
 msgstr "Érvénytelen igény, kérem térjen vissza a fő menühöz."
@@ -485,6 +490,7 @@ msgstr "Menedzser"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__manual_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__has_group_hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "Kézi jelenlét"
@@ -493,11 +499,6 @@ msgstr "Kézi jelenlét"
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
 msgid "Message"
 msgstr "Üzenet"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Month"
-msgstr "Hónap"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -520,10 +521,17 @@ msgid "No attendance records to display"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:72
+#: code:addons/hr_attendance/models/hr_employee.py:73
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
 msgstr "Ehhez vonalkódhoz nem tartozik alkalmazott: %(barcode)s"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:130
+#, python-format
+msgid "OK"
+msgstr "Ok"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -542,21 +550,14 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
 #, python-format
-msgid "Please enter your PIN to check in"
-msgstr "Kérem adja meg PIN kódját a belépéshez"
+msgid "Please enter your PIN to"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:59
-#, python-format
-msgid "Please enter your PIN to check out"
-msgstr "Kérem adja meg PIN kódját a kilépéshez"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:82
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
 #, python-format
 msgid "Please return to the main menu."
 msgstr "Kérem térjen vissza a fő menühöz."
@@ -573,14 +574,14 @@ msgstr "Riport készítés"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:18
 #, python-format
 msgid "Scan your badge"
 msgstr "Jelvénye beszkennelése"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:15
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
 #, python-format
 msgid "Select Employee"
 msgstr "Alkalmazott kiválasztása"
@@ -615,7 +616,7 @@ msgstr ""
 "alkalmazotthoz."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:63
+#: code:addons/hr_attendance/models/hr_employee.py:64
 #, python-format
 msgid "The PIN must be a sequence of digits."
 msgstr "A PIN sorrendbe állított számokat kell tartalmaznia."
@@ -628,7 +629,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:68
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:75
 #, python-format
 msgid "The early bird catches the worm"
 msgstr "Korai madár kapja el a gilisztát"
@@ -641,6 +642,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_res_users__has_group_hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
 msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
@@ -650,6 +652,7 @@ msgstr ""
 " a saját jelenlétének szervezését."
 
 #. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_res_users__has_group_hr_attendance_use_pin
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
@@ -669,31 +672,39 @@ msgid "Use PIN codes to check in in Kiosk Mode"
 msgstr ""
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:102
-#, python-format
-msgid ""
-"Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
-"please contact Human Resources."
-msgstr ""
-"Figyelem! Utolsó kijelentkezés 12 órája történt.<br/>Ha ez igaz, kérem vegye"
-" fel a kapcsolatot a HR Emberi erőforrással."
+#: model:ir.model,name:hr_attendance.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:25
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:112
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#, python-format
+msgid "Want to check out?"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
 #, python-format
 msgid "Welcome"
 msgstr "Üdvözlet"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:11
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Welcome to"
 msgstr "Üdvözlöm"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:44
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#, python-format
+msgid "Welcome!"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -701,16 +712,34 @@ msgid "Worked Hours"
 msgstr "Ledolgozott órák"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:79
+#: code:addons/hr_attendance/models/hr_employee.py:80
 #, python-format
 msgid "Wrong PIN"
 msgstr "Rossz PIN"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:106
+#: code:addons/hr_attendance/models/hr_attendance.py:107
 #, python-format
 msgid "You cannot duplicate an attendance."
 msgstr "Nem sokszorozhat meg egy jelenlétet."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#, python-format
+msgid "check in"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#, python-format
+msgid "check out"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
@@ -719,14 +748,7 @@ msgstr "alkalmazott jelenléti ívei"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:123
-#, python-format
-msgid "ok"
-msgstr "ok"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:14
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:21
 #, python-format
 msgid "or"
 msgstr "vagy"

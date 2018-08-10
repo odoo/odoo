@@ -3,15 +3,15 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris, 2016
+# Martin Trigaux, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -56,12 +56,12 @@ msgid ""
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__nbr_cases
 msgid "# of Cases"
 msgstr "Esetek száma"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_nbr_opportunities
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
 msgid "# of Opportunity"
 msgstr "# lehetőségek száma"
 
@@ -138,9 +138,9 @@ msgid "<strong>Message and communication history</strong>"
 msgstr "<strong>Üzenetek és kommunikáció történet</strong>"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -149,7 +149,7 @@ msgstr "Aktiválás"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:100
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_active
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__active
 #, python-format
 msgid "Active"
 msgstr "Aktív"
@@ -173,20 +173,16 @@ msgid "All Countries"
 msgstr "Összes ország"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:262
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:263
 #, python-format
 msgid "All fields are required !"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__date_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Date"
 msgstr "Dátum hozzárendelés"
-
-#. module: website_crm_partner_assign
-#: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
-msgid "Assign Month"
-msgstr "Hozzárendelési hónap"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.server,name:website_crm_partner_assign.action_assign_salesman_according_assigned_partner
@@ -194,13 +190,13 @@ msgid "Assign salesman of assigned partner"
 msgstr "Rendeljen hozzá egy értékesítőt a hozzárendelt partnerhez"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_assign
 msgid "Assignation Date"
 msgstr "Hozzárendelés dátuma"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_assigned_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_opportunity_partner_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -216,19 +212,14 @@ msgid "Automatic Assignation"
 msgstr "Automatikus hozzárendelés"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Automatically sanitized HTML contents"
 msgstr "Automatikusan letisztított HTML tartalom"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__probability
 msgid "Avg Probability"
 msgstr "Átlagos valószínűség"
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
-msgid "Bronze"
-msgstr "Bronz"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_report_assign
@@ -259,12 +250,12 @@ msgid "City"
 msgstr "Város"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_closed
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__date_closed
 msgid "Close Date"
 msgstr "Zárás dátuma"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_company_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__company_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Company"
 msgstr "Vállalat"
@@ -301,7 +292,7 @@ msgid "Contact name"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Contents"
 msgstr "Tartalmak"
 
@@ -311,22 +302,22 @@ msgid "Countries..."
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_country_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_country_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__country_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__country_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Country"
 msgstr "Ország"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__create_date
 msgid "Create Date"
 msgstr "Dátum létrehozás"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_create_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_create_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__create_uid
 msgid "Created by"
 msgstr "Készítette"
 
@@ -336,20 +327,20 @@ msgid "Created by Partner"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_create_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_create_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-msgid "Current stage of the opp"
+msgid "Current stage of the opportunity"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__partner_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Customer"
@@ -382,12 +373,12 @@ msgid "Deadline:"
 msgstr "Határidő:"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__delay_open
 msgid "Delay to Assign"
 msgstr "Késleltetés a hozzárendelésig"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__delay_close
 msgid "Delay to Close"
 msgstr "Késleltetés a zárásig"
 
@@ -402,12 +393,12 @@ msgid "Details Next Activity"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -473,12 +464,12 @@ msgid "Filter by Level"
 msgstr "Szűrés szint szerint"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
 msgid "Forward Leads To"
 msgstr "Érdeklődés továbbítása ide"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__forward_type
 msgid "Forward selected leads to"
 msgstr "Kiválasztott érdeklődések továbbítása ide"
 
@@ -494,12 +485,12 @@ msgid "Fwd: Lead: ${ctx['partner_id'].name}"
 msgstr "Fw: Érdeklődés: ${ctx['partner_id'].name}"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_latitude
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
 msgid "Geo Latitude"
 msgstr "Földrajzi szélesség"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_longitude
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_longitude
 msgid "Geo Longitude"
 msgstr "Földrajzi hosszúság"
 
@@ -510,9 +501,9 @@ msgid "Geolocation"
 msgstr "Földrajzi elhelyezkedés"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner__partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users__partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
@@ -521,13 +512,8 @@ msgstr ""
 " 0 jelenti)"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
-msgid "Gold"
-msgstr "Arany"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_grade_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
 msgid "Grade"
 msgstr "Fokozat"
 
@@ -555,81 +541,81 @@ msgid "I am not interested by this lead. I have not contacted the lead."
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
 msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_ids
 msgid "Implementation References"
 msgstr "Kivitelezési hivatkozások"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_count
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_count
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_count
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_count
 msgid "Implemented Count"
 msgstr "Végrehajtás számláló"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__assigned_partner_id
 msgid "Implemented by"
 msgstr "Végrehajtotta"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date
 msgid "Invoice Account Date"
 msgstr "Számla főkönyvi számla kelte"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade___last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade____last_update
 msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_write_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_write_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítette"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_write_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_write_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_date_assign
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__date_assign
 msgid "Last date this case was forwarded/assigned to a partner"
 msgstr ""
 "Ebben az esetben az utolsó dátum a partnerhez el lesz küldve/hozzá lesz "
 "rendelve"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Partner Review"
 msgstr "Legutóbbi partner felülvizsgálat"
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 msgid "Lead"
 msgstr "Érdeklődő"
 
@@ -650,14 +636,9 @@ msgid "Lead Feedback"
 msgstr "Visszajelzés érdeklődésről"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_location
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
 msgstr "Érdeklődés helyszíne"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_link
-msgid "Lead Single Links"
-msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -670,23 +651,28 @@ msgid "Leads Analysis"
 msgstr "Érdeklődők elemzése"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_10761
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Szint"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__name
 msgid "Level Name"
 msgstr "Szint neve"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__partner_weight
 msgid "Level Weight"
 msgstr "Szint súlyozása"
+
+#. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
+msgid "Link to Lead"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -705,11 +691,12 @@ msgid "Low"
 msgstr "Alacsony"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability_max
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__probability_max
 msgid "Max Probability"
 msgstr "Max. valószínűség"
 
 #. module: website_crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Medium"
 msgstr "Közepes"
@@ -742,7 +729,7 @@ msgstr "Lehetőségeim"
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:53
 #: code:addons/website_crm_partner_assign/controllers/main.py:110
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__name
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #, python-format
@@ -772,8 +759,8 @@ msgid "Next Activity Date"
 msgstr "Következő tevékenység dátuma"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Partner Review"
 msgstr "Következő partner felülvizsgálata"
 
@@ -788,22 +775,17 @@ msgid "No result found"
 msgstr "Nem talál eredményt"
 
 #. module: website_crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Normal"
-msgstr "Normál"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign__delay_close
 msgid "Number of Days to close the case"
 msgstr "Napok száma az eset lezárásáig"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign__delay_open
 msgid "Number of Days to open the case"
 msgstr "Napok száma az eset megnyitásáig"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_opening_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__opening_date
 msgid "Opening Date"
 msgstr "Nyitó dátum"
 
@@ -844,13 +826,13 @@ msgid "Overdue Activities"
 msgstr "Lejárt tevékenységek"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_expected
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__delay_expected
 msgid "Overpassed Deadline"
 msgstr "Túllépett határidő"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_assigned_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__partner_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.grade_in_detail
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner"
@@ -868,8 +850,8 @@ msgid "Partner Activations"
 msgstr "Partner aktiválások"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_forward_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_assignation_lines
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__forward_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__assignation_lines
 msgid "Partner Assignation"
 msgstr "Partner hozzárendelés"
 
@@ -882,7 +864,7 @@ msgid "Partner Level"
 msgstr "Partner szint"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_location
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_location
 msgid "Partner Location"
 msgstr "Partner helyszín"
 
@@ -897,12 +879,12 @@ msgid "Partner assigned Analysis"
 msgstr "Partner hozzárendelés elemzés"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_declined_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_declined_ids
 msgid "Partner not interested"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_partner_assigned_id
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__partner_assigned_id
 msgid "Partner this case has been forwarded/assigned to."
 msgstr ""
 "A partenr ebben az esetben ezzel együtt el lesz küldve/hozzá lesz rendelve."
@@ -918,9 +900,9 @@ msgid "Partnership Analysis"
 msgstr "Partnerkapcsolat elemzések"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_partnership
 msgid "Partnership Date"
 msgstr "Partnerkapcsolat dátuma"
 
@@ -935,18 +917,13 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_planned_revenue
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__planned_revenue
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Planned Revenue"
 msgstr "Tervezett jövedelem"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
-msgid "Platinum"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_priority
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__priority
 msgid "Priority"
 msgstr "Elsőbbségi"
 
@@ -963,7 +940,7 @@ msgid "Probability"
 msgstr "Valószínűség"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probable_revenue
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__probable_revenue
 msgid "Probable Revenue"
 msgstr "Várható bevétel"
 
@@ -980,14 +957,14 @@ msgstr "Hivatkozások"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.crm_menu_resellers
-#: model:ir.ui.view,arch_db:website_crm_partner_assign.footer_custom
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.layout
+#: model:website.menu,name:website_crm_partner_assign.menu_resellers
 msgid "Resellers"
 msgstr "Viszonteladók"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_team_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_team_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__team_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__team_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -1023,10 +1000,10 @@ msgid "Send Mail"
 msgstr "Levél küldése"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_sequence
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence_10762
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
@@ -1041,11 +1018,6 @@ msgstr "Állítson be egy email címet  ehhez a partnerhez: %s"
 #, python-format
 msgid "Set an email address for the partner(s): %s"
 msgstr "Állítson be egy email címet  ehhez a partner(ek)hez: %s"
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
-msgid "Silver"
-msgstr "Ezüst"
 
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
@@ -1075,7 +1047,7 @@ msgid "Street2"
 msgstr "Utca2"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_tag_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__tag_ids
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Tags"
 msgstr "Címkék"
@@ -1085,6 +1057,12 @@ msgstr "Címkék"
 #, python-format
 msgid "The Forward Email Template is not in the database"
 msgstr "A továbítás email sablon nincs az adatbázisban"
+
+#. module: website_crm_partner_assign
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1119,23 +1097,23 @@ msgid "Today Activities"
 msgstr "Mai napi tevékenységek"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_turnover
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__turnover
 msgid "Turnover"
 msgstr "Tényleges árbevétel"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_type
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__type
 msgid "Type"
 msgstr "Típus"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_type
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign__type
 msgid "Type is used to separate Leads and Opportunities"
 msgstr "A típust az érdeklődők és a lehetőségek szétválasztására használja"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_user_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_user_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__user_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__user_id
 msgid "User"
 msgstr "Felhasználó"
 
@@ -1145,9 +1123,14 @@ msgid "Very High"
 msgstr "Nagyon nagy"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_published
 msgid "Visible in Website"
 msgstr "Látható a weboldalon"
+
+#. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
+msgid "Website URL"
+msgstr "Honlap URL"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead

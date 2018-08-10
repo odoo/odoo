@@ -5,12 +5,10 @@
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Agathe Mollé <molleagathe@gmail.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Clo <clo@odoo.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
@@ -20,10 +18,10 @@
 # fr rev <e2ffr02@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -241,6 +239,7 @@ msgstr "Montant récolté"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
 msgstr "Date de fin"
 
@@ -250,31 +249,19 @@ msgid "End Membership Date"
 msgstr "Date de fin d'adhésion"
 
 #. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "End Month"
-msgstr "Mois de fin"
-
-#. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
 msgstr "Date de fin de l'adhésion"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Ending Month Of Membership"
-msgstr "Mois de fin de l'adhésion"
+msgid "Ending Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Erreur! La date de fin ne peut pas être avant la date de début."
-
-#. module: membership
-#: code:addons/membership/models/partner.py:159
-#, python-format
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Erreur! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -294,11 +281,6 @@ msgstr "Membre libre"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
 msgid "From"
 msgstr "De"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
-msgid "From Month"
-msgstr "Mois de début"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -638,18 +620,15 @@ msgstr "Sélectionner si vous voulez donner une adhésion gratuite."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Date"
 msgstr "Date de début"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Start Month"
-msgstr "Mois de début"
-
-#. module: membership
-#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
-msgid "Starting Month Of Membership"
-msgstr "Mois de début de l'adhésion"
+msgid "Starting Date Of Membership"
+msgstr ""
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -693,6 +672,12 @@ msgstr "Fournisseurs"
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
 msgstr "Membre en attente"
+
+#. module: membership
+#: code:addons/membership/models/partner.py:159
+#, python-format
+msgid "You cannot create recursive associated members."
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line

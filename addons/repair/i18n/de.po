@@ -26,13 +26,16 @@
 # Malte Jansen <work@maltejansen.de>, 2018
 # Christopher Bendlin <inactive+cbeodoo@transifex.com>, 2018
 # Jan Brodersen <4rmitxes@gmail.com>, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2018
+# Tom, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Jan Brodersen <4rmitxes@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,6 +99,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hallo ${object.partner_id.name}</p>\n"
+" <p>\n"
+" Hier ist Ihr Reparaturauftrag ${doc_name} <strong>${object.name}</strong>\n"
+" % if object.origin:\n"
+" (Mit der Referenz: ${object.origin} )\n"
+" % endif\n"
+" % if object.invoice_method ! = 'none':\n"
+" Betrag <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
+" % endif\n"
+" </p>\n"
+" <p>Falls Sie Fragen haben, können Sie auf diese E-Mail antworten.</p>\n"
+" <p>Vielen Dank,</p>\n"
+"</data>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -148,6 +165,21 @@ msgid "<strong>Warranty:</strong>"
 msgstr "<strong>Garantie:</strong>"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
+msgid "Activities"
+msgstr "Aktivitäten"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
+msgid "Activity State"
+msgstr "Status der Aktivität"
+
+#. module: repair
 #: selection:repair.line,type:0
 msgid "Add"
 msgstr "Hinzufügen"
@@ -173,12 +205,6 @@ msgid "Before Repair"
 msgstr "Vor Reparatur"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:230
-#, python-format
-msgid "Can only confirm draft repairs."
-msgstr "Kann nur Reparaturentwürfe bestätigen."
-
-#. module: repair
 #: model:ir.ui.view,arch_db:repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
@@ -202,7 +228,7 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:242
+#: code:addons/repair/models/repair.py:244
 #, python-format
 msgid "Cannot cancel completed repairs."
 msgstr "Abgeschlossene Reparaturen können nicht storniert werden. "
@@ -230,8 +256,8 @@ msgid "Confirmed"
 msgstr "Bestätigt"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:593
-#: code:addons/repair/models/repair.py:651
+#: code:addons/repair/models/repair.py:604
+#: code:addons/repair/models/repair.py:662
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -346,6 +372,21 @@ msgid "Fees"
 msgstr "Gebühren"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
+msgid "Followers"
+msgstr "Abonnenten"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Abonnenten (Kanäle)"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnenten (Partner)"
+
+#. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
 msgstr "Anstehende Aktivitäten"
@@ -359,16 +400,6 @@ msgstr "Gruppieren nach"
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
 msgstr "Gruppieren nach Partner-Rechnungsadressen"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Guarantee limit Month"
-msgstr "Garantielimit Monat"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Guarantee limit by Month"
-msgstr "Garantielimit Monat"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -386,6 +417,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: repair
 #: model:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
@@ -397,7 +443,7 @@ msgstr ""
 "verschiedenen Vorgänge gebraucht haben, aufzeichnen."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:208
+#: code:addons/repair/models/repair.py:210
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Nicht genügend Mengen"
@@ -445,7 +491,7 @@ msgid "Invoice and shipping address:"
 msgstr "Rechnungs- und Lieferanschrift:"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:382
+#: code:addons/repair/models/repair.py:384
 #, python-format
 msgid "Invoice created"
 msgstr "Abrechnung erstellt"
@@ -462,6 +508,11 @@ msgstr "Abgerechnet"
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
 msgid "Invoicing Address"
 msgstr "Rechnungsanschrift"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
+msgid "Is Follower"
+msgstr "Ist ein Abonnent"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
@@ -500,6 +551,7 @@ msgstr "Verspätete Aktivitäten"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
 msgstr "Veranstaltungsort"
 
@@ -513,6 +565,16 @@ msgstr "Los/Serie"
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Make Invoice"
 msgstr "Rechnung erstellen"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
+msgid "Messages"
+msgstr "Nachrichten"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
@@ -530,42 +592,57 @@ msgid "My Activities"
 msgstr "Meine Aktivitäten"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nächste Aktivitätsfrist"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Zusammenfassung nächste Aktion"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nächster Aktivitätstyp"
+
+#. module: repair
 #: selection:repair.order,invoice_method:0
 msgid "No Invoice"
 msgstr "Keine Rechnung"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:584
-#: code:addons/repair/models/repair.py:642
-#, python-format
-msgid "No Pricelist!"
-msgstr "Es existiert keine Preisliste!"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:305
+#: code:addons/repair/models/repair.py:307
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Kein Finanzkonto definiert für den Partner \"%s.\""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:331
-#: code:addons/repair/models/repair.py:359
+#: code:addons/repair/models/repair.py:333
+#: code:addons/repair/models/repair.py:361
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Kein Finanzkonto für das Produkt \"%s\" definiert!"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:352
+#: code:addons/repair/models/repair.py:595
+#: code:addons/repair/models/repair.py:653
 #, python-format
-msgid "No product defined on Fees!"
-msgstr "Kein Produkt für den Reparaturaufwand definiert !"
+msgid "No pricelist found."
+msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:591
-#: code:addons/repair/models/repair.py:649
+#: code:addons/repair/models/repair.py:354
 #, python-format
-msgid "No valid pricelist line found !"
-msgstr "Keine gültige Preisliste gefunden !"
+msgid "No product defined on fees."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:602
+#: code:addons/repair/models/repair.py:660
+#, python-format
+msgid "No valid pricelist line found."
+msgstr ""
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -573,10 +650,46 @@ msgid "Notes"
 msgstr "Notizen"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Anzahl ungelesener Nachrichten"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:232
+#, python-format
+msgid "Only draft repairs can be confirmed."
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
 msgstr "Vorgänge"
+
+#. module: repair
+#: selection:repair.order,activity_state:0
+msgid "Overdue"
+msgstr "Überfällig"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -588,6 +701,11 @@ msgstr "Partner"
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
 msgstr "Teile"
+
+#. module: repair
+#: selection:repair.order,activity_state:0
+msgid "Planned"
+msgstr "Geplant"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -612,6 +730,7 @@ msgstr "Angebot drucken"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
 msgstr "Produkt"
@@ -637,6 +756,11 @@ msgstr "Defektes Produkt"
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
 msgstr "Alle reparierten Produkte gehören zu dieser Serie"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
+msgid "Quant"
+msgstr "Quant"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
@@ -739,29 +863,23 @@ msgstr ""
 "Reparatur muss storniert werden um auf Entwurf zurückgesetzt zu werden."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:401
+#: code:addons/repair/models/repair.py:403
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "Reparaturen müssen vor Beginn der Reparatur bestätigt werden."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:429
+#: code:addons/repair/models/repair.py:431
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
 "Die Reparatur muss repariert werden, um die Produktbuchungen zu vollziehen."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:412
+#: code:addons/repair/models/repair.py:414
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Reparaturen müssen in Reperatur sein, um diese zu beenden."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:244
-#, python-format
-msgid "Repair order is already invoiced."
-msgstr "Reparatur wurde bereits abgerechnet."
 
 #. module: repair
 #: code:addons/repair/wizard/repair_cancel.py:20
@@ -787,6 +905,11 @@ msgid "Repairs order"
 msgstr "Reparaturauftrag"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
+msgid "Responsible User"
+msgstr "Manager Veranstaltung"
+
+#. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
 msgstr "Suche Reparatur Auftragsnummern"
@@ -809,7 +932,7 @@ msgid "Send Quotation"
 msgstr "Angebot senden"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:533
+#: code:addons/repair/models/repair.py:544
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
@@ -843,6 +966,19 @@ msgid "Status"
 msgstr "Status"
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status basierend auf Aktivitäten\n"
+"Überfällig: Fälligkeitsdatum bereits überschritten\n"
+"Heute: Aktivität besitzt heutiges Datum\n"
+"Geplant: anstehende Aktivitäten."
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
 msgstr "Lagerbuchung"
@@ -867,19 +1003,23 @@ msgid "Taxes"
 msgstr "Steuern"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
-#, python-format
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr ""
-"Die ausgewählte Mengeneinheit ist in einer anderen Kategorie als die dieses "
-"Produkts"
-
-#. module: repair
 #: sql_constraint:repair.order:0
 msgid "The name of the Repair Order must be unique!"
 msgstr "Die Bezeichnung für eine Reparatur muss eindeutig sein!"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:172
+#, python-format
+msgid ""
+"The product unit of measure you chose has a different category than the "
+"product unit of measure."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:246
+#, python-format
+msgid "The repair order is already invoiced."
+msgstr ""
 
 #. module: repair
 #: model:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -919,6 +1059,11 @@ msgstr ""
 #: selection:repair.order,state:0
 msgid "To be Invoiced"
 msgstr "Abrechenbar"
+
+#. module: repair
+#: selection:repair.order,activity_state:0
+msgid "Today"
+msgstr "Heute"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -963,6 +1108,16 @@ msgid "Unit of Measure"
 msgstr "Mengeneinheit"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
+msgid "Unread Messages"
+msgstr "Ungelesene Nachrichten"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Zähler der ungelesenen Nachrichten"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Nettobetrag"
@@ -980,8 +1135,19 @@ msgstr "Warnung"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
+#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
 msgstr "Garantieablauf"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationshistorie"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_cancel_repair
@@ -989,15 +1155,8 @@ msgid "Yes"
 msgstr "Ja."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:293
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
-"Sie müssen eine Partner Rechnungsanschrift im Reparaturformular auswählen."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:586
-#: code:addons/repair/models/repair.py:644
+#: code:addons/repair/models/repair.py:597
+#: code:addons/repair/models/repair.py:655
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -1005,6 +1164,12 @@ msgid ""
 msgstr ""
 "Sie müssen eine Preisliste bei der Reparatur auswählen! \n"
 "Bitte legen Sie eine vor Ihrer Produktauswahl fest."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:295
+#, python-format
+msgid "You have to select an invoice address in the repair form."
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_traceability_report

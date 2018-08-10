@@ -16,10 +16,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -45,39 +45,33 @@ msgid "Could not select database '%s'"
 msgstr "Datenbank „%s“ konnte nicht ausgewählt werden"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_date
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:112
+#: code:addons/base_import_module/models/ir_module.py:123
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Die Datei '%s' überschreitet die maximal erlaubte Dateigröße"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:104
-#, python-format
-msgid "File is not a zip file!"
-msgstr "Das ist keine ZIP-Datei"
-
-#. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__force
 msgid "Force init"
 msgstr "Erzwinge init"
 
 #. module: base_import_module
-#: model:ir.model.fields,help:base_import_module.field_base_import_module_force
+#: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
@@ -85,7 +79,7 @@ msgstr ""
 "`noupdate='1'` Daten)"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
 msgid "ID"
 msgstr "ID"
 
@@ -95,7 +89,7 @@ msgid "Import App"
 msgstr "App importieren"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
 msgid "Import Message"
 msgstr "Mitteilung importieren"
 
@@ -113,22 +107,22 @@ msgid "Import module"
 msgstr "Modul importieren"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
 msgid "Imported Module"
 msgstr "Importiertes Modul"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_uid
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert durch"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_date
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
@@ -138,12 +132,12 @@ msgid "Module"
 msgstr "Modul"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__module_file
 msgid "Module .ZIP file"
 msgstr "Modul .ZIP Datei"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:102
+#: code:addons/base_import_module/models/ir_module.py:113
 #, python-format
 msgid "No file sent."
 msgstr "Keine Datei gesendet."
@@ -153,6 +147,12 @@ msgstr "Keine Datei gesendet."
 #, python-format
 msgid "Only administrators can upload a module"
 msgstr "Nur Administratoren können ein Modul hochladen"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:115
+#, python-format
+msgid "Only zip files are supported."
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -165,19 +165,24 @@ msgid "Select module package to import (.zip file):"
 msgstr "Wählen Sie das Module (zip Datei) für den Import"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
 msgid "Status"
 msgstr "Status"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:40
-#: code:addons/base_import_module/models/ir_module.py:47
+#: code:addons/base_import_module/models/ir_module.py:50
 #, python-format
 msgid "Studio customizations require Studio"
 msgstr "Studio-Anpassungen erfordern Studio"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:42
+#: code:addons/base_import_module/models/ir_module.py:57
+#, python-format
+msgid "Studio customizations require the Odoo Studio app."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:52
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Es gibt abhängige Module: %s"

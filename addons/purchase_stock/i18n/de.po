@@ -1,0 +1,401 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase_stock
+# 
+# Translators:
+# e2f <projects@e2f.com>, 2018
+# DE R1 <e2fes1@hotmail.com>, 2018
+# DE T1 <e2f8846@yahoo.com>, 2018
+# Martin Trigaux, 2018
+# Wolfgang Taferner, 2018
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
+# Anja Funk <anja.funk@afimage.de>, 2018
+# Mehmed Yilmaz <admyde@gmail.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2018\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock.py:123
+#, python-format
+msgid " Buy"
+msgstr " Einkaufen"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_procurement_rule__action
+msgid "Action"
+msgstr "Aktion"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock.py:118
+#: selection:procurement.rule,action:0
+#: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
+#, python-format
+msgid "Buy"
+msgstr "Einkaufen"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
+msgid "Buy rule"
+msgstr "Einkaufsregel"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock.py:120
+#, python-format
+msgid ""
+"Can't find any Buy route. Please create a route with the 'Buy' action for "
+"your receipts operation types."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
+msgid "Created Purchase Order Line"
+msgstr "Erstellte Bestellposition"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
+msgid "Deliver To"
+msgstr "Ausliefern an"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr ""
+"Abhängig von den installierten Anwendungen, kann hier bereits die "
+"Beschaffungsroute für ein Produkt bestimmt werden: Entweder wird das Produkt"
+" eingekauft oder gefertigt, die Beschaffung erfolgt vom Auftrag (MTO) bzw. "
+"vom Lagerbestand (MTS) usw."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Lieferzielort Typ"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
+msgid "Downstream Moves"
+msgstr "Nachgeschaltete Buchungen"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
+msgid "Dropshipping"
+msgstr "Streckengeschäft"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s):"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.ui.menu,name:purchase_stock.menu_action_picking_tree_in_move
+msgid "Incoming  Products"
+msgstr "Produktzugänge"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Incoming Shipments"
+msgstr "Wareneingang"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
+msgid "Incoterm"
+msgstr "Lieferbedingung"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"International Lieferbedingungen sind vordefinierte Konditionen und "
+"Bedingungen, die zumeist im internationalen Handel eingesetzt werden."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_invoice
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
+msgid "Is Shipped"
+msgstr "Ist gesendet"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
+msgid "Is the Sale Module Installed"
+msgstr "Ist das Verkaufsmodul installiert"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Logistics"
+msgstr "Logistik"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Manual actions may be needed."
+msgstr ""
+
+#. module: purchase_stock
+#: selection:procurement.rule,action:0
+msgid "Manufacture"
+msgstr "Fertigung"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Toleranz bei Lieferzeiten. Wenn das System Bestellungen für erneut zu "
+"bestellende Produkte generiert, werden sie mit diesem Vorlauf bestellt, um "
+"unerwartete Lieferverzögerungen einzuplanen."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Mindestbestandsregel"
+
+#. module: purchase_stock
+#: selection:procurement.rule,action:0
+msgid "Move From Another Location"
+msgstr "Lagerort Umbuchung"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Move forward expected delivery dates by"
+msgstr "Geschätztes Lieferdatum verschieben um"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Next transfer(s) impacted:"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
+msgid "Orderpoint"
+msgstr "Beschaffungsregel"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
+msgid "Picking count"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
+msgid "Procurement Group"
+msgstr "Beschaffungsgruppe"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_rule
+msgid "Procurement Rule"
+msgstr "Beschaffungsregel"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_template
+msgid "Product Template"
+msgstr "Produktvorlage"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order
+msgid "Purchase Order"
+msgstr "Beschaffungsauftrag"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
+msgid "Purchase Order Line"
+msgstr "Bestellposition"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+msgid "Purchase Orders"
+msgstr "Bestellungen"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "Purchase to resupply this warehouse"
+msgstr "Einkauf zur Wiederauffüllung des Lagers"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchases Orders"
+msgstr "Bestellungen"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receipt"
+msgstr "Bon"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receive Products"
+msgstr "Produktzugänge"
+
+#. module: purchase_stock
+#: model:ir.actions.act_window,name:purchase_stock.purchase_open_picking
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
+msgid "Receptions"
+msgstr "Produktzugänge"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Request your vendors to deliver to your customers"
+msgstr "Bitten Sie Ihre Lieferanten, direkt an Ihre Kunden zu liefern."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
+msgid "Reservation"
+msgstr "Reservierung"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Rücklieferschein"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
+msgid "Routes"
+msgstr "Routen"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Schedule receivings earlier to avoid delays"
+msgstr "Planen Sie Wareneingänge früher ein, um Verzögerungen zu vermeiden."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbuchung"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+msgid "Stock Moves"
+msgstr "Lagerbuchungen"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Technisches Feld zur Anzeige der Streckengeschäft Postanschrift"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:261
+#, python-format
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund. "
+msgstr ""
+"Die Mengen in Ihrer Bestellung geben weniger an, als berechnet wurde. Sie "
+"sollten eine Erstattung beantragen."
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/procurement.py:22
+#, python-format
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"Dem Produkt %s wurde kein Lieferant zugewiesen. Bitte definieren Sie einen "
+"Lieferanten für dieses Produkt."
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"Dadurch wird eine Streckengeschäft-Route hinzugefügt, die auf Produkte "
+"angewendet werden kann, um Ihre Lieferanten anzuweisen, an Ihre Kunden zu "
+"liefern. Ein Produkt für das Streckengeschäft generiert eine Kaufanfrage für"
+" ein Angebot, sobald der Verkaufsauftrag bestätigt wurde. Dies ist ein "
+"Ablauf auf Abruf. Die gewünschte Lieferadresse ist die Lieferadresse des "
+"Kunden und nicht Ihr Lager."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
+msgid "This will determine operation type of incoming shipment"
+msgstr "Dies bestimmt den Vorgangstyp einer eingehenden Lieferung."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Lieferung vornehmen"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:95
+#, python-format
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+"Es ist nicht möglich die Bestellung %s zu löschen, da einige "
+"Lieferungpositionen bereits geliefert wurden."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
+msgid "Warehouse"
+msgstr "Lager"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr ""
+"Sobald die Produkte bestellt sind, können Sie an dieses Lager geliefert "
+"werden."
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:253
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the received quantity.\n"
+"Create a return first."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:182
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "Sie müssen dem Partner %s einen Standort zuweisen.. "
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "Tage"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "of"
+msgstr "von"
+
+#. module: purchase_stock
+#: model:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "ordered instead of"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

@@ -1,18 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_extended
+# * mrp_bom_cost
 # 
 # Translators:
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,15 +19,19 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
-#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
-msgid "Compute from BOM"
-msgstr "Bereken vanuit stuklijst"
+#. module: mrp_bom_cost
+#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_product
+#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_template
+#: model:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
+#: model:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
+msgid "Compute Price from BoM"
+msgstr "Bereken prijs vanuit materiaallijst"
 
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
-#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
+#. module: mrp_bom_cost
+#: model:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
+#: model:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
@@ -36,12 +39,20 @@ msgstr ""
 "Bereken de prijs van het product gebruikmakend van producten en handelingen "
 "gerelateerd aan de stuklijst, enkel voor geproduceerde producten."
 
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_product_product
+#. module: mrp_bom_cost
+#: model:ir.model,name:mrp_bom_cost.model_product_product
 msgid "Product"
 msgstr "Product"
 
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_product_template
+#. module: mrp_bom_cost
+#: model:ir.model,name:mrp_bom_cost.model_product_template
 msgid "Product Template"
 msgstr "Productsjabloon"
+
+#. module: mrp_bom_cost
+#: code:addons/mrp_bom_cost/models/product.py:39
+#, python-format
+msgid ""
+"The inventory valuation of some products %s is automated. You can only "
+"update their cost from the product form."
+msgstr ""

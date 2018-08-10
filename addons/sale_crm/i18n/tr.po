@@ -12,10 +12,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,12 @@ msgstr "<span class=\"o_stat_text\"> Siparişler</span>"
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
 msgstr "<span class=\"o_stat_text\"> Teklifler </span>"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__campaign_id
+msgid "Campaign"
+msgstr "Kampanya"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -58,6 +64,12 @@ msgstr "Sohbetçiye, siparişin kaynaklandığı fırsattan giriş yap"
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Marketing"
 msgstr "Pazarlama"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__medium_id
+msgid "Medium"
+msgstr "Orta"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -108,6 +120,12 @@ msgid "Sales Channel"
 msgstr "Satış Ekibi"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__source_id
+msgid "Source"
+msgstr "Kaynak"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr "Siparişlerin Toplamı"
@@ -116,6 +134,32 @@ msgstr "Siparişlerin Toplamı"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "Etiketler"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Farklı kampanya çabalarınızı izlemenize yardımcı olacak bir isimdir Örn: "
+"Sonbahar_Sürüşü, Yılbaşı_Özel"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Banner reklamı"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Bu bağlantı kaynağıdır. örn: Arama Motoru, başka alan adı yada bir e-posta "
+"listesi adı"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
