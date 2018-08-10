@@ -335,7 +335,6 @@ class test_float_field(ImporterCase):
         self.assertEqual(result['messages'], [
             message(u"'foobar' does not seem to be a number for field 'Value'")])
 
-
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
 
