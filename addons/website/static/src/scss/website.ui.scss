@@ -418,54 +418,6 @@ body .modal {
     margin: 50px auto;
 }
 
-// CUSTOMIZE THEME
-#theme_error {
-    background: #ffc;
-}
-#theme_customize_modal {
-    overflow: visible;
-    display: block;
-    .modal-dialog {
-        @include o-position-absolute($o-navbar-height + 10, 10px);
-        width: auto;
-        margin: 0;
-        font-family: Roboto;
-    }
-    .loading_backdrop {
-        display: none;
-    }
-    &.loading .loading_backdrop {
-        @include o-position-absolute(0, 0, 0, 0);
-        display: block;
-        background: black;
-        opacity: 0.3;
-        z-index: 1;
-    }
-    label {
-        display: block;
-        text-align: center;
-        > div, > img {
-            border: 1px solid #fff;
-            line-height: 30px;
-            font-size: 0.9em;
-            margin: 2px 4px;
-        }
-        &.checked > div, &.checked > img {
-            box-shadow: 2px 2px 3px #888;
-            border: 1px solid #666;
-        }
-        img {
-            width: 60px;
-            height: 35px;
-            margin: 2px;
-            border: 1px solid rgba(136, 136, 136, 0.5);
-        }
-        input {
-            display: none;
-        }
-    }
-}
-
 // ACE EDITOR
 .o_ace_view_editor {
     @include o-w-preserve-base;

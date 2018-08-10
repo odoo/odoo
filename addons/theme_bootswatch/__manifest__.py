@@ -7,7 +7,7 @@
     'category': 'Theme/Corporate',
     'sequence': 900,
     'version': '1.0',
-    'depends': ['website'],
+    'depends': ['website', 'website_theme_install'],
     'data': [
         'data/theme_bootswatch_data.xml',
         'views/theme_bootswatch_templates.xml',

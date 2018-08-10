@@ -42,13 +42,12 @@ header {
 }
 .navbar {
     margin-bottom: 0;
+
     ul.nav > li {
         &.divider {
+            display: none;
             @include o-w-fill-navbar;
             border-right: 1px solid $nav-divider-color;
-            @include media-breakpoint-down(sm) {
-                display: none;
-            }
         }
 
         &.active + .divider {
@@ -61,12 +60,13 @@ header {
         }
     }
 }
+@include media-breakpoint-up(md) {
+    .navbar-expand-md ul.nav > li.divider {
+        display: list-item;
+    }
+}
 ul.flex-column > li > a {
     padding: 2px 15px;
-}
-
-footer {
-    background-color: #F8F8F8;
 }
 
 // Odoo options classes
