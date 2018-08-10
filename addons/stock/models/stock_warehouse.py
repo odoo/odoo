@@ -373,7 +373,7 @@ class Warehouse(models.Model):
                     'warehouse_selectable': True,
                     'product_selectable': False,
                     'company_id': self.company_id.id,
-                    'sequence': 10,
+                    'sequence': 9,
                 },
                 'rules_values': {
                     'active': True,
