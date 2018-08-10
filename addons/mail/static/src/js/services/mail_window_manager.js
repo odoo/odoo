@@ -639,7 +639,7 @@ MailManager.include({
      * @param {mail.model.Channel} channel
      */
     _onNewChannel: function (event) {
-        var channel = event.data;
+        var channel = event.data.channel;
         if (channel.isDetached()) {
             this.openThreadWindow(channel.getID(), { keepFoldState: true, passively: true });
         } else {

@@ -144,8 +144,9 @@ var MessagingMenu = Widget.extend({
             .then(function () {
                 // we cannot 'go back to previous page' otherwise
                 self.trigger('hide_home_menu');
-                core.bus.trigger('change_menu_section',
-                    self.call('mail_service', 'getDiscussMenuID'));
+                core.bus.trigger('change_menu_section', {
+                    menu_id: self.call('mail_service', 'getDiscussMenuID')
+                });
             });
     },
     /**

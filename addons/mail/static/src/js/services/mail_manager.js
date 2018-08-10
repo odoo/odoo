@@ -455,7 +455,7 @@ var MailManager =  AbstractService.extend({
             }
             this._sortThreads();
             if (!options.silent) {
-                this._mailBus.trigger('new_channel', channel);
+                this._mailBus.trigger('new_channel', {channel: channel});
             }
         }
         return channel.getID();

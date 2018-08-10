@@ -277,7 +277,7 @@ MailManager.include({
                     message.updateCustomerEmailStatus('sent');
                 }
                 self._updateMessageNotificationStatus(data, message);
-                self._mailBus.trigger('update_message', message);
+                self._mailBus.trigger('update_message', {message: message});
             }
         });
         this._mailBus.trigger('update_needaction', this.needactionCounter);
@@ -299,7 +299,7 @@ MailManager.include({
             });
             if (message) {
                 self._removeMessageFromThread('mailbox_inbox', message);
-                self._mailBus.trigger('update_message', message, data.type);
+                self._mailBus.trigger('update_message', {message: message, type: data.type});
             }
         });
         if (data.channel_ids) {
@@ -419,7 +419,7 @@ MailManager.include({
                     var channelStarred = self.getMailbox('starred');
                     channelStarred.invalidateCaches();
                 }
-                self._mailBus.trigger('update_message', message);
+                self._mailBus.trigger('update_message', {message: message});
             }
         });
 
