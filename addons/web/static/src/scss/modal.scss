@@ -29,10 +29,15 @@
             text-align: left;
             justify-content: flex-start;
 
+            // TODO These rules should not be necessary if we used buttons
+            // as direct children of the modal-footer as normally required
             > div, > footer {
-                // TODO this rule should not be necessary if we used buttons
-                // as direct children of the modal-footer as normally required
                 flex: 1 1 auto;
+            }
+
+            footer {
+                > :not(:first-child) { margin-left: .25rem; }
+                > :not(:last-child) { margin-right: .25rem; }
             }
         }
     }
