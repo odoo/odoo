@@ -86,7 +86,8 @@ var AbstractThreadWindow = Widget.extend({
             this._focusInput();
         }
         if (!config.device.isMobile) {
-            this.$el.css('margin-right', $.position.scrollbarWidth());
+            var margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
+            this.$el.css(margin_dir, $.position.scrollbarWidth());
         }
         var def = this.threadWidget.replace(this.$('.o_thread_window_content'));
         return $.when(this._super(), def);

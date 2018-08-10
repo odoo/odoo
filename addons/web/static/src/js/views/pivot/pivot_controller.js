@@ -164,8 +164,11 @@ var PivotController = AbstractController.extend({
             fields: fields
         }));
 
+        var cssProps = {top: top};
+        cssProps[_t.database.parameters.direction === 'rtl' ? 'right' : 'left'] =
+            _t.database.parameters.direction === 'rtl' ? this.$el.width() - left : left;
         this.$fieldSelection.find('.dropdown-menu').first()
-            .css({top: top, left: left})
+            .css(cssProps)
             .addClass('show');
     },
     /**

@@ -59,7 +59,8 @@
             </script>
             <t t-raw="head or ''"/>
         </head>
-        <body id="web_editor_inside_iframe" onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}">
+        <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
+        <body id="web_editor_inside_iframe" onload="var fn=window.top.odoo &amp;&amp; window.top.odoo[callback+'_content']; if(fn) {fn();} else {console.warn('Please don\'t open iframe without the odoo backend');}" t-attf-style="direction: #{direction};">
             <div id="wrapwrap">
                 <main>
                     <t t-raw="0"/>

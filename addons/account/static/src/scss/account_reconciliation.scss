@@ -342,3 +342,19 @@
         }
     }
 }
+
+// This is rtl language specific fix
+// It will flip the fa-fa play icon in left direction
+.o_rtl {
+    .o_reconciliation {
+        .o_reconciliation_line {
+            .toggle_match, .toggle_create {
+                transform: rotate(180deg);
+                transition: transform 300ms;
+            }
+            .visible_toggle, &[data-mode="match"] .toggle_match, &[data-mode="create"] .toggle_create {
+                transform: rotate(270deg);
+            }
+        }
+    }
+}

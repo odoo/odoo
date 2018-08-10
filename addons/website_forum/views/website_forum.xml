@@ -158,8 +158,8 @@
                         <h3 class="card-header">About This Community</h3>
                         <div class="card-body">
                             <span t-field="forum.description"/>
-                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
-                            <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="fa fa-arrow-right"> Back to <span t-field="forum.name"/></a>
+                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq"><i class="fa fa-arrow-right"/> Read Guidelines</a>
+                            <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}"><i class="fa fa-arrow-right"/> Back to <span t-field="forum.name"/></a>
                         </div>
                     </div>
                     <div class="card" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
@@ -1413,7 +1413,7 @@
                 </div>
                 <t t-if="uid == user.id">
                     <div>
-                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit">Edit Your Profile</a>
+                        <a t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"><i class="fa fa-arrow-right"/>Edit Your Profile</a>
                     </div>
                 </t>
             </div>

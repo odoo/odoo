@@ -9,6 +9,7 @@ var core = require('web.core');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var THREAD_WINDOW_WIDTH = 325 + 5;  // 5 pixels between windows
 
@@ -518,7 +519,9 @@ MailManager.include({
         var index = 0;
         while (index < count && index < this._threadWindows.length) {
             var threadWindow = this._threadWindows[index];
-            threadWindow.$el.css({ right: THREAD_WINDOW_WIDTH*index, bottom: 0 });
+            var cssProps = {bottom: 0};
+            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = THREAD_WINDOW_WIDTH*index;
+            threadWindow.$el.css(cssProps);
             threadWindow.do_show();
             index++;
         }
