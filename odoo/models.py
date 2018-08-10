@@ -1811,7 +1811,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # assumption: existing data is sorted by field 'groupby_name'
         first, last = existing[0], existing[-1]
 
-        expected = list(date_utils.date_range(first, last, interval))
+        expected = collections.deque(date_utils.date_range(first, last, interval))
 
         if len(existing) < len(expected):
             empty_data = dict.fromkeys(aggregated_fields, False)
@@ -1827,8 +1827,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # is sorted like data, so what we do is empty data progressivly by
             # popping its elements from first to last. To do this properly, we
             # need to compare dates together.
-            for dt in expected:
-                if not data[0][groupby_name] or data[0][groupby_name] == dt:
+            while expected or data:
+                if not data[0][groupby_name]:
+                    new_data.append(data.popleft())
+                    continue
+                dt = expected.popleft()
+                if data[0][groupby_name] == dt:
                     new_data.append(data.popleft())
                 else:
                     new_data.append(dict(empty_data, **{groupby_name: dt}))

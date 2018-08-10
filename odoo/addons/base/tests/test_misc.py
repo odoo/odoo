@@ -162,14 +162,6 @@ class TestDateRangeFunction(unittest.TestCase):
 
         self.assertEqual(dates, expected)
 
-    def test_date_range_with_identical_boundaries(self):
-        """ date_range with indentical boundaries. """
-        start = datetime.datetime(1985, 1, 1)
-        end = datetime.datetime(1985, 1, 1)
-
-        with self.assertRaises(ValueError):
-            dates = [date for date in date_utils.date_range(start, end)]
-
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
