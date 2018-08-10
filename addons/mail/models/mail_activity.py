@@ -8,6 +8,8 @@ import pytz
 
 from odoo import api, exceptions, fields, models, _
 
+from odoo.tools import pycompat
+
 
 class MailActivityType(models.Model):
     """ Activity Types are used to categorize activities. Each type is a different
@@ -188,7 +190,7 @@ class MailActivity(models.Model):
     def _compute_has_recommended_activities(self):
         for record in self:
             record.has_recommended_activities = bool(record.previous_activity_type_id.next_type_ids)
-    
+
     @api.multi
     @api.onchange('previous_activity_type_id')
     def _onchange_previous_activity_type_id(self):
@@ -600,6 +602,33 @@ class MailActivityMixin(models.AbstractModel):
             }
             create_vals.update(act_values)
             activities |= self.env['mail.activity'].create(create_vals)
+        return activities
+
+    def activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
+        """ Helper method: Schedule an activity on each record of the current record set.
+        This method allow to the same mecanism as `activity_schedule`, but provide
+        2 additionnal parameters:
+        :param views_or_xmlid: record of ir.ui.view or string representing the xmlid
+            of the qweb template to render
+        :type views_or_xmlid: string or recordset
+        :param render_context: the values required to render the given qweb template
+        :type render_context: dict
+        """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        render_context = render_context or dict()
+        if isinstance(views_or_xmlid, pycompat.string_types):
+            views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
+        else:
+            views = views_or_xmlid
+        if not views:
+            return
+        activities = self.env['mail.activity']
+        for record in self:
+            render_context['object'] = record
+            note = views.render(render_context, engine='ir.qweb', minimal_qcontext=True)
+            activities |= record.activity_schedule(act_type_xmlid=act_type_xmlid, date_deadline=date_deadline, summary=summary, note=note, **act_values)
         return activities
 
     def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None, new_user_id=None):

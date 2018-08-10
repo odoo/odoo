@@ -57,8 +57,8 @@ class SaleOrder(models.Model):
     # TODO onchange sol, clean delivery price
 
     @api.multi
-    def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
+    def _action_confirm(self):
+        res = super(SaleOrder, self)._action_confirm()
         for so in self:
             so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
         return res
