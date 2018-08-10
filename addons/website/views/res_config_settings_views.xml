@@ -198,10 +198,10 @@
         </record>
 
         <record id="action_website_add_features" model="ir.actions.act_window">
-            <field name="name">Add Features</field>
+            <field name="name">Apps</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.module.module</field>
-            <field name="view_mode">kanban,tree</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="context" eval="{'search_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
@@ -225,7 +225,7 @@
             sequence="10"/>
 
         <menuitem id="menu_website_add_features" parent="website.menu_website_global_configuration"
-            sequence="20" name="Apps" groups="base.group_system" action="action_website_add_features"/>
+            sequence="20" groups="base.group_system" action="action_website_add_features"/>
 
         <menuitem name="Pages"
             id="menu_website_pages_list"
