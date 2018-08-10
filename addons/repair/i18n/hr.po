@@ -12,13 +12,14 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2018
 # Tina Milas, 2018
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
+# Marko Carević <marko.carevic@live.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Marko Carević <marko.carevic@live.com>, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,6 +128,21 @@ msgid "<strong>Warranty:</strong>"
 msgstr ""
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
+msgid "Activities"
+msgstr "Aktivnosti"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
+msgid "Activity State"
+msgstr "Status aktivnosti"
+
+#. module: repair
 #: selection:repair.line,type:0
 msgid "Add"
 msgstr "Dodaj"
@@ -152,12 +168,6 @@ msgid "Before Repair"
 msgstr "Prije popravka"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:230
-#, python-format
-msgid "Can only confirm draft repairs."
-msgstr "Može se potvrditi samo prijedlog popravka."
-
-#. module: repair
 #: model:ir.ui.view,arch_db:repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
@@ -181,7 +191,7 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:242
+#: code:addons/repair/models/repair.py:244
 #, python-format
 msgid "Cannot cancel completed repairs."
 msgstr "Završeni popravci ne mogu se otkazati."
@@ -209,8 +219,8 @@ msgid "Confirmed"
 msgstr "Potvrđeno"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:593
-#: code:addons/repair/models/repair.py:651
+#: code:addons/repair/models/repair.py:604
+#: code:addons/repair/models/repair.py:662
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -324,6 +334,21 @@ msgid "Fees"
 msgstr "Naknade"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
 msgstr ""
@@ -337,16 +362,6 @@ msgstr "Grupiraj po"
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
 msgstr "Grupiraj po adresi računa"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Guarantee limit Month"
-msgstr "Ograničenje jamstva Mjesec"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Guarantee limit by Month"
-msgstr "Ograničenje jamstva po mjesecima"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -364,6 +379,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: repair
 #: model:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
@@ -375,7 +405,7 @@ msgstr ""
 "operacije."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:208
+#: code:addons/repair/models/repair.py:210
 #, python-format
 msgid "Insufficient Quantity"
 msgstr ""
@@ -423,7 +453,7 @@ msgid "Invoice and shipping address:"
 msgstr "Adresa za račun i dostavu"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:382
+#: code:addons/repair/models/repair.py:384
 #, python-format
 msgid "Invoice created"
 msgstr ""
@@ -440,6 +470,11 @@ msgstr "Izdani računi"
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
 msgid "Invoicing Address"
 msgstr "Adresa za račun"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
@@ -478,6 +513,7 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
 msgstr "Lokacija"
 
@@ -491,6 +527,16 @@ msgstr "Lot/Serija"
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Make Invoice"
 msgstr "Kreiraj račun"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
+msgid "Messages"
+msgstr "Poruke"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
@@ -508,42 +554,57 @@ msgid "My Activities"
 msgstr "Moje aktivnosti"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sažetak sljedeće aktivnosti"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: repair
 #: selection:repair.order,invoice_method:0
 msgid "No Invoice"
 msgstr "Nema računa"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:584
-#: code:addons/repair/models/repair.py:642
-#, python-format
-msgid "No Pricelist!"
-msgstr "Nema cjenika!"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:305
+#: code:addons/repair/models/repair.py:307
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Za partnera \"%s\" nije definiran konto"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:331
-#: code:addons/repair/models/repair.py:359
+#: code:addons/repair/models/repair.py:333
+#: code:addons/repair/models/repair.py:361
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Za proizvod \"%s\" nije definiran konto"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:352
+#: code:addons/repair/models/repair.py:595
+#: code:addons/repair/models/repair.py:653
 #, python-format
-msgid "No product defined on Fees!"
-msgstr "Nema definiranog proizvoda na troškovima!"
+msgid "No pricelist found."
+msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:591
-#: code:addons/repair/models/repair.py:649
+#: code:addons/repair/models/repair.py:354
 #, python-format
-msgid "No valid pricelist line found !"
-msgstr "Nije pronađen važeći cjenik!"
+msgid "No product defined on fees."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:602
+#: code:addons/repair/models/repair.py:660
+#, python-format
+msgid "No valid pricelist line found."
+msgstr ""
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -551,10 +612,46 @@ msgid "Notes"
 msgstr "Bilješke"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:232
+#, python-format
+msgid "Only draft repairs can be confirmed."
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
 msgstr "Operacije"
+
+#. module: repair
+#: selection:repair.order,activity_state:0
+msgid "Overdue"
+msgstr "Dospjelo"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -566,6 +663,11 @@ msgstr "Partner"
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
 msgstr ""
+
+#. module: repair
+#: selection:repair.order,activity_state:0
+msgid "Planned"
+msgstr "Planirano"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -590,6 +692,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
 msgstr "Proizvod"
@@ -615,6 +718,11 @@ msgstr "Proizvodi za popravak"
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
 msgstr "Svi popravljeni proizvodi pripadaju ovom lotu"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
+msgid "Quant"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
@@ -717,29 +825,23 @@ msgstr ""
 "Popravak mora biti otkazan kako biste ga mogli ponovno postaviti u nacrt."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:401
+#: code:addons/repair/models/repair.py:403
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "Popravak se mora potvrditi prije početka popravka."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:429
+#: code:addons/repair/models/repair.py:431
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
 "Popravak se mora popraviti kako bi se mogli napraviti skladišni prijenosi."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:412
+#: code:addons/repair/models/repair.py:414
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Popravak mora biti pod popravkom kako bi se završilo popravljanje."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:244
-#, python-format
-msgid "Repair order is already invoiced."
-msgstr "Nalog za popravak je već fakturiran."
 
 #. module: repair
 #: code:addons/repair/wizard/repair_cancel.py:20
@@ -765,6 +867,11 @@ msgid "Repairs order"
 msgstr "Nalozi za popravak"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
+msgid "Responsible User"
+msgstr "Odgovorna osoba"
+
+#. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
 msgstr "Traži naloge za popravak"
@@ -786,7 +893,7 @@ msgid "Send Quotation"
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:533
+#: code:addons/repair/models/repair.py:544
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Serijski broj je potreban za stavku operacije s proizvodom '%s'"
@@ -819,6 +926,15 @@ msgid "Status"
 msgstr "Status"
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
 msgstr "Skladišni prijenos"
@@ -843,19 +959,23 @@ msgid "Taxes"
 msgstr "Porezi"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
-#, python-format
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr ""
-"Jedinica mjere proizvoda koju ste odabrali je u drugačijoj kategoriji od "
-"jedinice mjere proizvoda na formi proizvoda"
-
-#. module: repair
 #: sql_constraint:repair.order:0
 msgid "The name of the Repair Order must be unique!"
 msgstr "Ime naloga za popravak mora biti jedinstveno!"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:172
+#, python-format
+msgid ""
+"The product unit of measure you chose has a different category than the "
+"product unit of measure."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:246
+#, python-format
+msgid "The repair order is already invoiced."
+msgstr ""
 
 #. module: repair
 #: model:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -895,6 +1015,11 @@ msgstr ""
 #: selection:repair.order,state:0
 msgid "To be Invoiced"
 msgstr "Za fakturiranje"
+
+#. module: repair
+#: selection:repair.order,activity_state:0
+msgid "Today"
+msgstr "Danas"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -939,6 +1064,16 @@ msgid "Unit of Measure"
 msgstr "Jedinica mjere"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Osnovica"
@@ -956,8 +1091,19 @@ msgstr "Upozorenje"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
+#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
 msgstr "Datum isteka jamstva"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_cancel_repair
@@ -965,14 +1111,8 @@ msgid "Yes"
 msgstr "Da"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:293
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
-
-#. module: repair
-#: code:addons/repair/models/repair.py:586
-#: code:addons/repair/models/repair.py:644
+#: code:addons/repair/models/repair.py:597
+#: code:addons/repair/models/repair.py:655
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -980,6 +1120,12 @@ msgid ""
 msgstr ""
 "Morate odabrati cjenik u obrascu popravka!\n"
 "Molimo da  ga postavite prije odabira proizvoda."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:295
+#, python-format
+msgid "You have to select an invoice address in the repair form."
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_traceability_report

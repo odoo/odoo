@@ -9,13 +9,14 @@
 # Dejan Dinic, 2017
 # Martin Trigaux, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: darenkster <inactive+darenkster@transifex.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,11 @@ msgstr "Mitarbeiterzuweisungen"
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "Created By"
 msgstr "Angelegt von"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__owner_user_id
+msgid "Created by User"
+msgstr ""
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__department_id
@@ -76,6 +82,11 @@ msgstr "Meine Anträge"
 #: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Other"
 msgstr "Andere"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__owner_user_id
+msgid "Owner"
+msgstr "Besitzer"
 
 #. module: hr_maintenance
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr

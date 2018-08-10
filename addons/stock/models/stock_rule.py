@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+from collections import OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.tools.misc import split_every
@@ -433,9 +433,19 @@ class ProcurementGroup(models.Model):
             orderpoints_noprefetch = orderpoints_noprefetch[1000:]
 
             # Calculate groups that can be executed together
-            location_data = defaultdict(lambda: dict(products=self.env['product.product'], orderpoints=self.env['stock.warehouse.orderpoint'], groups=list()))
+            location_data = OrderedDict()
+
+            def makedefault():
+                return {
+                    'products': self.env['product.product'],
+                    'orderpoints': self.env['stock.warehouse.orderpoint'],
+                    'groups': []
+                }
+
             for orderpoint in orderpoints:
                 key = self._procurement_from_orderpoint_get_grouping_key([orderpoint.id])
+                if not location_data.get(key):
+                    location_data[key] = makedefault()
                 location_data[key]['products'] += orderpoint.product_id
                 location_data[key]['orderpoints'] += orderpoint
                 location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])

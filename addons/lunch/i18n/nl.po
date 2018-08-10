@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -213,22 +213,22 @@ msgstr "Controleer leveranciers"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Create a new lunch alert"
-msgstr ""
+msgstr "Maak een nieuwe lunchwaarschuwing"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Create a new lunch category"
-msgstr ""
+msgstr "Maak een nieuwe lunch categorie aan"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Maak een nieuwe betaling aan"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "Create a new product for lunch"
-msgstr ""
+msgstr "Maak een nieuw product voor de lunch aan"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
@@ -447,6 +447,7 @@ msgid "List"
 msgstr "Lijst"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__group_lunch_user
 #: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
 msgid "Lunch"
@@ -475,7 +476,7 @@ msgstr "Lunchorder"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
-msgstr ""
+msgstr "Lunch order formulier"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
@@ -553,7 +554,7 @@ msgstr "Nieuw order"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "Nog geen kasmutatie"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
@@ -584,7 +585,7 @@ msgstr "Notitie"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "Niets te bestellen vandaag"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:225
@@ -616,8 +617,8 @@ msgstr "Order"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Order Month"
-msgstr "Bestel maand"
+msgid "Order Date"
+msgstr "Orderdatum"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -765,7 +766,7 @@ msgstr "Registreer kasmutaties"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Register a payment"
-msgstr ""
+msgstr "Registreer een betaling"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__saturday
@@ -898,6 +899,11 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: lunch
+#: model:ir.model,name:lunch.model_res_users
+msgid "Users"
+msgstr "Gebruikers"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier
@@ -907,8 +913,8 @@ msgstr "Leverancier"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-msgid "Vendor Orders by Month"
-msgstr "Leverancier orders per maand"
+msgid "Vendor Orders by Date"
+msgstr "Leverancier orders op datum"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday

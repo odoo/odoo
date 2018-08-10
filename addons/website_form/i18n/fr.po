@@ -13,10 +13,10 @@
 # Richard Mathot <rim@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -27,26 +27,26 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:226
+#: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "\"%s\" n'est pas une date correcte"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:221
+#: code:addons/website_form/static/src/js/website_form.js:225
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' n'est pas une date et une heure correcte"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:226
+#: code:addons/website_form/controllers/main.py:229
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Fichiers attachés : </p>"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Autorisé à utiliser dans les formulaires"
 
@@ -58,12 +58,12 @@ msgid "An error has occured, the form has not been sent."
 msgstr "Une erreur s'est produite, le formulaire n'a pas été envoyé."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr "Mettez sur liste noire ce champ pour les formulaires web."
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
 msgstr "Mis sur liste noire dans le formulaires web"
 
@@ -74,17 +74,18 @@ msgid "Custom infos"
 msgstr "Informations personnalisées"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
 msgstr "Autoriser la fonction contructeur de formulaire pour ce modèle."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
 msgid "Enable writing metadata on form submit."
 msgstr "Autoriser l'écriture de données méta pour soumettre un formulaire"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
 msgstr "Champs pour les données du formulaire personnalisé"
 
@@ -94,7 +95,7 @@ msgid "Fields"
 msgstr "Champs"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
@@ -103,7 +104,7 @@ msgstr ""
 "courriel\" et project.issue pourrait être \"Créez un incident\"."
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr "Etiquette pour un formulaire d'action"
 
@@ -126,7 +127,7 @@ msgid "Please fill in the form correctly."
 msgstr "Merci de remplir correctement le formulaire."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr ""
@@ -141,11 +142,22 @@ msgid "The form has been sent successfully."
 msgstr "Le formulaire a été envoyé avec succès."
 
 #. module: website_form
+#: model:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
+msgstr ""
+
+#. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
 msgstr "Site Web"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
 msgid "Write metadata"
 msgstr "Enregistrer les métadonnées"
+
+#. module: website_form
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

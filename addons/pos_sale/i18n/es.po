@@ -11,13 +11,14 @@
 # maitaoriana <maitaoriana@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # ES R1 <e2fes@hotmail.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: ES R1 <e2fes@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,12 @@ msgid "All sales orders grouped by sales channels"
 msgstr "Todos los pedidos de ventas agrupados por canales de venta"
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:103
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
+msgid "Channel Type"
+msgstr "Tipo de canal"
+
+#. module: pos_sale
+#: code:addons/pos_sale/models/crm_team.py:107
 #, python-format
 msgid "Dashboard"
 msgstr "Tablero"
@@ -73,7 +79,7 @@ msgstr ""
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
-#: model:crm.team,name:pos_sale.pos_sales_team
+#: model:crm.team,name:pos_sale.pos_sales_team selection:crm.team,team_type:0
 msgid "Point of Sale"
 msgstr "Punto de Venta"
 
@@ -83,6 +89,7 @@ msgid "Point of Sales"
 msgstr "Terminal punto de venta (TPV)"
 
 #. module: pos_sale
+#: selection:crm.team,team_type:0
 #: model:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
 msgid "Sales"
 msgstr "Ventas"
@@ -95,7 +102,7 @@ msgid "Sales Channel"
 msgstr "Canal de Ventas"
 
 #. module: pos_sale
-#: code:addons/pos_sale/models/crm_team.py:115
+#: code:addons/pos_sale/models/crm_team.py:119
 #, python-format
 msgid "Sales: Untaxed Amount"
 msgstr "Ventas: Base imponible"
@@ -121,12 +128,23 @@ msgid "Sessions Running"
 msgstr "Sesiones en ejecución"
 
 #. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_crm_team__team_type
+msgid ""
+"The type of this channel, it will define the resources this channel uses."
+msgstr "El tipo de canal, que determinará los recursos que emplea este canal."
+
+#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Channel."
 msgstr ""
 "Las ventas de este punto de venta estarán relacionadas con el canal de "
 "ventas."
+
+#. module: pos_sale
+#: selection:crm.team,team_type:0
+msgid "Website"
+msgstr "Sitio web"
 
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0

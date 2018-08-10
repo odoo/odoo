@@ -1,50 +1,71 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_partner
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-10 09:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
-msgid "Partner"
-msgstr "伙伴"
-
-#. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_self
-msgid "Self"
-msgstr ""
+msgid "Contact"
+msgstr "聯絡人"
 
 #. module: website_partner
 #: model:ir.ui.view,arch_db:website_partner.partner_detail
 msgid "Short Description for List View"
-msgstr ""
+msgstr "列表視圖簡短說明"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
+#: model:ir.model.fields,help:website_partner.field_res_users__website_url
+msgid "The full URL to access the document through the website."
+msgstr "通過網站訪問單據的完整網址。"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_published
+msgid "Visible in Website"
+msgstr "在網站可見"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "網站業務夥伴的詳細說明"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "網站業務夥伴簡介"
 
-#~ msgid "Website URL"
-#~ msgstr "網址"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_url
+msgid "Website URL"
+msgstr "網站網址"
 
-#~ msgid "unknown"
-#~ msgstr "不詳"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_description
+msgid "Website meta description"
+msgstr "網站元說明"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "網站元關鍵詞"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_title
+msgid "Website meta title"
+msgstr "網站元標題"

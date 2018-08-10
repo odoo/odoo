@@ -173,14 +173,14 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" after picking return' % self.so.invoice_status)
-        self.assertAlmostEqual(self.so.order_line[0].qty_delivered, 3.0, 'Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
+        self.assertAlmostEqual(self.so.order_line[0].qty_delivered, 3.0, msg='Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
         # let's do an invoice with refunds
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'all',
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
-        self.assertAlmostEqual(self.inv_2.invoice_line_ids[0].quantity, 2.0, 'Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids[0].quantity)
+        self.assertAlmostEqual(self.inv_2.invoice_line_ids[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
 
     def test_03_sale_stock_delivery_partial(self):
@@ -416,3 +416,76 @@ class TestSaleStock(TestSale):
 
         # check the delivered quantity
         self.assertEqual(so1.order_line.qty_delivered, 3.0)
+
+    def test_07_forced_qties(self):
+        """ Make multiple sale order lines of the same product which isn't available in stock. On
+        the picking, create new move lines (through the detailed operations view). See that the move
+        lines are correctly dispatched through the moves.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        item1 = self.products['prod_order']
+
+        self.assertEqual(item1.uom_id.id, uom_unit.id)
+
+        # sell a dozen
+        so1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': uom_dozen.id,
+                    'price_unit': item1.list_price,
+                }),
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': uom_dozen.id,
+                    'price_unit': item1.list_price,
+                }),
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': uom_dozen.id,
+                    'price_unit': item1.list_price,
+                }),
+            ],
+        })
+        so1.action_confirm()
+
+        self.assertEqual(len(so1.picking_ids.move_lines), 3)
+        so1.picking_ids.write({
+            'move_line_ids': [
+                (0, 0, {
+                    'product_id': item1.id,
+                    'product_uom_qty': 0,
+                    'qty_done': 1,
+                    'product_uom_id': uom_dozen.id,
+                    'location_id': so1.picking_ids.location_id.id,
+                    'location_dest_id': so1.picking_ids.location_dest_id.id,
+                }),
+                (0, 0, {
+                    'product_id': item1.id,
+                    'product_uom_qty': 0,
+                    'qty_done': 1,
+                    'product_uom_id': uom_dozen.id,
+                    'location_id': so1.picking_ids.location_id.id,
+                    'location_dest_id': so1.picking_ids.location_dest_id.id,
+                }),
+                (0, 0, {
+                    'product_id': item1.id,
+                    'product_uom_qty': 0,
+                    'qty_done': 1,
+                    'product_uom_id': uom_dozen.id,
+                    'location_id': so1.picking_ids.location_id.id,
+                    'location_dest_id': so1.picking_ids.location_dest_id.id,
+                }),
+            ],
+        })
+        so1.picking_ids.button_validate()
+        self.assertEqual(so1.picking_ids.state, 'done')
+        self.assertEqual(so1.order_line.mapped('qty_delivered'), [1, 1, 1])

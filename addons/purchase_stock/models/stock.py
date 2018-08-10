@@ -78,6 +78,10 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _clean_merged(self):
+        super(StockMove, self)._clean_merged()
+        self.write({'created_purchase_line_id': False})
+
     def _action_done(self):
         res = super(StockMove, self)._action_done()
         self.mapped('purchase_line_id').sudo()._update_received_qty()

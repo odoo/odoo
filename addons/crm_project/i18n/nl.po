@@ -7,13 +7,14 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +49,11 @@ msgid "Create Task"
 msgstr "Taak aanmaken"
 
 #. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "Maak een nieuwe klant"
+
+#. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
@@ -58,9 +64,19 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "Klant"
+
+#. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr "Weergavenaam"
+
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "Koppel niet aan een klant"
 
 #. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
@@ -88,9 +104,19 @@ msgid "Lead"
 msgstr "Lead"
 
 #. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "Koppel aan een bestaande klant"
+
+#. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr "Project"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "Gekoppelde klant"
 
 #. module: crm_project
 #: model:ir.model,name:crm_project.model_crm_lead_convert2task

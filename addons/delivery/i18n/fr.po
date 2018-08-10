@@ -27,10 +27,10 @@
 # Cécile Collart <cco@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -110,11 +110,15 @@ msgstr "<strong>Transporteur</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Shipping Weight</strong>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
 msgstr "<strong>Numéro de suivi</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>Poids</strong>"
@@ -324,6 +328,11 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: delivery
+#: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
+msgid "Display tracking links"
+msgstr ""
+
+#. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
@@ -341,7 +350,6 @@ msgstr "Environnement"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:50
-#: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
 msgstr "Erreur : aucune grille tarifaire correspondante."
@@ -374,6 +382,7 @@ msgid "Fixed Price"
 msgstr "Forfait"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -500,11 +509,6 @@ msgid "Log requests in order to ease debugging"
 msgstr "Consigner les demandes pour faciliter le débogage"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-msgid "Manage Package Type"
-msgstr "Gérer le type de colis"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr "Marge"
@@ -558,12 +562,17 @@ msgid "No carrier set for this order."
 msgstr "Aucun transporteur fixé pour cette commande."
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_grid.py:100
+#: code:addons/delivery/models/delivery_grid.py:102
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 "Aucune règle de prix ne correspond à cette commande ; impossible de calculer"
 " les frais de livraison."
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+msgid "OK"
+msgstr "OK"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -581,8 +590,8 @@ msgid "Package Code"
 msgstr "Code de colis"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:37
-#: code:addons/delivery/models/stock_picking.py:121
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:119
 #, python-format
 msgid "Package Details"
 msgstr "Détails du colis"
@@ -728,7 +737,7 @@ msgstr ""
 "production."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:165
+#: code:addons/delivery/models/stock_picking.py:166
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -781,6 +790,12 @@ msgid ""
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:111
+#, python-format
+msgid "There is no matching delivery rule."
+msgstr ""
+
+#. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
@@ -802,6 +817,11 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
 msgstr "Ce pourcentage sera ajouté au prix d'expédition"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+msgid "Trackers URL"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -898,7 +918,7 @@ msgid "Width must be positive"
 msgstr "La largeur doit être positive"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:203
+#: code:addons/delivery/models/stock_picking.py:217
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -916,7 +936,12 @@ msgstr ""
 "confirmés."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:179
+#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+msgid "You have multiple tracker links, they are available in the chatter."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:180
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "

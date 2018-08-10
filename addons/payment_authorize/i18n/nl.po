@@ -8,13 +8,14 @@
 # Martin Trigaux, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Thomas Pot <thomas@open2bizz.nl>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +34,22 @@ msgid "API Transaction Key"
 msgstr "API Transactiesleutel"
 
 #. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
 msgstr "Authorize.net Profiel ID"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:178
+#: code:addons/payment_authorize/models/payment.py:177
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
@@ -46,6 +57,11 @@ msgid ""
 msgstr ""
 "Authorize: data ontvangen met missende referentie (%s) of trans_id (%s) of "
 "fingerprint (%s)"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -79,6 +95,30 @@ msgid ""
 "If you don't have any account, please ask your salesperson to update your "
 "profile. "
 msgstr ""
+"Vraag uw verkoper om uw profiel bij te werken als u geen account heeft."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:261
+#, python-format
+msgid ""
+"Invalid token found: the Authorize profile is missing.Please make sure the "
+"token has a valid acquirer reference."
+msgstr ""
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Handmatige instellingen"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -89,6 +129,11 @@ msgstr "Betaling verwerver"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:63
@@ -103,6 +148,7 @@ msgid "Please sign in to complete your profile."
 msgstr "Gelieve aan te melden om uw profiel te voltooien."
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
 msgstr "Provider"
@@ -113,7 +159,17 @@ msgid "Save Cards"
 msgstr "Creditcards opslaan"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:383
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:365
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Aanmaken van klant profiel op Authorize.NET mislukt."
@@ -149,6 +205,11 @@ msgstr ""
 "en deze opnieuw gebruiken voor een latere aankoop. Als u abonnementen "
 "beheert (periodieke facturering), hebt u deze nodig om de klant automatisch "
 "in rekening te brengen bij het bevestigen van een factuur."
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Overschrijving"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
