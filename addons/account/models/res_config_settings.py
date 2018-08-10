@@ -81,6 +81,7 @@ class ResConfigSettings(models.TransientModel):
         help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
                This is useful if you install accounting after having used invoicing for some time and
                don't want to reconcile all the past payments with bank statements.""")
+    account_sanitize_invoice_ref = fields.Boolean(string="Sanitize Invoice References", related='company_id.account_sanitize_invoice_ref', help="If checked, customer invoices' and vendor bills' referneces will automatically correct their reference so that they are maximum 140 characters long, consist only of latin characters, contain no '//' sequence, and have no leading or trailing /.")
 
     @api.multi
     def set_values(self):

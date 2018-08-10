@@ -193,10 +193,11 @@
             <field name="arch" type="xml">
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
-                        <group>                    
+                        <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice">
                                 <field name="bank_ids" nolabel="1">
                                     <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
                                         <field name="bank_id"/>
                                         <field name="acc_number"/>
                                     </tree>
