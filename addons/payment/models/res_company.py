@@ -13,6 +13,7 @@ class ResCompany(models.Model):
         ('paypal', "PayPal"),
         ('stripe', "Stripe"),
         ('manual', "Manual"),
+        ('other', "Other"),
     ], string="Selected onboarding payment method")
 
     @api.model

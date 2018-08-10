@@ -74,7 +74,7 @@
             <t t-set="bg_image">/account/static/src/img/account_invoice_onboarding_bg.jpg</t>
             <t t-set="close_method">action_close_account_invoice_onboarding</t>
             <t t-set="close_model">res.company</t>
-            <t t-set="text_completed">Congratulations! You are all set. You can now issue real invoices to your customers.</t>
+            <t t-set="text_completed">Congratulations! You are all set.</t>
 
             <t t-call="base.onboarding_company_step" name="company_step" />
             <t t-call="account.onboarding_invoice_layout_step" name="invoice_layout_step" />
@@ -149,7 +149,7 @@
     <template id="onboarding_sale_tax_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Taxes</t>
-            <t t-set="description">Choose a default tax.</t>
+            <t t-set="description">Choose a default sales tax for your products.</t>
             <t t-set="btn_text">I'm ready</t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_sale_tax'" />

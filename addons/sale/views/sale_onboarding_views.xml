@@ -14,7 +14,7 @@
     </template>
     <template id="sale_onboarding_order_confirmation_step">
         <t t-call="base.onboarding_step">
-            <t t-set="title">Confirmation &amp; payment</t>
+            <t t-set="title">Confirmation &amp; Payment</t>
             <t t-set="description">Choose how to confirm quotations and get paid.</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_payment_acquirer'" />
             <t t-set="model" t-value="'res.company'" />
@@ -55,19 +55,10 @@
             <xpath expr="//div[@name='left-column']" position="attributes">
                 <attribute name="class">col col-4</attribute>
             </xpath>
-            <xpath expr="//div[@name='right-column']" position="inside">
-                <div attrs="{'invisible': [('payment_method', '!=', 'digital_signature')]}">
-                        Digital signature offers as much legal guarantee as a paper signature, with way
-                        more convenience for all parties.
-                </div>
-                <div attrs="{'invisible': [('payment_method', '!=', 'none')]}">
-                    The salesperson confirms the quotation, after receiving an approval by email, a call, etc.
-                </div>
-            </xpath>
         </field>
     </record>
     <record id="action_open_sale_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
-        <field name="name">Choose a payment method</field>
+        <field name="name">How your customers can confirm an order</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.payment.acquirer.onboarding.wizard</field>
         <field name="view_type">form</field>

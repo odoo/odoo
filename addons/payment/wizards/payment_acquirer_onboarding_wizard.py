@@ -9,9 +9,10 @@ class PaymentWizard(models.TransientModel):
     _name = 'payment.acquirer.onboarding.wizard'
 
     payment_method = fields.Selection([
-        ('paypal', "PayPal"),
-        ('stripe', "Credit Card (via Stripe)"),
-        ('manual', "Wire Transfer"),
+        ('paypal', "Pay with PayPal"),
+        ('stripe', "Pay with credit card (via Stripe)"),
+        ('other', "Pay with another payment acquirer"),
+        ('manual', "Custom payment instructions"),
     ], string="Payment Method", default=lambda self: self._get_default_payment_acquirer_onboarding_value('payment_method'))
 
     paypal_email_account = fields.Char("PayPal Email ID", default=lambda self: self._get_default_payment_acquirer_onboarding_value('paypal_email_account'))
@@ -21,7 +22,8 @@ class PaymentWizard(models.TransientModel):
     stripe_secret_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_secret_key'))
     stripe_publishable_key = fields.Char(default=lambda self: self._get_default_payment_acquirer_onboarding_value('stripe_publishable_key'))
 
-    journal_name = fields.Char("Journal Name", default=lambda self: self._get_default_payment_acquirer_onboarding_value('journal_name'))
+    manual_name = fields.Char("Method",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('manual_name'))
+    journal_name = fields.Char("Bank Name", default=lambda self: self._get_default_payment_acquirer_onboarding_value('journal_name'))
     acc_number = fields.Char("Account Number",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('acc_number'))
     manual_post_msg = fields.Html("Payment instructions")
 
@@ -69,6 +71,7 @@ class PaymentWizard(models.TransientModel):
         manual_payment = self._get_manual_payment_acquirer()
         journal = manual_payment.journal_id
 
+        self._payment_acquirer_onboarding_cache['manual_name'] = manual_payment['name']
         self._payment_acquirer_onboarding_cache['manual_post_msg'] = manual_payment['post_msg']
         self._payment_acquirer_onboarding_cache['journal_name'] = journal.name if journal.name != "Bank" else ""
         self._payment_acquirer_onboarding_cache['acc_number'] = journal.bank_acc_number
@@ -79,6 +82,9 @@ class PaymentWizard(models.TransientModel):
         module = self.env['ir.module.module'].sudo().search([('name', '=', module_name)])
         if module.state not in ('installed', 'to install', 'to upgrade'):
             module.button_immediate_install()
+
+    def _on_save_payment_acquirer(self):
+        self._install_module('account_payment')
 
     @api.multi
     def add_payment_methods(self):
@@ -91,7 +97,9 @@ class PaymentWizard(models.TransientModel):
         if self.payment_method == 'stripe':
             self._install_module('payment_stripe')
 
-        if self.payment_method  in ('paypal', 'stripe', 'manual'):
+        if self.payment_method  in ('paypal', 'stripe', 'manual', 'other'):
+
+            self._on_save_payment_acquirer()
 
             self.env.user.company_id.payment_onboarding_payment_method = self.payment_method
 
@@ -113,6 +121,7 @@ class PaymentWizard(models.TransientModel):
                 })
             if self.payment_method == 'manual':
                 manual_acquirer = self._get_manual_payment_acquirer(new_env)
+                manual_acquirer.name = self.manual_name
                 manual_acquirer.post_msg = self.manual_post_msg
                 manual_acquirer.website_published = True
 
