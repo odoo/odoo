@@ -69,7 +69,6 @@
                             <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary"/>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-primary" states="uninstalled" attrs="{'invisible': [('to_buy','=',False)]}" role="button">Upgrade</a>
                             <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary"/>
-                            <button name="button_discover" string="Learn More" type="object" attrs="{'invisible':['|', ('website', '=', False), ('application', '=', False)]}" class="btn btn-secondary"/>
                             <button name="button_uninstall_wizard" states="installed" string="Uninstall" type="object"  class="btn btn-secondary"/>
                             <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object" class="btn btn-secondary"/>
                             <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object" class="btn btn-secondary"/>
@@ -185,8 +184,7 @@
                              <field name="summary"/>
                           </p>
                           <div class="oe_module_action">
-
-                            <button name="button_discover" type="object" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-secondary float-right">Learn More</button>
+                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-secondary float-right" role="button">Learn More</a>
                             <a type="edit" class="btn btn-secondary float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
                             <button type="object" class="btn btn-primary" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" states="uninstalled" t-if="record.to_buy.raw_value" role="button">Upgrade</a>
