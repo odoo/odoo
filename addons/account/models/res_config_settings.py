@@ -72,6 +72,7 @@ class ResConfigSettings(models.TransientModel):
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
+    module_account_predictive_account = fields.Boolean(string="Account Predictive Account")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
