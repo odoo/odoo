@@ -25,6 +25,18 @@
 }
 
 // ------------------------------------------------------------------
+// Position sticky
+// ------------------------------------------------------------------
+@mixin o-position-sticky($top: auto, $right: auto, $bottom: auto, $left: auto) {
+    position: -webkit-sticky;
+    position: sticky;
+    top: $top;
+    left: $left;
+    bottom: $bottom;
+    right: $right;
+}
+
+// ------------------------------------------------------------------
 // Text overflow
 // ------------------------------------------------------------------
 @mixin o-text-overflow($display: inline-block, $max-width: 100%) {
@@ -34,6 +46,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+// ------------------------------------------------------------------
+// Transparent background color
+// ------------------------------------------------------------------
+@mixin o-transparent-background-color($alpha: 1, $color: white) {
+    // convert hex to rgba for applying opacity
+    background-color: rgba(red($color), green($color), blue($color), $alpha);
 }
 
 // ------------------------------------------------------------------

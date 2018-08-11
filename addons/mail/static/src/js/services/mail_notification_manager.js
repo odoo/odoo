@@ -43,6 +43,24 @@ MailManager.include({
         return notifications;
     },
     /**
+     * Called when receiving a notification on a channel (all members of a
+     * channel receive this notification)
+     *
+     * @private
+     * @param {Object} params
+     * @param {integer} [params.channelID]
+     * @param {Object} params.data
+     * @param {string} [params.data.info] if set, specify the type of data on
+     *   this channel notification
+     */
+    _handleChannelNotification: function (params) {
+        if (params.data && params.data.info === 'typing_status') {
+            this._handleChannelTypingNotification(params.channelID, params.data);
+        } else {
+            this._handleChannelMessageNotification(params.data);
+        }
+    },
+    /**
      * Called when a new or updated message is received on a channel
      *
      * @private
@@ -51,7 +69,7 @@ MailManager.include({
      *   (note that 'pending moderation' messages in moderated channels do not
      *   have the moderated channels in this array).
      */
-    _handleChannelNotification: function (messageData) {
+    _handleChannelMessageNotification: function (messageData) {
         var self = this;
         var def;
         var channelAlreadyInCache = true;
@@ -69,6 +87,36 @@ MailManager.include({
                 incrementUnread: channelAlreadyInCache
             });
         });
+    },
+    /**
+     * Called when someone starts or stops typing a message in a channel
+     *
+     * @private
+     * @param {integer} channelID
+     * @param {Object} typingData
+     * @param {boolean} typingData.is_typing
+     * @param {boolean} typingData.is_website_user
+     * @param {integer} typingData.partner_id
+     */
+    _handleChannelTypingNotification: function (channelID, typingData) {
+        var isWebsiteUser = typingData.is_website_user;
+        var partnerID = typingData.partner_id;
+        if (partnerID === session.partner_id && !isWebsiteUser) {
+            return; // ignore typing notification of myself
+        }
+        var channel = this.getChannel(channelID);
+        if (!channel) {
+            return;
+        }
+        var typingID = {
+            isWebsiteUser: typingData.is_website_user,
+            partnerID: typingData.partner_id,
+        };
+        if (typingData.is_typing) {
+            channel.registerTyping(typingID);
+        } else {
+            channel.unregisterTyping(typingID);
+        }
     },
      /**
      * On message becoming a need action (pinned to inbox)
@@ -487,7 +535,11 @@ MailManager.include({
             if (model === 'ir.needaction') {
                 self._handleNeedactionNotification(notif[1]);
             } else if (model === 'mail.channel') {
-                self._handleChannelNotification(notif[1]);
+                // new message in a channel
+                self._handleChannelNotification({
+                    channelID: notif[0][2],
+                    data: notif[1],
+                });
             } else if (model === 'res.partner') {
                 self._handlePartnerNotification(notif[1]);
             } else if (model === 'bus.presence') {

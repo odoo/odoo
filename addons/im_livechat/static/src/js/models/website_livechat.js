@@ -2,6 +2,7 @@ odoo.define('im_livechat.model.WebsiteLivechat', function (require) {
 "use strict";
 
 var AbstractThread = require('mail.model.AbstractThread');
+var ThreadTypingMixin = require('mail.model.ThreadTypingMixin');
 
 var session = require('web.session');
 
@@ -9,7 +10,7 @@ var session = require('web.session');
  * Thread model that represents a livechat on the website-side. This livechat
  * is not linked to the mail service.
  */
-var WebsiteLivechat = AbstractThread.extend({
+var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
 
     /**
      * @override
@@ -32,6 +33,7 @@ var WebsiteLivechat = AbstractThread.extend({
      */
     init: function (params) {
         this._super.apply(this, arguments);
+        ThreadTypingMixin.init.call(this, arguments);
 
         this._members = [];
         this._operatorPID = params.data.operator_pid;
@@ -46,6 +48,13 @@ var WebsiteLivechat = AbstractThread.extend({
         } else {
             this._folded = params.data.state === 'folded';
         }
+
+        // Necessary for thread typing mixin to display is typing notification
+        // bar text (at least, for the operator in the members).
+        this._members.push({
+            id: this._operatorPID[0],
+            name: this._operatorPID[1]
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -108,6 +117,39 @@ var WebsiteLivechat = AbstractThread.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     * @param {Object} params
+     * @param {boolean} params.isWebsiteUser
+     * @returns {boolean}
+     */
+    _isTypingMyselfInfo: function (params) {
+        return params.isWebsiteUser;
+    },
+    /**
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     * @param {Object} params
+     * @param {boolean} params.typing
+     * @returns {$.Promise}
+     */
+    _notifyMyselfTyping: function (params) {
+        return session.rpc('/im_livechat/notify_typing', {
+            uuid: this.getUUID(),
+            is_typing: params.typing,
+        }, { shadow: true });
+    },
+    /**
+     * Warn views that the list of users that are currently typing on this
+     * livechat has been updated.
+     *
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     */
+    _warnUpdatedTypingPartners: function () {
+        this.trigger_up('updated_typing_partners');
+    },
+    /**
      * Warn that the unread counter has been updated on this livechat
      *
      * @override
@@ -115,6 +157,28 @@ var WebsiteLivechat = AbstractThread.extend({
      */
     _warnUpdatedUnreadCounter: function () {
         this.trigger_up('updated_unread_counter');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handler
+    //--------------------------------------------------------------------------
+
+    /**
+     * Override so that it only unregister typing operators.
+     *
+     * Note that in the frontend, there is no way to identify a message that is
+     * from the current user, because there is no partner ID in the session and
+     * a message with an author sets the partner ID of the author.
+     *
+     * @override {mail.model.ThreadTypingMixin}
+     * @private
+     * @param {mail.model.AbstractMessage} message
+     */
+    _onTypingMessageAdded: function (message) {
+        var operatorID = this.getOperatorPID()[0];
+        if (message.hasAuthor() && message.getAuthorID() === operatorID) {
+            this.unregisterTyping({ partnerID: operatorID });
+        }
     },
 });
 

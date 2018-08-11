@@ -48,6 +48,7 @@ var LivechatButton = Widget.extend({
         'close_chat_window': '_onCloseChatWindow',
         'post_message_chat_window': '_onPostMessageChatWindow',
         'save_chat_window': '_onSaveChatWindow',
+        'updated_typing_partners': '_onUpdatedTypingPartners',
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
@@ -122,6 +123,9 @@ var LivechatButton = Widget.extend({
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
+        if (this._livechat) {
+            this._livechat.addMessage(message);
+        }
 
         if (options && options.prepend) {
             this._messages.unshift(message);
@@ -162,6 +166,17 @@ var LivechatButton = Widget.extend({
                     channel_uuid: this._livechat.getUUID(),
                     page_history: history,
                 });
+            } else if (notification[1].info === 'typing_status') {
+                var isWebsiteUser = notification[1].is_website_user;
+                if (isWebsiteUser) {
+                    return; // do not handle typing status notification of myself
+                }
+                var partnerID = notification[1].partner_id;
+                if (notification[1].is_typing) {
+                    this._livechat.registerTyping({ partnerID: partnerID });
+                } else {
+                    this._livechat.unregisterTyping({ partnerID: partnerID });
+                }
             } else { // normal message
                 this._addMessage(notification[1]);
                 this._renderMessages();
@@ -338,6 +353,14 @@ var LivechatButton = Widget.extend({
     _onSaveChatWindow: function (ev) {
         ev.stopPropagation();
         utils.set_cookie('im_livechat_session', JSON.stringify(this._livechat.toData()), 60*60);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onUpdatedTypingPartners: function (ev) {
+        ev.stopPropagation();
+        this._chatWindow.renderTypingNotificationBar();
     },
     /**
      * @private

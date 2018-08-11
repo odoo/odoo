@@ -176,6 +176,9 @@ MockServer.include({
         if (args.method === 'moderate') {
             return $.when(this._mockModerate(args));
         }
+        if (args.method === 'notify_typing') {
+            return $.when();
+        }
         if (args.method === 'set_message_done') {
             return $.when();
         }
