@@ -88,7 +88,7 @@ var MailManager =  AbstractService.extend({
                 });
             }
             if (options.domain && options.domain !== []) {
-                this._addMessageToThreads(message, options.domain);
+                this._addMessageToThreads(message, options);
             }
         }
         return message;
@@ -490,14 +490,17 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {mail.model.Message} message
-     * @param {Array} domain
+     * @param {Object} [options={}]
+     * @param {Array} [options.domain=[]]
+     * @param {boolean} [options.incrementUnread=false]
      */
-    _addMessageToThreads: function (message, domain) {
+    _addMessageToThreads: function (message, options) {
         var self = this;
+        options = options || {};
         _.each(message.getThreadIDs(), function (threadID) {
             var thread = self.getThread(threadID);
             if (thread) {
-                thread.addMessage(message, domain);
+                thread.addMessage(message, options);
             }
         });
     },
@@ -517,7 +520,7 @@ var MailManager =  AbstractService.extend({
         });
         this._messages.splice(index, 0, message);
         this._addNewMessagePostprocessThread(message, options);
-        this._addMessageToThreads(message, []);
+        this._addMessageToThreads(message, options);
         if (!options.silent) {
             this._mailBus.trigger('new_message', message);
         }
@@ -543,10 +546,6 @@ var MailManager =  AbstractService.extend({
                     !message.isMyselfAuthor() &&
                     !message.isSystemNotification()
                 ) {
-                    // HERE (remove below line for final version)
-                    if (options.incrementUnread) {
-                        thread.incrementUnreadCounter();
-                    }
                     if (thread.isTwoUserThread() && options.showNotification) {
                         if (
                             !self._isDiscussOpen() &&

@@ -370,5 +370,56 @@ QUnit.test('preview of message on a document', function (assert) {
     messagingMenu.destroy();
 });
 
+QUnit.test('update messaging preview on receiving a new message in channel preview', function (assert) {
+    assert.expect(8);
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should display a single channel preview");
+    assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(), "general",
+        "should display channel preview of 'general' channel");
+    assert.strictEqual(messagingMenu.$('.o_preview_counter').text().trim(), "",
+        "should have unread counter of 0 for 'general' channel (no unread messages)");
+    // remove any space-character inside text
+    var lastMessagePreviewText =
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, "");
+    assert.strictEqual(lastMessagePreviewText,
+        "Me:test",
+        "should display author name and inline body of currently last message in the channel");
+
+    // simulate receiving a new message on the channel 'general' (id 1)
+    var data = {
+        id: 100,
+        author_id: [42, "Someone"],
+        body: "<p>A new message content</p>",
+        channel_ids: [1],
+    };
+    var notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should still display a single channel preview");
+    assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(), "general",
+        "should still display channel preview of 'general' channel");
+    assert.strictEqual(messagingMenu.$('.o_preview_counter').text().trim(), "(1)",
+        "should have incremented unread counter of 'general' channel");
+    // remove any space-character inside text
+    lastMessagePreviewText =
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, "");
+    assert.strictEqual(lastMessagePreviewText,
+        "Someone:Anewmessagecontent",
+        "should display author name and inline body of newly received message");
+
+    messagingMenu.destroy();
+});
+
 });
 });

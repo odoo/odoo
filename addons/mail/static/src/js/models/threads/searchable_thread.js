@@ -117,16 +117,21 @@ var SearchableThread = Thread.extend({
      * @override
      * @private
      * @param {mail.model.Message} message
-     * @param {Array} domain
+     * @param {Object} options
+     * @param {Array} [options.domain=[]]
+     * @param {boolean} [options.incrementUnread=false]
      */
-    _addMessage: function (message, domain) {
+    _addMessage: function (message, options) {
         this._super.apply(this, arguments);
-        var cache = this._getCache(domain);
+        var cache = this._getCache(options.domain || []);
         var index = _.sortedIndex(cache.messages, message, function (msg) {
             return msg.getID();
         });
         if (cache.messages[index] !== message) {
             cache.messages.splice(index, 0, message);
+        }
+        if (options.incrementUnread) {
+            this._incrementUnreadCounter();
         }
     },
     /**
