@@ -20,10 +20,11 @@
         flex-flow: column nowrap;
     }
     .o_notification_counter {
-        @include o-position-absolute($top: 20%, $right: 1px);
+        margin-right: 0;
+        margin-left: -0.4rem;
         background: $o-brand-primary;
         color: white;
-        padding: 0em 0.3em;
+        vertical-align: super;
         font-size: 0.7em;
     }
     .o_mail_systray_dropdown {
