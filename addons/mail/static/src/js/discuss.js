@@ -986,26 +986,60 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _updateControlPanelButtons: function (thread) {
         // Hide 'unsubscribe' button in state channels and DM chats and channels with group-based subscription
-        this.$buttons
-            .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
-            .toggle(thread.getType() !== 'dm' && thread.getType() !== 'mailbox');
-        this.$buttons
-            .find('.o_mail_discuss_button_mark_all_read')
-            .toggle(thread.getID() === 'mailbox_inbox')
-            .removeClass('o_hidden');
-        this.$buttons
-            .find('.o_mail_discuss_button_unstar_all')
-            .toggle(thread.getID() === 'mailbox_starred')
-            .removeClass('o_hidden');
-        this.$buttons
-            .find('.o_mail_discuss_button_select_all')
-            .toggle((thread.isModerated() && thread.isMyselfModerator()) || thread.getID() === 'mailbox_moderation')
-            .removeClass('o_hidden');
-        this.$buttons
-            .find('.o_mail_discuss_button_unselect_all')
-            .toggle((thread.isModerated() && thread.isMyselfModerator()) || thread.getID() === 'mailbox_moderation')
-            .removeClass('o_hidden');
-        this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
+        // Invite
+        if (thread.getType() !== 'dm_chat' && thread.getType() !== 'mailbox') {
+            this.$buttons
+                .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none d-md-inline-block');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none');
+        }
+        // Mark All Read
+        if (thread.getID() === 'mailbox_inbox') {
+            this.$buttons
+                .find('.o_mail_discuss_button_mark_all_read')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none d-md-inline-block');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_mark_all_read')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none');
+        }
+        // Unstar All
+        if (thread.getID() === 'mailbox_starred') {
+            this.$buttons
+                .find('.o_mail_discuss_button_unstar_all')
+                .removeClass('d-none');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_unstar_all')
+                .addClass('d-none');
+        }
+        // Select All & Unselect All
+        if (
+            (thread.isModerated() && thread.isMyselfModerator()) ||
+            thread.getID() === 'mailbox_moderation'
+        ) {
+            this.$buttons
+                .find('.o_mail_discuss_button_select_all')
+                .removeClass('d-none');
+            this.$buttons
+                .find('.o_mail_discuss_button_unselect_all')
+                .removeClass('d-none');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_select_all')
+                .addClass('d-none');
+            this.$buttons
+                .find('.o_mail_discuss_button_unselect_all')
+                .addClass('d-none');
+        }
+        this.$buttons.find('.o_mail_discuss_button_moderate_all').addClass('d-none');
 
         this.$('.o_mail_discuss_item')
             .removeClass('o_active')
@@ -1032,9 +1066,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _updateModerationDecisionButton: function () {
         if (this._threadWidget.$('.moderation_checkbox:checked').length) {
-            this.$buttons.find('.o_mail_discuss_button_moderate_all').show();
+            this.$buttons.find('.o_mail_discuss_button_moderate_all').removeClass('d-none');
         } else {
-            this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
+            this.$buttons.find('.o_mail_discuss_button_moderate_all').addClass('d-none');
         }
     },
     /**

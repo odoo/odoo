@@ -22,11 +22,11 @@ var MessagingMenu = Widget.extend({
     name: 'messaging_menu',
     template:'mail.systray.MessagingMenu',
     events: {
-        'click': '_onClick',
         'click .o_mail_preview': '_onClickPreview',
         'click .o_filter_button': '_onClickFilterButton',
         'click .o_new_message': '_onClickNewMessage',
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
+        'show.bs.dropdown': '_onShowDropdown',
     },
     /**
      * @override
@@ -93,10 +93,10 @@ var MessagingMenu = Widget.extend({
     },
     /**
      * @private
-     * @return {boolean} whether the messaging menu is open or not.
+     * @return {boolean} whether the messaging menu is shown or not.
      */
-    _isOpen: function () {
-        return this.$el.hasClass('open');
+    _isShown: function () {
+        return this.$el.hasClass('show');
     },
     /**
      * Open discuss
@@ -237,7 +237,7 @@ var MessagingMenu = Widget.extend({
         counter = unreadChannelCounter + inboxCounter + mailFailureCounter;
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
-        if (this._isOpen()) {
+        if (this._isShown()) {
             this._updatePreviews();
         }
     },
@@ -249,11 +249,7 @@ var MessagingMenu = Widget.extend({
     /**
      * @private
      */
-    _onClick: function () {
-        if (!this._isOpen()) {
-            // we are opening the dropdown so update its content
-            this._updatePreviews();
-        }
+    _onShowDropdown: function () {
         this._updatePreviews();
     },
     /**
