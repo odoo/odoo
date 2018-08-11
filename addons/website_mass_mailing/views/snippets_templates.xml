@@ -52,16 +52,15 @@
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
     <xpath expr="//div" position="after">
-        <div data-js='mailing_list_subscribe'
+        <div data-js="mailing_list_subscribe"
             data-selector=".js_subscribe"
             data-drop-near="p, h1, h2, h3, blockquote, .card">
-            <li data-select_mailing_list="" data-no-preview="true"><a href="#">Change Newsletter</a></li>
+            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
         </div>
-
-        <div data-js='newsletter_popup'
+        <div data-js="newsletter_popup"
             data-selector=".o_newsletter_popup"
             data-drop-in=".oe_structure, [data-oe-type=html]">
-            <li data-select_mailing_list="" data-no-preview="true"><a href="#">Change Newsletter</a></li>
+            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
         </div>
     </xpath>
 </template>
