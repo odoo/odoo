@@ -8,7 +8,7 @@
 # arya sadeghy <aryasadeghy@gmail.com>, 2016
 # Zahed Alfak <tamass4116@gmail.com>, 2016
 # Reza Royaei <mr.royaei@gmail.com>, 2016
-# ifaraz ir <ifarazir@gmail.com>, 2016
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2016
 # hamid hvbnet <hvbnet@yahoo.com>, 2016
 # Morovat Guivi <tarjomac@gmail.com>, 2016
 # Maziar Niaki <maziarmn@gmail.com>, 2017
@@ -144,6 +144,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>سلام ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>موقعیت <strong>${object.name}</strong> در پنج روز گذشته هیچ فعالتی نداشته است.</p>\n"
+"%if object.description:\n"
+"<p>اینجا توضیحاتی در مورد موقعیت است : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>سپاسگذاریم!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -160,7 +167,7 @@ msgstr "تعداد فعالیتها"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "(if leads are activated)"
-msgstr ""
+msgstr "(اگر سرنخها فعال باشند)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -310,20 +317,22 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"label label-default text-center odoo_purple\">Lead</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">سرنخ</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">Opportunity</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">فرصت</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Quotation</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">پیشنهاد "
+"قیمت</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1111,7 +1120,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Category of lead"
-msgstr ""
+msgstr "طبقه‌بندی سرنخ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
@@ -1121,7 +1130,7 @@ msgstr "میزان شانس‌موفقیت به صورت خودکار تغییر
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Change the layout of a quotation"
-msgstr ""
+msgstr "تغییر طرح‌بندی پیش فاکتور"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -1168,13 +1177,13 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:54
 #, python-format
 msgid "Click on an opportunity to zoom to it."
-msgstr ""
+msgstr "بر روی فرصت برای زوم به آن کلیک کنید."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:867
 #, python-format
 msgid "Click to add a new opportunity"
-msgstr ""
+msgstr "برای افزودن فرصت جدید کلیک کنید"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_activity_action
@@ -1194,7 +1203,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Click to define a new sales tag."
-msgstr ""
+msgstr "برای تعریف تگ فروش جدید کلیک کنید."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
@@ -1608,12 +1617,12 @@ msgstr "مقادیر پیش فرض"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_open
 msgid "Delay to Assign"
-msgstr ""
+msgstr "تاخیر برای تخصیص"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_close
 msgid "Delay to Close"
-msgstr ""
+msgstr "تاخیر برای بستن"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2339,12 +2348,12 @@ msgstr "سرنخ ایجاد شد"
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr ""
+msgstr "تگهای سرنخ"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
-msgstr ""
+msgstr "همکار سرنخ به فرصت"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
@@ -2573,7 +2582,7 @@ msgstr "درج در لیست بردها"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
-msgstr ""
+msgstr "علامت زدن به از دست رفته"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2637,7 +2646,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
-msgstr ""
+msgstr "ادغام تماسها"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -2647,7 +2656,7 @@ msgstr "ادغام سرنخ ها / فرصت ها"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_merge
 msgid "Merge Selected Contacts"
-msgstr ""
+msgstr "ادغام تماسهای انتخاب شده"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2668,7 +2677,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge with Manual Check"
-msgstr ""
+msgstr "ادغام با بررسی دستی"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_deduplicate
@@ -2831,7 +2840,7 @@ msgstr "جدید"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr ""
+msgstr "فرصت جدید"
 
 #. module: crm
 #. openerp-web
@@ -2877,7 +2886,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity is planned"
-msgstr ""
+msgstr "فعالیت بعدی برنامه ریزی شده"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -2898,7 +2907,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "No next activity planned"
-msgstr ""
+msgstr "هیچ فعالیت بعدی برنامه ریزی نشده"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2944,7 +2953,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Number of Rooms"
-msgstr ""
+msgstr "تعداد اتاقها"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_days
@@ -3409,7 +3418,7 @@ msgstr "محصولات"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Proposal"
-msgstr ""
+msgstr "پروپوزال"
 
 #. module: crm
 #. openerp-web
@@ -3484,7 +3493,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Reason for loosing leads"
-msgstr ""
+msgstr "دلیل برای از دست دادن سرنخها"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
@@ -3743,7 +3752,7 @@ msgstr ""
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr ""
+msgstr "نمایش منوی سرنخ"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3779,7 +3788,7 @@ msgstr "فقط نمایش فرصت"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Skip these contacts"
-msgstr ""
+msgstr "پرش از این تماسها"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3794,7 +3803,7 @@ msgstr "نرم افزار"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Solution Selling"
-msgstr ""
+msgstr "فروش راه‌حل"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action

@@ -539,6 +539,15 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Ако е зададено, това поле ще помогне на сегментите, работещи в режим \"без "
+"дубликати\" да избягват избора на подобни записи два пъти. Сходните записи "
+"представляват записи, които имат еднаква стойност за това уникално поле. "
+"Например, като изберете полето \"email_from\" за CRM лийдове, ще "
+"предотвратите повторното изпращане на същата кампания на същия имейл адрес. "
+"Ако не е зададено, сегментите \"без дубликати\" само ще избягват да избират "
+"повторно същия запис, ако са били въведени в кампанията предварително. Могат"
+" да се използват само лесно съпоставимите полета като текстови полета, цели "
+"числа, селекции или единични връзки."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -621,7 +630,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
 msgid "Lead Automation"
-msgstr ""
+msgstr "Автоматизация на лийдове"
 
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
@@ -767,6 +776,9 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"Маркетинг компанията на Odoo Ви позволява да автоматизирате комуникацията\n"
+"            към изгледите Ви. Можете да определите сегмент (набор от условия) на\n"
+"            лийдовете и параметрите си, за да осъществите кампанията си."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
