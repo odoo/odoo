@@ -1786,6 +1786,74 @@ QUnit.test('chatter: do not duplicate messages on (un)star message', function (a
     form.destroy();
 });
 
+QUnit.test('chatter: new messages on document without any "display_name"', function (assert) {
+    assert.expect(5);
+
+    this.data.partner.records[0].message_ids = [1];
+    this.data.partner.records[0].display_name = false;
+    this.data['mail.message'].records = [{
+        author_id: [1, "John Doe"],
+        body: "A message",
+        date: "2016-12-20 09:35:40",
+        id: 1,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+    });
+
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "should have a single message in the chatter");
+    assert.strictEqual(form.$('.o_thread_message[data-message-id="1"]').length, 1,
+        "single message should have ID 1");
+
+    // Simulate a new message in the chatter
+    this.data['mail.message'].records.push({
+        author_id: [2, "Mister Smith"],
+        body: "Second message",
+        date: "2016-12-20 09:35:40",
+        id: 2,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    });
+    this.data.partner.records[0].message_ids.push(2);
+
+    form.reload();
+
+    assert.strictEqual(form.$('.o_thread_message').length, 2,
+        "should have a two messages in the chatter after reload");
+    assert.strictEqual(form.$('.o_thread_message[data-message-id="1"]').length, 1,
+        "one of the message should have ID 1");
+    assert.strictEqual(form.$('.o_thread_message[data-message-id="2"]').length, 1,
+        "the other message should have ID 2");
+
+    //cleanup
+    form.destroy();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {

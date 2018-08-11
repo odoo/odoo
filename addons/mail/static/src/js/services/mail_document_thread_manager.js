@@ -109,12 +109,14 @@ MailManager.include({
                 },
             });
             this._threads.push(thread);
-        } else if (params.name) {
+        } else {
             if ('messageIDs' in params) {
                 thread.setMessageIDs(params.messageIDs);
             }
-            // document thread may have a change of name
-            thread.setName(params.name);
+            if ('name' in params && params.name) {
+                // document thread may have a change of name
+                thread.setName(params.name);
+            }
         }
         return thread;
     },
