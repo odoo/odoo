@@ -195,16 +195,16 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             "there should be 3 buttons to moderate selected messages in the control panel");
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').length, 1,
             "there should one moderate button to accept messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: none', 'the moderate button "Accept" should be invisible by default');
+        assert.ok($(moderateAllSelector + '[data-decision="accept"]').hasClass('d-none'),
+            'the moderate button "Accept" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').length, 1,
             "there should one moderate button to reject messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: none;', 'the moderate button "Reject" should be invisible by default');
+        assert.ok($(moderateAllSelector + '[data-decision="reject"]').hasClass('d-none'),
+            'the moderate button "Reject" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').length, 1,
             "there should one moderate button to discard messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: none;', 'the moderate button "Discard" should be invisible by default');
+        assert.ok($(moderateAllSelector + '[data-decision="discard"]').hasClass('d-none'),
+            'the moderate button "Discard" should be invisible by default');
 
         // click on message moderation checkbox
         $message.find('.moderation_checkbox').click();
@@ -216,12 +216,12 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         assert.notOk($('.o_mail_discuss_button_unselect_all').hasClass('disabled'),
             "the 'Unselect All' button should not be disabled");
         // check moderate all buttons updated (visible)
-        assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: inline-block', 'the moderate button "Accept" should become visible');
-        assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: inline-block', 'the moderate button "Reject" should become visible');
-        assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: inline-block', 'the moderate button "Discard" should become visible');
+        assert.notOk($(moderateAllSelector + '[data-decision="accept"]').hasClass('d-none'),
+            'the moderate button "Accept" should become visible');
+        assert.notOk($(moderateAllSelector + '[data-decision="reject"]').hasClass('d-none'),
+            'the moderate button "Reject" should become visible');
+        assert.notOk($(moderateAllSelector + '[data-decision="discard"]').hasClass('d-none'),
+            'the moderate button "Discard" should become visible');
 
         // 2. go to channel 'general'
         discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
