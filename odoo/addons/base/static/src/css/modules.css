@@ -10,20 +10,28 @@
 }
 
 .oe_module_icon + .oe_module_desc {
-    padding-left: 85px;
+    padding-left: 80px;
 }
 
-.oe_module_desc h4 {
-    margin: 0;
-    font-size: 13px;
-    display: block;
+.o_modules_kanban.o_kanban_view h4.o_kanban_record_title {
+    line-height: 1;
+}
+
+.o_modules_kanban.o_kanban_view .o_kanban_record .o_dropdown_kanban {
+    visibility: visible;
+    opacity: 0.5;
+}
+
+.o_modules_kanban.o_kanban_view .o_kanban_record:hover .o_dropdown_kanban,
+.o_modules_kanban.o_kanban_view .o_kanban_record .o_dropdown_kanban.show {
+    opacity: 1;
 }
 
 .oe_module_name > span  {
     color: #999999;
     min-height: 26px;
-    line-height: 1.2;
-    display: inline-block;
+    line-height: 1.1;
+    display: block;
 }
 
 .oe_module_desc p {
