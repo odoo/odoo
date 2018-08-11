@@ -37,7 +37,7 @@ var ThreadField = AbstractField.extend({
         this.dp = new concurrency.DropPrevious();
 
         this._threadWidget = new ThreadWidget(this, {
-            displayOrder: ThreadWidget.ORDER.DESC,
+            displayOrder: ThreadWidget.ORDER.ASC,
             displayDocumentLinks: false,
             displayMarkAsRead: false,
             squashCloseMessages: false,

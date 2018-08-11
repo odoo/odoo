@@ -195,6 +195,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
 
     /**
      * @override
+     * @param {Object} [options]
+    //  * @param {boolean} [options.phantomjs=false] if set, rendering of non-empty
+    //  *   thread will use 'block' display instead of 'flex', because phantomjs
+    //  *   sucks with flexbox... TODO: remove this option when we no longer use
+    //  *   phantomJS
      */
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
@@ -445,15 +450,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                                     !this._thread.isMassMailing(),
             displayEmptyThread: !this._thread.hasMessages() && !this.domain.length,
             displayNoMatchFound: !this._thread.hasMessages() && this.domain.length,
-            displaySubjectOnMessages:
-                (
-                    this._thread.getType() !== 'mailbox' &&
-                    this._thread.isMassMailing()
-                ) ||
+            displaySubjectOnMessages: this._thread.isMassMailing() ||
                 this._thread.getID() === 'mailbox_inbox' ||
                 this._thread.getID() === 'mailbox_moderation',
             displayEmailIcons: false,
             displayReplyIcons: true,
+            displayBottomThreadFreeSpace: true,
         };
     },
     /**
@@ -495,8 +497,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             (this._threadWidget.el.clientHeight === this._threadWidget.el.scrollHeight) &&
             !this._thread.isAllHistoryLoaded(this.domain);
         if (loadMoreMessages) {
-            return this._loadMoreMessages()
-                        .then(this._loadEnoughMessages.bind(this));
+            return this._loadMoreMessages().then(this._loadEnoughMessages.bind(this));
         }
     },
     /**
@@ -520,8 +521,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                     self._thread,
                     self._getThreadRenderingOptions()
                 );
-                offset += dom.getPosition(document.querySelector(oldestMessageSelector)
-                ).top;
+                offset += dom.getPosition(document.querySelector(oldestMessageSelector)).top;
                 self._threadWidget.scrollToPosition(offset);
             });
     },
@@ -558,7 +558,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      *
      * @private
      * @param {JQuery} $input the input to prepare
-     * @param {string} type the type of thread to create ('dm', 'public' or
+     * @param {string} type the type of thread to create ('dm_chat', 'public' or
      *   'private' channel)
      */
     _prepareAddThreadInput: function ($input, type) {
@@ -569,11 +569,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                     self._lastSearchVal = _.escape(request.term);
                     self._searchChannel(self._lastSearchVal).done(function (result){
                         result.push({
-                            'label':  _.str.sprintf(
+                            label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s") + '</strong>',
                                         '<em>"#' + self._lastSearchVal + '"</em>'
                             ),
-                            'value': '_create',
+                            value: '_create',
                         });
                         response(result);
                     });
@@ -599,7 +599,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                     self.call('mail_service', 'createChannel', name, 'private');
                 }
             });
-        } else if (type === 'dm') {
+        } else if (type === 'dm_chat') {
             $input.autocomplete({
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
@@ -607,11 +607,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;
-                    var dm = self.call('mail_service', 'getDmFromPartnerID', partnerID);
-                    if (dm) {
-                        self._setThread(dm.getID());
+                    var dmChat = self.call('mail_service', 'getDMChatFromPartnerID', partnerID);
+                    if (dmChat) {
+                        self._setThread(dmChat.getID());
                     } else {
-                        self.call('mail_service', 'createChannel', partnerID, 'dm');
+                        self.call('mail_service', 'createChannel', partnerID, 'dm_chat');
                     }
                     // clear the input
                     $(this).val('');
@@ -693,7 +693,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             needactionCounter: inbox.getMailboxCounter(),
             starredCounter: starred.getMailboxCounter(),
             moderationCounter: moderation ? moderation.getMailboxCounter() : 0,
-            isModerator: this.call('mail_service', 'isModerator'),
+            isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
         }));
         return $sidebar;
     },
@@ -919,7 +919,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _unselectMessage: function () {
         this._basicComposer.do_toggle(this._thread.getType() !== 'mailbox' && !this._thread.isMassMailing());
-        this._extendedComposer.do_toggle(this._thread.getType() !== 'mailbox' && !!this._thread.isMassMailing());
+        this._extendedComposer.do_toggle(this._thread.isMassMailing());
 
         if (!config.device.isMobile) {
             var composer = this._thread.getType() !== 'mailbox' && this._thread.isMassMailing() ?
@@ -959,7 +959,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             this._thread.getID() === 'mailbox_moderation' ||
             (
                 this._thread.isModerated() &&
-                this._thread.isModerator()
+                this._thread.isMyselfModerator()
             )
         ) {
             this._updateModerationButtons();
@@ -985,7 +985,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @param {mail.model.Thread} thread
      */
     _updateControlPanelButtons: function (thread) {
-        // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
+        // Hide 'unsubscribe' button in state channels and DM chats and channels with group-based subscription
         this.$buttons
             .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
             .toggle(thread.getType() !== 'dm' && thread.getType() !== 'mailbox');
@@ -999,11 +999,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .removeClass('o_hidden');
         this.$buttons
             .find('.o_mail_discuss_button_select_all')
-            .toggle((thread.isModerated() && thread.isModerator()) || thread.getID() === 'mailbox_moderation')
+            .toggle((thread.isModerated() && thread.isMyselfModerator()) || thread.getID() === 'mailbox_moderation')
             .removeClass('o_hidden');
         this.$buttons
             .find('.o_mail_discuss_button_unselect_all')
-            .toggle((thread.isModerated() && thread.isModerator()) || thread.getID() === 'mailbox_moderation')
+            .toggle((thread.isModerated() && thread.isMyselfModerator()) || thread.getID() === 'mailbox_moderation')
             .removeClass('o_hidden');
         this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
 
@@ -1076,7 +1076,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         });
 
         this.$('.o_mail_discuss_sidebar').html($sidebar.contents());
-        _.each(['dm', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'public', 'private'], function (type) {
             var $input = self.$('.o_mail_add_thread[data-type=' + type + '] input');
             self._prepareAddThreadInput($input, type);
         });
@@ -1153,16 +1153,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * Called when someone asks discuss whether the bottom of `thread` is
      * visible or not. An object `query` is provided in order to reponse on the
-     * key `isDisplayed`.
+     * key `isVisible`.
      *
      * @private
      * @param {mail.model.Thread} thread
      * @param {Object} query
-     * @param {boolean} query.isBottomVisible the response to provide on whether
-     *   the thread is visible in discuss.
+     * @param {boolean} query.isVisible the response to provide on whether the
+     *   bottom of the thread is visible in discuss.
      */
     _onIsThreadBottomVisible: function (thread, query) {
-        query.isBottomVisible = query.isBottomVisible ||
+        query.isVisible = query.isVisible ||
                             (
                                 thread.getID() === this._thread.getID() &&
                                 this._threadWidget.isAtBottom()
@@ -1389,7 +1389,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         ev.stopPropagation();
         var channelID = $(ev.target).data('thread-id');
         var channel = this.call('mail_service', 'getChannel', channelID);
-        if (channel.isAdministrator()) {
+        if (channel.isMyselfAdministrator()) {
             this._askConfirmationAdminUnsubscribe(channel);
         } else {
             channel.unsubscribe();

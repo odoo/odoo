@@ -44,6 +44,12 @@ if (!_.contains(urlHistory, page)) {
 
 var LivechatButton = Widget.extend({
     className:'openerp o_livechat_button d-print-none',
+    custom_events: {
+        'close_chat_window': '_onCloseChatWindow',
+        'post_message_chat_window': '_onPostMessageChatWindow',
+        'save_chat_window': '_onSaveChatWindow',
+        'updated_unread_counter': '_onUpdatedUnreadCounter',
+    },
     events: {
         'click': '_openChat'
     },
@@ -112,7 +118,7 @@ var LivechatButton = Widget.extend({
      * @param {Object} [options={}]
      */
     _addMessage: function (data, options) {
-        options = _.extend({}, options, {
+        options = _.extend({}, this.options, options, {
             serverURL: this._serverURL,
         });
         var message = new WebsiteLivechatMessage(this, data, options);
@@ -130,7 +136,7 @@ var LivechatButton = Widget.extend({
         this._chatWindow.$('.o_thread_composer input').prop('disabled', true);
 
         var feedback = new Feedback(this, this._livechat);
-        feedback.replace(this._chatWindow.threadWidget.$el);
+        this._chatWindow.replaceContentWith(feedback);
 
         feedback.on('send_message', this, this._sendMessage);
         feedback.on('feedback_sent', this, this._closeChat);
@@ -159,7 +165,7 @@ var LivechatButton = Widget.extend({
             } else { // normal message
                 this._addMessage(notification[1]);
                 this._renderMessages();
-                if (this._chatWindow.isFolded() || !this._chatWindow.threadWidget.isAtBottom()) {
+                if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
                     this._livechat.incrementUnreadCounter();
                 }
             }
@@ -204,13 +210,16 @@ var LivechatButton = Widget.extend({
             if (!livechatData || !livechatData.operator_pid) {
                 alert(_t("None of our collaborators seems to be available, please try again later."));
             } else {
-                self._livechat = new WebsiteLivechat(livechatData);
+                self._livechat = new WebsiteLivechat({
+                    parent: self,
+                    data: livechatData
+                });
                 self._openChatWindow();
                 self._sendWelcomeMessage();
                 self._renderMessages();
 
-                self.busBus.addChannel(self._livechat.getUUID());
-                self.busBus.startPolling();
+                self.call('bus_service', 'addChannel', self._livechat.getUUID());
+                self.call('bus_service', 'startPolling');
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
                 utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
@@ -235,41 +244,16 @@ var LivechatButton = Widget.extend({
             self._chatWindow.$el.css(cssProps);
             self.$el.hide();
         });
-        this._chatWindow.on('close', this, function () {
-            var input_disabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
-            var ask_fb = !input_disabled && _.find(this._messages, function (message) {
-                return message.getID() !== '_welcome';
-            });
-            if (ask_fb) {
-                this._chatWindow.toggleFold(false);
-                this._askFeedback();
-            } else {
-                this._closeChat();
-            }
-        });
-        this._chatWindow.on('post_message', this, function (message) {
-            self._sendMessage(message).fail(function (error, e) {
-                e.preventDefault();
-                return self._sendMessage(message); // try again just in case
-            });
-        });
-        this._chatWindow.on('save_chat', this, this._onSaveChat);
-        this._chatWindow.threadWidget.$el.on('scroll', null, _.debounce(function () {
-            if (self._chatWindow.threadWidget.isAtBottom()) {
-                self._livechat.resetUnreadCounter();
-                self._chatWindow.renderHeader();
-            }
-        }, 100));
     },
     /**
      * @private
      */
     _renderMessages: function () {
-        var shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.threadWidget.isAtBottom();
+        var shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.isAtBottom();
         this._livechat.setMessages(this._messages);
         this._chatWindow.render();
         if (shouldScroll) {
-            this._chatWindow.threadWidget.scrollToBottom();
+            this._chatWindow.scrollToBottom();
         }
     },
     /**
@@ -282,7 +266,7 @@ var LivechatButton = Widget.extend({
         return session
             .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: message.content})
             .then(function () {
-                self._chatWindow.threadWidget.scrollToBottom();
+                self._chatWindow.scrollToBottom();
             });
     },
     /**
@@ -308,6 +292,23 @@ var LivechatButton = Widget.extend({
 
     /**
      * @private
+     * @param {OdooEvent} ev
+     */
+    _onCloseChatWindow: function (ev) {
+        ev.stopPropagation();
+        var isComposerDisabled = this._chatWindow.$('.o_thread_composer input').prop('disabled');
+        var shouldAskFeedback = !isComposerDisabled && _.find(this._messages, function (message) {
+            return message.getID() !== '_welcome';
+        });
+        if (shouldAskFeedback) {
+            this._chatWindow.toggleFold(false);
+            this._askFeedback();
+        } else {
+            this._closeChat();
+        }
+    },
+    /**
+     * @private
      * @param {Array[]} notifications
      */
     _onNotification: function (notifications) {
@@ -318,9 +319,33 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.messageData
      */
-    _onSaveChat: function () {
+    _onPostMessageChatWindow: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+        var messageData = ev.data.messageData;
+        this._sendMessage(messageData).fail(function (error, e) {
+            e.preventDefault();
+            return self._sendMessage(messageData); // try again just in case
+        });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSaveChatWindow: function (ev) {
+        ev.stopPropagation();
         utils.set_cookie('im_livechat_session', JSON.stringify(this._livechat.toData()), 60*60);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onUpdatedUnreadCounter: function (ev) {
+        ev.stopPropagation();
+        this._chatWindow.renderHeader();
     },
 });
 

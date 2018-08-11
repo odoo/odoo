@@ -26,11 +26,12 @@ odoo.define('mail.Manager', function (require) {
  */
 var AbstractService = require('web.AbstractService');
 
-var Channel = require('mail.model.Channel');
-var DM = require('mail.model.DM');
+var DMChat = require('mail.model.DMChat');
+var Livechat = require('mail.model.Livechat');
 var Mailbox = require('mail.model.Mailbox');
 var MailFailure = require('mail.model.MailFailure');
 var Message = require('mail.model.Message');
+var MultiUserChannel = require('mail.model.MultiUserChannel');
 var mailUtils = require('mail.utils');
 
 var Bus = require('web.Bus');
@@ -39,7 +40,6 @@ var core = require('web.core');
 var session = require('web.session');
 
 var _t = core._t;
-var _lt = core._lt;
 
 var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 
@@ -52,30 +52,10 @@ var MailManager =  AbstractService.extend({
      * @override
      */
     start: function () {
-        this._cannedResponses = [];
-        this._mailBus = new Bus(this);
-        this._commands = [];
-        this._discussMenuID = undefined;
-        this._discussOpen = false;
-        this._isModerator = false;
-        this._mailFailures = [];
-        // list of employees for chatter mentions
-        this._mentionPartnerSuggestions = [];
-        this._messages = [];
-        this._moderatedChannelIDs = [];
-        // # of message received when odoo is out of focus
-        this._outOfFocusUnreadMessageCounter = 0;
-        // partner_ids we have a pinned DM with
-        this._pinnedDmPartners = [];
-        // all threads, including channels, DM, mailboxes, document threads, ...
-        this._threads = [];
-
-        // listen on buses
-        this._mailBus
-            .on('discuss_open', this, this._onDiscussOpen)
-            .on('window_focus', this, this._onWindowFocus);
-
-        this._initializeFromServer();
+        this._super.apply(this, arguments);
+        this._initializeInternalState();
+        this._listenOnBuses();
+        this._fetchMailStateFromServer();
     },
 
     //--------------------------------------------------------------------------
@@ -100,17 +80,7 @@ var MailManager =  AbstractService.extend({
         options = options || {};
         var message = this.getMessage(data.id);
         if (!message) {
-            message = this._makeMessage(data);
-            // Keep the array ordered by ID when inserting the new message
-            var index = _.sortedIndex(this._messages, message, function (msg) {
-                return msg.getID();
-            });
-            this._messages.splice(index, 0, message);
-            this._addNewMessagePostprocessThread(message, options);
-            this._addMessageToThreads(message, []);
-            if (!options.silent) {
-                this._mailBus.trigger('new_message', message);
-            }
+            message = this._addNewMessage(data, options);
         } else {
             if (data.moderation_status === 'accepted') {
                 message.setModerationStatus('accepted', {
@@ -124,16 +94,17 @@ var MailManager =  AbstractService.extend({
         return message;
     },
     /**
-     * Creates a channel, can be either a true channel or a DM based on `type`
+     * Creates a channel, can be either a true channel or a DM chat based on
+     * `type`
      *
      * @param {integer|string} name id of partner (in case of dm) or name
-     * @param {string} type ['dm', 'public', 'private']
+     * @param {string} type ['dm_chat', 'public', 'private']
      * @returns {$.Promise<integer>} resolved with ID of the newly created
      *   channel
      */
     createChannel: function (name, type) {
-        if (type === 'dm') {
-            return this._createDM(name);
+        if (type === 'dm_chat') {
+            return this._createDMChat(name);
         } else {
             return this._createChannel(name, type);
         }
@@ -202,9 +173,9 @@ var MailManager =  AbstractService.extend({
      * @param {integer} partnerID
      * @returns {Object|undefined} channel
      */
-    getDmFromPartnerID: function (partnerID) {
+    getDMChatFromPartnerID: function (partnerID) {
         return _.find(this._threads, function (thread) {
-            return thread.getType() === 'dm' &&
+            return thread.getType() === 'dm_chat' &&
                     thread.getDirectPartnerID() === partnerID;
         });
     },
@@ -314,8 +285,8 @@ var MailManager =  AbstractService.extend({
      *
      * @returns {boolean}
      */
-    isModerator: function () {
-        return this._isModerator;
+    isMyselfModerator: function () {
+        return this._isMyselfModerator;
     },
     /**
      * States whether the mail manager is ready or not
@@ -381,7 +352,7 @@ var MailManager =  AbstractService.extend({
      * Special redirection handling for given model and id
      *
      * If the model is res.partner, and there is a user associated with this
-     * partner which isn't the current user, open the DM with this user.
+     * partner which isn't the current user, open the DM chat with this user.
      * Otherwhise, open the record's form view (if not current user's).
      *
      * @param {string} resModel model to open
@@ -531,6 +502,28 @@ var MailManager =  AbstractService.extend({
         });
     },
     /**
+     * Add a new message
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object} options
+     * @returns {mail.model.Message}
+     */
+    _addNewMessage: function (data, options) {
+        var message = this._makeMessage(data);
+        // Keep the array ordered by ID when inserting the new message
+        var index = _.sortedIndex(this._messages, message, function (msg) {
+            return msg.getID();
+        });
+        this._messages.splice(index, 0, message);
+        this._addNewMessagePostprocessThread(message, options);
+        this._addMessageToThreads(message, []);
+        if (!options.silent) {
+            this._mailBus.trigger('new_message', message);
+        }
+        return message;
+    },
+    /**
      * For newly added message, postprocess threads linked to this message
      *
      * @private
@@ -547,13 +540,14 @@ var MailManager =  AbstractService.extend({
             if (thread) {
                 if (
                     thread.getType() !== 'mailbox' &&
-                    !message.isAuthor() &&
+                    !message.isMyselfAuthor() &&
                     !message.isSystemNotification()
                 ) {
+                    // HERE (remove below line for final version)
                     if (options.incrementUnread) {
                         thread.incrementUnreadCounter();
                     }
-                    if (thread.isChat() && options.showNotification) {
+                    if (thread.isTwoUserThread() && options.showNotification) {
                         if (
                             !self._isDiscussOpen() &&
                             !config.device.isMobile &&
@@ -563,10 +557,10 @@ var MailManager =  AbstractService.extend({
                             // while keeping it unread
                             thread.detach({ passively: true });
                         }
-                        var query = { isBottomVisible: false };
+                        var query = { isVisible: false };
                         self._mailBus.trigger('is_thread_bottom_visible', thread, query);
-                        if (!query.isBottomVisible) {
-                            self._notifyIncomingMessage(message, query);
+                        if (!self.call('bus_service', 'isOdooFocused') || !query.isVisible) {
+                            self._notifyIncomingMessage(message);
                         }
                     }
                 }
@@ -598,7 +592,7 @@ var MailManager =  AbstractService.extend({
      * @param {string} name
      * @returns {$.Promise<integer>} ID of the created channel
      */
-    _createDM: function (name) {
+    _createDMChat: function (name) {
         var context = _.extend({ isMobile: config.device.isMobile }, session.user_context);
         return this._rpc({
                 model: 'mail.channel',
@@ -619,6 +613,25 @@ var MailManager =  AbstractService.extend({
                 method: 'channel_fetch_preview',
                 args: [channelIDs],
             }, { shadow: true });
+    },
+    /**
+     * @private
+     */
+    _fetchMailStateFromServer: function () {
+        var self = this;
+        this._isReady = session.is_bound.then(function () {
+            var context = _.extend(
+                { isMobile: config.device.isMobile },
+                session.user_context
+            );
+            return self._rpc({
+                route: '/mail/init_messaging',
+                params: { context: context },
+            });
+        }).then(function (result) {
+            self._updateInternalStateFromServer(result);
+            self.call('bus_service', 'startPolling');
+        });
     },
     /**
      * Get previews of the channels
@@ -744,9 +757,9 @@ var MailManager =  AbstractService.extend({
                 return false;
             }
             if (filter === 'chat') {
-                return thread.isChat();
+                return thread.isTwoUserThread();
             } else if (filter === 'channels') {
-                return !thread.isChat();
+                return !thread.isTwoUserThread();
             }
             return true;
         });
@@ -809,6 +822,8 @@ var MailManager =  AbstractService.extend({
      *
      * @private
      * @param {string|undefined} [filter]
+     * @returns {$.Promise<Object[]>} resolved with list of object that are
+     *     compatible with preview template of mail systray menu
      */
     _getSystrayStaticPreviews: function (filter) {
         var elems = [];
@@ -827,132 +842,29 @@ var MailManager =  AbstractService.extend({
         return $.when(elems);
     },
     /**
-     * Initialize the canned responses from the server data
+     * Initialize the internal state of the mail service. Ensure that all
+     * attributes are set before doing any operation on them.
      *
      * @private
-     * @param {Object} data
-     * @param {Object[]} [data.shortcodes]
-     * @param {integer} data.shortcodes[i].id
-     * @param {string} data.shortcodes[i].source
-     * @param {string} data.shortcodes[i].substitution
      */
-    _initializeCannedResponses: function (data) {
-        var self = this;
-        _.each(data.shortcodes, function (s) {
-            var cannedResponse = _.pick(s, ['id', 'source', 'substitution']);
-            self._cannedResponses.push(cannedResponse);
-        });
-    },
-    /**
-     * Initialize the channels from the server, including public, private, DM,
-     * livechat, etc.
-     *
-     * @private
-     * @param {Object} data
-     * @param {Object} [data.channel_slots] contains the data of channels to
-     *   initialize, which are grouped by channel type by key of the object
-     *   (e.g. list of public channel data are stored in 'channel_channel')
-     * @param {Object[]} [data.channel_slots[i] list of data of channel of type
-     *   `i`
-     */
-    _initializeChannels: function (data) {
-        var self = this;
-        _.each(data.channel_slots, function (channels) {
-            _.each(channels, self._addChannel.bind(self));
-        });
-    },
-    /**
-     * Initialize commands from the server
-     *
-     * @private
-     * @param {Object} data
-     * @param {Object[]} data.commands list of command data from the server
-     */
-    _initializeCommands: function (data) {
-        this._commands = _.map(data.commands, function (command) {
-            return _.extend({ id: command.name }, command);
-        });
-    },
-    /**
-     * @private
-     * @returns {$.Promise}
-     */
-    _initializeFromServer: function () {
-        var self = this;
-        this._isReady = session.is_bound.then(function () {
-            var context = _.extend(
-                { isMobile: config.device.isMobile },
-                session.user_context
-            );
-            return self._rpc({
-                route: '/mail/init_messaging',
-                params: { context: context },
-            });
-        }).then(function (result) {
-            self._updateFromServer(result);
-            self.call('bus_service', 'startPolling');
-        });
-    },
-    /**
-     * Initialize the mailboxes, namely 'Inbox', 'Starred',
-     * and 'Moderation Queue' if the user is a moderator of a channel
-     *
-     * @private
-     * @param {Object} data
-     * @param {boolean} [data.is_moderator=false] states whether the user is
-     *   moderator of a channel
-     * @param {integer} [data.moderation_counter=0] states the mailbox counter
-     *   to set to 'Moderation Queue'
-     * @param {integer} [data.needaction_inbox_counter=0] states the mailbox
-     *   counter to set to 'Inbox'
-     * @param {integer} [data.starred_counter=0] states the mailbox counter to
-     *   set to 'Starred'
-     */
-    _initializeMailboxes: function (data) {
-        this._addMailbox({
-            id: 'inbox',
-            name: _t("Inbox"),
-            mailboxCounter: data.needaction_inbox_counter || 0,
-        });
-        this._addMailbox({
-            id: 'starred',
-            name: _t("Starred"),
-            mailboxCounter: data.starred_counter || 0,
-        });
-
-        if (data.is_moderator) {
-            this._addMailbox({
-                id: 'moderation',
-                name: _t("Moderate Messages"),
-                mailboxCounter: data.moderation_counter || 0,
-            });
-        }
-    },
-    /**
-     * Initialize mail failures from the server data
-     *
-     * @private
-     * @param {Object} data
-     * @param {Object[]} data.mail_failures data to initialize mail failures
-     *   locally
-     */
-    _initializeMailFailures: function (data) {
-        var self = this;
-        this._mailFailures = _.map(data.mail_failures, function (mailFailureData) {
-            return new MailFailure(self, mailFailureData);
-        });
-    },
-    /**
-     * Initialize moderation settings from the server data
-     *
-     * @private
-     * @param {Object} data
-     * @param {boolean} [data.is_moderator=false]
-     * @param {integer[]} [data.moderation_channel_ids]
-     */
-    _initializeModerationSettings: function (data) {
-        this._moderatedChannelIDs = data.moderation_channel_ids;
-        this._isModerator = data.is_moderator;
+    _initializeInternalState: function () {
+        this._cannedResponses = [];
+        this._mailBus = new Bus(this);
+        this._commands = [];
+        this._discussMenuID = undefined;
+        this._discussOpen = false;
+        this._isMyselfModerator = false;
+        this._mailFailures = [];
+        // list of employees for chatter mentions
+        this._mentionPartnerSuggestions = [];
+        this._messages = [];
+        this._moderatedChannelIDs = [];
+        // # of message received when odoo is out of focus
+        this._outOfFocusUnreadMessageCounter = 0;
+        // partner_ids we have a pinned DM chat with
+        this._pinnedDmPartners = [];
+        // all threads, including channels, DM, mailboxes, document threads, ...
+        this._threads = [];
     },
     /**
      * State whether discuss app is open or not
@@ -983,25 +895,45 @@ var MailManager =  AbstractService.extend({
             });
     },
     /**
+     * Listen on several buses, before doing any action that trigger something
+     * on those buses.
+     *
+     * @private
+     */
+    _listenOnBuses: function () {
+        this._mailBus.on('discuss_open', this, this._onDiscussOpen);
+        this.call('bus_service', 'on', 'window_focus', this, this._onWindowFocus);
+    },
+    /**
      * Creates a new instance of Channel with the given data and options.
      *
      * @private
      * @param {Object} data
+     * @param {Array} [data.channel_type] if set and is 'livechat', the channel
+     *   is a Livechat.
      * @param {Array} [data.direct_partner] if set and is an non-empty array,
-     *   the channel is a DM
+     *   the channel is a DM chat
      * @param {Object} [options]
      * @returns {mail.model.Channel}
      */
     _makeChannel: function (data, options) {
         if (_.size(data.direct_partner) > 0) {
-            return new DM({
+            return new DMChat({
                 parent: this,
                 data: data,
                 options: options,
                 commands: this._commands
             });
         }
-        return new Channel({
+        if (data.channel_type === 'livechat') {
+            return new Livechat({
+                parent: this,
+                data: data,
+                options: options,
+                commands: this._commands,
+            });
+        }
+        return new MultiUserChannel({
             parent: this,
             data: data,
             options: options,
@@ -1020,16 +952,13 @@ var MailManager =  AbstractService.extend({
     },
     /**
      * shows a popup to notify a new received message.
-     * This will also rename the odoo tab browser if
-     * the user has no focus on it.
+     * This will also rename the browser tab if this is not the active tab.
      *
      * @private
      * @param {mail.model.Message} message message received
-     * @param {Object} options
-     * @param {boolean} options.isDisplayed
      */
-    _notifyIncomingMessage: function (message, options) {
-        if (this.call('bus_service', 'isOdooFocused') && options.isDisplayed) {
+    _notifyIncomingMessage: function (message) {
+        if (this.call('bus_service', 'isOdooFocused')) {
             // no need to notify
             return;
         }
@@ -1209,7 +1138,7 @@ var MailManager =  AbstractService.extend({
      * Sort previews
      *
      *      1. unread,
-     *      2. chat,
+     *      2. two-user thread,
      *      3. date,
      *
      * @private
@@ -1219,13 +1148,13 @@ var MailManager =  AbstractService.extend({
     _sortPreviews: function (previews) {
         var res = previews.sort(function (p1, p2) {
             var unreadDiff = Math.min(1, p2.unreadCounter) - Math.min(1, p1.unreadCounter);
-            var isChatDiff = p2.isChat - p1.isChat;
+            var isTwoUserThreadDiff = p2.isTwoUserThread - p1.isTwoUserThread;
             var dateDiff = (!!p2.date - !!p1.date) ||
                               (
                                 p2.date &&
                                 p2.date.diff(p1.date)
                               );
-            return  unreadDiff || isChatDiff || dateDiff;
+            return  unreadDiff || isTwoUserThreadDiff || dateDiff;
         });
         return res;
     },
@@ -1245,6 +1174,53 @@ var MailManager =  AbstractService.extend({
         });
     },
     /**
+     * Update the canned responses with mail data fetched from the server
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object[]} [data.shortcodes]
+     * @param {integer} data.shortcodes[i].id
+     * @param {string} data.shortcodes[i].source
+     * @param {string} data.shortcodes[i].substitution
+     */
+    _updateCannedResponsesFromServer: function (data) {
+        var self = this;
+        _.each(data.shortcodes, function (s) {
+            var cannedResponse = _.pick(s, ['id', 'source', 'substitution']);
+            self._cannedResponses.push(cannedResponse);
+        });
+    },
+    /**
+     * Update the channels with the mail data fetched from server, including
+     * public, private, DM, livechat, etc.
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object} [data.channel_slots] contains the data of channels to
+     *   update, which are grouped by channel type by key of the object
+     *   (e.g. list of public channel data are stored in 'channel_channel')
+     * @param {Object[]} [data.channel_slots[i] list of data of channel of type
+     *   `i`
+     */
+    _updateChannelsFromServer: function (data) {
+        var self = this;
+        _.each(data.channel_slots, function (channels) {
+            _.each(channels, self._addChannel.bind(self));
+        });
+    },
+    /**
+     * Update commands from mail data fetched from the server
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object[]} data.commands list of command data from the server
+     */
+    _updateCommandsFromServer: function (data) {
+        this._commands = _.map(data.commands, function (command) {
+            return _.extend({ id: command.name }, command);
+        });
+    },
+    /**
      * Update internal state from server data (mail/init_messaging rpc result)
      *
      * @private
@@ -1253,17 +1229,78 @@ var MailManager =  AbstractService.extend({
      *   with all the employees
      * @param {integer} result.menu_id the menu ID of discuss app
      */
-    _updateFromServer: function (result) {
+    _updateInternalStateFromServer: function (result) {
         // commands are needed for channel instantiation
-        this._initializeCommands(result);
-        this._initializeChannels(result);
-        this._initializeModerationSettings(result);
-        this._initializeMailboxes(result);
-        this._initializeMailFailures(result);
-        this._initializeCannedResponses(result);
+        this._updateCommandsFromServer(result);
+        this._updateChannelsFromServer(result);
+        this._updateModerationSettingsFromServer(result);
+        this._updateMailboxesFromServer(result);
+        this._updateMailFailuresFromServer(result);
+        this._updateCannedResponsesFromServer(result);
 
         this._mentionPartnerSuggestions = result.mention_partner_suggestions;
         this._discussMenuID = result.menu_id;
+    },
+    /**
+     * Update the mailboxes with mail data fetched from server, namely 'Inbox',
+     * 'Starred', and 'Moderation Queue' if the user is a moderator of a channel
+     *
+     * @private
+     * @param {Object} data
+     * @param {boolean} [data.is_moderator=false] states whether the user is
+     *   moderator of a channel
+     * @param {integer} [data.moderation_counter=0] states the mailbox counter
+     *   to set to 'Moderation Queue'
+     * @param {integer} [data.needaction_inbox_counter=0] states the mailbox
+     *   counter to set to 'Inbox'
+     * @param {integer} [data.starred_counter=0] states the mailbox counter to
+     *   set to 'Starred'
+     */
+    _updateMailboxesFromServer: function (data) {
+        this._addMailbox({
+            id: 'inbox',
+            name: _t("Inbox"),
+            mailboxCounter: data.needaction_inbox_counter || 0,
+        });
+        this._addMailbox({
+            id: 'starred',
+            name: _t("Starred"),
+            mailboxCounter: data.starred_counter || 0,
+        });
+
+        if (data.is_moderator) {
+            this._addMailbox({
+                id: 'moderation',
+                name: _t("Moderate Messages"),
+                mailboxCounter: data.moderation_counter || 0,
+            });
+        }
+    },
+    /**
+     * Update mail failures with mail data fetched from the server
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object[]} data.mail_failures data to update mail failures
+     *   locally
+     */
+    _updateMailFailuresFromServer: function (data) {
+        var self = this;
+        this._mailFailures = _.map(data.mail_failures, function (mailFailureData) {
+            return new MailFailure(self, mailFailureData);
+        });
+    },
+    /**
+     * Update moderation settings with mail data fetched from server
+     *
+     * @private
+     * @param {Object} data
+     * @param {boolean} [data.is_moderator=false]
+     * @param {integer[]} [data.moderation_channel_ids]
+     */
+    _updateModerationSettingsFromServer: function (data) {
+        this._isMyselfModerator = data.is_moderator;
+        this._moderatedChannelIDs = data.moderation_channel_ids;
     },
 
     //--------------------------------------------------------------------------

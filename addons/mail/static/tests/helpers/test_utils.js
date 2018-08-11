@@ -6,7 +6,6 @@ var BusService = require('bus.BusService');
 var Discuss = require('mail.Discuss');
 var MailService = require('mail.Service');
 
-var AbstractService = require('web.AbstractService');
 var AbstractStorageService = require('web.AbstractStorageService');
 var Class = require('web.Class');
 var ControlPanel = require('web.ControlPanel');
@@ -67,6 +66,7 @@ var MockMailService = Class.extend({
         return BusService.extend({
             _poll: function () {}, // Do nothing
             isOdooFocused: function () { return true; },
+            updateOption: function () {},
         });
     },
     mail_service: function () {

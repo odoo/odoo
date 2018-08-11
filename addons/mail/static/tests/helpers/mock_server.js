@@ -155,6 +155,9 @@ MockServer.include({
         if (args.method === 'channel_fetch_preview') {
             return $.when(this._mockChannelFetchPreview(args));
         }
+        if (args.method === 'channel_minimize') {
+            return $.when();
+        }
         if (args.method === 'channel_seen') {
             return $.when();
         }
@@ -173,7 +176,7 @@ MockServer.include({
         if (args.method === 'moderate') {
             return $.when(this._mockModerate(args));
         }
-        if (args.method === 'channel_minimize') {
+        if (args.method === 'set_message_done') {
             return $.when();
         }
         return this._super(route, args);

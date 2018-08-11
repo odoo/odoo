@@ -7,6 +7,8 @@ var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 var QWeb = core.qweb;
 
+var _t = core._t;
+
 /**
  * Menu item appended in the systray part of the navbar
  *
@@ -252,6 +254,7 @@ var MessagingMenu = Widget.extend({
             // we are opening the dropdown so update its content
             this._updatePreviews();
         }
+        this._updatePreviews();
     },
     /**
      * @private

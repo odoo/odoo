@@ -1,7 +1,7 @@
 odoo.define('mail.model.Mailbox', function (require) {
 "use strict";
 
-var ThreadWithCache = require('mail.model.ThreadWithCache');
+var SearchableThread = require('mail.model.SearchableThread');
 
 var core = require('web.core');
 
@@ -14,7 +14,7 @@ var _t = core._t;
  * list of messages, but the inbox does not represent a conversation: Inbox is
  * modeled as a mailbox.
  */
-var Mailbox = ThreadWithCache.extend({
+var Mailbox = SearchableThread.extend({
 
     /**
      * @override

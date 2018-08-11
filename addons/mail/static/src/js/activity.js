@@ -117,7 +117,7 @@ var AbstractActivityField = AbstractField.extend({
      * @param {integer} params.activityID
      * @param {string} params.feedback
      */
-    _markActivityDone: function(params) {
+    _markActivityDone: function (params) {
         var activityID = params.activityID;
         var feedback = params.feedback;
 
@@ -134,7 +134,7 @@ var AbstractActivityField = AbstractField.extend({
      * @param {integer} params.activityID
      * @param {string} params.feedback
      */
-    _markActivityDoneAndScheduleNext: function(params) {
+    _markActivityDoneAndScheduleNext: function (params) {
         var activityID = params.activityID;
         var feedback = params.feedback;
         var self = this;
@@ -145,8 +145,7 @@ var AbstractActivityField = AbstractField.extend({
             kwargs: {feedback: feedback},
             context: this.record.getContext(),
         }).then(
-            function(rslt_action) {
-                console.log(rslt_action);
+            function (rslt_action) {
                 self.do_action(rslt_action, {
                     on_close: function () {
                         self.trigger_up('reload');
@@ -352,7 +351,7 @@ var Activity = AbstractActivityField.extend({
                 force_email: true,
             },
         };
-        return this.do_action(action, { on_close: function(){}});
+        return this.do_action(action, { on_close: function () {} });
     },
     /**
      * @private
@@ -650,7 +649,7 @@ var KanbanActivity = AbstractActivityField.extend({
                 force_email: true,
             },
         };
-        return this.do_action(action, { on_close: function(){}});
+        return this.do_action(action, { on_close: function () {} });
     },
     /**
      * @private

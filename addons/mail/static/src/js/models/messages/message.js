@@ -358,14 +358,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return !!(this._trackingValueIDs && (this._trackingValueIDs.length > 0));
     },
     /**
-     * State whether the current user is the author of this message
-     *
-     * @return {boolean}
-     */
-    isAuthor: function () {
-        return this._isAuthor();
-    },
-    /**
      * State whether this message is linked to a document thread (not channel)
      *
      * Usually, if this is true, then this message comes from a document thread,
@@ -380,6 +372,14 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     isLinkedToDocumentThread: function () {
         return !!(this._documentModel !== 'mail.channel' && this._documentID);
+    },
+    /**
+     * State whether the current user is the author of this message
+     *
+     * @return {boolean}
+     */
+    isMyselfAuthor: function () {
+        return this._isMyselfAuthor();
     },
     /**
      * States whether the current message needs moderation in general.

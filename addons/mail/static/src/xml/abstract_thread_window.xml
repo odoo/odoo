@@ -15,7 +15,7 @@
             </div>
             <div class="o_thread_window_content">
             </div>
-            <div t-if='widget.hasThread()' class="o_thread_composer o_chat_mini_composer">
+            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
                 <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
             </div>
         </div>

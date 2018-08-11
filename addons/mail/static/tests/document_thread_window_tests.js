@@ -8,7 +8,7 @@ var testUtils = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 
-QUnit.module('DocumentThreadWindow', {
+QUnit.module('ThreadWindow (Document Thread)', {
     beforeEach: function () {
         var partnerID = 44;
         this.data = {

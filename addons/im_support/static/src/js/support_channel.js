@@ -3,7 +3,7 @@ odoo.define('im_support.SupportChannel', function (require) {
 
 var supportSession = require('im_support.SupportSession');
 
-var ThreadWithCache = require('mail.model.ThreadWithCache');
+var SearchableThread = require('mail.model.SearchableThread');
 
 var core = require('web.core');
 var session = require('web.session');
@@ -17,9 +17,9 @@ var _t = core._t;
  * communicate from their respective 'backend' access.
  *
  * FIXME: it should inherit from mail.model.Channel, not from
- * mail.model.ThreadWithCache
+ * mail.model.SearchableThread
  */
-var SupportChannel = ThreadWithCache.extend({
+var SupportChannel = SearchableThread.extend({
 
     /**
      * @override
@@ -51,7 +51,7 @@ var SupportChannel = ThreadWithCache.extend({
         this._super.apply(this, arguments);
 
         // force stuff that should probably be in Thread (or at least
-        // ThreadWithCache), but that are currently in Channel
+        // SearchableThread), but that are currently in Channel
         this._detached = data.is_minimized;
         this._folded = data.state === 'folded';
         this._uuid = data.uuid;
@@ -101,6 +101,22 @@ var SupportChannel = ThreadWithCache.extend({
         this.call('mail_service', 'updateSupportChannelState', value);
     },
     /**
+     * FIXME: this override is necessary just because the support channel is
+     * considered as a channel, even though it does not inherit from
+     * mail.model.Channel.
+     *
+     * @returns {integer}
+     */
+    getNeedactionCounter: function () {
+        return 0;
+    },
+    /**
+     * @return {string} uuid of this channel
+     */
+    getUUID: function () {
+        return this._uuid;
+    },
+    /**
      * FIXME: this method is necessary just because the support channel is
      * considered as a channel, even though it does not inherit from
      * mail.model.Channel.
@@ -128,44 +144,31 @@ var SupportChannel = ThreadWithCache.extend({
         return true;
     },
     /**
-     * Support channels are not considered as chat, so they are not displayed
-     * in the 'chat' filter of the systray messaging menu.
+     * Called when fold or detach (or both) status have changed on the support
+     * channel.
      *
-     * @override
-     * @returns {boolean}
-     */
-    isChat: function () {
-        return false;
-    },
-    /**
-     * FIXME: this override is necessary just because the support channel is
-     * considered as a channel, even though it does not inherit from
-     * mail.model.Channel.
+     * Note: this is partially a hack due to support channel not being a
+     * channel. Also, the support channel uses another way to handle its window
+     * state, by means of the local storage.
      *
-     * @returns {integer}
+     * @param {Object} params
+     * @param {boolean} [params.folded]
+     * @param {boolean} [params.detached]
      */
-    getNeedactionCounter: function () {
-        return 0;
-    },
-    /**
-     * @return {string} uuid of this channel
-     */
-    getUUID: function () {
-        return this._uuid;
-    },
-    /**
-     * Posts the message on the Support server.
-     *
-     * @override
-     * @return {$.Promise}
-     */
-    postMessage: function (data) {
-        // ensure that the poll is active before posting the message
-        this.call('mail_service', 'startPollingSupport');
-        return supportSession.rpc('/odoo_im_support/chat_post', {
-            uuid: this._supportChannelUUID,
-            message_content: data.content,
-        });
+    updateWindowState: function (params) {
+        if ('detached' in params) {
+            this._detached = params.detached;
+        }
+        if ('folded' in params) {
+            this._folded = params.folded;
+        }
+
+        if (!this._detached) {
+            this.call('mail_service', 'updateSupportChannelState', 'closed');
+        } else {
+            var value = this._folded ? 'folded' : 'open';
+            this.call('mail_service', 'updateSupportChannelState', value);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -240,6 +243,21 @@ var SupportChannel = ThreadWithCache.extend({
                 var channelCache = self._getCache(channel, domain);
                 return channelCache.messages;
             });
+    },
+    /**
+     * Posts the message on the Support server.
+     *
+     * @override
+     * @private
+     * @return {$.Promise}
+     */
+    _postMessage: function (data) {
+        // ensure that the poll is active before posting the message
+        this.call('mail_service', 'startPollingSupport');
+        return supportSession.rpc('/odoo_im_support/chat_post', {
+            uuid: this._supportChannelUUID,
+            message_content: data.content,
+        });
     },
 });
 

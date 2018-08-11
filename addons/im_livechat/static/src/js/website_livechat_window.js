@@ -11,7 +11,7 @@ var AbstractThreadWindow = require('mail.AbstractThreadWindow');
 var LivechatWindow = AbstractThreadWindow.extend({
     /**
      * @override
-     * @param parent
+     * @param {im_livechat.im_livechat.LivechatButton} parent
      * @param {im_livechat.model.WebsiteLivechat} thread
      */
     init: function (parent, thread) {
@@ -28,7 +28,15 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @override
      */
     close: function () {
-        this.trigger('close');
+        this.trigger_up('close_chat_window');
+    },
+    /**
+     * Replace the thread content with provided new content
+     *
+     * @param {$.Element} $element
+     */
+    replaceContentWith: function ($element) {
+        $element.replace(this._threadWidget.$el);
     },
     /**
      * Warn the parent widget (LivechatButton)
@@ -38,7 +46,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      */
     toggleFold: function () {
         this._super.apply(this, arguments);
-        this.trigger('save_chat');
+        this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
 
@@ -52,7 +60,8 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {Object} messageData
      */
     _postMessage: function (messageData) {
-        this.trigger('post_message', messageData);
+        this.trigger_up('post_message_chat_window', { messageData: messageData });
+        this._super.apply(this, arguments);
     },
 });
 
