@@ -26,6 +26,18 @@
         .oe_topbar_avatar {
             max-height: 18px;
             width: 18px;
+            margin-top: -4px;
+        }
+
+        .oe_systray, .oe_user_menu_placeholder {
+            > li {
+                position: relative;
+                padding: 4px 0px;
+
+                > a {
+                    @include o-hover-text-color($navbar-dark-color, $navbar-dark-active-color);
+                }
+            }
         }
     }
 
