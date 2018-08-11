@@ -130,7 +130,7 @@ var SearchableThread = Thread.extend({
         if (cache.messages[index] !== message) {
             cache.messages.splice(index, 0, message);
         }
-        if (options.incrementUnread) {
+        if (!message.isMyselfAuthor() && options.incrementUnread) {
             this._incrementUnreadCounter();
         }
     },

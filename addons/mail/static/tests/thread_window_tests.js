@@ -154,5 +154,60 @@ QUnit.module('mail', {
         }, 0);
     });
 
+    QUnit.test('do not increase unread counter when receiving message with myself as author', function (assert) {
+        assert.expect(4 + this.BEFORE_EACH_ASSERTIONS_NUM);
+
+        var generalChannelID = 1;
+        var myselfPartnerID = 44;
+
+        this.data.initMessaging = {
+            channel_slots: {
+                channel_channel: [{
+                    id: generalChannelID,
+                    channel_type: 'channel',
+                    name: "general",
+                }],
+            },
+        };
+
+        var parent = this.createParent({
+            data: this.data,
+            services: this.services,
+            session: { partner_id: myselfPartnerID }
+        });
+
+        // get channel instance to link to thread window
+        var channel = parent.call('mail_service', 'getChannel', 1);
+        channel.detach();
+
+        var threadWindowHeaderText = $('.o_thread_window_header').text().replace(/\s/g, "");
+
+        assert.strictEqual(threadWindowHeaderText, "#general",
+            "thread window header text should not have any unread counter initially");
+        assert.strictEqual(channel.getUnreadCounter(), 0,
+            "thread should have unread counter to 0 initially");
+
+        // simulate receiving message from myself
+        var messageData = {
+            author_id: [myselfPartnerID, "Myself"],
+            body: "<p>Test message</p>",
+            id: 2,
+            model: 'mail.channel',
+            res_id: 1,
+            channel_ids: [1],
+        };
+        var notification = [[false, 'mail.channel', generalChannelID], messageData];
+        parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+        threadWindowHeaderText = $('.o_thread_window_header').text().replace(/\s/g, "");
+
+        assert.strictEqual(threadWindowHeaderText, "#general",
+            "thread window header text should not have any unread counter after receiving my message");
+        assert.strictEqual(channel.getUnreadCounter(), 0,
+            "thread should not have incremented its unread counter after receiving my message");
+
+        parent.destroy();
+    });
+
 });
 });
