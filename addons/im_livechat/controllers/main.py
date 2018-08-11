@@ -115,3 +115,13 @@ class LivechatController(http.Controller):
         if channel:
             channel._send_history_message(pid, page_history)
         return True
+
+    @http.route('/im_livechat/notify_typing', type='json', auth='public')
+    def notify_typing(self, uuid, is_typing):
+        """ Broadcast the typing notification of the website user to other channel members
+            :param uuid: (string) the UUID of the livechat channel
+            :param is_typing: (boolean) tells whether the website user is typing or not.
+        """
+        Channel = request.env['mail.channel']
+        channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
+        channel.notify_typing(is_typing=is_typing, is_website_user=True)

@@ -32,7 +32,9 @@ var Livechat = TwoUserChannel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * For the livechat,
+     * Override so that the list of members has the website use. This is
+     * necessary in order for the 'is_typing' feature to compute the name to
+     * display of a user that is typing.
      *
      * @override
      * @returns {$.Promise<Object[]>} resolved with list of livechat members
@@ -49,6 +51,44 @@ var Livechat = TwoUserChannel.extend({
             }
             return self._members;
         });
+    },
+    /**
+     * Called when someone starts typing something on the livechat.
+     *
+     * Overrides it so that it determine the partner based on the received
+     * userID. The reason is that anonymous users have the partner ID of the
+     * admin, which is likely also an operator, so userID must be used in order
+     * to distinct them.
+     *
+     * @override {mail.model.ThreadTypingMixin}
+     * @param {Object} params
+     * @param {integer} params.partnerID ID of the partner that is currently
+     *   typing something on the thread.
+     * @param {boolean} [params.isWebsiteUser=false] whether the typing partner
+     *   is an anonymous user (reminder: they share partnerID with admin).
+     */
+    registerTyping: function (params) {
+        params.partnerID = this._WEBSITE_USER_ID;
+        this._super.call(this, params);
+    },
+    /**
+     * Called when someone stops typing something on the livechat.
+     *
+     * Overrides it so that it determine the partner based on the received
+     * userID. The reason is that anonymous users have the partner ID of the
+     * admin, which is likely also an operator, so userID must be used in order
+     * to distinct them.
+     *
+     * @override {mail.model.ThreadTypingMixin}
+     * @param {Object} params
+     * @param {integer} params.partnerID ID of the partner that stops typing
+     *   something on the thread.
+     * @param {boolean} [params.isWebsiteUser=false] whether the typing partner
+     *   is an anonymous user (reminder: they share partnerID with admin).
+     */
+    unregisterTyping: function (params) {
+        params.partnerID = this._WEBSITE_USER_ID;
+        this._super.call(this, params);
     },
 });
 

@@ -175,6 +175,7 @@
         <div t-att-class="options.withPhantomJS ? '' : 'o_mail_thread_content_asc'">
             <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
             <t t-set="messages" t-value="messages.slice().reverse()"/>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
             <t t-call="mail.widget.Thread.Messages"/>
             <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
         </div>
@@ -206,7 +207,17 @@
             <t t-if="options.displayBottomThreadFreeSpace">
                 <div class="o_thread_bottom_free_space"/>
             </t>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
         </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+    -->
+    <t t-name="mail.widget.Thread.TypingNotificationBar">
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.DESC"/>
+        <div class="o_thread_typing_notification_bar"/>
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.ASC"/>
     </t>
 
     <!--

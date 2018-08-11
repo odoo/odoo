@@ -727,6 +727,27 @@ class Channel(models.Model):
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
 
+    @api.multi
+    def notify_typing(self, is_typing, is_website_user=False):
+        """ Broadcast the typing notification to channel members
+            :param is_typing: (boolean) tells whether the current user is typing or not
+            :param is_website_user: (boolean) tells whether the user that notifies comes
+              from the website-side. This is useful in order to distinguish operator and
+              unlogged users for livechat, because unlogged users have the same
+              partner_id as the admin (default: False).
+        """
+        notifications = []
+        for channel in self:
+            data = {
+                'info': 'typing_status',
+                'is_typing': is_typing,
+                'is_website_user': is_website_user,
+                'partner_id': self.env.user.partner_id.id,
+            }
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), data]) # notify backend users
+            notifications.append([channel.uuid, data]) # notify frontend users
+        self.env['bus.bus'].sendmany(notifications)
+
     #------------------------------------------------------
     # Instant Messaging View Specific (Slack Client Action)
     #------------------------------------------------------

@@ -850,6 +850,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.action.context.active_id = this._thread.getID();
         this.action.context.active_ids = [this._thread.getID()];
 
+        this._basicComposer.setThread(this._thread);
+        this._extendedComposer.setThread(this._thread);
+
         return this._fetchAndRenderThread().then(function () {
             // Mark thread's messages as read and clear needactions
             if (self._thread.getType() !== 'mailbox') {
@@ -893,7 +896,8 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .on('update_thread_unread_counter', this, this._throttledUpdateThreads)
             .on('update_dm_presence', this, this._throttledUpdateThreads)
             .on('activity_updated', this, this._throttledUpdateThreads)
-            .on('update_moderation_counter', this, this._throttledUpdateThreads);
+            .on('update_moderation_counter', this, this._throttledUpdateThreads)
+            .on('update_typing_partners', this, this._onTypingPartnersUpdated);
     },
     /**
      * @private
@@ -1418,6 +1422,22 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             views: [[false, 'form']],
             target: 'current'
         });
+    },
+    /**
+     * @private
+     * @param {integer|string} threadID
+     */
+    _onTypingPartnersUpdated: function (threadID) {
+        var self = this;
+        if (this._thread.getID() !== threadID) {
+            return;
+        }
+        if (this._thread.hasTypingNotification()) {
+            // call getMentionpartnerSuggestions in order to correctly fetch members
+            this._thread.getMentionPartnerSuggestions().then(function () {
+                self._threadWidget.renderTypingNotificationBar(self._thread);
+            });
+        }
     },
     /**
      * @private

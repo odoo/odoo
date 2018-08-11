@@ -28,6 +28,7 @@ var BasicComposer = Widget.extend({
         'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
         'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
         'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
+        'input .o_input': '_onInput',
         'keydown .o_composer_input textarea': '_onKeydown',
         'keyup .o_composer_input': '_onKeyup',
         'click .o_composer_button_send': '_sendMessage',
@@ -183,6 +184,14 @@ var BasicComposer = Widget.extend({
     setState: function (state) {
         this.set('attachment_ids', state.attachments);
         this.$input.val(state.text);
+    },
+    /**
+     * Set the thread that this composer refers to.
+     *
+     * @param {mail.model.Thread} thread
+     */
+    setThread: function (thread) {
+        this.options.thread = thread;
     },
     /**
      * Set the list of command suggestions on the thread.
@@ -560,6 +569,17 @@ var BasicComposer = Widget.extend({
      */
     _onEmojiImageFocus: function () {
         clearTimeout(this._hideEmojisTimeout);
+    },
+    /**
+     * Called when the input in the composer changes
+     *
+     * @private
+     */
+    _onInput: function () {
+        if (this.options.thread && this.options.thread.hasTypingNotification()) {
+            var isTyping = this.$input.val().length > 0;
+            this.options.thread.setMyselfTyping({ typing: isTyping });
+        }
     },
     /**
      * _onKeydown event is triggered when is key is pressed

@@ -9,6 +9,9 @@ var AbstractThreadWindow = require('mail.AbstractThreadWindow');
  * @see mail.AbstractThreadWindow for more information
  */
 var LivechatWindow = AbstractThreadWindow.extend({
+    events: _.extend(AbstractThreadWindow.prototype.events, {
+        'input .o_composer_text_field': '_onInput',
+    }),
     /**
      * @override
      * @param {im_livechat.im_livechat.LivechatButton} parent
@@ -62,6 +65,22 @@ var LivechatWindow = AbstractThreadWindow.extend({
     _postMessage: function (messageData) {
         this.trigger_up('post_message_chat_window', { messageData: messageData });
         this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the input in the composer changes
+     *
+     * @private
+     */
+    _onInput: function () {
+        if (this.hasThread() && this._thread.hasTypingNotification()) {
+            var isTyping = this.$input.val().length > 0;
+            this._thread.setMyselfTyping({ typing: isTyping });
+        }
     },
 });
 

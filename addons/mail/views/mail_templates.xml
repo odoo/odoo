@@ -35,6 +35,11 @@
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/mailbox.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/searchable_thread.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/thread.js"></script>
+                        <!-- thread typing mixin -->
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timer.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timers.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/cc_throttle_function.js"></script>
                 <!-- Widgets -->
                     <!-- thread windows -->
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
@@ -103,6 +108,11 @@
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_mail_failure_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/discuss_typing_notification_tests.js"></script>
+                <!-- models -->
+                    <script type="text/javascript" src="/mail/static/tests/models/cc_throttle_function_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/models/timer_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/models/timers_tests.js"></script>
             </xpath>
         </template>
 
