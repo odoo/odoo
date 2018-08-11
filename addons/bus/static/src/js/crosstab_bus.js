@@ -2,7 +2,6 @@ odoo.define('bus.CrossTab', function (require) {
 "use strict";
 
 var Longpolling = require('bus.Longpolling');
-var session = require('web.session');
 
 
 /**

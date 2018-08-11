@@ -11,15 +11,11 @@ var MailManager = require('mail.Manager');
 var MailFailure = require('mail.model.MailFailure');
 
 var core = require('web.core');
+var session = require('web.session');
 
 var _t = core._t;
 
 MailManager.include({
-
-    start: function () {
-        this._super.apply(this, arguments);
-        this.call('bus_service', 'onNotification', this, this._onNotification);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -51,8 +47,9 @@ MailManager.include({
      *
      * @private
      * @param {Object} messageData
-     * @param {Array} messageData.channel_ids list of integers and strings,
-     *      where strings for static channels, e.g. 'mailbox_inbox'.
+     * @param {integer[]} messageData.channel_ids channel IDs of this message
+     *   (note that 'pending moderation' messages in moderated channels do not
+     *   have the moderated channels in this array).
      */
     _handleChannelNotification: function (messageData) {
         var self = this;
@@ -415,28 +412,35 @@ MailManager.include({
      * @param {Array} data.messages message to display on notification
      */
     _handlePartnerUserConnectionNotification: function (data) {
-        var self=this;
-        var partner_id = data.partner_id;
-        this.call('bus_service', 'sendNotification', data.title, data.message, function(){
-            self.call('mail_service', 'openDmWindow', partner_id);
+        var self = this;
+        var partnerID = data.partner_id;
+        this.call('bus_service', 'sendNotification', data.title, data.message, function ( ){
+            self.call('mail_service', 'openDmWindow', partnerID);
         });
     },
     /**
-     * 
      * On receiving an update on user status (e.g. becoming 'online', 'offline',
      * 'idle', etc.).
      *
      * @private
      * @param {Object} data partner infos
-     * @param {integer} data.id
-     * @param {string} data.im_status
+     * @param {integer} data.id partner ID
+     * @param {string} data.im_status partner new 'im status' (e.g. 'online')
      */
     _handlePresenceNotification: function (data) {
-        var dm = this.getDmFromPartnerID(data.id);
-        if (dm) {
-            dm.setStatus(data.im_status);
-            this._mailBus.trigger('update_dm_presence', dm);
+        var dmChat = this.getDMChatFromPartnerID(data.id);
+        if (dmChat) {
+            dmChat.setStatus(data.im_status);
+            this._mailBus.trigger('update_dm_presence', dmChat);
         }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _listenOnBuses: function () {
+        this._super.apply(this, arguments);
+        this.call('bus_service', 'onNotification', this, this._onNotification);
     },
     /**
      * Update the message notification status of message based on update_message
@@ -481,17 +485,12 @@ MailManager.include({
         _.each(notifs, function (notif) {
             var model = notif[0][1];
             if (model === 'ir.needaction') {
-                // new message in the inbox
                 self._handleNeedactionNotification(notif[1]);
             } else if (model === 'mail.channel') {
-                // new message in a channel
                 self._handleChannelNotification(notif[1]);
             } else if (model === 'res.partner') {
-                // channel joined/left, message marked as read/(un)starred,
-                // chat open/closed, moderation specific, etc.
                 self._handlePartnerNotification(notif[1]);
             } else if (model === 'bus.presence') {
-                // update presence of users
                 self._handlePresenceNotification(notif[1]);
             }
         });

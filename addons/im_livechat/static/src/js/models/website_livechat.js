@@ -3,6 +3,8 @@ odoo.define('im_livechat.model.WebsiteLivechat', function (require) {
 
 var AbstractThread = require('mail.model.AbstractThread');
 
+var session = require('web.session');
+
 /**
  * Thread model that represents a livechat on the website-side. This livechat
  * is not linked to the mail service.
@@ -12,34 +14,37 @@ var WebsiteLivechat = AbstractThread.extend({
     /**
      * @override
      * @private
-     * @param {Object} livechatData
-     * @param {boolean} [livechatData.folded] states whether the livechat is
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {string} params.data.anonymous_name
+     * @param {boolean} [params.data.folded] states whether the livechat is
      *   folded or not. It is considered only if this is defined and it is a
      *   boolean.
-     * @param {integer} livechatData.id the ID of this livechat.
-     * @param {integer} [livechatData.message_unread_counter] the
-     *   unread counter of this livechat.
-     * @param {Array} livechatData.operator_pid
-     * @param {string} livechatData.name the name of this livechat.
-     * @param {string} [livechatData.state] if 'folded', the livechat is folded.
+     * @param {integer} params.data.id the ID of this livechat.
+     * @param {integer} [params.data.message_unread_counter] the unread counter
+     *   of this livechat.
+     * @param {Array} params.data.operator_pid
+     * @param {string} params.data.name the name of this livechat.
+     * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
-     * @param {string} livechatData.uuid the UUID of this livechat.
+     * @param {string} params.data.uuid the UUID of this livechat.
+     * @param {im_livechat.im_livechat.LivechatButton} params.parent
      */
-    init: function (livechatData) {
-        var params = { data: livechatData };
-        this._super.call(this, params);
+    init: function (params) {
+        this._super.apply(this, arguments);
 
-        this._operatorPID = livechatData.operator_pid;
-        this._uuid = livechatData.uuid;
+        this._members = [];
+        this._operatorPID = params.data.operator_pid;
+        this._uuid = params.data.uuid;
 
-        if (livechatData.message_unread_counter !== undefined) {
-            this._unreadCounter = livechatData.message_unread_counter;
+        if (params.data.message_unread_counter !== undefined) {
+            this._unreadCounter = params.data.message_unread_counter;
         }
 
-        if (_.isBoolean(livechatData.folded)) {
-            this._folded = livechatData.folded;
+        if (_.isBoolean(params.data.folded)) {
+            this._folded = params.data.folded;
         } else {
-            this._folded = livechatData.state === 'folded';
+            this._folded = params.data.state === 'folded';
         }
     },
 
@@ -67,6 +72,16 @@ var WebsiteLivechat = AbstractThread.extend({
         return this._uuid;
     },
     /**
+     * Increments the unread counter of this livechat by 1 unit.
+     *
+     * Note: this public method makes sense because the management of messages
+     * for website livechat is external. This method should be dropped when
+     * this class handles messages by itself.
+     */
+    incrementUnreadCounter: function () {
+        this._incrementUnreadCounter();
+    },
+    /**
      * AKU: hack for the moment
      *
      * @param {im_livechat.model.WebsiteLivechatMessage[]} messages
@@ -86,6 +101,20 @@ var WebsiteLivechat = AbstractThread.extend({
             name: this.getName(),
             uuid: this.getUUID(),
         };
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Warn that the unread counter has been updated on this livechat
+     *
+     * @override
+     * @private
+     */
+    _warnUpdatedUnreadCounter: function () {
+        this.trigger_up('updated_unread_counter');
     },
 });
 

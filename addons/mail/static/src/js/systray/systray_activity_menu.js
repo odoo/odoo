@@ -132,9 +132,7 @@ var ActivityMenu = Widget.extend({
         });
     },
     /**
-     * When menu clicked update activity preview if counter updated
      * @private
-     * @param {MouseEvent} event
      */
     _onActivityMenuClick: function () {
         if (!this._isOpen()) {

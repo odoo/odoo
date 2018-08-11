@@ -47,9 +47,9 @@ QUnit.test('mobile basic rendering', function (assert) {
             "should be in inbox");
 
         // move to DMs tab
-        discuss.$('.o_mail_mobile_tab[data-type=dm]').click();
-        assert.ok(discuss.$('.o_mail_mobile_tab[data-type=dm]').hasClass('active'),
-            "should be in DMs tab");
+        discuss.$('.o_mail_mobile_tab[data-type=dm_chat]').click();
+        assert.ok(discuss.$('.o_mail_mobile_tab[data-type=dm_chat]').hasClass('active'),
+            "should be in DMs chat tab");
         assert.strictEqual(discuss.$('.o_mail_discuss_content .o_mail_no_content').length, 0,
             "should display the no content message");
         $('.o_mail_discuss_button_dm').click(); // click to add a channel

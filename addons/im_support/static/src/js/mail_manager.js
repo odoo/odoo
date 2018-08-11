@@ -186,7 +186,10 @@ MailManager.include({
      * @override
      */
     _makeMessage: function (data) {
-        if (_.contains(data.channel_ids, this.supportChannelUUID)) {
+        if (
+            this.supportChannelUUID &&
+            _.contains(data.channel_ids, this.supportChannelUUID)
+        ) {
             return new SupportMessage(this, data, this._emojis);
         }
         return this._super.apply(this, arguments);
@@ -239,10 +242,10 @@ MailManager.include({
                 // ignore history requests
                 return;
             }
-            var message = _.extend(notification[1], {
+            var messageData = _.extend(notification[1], {
                 channel_ids: [self.supportChannelUUID],
             });
-            self._handleChannelNotification(message);
+            self._handleChannelNotification({ data: messageData });
         });
     },
 });

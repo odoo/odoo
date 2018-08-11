@@ -39,9 +39,9 @@ var Chatter = Widget.extend({
      * @param {widget} parent
      * @param {Object} record
      * @param {Object} mailFields
-     * @param {boolean} [mailFields.mail_activity]
-     * @param {boolean} [mailFields.mail_followers]
-     * @param {boolean} [mailFields.mail_thread]
+     * @param {string} [mailFields.mail_activity]
+     * @param {string} [mailFields.mail_followers]
+     * @param {string} [mailFields.mail_thread]
      */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);

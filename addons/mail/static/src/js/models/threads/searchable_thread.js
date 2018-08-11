@@ -1,4 +1,4 @@
-odoo.define('mail.model.ThreadWithCache', function (require) {
+odoo.define('mail.model.SearchableThread', function (require) {
 "use strict";
 
 var Thread = require('mail.model.Thread');
@@ -13,7 +13,7 @@ var session = require('web.session');
  * Any threads that are instances of this Class can be used with a search view,
  * in order to make searches on messages in a thread.
  */
-var ThreadWithCache = Thread.extend({
+var SearchableThread = Thread.extend({
 
     /**
      * @override
@@ -38,23 +38,6 @@ var ThreadWithCache = Thread.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Add the message to this thread
-     *
-     * @override
-     * @private
-     * @param {mail.model.Message} message
-     * @param {Array} domain
-     */
-    addMessage: function (message, domain) {
-        var cache = this._getCache(domain);
-        var index = _.sortedIndex(cache.messages, message, function (msg) {
-            return msg.getID();
-        });
-        if (cache.messages[index] !== message) {
-            cache.messages.splice(index, 0, message);
-        }
-    },
     /**
      * @override
      * @param {Array} [domain]
@@ -129,6 +112,24 @@ var ThreadWithCache = Thread.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Add the message to this thread
+     *
+     * @override
+     * @private
+     * @param {mail.model.Message} message
+     * @param {Array} domain
+     */
+    _addMessage: function (message, domain) {
+        this._super.apply(this, arguments);
+        var cache = this._getCache(domain);
+        var index = _.sortedIndex(cache.messages, message, function (msg) {
+            return msg.getID();
+        });
+        if (cache.messages[index] !== message) {
+            cache.messages.splice(index, 0, message);
+        }
+    },
+    /**
      * Gets messages from thread
      *
      * @override
@@ -202,6 +203,6 @@ var ThreadWithCache = Thread.extend({
     _getThreadDomain: function () {},
 });
 
-return ThreadWithCache;
+return SearchableThread;
 
 });

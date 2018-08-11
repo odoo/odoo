@@ -8,8 +8,13 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
 QUnit.module('mail', {
-    beforeEach: function () {
+    beforeEach: function (assert) {
         var self = this;
+
+        this.BEFORE_EACH_ASSERTIONS_NUM = 1;
+
+        assert.strictEqual($('.o_thread_window').length, 0,
+            "should have no thread windows open before the test");
 
         // define channel to link to chat window
         this.data = {
@@ -34,6 +39,8 @@ QUnit.module('mail', {
             var widget = new Widget();
 
             // in non-debug mode, append thread windows in qunit-fixture
+            // note that it does not hide thread window because it uses fixed
+            // position, and qunit-fixture uses absolute...
             if (params.debug) {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = 'body';
             } else {
@@ -50,10 +57,9 @@ QUnit.module('mail', {
     },
 }, function () {
 
-    QUnit.module('thread_window');
-
+    QUnit.module('ThreadWindow');
     QUnit.test('close thread window using ESCAPE key', function (assert) {
-        assert.expect(5);
+        assert.expect(5 + this.BEFORE_EACH_ASSERTIONS_NUM);
 
         var parent = this.createParent({
             data: this.data,
@@ -91,7 +97,7 @@ QUnit.module('mail', {
     });
 
     QUnit.test('thread window\'s input can still be focused when the UI is blocked', function (assert) {
-        assert.expect(2);
+        assert.expect(2 + this.BEFORE_EACH_ASSERTIONS_NUM);
 
         var parent = this.createParent({
             data: this.data,
@@ -124,7 +130,7 @@ QUnit.module('mail', {
     });
 
     QUnit.test('emoji popover should open correctly in thread windows', function (assert) {
-        assert.expect(1);
+        assert.expect(1 + this.BEFORE_EACH_ASSERTIONS_NUM);
 
         var parent = this.createParent({
             data: this.data,
@@ -147,5 +153,6 @@ QUnit.module('mail', {
             done();
         }, 0);
     });
+
 });
 });

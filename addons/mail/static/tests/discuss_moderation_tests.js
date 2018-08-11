@@ -6,7 +6,7 @@ var mailTestUtils = require('mail.testUtils');
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
-QUnit.module('Discuss moderation', {
+QUnit.module('Discuss (Moderation)', {
     beforeEach: function () {
         // patch _.debounce and _.throttle to be fast and synchronous
         this.underscoreDebounce = _.debounce;
@@ -196,7 +196,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').length, 1,
             "there should one moderate button to accept messages pending moderation");
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: none;', 'the moderate button "Accept" should be invisible by default');
+            'display: none', 'the moderate button "Accept" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').length, 1,
             "there should one moderate button to reject messages pending moderation");
         assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
@@ -217,11 +217,11 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             "the 'Unselect All' button should not be disabled");
         // check moderate all buttons updated (visible)
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Accept" should become visible');
+            'display: inline-block', 'the moderate button "Accept" should become visible');
         assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Reject" should become visible');
+            'display: inline-block', 'the moderate button "Reject" should become visible');
         assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Discard" should become visible');
+            'display: inline-block', 'the moderate button "Discard" should become visible');
 
         // 2. go to channel 'general'
         discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
