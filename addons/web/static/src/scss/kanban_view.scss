@@ -368,7 +368,7 @@
     &.o_kanban_grouped {
         min-height: 100%;
         padding: 0;
-        background-color: theme-color('light');
+        background-color: desaturate($gray-100, 100%);
 
         .o_kanban_record, .o_kanban_quick_create {
             width: 100%;
@@ -450,6 +450,7 @@
     .o_kanban_group.o_column_folded {
         @include o-kanban-slim-col;
         background-color: #f0f0f0;
+        background-color: desaturate($gray-200, 100%);
 
         & + .o_kanban_group.o_column_folded {
             margin-left: 1px;
