@@ -31,7 +31,7 @@
 # Henry Mineehen <info@mineehen.de>, 2017
 # Falk Scholze, 2017
 # Maik Steinfeld <info@streward.de>, 2017
-# Krakataua Katarajtu <shlok@hotmail.de>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
 # Markus Mattes <mmattes87@gmail.com>, 2017
 # Sören Prilop <mail@soeren-prilop.de>, 2017
 # Andi, 2017
@@ -1121,6 +1121,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Konto, welches bei Positionen des Journals Einnahmen-Überschussrechnung "
+"eingesetzt wird und zum Fixieren des Steuerbasisbetrags verwendet wird."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1821,12 +1823,12 @@ msgstr "Anwendbarkeit"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Angewendet auf Habenbuchung im Journal"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Angewendet auf Sollbuchung im Journal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -2214,7 +2216,7 @@ msgstr "Grundbetrag"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr ""
+msgstr "Konto für erhaltenen Steuerbetrag"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
@@ -2753,7 +2755,7 @@ msgstr "Kontenvorlage auswählen"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:136
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Gegenkonto wählen oder Abschreibung erstellen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund__filter_refund
@@ -9808,6 +9810,8 @@ msgstr ""
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
+"Das Sperrdatum für Buchhalter ist unwiderufbar und kann nicht entfernt "
+"werden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -9825,6 +9829,7 @@ msgstr "Der Name, der in Buchungspositionen verwendet wird"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Das neue Buchhalter-Sperrdatum muss nach dem vorherigen Sperrdatum liegen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
@@ -11262,6 +11267,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Sie dürfen Buchhalter nicht strenger eingrenzen wie Anwender. Bitte stellen "
+"Sie sicher, dass das Buchhalter-Sperrdatum vor dem der Anwender gesetzt "
+"wird."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:493
@@ -11338,6 +11346,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Sie dürfen eine nicht abgeschlossene Periode nicht sperren. Stellen Sie "
+"bitte sicher, dass das Sperrdatum nicht nach dem letzten Tag der Vorperiode "
+"gesetzt wird."
 
 #. module: account
 #. openerp-web
