@@ -42,7 +42,7 @@ class IrRule(models.Model):
     def _eval_context(self):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
-        return {'user': self.env.user, 'time': time}
+        return {'user': self.env.user, 'time': time, 'website_id': self._context.get('website_id')}
 
     @api.depends('groups')
     def _compute_global(self):
@@ -61,7 +61,7 @@ class IrRule(models.Model):
             raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
 
     @api.model
-    @tools.ormcache('self._uid', 'model_name', 'mode')
+    @tools.ormcache_context('self._uid', 'model_name', 'mode', keys=["website_id"])
     def _compute_domain(self, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
