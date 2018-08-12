@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
@@ -67,6 +72,13 @@ msgid "<i class=\"fa fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-check-circle\"/> Oczekujące"
 
 #. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
@@ -93,15 +105,17 @@ msgstr "<b>Transakcje</b>"
 #: code:addons/account_payment/models/payment.py:80
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Niedopasowanie ilości (%s)"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:52
+#: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Jeśli przechowujemy informacje dotyczące płatności na naszym serwerze, "
+"płatności za subskrypcję będą dokonywane automatycznie."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -120,13 +134,13 @@ msgid "Number of payment transactions"
 msgstr "Liczba transakcji płatniczych"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: code:addons/account_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Zapłać i potwierdź"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:119
+#: code:addons/account_payment/models/payment.py:131
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"

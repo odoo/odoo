@@ -3,19 +3,19 @@
 # * sale_stock
 # 
 # Translators:
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr "<strong>Kliento numeris:</strong>"
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Incoterms:</strong>"
+msgstr "<strong>Incoterm sąlygos:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -61,6 +61,10 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"Standartiškai \"Odoo\" numatomą pristatymo datą skaičiuoja taip: užsakymo "
+"data + ilgiausias produkto gaminimo laikas. Su šiuo pasirinkimu galite "
+"nustatyti konkrečią pristatymo datą užsakymuose vietoje gaminimo laiko "
+"produktuose."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -70,12 +74,12 @@ msgstr "Įmonės"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Siųsti visus produktus išsyk"
+msgstr "Pristatyti visus produktus vienu kartu"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "Siųsti turimus produktus"
+msgstr "Pristatyti kiekvieną produktą atskirai, kai jis pasiekiamas"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -90,17 +94,18 @@ msgstr "Pristatymo data"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr "Išvykstančios siuntos"
+msgstr "Pristatymo užsakymai"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr ""
+"Rodyti Incoterm sąlygas pardavimų užsakymuose ir susijusiose sąskaitose"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Rodyti Incoterm sąlygas užsakymuose ir sąskaitose"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -122,6 +127,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Tarptautiniai susitarimai yra pardavimo sąlygų rinkinys. Jie yra naudojami "
+"operacijos kaštų ir atsakomybių pasidalijimui tarp pirkėjo ir pardavėjo ir "
+"transportavimo praktikoms aprašyti."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -135,7 +143,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Atsargų kelias"
+msgstr "Inventoriaus maršrutai"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -150,7 +158,7 @@ msgstr "Sąskaitos faktūros eilutė"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "Sąskaitos išrašymas"
+msgstr "Sąskaitos pateikimas"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
@@ -226,7 +234,7 @@ msgstr "Planinio užsakymo taisyklė"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Quotation"
-msgstr "Įkainojimas"
+msgstr "Komercinis pasiūlymas"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -236,6 +244,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Esant ilgiems gaminimo terminams ir/ar dažniems atsargų pasibaigimams, "
+"geresniam prioritetų valdymui rekomenduojama rezervuoti produktus rankiniu "
+"būdų pristatymo užsakymuose arba paleidžiant planuoklį. Standartiškai "
+"planuoklis automatiškai suveikia kas 24 valandas."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -245,12 +257,12 @@ msgstr "Maršrutas"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Maršrutai pardavimų užsakymo eilutėms"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Pardavimų eilutė"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
@@ -285,7 +297,7 @@ msgstr "Pardavimų užsakymų statistika"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Pardavimų saugumo dienos"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -295,17 +307,17 @@ msgstr "Planuokite pristatymus anksčiau, kad išvengtumėte vėlavimų"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Saugus gaminimo laikas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Saugus gaminimo laikas pardavimams"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Pasirenkamas pardavimų užsakymų eilutėje"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -345,7 +357,7 @@ msgstr "Atsargų perkėlimas"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
 msgid "Stock Moves"
-msgstr "Atsargų judėjimas"
+msgstr "Atsargų perkėlimai"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -396,8 +408,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"Mažinate užsakytą kieki! Nepamirškite rankiniu būdu atnaujinti pristatymo "
-"užsakymą, jei to reikia."
+"Mažinate užsakytą kieki! Nepamirškite rankiniu būdu atnaujinti ir pristatymo"
+" užsakymą, jei to reikia."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:166
