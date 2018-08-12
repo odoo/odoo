@@ -97,7 +97,7 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: selection:hr.leave,request_unit_all:0 selection:hr.leave,request_unit_day:0
 msgid "1 Day"
-msgstr ""
+msgstr "1 dag"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
@@ -115,6 +115,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('request_unit_all', '!=', 'period')]}\">From "
 "</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('request_unit_all', '!=', 'period')]}\">Van "
+"</span>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new_request
@@ -122,6 +124,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('request_unit_all', '!=', 'period')]}\">To "
 "</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('request_unit_all', '!=', 'period')]}\">Tot "
+"</span>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -260,7 +264,7 @@ msgstr ""
 #: selection:hr.leave,request_date_from_period:0
 #: selection:hr.leave,request_date_to_period:0
 msgid "Afternoon"
-msgstr ""
+msgstr "Namiddag"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
@@ -349,7 +353,7 @@ msgstr "Toewijzing van %s : %.2f dag(en) aan %s"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:275
 #, python-format
 msgid "Allocation of %s : %.2f hour(s) To %s"
-msgstr ""
+msgstr "Toewijzing van %s : %.2f u(u)r(en) aan %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -902,7 +906,7 @@ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_new_allocation
@@ -1290,7 +1294,7 @@ msgstr "Managers"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__balance_limit
 msgid "Max Balance Limit"
-msgstr ""
+msgstr "Maximale balans limiet"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -1484,7 +1488,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_per_interval
 msgid "Number of unit per interval"
-msgstr ""
+msgstr "Aantal van eenheid per interval"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_unread_counter
@@ -1689,12 +1693,12 @@ msgstr "Rapportages"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
 msgid "Request End Date"
-msgstr ""
+msgstr "Einddatum aanvraag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
 msgid "Request Start Date"
-msgstr ""
+msgstr "Startdatum aanvraag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__type
@@ -1861,7 +1865,7 @@ msgstr ""
 #. module: hr_holidays
 #: sql_constraint:hr.leave.allocation:0
 msgid "The interval number should be greater than 0"
-msgstr ""
+msgstr "De interval moet groter zijn dan 0"
 
 #. module: hr_holidays
 #: sql_constraint:hr.leave.type:0

@@ -245,7 +245,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:648
 #, python-format
 msgid "A transaction %s with %s has been initiated."
-msgstr ""
+msgstr "Een transactie %smet%sis gestart."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
@@ -260,6 +260,8 @@ msgstr ""
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
 msgstr ""
+"Een transactie kan niet gekoppeld worden aan facturen met verschillende "
+"contacten."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
@@ -356,7 +358,7 @@ msgstr "Geautoriseerd "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Geautoriseerde transacties"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -745,13 +747,13 @@ msgstr "Interne referentie van de TX"
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Ongeldig token gevonden! Token verwerver %s!= %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Ongeldig token gevonden! Token relatie %s!= %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -761,7 +763,7 @@ msgstr "Factuur"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Factu(u)r(en)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:801
@@ -986,19 +988,19 @@ msgstr "Ok"
 #: code:addons/payment/models/payment_acquirer.py:708
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Enkel concept transacties kunnen geautoriseerd worden."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:699
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Alleen concept transacties kunnen verwerkt worden."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:745
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
+msgstr "Alleen een concept/geautoriseerde transactie kan geannuleerd worden."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:717
@@ -1229,7 +1231,7 @@ msgstr "Referentie"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "referentie moet uniek zijn!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
