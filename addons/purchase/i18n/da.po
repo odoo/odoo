@@ -83,6 +83,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Kære ${object.partner_id.name}\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Vedhæftet fremsendes <strong>${object.state in ('draft', 'sent') and 'anmodning om tilbud' or 'indkøbsordre'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    med referencen: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"på <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"fra ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Denne mail kan besvares hvis der måtte være spørgsmål.</p>\n"
+"<p>På forhånd tak,</p>\n"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:79
@@ -517,7 +537,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr "Klik for at oprette en anmodning om et tilbud."
+msgstr "Klik for at oprette anmodning om tilbud."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
