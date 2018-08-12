@@ -19,13 +19,14 @@
 # Silmar <pinheirosilmar@gmail.com>, 2017
 # Raphael Mendonça, 2017
 # Marina Jacques <marinajacques@gmail.com>, 2017
-# Kayky de Brito <kayky_debritodossantos@hotmail.com>, 2017
+# Gideoni Silva <gd.willian@gmail.com>, 2017
 # Juliene Gomes <juliene_faria@hotmail.com>, 2017
 # Maicon Grahl <maicongrahl@hotmail.com>, 2017
 # Cesar Silveira <cesar.consultant@gmail.com>, 2017
 # Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017
 # Anderson Fratuci <ander.frat@gmail.com>, 2017
 # Thiago MACÊDO <thiago95macedo@gmail.com>, 2017
+# Kayky de Brito <kayky_debritodossantos@hotmail.com>, 2017
 # Ademílson F. Tonato <apraqueisso@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
 # Luiz Carlos Zancanella Junior <junior@zancanella.com.br>, 2017
@@ -58,6 +59,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* O estado 'Rascunho' é usado quando um usuário está preparando uma fatura nova e ainda não confirmada.\n"
+"* O estado 'Aberta' é usado quando o usuário cria a fatura e um número é gerado para ela. A fatura é mantida neste estado até ela ser paga. \n"
+"* O estado 'Paga' é definido automaticamente quando a fatura é paga. Os registros no livro Diário relacionados à fatura podem ser reconciliadas ou não.\n"
+"* O estado 'Cancelado' é usado quando o usuário cancela a fatura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -68,17 +73,17 @@ msgstr "# de Dígitos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_code_digits
 msgid "# of Digits *"
-msgstr "n° de dígitos *"
+msgstr "# de Dígitos *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr "n° de linhas"
+msgstr "# de Linhas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
 msgid "# of Transaction"
-msgstr "n° da Transação"
+msgstr "# de Transações"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -88,7 +93,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Pedido (Ref ${object.number ou 'n/a'})"
+msgstr "${object.company_id.name} Fatura (Ref ${object.number ou 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -130,12 +135,12 @@ msgstr "&amp;nbsp;<span>em</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", se contabilidade ou compras está instalado"
+msgstr ", se contabilidade ou compras estiverem instalados"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "- First Number:"
-msgstr "- Primeiro Número"
+msgstr "- Primeiro Número:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -7305,7 +7310,7 @@ msgstr "Outubro"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "Contabilidade do Odoo possui muitos recursos extras:"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -10203,6 +10208,7 @@ msgstr ""
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
+"A data de fechamento para contadores é irreversível e não pode ser removida."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id

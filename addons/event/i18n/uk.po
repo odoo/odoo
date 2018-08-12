@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Zoriana Zaiats, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -1109,7 +1109,7 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: event
-#: code:addons/event/models/event.py:481
+#: code:addons/event/models/event.py:486
 #, python-format
 msgid "Compose Email"
 msgstr "Створити електронний лист"
@@ -1213,13 +1213,13 @@ msgid "Created on"
 msgstr "Дата створення"
 
 #. module: event
-#: code:addons/event/models/event.py:444
+#: code:addons/event/models/event.py:449
 #, python-format
 msgid "Customer"
 msgstr "Клієнт"
 
 #. module: event
-#: code:addons/event/models/event.py:446
+#: code:addons/event/models/event.py:451
 #, python-format
 msgid "Customer Email"
 msgstr "Email клієнта"
@@ -1414,6 +1414,36 @@ msgstr "Організація подій"
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
 msgstr "Реєстрація події"
+
+#. module: event
+#: code:addons/event/models/event_mail.py:143
+#, python-format
+msgid ""
+"Event Scheduler for:\n"
+"                              - Event: %s (%s)\n"
+"                              - Scheduled: %s\n"
+"                              - Template: %s (%s)\n"
+"\n"
+"                            Failed with error:\n"
+"                              - %s\n"
+"\n"
+"                            You receive this email because you are:\n"
+"                              - the organizer of the event,\n"
+"                              - or the responsible of the event,\n"
+"                              - or the last writer of the template."
+msgstr ""
+"Розклад події для:\n"
+"                              - Подія: %s (%s)\n"
+"                              - Заплановано: %s\n"
+"                              - Шаблон: %s (%s)\n"
+"\n"
+"                            Відхилено з помилкою:\n"
+"                              - %s\n"
+"\n"
+"                            Ви отримуєте цей електронний лист, оскільки ви є:\n"
+"                               - організатором заходу,\n"
+"                               - або відповідальним за подію,\n"
+"                               - або останнім, хто редагував шаблон."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
@@ -2374,6 +2404,12 @@ msgid "Visibility"
 msgstr "Доступність"
 
 #. module: event
+#: code:addons/event/models/event_mail.py:130
+#, python-format
+msgid "WARNING: Event Scheduler Error for event: %s"
+msgstr "УВАГА: Помилка планування події для події: %s"
+
+#. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr ""
@@ -2460,25 +2496,25 @@ msgid "events@odoo.com"
 msgstr "events@odoo.com"
 
 #. module: event
-#: code:addons/event/models/event.py:503
+#: code:addons/event/models/event.py:508
 #, python-format
 msgid "in %d days"
 msgstr "У %d днів"
 
 #. module: event
-#: code:addons/event/models/event.py:507
+#: code:addons/event/models/event.py:512
 #, python-format
 msgid "next month"
 msgstr "наступний місяць"
 
 #. module: event
-#: code:addons/event/models/event.py:505
+#: code:addons/event/models/event.py:510
 #, python-format
 msgid "next week"
 msgstr "наступний тиждень"
 
 #. module: event
-#: code:addons/event/models/event.py:509
+#: code:addons/event/models/event.py:514
 #, python-format
 msgid "on "
 msgstr "на"
@@ -2489,13 +2525,13 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: event
-#: code:addons/event/models/event.py:499
+#: code:addons/event/models/event.py:504
 #, python-format
 msgid "today"
 msgstr "сьогодні"
 
 #. module: event
-#: code:addons/event/models/event.py:501
+#: code:addons/event/models/event.py:506
 #, python-format
 msgid "tomorrow"
 msgstr "завтра"

@@ -27,23 +27,25 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
+"<br/>\n"
+"                        <strong>Описание:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr ""
+msgstr "<strong>Име:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "Счетоводни тестове"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Счетоводни тестове за"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
@@ -54,6 +56,8 @@ msgstr "Активен"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"Проверете дали редовете на движение са балансирани и имат зададени едни и "
+"същи дата и период"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -61,11 +65,13 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
+"Проверете в банковото извлечение, че крайният баланс = началния баланс + "
+"сбора от редовете на извлеченията"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "Проверете дали платените/обединени фактури не са в етап 'Отворени'"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -73,6 +79,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"Проверете дали обединените движения по сметка, които дефинират сметките за "
+"плащане и получаване, принадлежат към обединени фактури."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -86,17 +94,17 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Проверете баланса: дебитна сума = кредитна сума"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Натиснете бутона, за да създадете счетоводен тест."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "Код помощ"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -122,6 +130,26 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"Кодът винаги трябва да задава променливо назован `резултат` с резултата от Вашия тест, който може да е списък или\n"
+"речник. Ако `резултатът` е празен списък, означава, че тестът е бил успешен. В противен случай ще\n"
+"се опита да преведе и разпечата това, което се явява вътрешен `резултат`.\n"
+"\n"
+"Ако резултатът от Вашия тест е речник, можете да зададете променливо назован `column_order`, за да изберете в\n"
+"какъв ред желаете да разпечатате съдържанието на `резултата`.\n"
+"\n"
+"Ако имате нужда от тях, можете да използвате и следните вариации в кода си:\n"
+"    * cr: курсор към базата данни\n"
+"    * uid: идентификация за текущия потребител\n"
+"\n"
+"Във всички случаи, кодът трябва да представлява правно твърдение на python с правилна идентификация (ако е нужно).\n"
+"\n"
+"Пример: \n"
+"    sql = '''ИЗБЕРЕТЕ идентификация, име, референция, дата\n"
+"             ОТ account_move_line \n"
+"             КЪДЕТО account_id В (ИЗБЕРИ идентификация ОТ account_account КЪДЕТО вид = 'изглед')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    резултат = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -189,43 +217,44 @@ msgstr "Последователност"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Тест 1: Общ баланс"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Тест 3: Редове на движение"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"Тест 5.1 : Счетоводни редове за плащане и получаване на обединени фактури"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "Тест 5.2 : Обединени фактури и сметки за плащане/получаване"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Тест 6 : Етап на фактурите"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "Тест 7 : Краен баланс в банково извлечение"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
 msgid "Test Description"
-msgstr ""
+msgstr "Описание на тест"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
 msgid "Test Name"
-msgstr ""
+msgstr "Име на тест"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -237,14 +266,14 @@ msgstr "Тестове"
 #: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "Тестът беше проведен успешно"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "accounting.assert.test"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest"

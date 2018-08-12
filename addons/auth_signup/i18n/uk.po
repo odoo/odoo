@@ -12,10 +12,10 @@
 # Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -242,19 +242,19 @@ msgid "Already have an account?"
 msgstr "Вже є аккаунт?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Електронний лист з деталями зміни паролю було відправлено"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Іншого користувача з такою електронною поштою вже зареєстровано."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr "Помилка входу."
@@ -291,18 +291,13 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr "Копіювати права доступу з"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "Не можливо створити новий обліковий запис."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr "Не можливо зкинути пароль"
@@ -329,6 +324,11 @@ msgid "Enable password reset from Login page"
 msgstr "Дозволити зкидання пароля зі сторінки входу"
 
 #. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "Поля"
+
+#. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
 msgstr "Безкоштовна реєстрація (B2C)"
@@ -345,7 +345,7 @@ msgstr ""
 "Якщо не відмічено, то тільки запрошені користувачі зможуть зареєструватися."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr "Невірний вхід токену"
@@ -361,7 +361,7 @@ msgid "Never Connected"
 msgstr "Ніколи не входив"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr "Не введено логін."
@@ -387,7 +387,7 @@ msgid "Password reset"
 msgstr "Скидання паролю"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Паролі не збігаються; будь ласка, введіть їх знову."
@@ -455,13 +455,13 @@ msgid "Signup is not allowed for uninvited users"
 msgstr "Реєстрація незапрошених користувачів заборонена"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr "Талон реєстрації '%s' вже не є вірним"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr "Талон реєстрації '%s' не є вірним"
@@ -477,7 +477,7 @@ msgid "Template user for new users created through signup"
 msgstr "Шаблон користувача для створення користувачів під час реєстрації"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "Форма не була належним чином заповнена."

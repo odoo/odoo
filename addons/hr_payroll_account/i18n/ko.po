@@ -3,15 +3,15 @@
 # * hr_payroll_account
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Linkup <link-up@naver.com>, 2017
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # 최재호 <hwangtog@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -29,53 +29,53 @@ msgstr "회계"
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
 msgid "Accounting Entry"
-msgstr "회계 항목"
+msgstr "계정 항목"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
-msgstr "조정 항목"
+msgstr "정리기장"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_analytic_account_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_analytic_account_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
 msgid "Analytic Account"
-msgstr "분석적 계정"
+msgstr "분석 계정"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_credit
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
 msgid "Credit Account"
-msgstr "신용 계정"
+msgstr "대변 계정"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
 msgid "Date Account"
-msgstr ""
+msgstr "정산일"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_debit
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
 msgid "Debit Account"
-msgstr "직불 계정"
+msgstr "차변 계정"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
 msgid "Employee Contract"
-msgstr "직원 계약"
+msgstr "근로계약서"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr "선택한 모든 임직원의 급여 명세서 생성"
+msgstr "선택한 직원의 급여명세서 일괄 생성"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
 msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "유효 날짜(급여명세서)의 기간을 사용하려면 비워두십시오."
+msgstr "유효일(급여명세서) 기간을 비워두십시오."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -83,27 +83,27 @@ msgid "Pay Slip"
 msgstr "급여명세서"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
-msgid "Payslip Line"
-msgstr "급여 명세"
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "급여명세서 일괄 처리"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Run"
-msgstr ""
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "급여명세서 라인"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
 #, python-format
 msgid "Payslip of %s"
-msgstr "%s의 급여명세서"
+msgstr "%s 급여명세서"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
 msgid "Salary Journal"
-msgstr "급여 일지"
+msgstr "급여 분개장"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_tax_id
@@ -115,13 +115,13 @@ msgstr "세금"
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr "\"%s\" 비용 일지의 신용 계정이 제대로 구성되지 않았습니다!"
+msgstr "경비분개장의 \"%s\" 대변계정이 올바르게 구성되지 않았습니다!"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr "\"%s\" 비용 일지의 직불 계정이 제대로 구성되지 않았습니다!"
+msgstr "경비분개장의 \"%s\" 대변계정이 올바르게 구성되지 않았습니다!"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule

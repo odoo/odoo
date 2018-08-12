@@ -20,13 +20,14 @@
 # 石家庄_老刘 <liuaiqun@sina.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
+# Maie <m@maie.name>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Maie <m@maie.name>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -438,13 +439,13 @@ msgid ""
 msgstr "在此处输入员工的家庭地址，非办公地址"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "错误！你不能创建递归的部门"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "错误！你不能创建递归的员工层级。"
@@ -719,6 +720,11 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr "发布新的产品、营销活动和优惠"
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr "合法同居者"
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "男性"
@@ -743,8 +749,8 @@ msgstr "市场及社区经理"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr "已婚 (或类似信息)"
+msgid "Married"
+msgstr "已婚"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto

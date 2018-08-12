@@ -11,10 +11,10 @@
 # Marek Pontus, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Marek Pontus, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -154,19 +154,19 @@ msgid "Already have an account?"
 msgstr "Teil on konto juba olemas?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Volitustega e-mail saadetud parooli lähtestamiseks."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Teine kasutaja on juba registreerunud selle e-posti aadressiga."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr "Audentimine ebaõnnestus."
@@ -203,18 +203,13 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr "Kopeeri ligipääsu õigused"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "Ei saanud luua uut kontot."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr "Ei saanud lähtestada teie parooli"
@@ -241,6 +236,11 @@ msgid "Enable password reset from Login page"
 msgstr "Võimalda parooli lähtestamine sisselogimise lehelt"
 
 #. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "Väljad"
+
+#. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
 msgstr "Vaba registreerimine (B2C)"
@@ -256,7 +256,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "Kui on märkimata, siis ainult kutsega kasutajad saavad siseneda. "
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr "Vigane sisselogimise tähis"
@@ -272,7 +272,7 @@ msgid "Never Connected"
 msgstr "Pole kunagi ühendatud"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr "Sisselogimise info puudub"
@@ -298,7 +298,7 @@ msgid "Password reset"
 msgstr "Salasõna lähtestamine"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Salasõnad ei sobi; palun sisesta need uuesti."
@@ -366,13 +366,13 @@ msgid "Signup is not allowed for uninvited users"
 msgstr "Sisselogimine ei ole lubatud kutseta kasutajatele"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr "Sisselogimise märgis '%s' ei ole enam kehtiv"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr "Sisselogimise märgis '%s' ei ole kehtiv."
@@ -388,7 +388,7 @@ msgid "Template user for new users created through signup"
 msgstr "Kasutaja mall, mis luuakse uutele kasutajatele registreerimisel"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "Vorm ei ole täidetud nõuetekohaselt"

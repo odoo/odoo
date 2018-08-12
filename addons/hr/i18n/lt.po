@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -446,13 +446,13 @@ msgid ""
 msgstr "Įveskite darbuotojo asmeninį adresą, nesusietą su įmone."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Klaida! Jūs negalite sukurti pasikartojančių skyrių."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -732,6 +732,11 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr "Paleiskite naujus produktus, rinkodaros kampanijas ir pasiūlymus"
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Vyras"
@@ -756,8 +761,8 @@ msgstr "Rinkodaros ir bendruomenės vadovas"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr "Susituokęs (ar pan.)"
+msgid "Married"
+msgstr "Susituokęs/-usi"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -979,7 +984,7 @@ msgstr "Susiję darbuotojai"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Susijęs naudotojo vardas resurso prieigai valdyti"
+msgstr "Susijusio vartotojo vardas resurso prieigai valdyti"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet

@@ -35,7 +35,7 @@
 # Christopher Westburry <cricsus99@gmail.com>, 2017
 # Markus Mattes <mmattes87@gmail.com>, 2017
 # Dejan Dinic, 2017
-# Krakataua Katarajtu <shlok@hotmail.de>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
 # Patrick Belser <patrick.belser@camptocamp.com>, 2017
 # Sören Prilop <mail@soeren-prilop.de>, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
@@ -2288,12 +2288,12 @@ msgstr "Anwendbarkeit"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Angewendet auf Habenbuchung im Journal"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Angewendet auf Sollbuchung im Journal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -3195,7 +3195,7 @@ msgstr "Kontenvorlage auswählen"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Gegenkonto wählen oder Abschreibung erstellen"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -5134,7 +5134,7 @@ msgstr "Vollständig abstimmen"
 #: code:addons/account/models/account_journal_dashboard.py:113
 #, python-format
 msgid "Future"
-msgstr "Fiktiver Bestand"
+msgstr "Zukünftig"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7412,7 +7412,7 @@ msgstr "Oktober"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "Odoo-Buchhaltung hat viel Zusatzfunktionalität:"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -10335,6 +10335,8 @@ msgstr ""
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
+"Das Sperrdatum für Buchhalter ist unwiderufbar und kann nicht entfernt "
+"werden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -10364,6 +10366,7 @@ msgstr "Der Name, der in Buchungspositionen verwendet wird"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Das neue Buchhalter-Sperrdatum muss nach dem vorherigen Sperrdatum liegen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
@@ -11859,6 +11862,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Sie dürfen Buchhalter nicht strenger eingrenzen wie Anwender. Bitte stellen "
+"Sie sicher, dass das Buchhalter-Sperrdatum vor dem der Anwender gesetzt "
+"wird."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -11944,6 +11950,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Sie dürfen eine nicht abgeschlossene Periode nicht sperren. Stellen Sie "
+"bitte sicher, dass das Sperrdatum nicht nach dem letzten Tag der Vorperiode "
+"gesetzt wird."
 
 #. module: account
 #. openerp-web

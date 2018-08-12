@@ -10,10 +10,10 @@
 # Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -193,26 +193,26 @@ msgstr ""
 "    </table>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    Beste ${object.name},</p>\n"
+"    <p>Beste ${object.name},</p>\n"
 "    <p>\n"
-"        Uw account is succesvol aangemaakt.!\n"
+"        Uw account is succesvol aangemaakt!\n"
 "    </p>\n"
 "    <p>\n"
 "        Uw login: ${object.email}\n"
 "        <br/>\n"
 "    </p>\n"
 "    <p>\n"
-"        Om toegang te krijgen tot uw account, kan u de volgende link gebruiken::\n"
+"        Om toegang te krijgen tot uw account, kan u de volgende link gebruiken:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Ga naar mijn account</a>\n"
 "    </div>\n"
-"    <p>Met vriendelijke groet,</p>\n"
+"    <p>Vriendelijke groet,</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>Verstuurd door ${user.company_id.name} met <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"        <strong>Verstuurd door  ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 
@@ -241,7 +241,7 @@ msgid "Already have an account?"
 msgstr "Heeft u al een account?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
@@ -249,13 +249,13 @@ msgstr ""
 "wachtwoord."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Er is al een gebruiker geregistreerd met dit e-mailadres."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authenticatie mislukt."
@@ -293,18 +293,13 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr "Kopieer gebruikersrechten van"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "Het was niet mogelijk een nieuw account aan te maken."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr "Uw wachtwoord kon niet reset worden"
@@ -331,6 +326,11 @@ msgid "Enable password reset from Login page"
 msgstr "Wachtwoord reset vanaf login pagina toestaan"
 
 #. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "Velden"
+
+#. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
 msgstr "Gratis registratie (B2C)"
@@ -346,7 +346,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "Indien uitgevinkt kunnen  alleen uitgenodigde gebruikers aanmelden"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr "Aanmeld toekenning ongeldig"
@@ -362,7 +362,7 @@ msgid "Never Connected"
 msgstr "Nog nooit verbonden"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr "Geen login gegeven"
@@ -388,7 +388,7 @@ msgid "Password reset"
 msgstr "Reset wachtwoord"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Wachtwoorden komen niet overeen, probeer het opnieuw."
@@ -456,13 +456,13 @@ msgid "Signup is not allowed for uninvited users"
 msgstr "Registratie is niet toegestaan voor gebruikers zonder uitnodiging"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr "Registratie token '%s' is niet meer geldig"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr "Registratie token '%s' is niet geldig."
@@ -479,7 +479,7 @@ msgstr ""
 "Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelden"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "Dit formulier is niet correct ingesteld."

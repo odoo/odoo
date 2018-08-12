@@ -6,6 +6,7 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Martin Trigaux, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
@@ -45,7 +46,7 @@ msgstr "Sąskaitos žurnalas"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "Papildomos atvežimo išlaidos"
+msgstr "Papildomi pristatymo kaštai"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -84,12 +85,12 @@ msgstr "Atšauktas"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr "Paspauskite, norėdami sukurti naują atvežimo savikainą."
+msgstr "Paspauskite norėdami sukurti naujus pristatymo kaštus."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr "Paspauskite, norėdami apibrėžti naują atvežimo savikainos rūšį."
+msgstr "Paspauskite norėdami nustatyti naują pristatymo kaštų tipą."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -217,7 +218,7 @@ msgstr "Informacija"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "Ar yra pristatymo kaštai?"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -234,22 +235,22 @@ msgstr "Žurnalo įrašas"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
 msgid "Landed Cost"
-msgstr "Atvežimo savikaina"
+msgstr "Pristatymo kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Atvežimo savikainos pavadinimas"
+msgstr "Pristatymo kaštų pavadinimas"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 msgid "Landed Cost Type"
-msgstr "Atvežimo savikainos tipas"
+msgstr "Pristatymo kaštų tipas"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
-msgstr ""
+msgstr "Pristatymo kaštų tipai"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -260,17 +261,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr "Atvežimo savikainos"
+msgstr "Pristatymo kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Pristatymo kaštai yra skaičiuojami pagal pirkimo matavimo vienetus."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Atvežimo savikaina patvirtinta"
+msgstr "Pristatymo kaštai patvirtinti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -310,14 +311,14 @@ msgstr "Pavadinimas"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
-"Nėra reikšmės koregavimo eilučių. Jums reikėtų perskaičiuoti atvežimo "
-"savikainas."
+"Nėra reikšmės koregavimo eilučių. Jums reikėtų perskaičiuoti pristatymo "
+"kaštus."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Tik juodraštinės atvežimo savikainos gai būti patvirtintos"
+msgstr "Tik juodraštiniai pristatymo kaštai gali būti patvirtinti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -382,12 +383,12 @@ msgstr "Būsena"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "Atsargų atvežimo savikaina"
+msgstr "Atsargų pristatymo kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Lines"
-msgstr "Atsargų atvežimo savikainos eilutės"
+msgstr "Atsargų pristatymo kaštų eilutės"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -436,6 +437,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Patvirtinti pristatymo kaštai negali būti atšaukti, tačiau galite sukurti "
+"neigiamus pristatymo kaštus, kad juos kompensuotumėte"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines

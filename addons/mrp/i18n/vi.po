@@ -300,7 +300,7 @@ msgstr "Hiệu lực"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_active_move_line_ids
 msgid "Active Move Line"
-msgstr ""
+msgstr "Chi tiết Dịch chuyển hoạt động"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -671,12 +671,12 @@ msgstr "Bấm để tạo một Lệnh sản xuất"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Click here to create a Unbuild Order."
-msgstr "Bấm để tạo một Lệnh tháo gỡ"
+msgstr "Bấm để tạo một Lệnh tháo gỡ."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Click here to create a new Routing."
-msgstr "Bấm để tạo mới một qui trình"
+msgstr "Bấm để tạo mới một qui trình."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -686,7 +686,7 @@ msgstr "Bấm để tạo mới một Năng lực sản xuất"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid "Click here to create a new Work Order Message."
-msgstr "Bấm để tạo mới một Thông điệp sản xuất"
+msgstr "Bấm để tạo mới một Thông điệp sản xuất."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -920,7 +920,7 @@ msgstr "Mô tả"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
 msgid "Description of the Work Center."
-msgstr "Mô tả Năng lực Sản xuất"
+msgstr "Mô tả Năng lực Sản xuất."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -1122,7 +1122,7 @@ msgstr "Năng suất đầy đủ"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Future Activitie"
-msgstr ""
+msgstr "Hoạt động trong tương lai"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1137,7 +1137,7 @@ msgstr "Thông tin chung"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_priority
 msgid "Gives the sequence order when displaying a list of MRP documents."
-msgstr ""
+msgstr "Cung cấp thứ tự tuần tự khi hiển thị danh sách các tài liệu Sản xuất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
@@ -1161,7 +1161,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr "Chỉ ra trình tự sắp xếp khi hiển thị"
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -1248,7 +1248,7 @@ msgid ""
 msgstr ""
 "Nếu được đánh dấu, khi một dịch chuyển kho trước (mà được sinh ra bởi một "
 "quy tắc cung ứng kế tiếp) bị hủy bỏ hoặc bị tách ra, dịch chuyển kho sinh ra"
-" bởi dịch chuyển này cũng bị như vậy."
+" bởi dịch chuyển này cũng bị như vậy"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_active
@@ -1346,6 +1346,7 @@ msgstr "Dịch chuyển Kho"
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
+"Dịch chuyển Kho mà bạn phải quét mã vạch một Lô hàng theo Lệnh sản xuất này"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_is_locked
@@ -1376,7 +1377,7 @@ msgstr "Người làm hiện tại"
 #: code:addons/mrp/models/mrp_workcenter.py:162
 #, python-format
 msgid "It has been unblocked already. "
-msgstr "Đã ngừng khoá rồi."
+msgstr "Đã được mở khóa"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1689,6 +1690,9 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Các hoạt động sản xuất được thực hiện với Quy trình sản xuất. Quy trình sản xuất có thể \n"
+"                bao gồm các công nhân/máy móc, chúng được sử dụng để lập kế hoạch chi phí, lập kế \n"
+"                hoạch tồn,... Các trung tâm làm việc được xác định trên các hoạt động của Tuyến đường."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1697,6 +1701,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Các hoạt động sản xuất được xử lý tại Quy trình sản xuất. Một Quy trình sản xuất có thể bao gồm\n"
+"                  các công nhân/máy móc, họ được sử dụng để lập kế hoạch chi phí, lập kế hoạch, năng lực, ...\n"
+"                  Các Quy trình sản xuất được xác định trên các hoạt động của Định tuyến sản xuất."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -1854,7 +1861,7 @@ msgstr "Chưa có mất năng suất sản xuất."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
 msgid "No productivity loss for this equipment."
-msgstr "Không có số liệu mất năng suất đối với thiết bị này"
+msgstr "Không có số liệu mất năng suất đối với thiết bị này."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -2443,7 +2450,7 @@ msgstr "Ghi nhận Sản xuất"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Record Production Line"
-msgstr ""
+msgstr "Chi tiết hồ sơ sản xuất"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:159
@@ -2453,7 +2460,7 @@ msgid ""
 "in its BoM or child BoMs!"
 msgstr ""
 "Lỗi Đệ quy! Một sản phẩm có Định mức Nguyên liệu không thể có chính nó trong"
-" định mức hoặc các Định mức con của Định mức đó"
+" định mức hoặc các Định mức con của Định mức đó!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
@@ -2714,13 +2721,13 @@ msgstr "Chọn"
 #: model:product.product,name:mrp.product_product_build_kit
 #: model:product.template,name:mrp.product_product_build_kit_product_template
 msgid "Self Build Kit"
-msgstr ""
+msgstr "Bán theo bộ"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_build_kit
 #: model:product.template,description:mrp.product_product_build_kit_product_template
 msgid "Self Build kit."
-msgstr ""
+msgstr "Bán theo bộ."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
@@ -2928,7 +2935,7 @@ msgstr "Kỹ thuật: được dùng trong chỉ xem"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_uom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_state
 msgid "Technical: used in views only."
-msgstr "Kỹ thuật: được dùng trong chỉ xem"
+msgstr "Kỹ thuật: được dùng trong chỉ xem."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_production_lot_use_next_on_work_order_id
@@ -2959,7 +2966,7 @@ msgstr "Nguyên liệu sẵn sàng cho hoạt động đầu tiên"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_res_model
 msgid "The database object this attachment will be attached to."
-msgstr ""
+msgstr "Đối tượng cơ sở dữ liệu tệp đính kèm này sẽ được đính kèm."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -3001,6 +3008,8 @@ msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
 msgstr ""
+"Các hoạt động ở nơi mà các thành phần được tiêu thụ, hoặc các sản phẩm đã "
+"hoàn thành được tạo ra."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
@@ -3024,7 +3033,7 @@ msgstr "Số lượng để sản xuất phải là số dương!"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "Id bản ghi này được đính kèm."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -3033,6 +3042,9 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
+"Định tuyến chứa tất cả các Năng lực sản xuất sẽ sử dụng. Điều này sẽ tạo ra "
+"các đơn đặt hàng làm việc sau đó làm thay đổi việc thực hiện theo thứ tự sản"
+" xuất."
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:20
@@ -3041,6 +3053,8 @@ msgid ""
 "There is no Bill of Material found for the product %s. Please define a Bill "
 "of Material for this product."
 msgstr ""
+"Không có Định mức nguyên liệu nào được tìm thấy cho sản phẩm %s. Hãy tạo cho"
+" nó một Định mức nguyên liệu trước."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3097,7 +3111,7 @@ msgstr "Theo dõi Thời gian"
 #: code:addons/mrp/models/mrp_workorder.py:402
 #, python-format
 msgid "Time Tracking: "
-msgstr "Theo dõi Thời gian"
+msgstr "Theo dõi Thời gian:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
@@ -3117,7 +3131,7 @@ msgstr "Thời gian tính bằng phút."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
 msgid "Time in minutes for the setup."
-msgstr "Thời gian tính bằng phút để setup"
+msgstr "Thời gian tính bằng phút để setup."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
@@ -3125,6 +3139,9 @@ msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
 msgstr ""
+"Thời gian tính bằng phút. Là thời gian được sử dụng trong chế độ thủ công "
+"hoặc lần đầu tiên được cho là trong thời gian thực khi chưa có bất kỳ đơn "
+"đặt hàng nào."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_qty_to_consume
@@ -3158,6 +3175,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Để sản xuất hoặc lắp ráp sản phẩm, sử dụng nguyên liệu và\n"
+"thành phẩm bạn cũng phải xử lý các hoạt động sản xuất.\n"
+"Các hoạt động sản xuất thường được gọi là Lệnh sản xuất. Sự đa dạng\n"
+"các hoạt động sẽ có tác động khác nhau đến chi phí của\n"
+"sản xuất và lập kế hoạch tùy thuộc vào khối lượng công việc có sẵn."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3258,7 +3280,7 @@ msgid ""
 "purchased into its components, based on its Bill of Material."
 msgstr ""
 "Lệnh tháo dỡ được sử dụng để tách rời một sản phẩm bạn sản xuất hoặc mua vào"
-" các thành phần của nó, dựa trên Định mức nguyên liệu của nó"
+" các thành phần của nó, dựa trên Định mức nguyên liệu của nó."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -3520,7 +3542,7 @@ msgstr ""
 "Năng lực sản xuất (Work Centers) cho phép bạn tạo và quản lý các đơn vị\n"
 "                sản xuất nhỏ nhất. Chúng bao gồm công nhân hoặc/và máy móc, mà\n"
 "                giao để thực hiện một hay nhiều hoạt động nào đó trong một quy\n"
-"                quy trình sản xuất cũng như phục vụ việc dự báo về lập kế hoạch\n"
+"                quy trình sản xuất cũng như phục vụ việc dự báo về lập kế hoạch"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3611,6 +3633,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Hoạt động sản xuất là các hoạt động được thực hiện tại Quy trình sản xuất để tạo ra \n"
+"           Lệnh sản xuất. Hoạt động sản xuất được kích hoạt bởi Lệnh sản xuất, chúng \n"
+"            được xác định dựa trên những định tuyến này"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
@@ -3619,6 +3644,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones."
 msgstr ""
+"Hoạt động sản xuất là các hoạt động được thực hiện tại Quy trình sản xuất để tạo ra \n"
+"           Lệnh sản xuất. Hoạt động sản xuất được kích hoạt bởi Lệnh sản xuất, chúng \n"
+"            được xác định dựa trên những định tuyến này."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
@@ -3627,6 +3655,9 @@ msgid ""
 "           Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "           they are based on the Routing defined on these ones."
 msgstr ""
+"Hoạt động sản xuất là các hoạt động được thực hiện tại Quy trình sản xuất để tạo ra \n"
+"           Lệnh sản xuất. Hoạt động sản xuất được kích hoạt bởi Lệnh sản xuất, chúng \n"
+"            được xác định dựa trên những định tuyến này."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -3673,7 +3704,7 @@ msgstr "Mất Năng suất Năng lực SX"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr "Năng lực sản xuất bị phong toả, bấm để dừng phong toả"
+msgstr "Năng lực sản xuất bị phong toả, bấm để dừng phong toả."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -3728,7 +3759,7 @@ msgid ""
 "Please close or cancel it first."
 msgstr ""
 "Bạn không thể xoá một Định mức Nguyên liệu mà có một lệnh sản xuất đang chạy nó.\n"
-"Vui lòng đóng hoặc huỷ lệnh sản xuất trước"
+"Vui lòng đóng hoặc huỷ lệnh sản xuất trước."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:202
@@ -3744,6 +3775,8 @@ msgid ""
 "material.             If you want to cancel this MO, please change the "
 "consumed quantities to 0."
 msgstr ""
+"Bạn không thể hủy bỏ một Lệnh sản xuất nếu bạn đã sử dụng nguyên liệu. Nếu "
+"bạn muốn hủy LSX này, hãy thay đổi số lượng nguyên liệu đã dùng thành 0."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:202
@@ -3752,6 +3785,8 @@ msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
+"Bạn không thể tiêu thụ cùng một số sê-ri hai lần. Vui lòng sửa số sê-ri được"
+" mã hóa."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:129
@@ -3769,7 +3804,7 @@ msgstr "Bạn không thể tháo dỡ một lệnh sản xuất hoàn tác."
 #: code:addons/mrp/wizard/change_production_qty.py:46
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
-msgstr "Bạn đã xử lý được %d rồi. Vui lòng nhập một số lượng lớn hơn %d"
+msgstr "Bạn đã xử lý được %d rồi. Vui lòng nhập một số lượng lớn hơn %d "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3777,6 +3812,8 @@ msgid ""
 "You have consumed less material than what was planned. Are you sure you want"
 " to close this MO?"
 msgstr ""
+"Bạn đã sử dụng ít nguyên liệu hơn so với những gì đã được lên kế hoạch. Bạn "
+"có chắc chắn muốn đóng LSX này không?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:392
@@ -3786,6 +3823,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"Bạn cần xác định ít nhất một tổn thất năng suất trong danh mục 'Hiệu suất'. "
+"Tạo một ứng dụng từ menu Ứng dụng, menu: Cấu hình/Mất năng suất."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:388
@@ -3795,6 +3834,8 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
+"Bạn cần xác định ít nhất một tổn thất năng suất trong danh mục 'Năng suất'. "
+"Tạo một ứng dụng từ menu Ứng dụng, menu: Cấu hình/Mất năng suất."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:446
@@ -3804,6 +3845,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"Bạn cần phải xác định ít nhất một mất năng suất không hoạt động trong danh "
+"mục 'Hiệu suất'. Tạo một ứng dụng từ menu Ứng dụng, menu: Cấu hình/Mất năng "
+"suất."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:125
@@ -3830,6 +3874,7 @@ msgid ""
 "You should specify a manufacturing order in order to find the correct "
 "tracked products."
 msgstr ""
+"Bạn nên chỉ định một Lệnh sản xuất để tìm đúng sản phẩm được theo dõi."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3862,7 +3907,7 @@ msgstr "phút"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
-msgstr ""
+msgstr "mrp.bom.line"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.production_message
@@ -3872,12 +3917,12 @@ msgstr "số lượng đã được cập nhật."
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_mrp_bom_cost_report
 msgid "report.mrp.mrp_bom_cost_report"
-msgstr ""
+msgstr "report.mrp.mrp_bom_cost_report"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_mrp_bom_structure_report
 msgid "report.mrp.mrp_bom_structure_report"
-msgstr ""
+msgstr "report.mrp.mrp_bom_structure_report"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
@@ -3887,12 +3932,12 @@ msgstr "res.config.settings"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
@@ -3902,7 +3947,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid "to create a new Work Center."
-msgstr "để tạo một mới Năng lực Sản xuất"
+msgstr "để tạo một mới Năng lực Sản xuất."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
