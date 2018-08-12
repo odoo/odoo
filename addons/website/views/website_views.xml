@@ -45,8 +45,7 @@
                     <field name="country_group_ids" widget="many2many_tags"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="default_lang_id"/>
-                    <field name="installed_theme_id" groups="base.group_no_one"/>
-                    <field name="theme_ids" groups="base.group_no_one" widget="many2many_tags"/>
+                    <field name="theme_id" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -265,7 +264,6 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="website_id" groups="website.group_multi_website"/>
-                    <field name="theme_id" groups="base.group_no_one"/>
                     <field name="key" readonly="1"/>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />

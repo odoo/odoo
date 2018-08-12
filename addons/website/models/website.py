@@ -101,8 +101,8 @@ class Website(models.Model):
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
-    installed_theme_id = fields.Many2one('ir.module.module')
-    theme_ids = fields.Many2many('ir.module.module', 'website_theme', 'website_id', 'ir_module_module_id')
+    theme_id = fields.Many2one('ir.module.module', help='Installed theme')
+
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
@@ -168,13 +168,14 @@ class Website(models.Model):
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
         top_menu = self.env['website.menu'].create({
-            'name': 'Top Menu for website ' + str(self.id),
+            'name': _('Top Menu for website %s') % self.id,
             'website_id': self.id,
             'sequence': 0
         })
         self.menu_id = top_menu.id
         self.env['website.menu'].create({
-            'name': 'Home', 'url': '/',
+            'name': _('Home'),
+            'url': '/',
             'website_id': self.id,
             'parent_id': top_menu.id,
             'sequence': 10
@@ -391,15 +392,16 @@ class Website(models.Model):
 
         return dependencies
 
-    @api.model
-    def page_exists(self, name, module='website'):
-        try:
-            name = (name or "").replace("/website.", "").replace("/", "")
-            if not name:
-                return False
-            return self.env.ref('%s.%s' % module, name)
-        except Exception:
-            return False
+    # removed by 3c9e6c89e7207636c1bdab4ed8118c0c1089d43e
+    # @api.model
+    # def page_exists(self, name, module='website'):
+    #     try:
+    #         name = (name or "").replace("/website.", "").replace("/", "")
+    #         if not name:
+    #             return False
+    #         return self.env.ref('%s.%s' % module, name)
+    #     except Exception:
+    #         return False
 
     # ----------------------------------------------------------
     # Languages
@@ -532,8 +534,7 @@ class Website(models.Model):
                 endpoint.routing['type'] == 'http' and
                 endpoint.routing['auth'] in ('none', 'public') and
                 endpoint.routing.get('website', False) and
-                all(hasattr(converter, 'generate') for converter in converters) and
-                endpoint.routing.get('website')):
+                all(hasattr(converter, 'generate') for converter in converters)):
                 return False
 
         # dont't list routes without argument having no default value or converter
@@ -915,21 +916,14 @@ class Page(models.Model):
     @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        if default and not default.get('view_id'):
-            view = self.env['ir.ui.view'].browse(self.view_id.id)
-            # website.page's ir.ui.view should have a different key than the one it
-            # is copied from.
-            # (eg: website_version: an ir.ui.view record with the same key is
-            # expected to be the same ir.ui.view but from another version)
-            website_id = default.get('website_id')
-            # website_id should be set during copy to avoid copying a generic page to another generic copy and then write on it
-            # which would result in the generic page copied to a generic one and a specific one
-            new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name, _('(copy)')), 'website_id': website_id.id})
-            default = {
-                'name': '%s %s' % (self.name, _('(copy)')),
-                'url': self.env['website'].get_unique_path(self.url),
-                'view_id': new_view.id,
-            }
+        if default:
+            if not default.get('view_id'):
+                view = self.env['ir.ui.view'].browse(self.view_id.id)
+                new_view = view.copy({'website_id': default.get('website_id')})
+                default['view_id'] = new_view.id
+
+            default['name'] = default.get('name', '%s %s' % (self.name, _('(copy)')))
+            default['url'] = default.get('url', self.env['website'].get_unique_path(self.url))
         return super(Page, self).copy(default=default)
 
     @api.model
@@ -938,7 +932,7 @@ class Page(models.Model):
             :param page_id : website.page identifier
         """
         page = self.browse(int(page_id))
-        new_page = page.copy(dict(website_id=self.env['website'].get_current_website()))
+        new_page = page.copy(dict(website_id=self.env['website'].get_current_website().id))
         # Should not clone menu if the page was cloned from one website to another
         # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
         if clone_menu and new_page.website_id == page.website_id:
@@ -1013,7 +1007,7 @@ class Menu(models.Model):
         if vals.get('website_id'):
             return super(Menu, self).create(vals)
         elif self._context.get('website_id'):
-            vals.update({'website_id': self._context.get('website_id')})
+            vals['website_id'] = self._context.get('website_id')
             return super(Menu, self).create(vals)
         else:
             # create for every site

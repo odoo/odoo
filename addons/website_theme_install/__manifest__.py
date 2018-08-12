@@ -8,6 +8,7 @@
         'views/assets.xml',
         'views/views.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.model.access.csv',
     ],
     'depends': ['website'],
     'auto_install': True,
