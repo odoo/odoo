@@ -40,6 +40,7 @@ var WebsiteRoot = BodyManager.extend({
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
+        'click .js_multi_website_switch': '_multiWebsiteSwitch',
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
@@ -278,6 +279,23 @@ var WebsiteRoot = BodyManager.extend({
      */
     _onDisableOnClick: function (ev) {
         $(ev.currentTarget).addClass('disabled');
+    },
+
+    /**
+     * Called when clicking on the multi-website switcher.
+     *
+     * @param {OdooEvent} ev
+     */
+    _multiWebsiteSwitch: function (ev) {
+        var website_id_to_switch_to = ev.target.getAttribute('website-id');
+        this._rpc({
+            route: '/website/set_session_website',
+            params: {
+                website_id: website_id_to_switch_to || false,
+            },
+        }).then(function () {
+            window.location.reload(true);
+        });
     },
 });
 

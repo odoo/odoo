@@ -145,6 +145,16 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             });
         }));
 
+        defs.push(this._rpc({model: 'res.users',
+                             method: 'has_group',
+                             args: ['website.group_multi_website'],
+                             context: context})
+                  .then(function (has_group) {
+                      if (!has_group) {
+                          self.$('#website_restriction').addClass('hidden');
+                      }
+                  }));
+
         var datepickersOptions = {
             minDate: moment({y: 1900}),
             maxDate: moment().add(200, 'y'),
@@ -210,6 +220,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             is_menu: this.$('#is_menu').prop('checked'),
             is_homepage: this.$('#is_homepage').prop('checked'),
             website_published: this.$('#is_published').prop('checked'),
+            restrict_to_current_website: this.$('#restrict_to_current_website').prop('checked'),
             create_redirect: this.$('#create_redirect').prop('checked'),
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
@@ -954,7 +965,7 @@ function _deletePage(pageId, fromPageManagement) {
     // Delete the page if the user confirmed
         return self._rpc({
             model: 'website.page',
-            method: 'delete_page',
+            method: 'unlink',
             args: [pageId],
             context: context,
         });

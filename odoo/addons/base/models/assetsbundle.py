@@ -214,7 +214,8 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         domain = [
-            ('url', '=like', '/web/content/%-%/{0}{1}%.{2}'.format(  # The wilcards are id, version and pagination number (if any)
+            ('url', '=like', '/web/content/%-%-{}/{}{}%.{}'.format(  # The wilcards are id, version and pagination number (if any)
+                self.env.context.get('website_id'),
                 ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
                 self.name,
                 type)),
@@ -235,8 +236,9 @@ class AssetsBundle(object):
         by file name and only return the one with the max id for each group.
         """
         version = "%" if ignore_version else self.version
-        url_pattern = '/web/content/%-{0}/{1}{2}{3}.{4}'.format(
+        url_pattern = '/web/content/%-{}-{}/{}{}{}.{}'.format(
             version,
+            self.env.context.get('website_id'),
             ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             self.name,
             '.%' if type == 'css' else '',
@@ -270,7 +272,7 @@ class AssetsBundle(object):
         values = {
             'name': "/web/content/%s" % type,
             'datas_fname': fname,
-            'mimetype' : mimetype,
+            'mimetype': mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
             'type': 'binary',
@@ -279,7 +281,13 @@ class AssetsBundle(object):
         }
         attachment = ira.sudo().create(values)
 
-        url = '/web/content/%s-%s%s/%s' % (attachment.id, self.version, ('/rtl' if type == 'css' and self.user_direction == 'rtl' else ''), fname)
+        url = '/web/content/%s-%s-%s%s/%s' % (
+            attachment.id,
+            self.version,
+            self.env.context.get('website_id'),
+            ('/rtl' if type == 'css' and self.user_direction == 'rtl' else ''),
+            fname
+        )
         values = {
             'name': url,
             'url': url,

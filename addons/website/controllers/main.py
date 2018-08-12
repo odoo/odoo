@@ -81,6 +81,11 @@ class Website(Home):
 
         raise request.not_found()
 
+    @http.route('/website/set_session_website', type='json', auth="user")
+    def set_session_website(self, website_id):
+        request.env['website'].browse(int(website_id) if website_id else False)._fix_to_session()
+        return True
+
     #------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
     # while portal users are redirected to the frontend by default
@@ -221,7 +226,7 @@ class Website(Home):
         # default sortby order
         sort_order = searchbar_sortings.get(sortby, 'name')['order']
 
-        domain = ['|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        domain = ['|', ('website_id', '=', False), ('website_id', '=', request.website.id)]
         if search:
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
@@ -235,6 +240,9 @@ class Website(Home):
             step=50
         )
         pages = Page.search(domain, order=sort_order, limit=50, offset=pager['offset'])
+
+        # only include pages if they are the most specific one available
+        pages = pages.filtered(pages._is_most_specific_page)
 
         values = {
             'pager': pager,
