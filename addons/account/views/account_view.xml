@@ -200,6 +200,14 @@
             context="{'search_default_partner_id': [active_id]}"
             res_model="account.move.line"/>
 
+        <!-- Reconciliation action -->
+        <record id="action_view_account_move_line_reconcile" model="ir.actions.client">
+             <field name="name">Reconcile Entries</field>
+             <field name="tag">manual_reconciliation_view</field>
+             <field name="binding_model_id" ref="account.model_account_move_line"/>
+             <field name="binding_type">action</field>
+         </record>
+
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
