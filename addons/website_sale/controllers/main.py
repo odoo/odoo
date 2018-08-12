@@ -245,7 +245,7 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        categs = request.env['product.public.category'].search([('parent_id', '=', False)])
+        categs = request.env['product.public.category'].search([('parent_id', '=', False), ('website_published', '=', True)])
         Product = request.env['product.template']
 
         parent_category_ids = []
@@ -578,6 +578,7 @@ class WebsiteSale(http.Controller):
 
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
+        new_values['website_id'] = request.website.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:

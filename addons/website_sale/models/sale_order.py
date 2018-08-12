@@ -25,6 +25,9 @@ class SaleOrder(models.Model):
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
+    website_id = fields.Many2one('website', related='partner_id.website_id', string='Website',
+                                 help='Website through which this order was placed.',
+                                 store=True, readonly=True)
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')

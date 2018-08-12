@@ -16,6 +16,9 @@ class ResConfigSettings(models.TransientModel):
     website_id = fields.Many2one('website', string="website",
                                  default=_default_website, required=True, ondelete='cascade')
     website_name = fields.Char('Website Name', related='website_id.name')
+    website_domain = fields.Char('Website Domain', related='website_id.domain')
+    website_country_group_ids = fields.Many2many(related='website_id.country_group_ids')
+    website_company_id = fields.Many2one(related='website_id.company_id', string='Website Company')
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
     website_default_lang_id = fields.Many2one(
@@ -34,6 +37,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_filters = fields.Text(related='website_id.cdn_filters')
     module_website_version = fields.Boolean("A/B Testing")
     module_website_links = fields.Boolean(string="Link Trackers")
+    auth_signup_uninvited = fields.Selection(string="Customer Account", related='website_id.auth_signup_uninvited')
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
     # Set as global config parameter since methods using it are not website-aware. To be changed
@@ -42,10 +46,15 @@ class ResConfigSettings(models.TransientModel):
     has_google_analytics = fields.Boolean("Google Analytics", config_parameter='website.has_google_analytics')
     has_google_analytics_dashboard = fields.Boolean("Embedded Google Analytics", config_parameter='website.has_google_analytics_dashboard')
     has_google_maps = fields.Boolean("Google Maps", config_parameter='website.has_google_maps')
-    auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation (B2B)'),
-        ('b2c', 'Free sign up (B2C)'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
+
+    social_twitter = fields.Char(related='website_id.social_twitter')
+    social_facebook = fields.Char(related='website_id.social_facebook')
+    social_github = fields.Char(related='website_id.social_github')
+    social_linkedin = fields.Char(related='website_id.social_linkedin')
+    social_youtube = fields.Char(related='website_id.social_youtube')
+    social_googleplus = fields.Char(related='website_id.social_googleplus')
+
+    group_multi_website = fields.Boolean("Multi-website", implied_group="website.group_multi_website")
 
     @api.onchange('has_google_analytics')
     def onchange_has_google_analytics(self):
@@ -83,3 +92,11 @@ class ResConfigSettings(models.TransientModel):
         action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
+
+    def website_go_to(self):
+        self.website_id._fix_to_session()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/',
+            'target': 'self',
+        }

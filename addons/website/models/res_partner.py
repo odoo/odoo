@@ -3,7 +3,7 @@
 
 import werkzeug
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 def urlplus(url, params):
@@ -11,8 +11,9 @@ def urlplus(url, params):
 
 
 class Partner(models.Model):
-
     _inherit = "res.partner"
+
+    website_id = fields.Many2one('website', string='Registration Website')
 
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):

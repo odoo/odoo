@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+        <record model="website" id="website.website2">
+            <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
+        </record>
 
         <record id="product.product_attribute_2" model="product.attribute">
             <field name="type">color</field>

@@ -12,8 +12,9 @@ from odoo.http import request
 class WebsiteSaleBackend(WebsiteBackend):
 
     @http.route()
-    def fetch_dashboard_data(self, date_from, date_to):
-        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(date_from, date_to)
+    def fetch_dashboard_data(self, website_id, date_from, date_to):
+        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
+        current_website = request.env['website'].browse(website_id) if website_id else request.env['website'].get_current_website()
 
         sales_values = dict(
             graph=[],
@@ -40,6 +41,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Product-based computation
         report_product_lines = request.env['sale.report'].read_group(
             domain=[
+                ('website_id', '=', current_website.id),
                 ('team_id.team_type', '=', 'website'),
                 ('state', 'in', ['sale', 'done']),
                 ('confirmation_date', '>=', date_from),
@@ -57,6 +59,7 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         # Sale-based results computation
         sale_order_domain = [
+            ('website_id', '=', current_website.id),
             ('team_id', 'in', request.env['crm.team'].search([('team_type', '=', 'website')]).ids),
             ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
             ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
@@ -70,6 +73,7 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         report_price_lines = request.env['sale.report'].read_group(
             domain=[
+                ('website_id', '=', current_website.id),
                 ('team_id.team_type', '=', 'website'),
                 ('state', 'in', ['sale', 'done']),
                 ('date', '>=', date_from),
@@ -110,6 +114,7 @@ class WebsiteSaleBackend(WebsiteBackend):
             previous_sale_label = _('Previous Year')
 
         sales_domain = [
+            ('website_id', '=', current_website.id),
             ('team_id.team_type', '=', 'website'),
             ('state', 'in', ['sale', 'done']),
             ('confirmation_date', '>=', date_from),
