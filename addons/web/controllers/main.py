@@ -424,11 +424,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
 
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
                    filename=None, filename_field='datas_fname', download=False, mimetype=None,
-                   default_mimetype='application/octet-stream', access_token=None, env=None):
+                   default_mimetype='application/octet-stream', share_id=None, share_token=None, access_token=None,
+                   force_ext=False, env=None):
     return request.registry['ir.http'].binary_content(
         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
         filename_field=filename_field, download=download, mimetype=mimetype,
-        default_mimetype=default_mimetype, access_token=access_token, env=env)
+        default_mimetype=default_mimetype, share_id=share_id, share_token=share_token, access_token=access_token,
+        force_ext=force_ext, env=env)
 
 #----------------------------------------------------------
 # Odoo Web web Controllers
@@ -1004,11 +1006,12 @@ class Binary(http.Controller):
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='datas_fname', unique=None, mimetype=None,
-                       download=None, data=None, token=None, access_token=None, **kw):
+                       download=None, data=None, token=None, share_id=None, share_token=None, access_token=None,
+                       force_ext=False, **kw):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            access_token=access_token)
+            access_token=access_token, share_id=share_id, share_token=share_token, force_ext=force_ext)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
@@ -1042,11 +1045,12 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False):
+                      download=None, width=0, height=0, crop=False, share_id=None, share_token=None, access_token=None, avoid_if_small=False,
+                      upper_limit=False):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype='image/png', access_token=access_token)
+            default_mimetype='image/png', share_id=share_id, share_token=share_token, access_token=access_token)
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
         elif status == 301:
@@ -1065,12 +1069,15 @@ class Binary(http.Controller):
             content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
 
         elif content and (width or height):
-            # resize maximum 500*500
-            if width > 500:
-                width = 500
-            if height > 500:
-                height = 500
-            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG', avoid_if_small=avoid_if_small)
+            if not upper_limit:
+                # resize maximum 500*500
+                if width > 500:
+                    width = 500
+                if height > 500:
+                    height = 500
+            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None),
+                                                    encoding='base64', filetype='PNG', upper_limit=upper_limit,
+                                                    avoid_if_small=avoid_if_small)
             # resize force png as filetype
             headers = self.force_contenttype(headers, contenttype='image/png')
 

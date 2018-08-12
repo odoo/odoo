@@ -225,8 +225,20 @@
         }
 
         .o_attachment_image > img {
-            width: 100%;
-            height: auto;
+            overflow: hidden;
+            padding-top: 75%;
+
+            .o_attachment_image {
+                @include o-position-absolute(0, 0, 0, 0);
+                background-size: cover;
+                background-position: center;
+                transform: scale(1.05);
+                transition: all 0.3s;
+            }
+
+            &:hover .o_attachment_image {
+                transform: scale(1);
+            }
         }
 
         .o_progressbar {

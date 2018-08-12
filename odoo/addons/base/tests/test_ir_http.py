@@ -79,3 +79,84 @@ class test_ir_http_mimetype(common.TransactionCase):
         )
         mimetype = dict(headers).get('Content-Type')
         self.assertEqual(mimetype, 'image/gif')
+
+    def test_ir_http_binary_content_force_ext_for_wrong_ext(self):
+        """ Test force mimetype for wrong extension when renamed """
+        attachment = self.env['ir.attachment'].create({
+            'datas': GIF,
+            'name': 'Test mimetype gif',
+            'datas_fname': 'file.gif'})
+
+        attachment.datas_fname = 'file.png'
+
+        status, headers, content = self.env['ir.http'].binary_content(
+            id=attachment.id,
+            mimetype=None,
+            default_mimetype='application/octet-stream',
+            env=self.env,
+            download=True,
+            force_ext=True,
+        )
+        disposition = dict(headers).get('Content-Disposition')
+        self.assertTrue(disposition.endswith('file.gif'))
+
+    def test_ir_http_binary_content_force_ext_for_right_ext(self):
+        """ Test force mimetype for right extension when renamed """
+        attachment = self.env['ir.attachment'].create({
+            'datas': GIF,
+            'name': 'Test mimetype gif',
+            'datas_fname': 'file.gif'})
+
+        attachment.datas_fname = 'file.gif'
+
+        status, headers, content = self.env['ir.http'].binary_content(
+            id=attachment.id,
+            mimetype=None,
+            default_mimetype='application/octet-stream',
+            env=self.env,
+            download=True,
+            force_ext=True,
+        )
+        disposition = dict(headers).get('Content-Disposition')
+        self.assertTrue(disposition.endswith('file.gif'))
+
+    def test_ir_http_binary_content_force_ext_without_ext(self):
+        """ Test force mimetype for right extension when renamed whith filename without extension """
+        attachment = self.env['ir.attachment'].create({
+            'datas': GIF,
+            'name': 'Test mimetype gif',
+            'datas_fname': 'file.gif'})
+
+        attachment.datas_fname = 'file'
+
+        status, headers, content = self.env['ir.http'].binary_content(
+            id=attachment.id,
+            mimetype=None,
+            default_mimetype='application/octet-stream',
+            env=self.env,
+            download=True,
+            force_ext=True,
+        )
+        disposition = dict(headers).get('Content-Disposition')
+        self.assertTrue(disposition.endswith('file.gif'))
+
+    def test_ir_http_binary_content_force_ext_for_binary_mimetype(self):
+        """ Test force mimetype for wrong extension when renamed and mimetyp is 'application/octet-stream' """
+        attachment = self.env['ir.attachment'].create({
+            'datas': GIF,
+            'name': 'Test mimetype exe',
+            'datas_fname': 'file.exe',
+        })
+        attachment.mimetype = 'application/octet-stream'
+        attachment.datas_fname = 'file.txt'
+
+        status, headers, content = self.env['ir.http'].binary_content(
+            id=attachment.id,
+            mimetype=None,
+            default_mimetype='application/octet-stream',
+            env=self.env,
+            download=True,
+            force_ext=True,
+        )
+        disposition = dict(headers).get('Content-Disposition')
+        self.assertTrue(disposition.endswith('file.txt'))
