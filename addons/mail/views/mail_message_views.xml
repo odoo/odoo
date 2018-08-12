@@ -127,7 +127,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
         </record>
-        
+
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
 
@@ -140,23 +140,54 @@
                     <field name="mimetype"/>
                     <field name="type"/>
                     <field name="datas_fname"/>
+                    <field name="create_uid"/>
+                    <field name="url"/>
+                    <field name="type"/>
+                    <field name="create_date"/>
+                    <field name="active"/>
                     <field name="name"/>
+                    <field name="res_model_name"/>
+                    <field name="res_name"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <div class="oe_kanban_vignette">
-                                    <div class="oe_attachment">
-                                        <div class="oe_name">
-                                            <field name="name"/>
+                            <div class="oe_kanban_global_area o_kanban_attachment">
+                                <div class="o_kanban_image">
+                                    <div class="o_kanban_image_wrapper">
+                                        <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                        <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
+                                        <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}?field=thumbnail" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                        <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_details">
+                                    <div class="o_kanban_details_wrapper">
+                                        <div t-att-title="record.datas_fname.raw_value" class="o_kanban_record_title">
+                                            <t t-if="record.type.raw_value == 'url'">
+                                                <field name="name" class="o_text_overflow"/>
+                                            </t>
+                                            <t t-else="">
+                                                <field name="datas_fname" class="o_text_overflow"/>
+                                            </t>
                                         </div>
-                                        <div t-if="record.type.raw_value == 'binary'">
-                                            <a t-attf-href="/web/content/#{record.id.raw_value}?download=1">
-                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                                <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1" alt="Download"/>
-                                                </div>
-                                            </a>
+                                        <div class="o_kanban_record_body">
+                                            <t t-if="record.res_model_name.raw_value">
+                                                <strong><field name="res_model_name"/></strong>
+                                                <t t-if="record.res_name.raw_value">
+                                                    <span t-att-title="record.res_name.raw_value">: <field name="res_name"/></span>
+                                                </t>
+                                            </t>
+                                            <t t-elif="record.type.raw_value == 'url'">
+                                                <span class="o_document_url"><i class="fa fa-globe"/> <field name="url" widget="url"/></span>
+                                            </t>
+                                            <samp t-else="" class="text-muted"> </samp>
+                                        </div>
+                                        <div class="o_kanban_record_bottom">
+                                            <time class="oe_kanban_bottom_left">
+                                                <field name="create_date" widget="date"/>
+                                            </time>
+                                            <div class="oe_kanban_bottom_right">
+                                                <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

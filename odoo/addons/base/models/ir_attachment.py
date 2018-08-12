@@ -6,14 +6,16 @@ import itertools
 import logging
 import mimetypes
 import os
+import io
 import re
 from collections import defaultdict
 import uuid
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, exceptions, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools import crop_image, image_resize_image
 
 _logger = logging.getLogger(__name__)
 
@@ -41,6 +43,14 @@ class IrAttachment(models.Model):
             if attachment.res_model and attachment.res_id:
                 record = self.env[attachment.res_model].browse(attachment.res_id)
                 attachment.res_name = record.display_name
+
+    @api.depends('res_model')
+    def _compute_res_model_name(self):
+        for record in self:
+            if record.res_model:
+                model = self.env['ir.model'].search([('model', '=', record.res_model)], limit=1)
+                if model:
+                    record.res_model_name = model[0].name
 
     @api.model
     def _storage(self):
@@ -272,15 +282,16 @@ class IrAttachment(models.Model):
         """
         return ['base.group_system']
 
-    name = fields.Char('Attachment Name', required=True)
-    datas_fname = fields.Char('File Name')
+    name = fields.Char('Name', required=True)
+    datas_fname = fields.Char('Filename')
     description = fields.Text('Description')
     res_name = fields.Char('Resource Name', compute='_compute_res_name', store=True)
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
+    res_model_name = fields.Char(compute='_compute_res_model_name', store=True, index=True)
     res_field = fields.Char('Resource Field', readonly=True)
     res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
     create_date = fields.Datetime('Date Created', readonly=True)
-    create_uid = fields.Many2one('res.users', string='Owner', readonly=True)
+    create_uid = fields.Many2one('res.users', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env['res.company']._company_default_get('ir.attachment'))
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
@@ -300,6 +311,18 @@ class IrAttachment(models.Model):
     checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
+    active = fields.Boolean(default=True, string="Active", oldname='archived')
+    thumbnail = fields.Binary(compute='_get_thumbnail', store=True, string="")
+
+    @api.depends('mimetype', 'file_size', 'checksum')
+    def _get_thumbnail(self):
+        for record in self:
+            if record.mimetype:
+                if re.match('image.*(gif|jpeg|jpg|png)', record.mimetype):
+                    if not record.thumbnail:
+                        temp_image = crop_image(record.datas, type='center', size=(100, 100), ratio=(1, 1))
+                        record.thumbnail = image_resize_image(base64_source=temp_image, size=(100, 100),
+                                                              encoding='base64', filetype='PNG')
 
     @api.model_cr_context
     def _auto_init(self):
@@ -438,6 +461,8 @@ class IrAttachment(models.Model):
 
     @api.multi
     def unlink(self):
+        if not self:
+            return True
         self.check('unlink')
 
         # First delete in the database, *then* in the filesystem if the
@@ -472,3 +497,31 @@ class IrAttachment(models.Model):
     @api.model
     def action_get(self):
         return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+
+    @api.model
+    def upload_attachment(self, attachments, custom_values=None):
+        """
+        directly uploads attachments.
+
+        :param attachments: array of dictionaries representing attachment data:
+                            eg: [{'name': 'doc.zip', 'data': 'data:application/zip;base64,R0lGODdhAQBADs='}]
+        :param custom_values: additional values for the attachment create dictionary.
+        :return: the ids of the new attachments.
+        """
+        if not custom_values:
+            custom_values = {}
+        ids = []
+        for attachment in attachments:
+            data = attachment['data']
+            raw_name = attachment['name']
+            values = {
+                'mimetype': data[data.find(':') + 1:data.find(';')],
+                'name': raw_name[:raw_name.rfind('.')],
+                'datas': data[data.find(',') + 1:],
+                'datas_fname': raw_name,
+            }
+
+            values.update(custom_values)
+            created_attachment = self.env['ir.attachment'].create(values)
+            ids.append(created_attachment.id)
+        return ids
