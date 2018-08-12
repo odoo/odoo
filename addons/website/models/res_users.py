@@ -16,7 +16,7 @@ class ResUsers(models.Model):
         string='Website Editor', compute='_compute_groups_id', inverse='_inverse_groups_id',
         category_xml_id='base.module_category_website')
     has_group_multi_website = fields.Boolean(
-        'Multi-Website',
+        'Multi-Websites',
         compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='website.group_multi_website')
 

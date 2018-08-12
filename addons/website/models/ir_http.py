@@ -255,8 +255,8 @@ class Http(models.AbstractModel):
     @classmethod
     def _xmlid_to_obj(cls, env, xmlid):
         website_id = env['website'].get_current_website()
-        if website_id and website_id.installed_theme_id:
-            obj = env['ir.attachment'].search([('key', '=', xmlid), ('theme_id', '=', website_id.installed_theme_id.id)])
+        if website_id and website_id.theme_id:
+            obj = env['ir.attachment'].search([('key', '=', xmlid), ('website_id', '=', website_id.id)])
             if obj:
                 return obj[0]
 
