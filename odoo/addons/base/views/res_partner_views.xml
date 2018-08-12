@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo> 
+<odoo>
     <data>
 
         <!-- Partner Titles -->
@@ -492,28 +492,34 @@
                     <field name="type"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click o_res_partner_kanban">
-                                <div class="o_kanban_image">
-                                    <t t-if="record.image_small.raw_value">
-                                        <img alt="Partner" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
+                            <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
+                                <t t-if="record.image_small.raw_value &amp;&amp; !record.is_company.raw_value">
+                                    <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_medium', record.id.raw_value)}')">
+                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_small', record.parent_id.raw_value)"/>
+                                    </div>
+                                    <div class="o_kanban_image rounded-circle d-md-none" t-attf-style="background-image:url('#{kanban_image('res.partner', 'image_small', record.id.raw_value)}')">
+                                        <img class="o_kanban_image_inner_pic" t-if="record.parent_id.raw_value" t-att-alt="record.parent_id.value" t-att-src="kanban_image('res.partner', 'image_small', record.parent_id.raw_value)"/>
+                                    </div>
+                                </t>
+                                <t t-elif="record.is_company.raw_value">
+                                    <img class="o_kanban_image" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)" t-att-alt="record.display_name"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-if="record.type.raw_value === 'delivery'">
+                                        <img alt="Delivery" t-att-src='_s + "/base/static/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                     </t>
-                                    <t t-if="!record.image_small.raw_value">
-                                        <t t-if="record.type.raw_value === 'delivery'">
-                                            <img alt="Delivery" t-att-src='_s + "/base/static/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                    <t t-if="record.type.raw_value === 'invoice'">
+                                        <img alt="Invoice" t-att-src='_s + "/base/static/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                    </t>
+                                    <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                        <t t-if="record.is_company.raw_value === true">
+                                            <img class="o_kanban_image" alt="Logo" t-att-src='_s + "/base/static/img/company_image.png"'/>
                                         </t>
-                                        <t t-if="record.type.raw_value === 'invoice'">
-                                            <img alt="Invoice" t-att-src='_s + "/base/static/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
-                                         </t>
-                                        <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
-                                            <t t-if="record.is_company.raw_value === true">
-                                                <img alt="Logo" t-att-src='_s + "/base/static/img/company_image.png"'/>
-                                            </t>
-                                            <t t-if="record.is_company.raw_value === false">
-                                                <img alt="Avatar" t-att-src='_s + "/base/static/img/avatar.png"'/>
-                                            </t>
+                                        <t t-if="record.is_company.raw_value === false">
+                                            <img class="o_kanban_image" alt="Avatar" t-att-src='_s + "/base/static/img/avatar.png"'/>
                                         </t>
                                     </t>
-                                </div>
+                                </t>
                                 <div class="oe_kanban_details">
                                     <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
                                     <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
@@ -529,7 +535,6 @@
                                     <div class="oe_kanban_partner_links"/>
                                 </div>
                             </div>
-
                         </t>
                     </templates>
                 </kanban>
