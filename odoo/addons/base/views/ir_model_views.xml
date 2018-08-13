@@ -347,8 +347,13 @@
                     <field name="name"/>
                     <field name="field_description"/>
                     <field name="model_id"/>
-                    <field name="ttype"/>
+                    <field name="ttype" string="Database Type"/>
+                    <field name="help"/>
                     <field name="state"/>
+                    <field name="index" string="Indexed"/>
+                    <field name="store"/>
+                    <field name="readonly"/>
+                    <field name="relation"/>
                 </tree>
             </field>
         </record>
@@ -371,6 +376,7 @@
                     <field name="readonly"/>
                     <group expand="0" string="Group By">
                         <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Type" name="group_by_ttype" domain="[]" context="{'group_by':'ttype'}"/>
                     </group>
                 </search>
             </field>
