@@ -28,6 +28,7 @@ var PivotView = AbstractView.extend({
         Renderer: PivotRenderer,
     },
     viewType: 'pivot',
+    enableTimeRangeMenu: 'true',
     /**
      * @override
      * @param {Object} params
@@ -35,8 +36,6 @@ var PivotView = AbstractView.extend({
     init: function (viewInfo, params) {
         var self = this;
         this._super.apply(this, arguments);
-
-        var self = this;
 
         var activeMeasures = [];
         var colGroupBys = [];
