@@ -1215,6 +1215,7 @@ class AccountTax(models.Model):
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4))
     description = fields.Char(string='Label on Invoices')
+    minimum_base = fields.Float("Minimum document-wide base amount", help="If set, this tax only applies on any given document (eg. invoice) if all it's bases sum up at least to this minimum amount.")
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
@@ -1653,6 +1654,14 @@ class AccountTax(models.Model):
             'total_included': sign * (currency.round(total_included) if round_total else total_included),
             'total_void': sign * (currency.round(total_void) if round_total else total_void),
         }
+
+    def get_minimum_base_amount(self, currency_id=None, date=None):
+        """ Returns the minimum tax base. Can be overridden."""
+        self.ensure_one()
+        if currency_id and currency_id != self.company_id.currency_id:
+            return self.company_id.currency_id._convert(self.minimum_base, currency_id, self.company_id, date or fields.Date.today(), round=False)
+        else:
+            return self.minimum_base
 
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):

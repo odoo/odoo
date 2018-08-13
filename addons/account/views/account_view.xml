@@ -1187,6 +1187,7 @@ action = model.setting_init_bank_account_action()
                                     <field name="tax_group_id"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="minimum_base" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                 </group>
                                 <group name="advanced_booleans">
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
@@ -1562,6 +1563,7 @@ action = model.setting_init_bank_account_action()
                                     <group>
                                         <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                         <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                        <field name="minimum_base" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     </group>
                                     <group name="price_definitions">
                                         <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
