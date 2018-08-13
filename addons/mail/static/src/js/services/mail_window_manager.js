@@ -652,8 +652,8 @@ MailManager.include({
      * @private
      * @param {Object} message
      */
-    _onNewMessage: function (message) {
-        this._updateThreadWindowsFromMessage(message, { keepBottom: true, passively: true });
+    _onNewMessage: function (ev) {
+        this._updateThreadWindowsFromMessage(message, { keepBottom: ev.data, passively: true });
     },
     /**
      * Close the thread window when unsusbscribe from a channel.
