@@ -181,7 +181,7 @@ class HrPayslip(models.Model):
                 current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
                     'name': holiday.holiday_status_id.name,
                     'sequence': 5,
-                    'code': holiday.holiday_status_id.name,
+                    'code': holiday.holiday_status_id.code,
                     'number_of_days': 0.0,
                     'number_of_hours': 0.0,
                     'contract_id': contract.id,

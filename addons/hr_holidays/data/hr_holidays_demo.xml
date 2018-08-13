@@ -5,6 +5,7 @@
     <record id="hr_holiday_status_hl" model="hr.leave.type">
         <field name="name">Overtime Compensation</field>
         <field name="allocation_type">fixed_allocation</field>
+        <field name="code">OTC</field>
         <field name="color_name">blue</field>
         <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
         <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>

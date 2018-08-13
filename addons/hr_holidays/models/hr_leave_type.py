@@ -20,6 +20,7 @@ class HolidaysType(models.Model):
     _order = "sequence, id"
 
     name = fields.Char('Leave Type', required=True, translate=True)
+    code = fields.Char('Code', required=True)
     sequence = fields.Integer(default=100,
                               help='The type with the smallest sequence is the default value in leave request')
     categ_id = fields.Many2one(

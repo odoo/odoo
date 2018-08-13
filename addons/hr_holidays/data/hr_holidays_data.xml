@@ -5,6 +5,7 @@
         <record id="holiday_status_cl" model="hr.leave.type">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
             <field name="allocation_type">fixed</field>
+            <field name="code">LEGALLEAVES</field>
             <field name="color_name">black</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
@@ -23,6 +24,7 @@
         <record id="holiday_status_sl" model="hr.leave.type">
             <field name="name">Sick Leaves</field>
             <field name="allocation_type">no</field>
+            <field name="code">SICK</field>
             <field name="color_name">red</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave_sick')"/>
@@ -33,6 +35,7 @@
             <field name="name">Compensatory Days</field>
             <field name="allocation_type">fixed_allocation</field>
             <field name="request_unit">hour</field>
+            <field name="code">COMPENSATION</field>
             <field name="color_name">lavender</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
             <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
@@ -44,6 +47,7 @@
             <field name="name">Unpaid</field>
             <field name="allocation_type">fixed_allocation</field>
             <field name="validation_type">both</field>
+            <field name="code">UNPAID</field>
             <field name="color_name">brown</field>
             <field name="unpaid" eval="True"/>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>

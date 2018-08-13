@@ -8,6 +8,7 @@
             <search string="Search Leave Type">
                 <field name="name" string="Leave Types"/>
                 <field name="categ_id"/>
+                <field name="code"/>
             </search>
         </field>
     </record>
@@ -36,11 +37,12 @@
                             options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <div class="oe_title">  
-                        <h1><field name="name"/></h1>   
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
                     </div>
                     <group>
                         <group name="description" string="Options">
+                            <field name="code"/>
                             <field name="unpaid"/>
                             <field name="request_unit" widget="radio"/>
                             <field name="sequence" groups="base.group_no_one"/>
@@ -110,6 +112,7 @@
                 <field name="validation_type"/>
                 <field name="validity_start"/>
                 <field name="validity_stop"/>
+                <field name="code"/>
             </tree>
         </field>
     </record>
