@@ -8,8 +8,9 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     sale_note = fields.Text(string='Default Terms and Conditions', translate=True)
-    portal_confirmation_sign = fields.Boolean(string='Digital Signature')
+    portal_confirmation_sign = fields.Boolean(string='Online Signature')
     portal_confirmation_pay = fields.Boolean(string='Electronic Payment')
+    quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
 
     # sale quotation onboarding
     sale_quotation_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the sale onboarding panel", default='not_done')
@@ -108,3 +109,5 @@ class ResCompany(models.Model):
         action = self.env.ref('sale.action_open_sale_onboarding_quotation_layout').read()[0]
         action['res_id'] = self.env.user.company_id.id
         return action
+
+    _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]

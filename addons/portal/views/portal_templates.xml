@@ -72,11 +72,11 @@
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
                         <div t-attf-class="col-md-12">
+                            <t t-call='portal.record_pager'/>
                             <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
                                 <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
                             </ol>
-                            <t t-call='portal.record_pager'/>
                         </div>
                     </div>
                 </div>
@@ -357,7 +357,7 @@
 
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
-          <div class="ml8 record_pager btn-group btn-group-xs float-right" role="group">
+          <div class="ml8 record_pager btn-group btn-group-xs float-md-right" role="group">
             <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
             <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>
@@ -395,7 +395,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="d-print-none o_portal_chatter o_not_editable"
+        <div id="discussion" class="d-print-none o_portal_chatter o_not_editable p-0"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-pid="pid" t-att-data-hash="hash" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>

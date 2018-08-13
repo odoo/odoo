@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
         return self.env['website'].search([], limit=1)
 
     website_id = fields.Many2one('website', string="website",
-                                 default=_default_website, required=True, ondelete='cascade')
+                                 default=_default_website, ondelete='cascade')
     website_name = fields.Char('Website Name', related='website_id.name')
     website_domain = fields.Char('Website Domain', related='website_id.domain')
     website_country_group_ids = fields.Many2many(related='website_id.country_group_ids')

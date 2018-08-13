@@ -427,8 +427,8 @@ class AccountInvoice(models.Model):
 
     def _compute_access_url(self):
         super(AccountInvoice, self)._compute_access_url()
-        for order in self:
-            order.access_url = '/my/invoices/%s' % (order.id)
+        for invoice in self:
+            invoice.access_url = '/my/invoices/%s' % (invoice.id)
 
     @api.depends('state', 'journal_id', 'date_invoice')
     def _get_sequence_prefix(self):
@@ -1504,6 +1504,24 @@ class AccountInvoice(models.Model):
                 fmt(r[1]['amount']), fmt(r[1]['base']),
                 len(res),
             ) for r in res]
+
+    @api.multi
+    def get_portal_url(self, suffix=None):
+        """
+            Get a portal url for this invoice, including access_token.
+            - suffix: string to append to the url, before the query string
+        """
+        self.ensure_one()
+        return self.access_url + '%s?access_token=%s' % (suffix if suffix else '', self._portal_ensure_token())
+
+    @api.multi
+    def preview_invoice(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.get_portal_url(),
+        }
 
 
 class AccountInvoiceLine(models.Model):
