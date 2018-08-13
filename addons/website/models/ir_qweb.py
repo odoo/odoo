@@ -5,9 +5,20 @@ from collections import OrderedDict
 
 from odoo import models
 from odoo.http import request
+from odoo.addons.base.models.assetsbundle import AssetsBundle
+
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
+
+
+class AssetsBundleMultiWebsite(AssetsBundle):
+    def _get_asset_url_values(self, id, unique, extra, name, page, type):
+        website_id = self.env.context.get('website_id')
+        website_id_path = website_id and ('%s/' % website_id) or ''
+        extra = website_id_path + extra
+        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, page, type)
+        return res
 
 
 class QWeb(models.AbstractModel):
@@ -22,6 +33,9 @@ class QWeb(models.AbstractModel):
         'script': 'src',
         'img':    'src',
     }
+
+    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
+        return AssetsBundleMultiWebsite(xmlid, files, remains=remains, env=env)
 
     def _post_processing_att(self, tagName, atts, options):
         if atts.get('data-no-post-process'):
