@@ -21,7 +21,7 @@ class StockRule(models.Model):
     """ A rule describe what a procurement should do; produce, buy, move, ... """
     _name = 'stock.rule'
     _description = "Stock Rule"
-    _order = "sequence, name"
+    _order = "sequence, id"
 
     name = fields.Char(
         'Name', required=True, translate=True,
