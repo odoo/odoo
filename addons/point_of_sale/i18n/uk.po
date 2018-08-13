@@ -436,7 +436,7 @@ msgstr "Дозволити касиру передруковувати чеки"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow global discounts on orders"
-msgstr ""
+msgstr "Дозволити глобальні знижки на замовленнях"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_sale_pricelist
@@ -444,6 +444,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Дозволяє управляти різними цінами на основі правил для кожної категорії клієнтів.\n"
+"                     Приклад: 10% для роздрібних продавців, просування 5 євро на цей продукт тощо."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
@@ -464,13 +466,13 @@ msgstr "Сума всього"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale."
-msgstr ""
+msgstr "Внутрішня ідентифікація точки продажу."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:160
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr ""
+msgstr "Ще одна сесія вже відкрита для цієї точки продажу."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -510,7 +512,7 @@ msgstr "Автоматичний друк чеку"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Automatically open the cashdrawer."
-msgstr ""
+msgstr "Автоматично відкриває грошовий ящик."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_ids
@@ -522,12 +524,12 @@ msgstr "Наявні способи оплати"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_available_pricelist_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Pricelists"
-msgstr ""
+msgstr "Доступний прайслист"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
 msgid "Available for Point of Sale"
-msgstr ""
+msgstr "Доступний для точки продажу"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
@@ -538,7 +540,7 @@ msgstr "Доступний у ТП"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in Point of Sale"
-msgstr ""
+msgstr "Доступний у точці продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
@@ -595,7 +597,7 @@ msgstr "Base Amount"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Bills &amp; Receipts"
-msgstr ""
+msgstr "Рахунки та квитанції"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.raisins_noir
@@ -619,7 +621,7 @@ msgstr "Кнопка"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
-msgstr ""
+msgstr "Друкувати в обхід браузера за допомогою апаратного проксі."
 
 #. module: point_of_sale
 #. openerp-web
@@ -694,7 +696,7 @@ msgstr "Рядок касової скриньки"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
 msgid "Cashbox balance"
-msgstr ""
+msgstr "Баланс грошового ящика"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -730,7 +732,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Category Pictures"
-msgstr ""
+msgstr "Категорія зображень"
 
 #. module: point_of_sale
 #. openerp-web
@@ -788,6 +790,8 @@ msgstr "Позначте, якщо хочете, щоб цей товар з’�
 msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
+"Перевірте, чи хочете ви групувати товари цієї категорії у точках продажу "
+"замовлень"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
@@ -809,6 +813,8 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session."
 msgstr ""
+"Перевірте це, якщо ви хочете групувати елементи журналу за товаром під час "
+"закриття сеансу."
 
 #. module: point_of_sale
 #. openerp-web
@@ -825,7 +831,7 @@ msgstr "Дочірні категорії"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose a pricelist for the Point Of Sale"
-msgstr ""
+msgstr "Оберіть прайслист для точки продажу"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -833,11 +839,13 @@ msgid ""
 "Choose a specific tax regime at the order depending on the kind of customer "
 "(tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Виберіть конкретний податковий режим на замовлення, залежно від клієнта "
+"(звільнений від податку, на місці або на виході тощо)."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose among several tax regimes when processing an order"
-msgstr ""
+msgstr "Виберіть серед кількох податкових режимів під час обробки замовлення"
 
 #. module: point_of_sale
 #. openerp-web
@@ -888,7 +896,7 @@ msgstr "Клієнт"
 #: code:addons/point_of_sale/static/src/js/chrome.js:461
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
-msgstr ""
+msgstr "Клієнтський екран не підтримується. Будь ласка, оновіть PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -944,7 +952,7 @@ msgstr "Налаштування"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration for journal entries of PoS orders"
-msgstr ""
+msgstr "Налаштування для журнальних записів замовлень точки продажу"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -968,7 +976,7 @@ msgstr "Підтвердити"
 #: code:addons/point_of_sale/static/src/js/chrome.js:454
 #, python-format
 msgid "Connected, Not Owned"
-msgstr ""
+msgstr "Підключений, не належить"
 
 #. module: point_of_sale
 #. openerp-web
@@ -990,7 +998,7 @@ msgstr "Продовжити продаж"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Control cash box at opening and closing"
-msgstr ""
+msgstr "Контролювати грошові ящики при відкритті та закритті"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1052,7 +1060,7 @@ msgstr "Поточна сесія"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
 msgid "Current Session State"
-msgstr ""
+msgstr "Поточний етап сесії"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1069,12 +1077,12 @@ msgstr "Клієнт"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Customer Display"
-msgstr ""
+msgstr "Екран клієнта"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Customer Facing Display"
-msgstr ""
+msgstr "Екран, направлений на клієнта"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:486
@@ -1086,7 +1094,7 @@ msgstr "Рахунок клієнту"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_customer_facing_display_html
 msgid "Customer facing display content"
-msgstr ""
+msgstr "Замовник, який бачить вміст екрану"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -1129,7 +1137,7 @@ msgstr "Схема оподаткування за замовчуванням"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Default Opening"
-msgstr ""
+msgstr "Відкриття за замовчуванням"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -1140,7 +1148,7 @@ msgstr "Типовий прайслист"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_snippets
 msgid "Default company logo"
-msgstr ""
+msgstr "Логотип компанії за замовчуванням"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
@@ -1148,6 +1156,8 @@ msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers."
 msgstr ""
+"Визначає, які штрихові коди доступні, і як вони призначаються товарам, "
+"клієнтам та касирам."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_delay_validation
@@ -1225,7 +1235,7 @@ msgstr "Зниж:"
 #: code:addons/point_of_sale/static/src/js/chrome.js:459
 #, python-format
 msgid "Disconnected"
-msgstr ""
+msgstr "Відключено"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_discount_discount
@@ -1285,7 +1295,7 @@ msgstr "Назва для відображення"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Display pictures of product categories"
-msgstr ""
+msgstr "Відображення зображень категорій товару"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1310,6 +1320,8 @@ msgid ""
 "Don't turn this option on if you take orders on smartphones or tablets. Such"
 " devices already benefit from a native keyboard."
 msgstr ""
+"Не вмикайте цю опцію, якщо ви приймаєте замовлення на смартфонах або "
+"планшетах. Такі пристрої вже користуються власною клавіатурою."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -1322,6 +1334,8 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
 msgstr ""
+"Не вмикайте цю опцію, якщо ви приймаєте замовлення на смартфонах або планшетах. \n"
+"Такі пристрої вже користуються власною клавіатурою."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1396,22 +1410,22 @@ msgstr "Пустий серійний/партійний номер"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
 msgid "Enable barcode scanning with a remotely connected barcode scanner."
-msgstr ""
+msgstr "Дозволити перевірку штрих-коду з віддаленого сканера штрих-кодів"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_electronic_scale
 msgid "Enables Electronic Scale integration."
-msgstr ""
+msgstr "Включає інтеграцію електронних вагів "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_payment_terminal
 msgid "Enables Payment Terminal integration."
-msgstr ""
+msgstr "Дозволяє інтегрувати платіжний термінал"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
 msgid "Enables invoice generation from the Point of Sale."
-msgstr ""
+msgstr "Включає створення рахуноку-фактури з точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
@@ -1503,7 +1517,7 @@ msgstr "Схема оподаткування"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position per Order"
-msgstr ""
+msgstr "Схема оподаткування на замовлення"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_fiscal_position_ids
@@ -1519,7 +1533,7 @@ msgstr "Нижній колонтитул"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_big_scrollbars
 msgid "For imprecise industrial touchscreens."
-msgstr ""
+msgstr "Для неточних промислових сенсорних екранів."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits_vegetables
@@ -1534,7 +1548,7 @@ msgstr "Загальна інформація"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Generation of your order references"
-msgstr ""
+msgstr "Генерація посилань вашого замовлення"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1545,11 +1559,16 @@ msgid ""
 "recommended for an easy review of your journal entries when managing lots of"
 " orders."
 msgstr ""
+"Отримайте один елемент журналу на товар, а не один елемент журналу на "
+"квитанцію. Це працює для будь-якого анонімного замовлення. Якщо клієнт "
+"встановлений у замовленні, для кожного рядка квитка створюється один елемент"
+" журналу. Цей параметр рекомендується для зручного перегляду ваших записів "
+"журналу при управлінні великою кількістю замовлень."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Give customer rewards, free samples, etc."
-msgstr ""
+msgstr "Надайте переваги клієнтам, безкоштовні зразки тощо."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
@@ -1559,7 +1578,7 @@ msgstr "Дає порядок послідовності при відображ
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_discount
 msgid "Global Discounts"
-msgstr ""
+msgstr "Глобальні знижки"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_golden_perlim
@@ -1602,7 +1621,7 @@ msgstr "Згрупувати проведення"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_categ_is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom_is_pos_groupable
 msgid "Group Products in POS"
-msgstr ""
+msgstr "Група товарів у точці продажу"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1631,7 +1650,7 @@ msgstr "Верхній колонтитул"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_header_or_footer
 msgid "Header & Footer"
-msgstr ""
+msgstr "Заголовок і нижній колонтитул"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
@@ -1670,6 +1689,9 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
+"Якщо це позначено, ви зможете вибрати партії/серійні номери. Ви також можете"
+" вирішити не ставити партію в цьому типі комплектування. Це означає, що він "
+"створить склад без будь-яких партій або не обмежує партію."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1697,7 +1719,7 @@ msgstr "Імпорт замовлень"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Improve navigation for imprecise industrial touchscreens"
-msgstr ""
+msgstr "Поліпшення навігації для неточних промислових сенсорних екранів"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tomate_en_grappe
@@ -1732,22 +1754,22 @@ msgstr "Невірний пароль"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
 msgid "Initial Category"
-msgstr ""
+msgstr "Початкова категорія"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr ""
+msgstr "Інтегровані платіжні картки"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Integrated Card Reader"
-msgstr ""
+msgstr "Інтегрований Кардрідер"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
 msgid "Internal Categories"
-msgstr ""
+msgstr "Внутрішні категорії"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_note
@@ -1791,12 +1813,12 @@ msgstr "Рахунки"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_installed_account_accountant
 msgid "Is Installed Account Accountant"
-msgstr ""
+msgstr "Встановлений модуль бухобліку"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_restaurant
 msgid "Is a Bar/Restaurant"
-msgstr ""
+msgstr "Є Баром/рестораном"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_account_id
@@ -1850,12 +1872,12 @@ msgstr "Остання модифікація"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
 msgid "Last Session Closing Cash"
-msgstr ""
+msgstr "Остання сесія закриття готівки"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr ""
+msgstr "Остання дата закриття сесії"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -1905,7 +1927,7 @@ msgstr "Номер рядка"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale Orders"
-msgstr ""
+msgstr "Рядки точок продажу замовлень"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:33
@@ -1964,7 +1986,7 @@ msgstr "Програма лояльності"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Loyalty program to use for this point of sale."
-msgstr ""
+msgstr "Програма лояльності для використання в цій точці продажу."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -1979,12 +2001,16 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
+"Зробити кілька прайслистів у продажу. Ви також можете застосувати прайслист "
+"до конкретних клієнтів з їхньої контактної форми (на вкладці Продажі). Щоби "
+"бути дійсним, цей прайслист повинен бути вказаний тут як доступний. В іншому"
+" випадку застосовується прайслист за замовчуванням."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Malibu Drink"
-msgstr ""
+msgstr "Напій Малібу"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -2134,7 +2160,7 @@ msgstr "Кількість друків"
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Odoo Logo"
-msgstr ""
+msgstr "Логотип Odoo"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2185,6 +2211,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"Тільки користувачі, які мають права доступу до програми для PoS, можуть "
+"змінювати ціни на товари за замовленнями."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2225,7 +2253,7 @@ msgstr "Відкрити каси"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Open Sales Details Report"
-msgstr ""
+msgstr "Відкрити звіт про продаж"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2260,7 +2288,7 @@ msgstr "Дата відкриття"
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Opening/Closing Values"
-msgstr ""
+msgstr "Значення відкриття/закриття"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
@@ -2272,12 +2300,12 @@ msgstr "Тип операції"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation type used to record product pickings"
-msgstr ""
+msgstr "Тип операції, який використовується для запису комплектування товарів"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Типи операцій відображаються на інформаційній панелі Складу."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.papillon_orange
@@ -2314,12 +2342,12 @@ msgstr "Послідовність ID замовлення"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Interface"
-msgstr ""
+msgstr "Інтерфейс замовлення"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "Послідовність рядків ідентифікаторів замовлення"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_lines
@@ -2384,7 +2412,7 @@ msgstr "Аналіз замовлень"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_journal_action_point_of_sale
 msgid "POS Journals"
-msgstr ""
+msgstr "Журнали точки продажу"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:335
@@ -2426,7 +2454,7 @@ msgstr "Рядок замовлення по ТП%s"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "POS orders created during the current year"
-msgstr ""
+msgstr "Замовлення точки продажу, створені протягом поточного року"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line_pos_statement_id
@@ -2520,7 +2548,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Payment methods available"
-msgstr ""
+msgstr "Доступні методи оплати"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
@@ -2581,7 +2609,7 @@ msgstr "Відбирання"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Підрахунок комплектування"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -2625,14 +2653,14 @@ msgstr "Будь ласка, оберіть клієнта"
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 msgid "PoS Categories"
-msgstr ""
+msgstr "Категорії точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pos_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "PoS Category"
-msgstr ""
+msgstr "Категорія точки продажу"
 
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
@@ -2727,39 +2755,39 @@ msgstr "Категорії точки продажу"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "Налаштування точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "Розрахунок замовлення точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "Рядок замовлення точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "Етап сесії точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "Ім'я користувача сесії точки продажу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PosBox"
-msgstr ""
+msgstr "Коробка точки продажу"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PosBox / Hardware Proxy"
-msgstr ""
+msgstr "Термінал/Апаратний проксі"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2788,7 +2816,7 @@ msgstr "Поповнення готівки"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Prefill amount paid with the exact due amount"
-msgstr ""
+msgstr "Сума заздалегідь сплачена з точною належною сумою"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2802,7 +2830,7 @@ msgstr "Разом"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Price Control"
-msgstr ""
+msgstr "Контроль ціни"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -2854,12 +2882,12 @@ msgstr "Друк чека"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print invoices on customer request"
-msgstr ""
+msgstr "Друкувати рахунки-фактури на замовлення клієнта"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Print receipts automatically once the payment registered"
-msgstr ""
+msgstr "Отримання квитанцій на друк після реєстрації платежу"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_via_proxy
@@ -2898,7 +2926,7 @@ msgstr "Категорія товару"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Product Prices"
-msgstr ""
+msgstr "Ціни товару"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
@@ -2935,12 +2963,12 @@ msgstr "Варіанти товару"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Product prices on receipts"
-msgstr ""
+msgstr "Ціни товару на квитанції"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_tipproduct
 msgid "Product tips"
-msgstr ""
+msgstr "Товар для чайових"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_pos_product
@@ -3013,7 +3041,7 @@ msgstr "Рефр. чека"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "Сезон відновлення"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poivron_rouges
@@ -3032,7 +3060,7 @@ msgstr "Червоний грейпфрут"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1367
 #, python-format
 msgid "Refresh Display"
-msgstr ""
+msgstr "Оновити дисплей"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -3059,12 +3087,12 @@ msgstr "Відповідальний"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_restrict_price_control
 msgid "Restrict Price Modifications to Managers"
-msgstr ""
+msgstr "Обмежити зміни цін для менеджерів"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Restrict price modification to managers"
-msgstr ""
+msgstr "Обмежте зміну ціни менеджерам"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3132,6 +3160,7 @@ msgstr "Зберегти"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Save this configuration to see and edit the customer display"
 msgstr ""
+"Збережіть це налаштування, щоби переглянути та редагувати дисплей замовника"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3215,7 +3244,7 @@ msgstr "Оберіть користувача"
 #: code:addons/point_of_sale/static/src/js/screens.js:2137
 #, python-format
 msgid "Select pricelist"
-msgstr ""
+msgstr "Обрати прайслист "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3309,7 +3338,7 @@ msgstr "Вказати клієнта"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_start_category
 msgid "Set Start Category"
-msgstr ""
+msgstr "Встановити початок категорії"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3321,19 +3350,19 @@ msgstr "Вказати вагу"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set barcodes to scan products, customer cards, etc."
-msgstr ""
+msgstr "Встановіть штрих-коди для сканування товарів, картки клієнтів тощо."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
-msgstr ""
+msgstr "Встановіть ціну магазину, сезонні знижки тощо."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/pos.web_editor.js:33
 #, python-format
 msgid "Set your customized advertisement here"
-msgstr ""
+msgstr "Встановіть свою індивідуальну рекламу тут"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3343,7 +3372,7 @@ msgstr "Налаштування"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Покажіть клієнту екран з віддаленим підключенням."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pricelist_item
@@ -3360,7 +3389,7 @@ msgstr "Пропустити"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_skip_screen
 msgid "Skip Preview Screen"
-msgstr ""
+msgstr "Пропустити попередній перегляд екрану"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_small
@@ -3398,7 +3427,7 @@ msgstr "Початкова дата"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr ""
+msgstr "Почніть продавати з категорії товарів за замовчуванням"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
@@ -3437,7 +3466,7 @@ msgstr "Розташування запасів"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Stock location used for the inventory"
-msgstr ""
+msgstr "Місце зберігання використовується для інвентаризації"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3548,22 +3577,22 @@ msgstr "ІПН"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime
 msgid "Tax Regime"
-msgstr ""
+msgstr "Податковий режим"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Значення вибору податкового режиму"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
 msgid "Tax-Excluded Prices"
-msgstr ""
+msgstr "Ціни без податків"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
 msgid "Tax-Included Prices"
-msgstr ""
+msgstr "Ціни з податками"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
@@ -3626,7 +3655,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The company of the sales journal is different than the one of point of sale"
-msgstr ""
+msgstr "Компанія журналу продажу відрізняється від однієї з точок продажу"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:215
@@ -3640,6 +3669,7 @@ msgstr "Компанія місцезнаходження запасів від�
 #, python-format
 msgid "The default pricelist must be included in the available pricelists."
 msgstr ""
+"Прайслист за замовчуванням повинен бути включений в доступний прайслист."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_proxy_ip
@@ -3647,6 +3677,8 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
 msgstr ""
+"Ім'я комп'ютера або IP-адреса апаратного проксі, буде автоматично виявлено, "
+"якщо воно залишиться порожнім."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:225
@@ -3662,6 +3694,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
+"Журнал рахунку має бути в тій же валюті, що й журнал продажів або валюта "
+"компанії, якщо вона не встановлена."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3672,7 +3706,7 @@ msgstr "Назва цієї POS сесії повинна бути унікал�
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
 msgid "The number of point of sales orders related to this customer"
-msgstr ""
+msgstr "Кількість замовлень по точці продажу, пов'язаних із цим клієнтом"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3694,6 +3728,8 @@ msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount."
 msgstr ""
+"Платіжний вхід буде вести себе аналогічно введенню банківського платежу, і "
+"буде попередньо заповнено з точною належною сумою."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
@@ -3707,6 +3743,8 @@ msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown."
 msgstr ""
+"У точці продажу відображатиметься ця категорія товару за замовчуванням. Якщо"
+" категорія не вказана, буде показано всі доступні товари."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_pricelist_id
@@ -3714,6 +3752,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
+"Прайслист застосовується, якщо клієнт не обраний, або якщо клієнт не має "
+"налаштувань продажного прайслиста."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
@@ -3739,7 +3779,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order."
-msgstr ""
+msgstr "Квитанція буде надрукована автоматично в кінці кожного замовлення."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3867,6 +3907,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
+"Це поле полягає в тому, щоби передавати іd групи менеджерів тп до точки "
+"продажу клієнта."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
@@ -3874,6 +3916,8 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
 msgstr ""
+"Це поле полягає в тому, щоби передавати id групи ТП до точки продажу "
+"клієнта."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:522
@@ -3891,6 +3935,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
 msgstr ""
+"Це корисно для ресторанів з місцевими та виїзними послугами, які "
+"передбачають конкретні податкові ставки."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3901,6 +3947,8 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"Ця операція знищить всі неоплачені замовлення в браузері. Ви втратите всі "
+"незбережені дані та вийдете з точки продажу. Цю операцію не можна скасувати."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3924,6 +3972,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
+"Ця послідовність автоматично створюється компанією Odoo, але ви можете "
+"змінити її, щоб налаштувати довідкові номери ваших рядків замовлень."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
@@ -4022,7 +4072,7 @@ msgstr "Разом податків"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_total_entry_encoding
 msgid "Total of all paid sales orders"
-msgstr ""
+msgstr "Сума всіх оплачених замовлень на продаж"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_balance_end_real
@@ -4062,6 +4112,8 @@ msgid ""
 "Unable to open the session. You have to assign a sales journal to your point"
 " of sale."
 msgstr ""
+"Не вдається відкрити сеанс. Ви повинні призначити журнал продажів на вашу "
+"точку продажу."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -4092,7 +4144,7 @@ msgstr "Непідтримуваний формат файлу"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Unused"
-msgstr ""
+msgstr "Невикористаний"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_existing_lots
@@ -4102,22 +4154,22 @@ msgstr "Використовуйте існуючі партії/серійні 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a default specific tax regime"
-msgstr ""
+msgstr "Використовуйте спеціальний податковий режим за замовчуванням"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_pricelist
 msgid "Use a pricelist."
-msgstr ""
+msgstr "Використовуйте прайс-лист."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a virtual keyboard for touchscreens"
-msgstr ""
+msgstr "Використовуйте віртуальну клавіатуру для сенсорних екранів"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use an integrated hardware setup like"
-msgstr ""
+msgstr "Використовуйте інтегровану установку апаратного забезпечення, як"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_journal_user
@@ -4229,6 +4281,9 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
 msgstr ""
+"Кожного разу, коли ви закриваєте сеанс, одне повідомлення створюється в "
+"наступному журналі бухгалтерського обліку для всіх замовлень, на які не "
+"виставляється рахунок. Рахунки вносяться в бухоблік окремо."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4275,6 +4330,8 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
 "{reference} is in state {state}, total amount: {total}, paid: {paid}"
 msgstr ""
+"Ви не можете підтвердити всі замовлення цієї сесії, оскільки вони не мають \"платного\" статусу.\n"
+"{довідка} знаходиться в стані, загальна сума: {загальна}, оплачена: {оплачена}"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:151
@@ -4310,6 +4367,9 @@ msgid ""
 "You cannot use the session of another user. This session is owned by %s. "
 "Please first close this one to use this point of sale."
 msgstr ""
+"Ви не можете використовувати сеанс інших користувачів. Цей сеанс належить "
+"компанії %s. Будь ласка, спочатку закрийте це, щоби використовувати цю точку"
+" продажу."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
@@ -4506,12 +4566,12 @@ msgstr "знижка"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Company Address, Website"
-msgstr ""
+msgstr "напр., адреса компанії, веб-сайт"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Return Policy, Thanks for shopping with us!"
-msgstr ""
+msgstr "наприклад, Політика повернення, дякую за покупки з нами!"
 
 #. module: point_of_sale
 #. openerp-web

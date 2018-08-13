@@ -10,10 +10,10 @@
 # 최재호 <hwangtog@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -149,19 +149,19 @@ msgid "Already have an account?"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "암호를 초기화하기 위한 로그인 정보를 포함한 이메일을 보냈습니다"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "다른 사용자가 이미 이 이메일 주소를 등록하였습니다."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr "인증에 실패하였습니다"
@@ -198,18 +198,13 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr ""
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "새 계정을 만들 수 없습니다."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr "암호를 초기화 할 수 없음"
@@ -236,6 +231,11 @@ msgid "Enable password reset from Login page"
 msgstr "로그인 페이지에서 암호 초기화 기능 활성화"
 
 #. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "필드"
+
+#. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
 msgstr ""
@@ -251,7 +251,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "체크하지 않을 경우, 초청된 사용자만 가입할 수 있습니다."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr "잘못된 가입 토큰"
@@ -267,7 +267,7 @@ msgid "Never Connected"
 msgstr "연결한 적이 없음"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr ""
@@ -293,7 +293,7 @@ msgid "Password reset"
 msgstr "암호 초기화"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr ""
@@ -361,13 +361,13 @@ msgid "Signup is not allowed for uninvited users"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr ""
@@ -383,7 +383,7 @@ msgid "Template user for new users created through signup"
 msgstr "가입을 통해 생성된 새로운 사용자를 위한 사용자 양식"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
 msgstr ""

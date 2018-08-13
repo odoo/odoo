@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2017
 # Collex100, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Sergey Vilizhanin, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -451,13 +451,13 @@ msgstr ""
 "Сюда следует вводить личный адрес сотрудника, не связанный с компанией."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Ошибка! Вы не можете создавать рекурсивные подразделения."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Ошибка! Вы не можете создавать рекурсивную иерархию сотрудника(ов)."
@@ -738,6 +738,11 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr "Запуск новых продуктов, маркетинговые кампании и предложения"
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Мужской"
@@ -762,8 +767,8 @@ msgstr "Маркетинг и менеджер сообщества"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr ""
+msgid "Married"
+msgstr "В браке"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto

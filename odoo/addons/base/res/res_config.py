@@ -528,8 +528,11 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             IrDefault.set(model, field, value)
 
         # group fields: modify group / implied groups
+        current_settings = self.new(self.default_get(list(self.fields_get())))
         with self.env.norecompute():
             for name, groups, implied_group in classified['group']:
+                if self[name] == current_settings[name]:
+                    continue
                 if self[name]:
                     groups.write({'implied_ids': [(4, implied_group.id)]})
                 else:

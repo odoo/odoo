@@ -6,6 +6,7 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
+# Jacara <baskhuujacara@gmail.com>, 2018
 # Martin Trigaux, 2018
 # darambazar <daramaa26@gmail.com>, 2018
 # Erdenebold Ts <erdenebold10@gmail.com>, 2018
@@ -17,14 +18,13 @@
 # ERDENESAIKHAN BATZORIG <esab.orgil@gmail.com>, 2018
 # Puujee S <puujeemtz@gmail.com>, 2018
 # Chinzorita <chinzorig.o@asterisk-tech.mn>, 2018
-# Jacara <baskhuujacara@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
 "PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Jacara <baskhuujacara@gmail.com>, 2018\n"
+"Last-Translator: Chinzorita <chinzorig.o@asterisk-tech.mn>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Нэхэмжлэлийг шинээр үүсгээд батлаагүй байх үед 'Ноорог' төлөвтэй байна.\n"
+" * Нэхэмжлэлийг батлахад 'Нээлттэй' төлөвт шилжих бөгөөд нэхэмжлэлийн дугаар оноогдсон байна. Нэхэмжлэлийг бүрэн төлөхөөс нааш нээлттэй төлөвтэй байх болно.\n"
+" * Нэхэмжлэлийг бүрэн төлөх үед 'Төлөгдсөн' төлөвт автоматаар шилжинэ. Нэхэмжлэл төлөх гэдэг нь төлбөрийн журналын бичилтийг нэхэмжлэлтэй холбох үйлдлийг хэлнэ.\n"
+" * Хэрэглэгч нэхэмжлэлийг цуцлавал 'Цуцлагдсан' төлөвт шилжинэ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -159,13 +163,13 @@ msgstr "5) Тохируулж суулгахын тулд танд дараах 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid ": General ledger"
-msgstr ": Ерөнхий дэвтэр"
+msgstr ": Ерөнхий журнал"
 
 #. module: account
 #: code:addons/account/models/account.py:554
 #, python-format
 msgid ": Refund"
-msgstr ": Төлбөрийн буцаалт"
+msgstr ": Буцаалт"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -188,7 +192,7 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data>Эрхэм ${object.partner_id.name},</p>\n"
-"<p>Төлбөрөө төлсөнд баярлалаа.<br/>Таны төлбөрийн баримтйг энд харуулав.<strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>\n"
+"<p>Төлбөрөө төлсөнд баярлалаа.<br/>Таны төлбөрийн баримтыг энд харуулав.<strong>${(object.name or '').replace('/','-')}</strong> мөнгөн дүн <strong>${format_amount(object.amount, object.currency_id)}</strong> компани: ${object.company_id.name}.</p>\n"
 "<p>Хэрэв танд асуулт байгаа бол бидэнтэй холбогдоорой.</p>\n"
 "<p>Хүндэтгэсэн,\n"
 "% if user and user.signature:\n"
@@ -376,6 +380,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
 "class=\"hidden-xs\"> Paid</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\"> Төлсөн</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -383,6 +389,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
 "class=\"hidden-xs\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
+"class=\"hidden-xs\"> Цуцлагдсан</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -390,6 +398,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> Төлбөр хүлээж буй</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -568,7 +578,7 @@ msgstr "<span> Хэн рүү </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr ""
+msgstr "<span>Журналын бичилтүүд</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -628,7 +638,7 @@ msgstr "<strong>2. Харгалзаагүй Төлбөрийг Бүртгэх</s
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>Төлбөрийн үлдэгдэл</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -727,18 +737,18 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 msgid "<strong>Customer Address</strong>"
-msgstr ""
+msgstr "<strong>Харилцагчийн хаяг</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
-msgstr "<strong>Захиалагчийн Код:</strong>"
+msgstr "<strong>Харилцагчийн код:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Customer: </strong>"
-msgstr ""
+msgstr "<strong>Харилцагч: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -759,7 +769,7 @@ msgstr "<strong>Дуусах огноо :</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr "<strong>Хадгаламжийн Тасалбар</strong>"
+msgstr "<strong>Хадгаламжийн тасалбар</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -796,12 +806,12 @@ msgstr "<strong>Зардлууд</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "<strong>Fiscal Year End</strong>"
-msgstr ""
+msgstr "<strong>Санхүүгийн жилийн төгсгөл</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>From</strong>"
-msgstr ""
+msgstr "<strong>Эхлэл</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -826,12 +836,12 @@ msgid ""
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
 msgstr ""
 "<strong>Төлөх тооцоонуудыг тэмдэглэх</strong><br/>\n"
-"                                        Дараа долоо хоногт харахыг хүссэн тооцоонуудыг шүүх юмуу бүлэглэнэ үү. Тэгээд тооцоо тус бүр рүү орж  <strong>'Төлөх'</strong> товчийг дараад зохимжтой төлбөрийн хэлбэрийг сонгоно."
+"                                        Ирэх долоо хоногт төлөгдөх ёстой тооцоонуудыг шүүх эсвэл бүлэглэнэ үү. Улмаар тооцоо тус бүр рүү орж зохих төлбөрийн хэлбэрийг сонгон<strong>'Төлөх'</strong> товчийг дарна уу."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Memo: </strong>"
-msgstr ""
+msgstr "<strong>Санамж: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -844,8 +854,8 @@ msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
 msgstr ""
-"<strong>Төлбөрийг автоматаар тулгах:</strong> нэхэмжлэлийг үүсгэхэд илүүдсэн"
-" төлбөрийг санал болгодог."
+"<strong>Төлбөрийг автоматаар тулгах:</strong> Нэхэмжлэл үүсгэх үед тулгах "
+"боломжтой төлөлтийн бичилтүүдийг санал болгоно."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -864,17 +874,17 @@ msgstr "<strong>Харилцагчид:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Payment Amount: </strong>"
-msgstr ""
+msgstr "<strong>Төлбөрийн дүн: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Payment Date: </strong>"
-msgstr ""
+msgstr "<strong>Төлбөрийн огноо: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Payment Method: </strong>"
-msgstr ""
+msgstr "<strong>Төлбөрийн хэлбэр: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -893,7 +903,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>Purchase</strong>"
-msgstr ""
+msgstr "<strong>Худалдан авалт</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1036,7 +1046,7 @@ msgstr "<strong>Нийт</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_account_kanban
 msgid "<strong>Type: </strong>"
-msgstr ""
+msgstr "<strong>Төрөл: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1044,18 +1054,17 @@ msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
 msgstr ""
-"Бараа болон татварыг шивсэн дараагаараа <strong>Тооцоог "
-"батлана</strong><br/> ."
+"Бараа болон татвар сонгож бүртгээд <strong>Тооцоог батлана</strong><br/> ."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Vendor: </strong>"
-msgstr ""
+msgstr "<strong>Нийлүүлэгч: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>to </strong>"
-msgstr ""
+msgstr "<strong>хүртэл </strong>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1066,35 +1075,38 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
-"               Кассын бүртгэл нь кассын журналын бичилтийг менежмент \n"
-"               хийх боломжоор хангадаг. Энэ боломж нь кассын төлбөрийг \n"
-"               өдөр тутамд хянаж, ажиглах хялбар аргыг олгодог.\n"
-"               Мөнгөний хайрцаг дахь дэвсгэртүүдийг оруулж дараа нь\n"
-"               мөнгөний хайрцагаас мөнгө гарах, орох болгонд хөтлөж бичүүлэх боломжтой."
+"Кассын бүртгэл нь бэлэн мөнгөний гүйлгээ бүртгэлийг удирдах, хянахад тусална\n"
+"                Өдөр тутмын бэлэн мөнгөөр хийгдэж буй төлбөр төлөлтүүдийг хянах \n"
+"                боломжтой. Мөнгөний хайрцаг доторх дэвсгэрт, зоос бүрийг нарийвчлан\n"
+"                бүртгэх бөгөөд мөнгөний хайрцагт орж гарч буй бүх мөнгө хөтлөгдөнө."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:383
 #, python-format
 msgid "A Cash transaction can't have a 0 amount."
-msgstr ""
+msgstr "Бэлэн мөнгөний гүйлгээний дүн 0 байж болохгүй."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1699
 #, python-format
 msgid "A Payment Terms should have its last line of type Balance."
 msgstr ""
+"Төлбөрийн нөхцөлийн тооцооллын сүүлийн мөрөнд Үлдэгдэл төрөлтэй тооцоолол "
+"байх ёстой."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1702
 #, python-format
 msgid "A Payment Terms should have only one line of type Balance."
 msgstr ""
+"Төлбөрийн нөхцөлийн тооцооллын мөрүүдэд Үлдэгдэл төрөлтэй нэг л мөр байх "
+"ёстой."
 
 #. module: account
 #: code:addons/account/models/account.py:722
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr "Банкны данс нь зөвхөн нэг журнальд харъяалагдах ёстой."
+msgstr "Банк төрөлтэй данс нь зөвхөн нэг журналд харъяалагдах ёстой."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1104,13 +1116,13 @@ msgid ""
 "                should receive this periodicaly from your bank."
 msgstr ""
 "Банкны хуулга нь тухайн хугацааны мужид тухайн банкны дансаар явагдсан бүх "
-"гүйлгээнүүд юм. Үүнийг банкнаасаа тогтмол давтамжтайгаар авдаг байх "
-"хэрэгтэй."
+"гүйлгээг агуулна. Мөн үүнийг банкны системээс тогтмол давтамжтайгаар авдаг "
+"байх боломжтой."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr "Банкны хуулганы мөр нь банкны дансаар хийгдсэн гүйлгээ юм."
+msgstr "Банкны хуулганы мөр бүр нь банканд хийгдсэн гүйлгээнүүд байх юм."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -1118,8 +1130,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Журналийн бичилт нь журналын хэд хэдэн мөрөөс бүрддэг, тэдгээр нь дебит "
-"эсвэл кредит мөрүүд байна."
+"Журналийн бичилт нь дебет болон кредит гүйлгээнүүд бүхий хэд хэдэн мөрүүдээс"
+" бүрдэж болно."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1162,6 +1174,9 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"Хэрэв нэгж үнэд татвар шингэсэн бол гүйлгээний мөр бүр дээр бутархайн орон "
+"дэвшүүлэлт хийгдэнэ. Ингэснээр мөрүүдийн дэд дүнгийн нийлбэр нь татвартай "
+"нийт дүнтэй тэнцэх юм."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:881
@@ -1191,6 +1206,8 @@ msgid ""
 "                bank accounts, checks), one purchase journal, one sales journal\n"
 "                and one for miscellaneous information."
 msgstr ""
+"Ихэнх компаниуд нэг төлбөрийн хэлбэрт (бэлэн мөнгө, банкны данс, чек гэх мэт) \n"
+"                нэг л журнал ашигладаг, мөн худалдан авалт болон борлуулалт, бусад ерөнхий тохиолдлын нэг л журналууд ашигладаг."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1227,7 +1244,7 @@ msgstr "Данс"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr ""
+msgstr "Санхүү Нягтлан бодогч"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -1291,12 +1308,12 @@ msgstr "Санхүүгийн бичилт"
 #: model:ir.ui.view,arch_db:account.view_account_group_form
 #: model:ir.ui.view,arch_db:account.view_account_group_tree
 msgid "Account Group"
-msgstr ""
+msgstr "Санхүүгийн бүлэг"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_group_tree
 msgid "Account Groups"
-msgstr ""
+msgstr "Санхүүгийн бүлгүүд"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_journal_id
@@ -1378,7 +1395,7 @@ msgstr "Санхүүгийн тайлан"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Rounding"
-msgstr ""
+msgstr "Санхүүгийн оронгийн нарийвчлал"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
@@ -1401,7 +1418,7 @@ msgstr "Дансны пайз"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr ""
+msgstr "Дансны пайзууд"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -1442,7 +1459,7 @@ msgstr "Дансны үлгэр"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr "Дансны Дүн"
+msgstr "Дансны нийлбэр"
 
 #. module: account
 #: selection:account.financial.report,type:0
@@ -1527,6 +1544,9 @@ msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
 msgstr ""
+"Энэ данс нь нэхэмжлэлийн буцаалт бүртгэх үед татварын мөр дээр сонгогдоно. "
+"Хэрэв татварын мөр дээр нэхэмжлэлийн мөр дээрх дансыг ашиглах бол энд хоосон"
+" орхино уу."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1559,6 +1579,8 @@ msgid ""
 "Account used as counterpart for the journal entry, for taxes eligible based "
 "on payments."
 msgstr ""
+"Гүйлгээ бүртгэхэд ерөнхий харьцах данс зорилгоор ашиглагдах данс юм. Жишээ "
+"нь төлбөрийн гүйлгээнд татварын суутгал бүртгэх гэх мэт тохиолдол."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1649,7 +1671,7 @@ msgstr "Үйлдлүүд"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Other Currencies"
-msgstr ""
+msgstr "Бусад валютын төрлүүдийг идэвхижүүлэх"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1678,7 +1700,7 @@ msgstr "Нэмэх"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "Буцаалт нэмэх"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1721,7 +1743,7 @@ msgstr "Тохируулах татвар"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Тохируулгын төрөл"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1802,12 +1824,12 @@ msgstr "Бүх бичилтүүд"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_all_partner_invoices
 msgid "All Invoices"
-msgstr ""
+msgstr "Бүх нэхэмжлэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr ""
+msgstr "Бүх мөрүүд тулгагдсан"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -1828,7 +1850,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "All Posted Entries"
-msgstr "Бүх Батлагдсан бичилтүүд"
+msgstr "Бүх батлагдсан бичилтүүд"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -1981,12 +2003,12 @@ msgstr "Төлөх дүн нэхэмжлэлийн валютаар"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "Amount Paid"
-msgstr ""
+msgstr "Төлсөн дүн"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_rounding
 msgid "Amount Rounding"
-msgstr ""
+msgstr "Дүн бүхэлчлэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed

@@ -114,7 +114,7 @@ msgid ""
 " continues to run without an internet connection.</p>"
 msgstr ""
 "<p> "
-"點選啟動銷售點接口。它<b>在平板電腦</b>、筆記本電腦或工業硬體上運行。</p><p>一旦會議啟動，該系統將繼續在沒有網路連接的情況下運行。</p>"
+"點選啟動銷售點接口。它<b>在平板電腦</b>、筆記本電腦或工業硬體上運行。</p><p>一旦前台啟動，該系統將繼續在沒有網路連接的情況下運行。</p>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -275,7 +275,7 @@ msgstr "一個用來在POS保護敏感功能的安全PIN"
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
-msgstr "此POS配置的全球唯一標識符，用於防止客戶生成數據的衝突。"
+msgstr "此POS配置的整體唯一標識符，用於防止客戶生成數據的衝突。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
@@ -296,7 +296,7 @@ msgid ""
 "                you sell through the point of sale. The user has to check the\n"
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
-msgstr "一個會話是一段時間，通常是通過銷售點賣東西的一天。使用者需要在每一個會話的開始和結束時清點在您收款機的貨幣。"
+msgstr "一個前台是一段時間，通常是通過銷售點賣東西的一天。使用者需要在每一個前台的開始和結束時清點在您收款機的貨幣。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
@@ -328,7 +328,7 @@ msgstr "以一個集成的讀卡器接納付款"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr "帳戶的銀行對帳單零用金細節"
+msgstr "帳戶的銀行對帳單現金詳情"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -372,7 +372,7 @@ msgstr "添加提示"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr "增加一個全球折扣"
+msgstr "增加一個整體折扣"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -453,7 +453,7 @@ msgstr "銷售點的內部標識。"
 #: code:addons/point_of_sale/models/pos_session.py:160
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr "已為此銷售點打開其他會話。"
+msgstr "已為此銷售點打開其他前台。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -543,7 +543,7 @@ msgstr "銀行對帳單"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行對帳單行"
+msgstr "銀行對帳單明細"
 
 #. module: point_of_sale
 #. openerp-web
@@ -670,7 +670,7 @@ msgstr "只能在現金日記帳上適用現金控制。"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr "零用金行"
+msgstr "CashBox明細"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
@@ -785,7 +785,7 @@ msgstr "如果此日記帳中定義了能夠在『POS』用的付款方式就勾
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session."
-msgstr "如果您想要在關閉會話時按產品分組日記帳專案，則對其進行檢查。"
+msgstr "如果您想要在關閉前台時按產品分組日記帳專案，則對其進行檢查。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -852,7 +852,7 @@ msgstr "按此以定義一個新類別。"
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "Click to start a new session."
-msgstr "點選開始一個新的會話。"
+msgstr "點選開始一個新的前台。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:15
@@ -955,7 +955,7 @@ msgstr "正連接到PosBox"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -1022,12 +1022,12 @@ msgstr "貨幣"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_id
 msgid "Current Session"
-msgstr "目前會話"
+msgstr "目前前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
 msgid "Current Session State"
-msgstr "目前會話狀態"
+msgstr "目前前台狀態"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1296,6 +1296,8 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
 msgstr ""
+"Don’t turn this option on if you take orders on smartphones or tablets. \n"
+" Such devices already benefit from a native keyboard."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1395,7 +1397,7 @@ msgstr "結束日期"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "End of Session"
-msgstr "會話結束"
+msgstr "前台結束"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end_real
@@ -1468,7 +1470,7 @@ msgstr "完成導入訂單"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_fiscal_position_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
-msgstr "財政狀況"
+msgstr "財政狀態"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1561,7 +1563,7 @@ msgstr "青椒"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
@@ -1821,12 +1823,12 @@ msgstr "最後修改時間"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
 msgid "Last Session Closing Cash"
-msgstr "上次會話關閉支付金額"
+msgstr "上次前台關閉支付金額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr "上次會話關閉日期"
+msgstr "上次前台關閉日期"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -2038,7 +2040,7 @@ msgstr "新建"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
-msgstr "新會話"
+msgstr "新前台"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2085,8 +2087,8 @@ msgid ""
 "Note that you may use the menu <i>Your Session</i>\n"
 "                to quickly open a new session."
 msgstr ""
-"注意您可能用到<i>您的會話</i>這個選單\n"
-"來快速的開啟一個會話"
+"注意您可能用到<i>您的前台</i>這個選單\n"
+"來快速的開啟一個前台"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2198,7 +2200,7 @@ msgstr "打開銷售詳細信息報告"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Open Session"
-msgstr "打開會話"
+msgstr "打開前台"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
@@ -2492,7 +2494,7 @@ msgstr "可用支付方式"
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
-msgstr "收付款"
+msgstr "付款"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2510,7 +2512,7 @@ msgstr "水蜜桃"
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
-msgstr "按會話"
+msgstr "按前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_user_id
@@ -2674,7 +2676,7 @@ msgstr "POS付款"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "POS會話"
+msgstr "POS前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
@@ -2705,12 +2707,12 @@ msgstr "銷售點訂單明細"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
 msgid "Pos Session State"
-msgstr "銷售點會話狀態"
+msgstr "銷售點前台狀態"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos Session Username"
-msgstr "銷售點會話使用者名"
+msgstr "銷售點前台使用者名"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
@@ -2881,12 +2883,12 @@ msgstr "產品模板"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "單位"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr "產品計量單位類別"
+msgstr "產品計量單位 類別"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
@@ -2975,7 +2977,7 @@ msgstr "收據參考"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
 msgid "Recovery Session"
-msgstr "恢復會話"
+msgstr "恢復前台"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poivron_rouges
@@ -3190,7 +3192,7 @@ msgstr "選擇稅"
 #: code:addons/point_of_sale/models/pos_order.py:236
 #, python-format
 msgid "Selected orders do not have the same session!"
-msgstr "選擇的訂單不在相同的會話中！"
+msgstr "選擇的訂單不在相同的前台中！"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_sequence
@@ -3232,24 +3234,24 @@ msgstr "伺服器錯誤"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Session"
-msgstr "會話"
+msgstr "前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_name
 msgid "Session ID"
-msgstr "會話ID"
+msgstr "前台ID"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1225
 #, python-format
 msgid "Session ids:"
-msgstr "會話ID："
+msgstr "前台ID："
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Session:"
-msgstr "會話:"
+msgstr "前台:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
@@ -3259,7 +3261,7 @@ msgstr "會話:"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sessions"
-msgstr "會話"
+msgstr "前台"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3624,7 +3626,7 @@ msgstr "在未設定的情況下，發票日記帳所使用幣別必須與銷售
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr "銷售會話名稱必須唯一！"
+msgstr "POS前台名稱必須唯一！"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
@@ -3750,7 +3752,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box.py:21
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr "此POS會話沒有現金收納機。"
+msgstr "此POS前台沒有現金收納機。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:764
@@ -3818,7 +3820,7 @@ msgstr "該字段用於將銷售點使用者組的 ID 傳遞到銷售點客戶�
 msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
-msgstr "此發票已在銷售點會話中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
+msgstr "此發票已在銷售點前台中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_fiscal_position_ids
@@ -3844,7 +3846,7 @@ msgstr "此操作將銷毀瀏覽器中的所有未支付訂單。您將丟失所
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
-msgstr "本操作將會損壞存儲在本地的所有會話中的未付訂單您將市區所有的數據以及跳出銷售點。本操作不能恢復"
+msgstr "本操作將會損壞存儲在本地的所有前台中的未付訂單您將市區所有的數據以及跳出銷售點。本操作不能恢復"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_tip_product_id
@@ -3872,7 +3874,7 @@ msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
-"此庫存轉儲已在銷售點會話中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
+"此庫存轉儲已在銷售點前台中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
@@ -3910,7 +3912,7 @@ msgstr "用秤稱重"
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr "為了退回貨物，您需要打開一個會話，用來登記退款。"
+msgstr "為了退回貨物，您需要打開一個前台，用來登記退款。"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3987,7 +3989,7 @@ msgstr "貿易應收款"
 msgid ""
 "Unable to open the session. You have to assign a sales journal to your point"
 " of sale."
-msgstr "無法打開會話。您必須向銷售點分配銷售日記帳。"
+msgstr "無法打開前台。您必須向銷售點分配銷售日記帳。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -4061,7 +4063,7 @@ msgid ""
 "Use this menu to browse previous orders. To record new\n"
 "                orders, you may use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface."
-msgstr "用此選單瀏覽之前的訂單。您可以在觸摸屏界面用<i>您的會話</i>來記錄新的訂單。"
+msgstr "用此選單瀏覽之前的訂單。您可以在觸摸屏界面用<i>您的前台</i>來記錄新的訂單。"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4151,7 +4153,7 @@ msgid ""
 "Whenever you close a session, one entry is generated in the following "
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
-msgstr "無論何時關閉會話，都會在所有未開立發票訂單的以下會計日記帳中生成一個分錄。發票在會計中單獨記錄。"
+msgstr "無論何時關閉前台，都會在所有未開立發票訂單的以下會計日記帳中生成一個分錄。發票在會計中單獨記錄。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4196,14 +4198,14 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
 "{reference} is in state {state}, total amount: {total}, paid: {paid}"
 msgstr ""
-"您無法確認此會話的所有訂單，因為這些訂單沒有「已支付」狀態。\n"
+"您無法確認此前台的所有訂單，因為這些訂單沒有「已支付」狀態。\n"
 "{reference} 狀態為 {state}，總計金額：{total}，已付金額：{paid}"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:151
 #, python-format
 msgid "You cannot create two active sessions with the same responsible!"
-msgstr "您不能以同一個負責人來創建兩個活動銷售會話！"
+msgstr "您不能以同一個負責人來創建兩個活動銷售前台！"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
@@ -4211,7 +4213,7 @@ msgstr "您不能以同一個負責人來創建兩個活動銷售會話！"
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
-msgstr "當會話仍打開時，您不能在POS中刪除一個可銷售的產品。"
+msgstr "當前台仍打開時，您不能在POS中刪除一個可銷售的產品。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4228,7 +4230,7 @@ msgstr "在銀行付款單中，您不能有一個負數。使用現金付款的
 msgid ""
 "You cannot use the session of another user. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr "您不能使用其他使用者的會話。此會話由 %s 所有。請先關閉此會話才能使用此銷售點。"
+msgstr "您不能使用其他使用者的前台。此前台由 %s 所有。請先關閉此前台才能使用此銷售點。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
@@ -4302,7 +4304,7 @@ msgstr "如果需要為訂單開立發票，需要先選擇一個客戶。"
 #: code:addons/point_of_sale/models/pos_session.py:166
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr "您需要為您的銷售會話指定一個POS。"
+msgstr "您需要為您的銷售前台指定一個POS。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4364,7 +4366,7 @@ msgstr "barcode.rule"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1222
 #, python-format
 msgid "belong to another session:"
-msgstr "屬於另外一個會話："
+msgstr "屬於另外一個前台："
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_8

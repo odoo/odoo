@@ -108,7 +108,14 @@
                         <td></td>
                         <td></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"></td>
-                        <td t-att-colspan="o.company_id.country_id.code == 'IN' and 5 or 1"></td>
+                        <td t-if="len(o.tax_line_ids) > 0"></td>
+                        <td></td>
+                        <t t-if="o.company_id.country_id.code == 'IN'">
+                            <td t-if="is_cgst"></td>
+                            <td t-if="is_cgst"></td>
+                            <td t-if="is_igst"></td>
+                            <td t-if="is_cess"></td>
+                        </t>
                     </tr>
                 </tbody>
             </table>

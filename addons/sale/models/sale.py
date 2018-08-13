@@ -633,6 +633,12 @@ class SaleOrder(models.Model):
                         'target': 'self',
                         'res_id': self.id,
                     }
+        else:
+            action = self.env.ref('sale.action_quotations', False)
+            if action:
+                result = action.read()[0]
+                result['res_id'] = self.id
+                return result
         return super(SaleOrder, self).get_access_action(access_uid)
 
     def get_mail_url(self):
