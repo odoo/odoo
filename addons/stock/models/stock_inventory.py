@@ -247,7 +247,7 @@ class Inventory(models.Model):
         if self.company_id:
             domain += ' AND company_id = %s'
             args += (self.company_id.id,)
-        
+
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
             domain += ' AND owner_id = %s'
@@ -412,9 +412,9 @@ class InventoryLine(models.Model):
                 ('package_id', '=', line.package_id.id),
                 ('prod_lot_id', '=', line.prod_lot_id.id)])
             if existings:
-                raise UserError(_("You cannot have two inventory adjustments in state 'In Progress' with the same product,"
+                raise UserError(_("You cannot have two inventory adjustments in state 'In Progress' with the same product (%s),"
                                    " same location, same package, same owner and same lot. Please first validate"
-                                   " the first inventory adjustment before creating another one."))
+                                   " the first inventory adjustment before creating another one.") % (line.product_id.display_name))
 
     @api.constrains('product_id')
     def _check_product_id(self):
