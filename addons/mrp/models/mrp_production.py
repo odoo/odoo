@@ -340,7 +340,7 @@ class MrpProduction(models.Model):
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
     @api.multi
-    def write (self, vals):
+    def write(self, vals):
         res = super(MrpProduction, self).write(vals)
         if 'date_planned_start' in vals:
             moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
@@ -353,8 +353,10 @@ class MrpProduction(models.Model):
     @api.model
     def create(self, values):
         if not values.get('name', False) or values['name'] == _('New'):
-            if values.get('picking_type_id'):
-                values['name'] = self.env['stock.picking.type'].browse(values['picking_type_id']).sequence_id.next_by_id()
+            picking_type_id = values.get('picking_type_id') or self._get_default_picking_type()
+            picking_type_id = self.env['stock.picking.type'].browse(picking_type_id)
+            if picking_type_id:
+                values['name'] = picking_type_id.sequence_id.next_by_id()
             else:
                 values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
