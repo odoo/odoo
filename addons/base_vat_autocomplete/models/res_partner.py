@@ -70,15 +70,6 @@ class ResPartner(models.Model):
             if len(lines) == 1:
                 lines = [x.strip() for x in lines[0].split('   ') if x]
 
-            partner['street'] = lines.pop(0).title()
-
-            if len(lines) > 0:
-                res = _check_city(lines, result['countryCode'])
-                if res:
-                    partner['zip'] = res[0]
-                    partner['city'] = res[1].title()
-            if len(lines) > 0:
-                partner['street2'] = lines.pop(0).title()
             vals = self._split_street_with_params(', '.join(lines.pop(0).rsplit(' ', 1)), '%(street_name)s, %(street_number)s/%(street_number2)s')
             partner.update(vals)
 
@@ -107,7 +98,7 @@ class ResPartner(models.Model):
             if not partner.vat:
                 continue
             # If a field is not set in the response, wipe it anyway
-            non_set_address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+            non_set_address_fields = self._get_all_address_fields()
             if self._check_vat_format(partner.vat):
                 company_data = self._get_vies_company_data(partner.vat)
 

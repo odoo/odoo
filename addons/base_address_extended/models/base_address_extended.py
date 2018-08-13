@@ -33,6 +33,10 @@ class Partner(models.Model):
     street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
+    def _get_all_address_fields(self):
+        fields = super(Partner, self)._address_fields()
+        return fields + list(self.get_street_fields())
+
     def get_street_fields(self):
         """Returns the fields that can be used in a street format.
         Overwrite this function if you want to add your own fields."""

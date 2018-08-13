@@ -405,6 +405,9 @@ class Partner(models.Model):
                 values[fname] = self[fname]
         return values
 
+    def _get_all_address_fields(self):
+        return self._address_fields()
+
     @api.model
     def _address_fields(self):
         """Returns the list of address fields that are synced from the parent."""
