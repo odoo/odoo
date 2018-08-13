@@ -34,7 +34,6 @@ class PosOrder(models.Model):
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields)
         return {
-            'name':         ui_order['name'],
             'user_id':      ui_order['user_id'] or False,
             'session_id':   ui_order['pos_session_id'],
             'lines':        [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
@@ -506,9 +505,10 @@ class PosOrder(models.Model):
         if values.get('session_id'):
             # set name based on the sequence specified on the config
             session = self.env['pos.session'].browse(values['session_id'])
-            values['name'] = session.config_id.sequence_id._next()
+            if not values.get('name'):
+                values['name'] = session.config_id.sequence_id._next()
             values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
-        else:
+        if not values.get('name'):
             # fallback on any pos.order sequence
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order')
         return super(PosOrder, self).create(values)
