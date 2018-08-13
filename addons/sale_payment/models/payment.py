@@ -16,16 +16,6 @@ class PaymentAcquirer(models.Model):
         help='You can set here the communication type that will appear on sales orders.'
              'The communication will be given to the customer when they choose the payment method.')
 
-    @api.model
-    def create(self, vals):
-        res = super(PaymentAcquirer, self).create(vals)
-
-        # so_reference_type default values is 'none' except for wire transfer.
-        if res.provider == 'transfer':
-            res.so_reference_type = 'so_name'
-
-        return res
-
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
