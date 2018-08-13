@@ -13,6 +13,7 @@ Auto-Complete Addresses based on VAT numbers
     """,
     'depends': ['base_vat'],
     'data': [
+        'views/base_vat_autocomplete_template.xml',
         'views/res_partner_views.xml',
         'views/res_company_view.xml',
     ],

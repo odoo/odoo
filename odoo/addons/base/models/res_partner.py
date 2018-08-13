@@ -599,6 +599,9 @@ class Partner(models.Model):
                 name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
             if not partner.is_company:
                 name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
+        # we want to show the vat when requested and only for the autocomplete suggestion (from name search), not for the final result (from read)
+        if self._context.get('show_vat') and self._context.get('from_name_search') and partner.is_company and partner.vat:
+            name = "%s - %s" % (name, partner.vat)
         if self._context.get('show_address_only'):
             name = partner._display_address(without_company=True)
         if self._context.get('show_address'):
@@ -640,7 +643,8 @@ class Partner(models.Model):
             name_create.
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
-            If 'force_email' key in context: must find the email address. """
+            If 'force_email' key in context: must find the email address.
+            """
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
             raise UserError(_("Couldn't create contact without email address!"))
@@ -662,7 +666,7 @@ class Partner(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        self = self.sudo(name_get_uid or self.env.uid)
+        self = self.with_context(from_name_search=True).sudo(name_get_uid or self.env.uid)
         if args is None:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
