@@ -376,7 +376,7 @@ tour.register('main_flow_tour', {
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Confirm Sale')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Confirm')",
     content: _t("<p>Confirm this quotation</p>"),
     position: "bottom"
 }, {
