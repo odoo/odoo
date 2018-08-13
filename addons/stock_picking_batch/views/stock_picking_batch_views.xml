@@ -24,7 +24,8 @@
                     </group>
                     <separator string="Pickings"/>
                     <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]" options="{'not_delete': True}">
-                        <tree>
+                        <tree default_order="sequence">
+                            <field name="sequence" widget="handle" />
                             <field name="name"/>
                             <field name="backorder_id"/>
                             <field name="origin"/>
