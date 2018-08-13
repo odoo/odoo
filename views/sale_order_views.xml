@@ -8,7 +8,7 @@
             <xpath expr="//header/button[@name='action_cancel']" position="before">
                 <button name="%(sale_coupon.sale_coupon_apply_code_action)d" string="Apply Coupon" type="action" groups="base.group_user" states="draft"/>
             </xpath>
-            <xpath expr="//button[@name='action_done']" position="after">
+            <xpath expr="//header/button[@name='action_cancel']" position="before">
                 <button name="recompute_coupon_lines" string="Update Promotions" type="object" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
             </xpath>
          </field>
