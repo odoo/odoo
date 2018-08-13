@@ -1182,6 +1182,10 @@ class AccountTaxGroup(models.Model):
     property_tax_payable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (payable)')
     property_tax_receivable_account_id = fields.Many2one('account.account', company_dependent=True, string='Tax current account (receivable)')
     property_advance_tax_payment_account_id = fields.Many2one('account.account', company_dependent=True, string='Advance Tax payment account')
+    post_total = fields.Boolean("Show after total", default=False,
+        help=("Check, if this levy group should not be "
+              "considered part of the total sum on invoices "
+              "and orders."))
 
 
 class AccountTax(models.Model):
