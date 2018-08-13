@@ -273,7 +273,7 @@ class SaleOrderOption(models.Model):
     def _get_values_to_add_to_order(self):
         self.ensure_one()
         return {
-            'order_id': self.order_id,
+            'order_id': self.order_id.id,
             'price_unit': self.price_unit,
             'name': self.name,
             'product_id': self.product_id.id,

@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     group_sale_order_template = fields.Boolean("Quotation Templates", implied_group='sale_management.group_sale_order_template')
-    default_sale_order_template_id = fields.Many2one('sale.order.template', string='Default Template')
+    default_sale_order_template_id = fields.Many2one('sale.order.template', default_model='sale.order', string='Default Template')
     module_sale_quotation_builder = fields.Boolean("Quotation Builder")
 
     @api.onchange('group_sale_order_template')

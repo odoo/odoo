@@ -39,7 +39,6 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-    _description = "Sales Order Line"
 
     website_description = fields.Html('Website Description', sanitize=False, translate=html_translate)
 

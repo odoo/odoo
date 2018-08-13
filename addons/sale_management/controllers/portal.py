@@ -88,7 +88,7 @@ class CustomerPortal(CustomerPortal):
         except AccessError:
             return request.redirect('/my')
 
-        option_sudo = self.env['sale.order.option'].sudo().browse(option_id)
+        option_sudo = request.env['sale.order.option'].sudo().browse(option_id)
 
         if order_sudo != option_sudo.order_id:
             return request.redirect(order_sudo.get_portal_url())

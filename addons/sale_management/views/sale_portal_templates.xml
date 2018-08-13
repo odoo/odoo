@@ -21,7 +21,7 @@
 
         <xpath expr="//section[@id='details']//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
-                <a t-attf-href="sale_order.get_portal_url('/update_line/%s', line.id) + '&amp;unlink=True'" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
+                <a t-att-href="sale_order.get_portal_url('/update_line/%s' % line.id) + '&amp;unlink=True'" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
                     <span class="fa fa-trash-o"></span>
                 </a>
             </td>
@@ -82,6 +82,7 @@
         <xpath expr="//section[@id='details']//div[@id='quote_qty']" position="replace">
             <!--
                 TODO SEB hide this in certain cases, at least when it's not OK to use it: not draft or sent, 
+                Also hide for non-option lines
             -->
             <div class="input-group oe_website_spinner">
                 <div class="input-group-prepend d-print-none">
