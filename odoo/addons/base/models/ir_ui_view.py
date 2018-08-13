@@ -1126,7 +1126,8 @@ actual arch.
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
-        return self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
+        view = self.search([('key', '=', template)])
+        return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """
