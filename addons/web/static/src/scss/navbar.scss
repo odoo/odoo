@@ -38,7 +38,7 @@
         font-weight: 500;
         line-height: $o-navbar-height;
 
-        @include media-breakpoint-down(xs) {
+        @include media-breakpoint-down(sm) {
             float: none;
             margin: 0;
             border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
@@ -147,7 +147,7 @@
         }
     }
 
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-down(sm) {
         transition: height 200ms linear 0s;
 
         position: relative;
@@ -207,20 +207,14 @@
     }
 }
 
-@include media-breakpoint-down(xs) {
-    body.o_mobile_menu_opened {
-        overflow: hidden;
+@include media-breakpoint-down(sm) {
+    body.o_mobile_menu_opened > .o_main_navbar {
         height: 100%;
-        height: 100vh;
-
-        .o_main_navbar {
-            height: 100%;
-            overflow: auto;
-        }
+        overflow: auto;
     }
 }
 
-@include media-breakpoint-down(xs) {
+@include media-breakpoint-down(sm) {
     .o_switch_company_menu > .dropdown-menu {
         padding-top: 0px;
         .bg-info {
