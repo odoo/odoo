@@ -39,6 +39,9 @@ class MrpProduction(models.Model):
         """
         res = super(MrpProduction, self)._generate_moves()
         for production in self.filtered(lambda production: production.bom_id):
-            for sub_product in production.bom_id.sub_products:
-                production._create_byproduct_move(sub_product)
+            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
+            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+            for (bom, bom_data) in boms:
+                for sub_product in bom.sub_products:
+                    production._create_byproduct_move(sub_product)
         return res
