@@ -12,7 +12,7 @@
         <template id="toc" name="Documentation Index">
             <t t-set="level" t-value="level+1"/>
             <t t-foreach="titles" t-as="title">
-                <div t-attf-class="h#{str(level) + (level&lt;3 and ' page-header' or '')}">
+                <div t-attf-class="h#{str(level) + (level&lt;3 and ' page-header border-bottom pb-2 mt-4 mb-3' or '')}">
                     <t t-esc="title.name"/>
                     <small t-if="len(title.post_ids)">
                         <t t-esc="len(title.post_ids)"/>

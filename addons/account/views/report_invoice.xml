@@ -21,8 +21,8 @@
                     </h2>
 
                     <!-- HTML Preview for mobile responsive -->
-                    <t t-set="o_grid_layout" t-value="'col-2'"/>
-                    <t t-if="type_html" t-set="o_grid_layout" t-value="'col-6 col-md-2'"/>
+                    <t t-set="o_grid_layout" t-value="'col-6 col-md-3 col-lg-2'"/>
+                    <t t-if="type_html" t-set="o_grid_layout" t-value="'col-6 col-md-3 col-lg-2'"/>
                     <div class="row mt32 mb32">
                         <div t-att-class="o_grid_layout" t-if="o.name" name="description">
                             <strong>Description:</strong>
@@ -155,7 +155,7 @@
                     </table>
 
                     <div class="clearfix">
-                        <div id="total" class="row">
+                        <div id="total" class="row float-right">
                             <div t-attf-class="col-md-4 float-right #{'col-4' if not type_html else ''}">
                                 <table class="table table-sm" style="min-width: 250px;max-width: 400px;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">

@@ -25,7 +25,7 @@
 <template id="link_button">
     <form method="POST" t-att-action="url" t-attf-class="#{form_classes}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <button t-attf-class="fa btn btn-link #{classes} #{karma and 'karma_required text-muted' or ''}" t-attf-data-karma="#{karma}">
+        <button t-attf-class="fa btn btn-link #{classes} #{karma and 'karma_required text-muted' or ''} border-0" t-attf-data-karma="#{karma}">
             <t t-esc="label"/></button>
     </form>
 </template>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="container mt16 website_forum">
-            <div class="navbar navbar-expand-md navbar-light bg-light">
+            <div class="navbar navbar-expand-md navbar-light bg-light border mb-4 rounded">
                 <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
                     <span t-field="forum.name"/>
                 </a>
@@ -107,7 +107,7 @@
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable" role="status">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                         <div t-field="notification.body"/>
-                        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right">View Your Badges</a>
+                        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right mt-1 d-block">View Your Badges</a>
                     </div>
                     <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable" role="alert">
                         <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
@@ -145,7 +145,7 @@
                             </div>
                         </t>
                     </div>
-                    <div class="card">
+                    <div class="card mb-4">
                         <h3 class="card-header">Keep Informed</h3>
                         <div class="card-body">
                             <t t-call="website_mail.follow">
@@ -154,15 +154,15 @@
                             </t>
                         </div>
                     </div>
-                    <div class="card" id="about_forum">
+                    <div class="card mb-4" id="about_forum">
                         <h3 class="card-header">About This Community</h3>
                         <div class="card-body">
                             <span t-field="forum.description"/>
-                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq"><i class="fa fa-arrow-right"/> Read Guidelines</a>
-                            <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}"><i class="fa fa-arrow-right"/> Back to <span t-field="forum.name"/></a>
+                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="mt-1 d-block"><i class="fa fa-arrow-right"/> Read Guidelines</a>
+                            <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="mt-1 d-block"><i class="fa fa-arrow-right"/> Back to <span t-field="forum.name"/></a>
                         </div>
                     </div>
-                    <div class="card" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
+                    <div class="card mb-4" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
                         <h3 class="card-header">Moderation Tools</h3>
                         <div class="card-body text-center">
                             <a t-attf-href="/forum/#{slug(forum)}/validation_queue"><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     <div t-if="header.get('question_data')">
-                        <div class="card">
+                        <div class="card mb-4">
                             <h3 class="card-header text-center">Question tools</h3>
                             <div class="card-body text-center">
                                 <t t-call="website_mail.follow"><t t-set="object" t-value="question"/></t>
@@ -233,8 +233,7 @@
         <div><t t-raw="post_content"/></div>
         <t t-foreach="question.tag_ids" t-as="question_tag">
             <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
-                <span t-attf-class="float-right badge #{tag and tag.name == question_tag.name and 'badge-primary' or 'badge-secondary'}" t-field="question_tag.name"
-                    style="margin-right: 4px;"/>
+                <span t-attf-class="float-right badge #{tag and tag.name == question_tag.name and 'badge-primary' or 'badge-secondary'} bg-dark" t-field="question_tag.name" style="margin-right: 4px;"/>
             </a>
         </t>
         <small class="text-muted">
@@ -372,7 +371,7 @@
 <template id="forum_all">
     <t t-call="website.layout">
         <div class="container">
-            <h1 class="mb32">Our forums</h1>
+            <h1 class="mb32 mt-4">Our forums</h1>
             <div class="row">
                 <div t-if="not forums" class="alert alert-info">No forum post yet.</div>
                 <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
@@ -389,7 +388,7 @@
 <!-- Specific Forum Layout -->
 <template id="forum_index" name="Forum">
     <t t-call="website_forum.header">
-        <h2 class="page-header mt0">
+        <h2 class="page-header mt0 border-bottom pb-2">
             <t t-esc="question_count"/>
                 <span t-if="post_type not in ('link','question','discussion')"> Posts </span>
                 <span t-if="post_type == 'question'"> Questions</span>
@@ -861,7 +860,7 @@
                         </li>
                         <li t-if="question.active" class="list-inline-item">
                             <a t-attf-style="cursor: pointer;#{not question.can_flag and 'color:#999;' or ''}"
-                                t-attf-class="flag fa fa-flag #{not question.can_flag and 'karma_required' or ''}"
+                                t-attf-class="flag fa fa-flag #{not question.can_flag and 'karma_required' or ''} text-primary"
                                 t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
                                 t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag"
                                 >
@@ -882,11 +881,11 @@
                             href="#post_reply"> Reply</a>
                         </li>
                         <li t-if="question.post_type == 'discussion'" class="list-inline-item">
-                            <a t-attf-class="fa fa-comment-o #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"> Comment</a>
+                            <a t-attf-class="fa fa-comment-o #{not question.can_answer and 'karma_required text-muted' or None} text-primary" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"> Comment</a>
                         </li>
                         <li t-if="question.post_type == 'question'" class="list-inline-item">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
-                                t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
+                                t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''} text-primary"
                                 t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
                                 t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
                                 Comment
@@ -963,7 +962,7 @@
                 <ul class="list-inline float-right mb0">
                     <li t-if="question.post_type == 'question' and not (len(answer.website_message_ids))"
                         class="list-inline-item">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''} text-primary"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                             style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
@@ -987,7 +986,7 @@
                     </li>
                     <li class="list-inline-item">
                         <a t-attf-style="cursor: pointer;#{not answer.can_flag and 'color:#999;' or ''}"
-                            t-attf-class="flag fa fa-flag #{not answer.can_flag and 'karma_required' or ''}"
+                            t-attf-class="flag fa fa-flag #{not answer.can_flag and 'karma_required' or ''} text-primary"
                             t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
                             t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag">
                             <t t-if="answer.state == 'flagged'">Flagged</t>
@@ -1031,7 +1030,7 @@
                 <div class="offset-md-2 col-md-2">
                     <ul class="list-inline mb0">
                         <li t-if="question.post_type == 'question'" class="list-inline-item">
-                            <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                            <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''} text-primary"
                                 t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                                 style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
                                 t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
@@ -1413,7 +1412,7 @@
                 </div>
                 <t t-if="uid == user.id">
                     <div>
-                        <a t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"><i class="fa fa-arrow-right"/>Edit Your Profile</a>
+                        <a t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit" class="mt-1 d-block"><i class="fa fa-arrow-right"/>Edit Your Profile</a>
                     </div>
                 </t>
             </div>
@@ -1514,7 +1513,7 @@
     </table>
     <div class="mb16" t-if="not user.badge_ids">
         <b>No badge yet!</b><br/>
-        <a t-attf-href="/forum/#{ slug(forum) }/badge" class="fa fa-arrow-right"> Check available badges</a>
+        <a t-attf-href="/forum/#{ slug(forum) }/badge" class="fa fa-arrow-right mt-1 d-block"> Check available badges</a>
     </div>
 </template>
 

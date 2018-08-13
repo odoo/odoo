@@ -38,27 +38,27 @@
             </h2>
 
             <div class="row mt32 mb32" id="informations">
-                <div t-if="doc.client_order_ref" class="col-3">
+                <div t-if="doc.client_order_ref" class="col-sm-6 col-md-3">
                     <strong>Your Reference:</strong>
                     <p t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-3">
+                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-sm-6 col-md-3">
                     <strong>Date Ordered:</strong>
                     <p t-field="doc.confirmation_date"/>
                 </div>
-                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-3">
+                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-sm-6 col-md-3">
                     <strong>Quotation Date:</strong>
                     <p t-field="doc.date_order"/>
                 </div>
-                <div t-if="doc.user_id.name" class="col-3">
+                <div t-if="doc.user_id.name" class="col-sm-6 col-md-3">
                     <strong>Salesperson:</strong>
                     <p t-field="doc.user_id"/>
                 </div>
-                <div name="payment_term" t-if="doc.payment_term_id" class="col-3">
+                <div name="payment_term" t-if="doc.payment_term_id" class="col-sm-6 col-md-3">
                     <strong>Payment Terms:</strong>
                     <p t-field="doc.payment_term_id"/>
                 </div>
-                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-3">
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-sm-6 col-md-3">
                     <strong>Expiration Date:</strong>
                     <p t-field="doc.validity_date"/>
                 </div>

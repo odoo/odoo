@@ -9,7 +9,7 @@
                 <section>
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-12 mt-4">
                                 <h1 class="text-center">Our Members Directory</h1>
                                 <h3 class="text-muted text-center">Find a business partner</h3>
                             </div>
@@ -33,7 +33,7 @@
                 </ul>
             </div>
             <div class="col-lg-8" id="ref_content">
-                <div class='navbar'>
+                <div class='navbar float-right'>
                     <t t-call="website.pager">
                        <t t-set="classname">float-left</t>
                     </t>
@@ -43,7 +43,7 @@
                         </t>
                     </form>
                 </div>
-                <div>
+                <div class="mt-5">
                     <t t-if="not memberships_partner_ids">
                         <p>No result found.</p>
                     </t>
