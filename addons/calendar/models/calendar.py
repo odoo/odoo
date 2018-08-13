@@ -783,6 +783,7 @@ class Meeting(models.Model):
     description = fields.Text('Description', states={'done': [('readonly', True)]})
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
     location = fields.Char('Location', states={'done': [('readonly', True)]}, track_visibility='onchange', help="Location of Event")
+    location_id = fields.Many2one('res.partner', 'Location of Contact', states={'done': [('readonly', True)]}, track_visibility='onchange', help="Location of Event taken from Partner Address")
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
 
     # linked document
@@ -956,6 +957,11 @@ class Meeting(models.Model):
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
         self.stop = self.stop_date
+
+    @api.onchange('location_id')
+    def _onchange_location_id(self):
+        if self.location_id:
+            self.location = self.location_id._display_address(without_company=False).replace('\n', ', ')
 
     ####################################################
     # Calendar Business, Reccurency, ...
