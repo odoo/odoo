@@ -62,7 +62,7 @@
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="6"/>
-                                <th>Description</th>
+                                <th class="text-left">Description</th>
                                 <th class="d-none">Source Document</th>
                                 <th class="text-right">Quantity</th>
                                 <th class="text-right d-none d-md-table-cell">Unit Price</th>
@@ -155,7 +155,7 @@
                     </table>
 
                     <div class="clearfix">
-                        <div id="total" class="row">
+                        <div id="total" class="row float-right">
                             <div t-attf-class="col-md-4 float-right #{'col-4' if not type_html else ''}">
                                 <table class="table table-sm" style="min-width: 250px;max-width: 400px;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">
