@@ -271,23 +271,24 @@ DebugManager.include({
         });
     },
     get_view_fields: function () {
-        var self = this;
-        var model = this._action.res_model;
+        var model = this._action.res_model,
+            self = this;
         this._rpc({
-                model: model,
-                method: 'fields_get',
-                kwargs: {
-                    attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
-                },
-            })
-            .done(function (fields) {
-                new Dialog(self, {
-                    title: _.str.sprintf(_t("Fields of %s"), model),
-                    $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
-                        fields: fields
-                    }))
-                }).open();
+            model: 'ir.model',
+            method: 'search',
+            args: [[['model', '=', model]]]
+        }).done(function (ids) {
+            self.do_action({
+                res_model: 'ir.model.fields',
+                name: _t('View Fields'),
+                views: [[false, 'list'], [false, 'form']],
+                domain: [['model_id', '=', model]],
+                type: 'ir.actions.act_window',
+                context: {
+                    'default_model_id': ids[0]
+                }
             });
+        });
     },
     manage_filters: function () {
         this.do_action({

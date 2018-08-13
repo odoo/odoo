@@ -259,17 +259,6 @@
         </t>
     </t>
 </t>
-<t t-name="WebClient.DebugManager.Action.Fields">
-    <dl><t t-foreach="fields" t-as="field">
-        <dt><h4><t t-esc="field"/></h4></dt>
-        <dd>
-            <dl><ul role="menu"><li role="menuitem" t-foreach="field_value" t-as="attribute">
-                <strong><t t-esc="attribute"/></strong>:
-                <t t-esc="attribute_value"/>
-            </li></ul></dl>
-        </dd>
-    </t></dl>
-</t>
 <t t-name="WebClient.DebugManager.View">
     <t t-if="view">
         <div role="separator" class="dropdown-divider"/>
