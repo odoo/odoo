@@ -29,6 +29,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @param {string} [params.data.state] if 'folded', the livechat is folded.
      *   This is ignored if `folded` is provided and is a boolean value.
      * @param {string} params.data.uuid the UUID of this livechat.
+     * @param {string} params.data.closed the close state of this livechat window.
      * @param {im_livechat.im_livechat.LivechatButton} params.parent
      */
     init: function (params) {
@@ -38,6 +39,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         this._members = [];
         this._operatorPID = params.data.operator_pid;
         this._uuid = params.data.uuid;
+        this._closed = params.data.closed || false;
 
         if (params.data.message_unread_counter !== undefined) {
             this._unreadCounter = params.data.message_unread_counter;
@@ -91,6 +93,14 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
         this._incrementUnreadCounter();
     },
     /**
+     * States whether the livechat is closed or not.
+     *
+     * @returns {boolean}
+     */
+    isClosed: function () {
+        return this._closed;
+    },
+    /**
      * AKU: hack for the moment
      *
      * @param {im_livechat.model.WebsiteLivechatMessage[]} messages
@@ -104,12 +114,21 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
     toData: function () {
         return {
             folded: this.isFolded(),
+            closed: this.isClosed(),
             id: this.getID(),
             message_unread_counter: this.getUnreadCounter(),
             operator_pid: this.getOperatorPID(),
             name: this.getName(),
             uuid: this.getUUID(),
         };
+    },
+    /**
+     * Updates the close state of the livechat
+     *
+     * @param {boolean} closed
+     */
+    updateCloseState: function (closed) {
+        this._closed = closed;
     },
 
     //--------------------------------------------------------------------------

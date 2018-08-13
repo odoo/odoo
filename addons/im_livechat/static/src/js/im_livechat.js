@@ -96,6 +96,11 @@ var LivechatButton = Widget.extend({
         this.$el.text(this.options.button_text);
         if (this._history) {
             _.each(this._history.reverse(), this._addMessage.bind(this));
+            var cookie = JSON.parse(utils.get_cookie('im_livechat_session'));
+            if (cookie.closed) {
+                // if chat window is closed then do not open it on refresh/menu change as we do not destroy session on chat window close
+                this._doNotOpenChatWindow = true;
+            }
             this._openChat();
         } else if (!config.device.isMobile && this._rule.action === 'auto_popup') {
             var autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
@@ -119,6 +124,10 @@ var LivechatButton = Widget.extend({
      * @param {Object} [options={}]
      */
     _addMessage: function (data, options) {
+        // if message already there in this._messages then don't add it again
+        if (_.findIndex(this._messages, {_id: data.id}) !== -1) {
+            return;
+        }
         options = _.extend({}, this.options, options, {
             serverURL: this._serverURL,
         });
@@ -150,7 +159,9 @@ var LivechatButton = Widget.extend({
      */
     _closeChat: function () {
         this._chatWindow.destroy();
-        utils.set_cookie('im_livechat_session', "", -1); // remove cookie
+        // set channel as closed instead of destroying session
+        this._livechat.updateCloseState(true);
+        utils.set_cookie('im_livechat_session', JSON.stringify(this._livechat.toData()), 60*20);
     },
     /**
      * @private
@@ -178,6 +189,13 @@ var LivechatButton = Widget.extend({
                     this._livechat.unregisterTyping({ partnerID: partnerID });
                 }
             } else { // normal message
+                // re-open chat window if message received from operator(as session is not destroyed on chat window close)
+                if (this._livechat.isClosed() && this._livechat.getOperatorPID()[0] === notification[1].author_id[0]) {
+                    this._livechat.updateCloseState(false);
+                    this._openChatWindow();
+                    this._sendWelcomeMessage();
+                    utils.set_cookie('im_livechat_session', JSON.stringify(this._livechat.toData()), 60*60);
+                }
                 this._addMessage(notification[1]);
                 this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
@@ -229,9 +247,14 @@ var LivechatButton = Widget.extend({
                     parent: self,
                     data: livechatData
                 });
-                self._openChatWindow();
-                self._sendWelcomeMessage();
-                self._renderMessages();
+                if (self._doNotOpenChatWindow) {
+                    self._doNotOpenChatWindow = false;
+                } else {
+                    self._livechat.updateCloseState(false);
+                    self._openChatWindow();
+                    self._sendWelcomeMessage();
+                    self._renderMessages();
+                }
 
                 self.call('bus_service', 'addChannel', self._livechat.getUUID());
                 self.call('bus_service', 'startPolling');
@@ -360,7 +383,9 @@ var LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners: function (ev) {
         ev.stopPropagation();
-        this._chatWindow.renderTypingNotificationBar();
+        if (this._chatWindow) {
+            this._chatWindow.renderTypingNotificationBar();
+        }
     },
     /**
      * @private
