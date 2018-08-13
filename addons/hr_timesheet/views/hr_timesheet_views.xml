@@ -43,8 +43,8 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="project_id" required="1"/>
-                    <field name="task_id" context="{'default_project_id': project_id}"/>
-                    <field name="unit_amount" string="Time (Hours)" sum="Total time" widget="float_time"/>
+                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="unit_amount" widget="timesheet_uom"/>
                 </tree>
             </field>
         </record>
@@ -70,7 +70,7 @@
                 <pivot string="Timesheet">
                     <field name="employee_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
-                    <field name="unit_amount" type="measure"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
                 </pivot>
             </field>
         </record>
@@ -93,7 +93,7 @@
                             </group>
                             <group>
                                 <field name="amount"/>
-                                <field name="unit_amount"/>
+                                <field name="unit_amount" widget="timesheet_uom"/>
                                 <field name="currency_id" invisible="1"/>
                             </group>
                         </group>
@@ -184,7 +184,7 @@
                                     <t t-esc="record.date.value"/>
                                 </span>
                                 <span class="float-right">
-                                    <strong>Duration: </strong><field name="unit_amount" widget="float_time"/>
+                                    <strong>Duration: </strong><field name="unit_amount" widget="timesheet_uom"/>
                                 </span>
                             </div>
                         </t>
@@ -201,7 +201,9 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
-            <field name="context">{"search_default_week":1}</field>
+            <field name="context">{
+                "search_default_week":1,
+            }</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -256,7 +258,7 @@
                 'search_default_week':1,
                 'search_default_groupby_employee':1,
                 'search_default_groupby_project':1,
-                'search_default_groupby_task':1
+                'search_default_groupby_task':1,
             }</field>
         </record>
 

@@ -173,6 +173,21 @@ function formatFloat(value, field, options) {
     return formatted.join(l10n.decimal_point);
 }
 
+
+/**
+ * Returns a string representing a float value, from a float converted with a
+ * factor.
+ *
+ * @param {number} value
+ * @param {number} [options.factor]
+ *          Conversion factor, default value is 1.0
+ * @returns {string}
+ */
+function formatFloatFactor(value, field, options) {
+    var factor = options.factor || 1;
+    return formatFloat(value * factor, field, options);
+}
+
 /**
  * Returns a string representing a time value, from a float.  The idea is that
  * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
@@ -528,6 +543,18 @@ function parseMonetary(value, field, options) {
     return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
 }
 
+/**
+ * Parse a String containing float and unconvert it with a conversion factor
+ *
+ * @param {number} [options.factor]
+ *          Conversion factor, default value is 1.0
+ */
+function parseFloatFactor(value, field, options) {
+    var parsed = parseFloat(value);
+    var factor = options.factor || 1.0;
+    return parsed / factor;
+}
+
 function parseFloatTime(value) {
     var factor = 1;
     if (value[0] === '-') {
@@ -596,6 +623,7 @@ return {
         date: formatDate,
         datetime: formatDateTime,
         float: formatFloat,
+        float_factor: formatFloatFactor,
         float_time: formatFloatTime,
         html: _.identity, // todo
         integer: formatInteger,
@@ -615,6 +643,7 @@ return {
         date: parseDate, // todo
         datetime: parseDateTime, // todo
         float: parseFloat,
+        float_factor: parseFloatFactor,
         float_time: parseFloatTime,
         html: _.identity, // todo
         integer: parseInteger,

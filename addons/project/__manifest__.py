@@ -10,7 +10,6 @@
     'summary': 'Organize and schedule your projects ',
     'depends': [
         'base_setup',
-        'product',
         'mail',
         'portal',
         'rating',
