@@ -62,9 +62,9 @@ class CustomerPortal(CustomerPortal):
         return request.redirect(order_sudo.get_portal_url())
 
     @http.route(['/my/orders/<int:order_id>/update_line'], type='json', auth="public", website=True)
-    def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
+    def update(self, line_id, remove=False, unlink=False, order_id=None, access_token=None, **post):
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
 
@@ -75,7 +75,7 @@ class CustomerPortal(CustomerPortal):
             return False
         if unlink:
             order_line.unlink()
-            return False
+            return False  # return False to reload the page, the line must move back to options and the JS doesn't handle it
         number = -1 if remove else 1
         quantity = order_line.product_uom_qty + number
         order_line.write({'product_uom_qty': quantity})

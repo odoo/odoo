@@ -18,7 +18,7 @@ if (!$('.o_portal_sale_sidebar').length) {
             ev.preventDefault();
             var self = this;
             var href = this.$el.attr("href");
-            var order_id = href.match(/order_id=([0-9]+)/);
+            var order_id = href.match(/my\/orders\/([0-9]+)/);
             var line_id = href.match(/update_line\/([0-9]+)/);
             var params = {
                 'line_id': line_id[1],

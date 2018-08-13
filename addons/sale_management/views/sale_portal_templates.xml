@@ -80,6 +80,9 @@
         </xpath>
 
         <xpath expr="//section[@id='details']//div[@id='quote_qty']" position="replace">
+            <!--
+                TODO SEB hide this in certain cases, at least when it's not OK to use it: not draft or sent, 
+            -->
             <div class="input-group oe_website_spinner">
                 <div class="input-group-prepend d-print-none">
                     <span class="input-group-text">

@@ -174,18 +174,18 @@
                             <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
                         </div>
 
-                        <div t-if="sale_order.validity_date and not sale_order.is_expired and sale_order.state in ['draft', 'sent']" class="pl-3 pr-3">
+                        <div t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']" class="pl-3 pr-3">
                             <input type="hidden" t-att-value="sale_order.validity_date" id="validity_date"/>
-                            <div class="mt8" t-if="remaining_validity_days &gt; 0">
+                            <div class="mt8" t-if="sale_order.remaining_validity_days &gt; 0">
                                 <hr class="mb0"/>
                                 <strong>This offer expires in</strong>
                                 <div class="day_counter mt8 mb16">
                                     <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
-                                    <t t-esc="remaining_validity_days"/>
-                                    <t t-if="remaining_validity_days &gt; 1">
+                                    <t t-esc="sale_order.remaining_validity_days"/>
+                                    <t t-if="sale_order.remaining_validity_days &gt; 1">
                                         days
                                     </t>
-                                    <t t-if="remaining_validity_days &lt;= 1">
+                                    <t t-if="sale_order.remaining_validity_days &lt;= 1">
                                         day
                                     </t>
                                 </div>
