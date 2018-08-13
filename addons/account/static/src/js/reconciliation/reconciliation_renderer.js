@@ -19,7 +19,6 @@ var _t = core._t;
 var StatementRenderer = Widget.extend(FieldManagerMixin, {
     template: 'reconciliation.statement',
     events: {
-        'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
         'click div:first h1.statement_name': '_onClickStatementName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
@@ -166,12 +165,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onAutoReconciliation: function () {
-        this.trigger_up('auto_reconciliation');
-    },
     /**
      * @private
      */

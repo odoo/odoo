@@ -713,57 +713,6 @@ class AccountBankStatementLine(models.Model):
                     excluded_ids = (excluded_ids or []) + [line_id]
         return results
 
-    @api.multi
-    def auto_reconcile(self):
-        def _process_reconciliation(stmt_line, amls):
-            counterpart_aml_dicts = []
-            payment_aml_rec = self.env['account.move.line']
-            for aml in amls:
-                if aml.account_id.internal_type == 'liquidity':
-                    payment_aml_rec = (payment_aml_rec | aml)
-                else:
-                    amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
-                    counterpart_aml_dicts.append({
-                        'name': aml.name if aml.name != '/' else aml.move_id.name,
-                        'debit': amount < 0 and -amount or 0,
-                        'credit': amount > 0 and amount or 0,
-                        'move_line': aml
-                    })
-
-            try:
-                with self._cr.savepoint():
-                    counterpart = stmt_line.process_reconciliation(
-                        counterpart_aml_dicts=counterpart_aml_dicts, payment_aml_rec=payment_aml_rec)
-                return counterpart
-            except UserError:
-                # A configuration / business logic error that makes it impossible to auto-reconcile should not be raised
-                # since automatic reconciliation is just an amenity and the user will get the same exception when manually
-                # reconciling. Other types of exception are (hopefully) programming errors and should cause a stacktrace.
-                self.invalidate_cache()
-                self.env['account.move'].invalidate_cache()
-                self.env['account.move.line'].invalidate_cache()
-                return False
-
-        matching_amls = self._get_matching_amls()
-
-        reconciled_lines = self.env['account.bank.statement.line']
-        for match in matching_amls.values():
-            st_line = match['line']
-
-            if match.get('aml_ids'):
-                amls = self.env['account.move.line'].browse(match['aml_ids'])
-
-                total_residual = sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in amls)
-                line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
-                line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
-                if not float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):
-                    continue
-
-                if _process_reconciliation(st_line, amls):
-                    reconciled_lines += st_line
-
-        return reconciled_lines
-
     def _prepare_reconciliation_move(self, move_ref):
         """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
             through model inheritance (make sure to call super() to establish a clean extension chain).

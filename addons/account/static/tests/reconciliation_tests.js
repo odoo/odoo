@@ -1246,37 +1246,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation auto reconciliation', function (assert) {
-        assert.expect(6);
-
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-
-        testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
-        });
-        clientAction.appendTo($('#qunit-fixture'));
-
-        clientAction.$('button.o_automatic_reconciliation').trigger('click');
-
-        assert.strictEqual(clientAction.$('.progress .valuenow').text(), "1", "should reconciled one line");
-        assert.strictEqual(clientAction.$('.progress .valuemax').text(), "4", "should have maximum 4 lines to reconciled");
-        assert.strictEqual(clientAction.$('thead .cell_label').text().replace(/[\n\r\s$,]+/g, ' '),
-            "SAJ/2014/002 and SAJ/2014/003 Bank fees First 2000 € of SAJ/2014/001 ", "should rest 3 lines to reconciled");
-        assert.ok(clientAction.$('.notification_area .notification').length, "should display the notification");
-        var do_action = false;
-        clientAction.on('do_action', clientAction, function (data) {
-            do_action = data.data.action;
-        });
-        clientAction.$('.notification_area a.fa-external-link').trigger('click');
-        assert.deepEqual(_.pick(do_action, "res_model", "domain", "type"),
-            {"res_model":"account.move", "domain":[['id',"in",[143]]], "type":"ir.actions.act_window"},
-            "should try to open the record form view");
-        clientAction.$('.notification_area .close').trigger('click');
-        assert.notOk(clientAction.$('.notification_area .notification').length, "should close the notification");
-
-        clientAction.destroy();
-    });
-
     QUnit.test('Reconciliation manual', function (assert) {
         assert.expect(13);
 

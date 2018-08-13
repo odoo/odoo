@@ -162,35 +162,6 @@ var StatementModel = BasicModel.extend({
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
-     * send information 'account.reconciliation.widget' model to reconciliate
-     * lines, call rpc to 'auto_reconcile'
-     * Update the number of validated line
-     *
-     * @returns {Deferred<Object>} resolved with an object who contains
-     *   'handles' key and 'notifications'
-     */
-    autoReconciliation: function () {
-        var self = this;
-        var ids = _.pluck(_.filter(this.lines, {'reconciled': false}), 'id');
-        return this._rpc({
-                model: 'account.reconciliation.widget',
-                method: 'auto_reconcile',
-                args: [ids, self.valuenow],
-            })
-            .then(function (result) {
-                var reconciled_ids = _.difference(ids, result.st_lines_ids);
-                self.valuenow += reconciled_ids.length;
-                result.handles = [];
-                _.each(self.lines, function (line, handle) {
-                    if (reconciled_ids.indexOf(line.id) !== -1) {
-                        line.reconciled = true;
-                        result.handles.push(handle);
-                    }
-                });
-                return result;
-            });
-    },
-    /**
      * change the filter for the target line and fetch the new matched lines
      *
      * @param {string} handle

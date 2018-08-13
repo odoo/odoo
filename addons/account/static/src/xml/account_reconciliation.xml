@@ -26,7 +26,6 @@
                 </div>
                 <div aria-valuemin="0" t-att-aria-valuenow="widget._initialState.valuenow" class="progress-bar" role="progressbar" style="width: 0%;" t-att-aria-valuemax="widget._initialState.valuemax"></div>
             </div>
-            <button class="btn btn-secondary o_automatic_reconciliation float-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
             <div class="notification_area"/>
         </div>
         <div class="o_reconciliation_lines"/>
@@ -45,7 +44,6 @@
     <t t-jquery="div:first" t-operation="attributes">
         <attribute name="class">o_manual_statement</attribute>
     </t>
-    <t t-jquery="h1:last, .progress, .o_automatic_reconciliation" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation p" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation" t-operation="append">
         <p><b>Good Job!</b> There is nothing to reconcile.</p>

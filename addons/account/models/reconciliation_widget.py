@@ -16,45 +16,6 @@ class AccountReconciliation(models.AbstractModel):
     ####################################################
 
     @api.model
-    def auto_reconcile(self, st_line_ids, num_already_reconciled_lines=0):
-        """ Use statement line auto_reconcile method and return the details
-            to the widget interface.
-
-            :param st_line_ids: ids of the statement lines to reconciliate
-            :param num_already_reconciled_lines: number of reconcilied lines
-                used to increment the progress bar in the interface in function
-                of the real number of reconcilied lines.
-        """
-        st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
-        automatic_reconciliation_entries = self.env['account.bank.statement.line']
-        reconciled_st_lines = st_lines.auto_reconcile()
-        automatic_reconciliation_entries += reconciled_st_lines
-        unreconciled = st_lines - reconciled_st_lines
-
-        # Collect various information for the reconciliation widget
-        notifications = []
-        num_auto_reconciled = len(automatic_reconciliation_entries)
-        if num_auto_reconciled > 0:
-            auto_reconciled_message = num_auto_reconciled > 1 \
-                and _("%d transactions were automatically reconciled.") % num_auto_reconciled \
-                or _("1 transaction was automatically reconciled.")
-            notifications += [{
-                'type': 'info',
-                'message': auto_reconciled_message,
-                'details': {
-                    'name': _("Automatically reconciled items"),
-                    'model': 'account.move',
-                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').mapped('move_id').ids
-                }
-            }]
-        return {
-            'st_lines_ids': unreconciled.ids,
-            'notifications': notifications,
-            'statement_name': False,
-            'num_already_reconciled_lines': num_auto_reconciled + num_already_reconciled_lines,
-        }
-
-    @api.model
     def process_bank_statement_line(self, st_line_ids, data):
         """ Handles data sent from the bank statement reconciliation widget
             (and can otherwise serve as an old-API bridge)
