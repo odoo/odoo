@@ -362,10 +362,21 @@ snippets_editor.Class.include({
 
             if (first_choice) {
                 self._registerDefaultTexts($new_wrapper_content);
+                if(theme_params.name == 'basic') {
+                    $editable_area.focusIn();
+                }
             }
             self._disableUndroppableSnippets();
         }
     },
+    cleanForSave: function () {
+        this._super.apply(this, arguments);
+        // remove font-family from all elements for plain text theme (just like gmail)
+        var $basicTheme = this.$editable.find('.o_basic_theme');
+        if($basicTheme.length && this.$editable.data('oe-model') === 'mail.mass_mailing') {
+            this.$editable.find('*').css('font-family', '');
+        }
+    }
 });
 
 var callback = window ? window["callback"] : undefined;
