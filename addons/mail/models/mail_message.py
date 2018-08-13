@@ -1020,7 +1020,7 @@ class Message(models.Model):
         res = self.env['mail.followers']._get_recipient_data(record, subtype_id, pids, cids)
         author_id = msg_vals.get('author_id') or self.author_id.id if res else False
         for pid, cid, active, pshare, ctype, notif, groups in res:
-            if pid and pid == author_id:  # do not notify the author of its own messages
+            if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
