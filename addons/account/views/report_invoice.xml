@@ -52,11 +52,6 @@
 
                     <!-- Is there a discount on at least one line? -->
                     <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
-                    <!-- show only in sale invoice -->
-                    <t t-set="type_is_out" t-value="o.type == 'out_invoice'"/>
-                    <!-- if Rounding Method is computed per line -->
-                    <t t-set="display_taxamount"
-                       t-value="o.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
 
                     <table class="table table-condensed" name="invoice_line_table">
                         <thead>
@@ -67,7 +62,6 @@
                                 <th class="text-right">Unit Price</th>
                                 <th t-if="display_discount" class="text-right">Disc.(%)</th>
                                 <th class="text-right">Taxes</th>
-                                <th t-if="display_taxamount and type_is_out" class="text-right">Tax Amount</th>
                                 <th class="text-right">Amount</th>
                             </tr>
                         </thead>
@@ -88,13 +82,6 @@
                                 <td class="text-right">
                                     <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
                                 </td>
-                                <td t-if="display_taxamount and type_is_out" class="text-right">
-                                    <t t-set="taxes"
-                                       t-value="l.invoice_line_tax_ids.compute_all(l.price_unit, l.currency_id, l.quantity)"/>
-                                    <t t-set="tax_amount"
-                                       t-value="taxes and (taxes['total_included'] - taxes['base']) or 0.0"/>
-                                    <span t-esc="tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                </td>
                                 <td class="text-right" id="subtotal">
                                     <span t-field="l.price_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
@@ -106,7 +93,6 @@
                                 <td></td>
                                 <td></td>
                                 <td t-if="display_discount"></td>
-                                <td t-if="display_taxamount and type_is_out"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
