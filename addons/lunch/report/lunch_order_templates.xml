@@ -34,8 +34,7 @@
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <strong>
-                                                <span t-esc="sum(line.price for line in lines)"/>
-                                                <span t-field="user.company_id.currency_id.symbol"/>
+                                                <span t-esc="sum(line.price for line in lines)" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                                             </strong>
                                         </td>
                                     </tr>
