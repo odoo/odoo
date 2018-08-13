@@ -52,7 +52,7 @@ class GoogleMap(http.Controller):
         else:
             partner_url = '/partners/'
 
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
         values = {
             'partner_url': partner_url,
             'partner_data': json.dumps(partner_data),
