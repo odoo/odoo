@@ -58,11 +58,13 @@
                     <group col="6" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
                         <field name="base" colspan="6"/>
 
-                        <span class="o_form_label">New Price =</span>
-                        <div>
-                            <span attrs="{'invisible':[('base', '!=', 'list_price')]}">Public Price  -  </span>
-                            <span attrs="{'invisible':[('base', '!=', 'standard_price')]}">Cost  -  </span>
-                            <span attrs="{'invisible':[('base', '!=', 'pricelist')]}">Other Pricelist  -  </span>
+                        <div colspan="2" class="row o_td_label">
+                            <span class="o_form_label col-md-6">New Price =</span>
+                            <span class="col-md-6 pl-2">
+                                <span attrs="{'invisible':[('base', '!=', 'list_price')]}">Public Price  -  </span>
+                                <span attrs="{'invisible':[('base', '!=', 'standard_price')]}">Cost  -  </span>
+                                <span attrs="{'invisible':[('base', '!=', 'pricelist')]}">Other Pricelist  -  </span>
+                            </span>
                         </div>
                         <label for="price_discount"/>
                         <div class="o_row">
