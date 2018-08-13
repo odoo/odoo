@@ -288,6 +288,7 @@ class AccountVoucher(models.Model):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
+                'product_id': line.product_id.id,
                 'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
