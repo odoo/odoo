@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="web_editor.dialog.image">
+    <t t-jquery=".card-body .form-inline" t-operation="append">
+        <div class="ml8">
+            <span class="text-muted">— or —</span>
+            <input type="text" class="form-control unsplash_search mr8" placeholder="Search from Unsplash" style="width: 250px;"/>
+        </div>
+    </t>
+    <t t-jquery=".existing-attachments" t-operation="after">
+        <div class="unsplash_img_container"></div>
+    </t>
+</t>
+
+<t t-name="web_unsplash.dialog.image.content">
+    <div class="row mt16" t-as="row" t-foreach="rows">
+        <div class="col-sm-2 o_unsplash_img_cell" t-as="img" t-foreach="row">
+            <div class="o_image o_webimage" t-att-data-imgid="img.id" t-att-data-url="img.urls.regular" t-att-data-download-url="img.links.download_location">
+                <img class="img-fluid" t-att-src="img.urls.thumb" />
+            </div>
+            <div class="author_name text-center"><a t-att-href="img.user.links.html" target="_blank"><t t-esc="img.user.name"/></a></div>
+        </div>
+    </div>
+    <div class="row mt16" t-if="rows.length == 0">
+        <div class="text-center text-muted not-found">
+            <i class="fa fa-camera mr8"/> Photos not found
+        </div>
+    </div>
+</t>
+
+<t t-name="web_unsplash.dialog.error.content">
+    <div class="row mt16 text-muted unsplash_error">
+        <t t-if="key_not_found">
+            <div class="text-center">
+                <p class="title">
+                    Access key is not set
+                </p>
+                <div class="details">
+                    <a href="https://unsplash.com/oauth/applications" target="_blank"><i class="fa fa-arrow-right"/> Generate an access key</a>
+                    <div>
+                        <div class="form-group btn-group access_key_box">
+                            <input type="text" class="form-control float-left" id="accessKeyInput" placeholder="Paste your access key here"/>
+                            <button type="button" class="btn btn-primary access_key">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-elif="status == 403">
+            <div class="text-center">
+                <p class="title">
+                    Search is temporary unavailable
+                </p>
+                <div class="details">
+                    The max number of searches is exceeded. Please retry in an hour or extend to a better account.
+                </div>
+            </div>
+        </t>
+        <t t-elif="status == 401">
+            <div class="text-center">
+                <p class="title">
+                    Unauthorized Key
+                </p>
+                <div class="details">
+                    Please check your unsplash api key.
+                    <div>
+                        <div class="form-group btn-group mt16 access_key_box">
+                            <input type="text" class="form-control float-left" id="accessKeyInput" placeholder="Paste your access key here"/>
+                            <button type="button" class="btn btn-primary access_key">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="text-center">
+                <p class="title">
+                    Something went wrong
+                </p>
+                <div class="details">
+                    Please check your internet connection or contact administrator.
+                </div>
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>
