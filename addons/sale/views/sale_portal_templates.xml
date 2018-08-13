@@ -144,6 +144,7 @@
                 <!-- Sidebar -->
                 <div class="col-lg-3 d-print-none">
                     <div class="bs-sidebar">
+                        <!-- TODO SEB add sale order total here, like invoice for the style -->
                         <t t-if="sale_order.team_id.team_type != 'website'">
                             <div class="text-center" t-if="sale_order.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
                                 <t t-set="show_hr" t-value="False"/>
@@ -313,7 +314,7 @@
 
                     <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
-                            <form id="decline" method="POST" t-attf-action="/my+orders/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
+                            <form id="decline" method="POST" t-attf-action="/my/orders/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
                                     <h4 class="modal-title">Reject This Quotation</h4>
@@ -333,7 +334,7 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-warning alert-dismissable d-print-none" t-if="sale_order.state == 'cancel'" role="alert">
+                    <div class="alert alert-danger alert-dismissable d-print-none" t-if="sale_order.state == 'cancel'" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
                         <strong>This quotation has been canceled.</strong> Contact us to get a new quotation.
                     </div>

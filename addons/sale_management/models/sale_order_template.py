@@ -26,7 +26,7 @@ class SaleOrderTemplate(models.Model):
     sale_order_template_option_ids = fields.One2many('sale.order.template.option', 'sale_order_template_id', 'Optional Lines', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
-    require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature, help='Request a digital signature to the customer in order to confirm orders automatically.')
+    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, help='Request a online signature to the customer in order to confirm orders automatically.')
     require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment, help='Request an electronic payment to the customer in order to confirm orders automatically.')
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',

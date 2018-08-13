@@ -164,6 +164,7 @@ class CustomerPortal(CustomerPortal):
 
         transaction = order_sudo.get_portal_last_transaction()
 
+        # TODO SEB fix breadcrumbs -> should always be visible (or at least no home alone)
         values = {
             'sale_order': order_sudo,
             'message': int(message) if message else False,

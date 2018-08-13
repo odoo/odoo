@@ -30,7 +30,7 @@
         <xpath expr="//section[@id='signature']" position="after">
             <t t-if="any([(not option.line_id) for option in sale_order.sale_order_option_ids])">
                 <section>
-                    <h1 class="page-header">Suggested Products</h1>
+                    <h1 class="page-header">Optional Products</h1>
                 </section>
                 <section>
                     <div style="overflow-x:auto;">

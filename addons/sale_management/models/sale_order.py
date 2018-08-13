@@ -42,9 +42,9 @@ class SaleOrder(models.Model):
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature,
+    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature,
                                        states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
-                                       help='Request a digital signature to the customer in order to confirm orders automatically.')
+                                       help='Request a online signature to the customer in order to confirm orders automatically.')
     require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment,
                                      states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
                                      help='Request an electronic payment to the customer in order to confirm orders automatically.')
