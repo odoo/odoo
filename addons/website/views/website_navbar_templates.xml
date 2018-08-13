@@ -77,6 +77,21 @@
                     <li class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
+                    <li groups="website.group_multi_website">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_selected_website['name']"/></a>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach="multi_website_websites" t-as="multi_website_website">
+                                <a role="menuitem" href="#"
+                                    t-if="multi_website_selected_website['website_id'] != multi_website_website['website_id']"
+                                    class="dropdown-item oe_menu_text js_multi_website_switch"
+                                    t-att-website-id="str(multi_website_website['website_id'])"
+                                >
+                                    <span t-esc="multi_website_website['name']" />
+                                </a>
+                            </t>
+                        </div>
+                    </li>
+
                     <!-- Page Edition -->
                     <li class="o_new_content_menu" id="new-content-menu">
                         <a href="#"><span class="fa fa-plus"/>New</a>

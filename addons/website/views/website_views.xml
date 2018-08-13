@@ -14,27 +14,13 @@
             <field name="model">website</field>
             <field name="arch" type="xml">
                 <form string="Website Settings">
-                     <header>
-                        <button string="Apply" type="object" name="noop" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="noop" class="oe_link"/>
-                    </header>
                     <div name="domain">
                         <separator name="domain" string="Domain"/>
                         <group name="domain">
                             <field name="name"/>
                             <field name="domain"/>
+                            <field name="country_group_ids" widget="many2many_tags"/>
                             <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
-                        </group>
-                    </div>
-                    <div name="social_media">
-                        <separator string="Social Media"/>
-                        <group name="social_media">
-                            <field name="social_twitter" placeholder="https://twitter.com/Odoo"/>
-                            <field name="social_facebook" placeholder="https://www.facebook.com/odoo"/>
-                            <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
-                            <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo"/>
-                            <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline"/>
-                            <field name="social_github" placeholder="https://youraccount.github.io"/>
                         </group>
                     </div>
                     <div name="other">
@@ -55,8 +41,11 @@
             <field name="arch" type="xml">
                 <tree string="Websites">
                     <field name="name"/>
+                    <field name="domain"/>
+                    <field name="country_group_ids" widget="many2many_tags"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="default_lang_id"/>
+                    <field name="theme_id" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
@@ -77,6 +66,15 @@
             </field>
         </record>
 
+        <record id="action_website_list" model="ir.actions.act_window">
+            <field name="name">Websites</field>
+            <field name="res_model">website</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_website_tree"/>
+            <field name="target">current</field>
+        </record>
+
         <!-- website.redirect views -->
         <record id="website_redirect_form_view" model="ir.ui.view">
             <field name="name">website.redirect.form</field>
@@ -91,7 +89,7 @@
                                 <field name="url_to"/>
                             </group>
                             <group>
-                                <field name="website_id"/>
+                                <field name="website_id" groups="website.group_multi_website"/>
                                 <field name="active"/>
                             </group>
                         </group>
@@ -108,7 +106,7 @@
                     <field name="type"/>
                     <field name="url_from"/>
                     <field name="url_to"/>
-                    <field name="website_id"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active"/>
                     <field name="sequence" widget="handle" />
                 </tree>
@@ -137,6 +135,8 @@
                                 <field name="name"/>
                                 <field name="url"/>
                                 <field name="view_id"/>
+                                <field groups="base.group_no_one" name="is_published"/>
+                                <field groups="website.group_multi_website" name="website_id"/>
                             </group>
                             <group>
                                 <field name="website_indexed"/>
@@ -144,7 +144,6 @@
                                 <field name="date_publish"/>
                             </group>
                         </group>
-                        <field groups="base.group_no_one" name="website_ids"/>
                         <label for="menu_ids" string="Related Menu Items"/>
                         <field name="menu_ids"/>
                     </sheet>
@@ -156,11 +155,12 @@
             <field name="name">website.page.list</field>
             <field name="model">website.page</field>
             <field name="arch" type="xml">
-                <tree string="Website Pages">
+                <tree string="Website Pages" default_order="name">
                     <field name="name"/>
                     <field name="url"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="website_indexed"/>
-                    <field name="website_published"/>
+                    <field name="website_published" string="Page Published"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
@@ -193,7 +193,7 @@
                             <group>
                                 <field name="new_window"/>
                                 <field name="sequence"/>
-                                <field attrs="{'invisible': [('parent_id', '!=', False)]}" name="website_id"/>
+                                <field name="website_id" groups="website.group_multi_website"/>
                             </group>
                             <group>
                                 <field name="parent_id"/>
@@ -219,7 +219,7 @@
             <field name="arch" type="xml">
                 <tree string="Website menu" editable="bottom">
                     <field name="sequence" widget="handle"/>
-                    <field name="website_id" options="{'no_create': True}"/>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="name"/>
                     <field name="url"/>
                     <field name="new_window"/>
@@ -263,7 +263,7 @@
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="website_id" readonly="1"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="key" readonly="1"/>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />

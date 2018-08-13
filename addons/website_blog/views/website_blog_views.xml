@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Blogs">
                     <field name="name"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -26,6 +27,7 @@
                         <group>
                             <field name="name"/>
                             <field name="subtitle"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -45,6 +47,7 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="blog_id"/>
+                    <field name="website_id"/>
                     <field name="visits"/>
                     <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
@@ -73,6 +76,7 @@
                             <field name="name" placeholder="Blog Post Title"/>
                             <field name="subtitle" placeholder="Blog Subtitle"/>
                             <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="website_id" groups="website.group_multi_website"/>
                         </group>
                         <group string="Publishing Options">
                             <field name="author_id"/>

@@ -131,53 +131,6 @@ response = request.render("website.template_partner_comment", {
             <field name="domain">0.0.0.0</field>
         </record>
 
-        <record id="website2_homepage" model="ir.ui.view">
-            <field name="name">Home</field>
-            <field name="type">qweb</field>
-            <field name="key">website2.homepage</field>
-            <field name="arch" type="xml">
-                <t name="Home" priority="29" t-name="website2.homepage">
-                  <t t-call="website.layout">
-                    <div id="wrap" class="oe_structure oe_empty">
-                      <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
-                        <ol class="carousel-indicators d-none">
-                          <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
-                        </ol>
-                        <div class="carousel-inner">
-                          <div class="carousel-item image_text oe_img_bg active" style="background-image: url(http://0.0.0.0:8069/web/image/website.s_background_image_11);">
-                            <div class="container">
-                              <div class="row content">
-                                <div class="carousel-content col-lg-6 col-md-12">
-                                  <h2>Homepage 0.0.0.0</h2>
-                                  <h3>Click to customize this text</h3>
-                                  <p>
-                                    <a role="button" class="btn btn-success btn-large" href="/contactus">Contact us</a>
-                                  </p>
-                                </div>
-                                <span class="carousel-img col-lg-6 d-none d-lg-block"> </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="carousel-control-prev d-none" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" role="img" aria-label="Previous" title="Previous">
-                          <i class="fa fa-chevron-left"/>
-                        </div>
-                        <div class="carousel-control-next d-none" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" role="img" aria-label="Next" title="Next">
-                          <i class="fa fa-chevron-right"/>
-                        </div>
-                      </div>
-                    </div>
-                  </t>
-                </t>
-            </field>
-        </record>
-        <record id="website2_homepage_page" model="website.page">
-            <field name="website_published">True</field>
-            <field name="url">/</field>
-            <field name="view_id" ref="website2_homepage" />
-            <field name="website_ids" eval="[(4, ref('website2'))]" />
-        </record>
-
         <record id="website2_contactus" model="ir.ui.view">
             <field name="name">Contact Us</field>
             <field name="type">qweb</field>
@@ -216,29 +169,14 @@ response = request.render("website.template_partner_comment", {
             <field name="website_published">True</field>
             <field name="url">/contactus</field>
             <field name="view_id" ref="website2_contactus" />
-            <field name="website_ids" eval="[(4, ref('website2'))]" />
+            <field name="website_id" eval="ref('website2')" />
         </record>
 
         <!-- Menu & Homepage -->
-        <record id="website2" model="website">
-            <field name="homepage_id" ref="website2_homepage_page" />
-        </record>
-        <record id="website2_main_menu" model="website.menu">
-            <field name="name">Top Menu</field>
-            <field name="website_id" ref="website2"/>
-        </record>
-        <record id="website2_menu_homepage" model="website.menu">
-            <field name="name">Home</field>
-            <field name="url">/</field>
-            <field name="parent_id" ref="website.website2_main_menu"/>
-            <field name="sequence" type="int">10</field>
-            <field name="website_id" ref="website2"/>
-            <field name="page_id" ref="website2_homepage_page" />
-        </record>
         <record id="website2_menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
             <field name="url">/contactus</field>
-            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="parent_id" search="[('website_id', '=', ref('website2')), ('parent_id', '=', False)]"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="website2"/>
             <field name="page_id" ref="website2_contactus_page" />

@@ -45,7 +45,7 @@
             <li class="nav-item"><a aria-controls="advances_page_info" role="tab" data-toggle="tab" class="nav-link" href="#advances_page_info">Publish</a></li>
         </ul>
         <div class="tab-content mt16">
-            <div role="tabpanel" id="basic_page_info" class="tab-pane fade in active">
+            <div role="tabpanel" id="basic_page_info" class="tab-pane fade show active">
                 <div class="form-group row">
                     <label class="col-form-label col-md-3" for="page_name">Page Name</label>
                     <div class="col-md-9">
@@ -89,8 +89,8 @@
             </div>
             <div role="tabpanel" id="advances_page_info" class="tab-pane fade">
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_menu">Show in Top Menu</label>
-                    <div class="col-md-2">
+                    <label class="control-label col-md-5" for="is_menu">Show in Top Menu</label>
+                    <div class="col-sm-2">
                         <label class="o_switch" for="is_menu" >
                             <input type="checkbox" t-att-checked="widget.page.menu_ids.length > 0 ? true : undefined" id="is_menu"/>
                             <span/>
@@ -98,8 +98,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_homepage">Use as Homepage</label>
-                    <div class="col-md-2">
+                    <label class="control-label col-md-5" for="is_homepage">Use as Homepage</label>
+                    <div class="col-sm-2">
                         <label class="o_switch" for="is_homepage" >
                             <input type="checkbox" t-att-checked="widget.page.is_homepage ? true : undefined" id="is_homepage"/>
                             <span/>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_indexed">
+                    <label class="control-label col-md-5" for="is_indexed">
                         Indexed
                         <i class="fa fa-question-circle-o" title="Hide this page from search results" role="img" aria-label="Info"></i>
                     </label>
@@ -119,17 +119,32 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="is_published">Publish</label>
-                    <div class="col-md-2">
+                    <label class="control-label col-md-5" for="is_published">Publish</label>
+                    <div class="col-sm-2">
                         <label class="o_switch js_publish_btn" for="is_published">
                             <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
                             <span/>
                         </label>
                     </div>
                 </div>
+                <div t-if='widget.page.website_id' class="form-group row" id="website_restriction">
+                    <!-- TODO hide with multi-website group -->
+                    <label class="control-label col-md-5" for="share_page_info">
+                        Share this page
+                        <i class="fa fa-question-circle-o" title="When enabled, this page will be shared between all the websites. This change is not reversible."></i>
+                    </label>
+                    <div class="col-md-2">
+                        <a>
+                            <label class="o_switch" for="share_page_info" >
+                                <input type="checkbox" t-att-checked="widget.page.website_id ? undefined : true" id="share_page_info"/>
+                                <span/>
+                            </label>
+                        </a>
+                    </div>
+                </div>
                 <div class="form-group row">
-                    <label class="col-form-label col-md-3" for="date_publish">Publishing Date</label>
-                    <div class="col-md-9">
+                    <label class="control-label col-md-5" for="date_publish">Publishing Date</label>
+                    <div class="col-md-7">
                         <div class='input-group date' id='date_publish_container'>
                             <input type='text' class="form-control" name="date_publish" id="date_publish" />
                             <div class="input-group-append">

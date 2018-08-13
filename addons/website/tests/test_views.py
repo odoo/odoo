@@ -258,3 +258,86 @@ class TestViewSaving(common.TransactionCase):
                     ))
             )
         )
+
+    def test_cow_leaf(self):
+        View = self.env['ir.ui.view']
+
+        base_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>base content</div>',
+        }).with_context(load_all_views=True)
+
+        inherit_view = View.create({
+            'name': 'Extension',
+            'mode': 'extension',
+            'inherit_id': base_view.id,
+            'arch': '<div position="replace"><div>extended content</div></div>',
+        })
+
+        # edit on backend, regular write
+        inherit_view.write({'arch': '<div position="replace"><div>modified content</div></div>'})
+        self.assertEqual(View.search_count([('name', '=', 'Base')]), 1)
+        self.assertEqual(View.search_count([('name', '=', 'Extension')]), 1)
+
+        arch = base_view.read_combined(['arch'])['arch']
+        self.assertEqual(arch, '<div>modified content</div>')
+
+        # edit on frontend, copy just the leaf
+        inherit_view.with_context(website_id=1).write({'arch': '<div position="replace"><div>website 1 content</div></div>'})
+        inherit_views = View.search([('name', '=', 'Extension')])
+        self.assertEqual(View.search_count([('name', '=', 'Base')]), 1)
+        self.assertEqual(len(inherit_views), 2)
+        self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
+
+        # read in backend should be unaffected
+        arch = base_view.read_combined(['arch'])['arch']
+        self.assertEqual(arch, '<div>modified content</div>')
+        # read on website should reflect change
+        arch = base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual(arch, '<div>website 1 content</div>')
+
+        # website-specific inactive view should take preference over active generic one when viewing the website
+        # this is necessary to make customize_show=True templates work correctly
+        inherit_views.filtered(lambda v: v.website_id.id == 1).write({'active': False})
+        arch = base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual(arch, '<div>base content</div>')
+
+    def test_cow_root(self):
+        View = self.env['ir.ui.view']
+
+        base_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>content</div>',
+        })
+
+        View.create({
+            'name': 'Extension',
+            'mode': 'extension',
+            'inherit_id': base_view.id,
+            'arch': '<div position="inside">, extended content</div>',
+        })
+
+        # edit on backend, regular write
+        base_view.write({'arch': '<div>modified base content</div>'})
+        self.assertEqual(View.search_count([('name', '=', 'Base')]), 1)
+        self.assertEqual(View.search_count([('name', '=', 'Extension')]), 1)
+
+        # edit on frontend, copy the entire tree
+        base_view.with_context(website_id=1).write({'arch': '<div>website 1 content</div>'})
+
+        generic_base_view = View.search([('name', '=', 'Base'), ('website_id', '=', False)])
+        website_specific_base_view = View.search([('name', '=', 'Base'), ('website_id', '=', 1)])
+        self.assertEqual(len(generic_base_view), 1)
+        self.assertEqual(len(website_specific_base_view), 1)
+
+        inherit_views = View.search([('name', '=', 'Extension')])
+        self.assertEqual(len(inherit_views), 2)
+        self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
+
+        arch = generic_base_view.with_context(load_all_views=True).read_combined(['arch'])['arch']
+        self.assertEqual(arch, '<div>modified base content, extended content</div>')
+
+        arch = website_specific_base_view.with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual(arch, '<div>website 1 content, extended content</div>')

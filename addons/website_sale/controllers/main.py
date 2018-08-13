@@ -206,12 +206,14 @@ class WebsiteSale(http.Controller):
         return domain
 
     @http.route([
-        '/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
+        '''/shop''',
+        '''/shop/page/<int:page>''',
+        '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>''',
+        '''/shop/category/<model("product.public.category", "[('website_id', 'in', (False, current_website_id))]"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
+        if category and not category.can_access_from_current_website():
+            raise NotFound()
         if ppg:
             try:
                 ppg = int(ppg)
@@ -245,7 +247,7 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        categs = request.env['product.public.category'].search([('parent_id', '=', False)])
+        categs = request.env['product.public.category'].search([('parent_id', '=', False)] + request.website.website_domain())
         Product = request.env['product.template']
 
         parent_category_ids = []
@@ -292,6 +294,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
+        if not product.can_access_from_current_website():
+            raise NotFound()
+
         product_context = dict(request.env.context,
                                active_id=product.id,
                                partner=request.env.user.partner_id)
@@ -578,6 +583,7 @@ class WebsiteSale(http.Controller):
 
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
+        new_values['website_id'] = request.website.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:
@@ -992,7 +998,8 @@ class WebsiteSale(http.Controller):
     def add_product(self, name=None, category=0, **post):
         product = request.env['product.product'].create({
             'name': name or _("New Product"),
-            'public_categ_ids': category
+            'public_categ_ids': category,
+            'website_id': request.website.id,
         })
         return "/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id)
 

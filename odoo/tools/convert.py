@@ -573,7 +573,7 @@ form: module.record_id""" % (xml_id,)
     def _tag_record(self, rec, data_node=None, mode=None):
         rec_model = rec.get("model")
         model = self.env[rec_model]
-        rec_id = rec.get("id",'')
+        rec_id = rec.get("id", '')
         rec_context = rec.get("context", {})
         if rec_context:
             rec_context = safe_eval(rec_context)
@@ -673,9 +673,14 @@ form: module.record_id""" % (xml_id,)
             el.tag = 'data'
         el.attrib.pop('id', None)
 
+        if self.module.startswith('theme_'):
+            model = 'theme.ir.ui.view'
+        else:
+            model = 'ir.ui.view'
+
         record_attrs = {
             'id': tpl_id,
-            'model': 'ir.ui.view',
+            'model': model,
         }
         for att in ['forcecreate', 'context']:
             if att in el.attrib:

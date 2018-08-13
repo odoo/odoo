@@ -145,7 +145,7 @@ class Website(models.Model):
 
     @api.multi
     def sale_product_domain(self):
-        return [("sale_ok", "=", True)]
+        return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
 
     @api.model
     def sale_get_payment_term(self, partner):
@@ -172,6 +172,7 @@ class Website(models.Model):
             'partner_invoice_id': partner.id,
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
+            'website_id': self._context.get('website_id'),
         }
         company = self.company_id or pricelist.company_id
         if company:

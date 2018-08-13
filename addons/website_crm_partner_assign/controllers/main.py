@@ -296,7 +296,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         partners = partner_ids.sudo()
 
         google_map_partner_ids = ','.join(str(p.id) for p in partners)
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
 
         values = {
             'countries': countries,

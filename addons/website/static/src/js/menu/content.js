@@ -81,7 +81,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         defs.push(this._rpc({
             model: 'website.page',
             method: 'get_page_info',
-            args: [this.page_id, context.website_id],
+            args: [this.page_id],
             context: context,
         }).then(function (page) {
             page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
@@ -144,6 +144,16 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                container: 'body',
             });
         }));
+
+        defs.push(this._rpc({model: 'res.users',
+                             method: 'has_group',
+                             args: ['website.group_multi_website'],
+                             context: context})
+                  .then(function (has_group) {
+                      if (!has_group) {
+                          self.$('#website_restriction').addClass('hidden');
+                      }
+                  }));
 
         var datepickersOptions = {
             minDate: moment({y: 1900}),
@@ -210,6 +220,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             is_menu: this.$('#is_menu').prop('checked'),
             is_homepage: this.$('#is_homepage').prop('checked'),
             website_published: this.$('#is_published').prop('checked'),
+            share_page_info: this.$('#share_page_info').prop('checked'),
             create_redirect: this.$('#create_redirect').prop('checked'),
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
@@ -531,7 +542,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         this._rpc({
             model: 'website.menu',
             method: 'save',
-            args: [[context.website_id], { data: data, to_delete: self.to_delete }],
+            args: [context.website_id, { data: data, to_delete: self.to_delete }],
             context: context,
         }).then(function () {
             return _super();
@@ -954,7 +965,7 @@ function _deletePage(pageId, fromPageManagement) {
     // Delete the page if the user confirmed
         return self._rpc({
             model: 'website.page',
-            method: 'delete_page',
+            method: 'unlink',
             args: [pageId],
             context: context,
         });
@@ -969,7 +980,7 @@ function _deletePage(pageId, fromPageManagement) {
 }
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
-websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');
+websiteRootData.websiteRootRegistry.add(PageManagement, '#list_website_pages');
 
 return {
     PagePropertiesDialog: PagePropertiesDialog,

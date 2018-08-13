@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class Company(models.Model):
@@ -16,3 +16,19 @@ class Company(models.Model):
     def google_map_link(self, zoom=8):
         partner = self.sudo().partner_id
         return partner and partner.google_map_link(zoom) or None
+
+    @api.multi
+    def _get_public_user(self):
+        self.ensure_one()
+        public_users = self.env.ref('base.group_public').with_context(active_test=False).users
+        public_users_for_website = public_users.filtered(lambda user: user.company_id == self)
+
+        if public_users_for_website:
+            return public_users_for_website[0]
+        else:
+            return self.env.ref('base.public_user').copy({
+                'name': 'Public user for %s' % self.name,
+                'login': 'public_company_%s' % self.id,
+                'company_id': self.id,
+                'company_ids': [(6, 0, [self.id])],
+            })
