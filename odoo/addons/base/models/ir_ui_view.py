@@ -1095,7 +1095,7 @@ actual arch.
 
     def _read_template_keys(self):
         """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model

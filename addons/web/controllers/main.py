@@ -1002,6 +1002,7 @@ class Binary(http.Controller):
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<int:id>-<string:unique>',
         '/web/content/<int:id>-<string:unique>/<string:filename>',
+        '/web/content/<int:id>-<string:unique>/<path:extra>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',

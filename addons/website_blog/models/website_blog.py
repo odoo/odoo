@@ -15,7 +15,7 @@ from odoo.tools import html2plaintext
 class Blog(models.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
@@ -108,7 +108,7 @@ class BlogTag(models.Model):
 class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -167,6 +167,8 @@ class BlogPost(models.Model):
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
     visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
+
+    website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
     @api.multi
     @api.depends('content', 'teaser_manual')

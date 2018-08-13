@@ -25,7 +25,7 @@ class KarmaError(Forbidden):
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
 
     @api.model_cr
     def init(self):
@@ -208,6 +208,7 @@ class Post(models.Model):
         ('discussion', 'Discussion')],
         string='Type', default='question', required=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)

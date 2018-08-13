@@ -1057,10 +1057,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </t>
 </template>
 
-<template id="edit_website_pages" name="Website Pages Management">
+<template id="list_website_pages" name="Website Pages Management">
   <t t-call="website.layout">
     <div id="wrap">
-      <div class="container" id="edit_website_pages">
+      <div class="container" id="list_website_pages">
           <form class="mt8 float-right" role="search" t-attf-action="/website/pages" method="get">
               <t t-call="website.website_search_box"/>
           </form>
@@ -1089,33 +1089,27 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
               </div>
           </t>
           <div t-if="pages" class="table-responsive">
-              <table class="table table-hover o_my_status_table">
+              <table class="table table-hover">
                   <thead>
-                    <tr class="active">
+                    <tr>
                       <th>Name</th>
                       <th>Url</th>
-                      <th class="col-lg-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
-                      <th class="col-lg-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
-                      <th class="col-lg-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
-                      <th class="col-md-3 col-lg-2"></th>
+                      <th class="text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="text-center"><i title="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
+                      <th style='width:140px;'></th>
                     </tr>
                   </thead>
-                  <t t-foreach="pages" t-as="page">
-                      <tr>
-                          <td><i t-if="page.is_homepage" class="fa fa-home" role="img" aria-label="Home" title="Home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
-                          <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" role="img" t-att-aria-label="'Checked' if page.menu_ids else 'Not checked'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>
-                          <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" role="img" t-att-aria-label="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" role="img" t-att-aria-label="'Checked' if page.website_indexed else 'Not checked'" t-att-title="'Checked' if page.website_indexed else 'Not checked'"></i></td>
-                          <td class="text-right">
-                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page" aria-label="Manage this page"></a>
-                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend" aria-label="Edit code in backend"></a>
-                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page" aria-label="Clone this page"></a>
-                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page" aria-label="Delete this page"></a>
-                          </td>
-                      </tr>
+                  <t t-set='prev_page' t-value='False' />
+                  <t t-set='page' t-value='pages[0]' />
+                  <t t-foreach="pages[1:]" t-as="next_page">
+                    <t t-call='website.one_page_line'/>
+                    <t t-set='prev_page' t-value='page' />
+                    <t t-set='page' t-value='next_page' />
                   </t>
+
+                  <t t-set='next_page' t-value='False'/>
+                  <t t-call='website.one_page_line' />
               </table>
           </div>
           <div t-if="pager" class="o_portal_pager text-center">
@@ -1124,6 +1118,50 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
       </div>
     </div>
   </t>
+</template>
+
+<template id="one_page_line">
+      <t t-set='specific_page' t-value="page.website_id" />
+      <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
+      <tr t-att-style='not final_page and "color:#999"'>
+          <td>
+              <t t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id'><i class="fa fa-level-up fa-rotate-90 ml32 mr4"></i></t>
+              <i t-else="1" class="fa fa-globe mr4" t-att-style='specific_page and "visibility:hidden;"' />
+              <i t-if="page.is_homepage" class="fa fa-home" title="Home"></i> <span t-esc="page.name"/>
+          </td>
+          <td><a t-if='final_page' t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
+          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>
+          <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
+          <td class="text-center">
+              <i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted"
+                 t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i>
+          </td>
+          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" t-att-title="'Checked' if page.website_indexed else 'Not checked'"></i></td>
+          <td class="text-right" style="white-space:nowrap;">
+              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
+              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
+              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+          </td>
+      </tr>
+</template>
+
+<template id="default_homepage">
+    <div id="wrap" class="oe_structure oe_empty">
+        <div class="item image_text oe_img_bg active">
+            <div class="container">
+                <div class="row content">
+                    <div class="col-md-6 col-sm-12">
+                        <h2>Homepage of <t t-esc="website.name"/></h2>
+                        <h3>Click to customize this text</h3>
+                        <p>
+                            <a role="button" class="btn btn-success btn-large" href="/contactus">Contact us</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 </odoo>

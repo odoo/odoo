@@ -198,6 +198,24 @@ class AssetsBundle(object):
         check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
         return hashlib.sha1(check.encode('utf-8')).hexdigest()
 
+    def _get_asset_template_url(self):
+        return "/web/content/{id}-{unique}/{extra}{name}{page}{type}"  # name contains inc
+
+    def _get_asset_url_values(self, id, unique, extra, name, page, type):  # extra can contain direction or/and website
+        return {
+            'id': id,
+            'unique': unique,
+            'extra': extra,
+            'name': name,
+            'page': page,
+            'type': type,
+        }
+
+    def get_asset_url(self, id='%', unique='%', extra='', name='%', page='%', type='%'):
+        return self._get_asset_template_url().format(
+            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, page=page, type=type)
+        )
+
     def clean_attachments(self, type):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
@@ -213,12 +231,14 @@ class AssetsBundle(object):
         must exclude the current bundle.
         """
         ira = self.env['ir.attachment']
+        url = self.get_asset_url(
+            extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
+            name=self.name,
+            type=type
+        )
         domain = [
-            ('url', '=like', '/web/content/%-%/{0}{1}%.{2}'.format(  # The wilcards are id, version and pagination number (if any)
-                ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
-                self.name,
-                type)),
-            '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
+            ('url', '=like', url),
+            '!', ('url', '=like', self.get_asset_url(unique=self.version))
         ]
 
         # force bundle invalidation on other workers
@@ -234,13 +254,13 @@ class AssetsBundle(object):
         multiple time the same bundle in our `to_html` function, we group our ir.attachment records
         by file name and only return the one with the max id for each group.
         """
-        version = "%" if ignore_version else self.version
-        url_pattern = '/web/content/%-{0}/{1}{2}{3}.{4}'.format(
-            version,
-            ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
-            self.name,
-            '.%' if type == 'css' else '',
-            type
+        unique = "%" if ignore_version else self.version
+        url_pattern = self.get_asset_url(
+            unique=unique,
+            extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
+            name=self.name,
+            page='.%' if type == 'css' else '',
+            type='.%s' % type
         )
         self.env.cr.execute("""
              SELECT max(id)
@@ -270,7 +290,7 @@ class AssetsBundle(object):
         values = {
             'name': "/web/content/%s" % type,
             'datas_fname': fname,
-            'mimetype' : mimetype,
+            'mimetype': mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
             'type': 'binary',
@@ -279,7 +299,14 @@ class AssetsBundle(object):
         }
         attachment = ira.sudo().create(values)
 
-        url = '/web/content/%s-%s%s/%s' % (attachment.id, self.version, ('/rtl' if type == 'css' and self.user_direction == 'rtl' else ''), fname)
+        url = self.get_asset_url(
+            id=attachment.id,
+            unique=self.version,
+            extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
+            name=fname,
+            page='',  # included in fname
+            type=''  # included in fname
+        )
         values = {
             'name': url,
             'url': url,

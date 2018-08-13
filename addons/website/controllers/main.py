@@ -18,7 +18,7 @@ from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.tools import pycompat, OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
-from odoo.addons.web.controllers.main import WebClient, Binary
+from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 
@@ -81,10 +81,15 @@ class Website(Home):
 
         raise request.not_found()
 
-    #------------------------------------------------------
+    @http.route('/website/force_website', type='json', auth="user")
+    def force_website(self, website_id):
+        request.env['website']._force_website(website_id)
+        return True
+
+    # ------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
     # while portal users are redirected to the frontend by default
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
@@ -97,9 +102,9 @@ class Website(Home):
             return http.redirect_with_hash(redirect)
         return response
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Business
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
@@ -135,7 +140,7 @@ class Website(Home):
                 'name': url,
                 'url': url,
             })
-        dom = [('url', '=' , '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        dom = [('url', '=', '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
@@ -203,9 +208,9 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Edit
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
     def pages_management(self, page=1, sortby='name', search='', **kw):
@@ -219,22 +224,27 @@ class Website(Home):
             'name': {'label': _('Sort by Name'), 'order': 'name'},
         }
         # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'name')['order']
+        sort_order = searchbar_sortings.get(sortby, 'name')['order'] + ', website_id desc'
 
-        domain = ['|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        domain = request.website.website_domain()
         if search:
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
-        pages_count = Page.search_count(domain)
+        pages = Page.search(domain, order=sort_order)
+        if sortby != 'url':
+            pages = pages.filtered(pages._is_most_specific_page)
+        pages_count = len(pages)
 
+        step = 50
         pager = portal_pager(
             url="/website/pages",
             url_args={'sortby': sortby},
             total=pages_count,
             page=page,
-            step=50
+            step=step
         )
-        pages = Page.search(domain, order=sort_order, limit=50, offset=pager['offset'])
+
+        pages = pages[(page - 1) * step:page * step]
 
         values = {
             'pager': pager,
@@ -243,13 +253,12 @@ class Website(Home):
             'sortby': sortby,
             'searchbar_sortings': searchbar_sortings,
         }
-        return request.render("website.edit_website_pages", values)
+        return request.render("website.list_website_pages", values)
 
     @http.route(['/website/add/', '/website/add/<path:path>'], type='http', auth="user", website=True)
     def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
-        View = request.env['ir.ui.view']
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
 
         if not template and ext_special_case:
@@ -263,7 +272,7 @@ class Website(Home):
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
 
-        if ext_special_case: # redirect non html pages to backend to edit
+        if ext_special_case:  # redirect non html pages to backend to edit
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
         return werkzeug.utils.redirect(url + "?enable_editor=1")
 
@@ -321,9 +330,9 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Themes
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def get_view_ids(self, xml_ids):
         ids = []
@@ -386,9 +395,9 @@ class Website(Home):
             res[id_or_xml_id] = View.render_template(id_or_xml_id, values)
         return res
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Server actions
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @http.route([
         '/website/action/<path_or_xml_id_or_id>',
@@ -422,9 +431,9 @@ class Website(Home):
         return request.redirect('/')
 
 
-#------------------------------------------------------
+# ------------------------------------------------------
 # Retrocompatibility routes
-#------------------------------------------------------
+# ------------------------------------------------------
 class WebsiteBinary(http.Controller):
 
     @http.route([

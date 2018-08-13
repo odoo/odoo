@@ -271,7 +271,9 @@
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
         <li class="nav-item">
-            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-field="c.name" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}"></a>
+            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}">
+                <span t-field="c.name"/> <span t-if="not c.website_published" class="text-danger">(Unpublished)</span>
+            </a>
             <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
                 <t t-foreach="c.child_id" t-as="c">
                     <t t-call="website_sale.categories_recursive" />

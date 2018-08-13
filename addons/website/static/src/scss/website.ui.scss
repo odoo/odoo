@@ -38,7 +38,7 @@ body.o_connected_user {
         }
     }
     .o_menu_systray {
-        a {
+        > li > a {
             padding: 0 $grid-gutter-width/2;
 
             &.css_edit_dynamic{
@@ -463,16 +463,24 @@ body .modal {
         padding-top: 9px;
     }
 }
-#edit_website_pages {
+#list_website_pages {
     th {
         background-color: $o-brand-odoo;
         color: white;
     }
-    td > a.fa {
-        margin-left: 5px;
-        color: $o-brand-odoo;
+    td, th {
+        padding: 0.45rem;
+    }
+    td {
+        > a.fa {
+            margin-left: 5px;
+            color: $o-brand-odoo;
+        }
+        .text-muted {
+            opacity: 0.5;
+        }
     }
     .fa-check, .fa-eye-slash {
-        color: $o-brand-primary;
+        color: $info;
     }
 }

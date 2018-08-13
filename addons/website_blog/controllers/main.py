@@ -48,13 +48,14 @@ class WebsiteBlog(http.Controller):
         '/blog/page/<int:page>',
     ], type='http', auth="public", website=True)
     def blogs(self, page=1, **post):
+        domain = request.website.website_domain()
         Blog = request.env['blog.blog']
-        blogs = Blog.search([], limit=2)
+        blogs = Blog.search(domain, limit=2)
         if len(blogs) == 1:
             return werkzeug.utils.redirect('/blog/%s' % slug(blogs[0]), code=302)
 
         BlogPost = request.env['blog.post']
-        total = BlogPost.search([], count=True)
+        total = BlogPost.search_count(domain)
 
         pager = request.website.pager(
             url='/blog',
@@ -62,7 +63,7 @@ class WebsiteBlog(http.Controller):
             page=page,
             step=self._blog_post_per_page,
         )
-        posts = BlogPost.search([], offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page)
+        posts = BlogPost.search(domain, offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page)
         blog_url = QueryURL('', ['blog', 'tag'])
         return request.render("website_blog.latest_blogs", {
             'posts': posts,
@@ -71,10 +72,10 @@ class WebsiteBlog(http.Controller):
         })
 
     @http.route([
-        '/blog/<model("blog.blog"):blog>',
-        '/blog/<model("blog.blog"):blog>/page/<int:page>',
-        '/blog/<model("blog.blog"):blog>/tag/<string:tag>',
-        '/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>',
+        '''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>''',
+        '''/blog/<model("blog.blog"):blog>/page/<int:page>''',
+        '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
+        '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
     ], type='http', auth="public", website=True)
     def blog(self, blog=None, tag=None, page=1, **opt):
         """ Prepare all values to display the blog.
@@ -92,16 +93,19 @@ class WebsiteBlog(http.Controller):
          - 'date': date_begin optional parameter, used in archives navigation
          - 'blog_url': help object to create URLs
         """
+        if not blog.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
         published_count, unpublished_count = 0, 0
+
+        domain = request.website.website_domain()
 
         BlogPost = request.env['blog.post']
 
         Blog = request.env['blog.blog']
-        blogs = Blog.search([], order="create_date asc")
+        blogs = Blog.search(domain, order="create_date asc")
 
-        # build the domain for blog post to display
-        domain = []
         # retrocompatibility to accept tag as slug
         active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
         if active_tag_ids:
@@ -172,7 +176,7 @@ class WebsiteBlog(http.Controller):
         response = request.render("website_blog.blog_post_short", values)
         return response
 
-    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public")
+    @http.route(['''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/feed'''], type='http', auth="public")
     def blog_feed(self, blog, limit='15'):
         v = {}
         v['blog'] = blog
@@ -185,7 +189,7 @@ class WebsiteBlog(http.Controller):
         return r
 
     @http.route([
-            '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
+            '''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
     ], type='http', auth="public", website=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -201,6 +205,9 @@ class WebsiteBlog(http.Controller):
          - 'nav_list': a dict [year][month] for archives navigation
          - 'next_post': next blog post, to direct the user towards the next interesting post
         """
+        if not blog.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         BlogPost = request.env['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
@@ -271,6 +278,12 @@ class WebsiteBlog(http.Controller):
 
     @http.route('/blog/<int:blog_id>/post/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
+        # Use sudo so this line prevents both editor and admin to access blog from another website
+        # as browse() will return the record even if forbidden by security rules but editor won't
+        # be able to access it
+        if not request.env['blog.blog'].browse(blog_id).sudo().can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         new_blog_post = request.env['blog.post'].create({
             'blog_id': blog_id,
             'website_published': False,

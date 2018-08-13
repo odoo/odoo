@@ -53,12 +53,14 @@
 
     <div t-name="website.ga_dialog_content">
         Your Tracking ID: <input type="text" name="ga_analytics_key" placeholder="UA-XXXXXXXX-Y" t-att-value="ga_analytics_key" style="width: 100%"></input>
-        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html" class="fa fa-arrow-right" target="_blank">
+        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html" target="_blank">
+            <i class="fa fa-arrow-right"/>
             How to get my Tracking ID
         </a>
         <br/><br/>
         Your Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
-        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html" class="fa fa-arrow-right" target="_blank">
+        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html" target="_blank">
+            <i class="fa fa-arrow-right"/>
             How to get my Client ID
         </a>
     </div>
@@ -69,6 +71,14 @@
             <button class="btn btn-secondary js_date_range active" data-date="week">Last Week</button>
             <button class="btn btn-secondary js_date_range" data-date="month">Last Month</button>
             <button class="btn btn-secondary js_date_range" data-date="year">Last Year</button>
+        </div>
+        <div class="btn-group pull-right" style="margin-right: 20px;">
+            <t t-foreach="widget.websites" t-as="website">
+                <button t-attf-class="btn btn-secondary js_website #{website.selected ? 'active' : ''}"
+                        t-att-data-website-id="website.id">
+                    <t t-esc="website.name"/>
+                </button>
+            </t>
         </div>
     </t>
 
