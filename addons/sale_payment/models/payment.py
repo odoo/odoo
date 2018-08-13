@@ -9,9 +9,22 @@ class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
     so_reference_type = fields.Selection(string='Communication',
-        selection=[('so_name', _('Based on Document Reference')), ('partner', _('Based on Customer ID'))], default='so_name',
+        selection=[
+            ('none', _('Free Communication')),
+            ('so_name', _('Based on Document Reference')),
+            ('partner', _('Based on Customer ID'))], default='none',
         help='You can set here the communication type that will appear on sales orders.'
              'The communication will be given to the customer when they choose the payment method.')
+
+    @api.model
+    def create(self, vals):
+        res = super(PaymentAcquirer, self).create(vals)
+
+        # so_reference_type default values is 'none' except for wire transfer.
+        if res.provider == 'transfer':
+            res.so_reference_type = 'so_name'
+
+        return res
 
 
 class PaymentTransaction(models.Model):
