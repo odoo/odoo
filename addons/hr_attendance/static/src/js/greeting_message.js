@@ -136,7 +136,8 @@ var GreetingMessage = AbstractAction.extend({
         }
     },
 
-    _onBarcodeScanned: function(barcode) {
+    _onBarcodeScanned: function(ev) {
+        var barcode = ev.data.barcode;
         var self = this;
         if (this.attendanceBarcode !== barcode){
             if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.

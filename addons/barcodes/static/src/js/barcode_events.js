@@ -83,11 +83,11 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
 
             // Send the target in case there are several barcode widgets on the same page (e.g.
             // registering the lot numbers in a stock picking)
-            core.bus.trigger('barcode_scanned', barcode, this.buffered_key_events[0].target);
+            core.bus.trigger('barcode_scanned', {barcode: barcode, target: this.buffered_key_events[0].target});
 
             // Dispatch a barcode_scanned DOM event to elements that have barcode_events="true" set.
             if (this.buffered_key_events[0].target.getAttribute("barcode_events") === "true")
-                $(this.buffered_key_events[0].target).trigger('barcode_scanned', barcode);
+                $(this.buffered_key_events[0].target).trigger('barcode_scanned', {barcode: barcode});
         } else {
             this.resend_buffered_keys();
         }
@@ -250,7 +250,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     _handleBarcodeValue: function (e) {
         var barcodeValue = this.$barcodeInput.val();
         if (barcodeValue.match(this.regexp)) {
-            core.bus.trigger('barcode_scanned', barcodeValue, $(e.target).parent()[0]);
+            core.bus.trigger('barcode_scanned', {barcodeValue: barcodeValue, target: $(e.target).parent()[0]});
             this._blurBarcodeInput();
         }
     },

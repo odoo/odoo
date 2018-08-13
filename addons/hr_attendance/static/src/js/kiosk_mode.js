@@ -34,7 +34,8 @@ var KioskMode = AbstractAction.extend({
         return $.when(def, this._super.apply(this, arguments));
     },
 
-    _onBarcodeScanned: function(barcode) {
+    _onBarcodeScanned: function(ev) {
+        var barcode = ev.data.barcode;
         var self = this;
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         this._rpc({

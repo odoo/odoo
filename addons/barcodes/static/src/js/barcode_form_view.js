@@ -299,6 +299,8 @@ FormController.include({
      * @returns {Deferred}
      */
     _barcodeScanned: function (barcode, target) {
+        var barcode = ev.data.barcode;
+        var target = ev.data.target;
         var self = this;
         return this.barcodeMutex.exec(function () {
             var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
