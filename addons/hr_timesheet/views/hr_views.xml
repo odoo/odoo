@@ -13,6 +13,20 @@
         }</field>
     </record>
 
+    <record id="timesheet_action_view_from_employee_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet_line_tree"/>
+        <field name="act_window_id" ref="timesheet_action_from_employee"/>
+    </record>
+
+    <record id="timesheet_action_view_from_employee_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet_line_form"/>
+        <field name="act_window_id" ref="timesheet_action_from_employee"/>
+    </record>
+
     <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
         <field name="name">hr.employee.form.timesheet</field>
         <field name="model">hr.employee</field>

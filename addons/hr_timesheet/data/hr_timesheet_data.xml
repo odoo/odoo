@@ -8,6 +8,16 @@
         <field name="user_id" ref='base.user_root'/>
     </record>
 
+    <!-- Set the JS widget -->
+    <record id="uom.product_uom_day" model="uom.uom">
+        <field name="timesheet_widget">float_toggle</field>
+    </record>
+
+    <record id="uom.product_uom_hour" model="uom.uom">
+        <field name="timesheet_widget">float_time</field>
+    </record>
+
+    <!-- Force Analytic account creation for projects allowing timesheet (default is True) -->
     <function id="_init_data_analytic_account"
         model="project.project"
         name="_init_data_analytic_account"
