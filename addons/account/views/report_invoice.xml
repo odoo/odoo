@@ -62,22 +62,22 @@
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="6"/>
-                                <th>Description</th>
-                                <th class="d-none">Source Document</th>
-                                <th class="text-right">Quantity</th>
-                                <th class="text-right d-none d-md-table-cell">Unit Price</th>
+                                <th><span>Description</span></th>
+                                <th class="d-none"><span>Source Document</span></th>
+                                <th class="text-right"><span>Quantity</span></th>
+                                <th class="text-right d-none d-md-table-cell"><span>Unit Price</span></th>
                                 <th t-if="display_discount" class="text-right d-none d-md-table-cell">
                                     <span>Disc.(%)</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
-                                <th class="text-right d-none d-md-table-cell">Taxes</th>
+                                <th class="text-right d-none d-md-table-cell"><span>Taxes</span></th>
                                 <th t-if="display_taxamount and type_is_out" class="text-right d-none d-md-table-cell">
                                     <span>Tax Amount</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
                                 <th class="text-right">
-                                    <t groups="account.group_show_line_subtotals_tax_excluded">Amount</t>
-                                    <t groups="account.group_show_line_subtotals_tax_included">Total Price</t>
+                                    <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
+                                    <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
                                 </th>
                             </tr>
                         </thead>

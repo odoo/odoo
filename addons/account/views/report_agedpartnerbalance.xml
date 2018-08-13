@@ -37,7 +37,7 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Partners</th>
+                            <th><span>Partners</span></th>
                             <th class="text-right">
                                 <span>Not due</span>
                             </th>
@@ -46,7 +46,7 @@
                             <th class="text-right"><span t-esc="data['2']['name']"/></th>
                             <th class="text-right"><span t-esc="data['1']['name']"/></th>
                             <th class="text-right"><span t-esc="data['0']['name']"/></th>
-                            <th class="text-right">Total</th>
+                            <th class="text-right"><span>Total</span></th>
                         </tr>
                         <tr t-if="get_partner_lines">
                             <th>Account Total</th>
