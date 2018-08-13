@@ -3,7 +3,6 @@
 
     <template id="assets_frontend" inherit_id="web.assets_frontend" name="Sale frontend assets">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale.scss"/>
             <script type="text/javascript" src="/sale/static/src/js/sale_portal_sidebar.js"></script>
         </xpath>
     </template>
@@ -175,7 +174,7 @@
                             <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
                         </div>
 
-                        <div t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']" class="pl-3 pr-3">
+                        <div t-if="sale_order.validity_date and not sale_order.is_expired and sale_order.state in ['draft', 'sent']" class="pl-3 pr-3">
                             <input type="hidden" t-att-value="sale_order.validity_date" id="validity_date"/>
                             <div class="mt8" t-if="remaining_validity_days &gt; 0">
                                 <hr class="mb0"/>
@@ -223,7 +222,7 @@
                             <div><strong>Your Contact:</strong></div>
                             <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.image" t-attf-src="data:image/png;base64,#{sale_order.user_id.image}" alt="Contact"/>
                             <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sale_order.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
-                            <span t-field="sale_order.user_id" t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                            <span t-field="sale_order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
                             <a href="#discussion"><i class="fa fa-comment"></i> Contact us</a>
                         </div>
                     </div>
@@ -465,8 +464,8 @@
         <div class="oe_structure"/>
         <!-- Pricing -->
         <!-- Signature -->
-        <section id="pricing">
-            <h1 class="page-header" id="pricing">Details</h1>
+        <section id="details">
+            <h1 class="page-header" id="details">Details</h1>
 
             <t t-set="display_taxamount" t-value="any([line.tax_id for line in sale_order.order_line])"/>
             <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>

@@ -216,12 +216,13 @@ class SaleOrder(models.Model):
             if dates_list:
                 order.expected_date = fields.Datetime.to_string(min(dates_list))
 
+    @api.multi
     def _compute_remaining_validity_days(self):
         for record in self:
-            if self.validity_date:
-                self.remaining_validity_days = (self.validity_date - fields.Date.today()).days + 1
+            if record.validity_date:
+                record.remaining_validity_days = (record.validity_date - fields.Date.today()).days + 1
             else:
-                self.remaining_validity_days = 0
+                record.remaining_validity_days = 0
 
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):

@@ -7,20 +7,19 @@
         </xpath>
     </template>
 
-    <template id="pricing_inherit_sale_management" name="Sale Management Pricing" inherit_id="sale.pricing">
+    <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
 
-        <!-- TODO SEB inherit into section pricing -> details (that is inline) -->
-        <xpath expr="//t[@t-set='display_discount']" position="after">
+        <xpath expr="//section[@id='details']//t[@t-set='display_discount']" position="after">
             <t t-set="display_remove" t-value="any([line.sale_order_option_ids for line in sale_order.order_line])"/>
         </xpath>
 
-        <xpath expr="//table[@id='sales_order_table']/thead/tr" position="inside">
+        <xpath expr="//section[@id='details']//table[@id='sales_order_table']/thead/tr" position="inside">
             <th t-if="display_remove">
                 <t t-set="colspan" t-value="colspan+1"/>
             </th>
         </xpath>
 
-        <xpath expr="//t[@t-if='not line.display_type']" position="inside">
+        <xpath expr="//section[@id='details']//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
                 <a t-attf-href="sale_order.get_portal_url('/update_line/%s', line.id) + '&amp;unlink=True'" class="mb8 js_update_line_json d-print-none" t-if="line.sale_order_option_ids" aria-label="Remove" title="Remove">
                     <span class="fa fa-trash-o"></span>
@@ -28,9 +27,6 @@
             </td>
         </xpath>
 
-    </template>
-
-    <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//section[@id='signature']" position="after">
             <t t-if="any([(not option.line_id) for option in sale_order.sale_order_option_ids])">
                 <section>
@@ -82,11 +78,8 @@
                 </section>
             </t>
         </xpath>
-    </template>
 
-    <!-- This is a separate template because in sale_quotation_builder we enable customization on it. -->
-    <template id="change_quantity" inherit_id="sale.pricing" active="False"  name="Change Quantity">
-        <xpath expr="//div[@id='quote_qty']" position="replace">$
+        <xpath expr="//section[@id='details']//div[@id='quote_qty']" position="replace">
             <div class="input-group oe_website_spinner">
                 <div class="input-group-prepend d-print-none">
                     <span class="input-group-text">
@@ -105,6 +98,7 @@
                 </div>
             </div>
         </xpath>
+
     </template>
 
 </odoo>

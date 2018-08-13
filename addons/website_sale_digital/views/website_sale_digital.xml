@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_order_page_downloads" name="Orders Downloads Followup" inherit_id="sale.pricing">
-        <xpath expr="//td[@id='product_name']" position="inside">
+    <template id="sale_order_portal_content_inherit_website_sale_digital" name="Orders Downloads Followup" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//td[@id='product_name']" position="inside">
             <t t-if="digital_attachments" t-set="attachments" t-value="digital_attachments.get(line.product_id.id)"/>
             <t t-if="attachments">
                 <span class="dropdown">
