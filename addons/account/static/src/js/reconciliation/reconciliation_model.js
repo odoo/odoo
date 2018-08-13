@@ -130,23 +130,7 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
         this._addProposition(line, prop);
-<<<<<<< HEAD
         line.limit_override = (line.offset + 1) * this.limitMoveLines;
-=======
-
-        // Check whether we have some propositions left
-        // If we don't, it means we are on an empty page
-        // so let's go back to the previous page
-        // Through the offset
-        var propLineIds = _.map(line.reconciliation_proposition, function(prop) {
-                return prop.id;
-            });
-        var leftOversProps = _.filter(line.mv_lines, function(mv_line) {
-            return propLineIds.indexOf(mv_line.id) === -1;
-        });
-        if (line.offset && !leftOversProps.length) {
-            line.offset -= line.limitMoveLines;
-        }
 
         // Onchange the partner if not already set on the statement line.
         if(!line.st_line.partner_id && line.reconciliation_proposition
@@ -158,7 +142,6 @@ var StatementModel = BasicModel.extend({
             );
         }
 
->>>>>>> [IMP] account[_bank_statement_import]: improve reconciliation
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
