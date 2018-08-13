@@ -6,10 +6,14 @@ class MrpStockReport(models.TransientModel):
     @api.model
     def _get_reference(self, move_line):
         res_model, res_id, ref = super(MrpStockReport, self)._get_reference(move_line)
-        if move_line.production_id:
+        if move_line.move_id.production_id and not move_line.move_id.scrapped:
             res_model = 'mrp.production'
-            res_id = move_line.production_id.id
-            ref = move_line.production_id.name
+            res_id = move_line.move_id.production_id.id
+            ref = move_line.move_id.production_id.name
+        if move_line.move_id.raw_material_production_id and not move_line.move_id.scrapped:
+            res_model = 'mrp.production'
+            res_id = move_line.move_id.raw_material_production_id.id
+            ref = move_line.move_id.raw_material_production_id.name
         if move_line.move_id.unbuild_id:
             res_model = 'mrp.unbuild'
             res_id = move_line.move_id.unbuild_id.id
