@@ -18,7 +18,7 @@ class Partner(models.Model):
 
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
-        google_maps_api_key = self.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = self.env['website'].get_current_website().google_maps_api_key
         if not google_maps_api_key:
             return False
         params = {

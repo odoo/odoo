@@ -74,7 +74,7 @@ class Website(models.Model):
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
-    default_lang_code = fields.Char(related='default_lang_id.code', string="Default language code", store=True)
+    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     social_twitter = fields.Char('Twitter Account', default=_default_social_twitter)
@@ -88,8 +88,13 @@ class Website(models.Model):
     google_management_client_id = fields.Char('Google Client ID')
     google_management_client_secret = fields.Char('Google Client Secret')
 
+    google_maps_api_key = fields.Char('Google Maps API Key')
+    has_google_analytics = fields.Boolean("Google Analytics")
+    has_google_analytics_dashboard = fields.Boolean("Embedded Google Analytics")
+    has_google_maps = fields.Boolean("Google Maps")
+
     user_id = fields.Many2one('res.users', string='Public User', required=True)
-    cdn_activated = fields.Boolean('Activate CDN for assets')
+    cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner')
@@ -799,7 +804,7 @@ class Page(models.Model):
     @api.multi
     def _is_most_specific_page(self, page_to_test):
         '''This will test if page_to_test is the most specific page in self.'''
-        pages_for_url = self.filtered(lambda page: page.url == page_to_test.url)
+        pages_for_url = self.sorted(key=lambda p: not p.website_id).filtered(lambda page: page.url == page_to_test.url)
 
         # this works because pages are _order'ed by website_id
         most_specific_page = pages_for_url[0]
