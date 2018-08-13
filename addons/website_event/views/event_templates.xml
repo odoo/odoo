@@ -331,7 +331,7 @@
             <div class="clearfix"/>
 
             <t t-if="not event.is_online">
-                <div class="card" t-if="event.address_id">
+                <div class="card mb-4" t-if="event.address_id">
                     <h4 class="card-header">Where</h4>
                     <div class="card-body">
                         <t t-if="event.google_map_img()">
@@ -350,7 +350,7 @@
                 </div>
             </t>
 
-            <div class="card">
+            <div class="card mb-4">
                 <h4 class="card-header">When</h4>
                 <div class="card-body">
                     <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
@@ -358,7 +358,7 @@
                 </div>
             </div>
 
-            <div class="card" t-if="event.organizer_id">
+            <div class="card mb-4" t-if="event.organizer_id">
                 <h4 class="card-header">Organizer</h4>
                 <div class="card-body" t-field="event.organizer_id" t-options='{
                     "widget": "contact",
@@ -366,7 +366,7 @@
                     }'/>
             </div>
 
-            <div class="card">
+            <div class="card mb-4">
                 <h4 class="card-header">Social Stream</h4>
                 <div class="card-body">
                     <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
