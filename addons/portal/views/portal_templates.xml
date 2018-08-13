@@ -155,12 +155,12 @@
         :param classes : navbar classes
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
-        <nav t-attf-class="navbar o_portal_navbar {{classes if classes else 'o_portal_navbar_default'}} pl-0 pr-0">
+        <nav t-attf-class="navbar o_portal_navbar {{classes if classes else 'o_portal_navbar_default'}}">
             <div class="container-fluid">
                 <!--  Navbar title only -->
                 <div class="navbar-header float-left">
                     <t t-set="no_title">No title</t>
-                    <h3 class="navbar-brand"><t t-esc="title or no_title"/></h3>
+                    <h3 class="navbar-brand pt-0"><t t-esc="title or no_title"/></h3>
                 </div>
 
                 <!-- Non-collapsing menu item(s) -->
