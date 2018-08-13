@@ -5,5 +5,13 @@ from odoo import models, fields
 
 class Users(models.Model):
     _inherit = 'res.users'
-
-    odoobot_initialized = fields.Boolean(readonly=True, default=False)
+    odoobot_state = fields.Selection(
+        [
+            ('not_initialized', 'Not initialized'),
+            ('onboarding_emoji', 'Onboarding emoji'),
+            ('onboarding_attachement', 'Onboarding attachement'),
+            ('onboarding_command', 'Onboarding command'),
+            ('onboarding_ping', 'Onboarding ping'),
+            ('idle', 'Idle'),
+            ('disabled', 'Disabled'),
+        ], string="Odoobot Status", readonly=True, required=True, default="not_initialized")  # keep track of the state: correspond to the code of the last message sent

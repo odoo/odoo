@@ -68,7 +68,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
             answer="Wow you are a natural! Ping someone to grab its attention with @nameoftheuser. Try to ping me with <b>@OdooBot</b>."
         )
         # we dont test the end of the flow since it will depends of the installed apps (livechat)
-
+        self.user_employee.odoobot_state = "idle"
         kwargs['partner_ids'] = []
         kwargs['body'] = "I love you"
         self.assertNextMessage(
@@ -82,14 +82,6 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
             sender=self.odoobot,
             answer="That's not a really nice thing to say, you know? I'm a bot but I have feelings, ok?! 💔"
         )
-        # we should have a default answer
-        with patch('random.choice', lambda x: x[0]):
-            kwargs['body'] = "I'm batman"
-            self.assertNextMessage(
-                channel.message_post(**kwargs),
-                sender=self.odoobot,
-                answer="Mmmmh I'm not sure what you mean.. Can you try again?"
-            )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_odoobot_no_default_answer(self):
