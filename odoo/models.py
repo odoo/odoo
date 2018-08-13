@@ -1796,7 +1796,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         first_a_gby = annotated_groupbys[0]
         if not data:
-            return
+            return data
         if first_a_gby['type'] not in ('date', 'datetime'):
             return data
         interval = first_a_gby['interval']
@@ -2190,7 +2190,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
-        if self.env.context.get('fill_temporal'):
+        if self.env.context.get('fill_temporal') and data:
             data = self._read_group_fill_temporal(data, groupby, aggregated_fields,
                                                   annotated_groupbys)
 
