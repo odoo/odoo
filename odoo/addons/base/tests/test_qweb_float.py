@@ -7,7 +7,7 @@ class TestFloatExport(common.TransactionCase):
 
     def get_converter(self, name):
         FloatField = self.env['ir.qweb.field.float']
-        _, precision = self.env['decimal.precision.test']._fields[name].digits or (None, None)
+        _, precision = self.env['decimal.precision.test']._fields[name].get_digits(self.env) or (None, None)
 
         def converter(value, options=None):
             record = self.env['decimal.precision.test'].new({name: value})
