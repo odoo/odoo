@@ -45,7 +45,7 @@ function _rgbToHex(rgb) {
     if (!hex) {
         return rgb; // TODO handle error
     }
-    return hex.hex;
+    return hex.hex.toUpperCase();
 };
 
 // Update and change the popovers content, and add history button
@@ -471,8 +471,8 @@ $.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, cus
         onSave: function (color) {
             var $palettes = $(event.currentTarget).find('.note-custom-color-palette > .note-color-row')
                 .append(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
-            $palettes.filter(':even').find('button:not([data-event])').attr('data-event', 'backColor');
-            $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'foreColor');
+            $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'backColor');
+            $palettes.filter(':even').find('button:not([data-event])').attr('data-event', 'foreColor');
             if (customColor === 'foreColor') {
                 $(event.currentTarget).find('.note-fore-color-preview > button').css('border-bottom-color', color);
                 $.summernote.pluginEvents.foreColor(event, editor, layoutInfo, color);
