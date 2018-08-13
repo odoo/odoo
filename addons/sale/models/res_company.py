@@ -81,6 +81,7 @@ class ResCompany(models.Model):
             'custom_layout': 'mail.mail_notification_paynow',
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
+            'mail_notify_author': True,
         }
         return action
 

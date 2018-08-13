@@ -7,6 +7,7 @@
             <t t-set="description">Customize the look of your quotations.</t>
             <t t-set="done_icon" t-value="'fa-star'" />
             <t t-set="done_text">Looks great!</t>
+            <t t-set="btn_text">Customize</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_quotation_layout'" />
             <t t-set="model" t-value="'res.company'" />
             <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
@@ -16,6 +17,7 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Confirmation &amp; Payment</t>
             <t t-set="description">Choose how to confirm quotations and get paid.</t>
+            <t t-set="btn_text">Set payments</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_payment_acquirer'" />
             <t t-set="model" t-value="'res.company'" />
             <t t-set="state" t-value="state.get('sale_onboarding_order_confirmation_state')" />
@@ -25,6 +27,7 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Sample Quotation</t>
             <t t-set="description">Send a quotation to test the customer portal.</t>
+            <t t-set="btn_text">Send sample</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_sample_quotation'" />
             <t t-set="model" t-value="'res.company'" />
             <t t-set="state" t-value="state.get('sale_onboarding_sample_quotation_state')" />

@@ -25,11 +25,12 @@ class PaymentWizard(models.TransientModel):
     manual_name = fields.Char("Method",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('manual_name'))
     journal_name = fields.Char("Bank Name", default=lambda self: self._get_default_payment_acquirer_onboarding_value('journal_name'))
     acc_number = fields.Char("Account Number",  default=lambda self: self._get_default_payment_acquirer_onboarding_value('acc_number'))
-    manual_post_msg = fields.Html("Payment instructions")
+    manual_post_msg = fields.Html("Payment Instructions")
 
     @api.onchange('journal_name', 'acc_number')
     def _set_manual_post_msg_value(self):
-        self.manual_post_msg = _('Please make a payment to %s  %s') % (self.journal_name or _("Bank") , self.acc_number or _("Account"))
+        self.manual_post_msg = _('Please make a payment to <ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>') %\
+                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.user.company_id.name)
 
     _payment_acquirer_onboarding_cache = {}
     _data_fetched = False
@@ -137,3 +138,8 @@ class PaymentWizard(models.TransientModel):
 
     def _set_payment_acquirer_onboarding_step_done(self):
         self.env.user.company_id.set_onboarding_step_done('payment_acquirer_onboarding_state')
+
+    def action_onboarding_other_payment_acquirer(self):
+        self._set_payment_acquirer_onboarding_step_done()
+        action = self.env.ref('payment.action_payment_acquirer').read()[0]
+        return action
