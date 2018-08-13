@@ -38,6 +38,11 @@ class AccountMove(models.Model):
 
         # Copy partner.
         self.partner_id = self.purchase_id.partner_id
+        # When _set_additional_fields is called later
+        # it should count on a state of the invoice *after* a partner onchange
+        # This is consistent with the move state feeded to _set_additional_fields
+        # on sales orders (there: in the create method, after any onchage)
+        self._onchange_partner_id()
         self.fiscal_position_id = self.purchase_id.fiscal_position_id
         self.invoice_payment_term_id = self.purchase_id.payment_term_id
         self.currency_id = self.purchase_id.currency_id
