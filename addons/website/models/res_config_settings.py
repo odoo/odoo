@@ -13,6 +13,7 @@ class ResConfigSettings(models.TransientModel):
     def _default_website(self):
         return self.env['website'].search([], limit=1)
 
+    # TODO SEB check this why it has null values -> error log at install of sale_quotation_builder (but it works)
     website_id = fields.Many2one('website', string="website",
                                  default=_default_website, required=True, ondelete='cascade')
     website_name = fields.Char('Website Name', related='website_id.name')
