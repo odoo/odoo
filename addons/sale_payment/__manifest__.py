@@ -23,5 +23,4 @@ Provide tools for sale-related payment
     ],
     'installable': True,
     'auto_install': False,
-    'post_init_hook': 'set_transfer_so_reference',
 }
