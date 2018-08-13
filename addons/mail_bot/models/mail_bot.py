@@ -33,17 +33,20 @@ class MailBot(models.AbstractModel):
 
     def _get_answer(self, record, body, values, command=False):
         # onboarding
+        odoobot_state = self.env.user.odoobot_state
         if self._is_bot_in_private_channel(record):
             # main flow
-            if body in ('hi', 'hello'):
-                return _("Hi, I will guide you through chat features. First, try to send me an emoji 😊")
-            elif self._body_contains_emoji(body):
+            if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
+                self.env.user.odoobot_state = "onboarding_attachement"
                 return _("Great! :) Did you notice that you can also send attachments, like a picture of your cute dog? Try it!")
-            elif values.get("attachment_ids"):
+            elif odoobot_state == 'onboarding_attachement' and values.get("attachment_ids"):
+                self.env.user.odoobot_state = "onboarding_command"
                 return _("Not a cute dog, but you get it :) To access special features, start your sentence with '/' (e.g. /help).")
-            elif command == 'help':
+            elif odoobot_state == 'onboarding_command' and command == 'help':
+                self.env.user.odoobot_state = "onboarding_ping"
                 return _("Wow you are a natural! Ping someone to grab its attention with @nameoftheuser. Try to ping me with <b>@OdooBot</b>.")
-            elif self._is_bot_pinged(values):
+            elif odoobot_state == 'onboarding_ping' and self._is_bot_pinged(values):
+                self.env.user.odoobot_state = "idle"
                 discuss_href = 'href="/web#action=mail.mail_channel_action_client_chat&active_id=%s"' % record.id
                 discuss_src = 'src="/mail_bot/static/img/odoobot_discuss.png"'
                 chatter_src = 'src="/mail_bot/static/img/odoobot_chatter.png"'
@@ -54,15 +57,24 @@ class MailBot(models.AbstractModel):
 -or via the chatter:<br/><img %s/><br/><br/>\
 Aaaaand that's it! Enjoy discovering Odoo!") % (discuss_href, discuss_src, chatter_src)
             # easter eggs
-            elif body in ['❤️', _('i love you'), _('love')]:
+            elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
                 return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
-            elif body in [_('help'), _('help me'), _('i need help')]:
+            elif odoobot_state == "idle" and body in [_('help'), _('help me'), _('i need help')]:
                 return _("I'm trying to help you, but I'm just a bot... :( You can also check <a href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more information!")
-            elif _('fuck') in body or "fuck" in body:
+            elif odoobot_state == "idle" and _('fuck') in body or "fuck" in body:
                 return _("That's not a really nice thing to say, you know? I'm a bot but I have feelings, ok?! 💔")
             else:
+                #repeat question
+                if odoobot_state == 'onboarding_emoji':
+                    return _("Not exactly. To send an emoji, type \":)\" and press enter.")
+                elif odoobot_state == 'onboarding_attachement':
+                    return _("I want you to send me an attachement, you should press the button next to the chat bar to select a file.")
+                elif odoobot_state == 'onboarding_command':
+                    return _("Not sure wat you are doing. Please press / and wait for the propositions. Select \"help\" and press enter")
+                elif odoobot_state == 'onboarding_ping':
+                    return _("Please, ping me. Type and \"@\" and begin to type \"odoobot\". Select the proposition and press enter.")
                 return random.choice([
-                    _("Mmmmh I'm not sure what you mean.. Can you try again?"),
+                    _("I'm not smart enough to answer your question, sorry."),
                     _("I'm afraid I don't understand. Sorry!")
                 ])
         elif self._is_bot_pinged(values):

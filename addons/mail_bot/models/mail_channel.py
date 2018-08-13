@@ -25,7 +25,7 @@ class Channel(models.Model):
 
     @api.model
     def init_odoobot(self):
-        if not self.env.user.odoobot_initialized:
+        if self.env.user.odoobot_state == 'not_initialized':
             partner = self.env.user.partner_id
             odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("mail_bot.partner_odoobot")
             channel = self.with_context({"mail_create_nosubscribe": True}).create({
@@ -37,5 +37,5 @@ class Channel(models.Model):
             })
             message = _("Hello, I'm here to help you discover chat features. Try answering me with an emoji 😊")
             channel.message_post(body=message, author_id=odoobot_id, message_type="comment", subtype="mail.mt_comment")
-            self.env.user.odoobot_initialized = True
+            self.env.user.odoobot_state = 'onboarding_emoji'
             return channel
