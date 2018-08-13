@@ -19,7 +19,7 @@
             <t t-set="description">
                 Send an invoice to test the customer portal.
             </t>
-            <t t-set="btn_text">Send Sample</t>
+            <t t-set="btn_text">Send sample</t>
             <t t-set="done_text">Sample invoice sent!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_sample_invoice'" />
             <t t-set="model" t-value="'res.company'" />
@@ -150,7 +150,7 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Taxes</t>
             <t t-set="description">Choose a default sales tax for your products.</t>
-            <t t-set="btn_text">I'm ready</t>
+            <t t-set="btn_text">Set taxes</t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_sale_tax'" />
             <t t-set="model" t-value="'res.company'" />
@@ -164,8 +164,8 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <form>
-                <div>Choose a default sales tax for your products.</div>
-                <label for="account_sale_tax_id" string="Sales tax"/>
+                <div class="mb16">Choose a default sales tax for your products.</div>
+                <label for="account_sale_tax_id" string="Sales Tax"/>
                 <field name="account_sale_tax_id" />
                 <footer>
                     <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax" />
