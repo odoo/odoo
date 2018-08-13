@@ -146,7 +146,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEquals(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
 
     def test_transfert_project(self):
-        """ Test transfert task with timesheet to another project """
+        """ Transfert task with timesheet to another project should not modified past timesheets (they are still linked to old project. """
         Timesheet = self.env['account.analytic.line']
         # create a second project
         self.project_customer2 = self.env['project.project'].create({
@@ -174,9 +174,9 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEquals(timesheet_count1, 0, "No timesheet in project 1")
-        self.assertEquals(timesheet_count2, 1, "One timesheet in project 2")
-        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+        self.assertEquals(timesheet_count1, 1, "Still one timesheet in project 1")
+        self.assertEquals(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
 
         # it is forbidden to set a task with timesheet without project
         with self.assertRaises(UserError):
