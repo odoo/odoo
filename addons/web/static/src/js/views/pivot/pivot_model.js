@@ -75,46 +75,76 @@ var PivotModel = AbstractModel.extend({
      */
     expandHeader: function (header, field) {
         var self = this;
-
         var other_root = header.root.other_root;
         var other_groupbys = header.root.other_root.groupbys;
-
         var measures = _.map(this.data.measures, function(measure) {
             var type = self.fields[measure].type;
             return (type === 'many2one') ? measure + ":count_distinct" : measure;
         });
-
-        var groupbys = [];
-
+        var groupBys = [];
         for (var i = 0; i <= other_groupbys.length; i++) {
-            groupbys.push([field].concat(other_groupbys.slice(0,i)));
+            groupBys.push([field].concat(other_groupbys.slice(0,i)));
         }
-
-        return $.when.apply(null, groupbys.map(function (groupBy) {
-            return self._rpc({
-                    model: self.modelName,
-                    method: 'read_group',
-                    context: self.data.context,
-                    domain: header.domain.length ? header.domain : self.data.domain,
-                    fields: measures,
-                    groupBy: groupBy,
-                    lazy: false,
-                });
-        })).then(function () {
-            var data = Array.prototype.slice.call(arguments);
-            var datapt, attrs, j, l, row, col, cell_value, groupBys;
-            for (i = 0; i < data.length; i++) {
-                for (j = 0; j < data[i].length; j++){
-                    datapt = data[i][j];
+        var defs = [];
+        if ((typeof header.count === 'object' && header.count.data) || (typeof header.count === 'number' && header.count)) {
+            defs = defs.concat(groupBys.map(function (groupBy) {
+                return self._rpc({
+                        model: self.modelName,
+                        method: 'read_group',
+                        context: self.data.context,
+                        domain: header.domain ||
+                                    self.data.domain.concat(self.data.timeRange),
+                        fields: measures,
+                        groupBy: groupBy,
+                        lazy: false,
+                    }).then(function (result) {
+                        return ['data', result];
+                    });
+            }));
+        }
+        if (header.comparisonCount && this.data.compare) {
+            defs = defs.concat(groupBys.map(function (groupBy) {
+                return self._rpc({
+                        model: self.modelName,
+                        method: 'read_group',
+                        context: self.data.context,
+                        domain: header.comparisonDomain ||
+                                    self.data.domain.concat(self.data.comparisonTimeRange),
+                        fields: measures,
+                        groupBy: groupBy,
+                        lazy: false,
+                    }).then(function (result) {
+                        return ['comparisonData', result];
+                    });
+            }));
+        }
+        return $.when.apply(null, defs).then(function () {
+            var results = Array.prototype.slice.call(arguments);
+            var data = [];
+            var comparisonData = [];
+            _.each(results, function (result) {
+                if (result[0] === 'data') {
+                    data.push(result[1]);
+                } else {
+                    comparisonData.push(result[1]);
+                }
+            });
+            var allData = self._mergeData(data, comparisonData, groupBys);
+            var dataPoint, attrs, j, l, row, col, cell_value;
+            for (i = 0; i < allData.length; i++) {
+                for (j = 0; j < allData[i].length; j++){
+                    dataPoint = allData[i][j];
                     groupBys = [field].concat(other_groupbys.slice(0,i));
                     attrs = {
-                        value: self._getValue(datapt, groupBys),
-                        domain: datapt.__domain || [],
-                        length: datapt.__count,
+                        value: self._getValue(dataPoint, groupBys),
+                        domain: dataPoint.__domain,
+                        comparisonDomain: dataPoint.__comparisonDomain,
+                        length: dataPoint.__count.data ? dataPoint.__count.data : dataPoint.__count,
+                        comparisonLength: dataPoint.__comparisonCount|| 0,
                     };
 
                     if (i === 0) {
-                        row = self._makeHeader(attrs.value, attrs.domain, header.root, 0, 1, header);
+                        row = self._makeHeader(attrs.value, attrs.domain, attrs.comparisonDomain, attrs.length, attrs.comparisonLength , header.root, 0, 1, header);
                     } else {
                         row = self._getHeader(attrs.value, header.root, 0, 1, header);
                     }
@@ -123,7 +153,7 @@ var PivotModel = AbstractModel.extend({
                         continue;
                     }
                     for (cell_value = {}, l=0; l < self.data.measures.length; l++) {
-                        var _value = datapt[self.data.measures[l]];
+                        var _value = dataPoint[self.data.measures[l]];
                         if (_value instanceof Array) {
                             // when a many2one field is used as a measure AND as
                             // a grouped field, bad things happen.  The server
@@ -133,7 +163,11 @@ var PivotModel = AbstractModel.extend({
                             // array.  Fortunately, if we group by a field,
                             // then we can say for certain that the group contains
                             // exactly one distinct value for that field.
-                            _value = 1;
+                            if (self.data.compare) {
+                                _value = dataPoint[self.data.measures[l] + 'Aggregate'];
+                            } else {
+                                _value = 1;
+                            }
                         }
                         cell_value[self.data.measures[l]] =_value;
                     }
@@ -155,35 +189,106 @@ var PivotModel = AbstractModel.extend({
      * @returns {Object}
      */
     exportData: function () {
+        var self = this;
         var measureNbr = this.data.measures.length;
         var headers = this._computeHeaders();
+        if (this.data.compare) {
+            _.each(headers, function (headerGroup) {
+                _.each(headerGroup, function (header) {
+                    header.width = header.width ? 3 * header.width : 3;
+                });
+            });
+        }
         var measureRow = measureNbr >= 1 ? _.last(headers) : [];
         var rows = this._computeRows();
-        var i, j, value;
+        var i, j, value, values, is_bold, additionalHeaders = [];
+        // remove the empty headers on left side
         headers[0].splice(0,1);
 
-        // process measureRow
-        for (i = 0; i < measureRow.length; i++) {
-            measureRow[i].measure = this.fields[measureRow[i].measure].string;
+        function isBold (i, j) {
+            return (i === 0) ||
+                        ((self.data.main_col.width > 1) &&
+                        (j >= rows[i].values.length - measureNbr));
         }
-        // process all rows
-        for (i =0, j, value; i < rows.length; i++) {
-            for (j = 0; j < rows[i].values.length; j++) {
-                value = rows[i].values[j];
-                rows[i].values[j] = {
-                    is_bold: (i === 0) ||
-                        ((this.data.main_col.width > 1) &&
-                         (j >= rows[i].values.length - measureNbr)),
-                    value:  (value === undefined) ? "" : value,
-                };
+
+        function makeValue (value, is_bold) {
+            return {
+                        is_bold: is_bold,
+                        value:  (value === undefined) ? "" : value,
+            };
+        }
+
+        function makeMeasure (name) {
+            return {
+                is_bold: false,
+                measure: name
+            };
+        }
+
+        // process measureRow
+        additionalHeaders = [];
+        for (i = 0; i < measureRow.length; i++) {
+            if (this.data.compare) {
+                measureRow[i].title = this.fields[measureRow[i].measure].string;
+                measureRow[i].height = 1;
+                measureRow[i].expanded = true;
+                additionalHeaders = additionalHeaders.concat(
+                        _.map(
+                            [
+                                this.data.timeRangeDescription,
+                                this.data.comparisonTimeRangeDescription,
+                                'Variation'
+                            ],
+                            makeMeasure
+                        )
+                    );
+            } else {
+                measureRow[i].measure = this.fields[measureRow[i].measure].string;
             }
         }
-        return {
-            headers: _.initial(headers),
-            measure_row: measureRow,
-            rows: rows,
-            nbr_measures: measureNbr,
-        };
+        if (this.data.compare) {
+            for (i =0, j, value; i < rows.length; i++) {
+                values = [];
+                for (j = 0; j < rows[i].values.length; j++) {
+                    value = rows[i].values[j];
+                    is_bold = isBold(i, j);
+                    if (value instanceof Object) {
+                        for (var origin in value) {
+                            if (origin === 'variation') {
+                                values.push(makeValue(value[origin].magnitude * 100, is_bold));
+                            } else {
+                                values.push(makeValue(value[origin], is_bold));
+                            }
+                        }
+                    } else {
+                        for (var l = 0; l < 3; l++) {
+                            values.push(makeValue(undefined, isBold(i, j)));
+                        }
+                    }
+                }
+                rows[i].values = values;
+            }
+            headers.push(additionalHeaders);
+            return {
+                headers: _.initial(headers),
+                measure_row: additionalHeaders,
+                rows: rows,
+                nbr_measures: 3 * measureNbr,
+            };
+        } else {
+        // process all rows
+            for (i =0, j, value; i < rows.length; i++) {
+                for (j = 0; j < rows[i].values.length; j++) {
+                    rows[i].values[j] = makeValue(rows[i].values[j], isBold(i, j));
+                }
+            }
+            return {
+                headers: _.initial(headers),
+                measure_row: measureRow,
+                rows: rows,
+                nbr_measures: measureNbr,
+            };
+        }
     },
     /**
      * Swap the columns and the rows.  It is a synchronous operation.
@@ -214,6 +319,7 @@ var PivotModel = AbstractModel.extend({
             colGroupBys: this.data.main_col.groupbys,
             context: this.data.context,
             domain: this.data.domain,
+            compare: this.data.compare,
             fields: this.fields,
             headers: !isRaw && this._computeHeaders(),
             has_data: true,
@@ -240,6 +346,11 @@ var PivotModel = AbstractModel.extend({
      * @param {string[]} params.rowGroupBys
      * @param {string[]} params.colGroupBys
      * @param {string[]} params.measures
+     * @param {string[]} params.timeRange
+     * @param {string[]} params.comparisonTimeRange
+     * @param {string[]} params.timeRangeDescription
+     * @param {string[]} params.comparisonTimeRangeDescription
+     * @param {string[]} params.compare
      * @param {Object} params.fields
      * @param {string} params.default_order
      * @returns {Deferred}
@@ -252,13 +363,19 @@ var PivotModel = AbstractModel.extend({
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.data = {
-            domain: params.domain,
+            domain: this.initialDomain,
+            timeRange: params.timeRange || [],
+            timeRangeDescription: params.timeRangeDescription || "",
+            comparisonTimeRange: params.comparisonTimeRange || [],
+            comparisonTimeRangeDescription: params.comparisonTimeRangeDescription || "",
+            compare: params.compare || false,
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
             measures: this._processMeasures(params.context.pivot_measures) || params.measures,
             sorted_column: {},
         };
+        this.variationData = {};
         this.defaultGroupedBy = params.groupedBy;
 
         return this._loadData().then(function () {
@@ -282,6 +399,21 @@ var PivotModel = AbstractModel.extend({
             this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
             this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
             this.defaultGroupedBy = this.data.groupedBy.length ? this.data.groupedBy : this.defaultGroupedBy;
+            var timeRangeMenuData = params.context.timeRangeMenuData;
+            if (timeRangeMenuData) {
+                this.data.timeRange = timeRangeMenuData.timeRange || [];
+                this.data.timeRangeDescription = timeRangeMenuData.timeRangeDescription || "";
+                this.data.comparisonTimeRange = timeRangeMenuData.comparisonTimeRange || [];
+                this.data.comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription || "";
+                this.data.compare = this.data.comparisonTimeRange.length > 0;
+            } else {
+                this.data.timeRange = [];
+                this.data.timeRangeDescription = "";
+                this.data.comparisonTimeRange = [];
+                this.data.comparisonTimeRangeDescription = "";
+                this.data.compare = false;
+                this.data.context = _.omit(this.data.context, 'timeRangeMenuData');
+            }
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
@@ -525,8 +657,8 @@ var PivotModel = AbstractModel.extend({
      * @returns {string}
      */
     _getNumberedValue: function (value, field) {
-        var id= value[0];
-        var name= value[1];
+        var id = value[0];
+        var name = value[1];
         this.numbering[field] = this.numbering[field] || {};
         this.numbering[field][name] = this.numbering[field][name] || {};
         var numbers = this.numbering[field][name];
@@ -534,15 +666,15 @@ var PivotModel = AbstractModel.extend({
         return name + (numbers[id] > 1 ? "  (" + numbers[id] + ")" : "");
     },
     /**
-     * @param {any} datapt
+     * @param {any} dataPoint
      * @param {any} fields
      * @returns {string[]}
      */
-    _getValue: function (datapt, fields) {
+    _getValue: function (dataPoint, fields) {
         var result = [];
         var value;
         for (var i = 0; i < fields.length; i++) {
-            value = this._sanitizeValue(datapt[fields[i]],fields[i]);
+            value = this._sanitizeValue(dataPoint[fields[i]],fields[i]);
             result.push(value);
         }
         return result;
@@ -569,35 +701,67 @@ var PivotModel = AbstractModel.extend({
                 groupBys.push(rowGroupBys.slice(0,i).concat(colGroupBys.slice(0,j)));
             }
         }
-
-        return this._loadDataDropPrevious.add($.when.apply(null, groupBys.map(function (groupBy) {
+        var defs = groupBys.map(function (groupBy) {
             return self._rpc({
                     model: self.modelName,
                     method: 'read_group',
                     context: self.data.context,
-                    domain: self.data.domain,
+                    domain: self.data.domain.concat(self.data.timeRange),
                     fields: measures,
                     groupBy: groupBy,
                     lazy: false,
+                }).then(function (result) {
+                    return ['data', result];
                 });
-        }))).then(function () {
-            var data = Array.prototype.slice.call(arguments);
-            if (data[0][0].__count === 0) {
+        });
+        if (this.data.compare) {
+            defs = defs.concat(groupBys.map(function (groupBy) {
+                return self._rpc({
+                        model: self.modelName,
+                        method: 'read_group',
+                        context: self.data.context,
+                        domain: self.data.domain.concat(self.data.comparisonTimeRange),
+                        fields: measures,
+                        groupBy: groupBy,
+                        lazy: false,
+                    }).then(function (result) {
+                        return ['comparisonData', result];
+                    });
+            }));
+        }
+
+        return this._loadDataDropPrevious.add($.when.apply(null, defs)).then(function () {
+            var results = Array.prototype.slice.call(arguments);
+            var data = [];
+            var comparisonData = [];
+            _.each(results, function (result) {
+                if (result[0] === 'data') {
+                    data.push(result[1]);
+                } else {
+                    comparisonData.push(result[1]);
+                }
+            });
+            var allData = self._mergeData(data, comparisonData, groupBys);
+            if (allData[0][0].__count === 0 && allData[0][0].__comparisonCount === 0) {
                 self.data.has_data = false;
             }
-            self._prepareData(data);
+            self._prepareData(allData);
         });
     },
     /**
      * @param {any} value
      * @param {any} domain
+     * @param {any} comparisonDomain
      * @param {any} root
+     * @param {any} count
+     * @param {any} comparisonCount
      * @param {any} i
      * @param {any} j
      * @param {any} parent_header
      * @returns {Object}
      */
-    _makeHeader: function (value, domain, root, i, j, parent_header) {
+
+    _makeHeader: function (value, domain, comparisonDomain, count, comparisonCount, root, i, j, parent_header) {
         var total = _t("Total");
         var title = value.length ? value[value.length - 1] : total;
         var path, parent;
@@ -611,7 +775,10 @@ var PivotModel = AbstractModel.extend({
         var header = {
             id: utils.generateID(),
             expanded: false,
-            domain: domain || [],
+            domain: domain,
+            comparisonDomain: comparisonDomain,
+            count: count,
+            comparisonCount: comparisonCount,
             children: [],
             path: value.length ? parent.path.concat(title) : [title]
         };
@@ -625,10 +792,131 @@ var PivotModel = AbstractModel.extend({
     },
     /**
      * @param {Object} data
+     * @param {Object} comparisonData
+     * @param {(string[])[]} groupBys
+     * @returns {Object}
+     */
+    _mergeData: function (data, comparisonData, groupBys) {
+        if (!this.data.compare) {
+            return data;
+        }
+        var allData = [];
+        var dataPoints;
+        var value, groupIdentifier, dataPoint, m, measureName, measureValue, measureComparisonValue;
+        for (var index = 0; index < groupBys.length; index++) {
+            dataPoints = {};
+            if (data.length) {
+                for (var k = 0; k < data[index].length; k++) {
+                    dataPoint  = data[index][k];
+                    value = this._getValue(dataPoint, groupBys[index]);
+                    groupIdentifier = value.join();
+                    for (m=0; m < this.data.measures.length; m++) {
+                        measureName = this.data.measures[m];
+                        measureValue = dataPoint[measureName];
+                        if (typeof measureValue === 'boolean') {
+                            measureValue = measureValue ? 1 : 0;
+                        }
+                        if (!(measureValue instanceof Array) && measureName !== '__count') {
+                            dataPoint[measureName] = {
+                                data: measureValue,
+                                comparisonData : 0,
+                                variation: computeVariation(measureValue, 0),
+                            };
+                        }
+                        if (measureValue instanceof Array) {
+                            dataPoint[measureName + 'Aggregate'] = {
+                                data: 1,
+                                comparisonData: 0,
+                                variation: computeVariation(1, 0),
+                            };
+                        }
+                    }
+                    dataPoint.__count = {
+                        data: dataPoint.__count,
+                        comparisonData: 0,
+                        variation: computeVariation(dataPoint.__count, 0)
+                    };
+                    dataPoints[groupIdentifier] = dataPoint;
+                }
+            }
+            if (comparisonData.length) {
+                for (var l = 0; l < comparisonData[index].length; l++) {
+                    dataPoint  = comparisonData[index][l];
+                    value = this._getValue(dataPoint, groupBys[index]);
+                    groupIdentifier = value.join();
+                    if (!dataPoints[groupIdentifier]) {
+                        for (m=0; m < this.data.measures.length; m++) {
+                            measureName = this.data.measures[m];
+                            measureComparisonValue = dataPoint[measureName];
+                            if (typeof(measureComparisonValue) === 'boolean') {
+                                measureComparisonValue = measureComparisonValue ? 1 : 0;
+                            }
+                            if (!(measureComparisonValue instanceof Array) && measureName !== '__count') {
+                                dataPoint[measureName] = {
+                                    data: 0,
+                                    comparisonData: measureComparisonValue,
+                                    variation: computeVariation(0, measureComparisonValue),
+                                };
+                            }
+                            if (measureComparisonValue instanceof Array) {
+                                dataPoint[measureName + 'Aggregate'] = {
+                                    data: 0,
+                                    comparisonData: 1,
+                                    variation: computeVariation(0,1),
+                                };
+                            }
+                        }
+                        dataPoint.__count = {
+                            data: 0,
+                            comparisonData: dataPoint.__count,
+                            variation: computeVariation(0, dataPoint.__count)
+                        };
+                        dataPoint.__comparisonCount = dataPoint.__count;
+                        dataPoint.__comparisonDomain = dataPoint.__domain;
+                        dataPoints[groupIdentifier] = _.omit(dataPoint, '__domain');
+                    } else {
+                        for (m=0; m < this.data.measures.length; m++) {
+                            measureName = this.data.measures[m];
+                            measureComparisonValue = dataPoint[measureName];
+                            if (typeof(measureComparisonValue) === 'boolean') {
+                                measureComparisonValue = measureComparisonValue ? 1 : 0;
+                            }
+                            if (!(measureComparisonValue instanceof Array) && measureName !== '__count') {
+                                dataPoints[groupIdentifier][measureName].comparisonData = measureComparisonValue;
+                                dataPoints[groupIdentifier][measureName].variation = computeVariation(
+                                    dataPoints[groupIdentifier][measureName].data,
+                                    measureComparisonValue
+                                );
+                            }
+                            if (measureComparisonValue instanceof Array) {
+                                dataPoints[groupIdentifier][measureName + 'Aggregate'].comparisonData = 1;
+                                dataPoints[groupIdentifier][measureName].variation = computeVariation(
+                                    dataPoints[groupIdentifier][measureName].data,
+                                    1
+                                );
+
+                            }
+                        }
+                        dataPoints[groupIdentifier].__count.comparisonData = dataPoint.__count;
+                        dataPoints[groupIdentifier].__count.variation = computeVariation(
+                            dataPoints[groupIdentifier].__count.data,
+                            dataPoint.__count
+                        );
+                        dataPoints[groupIdentifier].__comparisonCount = dataPoint.__count;
+                        dataPoints[groupIdentifier].__comparisonDomain = dataPoint.__domain;
+                    }
+                }
+            }
+            allData.push(_.values(dataPoints));
+        }
+        return allData;
+    },
+    /**
+     * @param {Object} data
      */
     _prepareData: function (data) {
         var self = this;
-        _.extend(self.data, {
+        _.extend(this.data, {
             main_row: {},
             main_col: {},
             headers: {},
@@ -638,7 +926,7 @@ var PivotModel = AbstractModel.extend({
         var index = 0;
         var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
-        var datapt, row, col, attrs, cell_value;
+        var dataPoint, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
         var groupBys;
         var m;
@@ -647,32 +935,35 @@ var PivotModel = AbstractModel.extend({
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
                 for (var k = 0; k < data[index].length; k++) {
-                    datapt = data[index][k];
+                    dataPoint = data[index][k];
                     groupBys = rowGroupBys.slice(0,i).concat(colGroupBys.slice(0,j));
                     attrs = {
-                        value: self._getValue(datapt, groupBys),
-                        domain: datapt.__domain || [],
-                        length: datapt.__count,
+                        // value could be named 'groupIdentifier'
+                        value: self._getValue(dataPoint, groupBys),
+                        domain: dataPoint.__domain,
+                        comparisonDomain: dataPoint.__comparisonDomain,
+                        length: dataPoint.__count.data ? dataPoint.__count.data : dataPoint.__count,
+                        comparisonLength: dataPoint.__count.comparisonData || 0
                     };
 
                     if (j === 0) {
-                        row = this._makeHeader(attrs.value, attrs.domain, main_row_header, 0, i);
+                        row = this._makeHeader(attrs.value, attrs.domain, attrs.comparisonDomain, attrs.length, attrs.comparisonLength, main_row_header, 0, i);
                     } else {
                         row = this._getHeader(attrs.value, main_row_header, 0, i);
                     }
                     if (i === 0) {
-                        col = this._makeHeader(attrs.value, attrs.domain, main_col_header, i, i+j);
+                        col = this._makeHeader(attrs.value, attrs.domain, attrs.comparisonDomain, attrs.length, attrs.comparisonLength, main_col_header, i, i+j);
                     } else {
                         col = this._getHeader(attrs.value, main_col_header, i, i+j);
                     }
                     if (i + j === 0) {
-                        this.data.has_data = attrs.length > 0;
+                        this.data.has_data = attrs.length > 0 || attrs.comparisonLength > 0;
                         main_row_header = row;
                         main_col_header = col;
                     }
                     if (!this.data.cells[row.id]) this.data.cells[row.id] = [];
                     for (cell_value = {}, m=0; m < this.data.measures.length; m++) {
-                        var _value = datapt[this.data.measures[m]];
+                        var _value = dataPoint[this.data.measures[m]];
                         if (_value instanceof Array) {
                             // when a many2one field is used as a measure AND as
                             // a grouped field, bad things happen.  The server
@@ -682,7 +973,11 @@ var PivotModel = AbstractModel.extend({
                             // array.  Fortunately, if we group by a field,
                             // then we can say for certain that the group contains
                             // exactly one distinct value for that field.
-                            _value = 1;
+                            if (this.data.compare) {
+                                _value = dataPoint[this.data.measures[m] + 'Aggregate'];
+                            } else {
+                                _value = 1;
+                            }
                         }
                         cell_value[this.data.measures[m]] = _value;
                     }

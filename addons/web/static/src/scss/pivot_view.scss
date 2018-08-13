@@ -7,6 +7,21 @@
         .o_pivot_cell_value:hover {
             color: $o-brand-primary;
             cursor: pointer;
+
+        }
+    }
+    .o_pivot_cell_value {
+        font-size: 1em;
+        .o_comparison {
+            font-size: 0.61em;
+        }
+        .o_variation {
+            &.o_positive {
+                color: green;
+            }
+            &.o_negative {
+                color: red;
+            }
         }
     }
 

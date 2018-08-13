@@ -5,6 +5,9 @@ var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
+var patchDate = testUtils.patchDate;
+
 var _t = core._t;
 var createView = testUtils.createView;
 
@@ -15,7 +18,7 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: "integer"},
                     bar: {string: "bar", type: "boolean"},
-                    date: {string: "Date", type: "date", store: true},
+                    date: {string: "Date", type: "date", store: true, sortable: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     other_product_id: {string: "Other Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
@@ -1194,7 +1197,7 @@ QUnit.module('Views', {
                         '<field name="foo" type="measure"/>' +
                         '<field name="bouh" type="measure"/>' +
                   '</pivot>',
-        })
+        });
 
         assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:first').data('field'), 'bouh',
             "Bouh should be the first measure");
@@ -1221,4 +1224,53 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
-});});
+
+    QUnit.test('rendering of pivot view with comparison active', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-11-22';
+        this.data.partner.records[3].date = '2016-11-03';
+
+        this.data.partner.fields.company_type = {string: "Company Type", type: "selection", selection: [["company", "Company"], ["individual", "Individual"]], searchable: true, store: true, sortable: true};
+
+        this.data.partner.records[0].company_type = 'company';
+        this.data.partner.records[1].company_type = 'individual';
+        this.data.partner.records[2].company_type = 'company';
+        this.data.partner.records[3].company_type = 'individual';
+
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        $('.o_time_range_menu_button').click();
+        $('.o_time_range_menu .custom-control-label').click();
+        $('.o_time_range_menu .o_apply_range').click();
+
+        // Test to modify and extend
+        assert.strictEqual($('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+});
+});
