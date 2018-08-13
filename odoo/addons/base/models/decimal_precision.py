@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, tools
 
+
 class DecimalPrecision(models.Model):
     _name = 'decimal.precision'
     _description = 'Decimal Precision'
@@ -58,7 +59,7 @@ class DecimalPrecisionFloat(models.AbstractModel):
         if dp:
             return self.env['decimal.precision'].precision_get(dp)
 
-        return super(DecimalPrecisionFloat, self).precision(field, options=options)
+        return super().precision(field, options=options)
 
 class DecimalPrecisionTestModel(models.Model):
     _name = 'decimal.precision.test'

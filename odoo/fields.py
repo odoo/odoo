@@ -1280,23 +1280,22 @@ class Float(Field):
         # with all significant digits.
         # FLOAT8 type is still the default when there is no precision because it
         # is faster for most operations (sums, etc.)
-        return ('numeric', 'numeric') if self.digits is not None else \
+        return ('numeric', 'numeric') if self._digits is not None else \
                ('float8', 'double precision')
 
-    @property
-    def digits(self):
-        if callable(self._digits):
-            with LazyCursor() as cr:
-                return self._digits(cr)
+    def get_digits(self, env):
+        if isinstance(self._digits, str):
+            precision = env['decimal.precision'].precision_get(self._digits)
+            return 16, precision
         else:
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
-    _description_digits = property(attrgetter('digits'))
+    _description_digits = property(attrgetter('_digits'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         result = float(value or 0.0)
-        digits = self.digits
+        digits = self.get_digits(record.env)
         if digits:
             precision, scale = digits
             result = float_repr(float_round(result, precision_digits=scale), precision_digits=scale)
@@ -1307,7 +1306,7 @@ class Float(Field):
         value = float(value or 0.0)
         if not validate:
             return value
-        digits = self.digits
+        digits = self.get_digits(record.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
     def convert_to_export(self, value, record):

@@ -11,7 +11,6 @@ Configure the price accuracy you need for different kinds of usage: accounting, 
     'depends': ['base'],
     'category' : 'Hidden',
     'data': [
-        'views/decimal_precision_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],
