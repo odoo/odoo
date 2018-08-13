@@ -77,6 +77,24 @@ class AccountAnalyticLine(models.Model):
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result
 
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        """ Set the correct label for `unit_amount`, depending on company UoM """
+        result = super(AccountAnalyticLine, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result['arch'] = self._apply_timesheet_label(result['arch'])
+        return result
+
+    @api.model
+    def _apply_timesheet_label(self, view_arch):
+        doc = etree.XML(view_arch)
+        encoding_uom = self.env.user.company_id.timesheet_encode_uom_id
+        # Here, we select only the unit_amount field having no string set to give priority to
+        # custom inheretied view stored in database. Even if normally, no xpath can be done on
+        # 'string' attribute.
+        for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
+            node.set('string', _('Duration (%s)') % (encoding_uom.name))
+        return etree.tostring(doc, encoding='unicode')
+
     # ----------------------------------------------------
     # Business Methods
     # ----------------------------------------------------
