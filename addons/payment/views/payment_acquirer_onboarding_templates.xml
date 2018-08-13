@@ -5,7 +5,7 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Payment Method</t>
             <t t-set="description">Configure your payment methods.</t>
-            <t t-set="btn_text">Set Payments</t>
+            <t t-set="btn_text">Set payments</t>
             <t t-set="done_text">Payment method set!</t>
             <t t-set="method" t-value="'action_open_payment_onboarding_payment_acquirer'" />
             <t t-set="model" t-value="'res.company'" />
@@ -61,9 +61,9 @@
                             </div>
 
                             <div attrs="{'invisible': [('payment_method', '!=', 'other')]}">
-                                <a type="action" role="button" name="payment.action_payment_acquirer">
+                                <button type="object" name="action_onboarding_other_payment_acquirer">
                                     Check here
-                                </a>
+                                </button>
                                 to choose another payment method.
                             </div>
                             <div attrs="{'invisible': [('payment_method', '!=', 'manual')]}">

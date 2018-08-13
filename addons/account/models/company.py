@@ -508,6 +508,7 @@ Best Regards,'''))
             'mark_invoice_as_sent': True,
             'custom_layout': 'mail.mail_notification_borders',
             'force_email': True,
+            'mail_notify_author': True,
         }
         return action
 
