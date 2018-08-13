@@ -2955,28 +2955,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
                     * noupdate: A boolean telling if the record will be updated or not
         """
-        fields = ['id']
+
+        IrModelData = self.env['ir.model.data'].sudo()
         if self._log_access:
-            fields += LOG_ACCESS_COLUMNS
-        quoted_table = '"%s"' % self._table
-        fields_str = ",".join('%s.%s' % (quoted_table, field) for field in fields)
-        query = '''SELECT %s, __imd.noupdate, __imd.module, __imd.name
-                   FROM %s LEFT JOIN ir_model_data __imd
-                       ON (__imd.model = %%s and __imd.res_id = %s.id)
-                   WHERE %s.id IN %%s''' % (fields_str, quoted_table, quoted_table, quoted_table)
-        self._cr.execute(query, (self._name, tuple(self.ids)))
-        res = self._cr.dictfetchall()
-
-        uids = set(r[k] for r in res for k in ['write_uid', 'create_uid'] if r.get(k))
-        names = dict(self.env['res.users'].browse(uids).name_get())
-
+            res = self.sudo().search_read([('id', 'in', self.ids)], LOG_ACCESS_COLUMNS)
+        else:
+            res = [{'id': x} for x in self.ids]
+        xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
+                                                                           ('res_id', 'in', self.ids)],
+                                                                          ['res_id', 'noupdate', 'module', 'name'],
+                                                                          order='id'))
         for r in res:
-            for key in r:
-                value = r[key] = r[key] or False
-                if key in ('write_uid', 'create_uid') and value in names:
-                    r[key] = (value, names[value])
-            r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
-            del r['name'], r['module']
+            value = xml_data.get(r['id'], {})
+            r['xmlid'] = '%(module)s.%(name)s' % value if value else False
+            r['noupdate'] = value.get('noupdate', False)
         return res
 
     @api.multi
@@ -4337,7 +4329,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         result = {record.id: [] for record in self}
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id']):
+        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id'], order='id'):
             result[data['res_id']].append('%(module)s.%(name)s' % data)
         return result
 
