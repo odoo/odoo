@@ -238,9 +238,9 @@ class AccountAccount(models.Model):
         try:
             default['code'] = (str(int(self.code) + 10) or '')
             default.setdefault('name', _("%s (copy)") % (self.name or ''))
-            if self.env['account.account'].search([('code', '=', default['code']),
-                                                   ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):
-                default['code'] = _("%s (copy)") % (self.code or '')
+            while self.env['account.account'].search([('code', '=', default['code']),
+                                                      ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):
+                default['code'] = (str(int(default['code']) + 10) or '')
                 default['name'] = _("%s (copy)") % (self.name or '')
         except ValueError:
             default['code'] = _("%s (copy)") % (self.code or '')
