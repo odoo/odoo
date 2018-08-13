@@ -690,7 +690,7 @@ class AccountReconciliation(models.AbstractModel):
         ret = []
 
         for line in move_lines:
-            company_currency = line.account_id.company_id.currency_id
+            company_currency = line.company_id.currency_id
             line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             ret_line = {
                 'id': line.id,
