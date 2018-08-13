@@ -51,7 +51,7 @@ var ControlPanelMixin = {
      */
     update_control_panel: function(cp_status, options) {
         if (this.cp_bus) {
-            this.cp_bus.trigger("update", cp_status || {}, options || {});
+            this.cp_bus.trigger("update", {cp_status: cp_status || {}, options: options || {}});
         }
     },
 };
@@ -128,7 +128,9 @@ var ControlPanel = Widget.extend({
      * @param {Boolean} [options.clear] set to true to clear from control panel
      * elements that are not in status.cp_content
      */
-    update: function(status, options) {
+    update: function(ev) {
+        var status = ev.data ? ev.data.cp_status : ev;
+        var options = ev.data ? ev.data.options : ev.options;
 
         this.bus.updateIndex++;
 
