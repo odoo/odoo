@@ -5,7 +5,6 @@ var CCThrottleFunction = require('mail.model.CCThrottleFunction');
 var CCThrottleFunctionObject = require('mail.model.CCThrottleFunctionObject');
 
 var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
 
 QUnit.module('mail', {
     beforeEach: function () {
@@ -40,8 +39,7 @@ QUnit.test('cancel()', function (assert) {
     var def = $.Deferred();
     var step = 1;
 
-    var widget = new Widget();
-    testUtils.addMockEnvironment(widget, {
+    var widget = testUtils.createParent({
         mockRPC: function (route, args) {
             if (args.method === '__rpc__') {
                 assert.step(args.method + args.args[0]);
@@ -84,6 +82,7 @@ QUnit.test('cancel()', function (assert) {
     this.timeoutCDDef.then(function () {
         assert.verifySteps(['__rpc__1'],
             "function should still have been called once after 2nd function call cancelled");
+        widget.destroy();
         done();
     });
 });
@@ -97,8 +96,7 @@ QUnit.test('clear()', function (assert) {
     var def2 = $.Deferred();
     var step = 1;
 
-    var widget = new Widget();
-    testUtils.addMockEnvironment(widget, {
+    var widget = testUtils.createParent({
         mockRPC: function (route, args) {
             if (args.method === '__rpc__') {
                 assert.step(args.method + args.args[0]);
@@ -146,6 +144,7 @@ QUnit.test('clear()', function (assert) {
     $.when(self.timeoutCDDef, def2).then(function () {
         assert.verifySteps(['__rpc__1', '__rpc__2'],
             "function should have been called twice after 'clear' (buffered 2nd function call)");
+        widget.destroy();
         done();
     });
 });
