@@ -534,15 +534,30 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 method: 'do',
                 args: [this.id, fields, columns, this.import_options()],
                 kwargs : kwargs,
-            }).fail(function (error, event) {
+            }).then(null, function (error, event) {
                 // In case of unexpected exception, convert
                 // "JSON-RPC error" to an import failure, and
                 // prevent default handling (warning dialog)
                 if (event) { event.preventDefault(); }
+
+                var msg;
+                if (error.data.type === 'xhrerror') {
+                    var xhr = error.data.objects[0];
+                    switch (xhr.status) {
+                    case 504: // gateway timeout
+                        msg = _t("Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file).");
+                        break;
+                    default:
+                        msg = _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
+                    }
+                } else {
+                    msg = error.data.arguments ? error.data.arguments[1] : error.message;
+                }
+
                 return $.when({'messages': [{
                     type: 'error',
                     record: false,
-                    message: error.data.arguments && error.data.arguments[1] || error.message,
+                    message: msg,
                 }]});
             }) ;
     },
