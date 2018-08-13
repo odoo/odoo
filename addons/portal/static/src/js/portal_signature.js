@@ -41,6 +41,7 @@ odoo.define('portal.signature_form', function (require){
                 'color': '#000',
                 'background-color': '#fff',
                 'height': '142px',
+                'width': '100%', // prevent the signature from being too big
             });
             this.empty_sign = this.$("#o_portal_signature").jSignature('getData', 'image');
         },
@@ -111,6 +112,11 @@ odoo.define('portal.signature_form', function (require){
             var $elem = $(this);
             var form = new SignatureForm(null, $elem.data());
             form.appendTo($elem);
+        });
+        // Make the signature responsive when it is displayed in bootstrap modal.
+        // More precisely it is too small if this code is not here.
+        $('.o_portal_signature_form').parents('.modal').on('shown.bs.modal', function (ev) {
+            $('.o_portal_signature_form').trigger('resize');
         });
     });
 

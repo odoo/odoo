@@ -18,7 +18,6 @@ var PortalSidebar = Widget.extend({
         // Window Handlers
         $(window).on('resize', _.throttle(self._onUpdateSidebarPosition.bind(self), 200, {leading: false}));
         this._onUpdateSidebarPosition();
-        this._setAffix();
         this._setDelayLabel();
     },
 
@@ -47,20 +46,6 @@ var PortalSidebar = Widget.extend({
                 displayStr = _.str.sprintf(_t('%d days overdue'), Math.abs(diff));
             }
              $(el).text(displayStr);
-        });
-    },
-    /**
-     * updates affix status of sidebar for window scrolle
-     *
-     * @private
-     */
-    _setAffix : function () {
-        var $bsSidebar = this.$el.find('.bs-sidebar');
-        $bsSidebar.affix({
-            offset: {
-                top: 0,
-                bottom: $('#wrapwrap').outerHeight() - $('main').height(),
-            },
         });
     },
     /**
@@ -97,7 +82,6 @@ var PortalSidebar = Widget.extend({
     _onUpdateSidebarPosition: function () {
         var $sidebar = this.$el.find('.bs-sidebar, .o_portal_brand');
         $sidebar.css({
-            position: config.device.size_class >= config.device.SIZES.MD ? "fixed" : '',
             width: config.device.size_class >= config.device.SIZES.MD ? $sidebar.outerWidth() : '',
         });
     },

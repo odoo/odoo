@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
+from odoo.osv import expression
 
 
 class CustomerPortal(CustomerPortal):
@@ -35,15 +34,6 @@ class CustomerPortal(CustomerPortal):
     #
     # Quotations and Sales Orders
     #
-
-    def _order_get_page_view_values(self, order, access_token, **kwargs):
-        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
-        values = {
-            'order': order,
-            'order_invoice_lines': order_invoice_lines,
-            'portal_confirmation': order.get_portal_confirmation_action(),
-        }
-        return self._get_page_view_values(order, access_token, values, 'my_orders_history', True, **kwargs)
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -149,66 +139,59 @@ class CustomerPortal(CustomerPortal):
         return request.render("sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
-    def portal_order_page(self, order_id=None, access_token=None, **kw):
+    def portal_order_page(self, order_id, pdf=None, access_token=None, message=False, **kw):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
 
-        values = self._order_get_page_view_values(order_sudo, access_token, **kw)
-        return request.render("sale.portal_order_page", values)
+        if pdf:
+            pdf = request.env.ref('sale.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
 
-    @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
-    def portal_order_report(self, order_id, access_token=None, **kw):
-        try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token)
-        except AccessError:
+        # use sudo to allow accessing/viewing orders for public user
+        # only if he knows the private token
+        now = fields.Date.today()
+
+        # Log only once a day
+        if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
+            request.session['view_quote_%s' % order_sudo.id] = now
+            body = _('Quotation viewed by customer')
+            _message_post_helper(res_model='sale.order', res_id=order_sudo.id, message=body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
+        if not order_sudo:
             return request.redirect('/my')
 
-        # print report as sudo, since it require access to taxes, payment term, ... and portal
-        # does not have those access rights.
-        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
-        pdfhttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(pdf)),
-        ]
-        return request.make_response(pdf, headers=pdfhttpheaders)
+        transaction = order_sudo.get_portal_last_transaction()
 
-    def _portal_quote_user_can_accept(self, order):
-        return order.company_id.portal_confirmation_sign or order.company_id.portal_confirmation_pay
-
-    @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
-    def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
-        try:
-            order_sudo = self._document_check_access('sale.order', res_id, access_token=access_token)
-        except AccessError:
-            return {'error': _('Invalid order')}
-        if order_sudo.state != 'sent':
-            return {'error': _('Order is not in a state requiring customer validation.')}
-
-        if not self._portal_quote_user_can_accept(order_sudo):
-            return {'error': _('Operation not allowed')}
-        if not signature:
-            return {'error': _('Signature is missing.')}
-
-        success_message = _('Your order has been signed but still needs to be paid to be confirmed.')
-
-        if not order_sudo.has_to_be_paid():
-            order_sudo.action_confirm()
-            success_message = _('Your order has been confirmed.')
-
-        order_sudo.signature = signature
-        order_sudo.signed_by = partner_name
-
-        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
-        _message_post_helper(
-            res_model='sale.order',
-            res_id=order_sudo.id,
-            message=_('Order signed by %s') % (partner_name,),
-            attachments=[('%s.pdf' % order_sudo.name, pdf)],
-            **({'token': access_token} if access_token else {}))
-
-        return {
-            'success': success_message,
-            'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
+        # TODO SEB fix breadcrumbs -> should always be visible (or at least no home alone)
+        values = {
+            'sale_order': order_sudo,
+            'message': int(message) if message else False,
+            'action': request.env.ref('sale.action_quotations').id,
+            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
+            'tx_state': transaction.state if transaction else False,
+            'need_payment': order_sudo.invoice_status == 'to invoice' and transaction.state in ['draft', 'cancel'],
+            'token': access_token,
+            'return_url': '/shop/payment/validate',
+            'bootstrap_formatting': True,
+            'partner_id': order_sudo.partner_id.id,
         }
+
+        if order_sudo.has_to_be_paid() or values['need_payment']:
+            domain = expression.AND([
+                ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
+                ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
+            ])
+            acquirers = request.env['payment.acquirer'].sudo().search(domain)
+
+            values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
+            values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
+            values['pms'] = request.env['payment.token'].search(
+                [('partner_id', '=', order_sudo.partner_id.id),
+                ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
+
+        history = request.session.get('my_quotes_history', [])
+        values.update(get_records_pager(history, order_sudo))
+
+        return request.render('sale.sale_order_portal_template', values)

@@ -254,4 +254,19 @@
     </t>
 </template>
 
+<template id="report_quotation">
+    <t t-call="web.html_container">
+        <t t-set="data_report_margin_top" t-value="45"/>
+        <t t-set="data_report_header_spacing" t-value="40"/>
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="docs[0]"/>
+            <t t-foreach="docs" t-as="sale_order">
+                <div class="page">
+                    <t t-call="sale.sale_order_portal_content"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
 </odoo>
