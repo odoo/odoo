@@ -2408,8 +2408,6 @@ exports.Order = Backbone.Model.extend({
     },
     export_for_printing: function(){
         var orderlines = [];
-        var self = this;
-
         this.orderlines.each(function(orderline){
             orderlines.push(orderline.export_for_printing());
         });
