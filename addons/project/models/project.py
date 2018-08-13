@@ -410,6 +410,7 @@ class Task(models.Model):
             result.update(self._subtask_values_from_parent(result['parent_id']))
         return result
 
+    @api.model
     def _get_default_partner(self):
         if 'default_project_id' in self.env.context:
             default_project_id = self.env['project.project'].browse(self.env.context['default_project_id'])
@@ -478,7 +479,7 @@ class Task(models.Model):
         index=True, track_visibility='always')
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        default=_get_default_partner)
+        default=lambda self: self._get_default_partner())
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company',
         string='Company',

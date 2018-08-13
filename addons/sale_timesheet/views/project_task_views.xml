@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="project_project_view_form" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_make_billable" string="Create Sales Order" type="object" attrs="{'invisible': [('billable_type', '!=', 'no')]}"/>
+            </xpath>
+            <xpath expr="//page[@name='emails']" position="after">
+                <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': [('billable_type', '=', 'no')]}">
+                    <group>
+                        <field name="billable_type" invisible="1"/>
+                        <field name="sale_order_id" attrs="{'invisible': [('billable_type', '=', 'no')]}"/>
+                        <field name="sale_line_id" attrs="{'invisible': [('billable_type', '=', 'no')]}"/>
+                    </group>
+                    <field name="sale_line_employee_ids">
+                        <tree editable="top">
+                            <field name="employee_id" options="{'no_create': True}"/>
+                            <field name="sale_line_id" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
+                            <field name="price_unit"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
         <field name="name">project.project.kanban.inherit.sale.timesheet</field>
         <field name="model">project.project</field>
@@ -37,11 +64,13 @@
                 <xpath expr="//button[@name='toggle_active']" position="before">
                     <button type="object" name="action_view_so"
                             class="oe_stat_button" icon="fa-dollar"
-                            attrs="{'invisible': [('sale_line_id', '=', False)]}"
+                            attrs="{'invisible': [('sale_order_id', '=', False)]}"
                             string="Sales Order"/>
+                    <field name="sale_order_id" invisible="1"/>
                 </xpath>
                 <field name="user_id" position="after">
-                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)]}" options='{"no_open": True, "no_create": True}'/>
+                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': ['|', ('partner_id', '=', False)]}" options='{"no_open": True, "no_create": True}'/>
+                    <field name="billable_type" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -66,8 +95,12 @@
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
                     <attribute name="decoration-muted">timesheet_invoice_id != False</attribute>
                 </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="is_project_map_empty" invisible="1"/>
+                </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <field name="timesheet_invoice_id" invisible="1"/>
+                    <field name="so_line" readonly="1" attrs="{'column_invisible': ['&amp;', ('parent.is_project_map_empty', '=', True), ('parent.sale_line_id', '!=', False)]}"/>
                 </xpath>
             </field>
         </record>
