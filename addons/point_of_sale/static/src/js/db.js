@@ -94,19 +94,20 @@ var PosDB = core.Class.extend({
                 name : 'Root',
             };
         }
-        for(var i=0, len = categories.length; i < len; i++){
-            this.category_by_id[categories[i].id] = categories[i];
-        }
-        len = categories.length;
-        for(i=0; i < len; i++){
-            var cat = categories[i];
-            var parent_id = cat.parent_id[0] || this.root_category_id;
-            this.category_parent[cat.id] = cat.parent_id[0];
-            if(!this.category_childs[parent_id]){
-                this.category_childs[parent_id] = [];
+        categories.forEach(function(cat){
+            self.category_by_id[cat.id] = cat;
+        });
+        categories.forEach(function(cat){
+            var parent_id = cat.parent_id[0];
+            if(!(parent_id && self.category_by_id[parent_id])){
+                parent_id = self.root_category_id;
             }
-            this.category_childs[parent_id].push(cat.id);
-        }
+            self.category_parent[cat.id] = parent_id;
+            if(!self.category_childs[parent_id]){
+                self.category_childs[parent_id] = [];
+            }
+            self.category_childs[parent_id].push(cat.id);
+        });
         function make_ancestors(cat_id, ancestors){
             self.category_ancestors[cat_id] = ancestors;
 
