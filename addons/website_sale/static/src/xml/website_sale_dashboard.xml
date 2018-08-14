@@ -32,11 +32,13 @@
                             <h2>Sales Since Last <t t-esc="widget.date_range"></t></h2>
                         </t>
                         <t t-else=""><h2>Sales</h2></t>
-                        <div class="col-lg-7 col-12">
-                            <div class="o_graph_sales" data-type="sales"/>
-                        </div>
-                        <div class="col-lg-5 col-12">
-                            <t t-call="website_sale.products_table"/>
+                        <div class="row">
+                            <div class="col-lg-7 col-12">
+                                <div class="o_graph_sales" data-type="sales"/>
+                            </div>
+                            <div class="col-lg-5 col-12">
+                                <t t-call="website_sale.products_table"/>
+                            </div>
                         </div>
                     </t>
                     <t t-if="! widget.dashboards_data.sales.summary.order_count">
@@ -63,39 +65,43 @@
                 <div class="row">
                     <div class="col-lg-12 col-12">
                         <h4>AT A GLANCE</h4>
-                        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+                        <div class="row">
                             <div class="col-md-4 o_link_enable" title="Orders">
-                                <div class="o_highlight">
-                                    <t t-esc="widget.dashboards_data.sales.summary.order_count"/>
-                                </div>
-                                Orders
+                                <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+                                    <div class="o_highlight">
+                                        <t t-esc="widget.dashboards_data.sales.summary.order_count"/>
+                                    </div>
+                                    Orders
+                                </a>
                             </div>
-                        </a>
-                        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
                             <div class="col-md-4 o_link_enable" title="Untaxed Total Sold">
-                                <div class="o_highlight">
-                                    <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_sold, widget.data.currency)"/>
-                                </div>
-                                Sold
+                                <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+                                    <div class="o_highlight">
+                                        <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_sold, widget.data.currency)"/>
+                                    </div>
+                                    Sold
+                                </a>
                             </div>
-                        </a>
-                        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_carts">
                             <div class="col-md-4 o_link_enable o_invisible_border" title="Carts">
-                                <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
-                                Carts
+                                <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_carts">
+                                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
+                                    Carts
+                                </a>
                             </div>
-                        </a>
-                        <div class="col-md-4 o_link_disable" title="Orders/Day">
-                            <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_per_day_ratio"/></div>
-                            Orders/Day
                         </div>
-                        <div class="col-md-4 o_link_disable" title="Average Order">
-                            <div class="o_highlight"><t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.order_sold_ratio, widget.data.currency)"/></div>
-                            Average Order
-                        </div>
-                        <div class="col-md-4 o_link_disable o_invisible_border" title="Conversion">
-                            <div class="o_highlight"><t t-esc="widget.format_number(widget.dashboards_data.sales.summary.order_convertion_pctg, 'float', [3, 2], '%')"/></div>
-                            Conversion
+                        <div class="row">
+                            <div class="col-md-4 o_link_disable" title="Orders/Day">
+                                <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_per_day_ratio"/></div>
+                                Orders/Day
+                            </div>
+                            <div class="col-md-4 o_link_disable" title="Average Order">
+                                <div class="o_highlight"><t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.order_sold_ratio, widget.data.currency)"/></div>
+                                Average Order
+                            </div>
+                            <div class="col-md-4 o_link_disable o_invisible_border" title="Conversion">
+                                <div class="o_highlight"><t t-esc="widget.format_number(widget.dashboards_data.sales.summary.order_convertion_pctg, 'float', [3, 2], '%')"/></div>
+                                Conversion
+                            </div>
                         </div>
                     </div>
                 </div>
