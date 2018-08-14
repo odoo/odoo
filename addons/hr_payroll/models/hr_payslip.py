@@ -226,10 +226,11 @@ class HrPayslip(models.Model):
         worked_days_dict = {}
         inputs_dict = {}
         blacklist = []
-        for worked_days_line in self.worked_days_line_ids:
-            worked_days_dict[worked_days_line.code] = worked_days_line
-        for input_line in self.input_line_ids:
-            inputs_dict[input_line.code] = input_line
+
+        for code in self.worked_days_line_ids.mapped('code'):
+            worked_days_dict[code] = self.worked_days_line_ids.filtered(lambda l: l.code == code)
+        for code in self.input_line_ids.mapped('code'):
+            inputs_dict[code] = self.input_line_ids.filtered(lambda l: l.code == code)
 
         categories = BrowsableObject(self.employee_id.id, {}, self.env)
         inputs = InputLine(self.employee_id.id, inputs_dict, self.env)
