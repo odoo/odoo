@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Partner autocomplete',
+    'name': 'Partner autocomplete [Clearbit]',
     'description': "Auto-complete partner companies' data",
     'depends': ['web', 'base_setup'],
     'data': [
