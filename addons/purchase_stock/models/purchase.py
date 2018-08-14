@@ -105,6 +105,9 @@ class PurchaseOrder(models.Model):
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
+
+            order.order_line.write({'move_dest_ids':[(5,0,0)]})
+
         return super(PurchaseOrder, self).button_cancel()
 
     @api.multi
