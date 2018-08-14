@@ -189,7 +189,7 @@ class StockMove(models.Model):
 
         :return: True if the move is entering the company else False
         """
-        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id):
+        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id or ml.owner_id == self.company_id.partner_id):
             if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
                 return True
         return False
@@ -200,7 +200,7 @@ class StockMove(models.Model):
 
         :return: True if the move is leaving the company else False
         """
-        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id):
+        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id or ml.owner_id != self.company_id.partner_id):
             if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
                 return True
         return False
