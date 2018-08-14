@@ -3,26 +3,31 @@
 <div t-name="website.facebook_page_dialog">
     <div class="row">
         <form class="col-lg-6">
-            <div class="form-group row">
+            <div class="form-group form-row">
                 <label class="col-form-label col-md-3">Page URL</label>
                 <div class="col-md-9">
                     <input class="form-control o_facebook_page_url" required="required" t-att-value="widget.fbData.href"/>
                 </div>
             </div>
-            <div class="form-group row o_facebook_tabs">
+            <div class="form-group form-row o_facebook_tabs">
                 <t t-set="fb_tabs" t-value="widget.fbData.tabs and widget.fbData.tabs.split(',') or []"/>
                 <label class="col-form-label col-md-3">Tabs</label>
-                <div class="col-md-3 checkbox">
-                    <label><input type="checkbox" name="timeline" t-att-checked="_.contains(fb_tabs, 'timeline') or None"/>Timeline</label>
-                </div>
-                <div class="col-md-3 checkbox">
-                    <label><input type="checkbox" name="events" t-att-checked="_.contains(fb_tabs, 'events') or None"/>Events</label>
-                </div>
-                <div class="col-md-3 checkbox">
-                    <label><input type="checkbox" name="messages" t-att-checked="_.contains(fb_tabs, 'messages') or None"/>Messages</label>
+                <div class="col-md-9">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="o_facebook_page_tab_timeline_checkbox" class="custom-control-input" name="timeline" t-att-checked="_.contains(fb_tabs, 'timeline') or None"/>
+                        <label class="custom-control-label" for="o_facebook_page_tab_timeline_checkbox">Timeline</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="o_facebook_page_tab_events_checkbox" class="custom-control-input" name="events" t-att-checked="_.contains(fb_tabs, 'events') or None"/>
+                        <label class="custom-control-label" for="o_facebook_page_tab_events_checkbox">Events</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="o_facebook_page_tab_messages_checkbox" class="custom-control-input" name="messages" t-att-checked="_.contains(fb_tabs, 'messages') or None"/>
+                        <label class="custom-control-label" for="o_facebook_page_tab_messages_checkbox">Messages</label>
+                    </div>
                 </div>
              </div>
-            <div class="form-group row o_facebook_options">
+            <div class="form-group form-row o_facebook_options">
                 <label class="col-form-label col-md-3">Options</label>
                 <div class="col-md-9 mt8">
                 <label class="o_switch">
