@@ -452,6 +452,32 @@ $o-mail-attachment-margin: 5px;
                 font-size: $h1-font-size;
                 font-weight: 300;
             }
+
+            .o_image_caption {
+                bottom: 20%;
+                position: absolute;
+
+                .o_split_pdf_area {
+                    background-color: #3a3a3a;
+                    margin: 5px;
+                    padding: 6px;
+                    margin-left: 50px;
+
+                    .o_split_btn {
+                        vertical-align: baseline;
+                    }
+
+                    .o_page_number_input {
+                        width: 13%;
+                        color: black;
+                        display: inline;
+                    }
+
+                    .o_remainder_input {
+                        vertical-align: middle;
+                    }
+                }
+            }
         }
 
         .o_loading_img {
@@ -490,6 +516,14 @@ $o-mail-attachment-margin: 5px;
                     height: 100%;
                     border: 0px;
                     box-shadow: 1px 1px 20px 1px #000;
+                }
+
+                .o_viewer_text {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                    background-color: white;
                 }
 
                 .o_viewer_video {

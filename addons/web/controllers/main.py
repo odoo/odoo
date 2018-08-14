@@ -425,12 +425,12 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
                    filename=None, filename_field='datas_fname', download=False, mimetype=None,
                    default_mimetype='application/octet-stream', share_id=None, share_token=None, access_token=None,
-                   force_ext=False, env=None):
+                   env=None):
     return request.registry['ir.http'].binary_content(
         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
         filename_field=filename_field, download=download, mimetype=mimetype,
         default_mimetype=default_mimetype, share_id=share_id, share_token=share_token, access_token=access_token,
-        force_ext=force_ext, env=env)
+        env=env)
 
 #----------------------------------------------------------
 # Odoo Web web Controllers
@@ -1008,11 +1008,11 @@ class Binary(http.Controller):
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='datas_fname', unique=None, mimetype=None,
                        download=None, data=None, token=None, share_id=None, share_token=None, access_token=None,
-                       force_ext=False, **kw):
+                       **kw):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            access_token=access_token, share_id=share_id, share_token=share_token, force_ext=force_ext)
+            access_token=access_token, share_id=share_id, share_token=share_token)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
@@ -1047,7 +1047,7 @@ class Binary(http.Controller):
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, share_id=None, share_token=None, access_token=None, avoid_if_small=False,
-                      upper_limit=False):
+                      upper_limit=False, signature=False):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,

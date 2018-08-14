@@ -16,6 +16,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import crop_image, image_resize_image
+from PyPDF2 import PdfFileWriter, PdfFileReader
 
 _logger = logging.getLogger(__name__)
 
@@ -312,17 +313,7 @@ class IrAttachment(models.Model):
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
     active = fields.Boolean(default=True, string="Active", oldname='archived')
-    thumbnail = fields.Binary(compute='_get_thumbnail', store=True, string="")
-
-    @api.depends('mimetype', 'file_size', 'checksum')
-    def _get_thumbnail(self):
-        for record in self:
-            if record.mimetype:
-                if re.match('image.*(gif|jpeg|jpg|png)', record.mimetype):
-                    if not record.thumbnail:
-                        temp_image = crop_image(record.datas, type='center', size=(100, 100), ratio=(1, 1))
-                        record.thumbnail = image_resize_image(base64_source=temp_image, size=(100, 100),
-                                                              encoding='base64', filetype='PNG')
+    thumbnail = fields.Binary(readonly=1, attachment=True)
 
     @api.model_cr_context
     def _auto_init(self):
@@ -444,6 +435,18 @@ class IrAttachment(models.Model):
         self.check('read')
         return super(IrAttachment, self).read(fields, load=load)
 
+    def _make_thumbnail(self, vals):
+        if vals.get('datas') and not vals.get('res_field'):
+            vals['thumbnail'] = False
+            if vals.get('mimetype') and re.match('image.*(gif|jpeg|jpg|png)', vals['mimetype']):
+                try:
+                    temp_image = crop_image(vals['datas'], type='center', size=(80, 80), ratio=(1, 1))
+                    vals['thumbnail'] = image_resize_image(base64_source=temp_image, size=(80, 80),
+                                                           encoding='base64')
+                except Exception:
+                    pass
+        return vals
+
     @api.multi
     def write(self, vals):
         self.check('write', values=vals)
@@ -452,6 +455,9 @@ class IrAttachment(models.Model):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals:
             vals = self._check_contents(vals)
+            vals = self._make_thumbnail(vals)
+            if all([not attachment.res_field for attachment in self]):
+                vals = self._make_thumbnail(vals)
         return super(IrAttachment, self).write(vals)
 
     @api.multi
@@ -483,6 +489,7 @@ class IrAttachment(models.Model):
             for field in ('file_size', 'checksum'):
                 values.pop(field, False)
             values = self._check_contents(values)
+            values = self._make_thumbnail(values)
             self.browse().check('write', values=values)
         return super(IrAttachment, self).create(vals_list)
 
@@ -498,30 +505,79 @@ class IrAttachment(models.Model):
     def action_get(self):
         return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
 
-    @api.model
-    def upload_attachment(self, attachments, custom_values=None):
+    def _make_pdf(self, output, name_ext):
         """
-        directly uploads attachments.
-
-        :param attachments: array of dictionaries representing attachment data:
-                            eg: [{'name': 'doc.zip', 'data': 'data:application/zip;base64,R0lGODdhAQBADs='}]
-        :param custom_values: additional values for the attachment create dictionary.
-        :return: the ids of the new attachments.
+        :param output: PdfFileWriter object.
+        :param name_ext: the additional name of the new attachment (page count).
+        :return: the id of the attachment.
         """
-        if not custom_values:
-            custom_values = {}
-        ids = []
-        for attachment in attachments:
-            data = attachment['data']
-            raw_name = attachment['name']
-            values = {
-                'mimetype': data[data.find(':') + 1:data.find(';')],
-                'name': raw_name[:raw_name.rfind('.')],
-                'datas': data[data.find(',') + 1:],
-                'datas_fname': raw_name,
-            }
+        self.ensure_one()
+        try:
+            stream = io.BytesIO()
+            output.write(stream)
+            return self.copy({
+                'name': self.name+'-'+name_ext,
+                'datas_fname': os.path.splitext(self.datas_fname or self.name)[0]+'-'+name_ext+".pdf",
+                'datas': base64.b64encode(stream.getvalue()),
+            })
+        except Exception:
+            raise Exception
 
-            values.update(custom_values)
-            created_attachment = self.env['ir.attachment'].create(values)
-            ids.append(created_attachment.id)
-        return ids
+    def _split_pdf_groups(self, pdf_groups, remainder=False):
+        """
+        calls _make_pdf to create the a new attachment for each page section.
+        :param pdf_groups: a list of lists representing the pages to split:  pages = [[1,1], [4,5], [7,7]]
+        :returns the list of the ID's of the new PDF attachments.
+
+        """
+        self.ensure_one()
+        with io.BytesIO(base64.b64decode(self.datas)) as stream:
+            try:
+                input_pdf = PdfFileReader(stream)
+            except Exception:
+                raise exceptions.ValidationError(_("ERROR: Invalid PDF file!"))
+            max_page = input_pdf.getNumPages()
+            remainder_set = set(range(0, max_page))
+            new_pdf_ids = []
+            for pages in pdf_groups:
+                pages[1] = min(max_page, pages[1])
+                pages[0] = min(max_page, pages[0])
+                if pages[0] == pages[1]:
+                    name_ext = "%s" % (pages[0],)
+                else:
+                    name_ext = "%s-%s" % (pages[0], pages[1])
+                output = PdfFileWriter()
+                for i in range(pages[0]-1, pages[1]):
+                    output.addPage(input_pdf.getPage(i))
+                new_pdf_id = self._make_pdf(output, name_ext)
+                new_pdf_ids.append(new_pdf_id)
+                remainder_set = remainder_set.difference(set(range(pages[0] - 1, pages[1])))
+            if remainder:
+                for i in remainder_set:
+                    output_page = PdfFileWriter()
+                    name_ext = "%s" % (i + 1,)
+                    output_page.addPage(input_pdf.getPage(i))
+                    new_pdf_id = self._make_pdf(output_page, name_ext)
+                    new_pdf_ids.append(new_pdf_id)
+            return new_pdf_ids
+
+    def split_pdf(self, indices, remainder=False):
+        """
+        called by the Document Viewer's Split PDF button.
+        evaluates the input string and turns it into a list of lists to be processed by _split_pdf_groups
+
+        :param indices: the formatted string of pdf split (e.g. 1,5-10, 8-22, 29-34) o_page_number_input
+        :param remainder: bool, if true splits the non specified pages, one by one. form checkbox o_remainder_input
+        :returns the list of the ID's of the newly created pdf attachments.
+        """
+        self.ensure_one()
+        if 'pdf' not in self.mimetype:
+            raise exceptions.ValidationError(_("ERROR: the file must be a PDF"))
+        try:
+            pages = [[int(x) for x in x.split('-')] for x in indices.split(',')]
+        except ValueError:
+            raise exceptions.ValidationError(_("ERROR: Invalid list of pages to split. Example: 1,5-9,10"))
+        return self._split_pdf_groups([[min(x), max(x)] for x in pages], remainder=remainder)
+
+
+
