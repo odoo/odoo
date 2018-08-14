@@ -11,7 +11,7 @@ class AccountReconciliation(models.AbstractModel):
     _name = 'account.reconciliation.widget'
 
     ####################################################
-    # Smart logic
+    # Search propositions
     ####################################################
 
     @api.model
@@ -150,6 +150,8 @@ class AccountReconciliation(models.AbstractModel):
     def _get_matching_amls_amount_rule(self, st_lines, excluded_ids=None):
         ''' RULE 2: Match one or more account.move.lines automatically if either the statement line has exactly the same amount
         or either the statement line matchs a single line having a greater or equals amount.
+
+        This only work if a partner has been found on the statement line.
 
         :param st_lines:        Account.bank.statement.lines recordset.
         :param excluded_ids:    Account.move.lines to exclude.
