@@ -817,6 +817,24 @@
         </xpath>
     </template>
 
+    <!-- We use this template where we want to give the user a link to the product of a sale order line. -->
+    <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
+        <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+            <t t-raw="0"/>
+        </a>
+    </template>
+
+    <!-- This template displays all the lines following the first one on the description of the sale order line, with a muted style. For typical products this content will be the product description_sale. -->
+    <template id="cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
+        <div t-if="line.get_description_following_lines()" t-attf-class="text-muted {{div_class}} small">
+            <t t-foreach="line.get_description_following_lines()" t-as="name_line">
+                <span><t t-esc="name_line"/></span>
+                <br t-if="not name_line_last" />
+            </t>
+        </div>
+    </template>
+
+    <!-- This template is the one at the "Review order" step (the first one) on the checkout workflow. -->
     <template id="cart_lines" name="Shopping Cart Lines">
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
           Your cart is empty!
@@ -840,15 +858,13 @@
                         </td>
                         <td t-if="line.product_id.product_tmpl_id" class='td-product_name'>
                             <div>
-                                <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                    <strong t-esc="line.product_id.with_context(display_default_code=False).display_name" />
-                                </a>
-                            </div>
-                            <div class="text-muted d-none d-md-block small">
-                                <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
-                                    <span><t t-esc="name_line"/></span><br/>
+                                <t t-call="website_sale.cart_line_product_link">
+                                    <strong t-field="line.name_short" />
                                 </t>
                             </div>
+                            <t t-call="website_sale.cart_line_description_following_lines">
+                                <t t-set="div_class" t-value="'d-none d-md-block'"/>
+                            </t>
                         </td>
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group oe_website_spinner">
@@ -943,6 +959,7 @@
         </t>
     </template>
 
+    <!-- this template is the one when we mouse over "My Cart" on the top right -->
     <template id="cart_popover" name="Cart Popover">
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
           Your cart is empty!
@@ -954,10 +971,11 @@
                         <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
                     </div>
                     <div class="col-9">
-                        <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                            <span t-esc="line.product_id.with_context(display_default_code=False).display_name" class="h6" />
-                        </a>
-                        <br />
+                        <div>
+                            <t t-call="website_sale.cart_line_product_link">
+                                <span class="h6" t-esc="line.name_short" />
+                            </t>
+                        </div>
                         <small>Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" /></small>
                     </div>
                 </div>
@@ -1388,6 +1406,10 @@
         </div>
     </template>
 
+    <!-- This template is the one present on the right during the payment process.
+        Here it is important to not show too much information to the user, because we want him to pay!
+        We shouldn't display link to products or long descriptions.
+    -->
     <template id="cart_summary" name="Cart right column">
         <div class="card">
             <div class="card-body p-xl-0">
@@ -1416,9 +1438,9 @@
                                 </td>
                                 <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
                                     <div>
-                                        <strong t-field="line.product_id.with_context(display_default_code=False).display_name" />
+                                        <strong t-field="line.name_short" />
                                     </div>
-                           </td>
+                                </td>
                                 <td class='td-qty'>
                                     <div t-esc="line.product_uom_qty" />
                                 </td>

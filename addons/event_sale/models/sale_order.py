@@ -28,14 +28,6 @@ class SaleOrderLine(models.Model):
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
     @api.multi
-    def _prepare_invoice_line(self, qty):
-        self.ensure_one()
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        if self.event_id:
-            res['name'] = '%s: %s' % (res.get('name', ''), self.event_id.name)
-        return res
-
-    @api.multi
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
@@ -60,9 +52,40 @@ class SaleOrderLine(models.Model):
                     Registration._prepare_attendee_values(registration))
         return True
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        # We reset the event when keeping it would lead to an inconstitent state.
+        # We need to do it this way because the only relation between the product and the event is through the corresponding tickets.
+        if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
+            self.event_id = None
+
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        # We reset the ticket when keeping it would lead to an inconstitent state.
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
+
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
         company = self.event_id.company_id or self.env.user.company_id
         currency = company.currency_id
         self.price_unit = currency._convert(
             self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())
+
+        # we call this to force update the default name
+        self.product_id_change()
+
+    def get_sale_order_line_multiline_description_sale(self, product):
+        """ We override this method because we decided that:
+                The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
+                So in that case we use the description computed from the ticket, instead of the description computed from the product.
+                We need this override to be defined here in sales order line (and not in product) because here is the only place where the event_ticket_id is referenced.
+        """
+        if self.event_ticket_id:
+            ticket = self.event_ticket_id.with_context(
+                lang=self.order_id.partner_id.lang,
+            )
+
+            return ticket.get_ticket_multiline_description_sale()
+        else:
+            return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)

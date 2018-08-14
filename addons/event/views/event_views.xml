@@ -468,7 +468,7 @@
                                 <field name="email"/>
                             </group>
                             <group string="Event Information" name="event">
-                                <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="date_open" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
                             </group>
