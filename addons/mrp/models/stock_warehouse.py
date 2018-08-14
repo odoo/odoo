@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class StockWarehouse(models.Model):
@@ -12,103 +13,225 @@ class StockWarehouse(models.Model):
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
         'stock.rule', 'Manufacture Rule')
+    pbm_mto_pull_id = fields.Many2one(
+        'stock.rule', 'Picking Before Manufacturing MTO Rule')
+    sam_rule_id = fields.Many2one(
+        'stock.rule', 'Stock After Manufacturing Rule')
     manu_type_id = fields.Many2one(
         'stock.picking.type', 'Manufacturing Operation Type',
         domain=[('code', '=', 'mrp_operation')])
 
-    def create_sequences_and_picking_types(self):
-        res = super(StockWarehouse, self).create_sequences_and_picking_types()
-        self._create_manufacturing_picking_type()
-        return res
+    pbm_type_id = fields.Many2one('stock.picking.type', 'Picking Before Manufacturing Operation Type')
+    sam_type_id = fields.Many2one('stock.picking.type', 'Stock After Manufacturing Operation Type')
 
-    @api.multi
-    def get_routes_dict(self):
-        result = super(StockWarehouse, self).get_routes_dict()
+    manufacture_steps = fields.Selection([
+        ('mrp_one_step', 'Manufacture (1 step)'),
+        ('pbm', 'Pick components and then manufacture (2 steps)'),
+        ('pbm_sam', 'Pick components, manufacture and then store products (3 steps)')],
+        'Manufacture', default='mrp_one_step', required=True,
+        help="Produce : Move the raw materials to the production location\
+        directly and start the manufacturing process.\nPick / Produce : Unload\
+        the raw materials from the Stock to Input location first, and then\
+        transfer it to the Production location.")
+
+    pbm_route_id = fields.Many2one('stock.location.route', 'Picking Before Manufacturing Route', ondelete='restrict')
+
+    pbm_loc_id = fields.Many2one('stock.location', 'Picking before Manufacturing Location')
+    sam_loc_id = fields.Many2one('stock.location', 'Stock after Manufacturing Location')
+
+    def get_rules_dict(self):
+        result = super(StockWarehouse, self).get_rules_dict()
+        production_location_id = self._get_production_location()
         for warehouse in self:
-            result[warehouse.id]['manufacture'] = [self.Routing(warehouse.lot_stock_id, warehouse.lot_stock_id, warehouse.int_type_id, 'manufacture')]
+            result[warehouse.id].update({
+                'mrp_one_step': [],
+                'pbm': [
+                    self.Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull'),
+                    self.Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull'),
+                ],
+                'pbm_sam': [
+                    self.Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull'),
+                    self.Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull'),
+                ],
+            })
         return result
 
-    def _get_manufacture_route_id(self):
-        manufacture_route = self.env.ref('mrp.route_warehouse0_manufacture', raise_if_not_found=False)
-        if not manufacture_route:
-            manufacture_route = self.env['stock.location.route'].search([('name', 'like', _('Manufacture'))], limit=1)
-        if not manufacture_route:
-            raise exceptions.UserError(_('Can\'t find any generic Manufacture route.'))
-        return manufacture_route.id
+    @api.model
+    def _get_production_location(self):
+        location = self.env.ref('stock.location_production', raise_if_not_found=False)
+        if not location:
+            location = self.env['stock.location'].search([('usage', '=', 'production')], limit=1)
+        if not location:
+            raise UserError(_('Can\'t find any production location.'))
+        return location
 
-    def _get_manufacture_pull_rules_values(self, route_values):
-        if not self.manu_type_id:
-            self._create_manufacturing_picking_type()
-        pull_rules_list = self._get_rule_values(route_values, values={
-            'name': self._format_routename(_(' Manufacture')),
-            'location_src_id': False,  # TDE FIXME
-            'action': 'manufacture',
-            'route_id': self._get_manufacture_route_id(),
-            'picking_type_id': self.manu_type_id.id,
-            'propagate': False,
-            'active': True})
-        return pull_rules_list
+    def _get_routes_values(self):
+        routes = super(StockWarehouse, self)._get_routes_values()
+        routes.update({
+            'pbm_route_id': {
+                'routing_key': self.manufacture_steps,
+                'depends': ['manufacture_steps', 'manufacture_to_resupply'],
+                'route_update_values': {
+                    'name': self._format_routename(route_type=self.manufacture_steps),
+                    'active': self.manufacture_steps != 'mrp_one_step',
+                },
+                'route_create_values': {
+                    'product_categ_selectable': True,
+                    'warehouse_selectable': True,
+                    'product_selectable': False,
+                    'company_id': self.company_id.id,
+                    'sequence': 10,
+                },
+                'rules_values': {
+                    'active': True,
+                }
+            }
+        })
+        return routes
 
-    def _create_manufacturing_picking_type(self):
-        # TDE CLEANME
-        picking_type_obj = self.env['stock.picking.type']
-        seq_obj = self.env['ir.sequence']
-        for warehouse in self:
-            #man_seq_id = seq_obj.sudo().create('name': warehouse.name + _(' Sequence Manufacturing'), 'prefix': warehouse.code + '/MANU/', 'padding')
-            wh_stock_loc = warehouse.lot_stock_id
-            seq = seq_obj.search([('code', '=', 'mrp.production')], limit=1)
-            other_pick_type = picking_type_obj.search([('warehouse_id', '=', warehouse.id)], order = 'sequence desc', limit=1)
-            color = other_pick_type.color if other_pick_type else 0
-            max_sequence = other_pick_type and other_pick_type.sequence or 0
-            manu_type = picking_type_obj.create({
+    def _get_route_name(self, route_type):
+        names = {
+            'mrp_one_step': _('Manufacture (1 step)'),
+            'pbm': _('Pick components and then manufacture'),
+            'pbm_sam': _('Pick components, manufacture and then store products (3 steps)'),
+        }
+        if route_type in names:
+            return names[route_type]
+        else:
+            return super(StockWarehouse, self)._get_route_name(route_type)
+
+    def _get_global_route_rules_values(self):
+        rules = super(StockWarehouse, self)._get_global_route_rules_values()
+        location_id = self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id
+        rules.update({
+            'manufacture_pull_id': {
+                'depends': ['manufacture_steps', 'manufacture_to_resupply'],
+                'create_values': {
+                    'action': 'manufacture',
+                    'procure_method': 'make_to_order',
+                    'picking_type_id': self.manu_type_id.id,
+                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', 'Manufacture').id
+                },
+                'update_values': {
+                    'active': self.manufacture_to_resupply,
+                    'name': self._format_rulename(location_id, False, 'Production'),
+                    'location_id': location_id.id,
+                }
+            },
+            'pbm_mto_pull_id': {
+                'depends': ['manufacture_steps', 'manufacture_to_resupply'],
+                'create_values': {
+                    'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
+                    'action': 'pull',
+                    'auto': 'manual',
+                    'propagate': True,
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', 'Make To Order').id,
+                    'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
+                    'location_id': self.pbm_loc_id.id,
+                    'location_src_id': self.lot_stock_id.id,
+                    'picking_type_id': self.pbm_type_id.id
+                },
+                'update_values': {
+                    'active': self.manufacture_steps != 'mrp_one_step',
+                }
+            },
+            # The purpose to move sam rule in the manufacture route instead of
+            # pbm_route_id is to avoid conflict with receipt in multiple
+            # step. For example if the product is manufacture and receipt in two
+            # step it would conflict in WH/Stock since product could come from
+            # WH/post-prod or WH/input. We do not have this conflict with
+            # manufacture route since it is set on the product.
+            'sam_rule_id': {
+                'depends': ['manufacture_steps', 'manufacture_to_resupply'],
+                'create_values': {
+                    'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
+                    'action': 'pull_push',
+                    'auto': 'manual',
+                    'propagate': True,
+                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', 'Manufacture').id,
+                    'name': self._format_rulename(self.sam_loc_id, self.lot_stock_id, False),
+                    'location_id': self.lot_stock_id.id,
+                    'location_src_id': self.sam_loc_id.id,
+                    'picking_type_id': self.sam_type_id.id
+                },
+                'update_values': {
+                    'active': self.manufacture_steps == 'pbm_sam',
+                }
+            }
+
+        })
+        return rules
+
+    def _get_locations_values(self, vals):
+        values = super(StockWarehouse, self)._get_locations_values(vals)
+        def_values = self.default_get(['manufacture_steps'])
+        manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
+        values.update({
+            'pbm_loc_id': {'name': _('Pre-Production'), 'active': manufacture_steps in ('pbm', 'pbm_sam'), 'usage': 'internal'},
+            'sam_loc_id': {'name': _('Post-Production'), 'active': manufacture_steps == 'pbm_sam', 'usage': 'internal'},
+        })
+        return values
+
+    def _get_sequence_values(self):
+        values = super(StockWarehouse, self)._get_sequence_values()
+        values.update({
+            'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/PC/', 'padding': 5},
+            'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/SFP/', 'padding': 5},
+            'manu_type_id': {'name': self.name + ' ' + _('Sequence production'), 'prefix': self.code + '/MO/', 'padding': 5},
+        })
+        return values
+
+    def _get_picking_type_create_values(self, max_sequence):
+        data, next_sequence = super(StockWarehouse, self)._get_picking_type_create_values(max_sequence)
+        data.update({
+            'pbm_type_id': {
+                'name': _('Pick Components'),
+                'code': 'internal',
+                'use_create_lots': True,
+                'use_existing_lots': True,
+                'default_location_src_id': self.lot_stock_id.id,
+                'default_location_dest_id': self.pbm_loc_id.id,
+                'sequence': next_sequence + 1
+            },
+            'sam_type_id': {
+                'name': _('Store Finished Product'),
+                'code': 'internal',
+                'use_create_lots': True,
+                'use_existing_lots': True,
+                'default_location_src_id': self.sam_loc_id.id,
+                'default_location_dest_id': self.lot_stock_id.id,
+                'sequence': next_sequence + 3
+            },
+            'manu_type_id': {
                 'name': _('Manufacturing'),
-                'warehouse_id': warehouse.id,
                 'code': 'mrp_operation',
                 'use_create_lots': True,
-                'use_existing_lots': False,
-                'sequence_id': seq.id,
-                'default_location_src_id': wh_stock_loc.id,
-                'default_location_dest_id': wh_stock_loc.id,
-                'sequence': max_sequence,
-                'color': color})
-            warehouse.write({'manu_type_id': manu_type.id})
+                'use_existing_lots': True,
+                'sequence': next_sequence + 2
+            },
+        })
+        return data, max_sequence + 4
 
-    def _create_or_update_manufacture_pull(self, routes_data):
-        routes_data = routes_data or self.get_routes_dict()
-        for warehouse in self:
-            routings = routes_data[warehouse.id]['manufacture']
-            if warehouse.manufacture_pull_id:
-                manufacture_pull = warehouse.manufacture_pull_id
-                manufacture_pull.write(warehouse._get_manufacture_pull_rules_values(routings)[0])
-            else:
-                manufacture_pull = self.env['stock.rule'].create(warehouse._get_manufacture_pull_rules_values(routings)[0])
-        return manufacture_pull
-
-    @api.multi
-    def create_routes(self):
-        res = super(StockWarehouse, self).create_routes()
-        self.ensure_one()
-        routes_data = self.get_routes_dict()
-        manufacture_pull = self._create_or_update_manufacture_pull(routes_data)
-        res['manufacture_pull_id'] = manufacture_pull.id
-        return res
+    def _get_picking_type_update_values(self):
+        data = super(StockWarehouse, self)._get_picking_type_update_values()
+        data.update({
+            'pbm_type_id': {'active': self.manufacture_to_resupply and self.manufacture_steps in ('pbm', 'pbm_sam')},
+            'sam_type_id': {'active': self.manufacture_to_resupply and self.manufacture_steps == 'pbm_sam'},
+            'manu_type_id': {
+                'active': self.manufacture_to_resupply,
+                'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
+                'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id.id,
+            },
+        })
+        return data
 
     @api.multi
     def write(self, vals):
-        if 'manufacture_to_resupply' in vals:
-            if vals.get("manufacture_to_resupply"):
-                for warehouse in self.filtered(lambda warehouse: not warehouse.manufacture_pull_id):
-                    manufacture_pull = warehouse._create_or_update_manufacture_pull(self.get_routes_dict())
-                    vals['manufacture_pull_id'] = manufacture_pull.id
-                for warehouse in self:
-                    if not warehouse.manu_type_id:
-                        warehouse._create_manufacturing_picking_type()
-                    warehouse.manu_type_id.active = True
-            else:
-                for warehouse in self:
-                    if warehouse.manu_type_id:
-                        warehouse.manu_type_id.active = False
-                self.mapped('manufacture_pull_id').unlink()
+        if any(field in vals for field in ('manufacture_steps', 'manufacture_to_resupply')):
+            for warehouse in self:
+                warehouse._update_location_manufacture(vals.get('manufacture_steps', warehouse.manufacture_steps))
         return super(StockWarehouse, self).write(vals)
 
     @api.multi
@@ -116,6 +239,19 @@ class StockWarehouse(models.Model):
         routes = super(StockWarehouse, self).get_all_routes_for_wh()
         routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).mapped('manufacture_pull_id').mapped('route_id')
         return routes
+
+    def _update_location_manufacture(self, new_manufacture_step):
+        switch_warehouses = self.filtered(lambda wh: wh.manufacture_steps != new_manufacture_step)
+        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.pbm_loc_id))
+        if loc_warehouse:
+            loc_warehouse.mapped('pbm_loc_id').write({'active': False})
+        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.sam_loc_id))
+        if loc_warehouse:
+            loc_warehouse.mapped('sam_loc_id').write({'active': False})
+        if new_manufacture_step != 'mrp_one_step':
+            self.mapped('pbm_loc_id').write({'active': True})
+        if new_manufacture_step == 'pbm_sam':
+            self.mapped('sam_loc_id').write({'active': True})
 
     @api.multi
     def _update_name_and_code(self, name=False, code=False):

@@ -64,6 +64,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
             route: '/website/fetch_dashboard_data',
             params: {
+                website_id: this.website_id || false,
                 date_from: this.date_from.year()+'-'+(this.date_from.month()+1)+'-'+this.date_from.date(),
                 date_to: this.date_to.year()+'-'+(this.date_to.month()+1)+'-'+this.date_to.date(),
             },
@@ -72,6 +73,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             self.dashboards_data = result.dashboards;
             self.currency_id = result.currency_id;
             self.groups = result.groups;
+            self.websites = result.websites;
         });
     },
 
@@ -110,6 +112,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
             route: '/website/dashboard/set_ga_data',
             params: {
+                'website_id': self.website_id,
                 'ga_client_id': ga_client_id,
                 'ga_analytics_key': ga_analytics_key,
             },
@@ -245,6 +248,16 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
 
     },
 
+    on_website_button: function(website_id) {
+        var self = this;
+        this.website_id = website_id;
+        $.when(this.fetch_data()).then(function() {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+        });
+    },
+
     on_reverse_breadcrumb: function() {
         var self = this;
         web_client.do_push_state({});
@@ -293,10 +306,15 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             this.$searchview = $(QWeb.render("website.DateRangeButtons", {
                 widget: this,
             }));
-            this.$searchview.click('button.js_date_range', function(ev) {
-                self.on_date_range_button($(ev.target).data('date'));
-                $(this).find('button.js_date_range.active').removeClass('active');
+            this.$searchview.find('button.js_date_range').click(function(ev) {
+                self.$searchview.find('button.js_date_range.active').removeClass('active');
                 $(ev.target).addClass('active');
+                self.on_date_range_button($(ev.target).data('date'));
+            });
+            this.$searchview.find('button.js_website').click(function(ev) {
+                self.$searchview.find('button.js_website.active').removeClass('active');
+                $(ev.target).addClass('active');
+                self.on_website_button($(ev.target).data('website-id'));
             });
         }
         this.update_control_panel({

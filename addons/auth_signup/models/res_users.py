@@ -81,6 +81,8 @@ class ResUsers(models.Model):
                 values.pop('login', None)
                 values.pop('name', None)
                 partner_user.write(values)
+                if not partner_user.login_date:
+                    partner_user._notify_inviter()
                 return (self.env.cr.dbname, partner_user.login, values.get('password'))
             else:
                 # user does not exist: sign up invited user
@@ -92,7 +94,8 @@ class ResUsers(models.Model):
                 if partner.company_id:
                     values['company_id'] = partner.company_id.id
                     values['company_ids'] = [(6, 0, [partner.company_id.id])]
-                self._signup_create_user(values)
+                partner_user = self._signup_create_user(values)
+                partner_user._notify_inviter()
         else:
             # no token, sign up an external user
             values['email'] = values.get('email') or values.get('login')
@@ -101,14 +104,32 @@ class ResUsers(models.Model):
         return (self.env.cr.dbname, values.get('login'), values.get('password'))
 
     @api.model
+    def _get_signup_invitation_scope(self):
+        return self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b')
+
+    @api.model
     def _signup_create_user(self, values):
         """ signup a new user using the template user """
 
         # check that uninvited users may sign up
         if 'partner_id' not in values:
-            if self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') != 'b2c':
+            if self._get_signup_invitation_scope() != 'b2c':
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
+
+    @api.multi
+    def _notify_inviter(self):
+        for user in self:
+            invite_partner = user.create_uid.partner_id
+            if invite_partner:
+                # notify invite user that new user is connected
+                title = _("%s connected") % user.name
+                message = _("This is his first connection. Wish him welcome")
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', invite_partner.id),
+                    {'type': 'user_connection', 'title': title,
+                     'message': message, 'partner_id': user.partner_id.id}
+                )
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
@@ -163,10 +184,20 @@ class ResUsers(models.Model):
             template = self.env.ref('auth_signup.reset_password_email')
         assert template._name == 'mail.template'
 
+        template_values = {
+            'email_to': '${object.email|safe}',
+            'email_cc': False,
+            'auto_delete': True,
+            'partner_to': False,
+            'scheduled_date': False,
+        }
+        template.write(template_values)
+
         for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-            template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
+            with self.env.cr.savepoint():
+                template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
 
     @api.model

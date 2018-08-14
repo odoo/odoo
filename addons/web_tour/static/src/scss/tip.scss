@@ -54,7 +54,9 @@
     $o-tip-arrow-delay-out: floor($o-tip-duration-out / 2);
 
     box-sizing: content-box;
+    /*rtl:begin:ignore*/
     @include o-position-absolute($top: 50%, $left: 50%);
+    /*rtl:end:ignore*/
     opacity: 0;
     width: $o-tip-size;
     height: $o-tip-size;
@@ -89,7 +91,9 @@
         border-right-color: $o-tip-color;
     }
     &.top::before {
+        /*rtl:begin:ignore*/
         @include o-position-absolute($bottom: -$o-tip-arrow-length+$o-tip-arrow-integration, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
+        /*rtl:end:ignore*/
         border-width: $o-tip-arrow-length $o-tip-arrow-width/2 0 $o-tip-arrow-width/2;
         border-top-color: $o-tip-color;
     }
@@ -99,7 +103,9 @@
         border-left-color: $o-tip-color;
     }
     &.bottom::before {
+        /*rtl:begin:ignore*/
         @include o-position-absolute($top: -$o-tip-arrow-length+$o-tip-arrow-integration, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
+        /*rtl:end:ignore*/
         border-width: 0 $o-tip-arrow-width/2 $o-tip-arrow-length $o-tip-arrow-width/2;
         border-bottom-color: $o-tip-color;
     }
@@ -169,6 +175,7 @@
             display: block;
         }
         > .o_tooltip_content {
+            direction: ltr;
             visibility: visible;
             transition: visibility 0s ease $o-tip-duration-in;
         }
@@ -191,7 +198,9 @@
                 border-top-color: $o-tip-color;
             }
             &::after {
+                /*rtl:begin:ignore*/
                 @include o-position-absolute($bottom: -$o-tip-arrow-length+$o-tip-border-width*2, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
+                /*rtl:end:ignore*/
                 border-width: $o-tip-arrow-length $o-tip-arrow-width/2 0 $o-tip-arrow-width/2;
                 border-top-color: white;
                 transition: border-top-color $o-tip-white-arrow-duration-in ease $o-tip-white-arrow-delay-in;
@@ -215,7 +224,9 @@
                 border-bottom-color: $o-tip-color;
             }
             &::after {
+                /*rtl:begin:ignore*/
                 @include o-position-absolute($top: -$o-tip-arrow-length+$o-tip-border-width*2, $left: ($o-tip-size - $o-tip-arrow-width) / 2);
+                /*rtl:end:ignore*/
                 border-width: 0 $o-tip-arrow-width/2 $o-tip-arrow-length $o-tip-arrow-width/2;
                 border-bottom-color: white;
                 transition: border-bottom-color $o-tip-white-arrow-duration-in ease $o-tip-white-arrow-delay-in;
@@ -232,8 +243,8 @@
         }
         &.top, &.bottom {
             &::before, &.active::after {
-                left: auto;
-                right: ($o-tip-size - $o-tip-arrow-width) / 2;
+                left: auto#{"/*rtl:ignore*/"};
+                right: ($o-tip-size - $o-tip-arrow-width) / 2#{"/*rtl:ignore*/"};
             }
         }
     }

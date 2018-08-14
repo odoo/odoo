@@ -5,9 +5,69 @@
         <p class="lead d-none d-md-block">Let's start designing.</p>
         <div class="o_tooltip_container d-none d-md-block">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
     </div>
-
     <div t-name="website.leaving_current_page_edition">
         <p>What do you want to do?</p>
         <p class="text-muted">Your current changes will be saved automatically.</p>
     </div>
+
+
+    <div t-name="website.theme_customize_modal_layout" class="d-flex align-items-start">
+        <ul class="nav flex-column flex-shrink-0 w-25"/>
+        <div class="tab-content pl-3 pb-2 flex-grow-1"/>
+    </div>
+    <div t-name="website.theme_customize_modal_content" t-att-id="id" class="tab-pane">
+        <h5 class="mt-0"><t t-esc="title"/></h5>
+        <div class="form-row justify-content-between o_options_container"/>
+    </div>
+    <t t-name="website.theme_customize_modal_option">
+        <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''}">
+            <img t-if="icon" t-att-src="icon"/>
+            <label t-attf-class="d-flex align-items-center justify-content-center text-center #{color ? 'bg-' + color : ''} #{colorPalette ? 'o_theme_customize_option_palette_label' : ''}">
+                <input t-att-id="id" t-att-name="name" type="radio" class="o_theme_customize_option_input" t-att-data-xmlid="xmlid" t-att-data-enable="enable" t-att-data-disable="disable" t-att-data-reload="reload"/>
+                <span><t t-esc="string"/></span>
+            </label>
+            <div t-if="colorPalette" class="o_theme_customize_color_previews" t-att-data-depends="id">
+                <div>
+                    <h6>Main colors</h6>
+                    <t t-foreach="{'primary': _t('Primary'), 'secondary': _t('Secondary'), 'gamma': _t('Extra Color 1'), 'delta': _t('Extra Color 2'), 'epsilon': _t('Extra Color 3')}" t-as="color">
+                        <t t-call="website.theme_customize_color_palette_button">
+                            <t t-set="color_type" t-value="'theme'"/>
+                        </t>
+                    </t>
+                </div>
+                <div>
+                    <h6>Background colors</h6>
+                    <t t-foreach="{'body': _t('Body'), 'menu': _t('Menu'), 'footer': _t('Footer')}" t-as="color">
+                        <t t-call="website.theme_customize_color_palette_button"/>
+                    </t>
+                </div>
+                <div>
+                    <h6>Text colors</h6>
+                    <t t-foreach="{'text': _t('Text'), 'h1': _t('Headings 1'), 'h2': _t('Headings 2'), 'h3': _t('Headings 3'), 'h4': _t('Headings 4'), 'h5': _t('Headings 5'), 'h6': _t('Headings 6')}" t-as="color">
+                        <t t-call="website.theme_customize_color_palette_button">
+                            <t t-set="color_type" t-value="'typo'"/>
+                        </t>
+                    </t>
+                </div>
+                <div>
+                    <h6>State colors</h6>
+                    <t t-foreach="{'success': _t('Success'), 'info': _t('Info'), 'warning': _t('Warning'), 'danger': _t('Error')}" t-as="color">
+                        <t t-call="website.theme_customize_color_palette_button">
+                            <t t-set="color_type" t-value="'theme'"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.theme_customize_color_palette_button">
+        <button type="button"
+            t-att-disabled="colorPalette != 'user' ? 'disabled' : undefined"
+            t-attf-class="btn btn-sm btn-secondary d-flex align-items-center w-100 mt-2 justify-content-between o_theme_customize_color o_theme_customize_color_#{colorPalette}_#{color}"
+            t-att-data-color="color"
+            t-att-data-color-type="color_type">
+            <t t-esc="color_value"/>
+            <span/>
+        </button>
+    </t>
 </templates>

@@ -20,6 +20,7 @@
         'views/stock_production_lot_views.xml',
         'report/purchase_report_views.xml',
         'report/purchase_report_templates.xml',
+        'report/report_stock_rule.xml',
     ],
     'demo': [
         'data/purchase_stock_demo.xml',

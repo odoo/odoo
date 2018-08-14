@@ -31,6 +31,7 @@ from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
+BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
 
 class MailThread(models.AbstractModel):
@@ -319,6 +320,8 @@ class MailThread(models.AbstractModel):
     def unlink(self):
         """ Override unlink to delete messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
+        if not self:
+            return True
         self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
@@ -1452,6 +1455,14 @@ class MailThread(models.AbstractModel):
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
+        In addition, an auto blacklist rule check if the email can be blacklisted
+        to avoid sending mails indefinitely to this email address.
+        This rule checks if the email bounced too much. If this is the case,
+        the email address is added to the blacklist in order to avoid continuing
+        to send mass_mail to that email address. If it bounced too much times
+        in the last month and the bounced are at least separated by one week,
+        to avoid blacklist someone because of a temporary mail server error,
+        then the email is considered as invalid and is blacklisted.
 
         :param mail_id: ID of the sent email that bounced. It may not exist anymore
                         but it could be usefull if the information was kept. This is
@@ -1461,6 +1472,14 @@ class MailThread(models.AbstractModel):
         if 'message_bounce' in self._fields:
             for record in self:
                 record.message_bounce = record.message_bounce + 1
+                three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
+                stats = self.env['mail.mail.statistics']\
+                    .search(['&', ('bounced', '>', three_months_ago), ('email','=ilike',email)])\
+                    .mapped('bounced')
+                if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT:
+                    if max(stats) > min(stats) + datetime.timedelta(weeks=1):
+                        blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
+                        blacklist_rec._message_log('This email has been automatically blacklisted because of too much bounced.')
 
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
@@ -2030,7 +2049,11 @@ class MailThread(models.AbstractModel):
             values.pop(x, None)
 
         # Post the message
+        # canned_response_ids are added by js to be used by other computations (odoobot)
+        # we need to pop it from values since it is not stored on mail.message
+        canned_response_ids = values.pop('canned_response_ids', False)
         new_message = MailMessage.create(values)
+        values['canned_response_ids'] = canned_response_ids
         self._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
         return new_message
 
@@ -2202,6 +2225,10 @@ class MailThread(models.AbstractModel):
         else:
             self.check_access_rights('write')
             self.check_access_rule('write')
+
+        # filter inactive
+        if partner_ids and not adding_current:
+            partner_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('active', '=', True)]).ids
 
         return self._message_subscribe(partner_ids, channel_ids, subtype_ids, customer_ids=customer_ids)
 

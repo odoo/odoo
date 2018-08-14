@@ -393,9 +393,8 @@ class TestReconciliation(AccountingTestCase):
         move_ids = []
         for name, amount, amount_currency, currency_id in move_list_vals:
             move_ids.append(create_move(name, amount, amount_currency, currency_id))
-        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
-        wizard = self.env['account.move.line.reconcile'].with_context(active_ids=[x.id for x in aml_recs]).create({})
-        wizard.trans_rec_reconcile_full()
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id), ('reconciled', '=', False)])
+        aml_recs.reconcile()
         for aml in aml_recs:
             self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
@@ -411,9 +410,8 @@ class TestReconciliation(AccountingTestCase):
         move_ids = []
         for name, amount, amount_currency, currency_id in move_list_vals:
             move_ids.append(create_move(name, amount, amount_currency, currency_id))
-        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
-        wizard = self.env['account.move.line.reconcile.writeoff'].with_context(active_ids=[x.id for x in aml_recs]).create({'journal_id': self.bank_journal_usd.id, 'writeoff_acc_id': self.account_rsa.id})
-        wizard.trans_rec_reconcile()
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id), ('reconciled', '=', False)])
+        aml_recs.reconcile(self.account_rsa, self.bank_journal_usd)
         for aml in aml_recs:
             self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')

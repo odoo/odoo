@@ -3,22 +3,13 @@
 
     <!--
         @param {mail.model.AbstractThread} thread
+        @param {Object} options
         @param {boolean} [options.displayEmptyThread]
-        @param {boolean} [options.displayLoadMore]
         @param {boolean} [options.displayNoMatchFound]
-        @param {integer} [options.displayOrder] 1 or -1
-        @param {Object} ORDER
-        @param {integer} ORDER.ASC=1
-        @param {integer} ORDER.DESC=-1
     -->
     <t t-name="mail.widget.Thread">
         <t t-if="thread.hasMessages()">
-            <t t-set="messages" t-value="thread.getMessages()"/>
-            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.ASC"
-               t-call="mail.widget.Thread.LoadMore"/>
             <t t-call="mail.widget.Thread.Content"/>
-            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.DESC"
-               t-call="mail.widget.Thread.LoadMore"/>
         </t>
         <t t-elif="options.displayEmptyThread">
             <t t-call="mail.widget.Thread.Empty" />
@@ -134,14 +125,107 @@
     </div>
 
     <!--
-        @param {mail.model.AbstractMessage[]} messages messages ordered by increasing IDs
-        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
-            message ID, the separator is placed just after this message.
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {integer} [options.displayOrder] 1 or -1 chronological order for the thread messages
+        @param {Object} ORDER
+        @param {integer} ORDER.ASC=1 messages are ordered by increasing IDs, from bottom to top
+        @param {integer} ORDER.DESC=-1 messages are ordered by increasing IDs, from top to bottom
+
+        Ordering of messages in the thread, messages are indexed by increasing IDs:
+                    _____________            _____________
+                   |             |          |             |
+                   |  message 1  |          |  message n  |
+                   |  message 2  |          |  ...        |
+                   |  ...        |          |  message 2  |
+                   |  message n  |          |  message 1  |
+                   |_____________|          |_____________|
+
+        ORDER:           DESC                    ASC
+
     -->
     <t t-name="mail.widget.Thread.Content">
-        <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+        <t t-set="messages" t-value="thread.getMessages()"/>
+        <t t-if="options.displayOrder === ORDER.ASC" t-call="mail.widget.Thread.Content.ASC"/>
+        <t t-else="" t-call="mail.widget.Thread.Content.DESC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayLoadMore=false]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+        @param {boolean} [options.withPhantomJS=false] phantomJS is a mess with flexbox
+            so it may break some features like auto-fetch message on scroll.
+            TODO: remove this option when we no longer use phantomJS
+
+                     _____________
+                    |             |
+                    |  message n  |
+                    |  ...        |
+                    |  message 2  |
+                    |  message 1  |
+                    |_____________|
+
+                      ASC Order
+
+    -->
+    <t t-name="mail.widget.Thread.Content.ASC">
+        <div t-att-class="options.withPhantomJS ? '' : 'o_mail_thread_content_asc'">
+            <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+            <t t-set="messages" t-value="messages.slice().reverse()"/>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayBottomThreadFreeSpace=false]
+        @param {boolean} [options.displayLoadMore=false]
+        @param {boolean} [options.withPhantomJS=false] phantomJS is a mess with flexbox
+            so it may break some features like auto-fetch message on scroll.
+            TODO: remove this option when we no longer use phantomJS
+
+                     _____________
+                    |             |
+                    |  message 1  |
+                    |  message 2  |
+                    |  ...        |
+                    |  message n  |
+                    |_____________|
+
+                      DESC Order
+    -->
+    <t t-name="mail.widget.Thread.Content.DESC">
+        <div t-att-class="options.withPhantomJS ? '' : 'o_mail_thread_content_desc'">
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayBottomThreadFreeSpace">
+                <div class="o_thread_bottom_free_space"/>
+            </t>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+    -->
+    <t t-name="mail.widget.Thread.TypingNotificationBar">
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.DESC"/>
+        <div class="o_thread_typing_notification_bar"/>
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.ASC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractMessage[]} messages messages are ordered based
+          on desired display order
+    -->
+    <t t-name="mail.widget.Thread.Messages">
         <t t-set="current_day" t-value="0"/>
-        <t t-if="options.displayOrder === ORDER.DESC" t-set="messages" t-value="messages.slice().reverse()"/>
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
                 <span class="o_thread_date">
@@ -261,7 +345,7 @@
                             <t t-if="message.needsModerationByUser()">
                                 <t t-call="mail.MessageModerationDecision"/>
                             </t>
-                            <t t-elif="message.isAuthor()">
+                            <t t-elif="message.isMyselfAuthor()">
                                 <t t-call="mail.MessageModerationFeedback"/>
                             </t>
                         </t>

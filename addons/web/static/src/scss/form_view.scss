@@ -72,10 +72,11 @@
             display: none!important;
         }
 
-        .o_row, .o_row > div {
-            display: inline-block;
+        .o_row:not(.o_row_readonly) {
+            &, & > div {
+                display: inline-block;
+            }
         }
-
     }
 
     .o_form_uri {
@@ -605,19 +606,18 @@
         }
     }
     &.o_company_document_layout {
-        .image_selection_container {
+        .report_layout_container {
+            display: inline-block;
             div {
-                width: 50%;
+                display: inline-block;
                 img {
                     margin-left: 0 !important;
                 }
             }
         }
-        td {
-            padding: 0 45px 0 0;
-        }
         img[name="logo"] {
-            max-height: 300px;
+            max-height: 100px;
+            max-width: 300px;
         }
     }
 }
@@ -646,6 +646,12 @@
     &:not(.modal-lg) .o_form_view {
         .o_group {
             width: 100%;
+        }
+    }
+    .o_onboarding_payment_acquirer_wizard {
+        a[type="action"] {
+            color: $link-color;
+            cursor: pointer;
         }
     }
 }

@@ -289,6 +289,7 @@
                         <group name="amount" string="Amount">
                             <field name="amount"/>
                             <field name="unit_amount"/>
+                            <field name="product_uom_id" class="oe_inline"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
@@ -373,7 +374,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="account_analytic_line_action_entries">
-            <field name="name">Analytic Entries</field>
+            <field name="name">Analytic Items</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>

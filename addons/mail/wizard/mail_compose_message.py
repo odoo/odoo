@@ -279,6 +279,16 @@ class MailComposer(models.TransientModel):
             records = self.env[self.model].browse(res_ids)
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
+        blacklisted_rec_ids = []
+        if mass_mail_mode and hasattr(self.env[self.model], "_primary_email"):
+            blacklist = self.env['mail.blacklist'].sudo().search([]).mapped('email')
+            if blacklist:
+                [email_field] = self.env[self.model]._primary_email
+                sql = """ SELECT id from %s WHERE LOWER(%s) = any (array[%s]) AND id in (%s)""" % \
+                      (self.env[self.model]._table, email_field, ', '.join("'" + rec + "'" for rec in blacklist),
+                       ', '.join(str(res_id) for res_id in res_ids))
+                self._cr.execute(sql)
+                blacklisted_rec_ids = [rec[0] for rec in self._cr.fetchall()]
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
@@ -328,6 +338,11 @@ class MailComposer(models.TransientModel):
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
                 )
+                # Filter out the blacklisted records by setting the mail state to cancel -> Used for Mass Mailing stats
+                if res_id in blacklisted_rec_ids:
+                    mail_values['state'] = 'cancel'
+                    # Do not post the mail into the recipient's chatter
+                    mail_values['notification'] = False
 
             results[res_id] = mail_values
         return results

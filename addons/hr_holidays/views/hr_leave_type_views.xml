@@ -34,25 +34,25 @@
                             <field name="sequence" attrs="{'invisible': [('limit', '!=', False)]}" groups="base.group_no_one"/>
                             <field name="time_type" groups="base.group_no_one"/>
                         </group>
-                        <group name="allocation_request" string="Allocation" attrs="{'invisible': [('unpaid', '=', True)]}">
-                            <field name="accrual"/>
-                            <field name="negative" attrs="{'invisible': [('accrual', '=', False)]}"/>
-                            <field name="balance_limit" attrs="{'invisible': [('accrual', '=', False)]}"/>
-                        </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
                         </group>
                         <group name="visibility" string="Visibility">
                             <field name="employee_applicability" widget="radio" attrs="{'readonly': ['|', ('limit', '=', True), ('accrual', '=', True)]}" force_save="1"/>
                         </group>
-                        <group name="calendar" string="Calendar">
+                        <group name="validity" string="Validity" attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
+                            <field name="validity_start"/>
+                            <field name="validity_stop"/>
+                        </group>
+                        <group name="calendar" string="Calendar" groups="base.group_no_one">
                             <field name="categ_id"/>
                             <field name="color_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group name="validity" string="Validity" attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
-                            <field name="validity_start"/>
-                            <field name="validity_stop"/>
+                        <group name="allocation_request" string="Allocation Type" attrs="{'invisible': [('unpaid', '=', True)]}">
+                            <field name="accrual"/>
+                            <field name="negative" attrs="{'invisible': [('accrual', '=', False)]}"/>
+                            <field name="balance_limit" attrs="{'invisible': [('accrual', '=', False)]}"/>
                         </group>
                     </group>
                 </sheet>
@@ -143,6 +143,7 @@
         action="open_view_holiday_status"
         name="Leave Types"
         parent="menu_hr_holidays_configuration"
+        groups="hr_holidays.group_hr_holidays_user"
         sequence="1"/>
 
 </odoo>

@@ -15,6 +15,8 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()
 
+        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
+
         # expense product
         cls.product_expense = cls.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'name': "Expense service",

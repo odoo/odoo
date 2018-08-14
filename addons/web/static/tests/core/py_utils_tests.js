@@ -340,6 +340,93 @@ QUnit.module('core', function () {
 
     });
 
+    QUnit.test('add', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 4, 18, 9, 32, 15).add(hours=2, minutes=30, " +
+                "seconds=10)).strftime('%Y-%m-%d %H:%M:%S')", pyUtils.context()),
+            '2017-04-18 12:02:25'
+        );
+        assert.strictEqual(
+            py.eval("(datetime.date(2017, 4, 18).add(months=1, years=3, days=5))" +
+                ".strftime('%Y-%m-%d')", pyUtils.context()),
+            '2020-05-23'
+        );
+    });
+
+    QUnit.test('subtract', function(assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 4, 18, 9, 32, 15).subtract(hours=1, minutes=5, " +
+                "seconds=33)).strftime('%Y-%m-%d %H:%M:%S')", pyUtils.context()),
+            '2017-04-18 08:26:42'
+        );
+        assert.strictEqual(
+            py.eval("(datetime.date(2017, 4, 18).subtract(years=5, months=1, days=1))" +
+                ".strftime('%Y-%m-%d')", pyUtils.context()),
+            '2012-03-17'
+        );
+    })
+
+    QUnit.test('start_of/end_of', function (assert) {
+        assert.expect(26);
+
+        var datetime = pyUtils.context().datetime;
+        // Ain't that a kick in the head?
+        var _date = datetime.date.fromJSON(2281, 10, 11);
+        var _datetime = datetime.datetime.fromJSON(2281, 10, 11, 22, 33, 44);
+        var ctx = {
+            _date: _date,
+            _datetime: _datetime,
+            date: datetime.date,
+            datetime: datetime.datetime
+        };
+
+        // Start of period
+        // Dates first
+        assert.ok(py.eval('_date.start_of("year") == date(2281, 1, 1)', ctx));
+        assert.ok(py.eval('_date.start_of("quarter") == date(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_date.start_of("month") == date(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_date.start_of("week") == date(2281, 10, 10)', ctx));
+        assert.ok(py.eval('_date.start_of("day") == date(2281, 10, 11)', ctx));
+        assert.throws(function () {
+            py.eval('_date.start_of("hour")', ctx);
+        }, /^Error: ValueError:/);
+
+        // Datetimes
+        assert.ok(py.eval('_datetime.start_of("year") == datetime(2281, 1, 1)', ctx));
+        assert.ok(py.eval('_datetime.start_of("quarter") == datetime(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_datetime.start_of("month") == datetime(2281, 10, 1)', ctx));
+        assert.ok(py.eval('_datetime.start_of("week") == datetime(2281, 10, 10)', ctx));
+        assert.ok(py.eval('_datetime.start_of("day") == datetime(2281, 10, 11)', ctx));
+        assert.ok(py.eval('_datetime.start_of("hour") == datetime(2281, 10, 11, 22, 0, 0)', ctx));
+        assert.throws(function () {
+            py.eval('_datetime.start_of("cheese")', ctx);
+        }, /^Error: ValueError:/);
+
+        // End of period
+        // Dates
+        assert.ok(py.eval('_date.end_of("year") == date(2281, 12, 31)', ctx));
+        assert.ok(py.eval('_date.end_of("quarter") == date(2281, 12, 31)', ctx));
+        assert.ok(py.eval('_date.end_of("month") == date(2281, 10, 31)', ctx));
+        assert.ok(py.eval('_date.end_of("week") == date(2281, 10, 16)', ctx));
+        assert.ok(py.eval('_date.end_of("day") == date(2281, 10, 11)', ctx));
+        assert.throws(function () {
+            py.eval('_date.start_of("hour")', ctx);
+        }, /^Error: ValueError:/);
+
+        // Datetimes
+        assert.ok(py.eval('_datetime.end_of("year") == datetime(2281, 12, 31, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("quarter") == datetime(2281, 12, 31, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("month") == datetime(2281, 10, 31, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("week") == datetime(2281, 10, 16, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("day") == datetime(2281, 10, 11, 23, 59, 59)', ctx));
+        assert.ok(py.eval('_datetime.end_of("hour") == datetime(2281, 10, 11, 22, 59, 59)', ctx));
+        assert.throws(function () {
+            py.eval('_datetime.end_of("cheese")', ctx);
+        }, /^Error: ValueError:/);
+    });
+
     QUnit.test('relativedelta', function (assert) {
         assert.expect(5);
 

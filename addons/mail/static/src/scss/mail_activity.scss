@@ -144,10 +144,13 @@
 }
 
 /* Kanban View */
-.o_kanban_record {
+.o_kanban_record{
     .o_kanban_inline_block {
         display: inline-block;
     }
+}
+
+.o_kanban_record, .o_view_controller{
     .o_mail_activity {
         .o_activity_btn {
             span.fa {
@@ -164,8 +167,18 @@
             }
         }
 
+        .o_activity_template_preview,.o_activity_template_send {
+            font-weight: bold;
+            color: $o-brand-primary;
+            cursor: pointer;
+            &:hover:not(.active) {
+                color: darken($o-brand-primary, 15%);
+                border-color: darken($o-brand-primary, 15%);
+            }
+        }
+
         div.o_activity {
-            width: 290px;
+            min-width: 290px;
             padding: 0px 0px;
 
             > :last-child {
@@ -201,7 +214,6 @@
                             width: 85%;
                             padding: 0px 5px 0px 10px;
                             white-space: nowrap;
-                            overflow: hidden;
                             text-overflow: ellipsis;
                         }
                     }

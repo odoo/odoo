@@ -6,12 +6,14 @@ var framework = require('web.framework');
 var stock_report_generic = require('stock.stock_report_generic');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var MrpBomReport = stock_report_generic.extend({
     events: {
         'click .o_mrp_bom_unfoldable': '_onClickUnfold',
         'click .o_mrp_bom_foldable': '_onClickFold',
         'click .o_mrp_bom_action': '_onClickAction',
+        'click .o_mrp_show_attachment_action': '_onClickShowAttachment',
     },
     get_html: function() {
         var self = this;
@@ -38,6 +40,16 @@ var MrpBomReport = stock_report_generic.extend({
         });
     },
     render_html: function(event, $el, result){
+        if (result.indexOf('mrp.document') > 0) {
+            if (this.$('.o_mrp_has_attachments').length === 0) {
+                var column = $('<th/>', {
+                    class: 'o_mrp_has_attachments',
+                    title: 'Files attached to the product Attachments',
+                    text: 'Attachments',
+                });
+                this.$('table thead th:last-child').after(column);
+            }
+        }
         $el.after(result);
         $(event.currentTarget).toggleClass('o_mrp_bom_foldable o_mrp_bom_unfoldable fa-caret-right fa-caret-down');
         this._reload_report_type();
@@ -58,7 +70,7 @@ var MrpBomReport = stock_report_generic.extend({
                   productID,
                   parseFloat(qty),
                   lineID,
-                  level + 1
+                  level + 1,
               ]
           })
           .then(function (result) {
@@ -107,11 +119,10 @@ var MrpBomReport = stock_report_generic.extend({
             return $(el).data('id');
         });
         framework.blockUI();
-        var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id;
+        var reportname = 'mrp.report_bom_structure?docids=' + this.given_context.active_id + '&report_type=' + this.given_context.report_type;
         if (! $(ev.currentTarget).hasClass('o_mrp_bom_print_unfolded')) {
             reportname += '&quantity=' + (this.given_context.searchQty || 1) +
-                          '&childs=' + JSON.stringify(childBomIDs) +
-                          '&report_type=' + this.given_context.report_type;
+                          '&childs=' + JSON.stringify(childBomIDs);
         }
         if (this.given_context.searchVariant) {
             reportname += '&variant=' + this.given_context.searchVariant;
@@ -157,6 +168,18 @@ var MrpBomReport = stock_report_generic.extend({
             res_id: $(ev.currentTarget).data('res-id'),
             views: [[false, 'form']],
             target: 'current'
+        });
+    },
+    _onClickShowAttachment: function (ev) {
+        var ids = $(ev.currentTarget).data('res-id');
+        return this.do_action({
+            name: _t('Attachments'),
+            type: 'ir.actions.act_window',
+            res_model: $(ev.currentTarget).data('model'),
+            domain: [['id', 'in', ids]],
+            views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+            view_mode: 'kanban,list,form',
+            target: 'current',
         });
     },
     _reload: function () {

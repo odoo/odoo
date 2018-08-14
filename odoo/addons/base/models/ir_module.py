@@ -188,6 +188,7 @@ class Module(models.Model):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
                 output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
                 module.description_html = tools.html_sanitize(output)
@@ -445,13 +446,6 @@ class Module(models.Model):
     def button_install_cancel(self):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
-
-    @api.multi
-    def button_discover(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.website,
-        }
 
     @assert_log_admin_access
     @api.multi

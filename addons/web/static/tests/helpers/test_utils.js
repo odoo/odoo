@@ -98,7 +98,7 @@ var createActionManager = function (params) {
         },
     });
     addMockEnvironment(widget, _.defaults(params, {debounce: false}));
-    widget.appendTo($target);
+    widget.prependTo($target);
     widget.$el.addClass('o_web_client');
     if (config.device.isMobile) {
         widget.$el.addClass('o_touch_device');
@@ -313,12 +313,14 @@ function addMockEnvironment(widget, params) {
         var url = window.location.href + separator + 'testId=' + QUnit.config.current.testId;
         console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
     }
+
     var mockServer = new Server(params.data, {
         actions: params.actions,
         archs: params.archs,
         currentDate: params.currentDate,
         debug: params.debug,
         services: params.services,
+        widget: widget,
     });
 
     // make sure images do not trigger a GET on the server
@@ -424,23 +426,6 @@ function addMockEnvironment(widget, params) {
         ev.data.callback(result);
     });
 
-    // Deploy services
-    var done = false;
-    while (!done) {
-        var index = _.findIndex(params.services, function (Service) {
-            return !_.some(Service.prototype.dependencies, function (depName) {
-                return !_.has(services, depName);
-            });
-        });
-        if (index !== -1) {
-            var Service = params.services.splice(index, 1)[0];
-            services[Service.prototype.name] = new Service(widget);
-            services[Service.prototype.name].start();
-        } else {
-            done = true;
-        }
-    }
-
     intercept(widget, 'load_action', function (event) {
         mockServer.performRpc('/web/action/load', {
             kwargs: {
@@ -471,7 +456,7 @@ function addMockEnvironment(widget, params) {
     });
 
     intercept(widget, "get_session", function (event) {
-        event.data.callback(params.session || session);
+        event.data.callback(session);
     });
 
     intercept(widget, "load_filters", function (event) {
@@ -486,6 +471,34 @@ function addMockEnvironment(widget, params) {
         _.each(params.intercepts, function (cb, name) {
             intercept(widget, name, cb);
         });
+    }
+
+    // Deploy services
+    var done = false;
+    var servicesToDeploy = _.clone(params.services);
+    while (!done) {
+        var serviceName = _.findKey(servicesToDeploy, function (Service) {
+            return !_.some(Service.prototype.dependencies, function (depName) {
+                return !_.has(services, depName);
+            });
+        });
+        if (serviceName) {
+            var Service = servicesToDeploy[serviceName];
+            var service = services[serviceName] = new Service(widget);
+            delete servicesToDeploy[serviceName];
+
+            intercept(service, "get_session", function (event) {
+                event.data.callback(session);
+            });
+
+            service.start();
+        } else {
+            var serviceNames = _.keys(servicesToDeploy);
+            if (serviceNames.length) {
+                console.warn("Non loaded services:", serviceNames);
+            }
+            done = true;
+        }
     }
 
     return mockServer;
@@ -540,34 +553,54 @@ function createParent(params) {
  * @param {jqueryElement} $el
  * @param {jqueryElement} $to
  * @param {Object} [options]
- * @param {string} [options.position=center] target position
- * @param {string} [options.disableDrop=false] whether to trigger the drop action
+ * @param {string|Object} [options.position='center'] target position:
+ *   can either be one of {'top', 'bottom', 'left', 'right'} or
+ *   an object with two attributes (top and left))
+ * @param {boolean} [options.disableDrop=false] whether to trigger the drop action
+ * @param {boolean} [options.continueMove=false] whether to trigger the
+ *   mousedown action (will only work after another call of this function with
+ *   without this option)
  */
 function dragAndDrop($el, $to, options) {
     var position = (options && options.position) || 'center';
     var elementCenter = $el.offset();
-    elementCenter.left += $el.outerWidth()/2;
-    elementCenter.top += $el.outerHeight()/2;
-
     var toOffset = $to.offset();
-    toOffset.top += $to.outerHeight()/2;
-    toOffset.left += $to.outerWidth()/2;
-    var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
-    if (position === 'top') {
-        toOffset.top -= $to.outerHeight()/2 + vertical_offset;
-    } else if (position === 'bottom') {
-        toOffset.top += $to.outerHeight()/2 - vertical_offset;
-    } else if (position === 'left') {
-        toOffset.left -= $to.outerWidth()/2;
-    } else if (position === 'right') {
+
+    if (_.isObject(position)) {
+        toOffset.top += position.top;
+        toOffset.left += position.left;
+    } else {
+        toOffset.top += $to.outerHeight()/2;
         toOffset.left += $to.outerWidth()/2;
+        var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
+        if (position === 'top') {
+            toOffset.top -= $to.outerHeight()/2 + vertical_offset;
+        } else if (position === 'bottom') {
+            toOffset.top += $to.outerHeight()/2 - vertical_offset;
+        } else if (position === 'left') {
+            toOffset.left -= $to.outerWidth()/2;
+        } else if (position === 'right') {
+            toOffset.left += $to.outerWidth()/2;
+        }
     }
 
-    $el.trigger($.Event("mousedown", {
-        which: 1,
-        pageX: elementCenter.left,
-        pageY: elementCenter.top
-    }));
+    if ($to[0].ownerDocument !== document) {
+        // we are in an iframe
+        var bound = $('iframe')[0].getBoundingClientRect();
+        toOffset.left += bound.left;
+        toOffset.top += bound.top;
+    }
+
+    if (!(options && options.continueMove)) {
+        elementCenter.left += $el.outerWidth()/2;
+        elementCenter.top += $el.outerHeight()/2;
+
+        $el.trigger($.Event("mousedown", {
+            which: 1,
+            pageX: elementCenter.left,
+            pageY: elementCenter.top
+        }));
+    }
 
     $el.trigger($.Event("mousemove", {
         which: 1,

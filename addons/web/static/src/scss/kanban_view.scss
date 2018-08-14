@@ -129,6 +129,56 @@
                 }
             }
         }
+
+        // ---------- Kanban Record, fill image design ----------
+        // Records with images that compensate record's padding
+        // filling all the available space (eg. hr, partners.. )
+        &.o_kanban_record_has_image_fill {
+            display: flex;
+
+            .o_kanban_image_fill_left {
+                position: relative;
+                margin: $o-kanban-inside-vgutter*-1 $o-kanban-inside-hgutter*-1;
+                margin-right: $o-kanban-inside-hgutter*2;
+                flex: 1 0 $o-kanban-image-fill-width;
+                min-height: 95px;
+                background: {size: cover; position: center };
+            }
+
+            // Adapt default 'o_kanban_image' element if present.
+            // This adaptation allow to use both images type.
+            // Eg. In partners list we use to fill user picture only, keeping the
+            // default design for company logos.
+            .o_kanban_image {
+                margin-right: $o-kanban-inside-hgutter*2;
+                flex: 0 0 $o-kanban-image-width;
+                min-height: $o-kanban-image-width;
+                align-self: baseline;
+
+                // On medium screen size, align 'o_kanban_image' to 'o_kanban_image_fill_left' elements.
+                @include media-breakpoint-up(md) {
+                    $fill-notfill-gap: ($o-kanban-image-fill-width - $o-kanban-inside-hgutter*2) - $o-kanban-image-width;
+                    margin: { left: $fill-notfill-gap*0.5; right: $fill-notfill-gap*2;}
+                    align-self: center;
+                }
+
+                // Reset immedialy after div padding
+                + div {
+                    padding-left: 0
+                }
+            }
+
+            // Images (backgrounds) could accomodate another image inside.
+            // (eg. Company logo badge inside a contact picture)
+            .o_kanban_image_fill_left, .o_kanban_image {
+                .o_kanban_image_inner_pic {
+                    @include o-position-absolute($right: 0, $bottom:0);
+                    max: { height: 25px; width: 80%;}
+                    background: white;
+                    box-shadow: -1px -1px 0 1px white;
+                }
+            }
+        }
     }
 
     // -------  Compatibility of old (<= v10) Generic layouts -------
@@ -195,6 +245,7 @@
         // Commonly used to place an image beside the text
         // (e.g. Fleet, Employees, ...)
         .o_kanban_image {
+            position: relative;
             text-align: center;
 
             img {
@@ -225,8 +276,20 @@
         }
 
         .o_attachment_image > img {
-            width: 100%;
-            height: auto;
+            overflow: hidden;
+            padding-top: 75%;
+
+            .o_attachment_image {
+                @include o-position-absolute(0, 0, 0, 0);
+                background-size: cover;
+                background-position: center;
+                transform: scale(1.05);
+                transition: all 0.3s;
+            }
+
+            &:hover .o_attachment_image {
+                transform: scale(1);
+            }
         }
 
         .o_progressbar {
@@ -305,7 +368,7 @@
     &.o_kanban_grouped {
         min-height: 100%;
         padding: 0;
-        background-color: theme-color('light');
+        background-color: desaturate($gray-100, 100%);
 
         .o_kanban_record, .o_kanban_quick_create {
             width: 100%;
@@ -387,6 +450,7 @@
     .o_kanban_group.o_column_folded {
         @include o-kanban-slim-col;
         background-color: #f0f0f0;
+        background-color: desaturate($gray-200, 100%);
 
         & + .o_kanban_group.o_column_folded {
             margin-left: 1px;

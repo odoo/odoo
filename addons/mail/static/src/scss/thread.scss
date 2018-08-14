@@ -3,6 +3,56 @@
         text-align: center;
     }
 
+    .o_mail_thread_content_asc, .o_mail_thread_content_desc {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
+
+    .o_thread_bottom_free_space {
+        height: 15px;
+    }
+
+    .o_thread_typing_notification_free_space {
+        flex-grow: 1,
+    }
+
+    .o_thread_typing_notification_bar {
+        flex: 0, 0, 20px;
+        @include o-position-sticky($bottom: 0px);
+        @include o-transparent-background-color(0.75, white);
+        padding: 5px;
+        text-align: center;
+        color: gray('600');
+    }
+
+    .o_thread_tooltip_container {
+        display: inline;
+        position: relative;
+
+        .o_thread_tooltip_content {
+            top: 10px;
+            background: gray('200');
+            padding: 4px;
+            border: solid gray('200') 1px;
+            border-radius: 5px;
+            color: gray;
+            width: 300px;
+            display: none;
+            opacity: 0;
+            position: absolute;
+            transition: opacity 0.5s;
+            i.fa-exclamation {
+                color: red;
+            }
+        }
+
+        .o_thread_tooltip:hover + .o_thread_tooltip_content {
+            display: inline;
+            opacity: 1;
+        }
+    }
+
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;

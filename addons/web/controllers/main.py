@@ -424,11 +424,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
 
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
                    filename=None, filename_field='datas_fname', download=False, mimetype=None,
-                   default_mimetype='application/octet-stream', access_token=None, env=None):
+                   default_mimetype='application/octet-stream', share_id=None, share_token=None, access_token=None,
+                   force_ext=False, env=None):
     return request.registry['ir.http'].binary_content(
         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
         filename_field=filename_field, download=download, mimetype=mimetype,
-        default_mimetype=default_mimetype, access_token=access_token, env=env)
+        default_mimetype=default_mimetype, share_id=share_id, share_token=share_token, access_token=access_token,
+        force_ext=force_ext, env=env)
 
 #----------------------------------------------------------
 # Odoo Web web Controllers
@@ -748,6 +750,8 @@ class Database(http.Controller):
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
+            data_file = None
+            db.check_super(master_pwd)
             with tempfile.NamedTemporaryFile(delete=False) as data_file:
                 backup_file.save(data_file)
             db.restore_db(name, data_file.name, str2bool(copy))
@@ -756,7 +760,8 @@ class Database(http.Controller):
             error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
         finally:
-            os.unlink(data_file.name)
+            if data_file:
+                os.unlink(data_file.name)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
@@ -997,15 +1002,17 @@ class Binary(http.Controller):
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<int:id>-<string:unique>',
         '/web/content/<int:id>-<string:unique>/<string:filename>',
+        '/web/content/<int:id>-<string:unique>/<path:extra>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='datas_fname', unique=None, mimetype=None,
-                       download=None, data=None, token=None, access_token=None, **kw):
+                       download=None, data=None, token=None, share_id=None, share_token=None, access_token=None,
+                       force_ext=False, **kw):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            access_token=access_token)
+            access_token=access_token, share_id=share_id, share_token=share_token, force_ext=force_ext)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
@@ -1039,11 +1046,12 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False):
+                      download=None, width=0, height=0, crop=False, share_id=None, share_token=None, access_token=None, avoid_if_small=False,
+                      upper_limit=False):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype='image/png', access_token=access_token)
+            default_mimetype='image/png', share_id=share_id, share_token=share_token, access_token=access_token)
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
         elif status == 301:
@@ -1062,12 +1070,15 @@ class Binary(http.Controller):
             content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
 
         elif content and (width or height):
-            # resize maximum 500*500
-            if width > 500:
-                width = 500
-            if height > 500:
-                height = 500
-            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG', avoid_if_small=avoid_if_small)
+            if not upper_limit:
+                # resize maximum 500*500
+                if width > 500:
+                    width = 500
+                if height > 500:
+                    height = 500
+            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None),
+                                                    encoding='base64', filetype='PNG', upper_limit=upper_limit,
+                                                    avoid_if_small=avoid_if_small)
             # resize force png as filetype
             headers = self.force_contenttype(headers, contenttype='image/png')
 
@@ -1575,6 +1586,10 @@ class ReportController(http.Controller):
             pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
+        elif converter == 'text':
+            text = report.with_context(context).render_qweb_text(docids, data=data)[0]
+            texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
+            return request.make_response(text, headers=texthttpheaders)
         else:
             raise werkzeug.exceptions.HTTPException(description='Converter %s not implemented.' % converter)
 
@@ -1614,8 +1629,12 @@ class ReportController(http.Controller):
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
         try:
-            if type == 'qweb-pdf':
-                reportname = url.split('/report/pdf/')[1].split('?')[0]
+            if type in ['qweb-pdf', 'qweb-text']:
+                converter = 'pdf' if type == 'qweb-pdf' else 'text'
+                extension = 'pdf' if type == 'qweb-pdf' else 'txt'
+
+                pattern = '/report/pdf/' if type == 'qweb-pdf' else '/report/text/'
+                reportname = url.split(pattern)[1].split('?')[0]
 
                 docids = None
                 if '/' in reportname:
@@ -1623,20 +1642,21 @@ class ReportController(http.Controller):
 
                 if docids:
                     # Generic report:
-                    response = self.report_routes(reportname, docids=docids, converter='pdf')
+                    response = self.report_routes(reportname, docids=docids, converter=converter)
                 else:
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
-                    response = self.report_routes(reportname, converter='pdf', **dict(data))
+                    response = self.report_routes(reportname, converter=converter, **dict(data))
 
                 report = request.env['ir.actions.report']._get_report_from_name(reportname)
-                filename = "%s.%s" % (report.name, "pdf")
+                filename = "%s.%s" % (report.name, extension)
+
                 if docids:
                     ids = [int(x) for x in docids.split(",")]
                     obj = request.env[report.model].browse(ids)
                     if report.print_report_name and not len(obj) > 1:
                         report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
-                        filename = "%s.%s" % (report_name, "pdf")
+                        filename = "%s.%s" % (report_name, extension)
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response

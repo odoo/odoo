@@ -53,6 +53,7 @@
                             </div>
                             <field name="account_depreciation_expense_id" nolabel="1"/>
                             <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
                         </group>
                         <group string="Periodicity">
                             <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
@@ -170,6 +171,7 @@
                             <field name="first_depreciation_manual_date"
                                    attrs="{'invisible': [('date_first_depreciation', '!=', 'manual')], 'required': [('date_first_depreciation', '=', 'manual')]}"/>
                             <field name="type" invisible="1"/>
+                            <field name="account_analytic_id" groups="analytic.group_analytic_accounting" />
                         </group>
                         <group>
                             <field name="currency_id" groups="base.group_multi_currency"/>
@@ -179,6 +181,7 @@
                             <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="partner_id" string="Vendor" domain="[('supplier', '=', True)]"/>
                             <field name="invoice_id" string="Invoice" options="{'no_create': True}"/>
+                            <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -321,7 +324,7 @@
         <field name="domain">[('category_id.type', '=', 'purchase')]</field>
     </record>
 
-    <menuitem parent="account.menu_finance_entries_management" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_user"/>
+    <menuitem parent="account.menu_finance_entries_management" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_manager"/>
 
 
     <!-- Configuration -->

@@ -302,6 +302,7 @@ class AccountInvoice(models.Model):
         readonly=True, index=True, ondelete='restrict', copy=False,
         help="Link to the automatically generated Journal Items.")
 
+    amount_by_group = fields.Binary(string="Taxe amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
     amount_untaxed = fields.Monetary(string='Untaxed Amount',
         store=True, readonly=True, compute='_compute_amount', track_visibility='always')
     amount_untaxed_signed = fields.Monetary(string='Untaxed Amount in Company Currency', currency_field='company_currency_id',
@@ -426,8 +427,8 @@ class AccountInvoice(models.Model):
 
     def _compute_access_url(self):
         super(AccountInvoice, self)._compute_access_url()
-        for order in self:
-            order.access_url = '/my/invoices/%s' % (order.id)
+        for invoice in self:
+            invoice.access_url = '/my/invoices/%s' % (invoice.id)
 
     @api.depends('state', 'journal_id', 'date_invoice')
     def _get_sequence_prefix(self):
@@ -508,6 +509,15 @@ class AccountInvoice(models.Model):
 
         return invoice
 
+    @api.constrains('partner_id', 'partner_bank_id')
+    def validate_partner_bank_id(self):
+        for record in self:
+            if record.partner_bank_id:
+                if record.type in ('in_invoice', 'out_refund') and record.partner_bank_id.partner_id != record.partner_id.commercial_partner_id:
+                    raise ValidationError(_("Commercial partner and vendor account owners must be identical."))
+                elif record.type in ('out_invoice', 'in_refund') and not record.company_id in record.partner_bank_id.partner_id.ref_company_ids:
+                    raise ValidationError(_("The account selected for payment does not belong to the same company as this invoice."))
+
     @api.multi
     def _write(self, vals):
         pre_not_reconciled = self.filtered(lambda invoice: not invoice.reconciled)
@@ -526,7 +536,7 @@ class AccountInvoice(models.Model):
         """
         res = super(AccountInvoice, self).default_get(default_fields)
 
-        if not res.get('type', False) == 'out_invoice' or not 'company_id' in res:
+        if res.get('type', False) not in ('out_invoice', 'in_refund') or not 'company_id' in res:
             return res
 
         company = self.env['res.company'].browse(res['company_id'])
@@ -565,8 +575,7 @@ class AccountInvoice(models.Model):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
-        self.ensure_one()
-        self.sent = True
+        self.write({'sent': True})
         if self.user_has_groups('account.group_account_invoice'):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
@@ -579,7 +588,7 @@ class AccountInvoice(models.Model):
         """
         self.ensure_one()
         template = self.env.ref('account.email_template_edi_invoice', False)
-        compose_form = self.env.ref('account.multi_compose_message_wizard_form', False)
+        compose_form = self.env.ref('account.account_invoice_send_wizard_form', False)
         ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
@@ -591,11 +600,11 @@ class AccountInvoice(models.Model):
             force_email=True
         )
         return {
-            'name': _('Compose Email'),
+            'name': _('Send Invoice'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'multi.compose.message',
+            'res_model': 'account.invoice.send',
             'views': [(compose_form.id, 'form')],
             'view_id': compose_form.id,
             'target': 'new',
@@ -607,7 +616,7 @@ class AccountInvoice(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_invoice_as_sent'):
             self.filtered(lambda inv: not inv.sent).write({'sent': True})
-            self.env.user.company_id.account_onboarding_sample_invoice_sent = True
+            self.env.user.company_id.set_onboarding_step_done('account_onboarding_sample_invoice_state')
         return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.model
@@ -874,7 +883,7 @@ class AccountInvoice(models.Model):
     def action_invoice_open(self):
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
-        for inv in to_open_invoices.filtered(lambda inv: not inv.partner_id):
+        if to_open_invoices.filtered(lambda inv: not inv.partner_id):
             raise UserError(_("The field Vendor is required, please complete it to validate the Vendor Bill."))
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
@@ -882,6 +891,9 @@ class AccountInvoice(models.Model):
             raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead."))
         if to_open_invoices.filtered(lambda inv: not inv.account_id):
             raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
+        for record in to_open_invoices:
+            if record.company_id.account_sanitize_invoice_ref and record.reference:
+                record.reference = self.env['account.payment']._sanitize_communication(record.reference)
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         return to_open_invoices.invoice_validate()
@@ -1477,22 +1489,39 @@ class AccountInvoice(models.Model):
             return 'account.mt_invoice_created'
         return super(AccountInvoice, self)._track_subtype(init_values)
 
+    def _amount_by_group(self):
+        for invoice in self:
+            currency = invoice.currency_id or invoice.company_id.currency_id
+            fmt = partial(formatLang, invoice.with_context(lang=invoice.partner_id.lang).env, currency_obj=currency)
+            res = {}
+            for line in invoice.tax_line_ids:
+                res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                res[line.tax_id.tax_group_id]['amount'] += line.amount
+                res[line.tax_id.tax_group_id]['base'] += line.base
+            res = sorted(res.items(), key=lambda l: l[0].sequence)
+            invoice.amount_by_group = [(
+                r[0].name, r[1]['amount'], r[1]['base'],
+                fmt(r[1]['amount']), fmt(r[1]['base']),
+                len(res),
+            ) for r in res]
+
     @api.multi
-    def _get_tax_amount_by_group(self):
+    def get_portal_url(self, suffix=None):
+        """
+            Get a portal url for this invoice, including access_token.
+            - suffix: string to append to the url, before the query string
+        """
         self.ensure_one()
-        currency = self.currency_id or self.company_id.currency_id
-        fmt = partial(formatLang, self.with_context(lang=self.partner_id.lang).env, currency_obj=currency)
-        res = {}
-        for line in self.tax_line_ids:
-            res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-            res[line.tax_id.tax_group_id]['amount'] += line.amount
-            res[line.tax_id.tax_group_id]['base'] += line.base
-        res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = [(
-            r[0].name, r[1]['amount'], r[1]['base'],
-            fmt(r[1]['amount']), fmt(r[1]['base']),
-        ) for r in res]
-        return res
+        return self.access_url + '%s?access_token=%s' % (suffix if suffix else '', self._portal_ensure_token())
+
+    @api.multi
+    def preview_invoice(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.get_portal_url(),
+        }
 
 
 class AccountInvoiceLine(models.Model):
@@ -1527,6 +1556,10 @@ class AccountInvoiceLine(models.Model):
                 return journal.default_credit_account_id.id
             return journal.default_debit_account_id.id
 
+    def _get_price_tax(self):
+        for l in self:
+            l.price_tax = l.price_total - l.price_subtotal
+
     name = fields.Text(string='Description', required=True)
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.")
@@ -1550,6 +1583,7 @@ class AccountInvoiceLine(models.Model):
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_price',
         help="Total amount in the currency of the company, negative for credit note.")
+    price_tax = fields.Monetary(string='Tax Amount', compute='_get_price_tax', store=False)
     quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'),

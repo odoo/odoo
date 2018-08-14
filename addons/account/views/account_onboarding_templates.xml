@@ -4,48 +4,68 @@
     <template id="onboarding_invoice_layout_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Invoice Layout</t>
-            <t t-set="description">Create and send professional looking invoices.</t>
+            <t t-set="description">Customize the look of your invoices.</t>
             <t t-set="done_icon" t-value="'fa-star'" />
+            <t t-set="btn_text">Customize</t>
             <t t-set="done_text">Looks great!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_invoice_layout'" />
             <t t-set="model" t-value="'res.company'" />
-            <t t-set="done" t-value="company.account_onboarding_invoice_layout_done" />
+            <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
         </t>
     </template>
     <template id="onboarding_sample_invoice_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Sample Invoice</t>
-            <t t-set="description">Quickly preview what your client sees by sending a sample invoice
-                to yourself.
+            <t t-set="description">
+                Send an invoice to test the customer portal.
             </t>
-            <t t-set="btn_text">I'm ready</t>
+            <t t-set="btn_text">Send sample</t>
             <t t-set="done_text">Sample invoice sent!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_sample_invoice'" />
             <t t-set="model" t-value="'res.company'" />
-            <t t-set="done" t-value="company.account_onboarding_sample_invoice_sent" />
+            <t t-set="state" t-value="state.get('account_onboarding_sample_invoice_state')" />
+        </t>
+    </template>
+    <template id="onboarding_bank_account_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Bank Account</t>
+            <t t-set="description">Setup your bank account to sync bank feeds.</t>
+            <t t-set="btn_text">Add a bank</t>
+            <t t-set="done_text">Step Completed!</t>
+            <t t-set="method" t-value="'setting_init_bank_account_action'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_setup_bank_data_state')" />
         </t>
     </template>
     <template id="onboarding_fiscal_year_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Fiscal Year</t>
-            <t t-set="description">Set the closing date of your legal reports.</t>
-            <t t-set="btn_text">I'm ready</t>
+            <t t-set="description">Define your fiscal years opening &amp; closing dates.</t>
+            <t t-set="btn_text">Configure</t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'setting_init_fiscal_year_action'" />
             <t t-set="model" t-value="'res.company'" />
-            <t t-set="done" t-value="company.account_setup_fy_data_done" />
+            <t t-set="state" t-value="state.get('account_setup_fy_data_state')" />
         </t>
     </template>
     <template id="onboarding_chart_of_account_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Chart of Accounts</t>
-            <t t-set="description">Setup your chart of accounts and enter the initial balances.</t>
-            <t t-set="btn_text">I'm ready</t>
+            <t t-set="description">Setup your chart of accounts and record initial balances.</t>
+            <t t-set="btn_text">Review</t>
             <t t-set="done_text">Chart of account set.</t>
             <t t-set="method" t-value="'setting_chart_of_accounts_action'" />
             <t t-set="model" t-value="'res.company'" />
-            <t t-set="done" t-value="company.account_setup_coa_done" />
+            <t t-set="state" t-value="state.get('account_setup_coa_state')" />
         </t>
+    </template>
+    <template id="dashboard_onboarding_company_step" primary="True"
+              inherit_id="base.onboarding_company_step">
+        <xpath expr="//t[@t-set='description']" position="replace">
+            <t t-set="description">
+                Setup your company's data for reports headers.
+            </t>
+        </xpath>
     </template>
     <!-- ONBOARDING PANELS -->
     <template id="account_invoice_onboarding_panel" name="account.invoice.onboarding.panel">
@@ -54,9 +74,8 @@
             <t t-set="bg_image">/account/static/src/img/account_invoice_onboarding_bg.jpg</t>
             <t t-set="close_method">action_close_account_invoice_onboarding</t>
             <t t-set="close_model">res.company</t>
-            <t t-set="fold_method">action_toggle_fold_account_invoice_onboarding</t>
-            <t t-set="fold_model">res.company</t>
-            <t t-set="folded_by_default" t-value="company.account_invoice_onboarding_folded" />
+            <t t-set="text_completed">Congratulations! You are all set.</t>
+
             <t t-call="base.onboarding_company_step" name="company_step" />
             <t t-call="account.onboarding_invoice_layout_step" name="invoice_layout_step" />
             <t t-call="account.onboarding_sample_invoice_step" name="sample_invoice_step" />
@@ -68,22 +87,33 @@
             <t t-set="bg_image">/account/static/src/img/account_dashboard_onboarding_bg.jpg</t>
             <t t-set="close_method">action_close_account_dashboard_onboarding</t>
             <t t-set="close_model">res.company</t>
-            <t t-set="fold_method">action_toggle_fold_account_dashboard_onboarding</t>
-            <t t-set="fold_model">res.company</t>
-            <t t-set="folded_by_default" t-value="company.account_dashboard_onboarding_folded" />
-            <t t-call="base.onboarding_company_step" name="company_step" />
+
+            <t t-call="account.dashboard_onboarding_company_step" name="company_step" />
+            <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
             <t t-call="account.onboarding_fiscal_year_step" name="fiscal_year_step" />
             <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
         </t>
     </template>
     <!-- INVOICE FORM -->
+    <record id="account_invoice_onboarding_invoice_layout_form" model="ir.ui.view">
+        <field name="name">account.invoice.layout.onboarding.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_document_template_form" />
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@special='save']" position="replace">
+                <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_invoice_layout" />
+            </xpath>
+        </field>
+    </record>
     <record id="action_open_account_onboarding_invoice_layout" model="ir.actions.act_window">
-        <field name="name">Configure your document template</field>
+        <field name="name">Configure your document layout</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.company</field>
         <field name="view_mode">form</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="base.view_company_document_template_form" />
+        <field name="view_id" ref="account_invoice_onboarding_invoice_layout_form" />
         <field name="target">new</field>
     </record>
     <!-- SAMPLE INVOICE EMAIL -->
@@ -113,6 +143,44 @@
         <field name="view_mode">form</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="email_compose_onboarding_sample_invoice" />
+        <field name="target">new</field>
+    </record>
+    <!-- SALE TAX -->
+    <template id="onboarding_sale_tax_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Taxes</t>
+            <t t-set="description">Choose a default sales tax for your products.</t>
+            <t t-set="btn_text">Set taxes</t>
+            <t t-set="done_text">Step Completed!</t>
+            <t t-set="method" t-value="'action_open_account_onboarding_sale_tax'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_onboarding_sale_tax_state')" />
+        </t>
+    </template>
+    <record id="account_invoice_onboarding_sale_tax_form" model="ir.ui.view">
+        <field name="name">account.invoice.layout.onboarding.form</field>
+        <field name="model">res.company</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="mb16">Choose a default sales tax for your products.</div>
+                <label for="account_sale_tax_id" string="Sales Tax"/>
+                <field name="account_sale_tax_id" />
+                <footer>
+                    <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_account_onboarding_sale_tax" model="ir.actions.act_window">
+        <field name="name">Sales tax</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="account_invoice_onboarding_sale_tax_form" />
         <field name="target">new</field>
     </record>
 </odoo>

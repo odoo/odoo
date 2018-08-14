@@ -13,13 +13,14 @@
 # fausthuang, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,9 +29,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;次数;"
 
@@ -46,7 +46,7 @@ msgstr ""
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Add a contact form in the"
-msgstr ""
+msgstr "将联系表单添加到"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -64,33 +64,33 @@ msgid "Contact Us"
 msgstr "联系我们"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_team_id
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Channel"
-msgstr ""
+msgstr "默认销售渠道"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Channels"
-msgstr ""
+msgstr "默认销售渠道"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr "默认销售人员"
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid ""
 "Default sales channel for new leads created through the Contact Us form."
-msgstr ""
+msgstr "通过联系我们表单创建的新线索的默认销售渠道。"
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr ""
+msgstr "通过联系我们表单创建的新线索的默认销售人员。"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -98,9 +98,8 @@ msgid "Email"
 msgstr "Email"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "If you have an emergency, do not hesitate to contact us by phone:"
 msgstr "如果你遇到了急待解决的问题，请不要犹豫，立即通过电话联系我们："
 
@@ -112,7 +111,7 @@ msgstr "线索/商机"
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr ""
+msgstr "在您的客户关系管理应用中，将新消息作为线索或机会进行管理。"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -135,16 +134,14 @@ msgid "Subject"
 msgstr "主题"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "Thanks!"
 msgstr "感谢！"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "我们将很快回复。"
 
@@ -174,16 +171,15 @@ msgid "Your Question"
 msgstr "你的问题"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr "你的消息已成功发出。"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
-msgstr ""
+msgstr "页面"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings

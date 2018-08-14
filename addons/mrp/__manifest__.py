@@ -38,6 +38,7 @@
         'report/mrp_report_views_main.xml',
         'report/mrp_report_bom_structure.xml',
         'report/mrp_production_templates.xml',
+        'report/report_stock_rule.xml',
     ],
     'qweb': ['static/src/xml/mrp.xml'],
     'demo': [
@@ -45,4 +46,5 @@
     ],
     'test': [],
     'application': True,
+    'post_init_hook': '_create_warehouse_data',
 }

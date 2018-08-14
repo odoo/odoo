@@ -5,18 +5,23 @@
         <field name="name">project.create.sale.order.wizard.form</field>
         <field name="model">project.create.sale.order</field>
         <field name="arch" type="xml">
-            <form string="Create Sales Order from Project">
+            <form string="Make Project Billable">
                 <group>
-                    <group>
-                        <field name="project_id" readonly="1"/>
-                        <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
-                        <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                        <field name="partner_id"/>
-                        <field name="currency_id" invisible="1"/>
-                    </group>
+                    <field name="project_id" readonly="1"/>
+                    <field name="partner_id"/>
+                </group>
+                <group>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                            <field name="quantity"/>
+                            <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </tree>
+                    </field>
                 </group>
                 <footer>
-                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight"/>
+                    <button string="Create Order" type="object" name="action_create_sale_order" class="oe_highlight"/>
                     <button string="Cancel" special="cancel" type="object" class="btn btn-secondary oe_inline"/>
                 </footer>
             </form>
@@ -32,7 +37,6 @@
         <field name="view_id" ref="project_create_sale_order_view_form"/>
         <field name="target">new</field>
         <field name="multi" eval="False"/>
-        <field name="binding_model_id" ref="project.model_project_project"/>
         <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 

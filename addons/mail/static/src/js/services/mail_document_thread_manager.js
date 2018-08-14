@@ -25,9 +25,9 @@ MailManager.include({
         // retrieve the open DocumentThreads from the localStorage
         var state = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
         if (!state) {
-            this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY, '{}');
+            this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY, {});
         } else {
-            this.isReady().then(this._updateDocumentThreadWindows.bind(this, JSON.parse(state)));
+            this.isReady().then(this._updateDocumentThreadWindows.bind(this, state));
         }
         // listen to localStorage changes to synchronize DocumentThread's
         // windows between tabs
@@ -67,7 +67,7 @@ MailManager.include({
             data.author_id[0] === session.partner_id
         ) {
             var key = this.DOCUMENT_THREAD_MESSAGE_KEY;
-            this.call('local_storage', 'setItem', key, JSON.stringify(data));
+            this.call('local_storage', 'setItem', key, data);
         }
         return this._super.apply(this, arguments);
     },
@@ -109,12 +109,14 @@ MailManager.include({
                 },
             });
             this._threads.push(thread);
-        } else if (params.name) {
+        } else {
             if ('messageIDs' in params) {
                 thread.setMessageIDs(params.messageIDs);
             }
-            // document thread may have a change of name
-            thread.setName(params.name);
+            if ('name' in params && params.name) {
+                // document thread may have a change of name
+                thread.setName(params.name);
+            }
         }
         return thread;
     },
@@ -149,15 +151,12 @@ MailManager.include({
      * @param {string} state.windowState ('closed', 'folded' or 'open')
      */
     updateDocumentThreadState: function (threadID, state) {
-        var item = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
-        var states = JSON.parse(item);
+        var states = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
         states = _.omit(states, function (state) {
             return state.windowState === 'closed';
         });
         states[threadID] = state;
-        this.call('local_storage', 'setItem',
-            this.DOCUMENT_THREAD_STATE_KEY,
-            JSON.stringify(states));
+        this.call('local_storage', 'setItem', this.DOCUMENT_THREAD_STATE_KEY, states);
     },
 
     //--------------------------------------------------------------------------
@@ -223,11 +222,11 @@ MailManager.include({
     _onStorage: function (ev) {
         if (ev.key === this.DOCUMENT_THREAD_STATE_KEY) {
             var state = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_STATE_KEY);
-            this._updateDocumentThreadWindows(JSON.parse(state));
+            this._updateDocumentThreadWindows(state);
         } else if (ev.key === this.DOCUMENT_THREAD_MESSAGE_KEY) {
             var message = this.call('local_storage', 'getItem', this.DOCUMENT_THREAD_MESSAGE_KEY);
             if (message) {
-                this.addMessage(JSON.parse(message));
+                this.addMessage(message);
             }
         }
     },

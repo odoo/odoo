@@ -220,6 +220,72 @@ return {
         }
     }),
     /**
+     * A MutexedDropPrevious is a primitive for serializing computations while
+     * skipping the ones that where executed between a current one and before
+     * the execution of a new one. This is useful to avoid useless RPCs.
+     *
+     * You can read the Mutex description to understand its role ; for the
+     * DropPrevious part of this abstraction, imagine the following situation:
+     * you have a code that call the server with a fixed argument and a list of
+     * operations that only grows after each call and you only care about the
+     * RPC result (the server code doesn't do anything). If this code is called
+     * three times (A B C) and C is executed before B has started, it's useless
+     * to make an extra RPC (B) if you know that it won't have an impact and you
+     * won't use its result.
+     *
+     * Note that the promise returned by the exec call won't be resolved if
+     * exec is called before the first exec call resolution ; only the promise
+     * returned by the last exec call will be resolved (the other are rejected);
+     *
+     * A MutexedDropPrevious has to be a class, and not a function, because we
+     * have to keep track of some internal state. The exec function takes as
+     * argument an action (and not a deferred as DropPrevious for example)
+     * because it's the MutexedDropPrevious role to trigger the RPC call that
+     * returns a deferred when it's time.
+     */
+    MutexedDropPrevious: Class.extend({
+        init: function () {
+            this.currentDef = null;
+            this.locked = false;
+            this.pendingAction = null;
+            this.pendingDef = null;
+        },
+        /**
+         * @param {function} action a function which may return a deferred
+         * @returns {Deferred}
+         */
+        exec: function (action) {
+            var self = this;
+            if (this.locked) {
+                this.pendingAction = action;
+                var oldPendingDef = this.pendingDef;
+                var pendingDef = this.pendingDef = $.Deferred();
+                if (oldPendingDef) {
+                    oldPendingDef.reject();
+                }
+                this.currentDef.reject();
+                return pendingDef.promise();
+            } else {
+                this.locked = true;
+                this.currentDef = $.Deferred();
+                $.when(action())
+                    .then(this.currentDef.resolve.bind(this.currentDef))
+                    .fail(this.currentDef.reject.bind(this.currentDef))
+                    .always(function () {
+                        self.locked = false;
+                        if (self.pendingAction) {
+                            var action = self.pendingAction;
+                            self.pendingAction = null;
+                            self.exec(action)
+                                .then(self.pendingDef.resolve.bind(self.pendingDef))
+                                .fail(self.pendingDef.reject.bind(self.pendingDef));
+                        }
+                });
+                return this.currentDef.promise();
+            }
+        },
+    }),
+    /**
      * Rejects a deferred as soon as a reference deferred is either resolved or
      * rejected
      *

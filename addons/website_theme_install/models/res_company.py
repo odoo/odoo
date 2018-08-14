@@ -19,7 +19,7 @@ class ResCompany(models.Model):
             record.website_theme_onboarding_done = (installed_themes_count > 0)
 
     website_theme_onboarding_done = fields.Boolean("Onboarding website theme step done",
-        compute='_compute_website_theme_onboarding_done')
+                                                   compute='_compute_website_theme_onboarding_done')
 
     @api.model
     def action_open_website_theme_selector(self):

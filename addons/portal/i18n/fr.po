@@ -19,19 +19,19 @@
 # Xavier Symons <xsy@openerp.com>, 2017
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
 # e2f <projects@e2f.com>, 2018
 # fr trans <e2ffr05@hotmail.com>, 2018
+# Clo <clo@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: fr trans <e2ffr05@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Clo <clo@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,9 +73,24 @@ msgid "<b>Sign in</b>"
 msgstr "<b>Se connecter</b>"
 
 #. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Basculer la navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+
+#. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
-msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
-msgstr "<span id=\"search_label\">Chercher</span> <span class=\"caret\"/>"
+msgid ""
+"<span id=\"search_label\" class=\"hidden-xs mr4\">Search</span><span "
+"class=\"caret\"/>"
+msgstr ""
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -96,6 +111,14 @@ msgstr "Annuler"
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
 msgstr "Modifier"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:219
+#, python-format
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -129,6 +152,7 @@ msgid ""
 msgstr "<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
 msgstr "Contact"
@@ -161,11 +185,7 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: portal
-#: model:ir.model.fields,help:portal.field_account_invoice__portal_url
 #: model:ir.model.fields,help:portal.field_portal_mixin__portal_url
-#: model:ir.model.fields,help:portal.field_project_project__portal_url
-#: model:ir.model.fields,help:portal.field_project_task__portal_url
-#: model:ir.model.fields,help:portal.field_sale_order__portal_url
 msgid "Customer Portal URL"
 msgstr "URl du portail client"
 
@@ -195,6 +215,11 @@ msgid "Email Thread"
 msgstr "Discussion par email"
 
 #. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "Routage HTTP"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
@@ -207,7 +232,7 @@ msgid "In Portal"
 msgstr "Dans le portail"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:198
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Adresse email incorrecte! Merci de saisir une adresse email valable."
@@ -269,6 +294,11 @@ msgid "Next"
 msgstr "Suivante"
 
 #. module: portal
+#: model:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "No title"
+msgstr ""
+
+#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:38
 #, python-format
@@ -290,11 +320,7 @@ msgid "Portal Access Management"
 msgstr "Gestion de l'accès au portail"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_account_invoice__portal_url
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__portal_url
-#: model:ir.model.fields,field_description:portal.field_project_project__portal_url
-#: model:ir.model.fields,field_description:portal.field_project_task__portal_url
-#: model:ir.model.fields,field_description:portal.field_sale_order__portal_url
 msgid "Portal Access URL"
 msgstr "URl d'accès au portail"
 
@@ -354,7 +380,7 @@ msgstr ""
 "portail :"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:217
+#: code:addons/portal/controllers/portal.py:223
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Certains champs obligatoires sont vides."
@@ -374,7 +400,7 @@ msgstr "Rue"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr "erci!"
+msgstr "Merci !"
 
 #. module: portal
 #. openerp-web
@@ -421,133 +447,49 @@ msgstr "Numéro de TVA intracommunautaire"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_account_asset_asset__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_account_bank_statement__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_account_invoice__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_account_payment__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_account_voucher__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_blog_blog__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_crm_lead__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_crossovered_budget__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_event_registration__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_event_track__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_forum_forum__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_forum_tag__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_expense__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_expense_sheet__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_mass_mailing_contact__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_test__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_test_activity__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_test_full__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_test_simple__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mail_test_track__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mrp_bom__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mrp_production__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mrp_unbuild__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_mrp_workorder__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_project__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_purchase_order__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_purchase_requisition__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_repair_order__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_sale_order__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_slide_channel__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_slide_slide__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_stock_landed_cost__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_stock_picking__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_stock_picking_batch__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_stock_production_lot__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_survey_survey__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_test_performance_mail__website_message_ids
 msgid "Website Messages"
 msgstr "Messages du site web"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
-#: model:ir.model.fields,help:portal.field_account_asset_asset__website_message_ids
-#: model:ir.model.fields,help:portal.field_account_bank_statement__website_message_ids
-#: model:ir.model.fields,help:portal.field_account_invoice__website_message_ids
-#: model:ir.model.fields,help:portal.field_account_payment__website_message_ids
-#: model:ir.model.fields,help:portal.field_account_voucher__website_message_ids
-#: model:ir.model.fields,help:portal.field_blog_blog__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,help:portal.field_crm_lead__website_message_ids
-#: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
-#: model:ir.model.fields,help:portal.field_crossovered_budget__website_message_ids
 #: model:ir.model.fields,help:portal.field_event_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_event_registration__website_message_ids
-#: model:ir.model.fields,help:portal.field_event_track__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_forum_forum__website_message_ids
-#: model:ir.model.fields,help:portal.field_forum_tag__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_expense__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_expense_sheet__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_mass_mailing_contact__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_test__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_test_activity__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_test_full__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_test_simple__website_message_ids
-#: model:ir.model.fields,help:portal.field_mail_test_track__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_mrp_bom__website_message_ids
-#: model:ir.model.fields,help:portal.field_mrp_production__website_message_ids
-#: model:ir.model.fields,help:portal.field_mrp_unbuild__website_message_ids
-#: model:ir.model.fields,help:portal.field_mrp_workorder__website_message_ids
 #: model:ir.model.fields,help:portal.field_note_note__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
-#: model:ir.model.fields,help:portal.field_project_project__website_message_ids
-#: model:ir.model.fields,help:portal.field_purchase_order__website_message_ids
-#: model:ir.model.fields,help:portal.field_purchase_requisition__website_message_ids
-#: model:ir.model.fields,help:portal.field_repair_order__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
-#: model:ir.model.fields,help:portal.field_sale_order__website_message_ids
-#: model:ir.model.fields,help:portal.field_slide_channel__website_message_ids
-#: model:ir.model.fields,help:portal.field_slide_slide__website_message_ids
-#: model:ir.model.fields,help:portal.field_stock_landed_cost__website_message_ids
-#: model:ir.model.fields,help:portal.field_stock_picking__website_message_ids
-#: model:ir.model.fields,help:portal.field_stock_picking_batch__website_message_ids
-#: model:ir.model.fields,help:portal.field_stock_production_lot__website_message_ids
-#: model:ir.model.fields,help:portal.field_survey_survey__website_message_ids
-#: model:ir.model.fields,help:portal.field_test_performance_mail__website_message_ids
 msgid "Website communication history"
 msgstr "Historique de communication du site web"
 
@@ -571,7 +513,7 @@ msgid "You must be"
 msgstr "Vous devez être"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:176
+#: code:addons/portal/wizard/portal_wizard.py:175
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
@@ -644,7 +586,7 @@ msgstr "Connecté en tant que"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "portal.mixin"
-msgstr ""
+msgstr "portal.mixin"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details

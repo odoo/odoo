@@ -29,7 +29,8 @@ class Inventory(models.Model):
         'Inventory Date',
         readonly=True, required=True,
         default=fields.Datetime.now,
-        help="The date that will be used for the stock level check of the products and the validation of the stock move related to this inventory.")
+        help="If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
+             "If the inventory adjustment is validated, date at which the inventory adjustment has been validated.")
     line_ids = fields.One2many(
         'stock.inventory.line', 'inventory_id', string='Inventories',
         copy=True, readonly=False,

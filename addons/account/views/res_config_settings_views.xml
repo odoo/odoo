@@ -43,19 +43,7 @@
                             </div>
                         <t groups="account.group_account_user">
                             <h2>Setup</h2>
-                            <div class="row mt16 o_settings_container">
-                                <div class="col-12 col-lg-6 o_setting_box">
-                                    <div class="o_setting_left_pane">
-                                        <field name="account_hide_setup_bar" widget="upgrade_boolean"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="account_hide_setup_bar" string='Hide the Configuration Steps bar'/>
-                                        <div class="text-muted">
-                                            Deactivate the "Configuration Steps" bar on the dashboard
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div class="row mt16 o_settings_container" id="setup">
                                 <div class="col-xs-12 col-md-6 o_setting_box">
                                     <div class="o_setting_left_pane"/>
                                     <div class="o_setting_right_pane">
@@ -282,6 +270,31 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Add an EPC QR code to your invoices so that your customers can pay instantly with their mobile banking application. EPC QR codes are used by many European banks to process SEPA payments.">
+                                <div class="o_setting_left_pane">
+                                    <field name="qr_code" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="qr_code_right_pane">
+                                    <label string="SEPA QR Code" for="qr_code"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Add a payment QR code to your invoices
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('qr_code', '=', False)]}">
+                                        <div class="row">
+                                            <label for="qr_code_payment_journal_id" class="col-md-3 o_light_label"/>
+                                            <field name="qr_code_payment_journal_id" class="oe_inline"/>
+                                        </div>
+                                    </div>
+                                    <div class="badge-danger" attrs="{'invisible': ['|',('qr_code_payment_journal_id', '!=', False), ('qr_code', '=', False)]}">
+                                        A bank journal must be set to use the SEPA QR code
+                                    </div>
+                                    <field name="qr_code_valid" invisible='1'/>
+                                    <div class="badge-danger" attrs="{'invisible': ['|','|',('qr_code_payment_journal_id', '=', False), ('qr_code', '=', False), ('qr_code_valid','!=',False)]}">
+                                        Please check that following information are set on the journal: bank account, BIC, EUR as currency.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <h2>Supplier Payments</h2>
@@ -437,6 +450,27 @@
                                 </div>
                             </div>
                         </div>
+                       <h2>Default Sending Options</h2>
+                        <div class="row mt16 o_settings_container" id="send_default">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="invoice_is_print"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="invoice_is_print"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="invoice_is_email"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="invoice_is_email"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                </div>
+                            </div>
+                        </div>
                         <h2>Invoices</h2>
                         <div class="row mt16 o_settings_container" id="invoicing_settings">
                             <div class="col-12 col-lg-6 o_setting_box">
@@ -500,6 +534,17 @@
                                     <label for="module_account_intrastat"/>
                                     <div class="text-muted">
                                         Collect information and produce statistics on the trade in goods in Europe with intrastat.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="account_sanitize_invoice_ref"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="account_sanitize_invoice_ref"/>
+                                    <div class="text-muted">
+                                        Make sure invoice communications only contain authorized characters.
                                     </div>
                                 </div>
                             </div>

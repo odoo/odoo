@@ -1418,6 +1418,26 @@ order.
 
     - Supported field types: *float*
 
+- float_factor (FieldFloatFactor)
+    This widget aims to display properly a float value that converted using a factor
+    given in its options. So, for example, the value saved in database is 0.5 and the
+    factor is 3, the widget value should be formatted as 1.5.
+
+    - Supported field types: *float*
+
+- float_toggle (FieldFloatToggle)
+    The goal of this widget is to replace the input field by a button containing a
+    range of possible values (given in the options). Each click allows the user to loop
+    in the range. The purpose here is to restrict the field value to a predefined selection.
+    Also, the widget support the factor conversion as the *float_factor* widget (Range values
+    should be the result of the conversion).
+
+    - Supported field types: *float*
+
+    .. code-block:: xml
+
+        <field name="days_to_close" widget="float_toggle" options='{"factor": 2, "range": [0, 4, 8]}'/>
+
 - boolean (FieldBoolean)
     This is the default field type for fields of type *boolean*.
 

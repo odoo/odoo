@@ -282,8 +282,8 @@ class SaleTimesheetController(http.Controller):
         return query, query_params
 
     def _table_rows_get_employee_lines(self, projects, data_from_db):
-        initial_date = fields.Date.from_string(fields.Date.today())
-        ts_months = sorted([fields.Date.to_string(initial_date - relativedelta(months=i, day=1)) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
+        initial_date = fields.Date.today()
+        ts_months = sorted([initial_date - relativedelta(months=i, day=1) for i in range(0, DEFAULT_MONTH_RANGE)])  # M1, M2, M3
         default_row_vals = self._table_row_default(projects)
 
         # extract employee names
@@ -362,6 +362,13 @@ class SaleTimesheetController(http.Controller):
 
     def _plan_get_stat_button(self, projects):
         stat_buttons = []
+        if len(projects) == 1:
+            stat_buttons.append({
+                'name': _('Project'),
+                'res_model': 'project.project',
+                'res_id': projects.id,
+                'icon': 'fa fa-puzzle-piece',
+            })
         stat_buttons.append({
             'name': _('Timesheets'),
             'res_model': 'account.analytic.line',
@@ -397,7 +404,7 @@ class SaleTimesheetController(http.Controller):
         return stat_buttons
 
     @http.route('/timesheet/plan/action', type='json', auth="user")
-    def plan_stat_button(self, domain, res_model='account.analytic.line'):
+    def plan_stat_button(self, domain=[], res_model='account.analytic.line', res_id=False):
         action = {
             'type': 'ir.actions.act_window',
             'view_id': False,
@@ -405,7 +412,18 @@ class SaleTimesheetController(http.Controller):
             'view_type': 'list',
             'domain': domain,
         }
-        if res_model == 'account.analytic.line':
+        if res_model == 'project.project':
+            view_form_id = request.env.ref('project.edit_project').id
+            action = {
+                'name': _('Project'),
+                'type': 'ir.actions.act_window',
+                'res_model': res_model,
+                'view_mode': 'form',
+                'view_type': 'form',
+                'views': [[view_form_id, 'form']],
+                'res_id': res_id,
+            }
+        elif res_model == 'account.analytic.line':
             ts_view_tree_id = request.env.ref('hr_timesheet.hr_timesheet_line_tree').id
             ts_view_form_id = request.env.ref('hr_timesheet.hr_timesheet_line_form').id
             action = {

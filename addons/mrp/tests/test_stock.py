@@ -18,7 +18,7 @@ class TestWarehouse(common.TestMrpCommon):
         warehouse_1_stock_manager.write({
             'manufacture_to_resupply': False
         })
-        self.assertFalse(self.warehouse_1.manufacture_pull_id)
+        self.assertFalse(self.warehouse_1.manufacture_pull_id.active)
         self.assertFalse(self.warehouse_1.manu_type_id.active)
         self.assertNotIn(manu_route, warehouse_1_stock_manager._get_all_routes())
         warehouse_1_stock_manager.write({

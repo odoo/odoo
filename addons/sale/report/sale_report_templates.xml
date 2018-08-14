@@ -6,7 +6,7 @@
         <t t-set="address">
             <div t-field="doc.partner_id"
                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-            <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/></p>
+            <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
         </t>
         <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
                              and doc.partner_invoice_id != doc.partner_id
@@ -175,7 +175,7 @@
                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                 </td>
                             </tr>
-                            <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
+                            <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
                                 <tr style="border-bottom:1px solid #dddddd;">
                                     <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
                                         <td>
@@ -250,6 +250,21 @@
         <t t-set="is_pro_forma" t-value="True"/>
         <t t-foreach="docs" t-as="doc">
             <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_quotation">
+    <t t-call="web.html_container">
+        <t t-set="data_report_margin_top" t-value="45"/>
+        <t t-set="data_report_header_spacing" t-value="40"/>
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="docs[0]"/>
+            <t t-foreach="docs" t-as="sale_order">
+                <div class="page">
+                    <t t-call="sale.sale_order_portal_content"/>
+                </div>
+            </t>
         </t>
     </t>
 </template>

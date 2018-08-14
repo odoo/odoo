@@ -24,13 +24,22 @@
                     <script type="text/javascript" src="/mail/static/src/js/models/messages/message.js"></script>
                     <!-- threads -->
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/channel.js"></script>
+                        <!-- channels -->
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/channel.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/multi_user_channel.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/two_user_channel.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/create_mode_document_thread.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/dm.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/dm_chat.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/document_thread.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/livechat.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/mailbox.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/searchable_thread.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/thread.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_with_cache.js"></script>
+                        <!-- thread typing mixin -->
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timer.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timers.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/cc_throttle_function.js"></script>
                 <!-- Widgets -->
                     <!-- thread windows -->
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
@@ -57,6 +66,11 @@
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <!-- Activity view type -->
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_view.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_model.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_controller.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_renderer.js"></script>
                 <!-- Others -->
                 <script type="text/javascript" src="/mail/static/src/js/emojis.js"></script>
 
@@ -70,6 +84,8 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/systray.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/activity_view.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/kanban_view.scss"/>
             </xpath>
         </template>
 
@@ -92,6 +108,11 @@
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_mail_failure_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/discuss_typing_notification_tests.js"></script>
+                <!-- models -->
+                    <script type="text/javascript" src="/mail/static/tests/models/cc_throttle_function_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/models/timer_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/models/timers_tests.js"></script>
             </xpath>
         </template>
 

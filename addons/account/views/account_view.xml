@@ -138,6 +138,11 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
                     <filter string="Receivable Accounts" name="receivableacc" domain="[('internal_type','=','receivable')]"/>
                     <filter string="Payable Accounts" name="payableacc" domain="[('internal_type','=','payable')]"/>
+                    <filter string="Equity" name="equityacc" domain="[('internal_group','=', 'equity')]"/>
+                    <filter string="Assets" name="assetsacc" domain="[('internal_group','=', 'assets')]"/>
+                    <filter string="Liability" name="liabilityacc" domain="[('internal_group','=', 'liability')]"/>
+                    <filter string="Income" name="incomeacc" domain="[('internal_group','=', 'income')]"/>
+                    <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'user_type_id'}"/>
@@ -165,7 +170,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu" groups="account.group_account_user" sequence="0"/>
+        <menuitem action="action_account_form" id="menu_action_account_form" parent="account.account_account_menu" groups="account.group_account_user" sequence="2"/>
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
@@ -199,6 +204,14 @@
             name="Journal Items"
             context="{'search_default_partner_id': [active_id]}"
             res_model="account.move.line"/>
+
+        <!-- Reconciliation action -->
+        <record id="action_view_account_move_line_reconcile" model="ir.actions.client">
+             <field name="name">Reconcile Entries</field>
+             <field name="tag">manual_reconciliation_view</field>
+             <field name="binding_model_id" ref="account.model_account_move_line"/>
+             <field name="binding_type">action</field>
+         </record>
 
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
@@ -657,7 +670,7 @@
                             <field name="cashbox_start_id" invisible="1"/>
                             <field name="cashbox_end_id" invisible="1"/>
                             <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
-                            <field name="date"/>
+                            <field name="date" options="{'datepicker': {'warn_future': true}}" />
                             <field name="accounting_date" groups="base.group_no_one"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
                             <field name="currency_id" invisible="1"/>
@@ -684,7 +697,7 @@
                     <notebook>
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids">
+                                <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids" limit="500">
                                     <field name="sequence"  widget="handle"/>
                                     <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
@@ -854,7 +867,14 @@
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('company_id', '=', company_id)]" options="{'no_create': True}" />
+                                <field name="tax_id"
+                                       domain="[('company_id', '=', company_id)]"
+                                       options="{'no_create': True}"
+                                       context="{'append_type_to_tax_name': True}"/>
+                                <field name="is_tax_price_included" invisible="1"/>
+                                <field name="tax_amount_type" invisible="1"/>
+                                <field name="force_tax_included"
+                                       attrs="{'invisible': ['|', ('tax_id', '=', None), ('tax_amount_type', '=', 'group')], 'readonly': [('is_tax_price_included', '=', True)]}" force_save="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -877,7 +897,15 @@
                             <group>
                                 <field name="second_account_id" string="Account" domain="[('company_id', '=', company_id)]"/>
                                 <field name="second_amount_type" string="Amount type"/>
-                                <field name="second_tax_id" string="Tax" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="second_tax_id"
+                                       string="Tax"
+                                       domain="[('company_id', '=', company_id)]"
+                                       widget="selection"
+                                       context="{'append_type_to_tax_name': True}"/>
+                                <field name="is_second_tax_price_included" invisible="1"/>
+                                <field name="second_tax_amount_type" invisible="1"/>
+                                <field name="force_second_tax_included"
+                                       attrs="{'invisible': ['|', ('second_tax_id', '=', None), ('second_tax_amount_type', '=', 'group')], 'readonly': [('is_second_tax_price_included', '=', True)]}" force_save="1"/>
                                 <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>
@@ -934,6 +962,8 @@
               </p>
             </field>
         </record>
+        <menuitem id="action_account_reconcile_model_menu" parent="account.account_account_menu"
+                action="account.action_account_reconcile_model" sequence="100" />
 
         <menuitem
             id="account_report_folder"
@@ -1166,7 +1196,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_account_menu" sequence="1"/>
+        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_account_menu" sequence="2"/>
 
         <!-- Journal Items -->
         <record id="view_move_line_form" model="ir.ui.view">
@@ -1397,7 +1427,7 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
-        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries_accounting_entries" sequence="1" groups="group_account_manager" />
+        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries_accounting_entries" sequence="10" groups="group_account_manager" />
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
@@ -1632,7 +1662,7 @@
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries_accounting_entries"
             groups="account.group_account_user"
-            sequence="2"/>
+            sequence="1"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
             <field name="name">Entries</field>
@@ -2131,8 +2161,8 @@
         </record>
 
         <menuitem id="menu_account_customer" name="Customers"
-            parent="menu_finance_receivables_master_data"
-            action="base.action_partner_customer_form" sequence="100"/>
+            parent="account.menu_finance_receivables"
+            action="base.action_partner_customer_form" sequence="110"/>
 
         <record id="product_product_view_tree" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -2159,7 +2189,7 @@
         </record>
 
         <record id="product_product_action_sellable" model="ir.actions.act_window">
-            <field name="name">Sellable Products</field>
+            <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -2174,7 +2204,7 @@
         </record>
 
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
-            <field name="name">Purchasable Products</field>
+            <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -2188,13 +2218,13 @@
             </field>
         </record>
 
-        <menuitem id="product_product_menu_sellable" name="Sellable Products" action="product_product_action_sellable" parent="account.menu_finance_receivables_master_data" sequence="100"/>
+        <menuitem id="product_product_menu_sellable" name="Products" action="product_product_action_sellable" parent="account.menu_finance_receivables" sequence="100"/>
 
-        <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables_master_data" sequence="101"/>
+        <menuitem id="product_product_menu_purchasable" name="Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="100"/>
 
         <menuitem id="menu_account_supplier" name="Vendors"
-            parent="menu_finance_payables_master_data"
-            action="base.action_partner_supplier_form" sequence="100"/>
+            parent="account.menu_finance_payables"
+            action="base.action_partner_supplier_form" sequence="200"/>
 
         <!-- Account Financial Report -->
 
@@ -2269,11 +2299,11 @@
 
         <!-- Manual reconciliation -->
         <record id="action_manual_reconciliation" model="ir.actions.client">
-            <field name="name">Manual Reconciliation</field>
+            <field name="name">Reconciliation</field>
             <field name="tag">manual_reconciliation_view</field>
         </record>
 
-        <menuitem id="menu_action_manual_reconciliation" parent="menu_finance_entries_actions" action="action_manual_reconciliation" sequence="25"/>
+        <menuitem id="menu_action_manual_reconciliation" parent="account.menu_finance_entries_actions" action="action_manual_reconciliation" sequence="25"/>
 
         <record id="view_account_group_form" model="ir.ui.view">
             <field name="name">account.group.form</field>

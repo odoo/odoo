@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -87,17 +87,23 @@ msgid "&amp;times;"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_template
-msgid ":\n"
-"                                this content will appear on the quotation only if this\n"
-"                                product is put on the quote."
+#: model:ir.ui.view,arch_db:website_quote.brand_promotion
+msgid ",\n"
+"              an awesome"
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ":\n"
-"                                this content will appear on the quotation only if this\n"
-"                                product is used in the quote."
+"                                    this content will appear on the quotation only if this\n"
+"                                    product is put on the quote."
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_template
+msgid ":\n"
+"                                    this content will appear on the quotation only if this\n"
+"                                    product is used in the quote."
 msgstr ""
 
 #. module: website_quote
@@ -155,11 +161,6 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
-msgid "<strong>Expiration Date:</strong>"
 msgstr ""
 
 #. module: website_quote
@@ -374,11 +375,6 @@ msgid "Expiration Date:"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.model,name:website_quote.model_ir_model_fields
-msgid "Fields"
-msgstr ""
-
-#. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
@@ -424,7 +420,7 @@ msgid "If unchecked, it will allow you to hide the quotation template without re
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:188
+#: code:addons/website_quote/controllers/main.py:202
 #, python-format
 msgid "If we store your payment information on our server, subscription payments will be made automatically."
 msgstr ""
@@ -486,6 +482,11 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.brand_promotion
+msgid "Odoo"
+msgstr ""
+
+#. module: website_quote
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Payment"
@@ -495,6 +496,11 @@ msgstr ""
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Signature"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.brand_promotion
+msgid "Open Source CRM"
 msgstr ""
 
 #. module: website_quote
@@ -530,7 +536,7 @@ msgid "Our Service"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:186
+#: code:addons/website_quote/controllers/main.py:199
 #, python-format
 msgid "Pay & Confirm"
 msgstr ""
@@ -548,6 +554,11 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Payment Terms:"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.brand_promotion
+msgid "Powered by"
 msgstr ""
 
 #. module: website_quote
@@ -662,7 +673,7 @@ msgid "Quotation expires after"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:50
+#: code:addons/website_quote/controllers/main.py:52
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr ""
@@ -872,7 +883,7 @@ msgid "You can <strong>set a description per product</strong>. Odoo will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:145
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr ""

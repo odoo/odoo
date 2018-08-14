@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 
 from itertools import groupby
+import re
 
 
 MAP_INVOICE_TYPE_PARTNER_TYPE = {
@@ -92,6 +93,7 @@ class account_abstract_payment(models.AbstractModel):
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
             or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
             or inv.account_id != invoices[0].account_id
+            or inv.partner_bank_id != invoices[0].partner_bank_id
             for inv in invoices)
 
         currency = invoices[0].currency_id
@@ -125,7 +127,7 @@ class account_abstract_payment(models.AbstractModel):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
         won't be displayed but some modules might change that, depending on the payment type."""
         for payment in self:
-            payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
+            payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account() and not self.multi
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
@@ -166,12 +168,19 @@ class account_abstract_payment(models.AbstractModel):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        if self.partner_id and len(self.partner_id.bank_ids) > 0:
-            self.partner_bank_account_id = self.partner_id.bank_ids[0]
-        elif self.partner_id and len(self.partner_id.commercial_partner_id.bank_ids) > 0:
-            self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
-        else:
-            self.partner_bank_account_id = False
+        if not self.multi and self.invoice_ids and self.invoice_ids[0].partner_bank_id:
+            self.partner_bank_account_id = self.invoice_ids[0].partner_bank_id
+        elif self.partner_id != self.partner_bank_account_id.partner_id:
+            # This condition ensures we use the default value provided into
+            # context for partner_bank_account_id properly when provided with a
+            # default partner_id. Without it, the onchange recomputes the bank account
+            # uselessly and might assign a different value to it.
+            if self.partner_id and len(self.partner_id.bank_ids) > 0:
+                self.partner_bank_account_id = self.partner_id.bank_ids[0]
+            elif self.partner_id and len(self.partner_id.commercial_partner_id.bank_ids) > 0:
+                self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
+            else:
+                self.partner_bank_account_id = False
         return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
 
     def _compute_journal_domain_and_types(self):
@@ -216,13 +225,14 @@ class account_abstract_payment(models.AbstractModel):
         :param currency: If not specified, search a default currency on wizard/journal.
         :return: The total amount to pay the invoices.
         '''
-        # Get the payment currency
-        if not currency:
-            currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
 
         # Get the payment invoices
         if not invoices:
             invoices = self.invoice_ids
+
+        # Get the payment currency
+        if not currency:
+            currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
 
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
         total = 0.0
@@ -241,6 +251,29 @@ class account_register_payments(models.TransientModel):
     _inherit = 'account.abstract.payment'
     _description = "Register payments on multiple invoices"
 
+    group_invoices = fields.Boolean(string="Group Invoices", help="""If enabled, groups invoices by commercial partner, invoice account,
+                                                                    type and recipient bank account in the generated payments. If disabled,
+                                                                    a distinct payment will be generated for each invoice.""")
+    show_communication_field = fields.Boolean(compute='_compute_show_communication_field')
+
+    @api.depends('invoice_ids.partner_id', 'group_invoices')
+    def _compute_show_communication_field(self):
+        """ We allow choosing a common communication for payments if the group
+        option has been activated, and all the invoices relate to the same
+        partner.
+        """
+        for record in self:
+            record.show_communication_field = len(record.invoice_ids) == 1 \
+                                              or record.group_invoices and len(record.mapped('invoice_ids.partner_id.commercial_partner_id')) == 1
+
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        res = super(account_register_payments, self)._onchange_journal()
+        active_ids = self._context.get('active_ids')
+        invoices = self.env['account.invoice'].browse(active_ids)
+        self.amount = abs(self._compute_payment_amount(invoices))
+        return res
+
     @api.model
     def default_get(self, fields):
         rec = super(account_register_payments, self).default_get(fields)
@@ -253,18 +286,27 @@ class account_register_payments(models.TransientModel):
 
     @api.multi
     def _groupby_invoices(self):
-        '''Split the invoices linked to the wizard according to their commercial partner,
-         their account and their type.
+        '''Groups the invoices linked to the wizard.
 
-        :return: a dictionary mapping (partner_id, account_id, invoice_type) => invoices recordset.
+        If the group_invoices option is activated, invoices will be grouped
+        according to their commercial partner, their account, their type and
+        the account where the payment they expect should end up. Otherwise,
+        invoices will be grouped so that each of them belongs to a
+        distinct group.
+
+        :return: a dictionary mapping, grouping invoices as a recordset under each of its keys.
         '''
+        if not self.group_invoices:
+            return {inv.id: inv for inv in self.invoice_ids}
+
         results = {}
-        # Create a dict dispatching invoices according to their commercial_partner_id and type
+        # Create a dict dispatching invoices according to their commercial_partner_id, account_id, invoice_type and partner_bank_id
         for inv in self.invoice_ids:
             partner_id = inv.commercial_partner_id.id
             account_id = inv.account_id.id
             invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
-            key = (partner_id, account_id, invoice_type)
+            recipient_account =  inv.partner_bank_id
+            key = (partner_id, account_id, invoice_type, recipient_account)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
@@ -279,18 +321,22 @@ class account_register_payments(models.TransientModel):
         '''
         amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
+        bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
+        pmt_communication = self.show_communication_field and self.communication \
+                            or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
+                            or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
         return {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
-            'communication': self.communication,
+            'communication': pmt_communication,
             'invoice_ids': [(6, 0, invoices.ids)],
             'payment_type': payment_type,
             'amount': abs(amount),
             'currency_id': self.currency_id.id,
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'partner_bank_account_id': self.partner_bank_account_id.id,
+            'partner_bank_account_id': bank_account.id,
             'multi': False,
         }
 
@@ -465,6 +511,18 @@ class account_payment(models.Model):
             rec['partner_id'] = invoice['partner_id'][0]
             rec['amount'] = invoice['residual']
         return rec
+
+    @api.model
+    def create(self, vals):
+        rslt = super(account_payment, self).create(vals)
+        # When a payment is created by the multi payments wizard in 'multi' mode,
+        # its partner_bank_account_id will never be displayed, and hence stay empty,
+        # even if the payment method requires it. This condition ensures we set
+        # the first (and thus most prioritary) account of the partner in this field
+        # in that situation.
+        if not rslt.partner_bank_account_id and rslt.show_partner_bank_account and rslt.partner_id.bank_ids:
+            rslt.partner_bank_account_id = rslt.partner_id.bank_ids[0]
+        return rslt
 
     @api.multi
     def button_journal_entries(self):
@@ -752,3 +810,23 @@ class account_payment(models.Model):
             })
 
         return vals
+
+    @api.model
+    def _sanitize_communication(self, communication):
+        """ Returns a sanitized version of the communication given in parameter,
+            so that:
+                - it contains only latin characters
+                - it does not contain any //
+                - it does not start or end with /
+                - it is maximum 140 characters long
+            (these are the SEPA compliance criteria)
+        """
+        communication = communication[:140]
+        while '//' in communication:
+            communication = communication.replace('//', '/')
+        if communication.startswith('/'):
+            communication = communication[1:]
+        if communication.endswith('/'):
+            communication = communication[:-1]
+        communication = re.sub('[^-A-Za-z0-9/?:().,\'+ ]', '', communication)
+        return communication

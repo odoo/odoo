@@ -120,6 +120,9 @@ return AbstractRenderer.extend({
         var data, values;
         var measure = this.state.fields[this.state.measure].string;
 
+        // undefined label value becomes a string 'Undefined' translated
+        this.state.data.forEach(self._sanitizeLabel);
+
         // zero groupbys
         if (this.state.groupedBy.length === 0) {
             data = [{
@@ -171,6 +174,13 @@ return AbstractRenderer.extend({
                 data.push(current_serie);
             }
         }
+        
+        // For Bar chart View, we keep only groups where count > 0
+        data[0].values  = _.filter(data[0].values, function (elem, index) {
+            return self.state.data[index].count > 0;
+        });
+
+        // SVG
         var svg = d3.select(this.$el[0]).append('svg');
         svg.datum(data);
 
@@ -207,10 +217,14 @@ return AbstractRenderer.extend({
      * @returns {nvd3 chart}
      */
     _renderPieChart: function () {
+        var self = this;
         var data = [];
         var all_negative = true;
         var some_negative = false;
         var all_zero = true;
+
+        // undefined label value becomes a string 'Undefined' translated
+        this.state.data.forEach(self._sanitizeLabel);
 
         this.state.data.forEach(function (datapt) {
             all_negative = all_negative && (datapt.value < 0);
@@ -238,6 +252,12 @@ return AbstractRenderer.extend({
                 return {x:datapt.labels.join("/"), y: datapt.value};
             });
         }
+
+        // We only keep groups where count > 0
+        data  = _.filter(data, function (elem, index) {
+            return self.state.data[index].count > 0;
+        });
+
         var svg = d3.select(this.$el[0]).append('svg');
         svg.datum(data);
 
@@ -264,30 +284,40 @@ return AbstractRenderer.extend({
      * @returns {nvd3 chart}
      */
     _renderLineChart: function () {
-        if (this.state.data.length < 2) {
+        var self = this;
+
+        // Remove Undefined of first GroupBy
+        var graphData = _.filter(this.state.data, function(elem){
+            return elem.labels[0] !== undefined;
+        });
+
+        // undefined label value becomes a string 'Undefined' translated
+        this.state.data.forEach(self._sanitizeLabel);
+
+        if (graphData.length < 2) {
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("Not enough data points"),
-                description: "You need at least two data points to display a line chart."
+                description: _t("You need at least two data points to display a line chart.")
             }));
             return;
         }
-        var self = this;
         var data = [];
         var tickValues;
         var tickFormat;
         var measure = this.state.fields[this.state.measure].string;
 
         if (this.state.groupedBy.length === 1) {
-            var values = this.state.data.map(function (datapt, index) {
+            var values = graphData.map(function (datapt, index) {
                 return {x: index, y: datapt.value};
             });
             data = [
                 {
                     values: values,
                     key: measure,
+                    area: true,
                 }
             ];
-            tickValues = this.state.data.map(function (d, i) { return i;});
+            tickValues = graphData.map(function (d, i) { return i;});
             tickFormat = function (d) {return self.state.data[d].labels;};
         }
         if (this.state.groupedBy.length > 1) {
@@ -299,13 +329,13 @@ return AbstractRenderer.extend({
             var identity = function (p) {return p;};
             tickValues = [];
             for (var i = 0; i < this.state.data.length; i++) {
-                if (this.state.data[i].labels[0] !== tickLabel) {
+                if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = this.state.data[i].labels[0];
                     tickValues.push(tick);
                     tickLabels.push(tickLabel);
                     tick++;
                 }
-                serie = this.state.data[i].labels[1];
+                serie = graphData[i].labels[1];
                 if (!data_dict[serie]) {
                     data_dict[serie] = {
                         values: [],
@@ -313,7 +343,7 @@ return AbstractRenderer.extend({
                     };
                 }
                 data_dict[serie].values.push({
-                    x: tick, y: this.state.data[i].value,
+                    x: tick, y: graphData[i].value,
                 });
                 data = _.map(data_dict, identity);
             }
@@ -327,11 +357,12 @@ return AbstractRenderer.extend({
 
         var chart = nv.models.lineChart();
         chart.options({
-          margin: {left: 80, bottom: 100, top: 80, right: 0},
+          margin: {left: 80, bottom: 100, top: 80, right: 80},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
+          wrapLabels: true,
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
@@ -358,6 +389,20 @@ return AbstractRenderer.extend({
             nv.utils.onWindowResize(chart.update);
             chart.tooltip.chartContainer(this.el);
         }
+    },
+    /**
+     * Helper function, turns label value into a usable string form if it is
+     * undefined, that we can display in the interface.
+     *
+     * @param {Array} datapt an array that contains groupby labels of the graph
+     *     received by the read_group rpc.
+     * @returns {string}
+     */
+    _sanitizeLabel: function (datapt) {
+        datapt.labels = datapt.labels.map(function(label) {
+            if (label === undefined) return _t("Undefined");
+            return label;
+        });
     },
 });
 

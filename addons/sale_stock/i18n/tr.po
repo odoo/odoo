@@ -12,10 +12,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:247
+#: code:addons/sale_stock/models/sale_order.py:249
 #, python-format
 msgid ""
 "\n"
@@ -93,26 +93,30 @@ msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Teslim Şekilleri:</strong>"
 
 #. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
 msgstr "Satış Sonrası"
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Analytic From Expenses"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
 "Siparişlerde kalem bazında özel rotalar uygulayın (ör. Dropshipping, MTO)"
-
-#. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid ""
-"By default Odoo computes the expected delivery date this way: order date + "
-"highest customer lead time of products. With this option, you can set a "
-"specific delivery date on orders rather than setting lead times on products."
-msgstr ""
-"Varsayılan olarak, Odoo, beklenen teslimat tarihini şu şekilde hesaplar: \n"
-"sipariş tarihi + ürünlerin teslimat için güvenli tampon süreleri.\n"
-"Bu seçenekle, ürünler üzerinde güvenli teslimat tampon süreleri ayarlamak yerine siparişlerde net bir teslim tarihi belirleyebilirsiniz."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -145,6 +149,7 @@ msgid "Delivery Orders"
 msgstr "Teslimat Emirleri"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__has_group_display_incoterm
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr ""
@@ -158,6 +163,7 @@ msgstr ""
 "Sipariş ve Faturalarda Uluslararası Teslim Şekillerini (Incoterms) göster"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__has_group_route_so_lines
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
 msgstr "Satış Sipariş Satırında Özel Rota Seçimini Kullan"
@@ -176,6 +182,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
 msgstr ""
 
 #. module: sale_stock
@@ -232,6 +246,16 @@ msgid "Invoicing"
 msgstr "Faturalama"
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid "Manage delivery dates from sales orders"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Manual"
+msgstr "Manuel"
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
 msgstr ""
@@ -261,12 +285,17 @@ msgstr ""
 "gerçek söz verilen tarihlerden bir kaç gün erken planlanacaktır."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
 msgstr "Beklenen teslim tarihlerini ileriye taşıyın : "
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:254
+#: code:addons/sale_stock/models/sale_order.py:256
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Yeterli stok yok!"
@@ -277,7 +306,7 @@ msgid "Order-Specific Routes"
 msgstr "Siparişe Özel Rotalar"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:268
+#: code:addons/sale_stock/models/sale_order.py:270
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Sipariş edilen miktar azaldı!"
@@ -404,11 +433,6 @@ msgid "Selectable on Sales Order Line"
 msgstr "Satış Sipariş Satır'dan Seçilebilir"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Set a delivery date on orders"
-msgstr "Siparişlerde bir teslim tarihi belirle"
-
-#. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
 msgstr "Tüm ürünleri tek seferde gönder"
@@ -435,6 +459,7 @@ msgstr "Stok Hareketi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
 msgstr "Stok Hareketleri"
 
@@ -452,15 +477,33 @@ msgstr ""
 "'Satış Sipariş Satırları' seçeneğinin işaretli olması gerekir."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:361
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+msgid ""
+"This option introduces extra fields in the sales order to easily schedule "
+"product deliveries on your own: expected date, commitment date, effective "
+"date."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:363
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "Bu ürün% .2f%s tarafından paketlenmiştir. % .2f%s satmalısınız."
 
 #. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Timesheets"
+msgstr "Zaman Çizelgeleri"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Transfer"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -469,7 +512,7 @@ msgid "Warehouse"
 msgstr "Depo"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:360
+#: code:addons/sale_stock/models/sale_order.py:362
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -485,7 +528,7 @@ msgid "When to start shipping"
 msgstr "Sevkıyatın ne zaman başlatılacağı"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:269
+#: code:addons/sale_stock/models/sale_order.py:271
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -495,7 +538,7 @@ msgstr ""
 "güncellemeyi unutmayın."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:401
+#: code:addons/sale_stock/models/sale_order.py:403
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
@@ -503,7 +546,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:243
+#: code:addons/sale_stock/models/sale_order.py:245
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."

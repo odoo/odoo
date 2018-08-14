@@ -18,7 +18,6 @@ var id = 0;
  */
 
 var NotificationService = AbstractService.extend({
-    name: 'notification',
 
     custom_events: {
         close: '_onCloseNotification',

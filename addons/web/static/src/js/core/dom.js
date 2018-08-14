@@ -22,6 +22,7 @@ odoo.define('web.dom', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
+var _t = core._t;
 
 /**
  * Private function to notify that something has been attached in the DOM
@@ -90,14 +91,15 @@ return {
         minHeight = (options && options.min_height) || 50;
 
         $fixedTextarea = $('<textarea disabled>', {
-            class: $textarea[0].className,
-        }).css({
+            class: $textarea[0].className,});
+
+        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
+        $fixedTextarea.css({
             position: 'absolute',
             opacity: 0,
             height: 10,
             top: -10000,
-            left: -10000,
-        });
+        }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
 
         var style = window.getComputedStyle($textarea[0], null);

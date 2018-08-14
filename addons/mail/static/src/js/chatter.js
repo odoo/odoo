@@ -39,9 +39,9 @@ var Chatter = Widget.extend({
      * @param {widget} parent
      * @param {Object} record
      * @param {Object} mailFields
-     * @param {boolean} [mailFields.mail_activity]
-     * @param {boolean} [mailFields.mail_followers]
-     * @param {boolean} [mailFields.mail_thread]
+     * @param {string} [mailFields.mail_activity]
+     * @param {string} [mailFields.mail_followers]
+     * @param {string} [mailFields.mail_thread]
      */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);
@@ -64,8 +64,9 @@ var Chatter = Widget.extend({
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var nodeOptions = this.record.fieldsInfo.form[mailFields.mail_thread].options;
-            this.hasLogButton = nodeOptions.display_log_button;
+            var fieldsInfo = this.record.fieldsInfo[record.viewType];
+            var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
+            this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
         }
     },

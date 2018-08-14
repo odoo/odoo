@@ -19,14 +19,14 @@
             (${object.partner_id.parent_id.name})
         % endif
         <br /><br />
-        Here is, in attachment, your 
+        Here is your 
         % if object.number:
             invoice <strong>${object.number}</strong>
         % else:
             invoice
         %endif
         % if object.origin:
-            (with reference: ${object.origin} )
+            (with reference: ${object.origin})
         % endif
         amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
         from ${object.company_id.name}.

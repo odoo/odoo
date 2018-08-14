@@ -1,6 +1,7 @@
 odoo.define('website.contentMenu', function (require) {
 'use strict';
 
+var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
@@ -80,7 +81,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         defs.push(this._rpc({
             model: 'website.page',
             method: 'get_page_info',
-            args: [this.page_id, context.website_id],
+            args: [this.page_id],
             context: context,
         }).then(function (page) {
             page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
@@ -143,6 +144,16 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                container: 'body',
             });
         }));
+
+        defs.push(this._rpc({model: 'res.users',
+                             method: 'has_group',
+                             args: ['website.group_multi_website'],
+                             context: context})
+                  .then(function (has_group) {
+                      if (!has_group) {
+                          self.$('#website_restriction').addClass('hidden');
+                      }
+                  }));
 
         var datepickersOptions = {
             minDate: moment({y: 1900}),
@@ -209,6 +220,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             is_menu: this.$('#is_menu').prop('checked'),
             is_homepage: this.$('#is_homepage').prop('checked'),
             website_published: this.$('#is_published').prop('checked'),
+            share_page_info: this.$('#share_page_info').prop('checked'),
             create_redirect: this.$('#create_redirect').prop('checked'),
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
@@ -222,7 +234,13 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         }).then(function (url) {
             // If from page manager: reload url, if from page itself: go to
             // (possibly) new url
-            if (self._getMainObject().model === 'website.page') {
+            var mo;
+            self.trigger_up('main_object_request', {
+                callback: function (value) {
+                    mo = value;
+                },
+            });
+            if (mo.model === 'website.page') {
                 window.location.href = url.toLowerCase();
             } else {
                 window.location.reload(true);
@@ -524,7 +542,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         this._rpc({
             model: 'website.menu',
             method: 'save',
-            args: [[context.website_id], { data: data, to_delete: self.to_delete }],
+            args: [context.website_id, { data: data, to_delete: self.to_delete }],
             context: context,
         }).then(function () {
             return _super();
@@ -626,30 +644,82 @@ var EditMenuDialog = weWidgets.Dialog.extend({
     },
 });
 
+var PageOption = Class.extend({
+    /**
+     * @constructor
+     * @param {string} name
+     *        the option's name = the field's name in website.page model
+     * @param {*} value
+     * @param {function} setValueCallback
+     *        a function which simulates an option's value change without
+     *        asking the server to change it
+     */
+    init: function (name, value, setValueCallback) {
+        this.name = name;
+        this.value = value;
+        this.isDirty = false;
+        this.setValueCallback = setValueCallback;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the new option's value thanks to the related callback.
+     *
+     * @param {*} [value]
+     *        by default: consider the current value is a boolean and toggle it
+     */
+    setValue: function (value) {
+        if (value === undefined) {
+            value = !this.value;
+        }
+        this.setValueCallback.call(this, value);
+        this.value = value;
+        this.isDirty = true;
+    },
+});
+
 var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
         edit_menu: '_editMenu',
+        get_page_option: '_getPageOption',
+        on_save: '_onSave',
         page_properties: '_pageProperties',
+        toggle_page_option: '_togglePageOption',
     }),
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    pageOptionsSetValueCallbacks: {
+        header_overlay: function (value) {
+            $('#wrapwrap').toggleClass('o_header_overlay', value);
+        },
+        header_color: function (value) {
+            $('#wrapwrap > header').removeClass(this.value)
+                                   .addClass(value);
+        },
+    },
 
     /**
-     * Returns information about the page main object.
-     *
-     * @private
-     * @returns {Object} model and id
+     * @override
      */
-    _getMainObject: function () {
-        var repr = $('html').data('main-object');
-        var m = repr.match(/(.+)\((\d+),(.*)\)/);
-        return {
-            model: m[1],
-            id: m[2] | 0,
-        };
+    start: function () {
+        var self = this;
+        this.pageOptions = {};
+        _.each($('.o_page_option_data'), function (el) {
+            var value = el.value;
+            if (value === "True") {
+                value = true;
+            } else if (value === "False") {
+                value = false;
+            }
+            self.pageOptions[el.name] = new PageOption(
+                el.name,
+                value,
+                self.pageOptionsSetValueCallbacks[el.name]
+            );
+        });
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -703,15 +773,106 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return def;
     },
     /**
+     * Retrieves the value of a page option.
+     *
+     * @private
+     * @param {string} name
+     * @returns {Deferred<*>}
+     */
+    _getPageOption: function (name) {
+        var option = this.pageOptions[name];
+        if (!option) {
+            return $.Deferred().reject();
+        }
+        return $.when(option.value);
+    },
+    /**
+     * On save, simulated page options have to be server-saved.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _onSave: function () {
+        var self = this;
+        var defs = _.map(this.pageOptions, function (option, optionName) {
+            if (option.isDirty) {
+                return self._togglePageOption({
+                    name: optionName,
+                    value: option.value,
+                }, true, true);
+            }
+        });
+        return $.when.apply($, defs);
+    },
+    /**
      * Opens the page properties dialog.
      *
      * @private
      * @returns {Deferred}
      */
     _pageProperties: function () {
-        var moID = this._getMainObject().id;
-        var dialog = new PagePropertiesDialog(this, moID, {}).open();
+        var mo;
+        this.trigger_up('main_object_request', {
+            callback: function (value) {
+                mo = value;
+            },
+        });
+        var dialog = new PagePropertiesDialog(this, mo.id, {}).open();
         return dialog.opened();
+    },
+    /**
+     * Toggles a page option.
+     *
+     * @private
+     * @param {Object} params
+     * @param {string} params.name
+     * @param {*} [params.value] (change value by default true -> false -> true)
+     * @param {boolean} [forceSave=false]
+     * @param {boolean} [noReload=false]
+     * @returns {Deferred}
+     */
+    _togglePageOption: function (params, forceSave, noReload) {
+        // First check it is a website page
+        var mo;
+        this.trigger_up('main_object_request', {
+            callback: function (value) {
+                mo = value;
+            },
+        });
+        if (mo.model !== 'website.page') {
+            return $.Deferred().reject();
+        }
+
+        // Check if this is a valid option
+        var option = this.pageOptions[params.name];
+        if (!option) {
+            return $.Deferred().reject();
+        }
+
+        // Toggle the value
+        option.setValue(params.value);
+
+        // If simulate is true, it means we want the option to be toggled but
+        // not saved on the server yet
+        if (!forceSave) {
+            return $.when();
+        }
+
+        // If not, write on the server page and reload the current location
+        var vals = {};
+        vals[params.name] = option.value;
+        var def = this._rpc({
+            model: 'website.page',
+            method: 'write',
+            args: [[mo.id], vals],
+        });
+        if (noReload) {
+            return def;
+        }
+        return def.then(function () {
+            window.location.reload();
+            return $.Deferred();
+        });
     },
 });
 
@@ -804,7 +965,7 @@ function _deletePage(pageId, fromPageManagement) {
     // Delete the page if the user confirmed
         return self._rpc({
             model: 'website.page',
-            method: 'delete_page',
+            method: 'unlink',
             args: [pageId],
             context: context,
         });
@@ -819,7 +980,7 @@ function _deletePage(pageId, fromPageManagement) {
 }
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
-websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');
+websiteRootData.websiteRootRegistry.add(PageManagement, '#list_website_pages');
 
 return {
     PagePropertiesDialog: PagePropertiesDialog,

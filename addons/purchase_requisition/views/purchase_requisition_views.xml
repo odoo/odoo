@@ -337,7 +337,7 @@
         <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
         <field name="arch" type="xml">
             <group name="bill" position="before">
-                <group string="Reordering">
+                <group string="Reordering" attrs="{'invisible': [('type', '=', 'service')]}">
                     <field name="purchase_requisition" widget="radio"/>
                 </group>
             </group>

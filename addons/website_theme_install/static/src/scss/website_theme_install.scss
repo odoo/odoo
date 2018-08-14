@@ -25,9 +25,9 @@
         background: none;
         border: none;
 
-        .o_browser_bar:before {
+        .o_browser_bar:after {
             content: "•••";
-            display: block;
+            display: inline-block;
             padding-left: 10px;
             color: darken($o-theme-kanban-gray, 10%);
             font: 12px/20px Courier, monospace;
@@ -35,13 +35,10 @@
         }
 
         &.o_theme_installed .o_theme_preview_top {
-            border-color: $o-brand-primary;
+            border: 3px solid $o-brand-primary;
 
-            > .fa-check-circle {
-                @include o-position-absolute(10px, 10px);
-                width: 20px;
-                height: 20px;
-                font-size: 20px;
+            .fa {
+                color: $o-brand-primary;
             }
         }
 
@@ -95,18 +92,16 @@
             }
         }
 
-        &:not(.o_theme_installed) {
-            .o_theme_preview_top:hover {
-                transition: all .3s ease 0s;
-                transform: translateY(-10px);
-                border-color: darken($o-theme-kanban-gray, 26%);
-                box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
+        .o_theme_preview_top:hover {
+            transition: all .3s ease 0s;
+            transform: translateY(-10px);
+            border-color: darken($o-theme-kanban-gray, 26%);
+            box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
 
-                .o_button_area {
-                    opacity: 1;
-                    visibility: visible;
-                    transition: opacity 0.2s ease 0.1s;
-                }
+            .o_button_area {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.2s ease 0.1s;
             }
         }
     }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website_theme_install</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='domain_setting']/div[hasclass('o_setting_right_pane')]" position="inside">
+                <div>
+                    <button name="install_theme_on_current_website" type="object" string="Change theme" class="btn-link" icon="fa-arrow-right"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -11,15 +11,11 @@ var MailManager = require('mail.Manager');
 var MailFailure = require('mail.model.MailFailure');
 
 var core = require('web.core');
+var session = require('web.session');
 
 var _t = core._t;
 
 MailManager.include({
-
-    start: function () {
-        this._super.apply(this, arguments);
-        this._busBus.on('notification', this, this._onNotification);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -47,14 +43,33 @@ MailManager.include({
         return notifications;
     },
     /**
+     * Called when receiving a notification on a channel (all members of a
+     * channel receive this notification)
+     *
+     * @private
+     * @param {Object} params
+     * @param {integer} [params.channelID]
+     * @param {Object} params.data
+     * @param {string} [params.data.info] if set, specify the type of data on
+     *   this channel notification
+     */
+    _handleChannelNotification: function (params) {
+        if (params.data && params.data.info === 'typing_status') {
+            this._handleChannelTypingNotification(params.channelID, params.data);
+        } else {
+            this._handleChannelMessageNotification(params.data);
+        }
+    },
+    /**
      * Called when a new or updated message is received on a channel
      *
      * @private
      * @param {Object} messageData
-     * @param {Array} messageData.channel_ids list of integers and strings,
-     *      where strings for static channels, e.g. 'mailbox_inbox'.
+     * @param {integer[]} messageData.channel_ids channel IDs of this message
+     *   (note that 'pending moderation' messages in moderated channels do not
+     *   have the moderated channels in this array).
      */
-    _handleChannelNotification: function (messageData) {
+    _handleChannelMessageNotification: function (messageData) {
         var self = this;
         var def;
         var channelAlreadyInCache = true;
@@ -72,6 +87,36 @@ MailManager.include({
                 incrementUnread: channelAlreadyInCache
             });
         });
+    },
+    /**
+     * Called when someone starts or stops typing a message in a channel
+     *
+     * @private
+     * @param {integer} channelID
+     * @param {Object} typingData
+     * @param {boolean} typingData.is_typing
+     * @param {boolean} typingData.is_website_user
+     * @param {integer} typingData.partner_id
+     */
+    _handleChannelTypingNotification: function (channelID, typingData) {
+        var isWebsiteUser = typingData.is_website_user;
+        var partnerID = typingData.partner_id;
+        if (partnerID === session.partner_id && !isWebsiteUser) {
+            return; // ignore typing notification of myself
+        }
+        var channel = this.getChannel(channelID);
+        if (!channel) {
+            return;
+        }
+        var typingID = {
+            isWebsiteUser: typingData.is_website_user,
+            partnerID: typingData.partner_id,
+        };
+        if (typingData.is_typing) {
+            channel.registerTyping(typingID);
+        } else {
+            channel.unregisterTyping(typingID);
+        }
     },
      /**
      * On message becoming a need action (pinned to inbox)
@@ -165,13 +210,13 @@ MailManager.include({
      * Add or remove failure when receiving a failure update message
      *
      * @private
-     * @param {Object} data
-     * @param {Object[]} data.elements list of mail failure data
-     * @param {string} data.elements[].message_id ID of related message that
+     * @param {Object} datas
+     * @param {Object[]} datas.elements list of mail failure data
+     * @param {string} datas.elements[].message_id ID of related message that
      *   has a mail failure.
-     * @param {Array} data.elements[].notifications list of notifications
+     * @param {Array} datas.elements[].notifications list of notifications
      *   that is related to a mail failure.
-     * @param {string} data.elements[].notifications[0] sending state of a mail
+     * @param {string} datas.elements[].notifications[0] sending state of a mail
      *   failure (e.g. 'exception').
      */
     _handlePartnerMailFailureNotification: function (datas) {
@@ -313,6 +358,8 @@ MailManager.include({
             this._handlePartnerActivityUpdateNotification(data);
         } else if (data.type === 'mail_failure') {
             this._handlePartnerMailFailureNotification(data);
+        } else if (data.type === 'user_connection') {
+            this._handlePartnerUserConnectionNotification(data);
         } else {
             this._handlePartnerChannelNotification(data);
         }
@@ -403,21 +450,45 @@ MailManager.include({
             this.do_notify(_("Unsubscribed"), message);
         }
     },
+     /**
+     * Shows a popup to notify a user connection
+     *
+     * @private
+     * @param {Object} data
+     * @param {Object[]} data.partner_id id of the connected partner
+     * @param {string} data.title title to display on notification
+     * @param {Array} data.messages message to display on notification
+     */
+    _handlePartnerUserConnectionNotification: function (data) {
+        var self = this;
+        var partnerID = data.partner_id;
+        this.call('bus_service', 'sendNotification', data.title, data.message, function ( ){
+            self.call('mail_service', 'openDmWindow', partnerID);
+        });
+    },
     /**
      * On receiving an update on user status (e.g. becoming 'online', 'offline',
      * 'idle', etc.).
      *
      * @private
      * @param {Object} data partner infos
-     * @param {integer} data.id
-     * @param {string} data.im_status
+     * @param {integer} data.id partner ID
+     * @param {string} data.im_status partner new 'im status' (e.g. 'online')
      */
     _handlePresenceNotification: function (data) {
-        var dm = this.getDmFromPartnerID(data.id);
-        if (dm) {
-            dm.setStatus(data.im_status);
-            this._mailBus.trigger('update_dm_presence', dm);
+        var dmChat = this.getDMChatFromPartnerID(data.id);
+        if (dmChat) {
+            dmChat.setStatus(data.im_status);
+            this._mailBus.trigger('update_dm_presence', dmChat);
         }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _listenOnBuses: function () {
+        this._super.apply(this, arguments);
+        this.call('bus_service', 'onNotification', this, this._onNotification);
     },
     /**
      * Update the message notification status of message based on update_message
@@ -462,17 +533,16 @@ MailManager.include({
         _.each(notifs, function (notif) {
             var model = notif[0][1];
             if (model === 'ir.needaction') {
-                // new message in the inbox
                 self._handleNeedactionNotification(notif[1]);
             } else if (model === 'mail.channel') {
                 // new message in a channel
-                self._handleChannelNotification(notif[1]);
+                self._handleChannelNotification({
+                    channelID: notif[0][2],
+                    data: notif[1],
+                });
             } else if (model === 'res.partner') {
-                // channel joined/left, message marked as read/(un)starred,
-                // chat open/closed, moderation specific, etc.
                 self._handlePartnerNotification(notif[1]);
             } else if (model === 'bus.presence') {
-                // update presence of users
                 self._handlePresenceNotification(notif[1]);
             }
         });

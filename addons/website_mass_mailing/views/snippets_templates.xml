@@ -12,7 +12,7 @@
     </xpath>
 
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
     </xpath>
 </template>
 
@@ -29,7 +29,7 @@
 
 <template id="s_newsletter_subscribe_popup" name="Newsletter Popup">
     <div class="o_newsletter_popup" data-list-id="0">
-        <div class="alert alert-warning alert-dismissible fade in css_non_editable_mode_hidden o_not_editable" role="status">
+        <div class="alert alert-warning alert-dismissible fade show css_non_editable_mode_hidden o_not_editable" role="status">
             <strong>Newsletter Popup!</strong> The newsletter popup snippet effect is active on this page. Click <a id="edit_dialog" href="#">Here To Edit Dialog Content</a>
         </div>
         <div role="dialog" class="modal modal-dialog modal-md fade fade-custom" id="o_newsletter_popup" tabindex="-1">
@@ -52,16 +52,15 @@
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
     <xpath expr="//div" position="after">
-        <div data-js='mailing_list_subscribe'
+        <div data-js="mailing_list_subscribe"
             data-selector=".js_subscribe"
             data-drop-near="p, h1, h2, h3, blockquote, .card">
-            <li data-select_mailing_list="" data-no-preview="true"><a href="#">Change Newsletter</a></li>
+            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
         </div>
-
-        <div data-js='newsletter_popup'
+        <div data-js="newsletter_popup"
             data-selector=".o_newsletter_popup"
             data-drop-in=".oe_structure, [data-oe-type=html]">
-            <li data-select_mailing_list="" data-no-preview="true"><a href="#">Change Newsletter</a></li>
+            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
         </div>
     </xpath>
 </template>

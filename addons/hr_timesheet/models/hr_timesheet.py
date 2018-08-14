@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+import json
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -46,6 +49,10 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.department_id = line.employee_id.department_id
 
+    # ----------------------------------------------------
+    # ORM overrides
+    # ----------------------------------------------------
+
     @api.model
     def create(self, values):
         # compute employee only for timesheet lines, makes no sense for other lines
@@ -70,6 +77,28 @@ class AccountAnalyticLine(models.Model):
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result
 
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        """ Set the correct label for `unit_amount`, depending on company UoM """
+        result = super(AccountAnalyticLine, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result['arch'] = self._apply_timesheet_label(result['arch'])
+        return result
+
+    @api.model
+    def _apply_timesheet_label(self, view_arch):
+        doc = etree.XML(view_arch)
+        encoding_uom = self.env.user.company_id.timesheet_encode_uom_id
+        # Here, we select only the unit_amount field having no string set to give priority to
+        # custom inheretied view stored in database. Even if normally, no xpath can be done on
+        # 'string' attribute.
+        for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
+            node.set('string', _('Duration (%s)') % (encoding_uom.name))
+        return etree.tostring(doc, encoding='unicode')
+
+    # ----------------------------------------------------
+    # Business Methods
+    # ----------------------------------------------------
+
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
             Overrride this to compute on the fly some field that can not be computed fields.
@@ -81,7 +110,7 @@ class AccountAnalyticLine(models.Model):
             vals['account_id'] = project.analytic_account_id.id
             vals['company_id'] = project.analytic_account_id.company_id.id
             if not project.analytic_account_id.active:
-                raise UserError(_('The project you are timesheeting on is not linked to a active analytic account. Please the project configuration.'))
+                raise UserError(_('The project you are timesheeting on is not linked to an active analytic account. Set one on the project configuration.'))
         # employee implies user
         if vals.get('employee_id') and not vals.get('user_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])
@@ -95,6 +124,10 @@ class AccountAnalyticLine(models.Model):
                 partner_id = self.env['project.project'].browse(vals['project_id']).partner_id.id
             if partner_id:
                 vals['partner_id'] = partner_id
+        # set timesheet UoM from the employee company (employee implies uom)
+        if 'product_uom_id' not in vals and all([v in vals for v in ['employee_id', 'project_id']]):  # project_id required to check this is timesheet flow
+            employee = self.env['hr.employee'].sudo().browse(vals['employee_id'])
+            vals['product_uom_id'] = employee.company_id.project_time_mode_id.id
         return vals
 
     @api.multi

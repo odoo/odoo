@@ -35,16 +35,16 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         load_more: '_onLoadMore',
     },
     config: {
-        // used to instanciate the model
+        // used to instantiate the model
         Model: ReconciliationModel.StatementModel,
-        // used to instanciate the action interface
+        // used to instantiate the action interface
         ActionRenderer: ReconciliationRenderer.StatementRenderer,
-        // used to instanciate each widget line
+        // used to instantiate each widget line
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
         params: ['statement_ids'],
         // number of moves lines displayed in 'match' mode
-        limitMoveLines: 5,
+        limitMoveLines: 15,
     },
 
     /**
@@ -319,7 +319,7 @@ var ManualAction = StatementAction.extend({
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
         LineRenderer: ReconciliationRenderer.ManualLineRenderer,
         params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
-        limitMoveLines: 10,
+        limitMoveLines: 15,
     },
 
     //--------------------------------------------------------------------------

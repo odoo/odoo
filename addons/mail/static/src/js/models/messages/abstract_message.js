@@ -344,7 +344,7 @@ var AbstractMessage =  Class.extend({
      * @return {boolean}
      */
     shouldRedirectToAuthor: function () {
-        return !this._isAuthor();
+        return !this._isMyselfAuthor();
     },
 
     //--------------------------------------------------------------------------
@@ -370,7 +370,7 @@ var AbstractMessage =  Class.extend({
      * @private
      * @return {boolean}
      */
-    _isAuthor: function () {
+    _isMyselfAuthor: function () {
         return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
     },
     /**

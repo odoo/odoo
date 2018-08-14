@@ -22,7 +22,8 @@
             </t>
             <t t-set="head" t-value="head_website + (head or '')"/>
 
-            <div id="wrapwrap" t-att-class="pageName or ''">
+            <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
+            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''}">
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
@@ -34,7 +35,7 @@
                             </button>
                             <div class="collapse navbar-collapse" id="top_menu_collapse">
                                 <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
-                                <ul class="nav navbar-nav ml-auto" id="top_menu">
+                                <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
                                     <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
                                     <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
                                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
@@ -54,7 +55,7 @@
                 <main>
                     <t t-raw="0"/>
                 </main>
-                <footer >
+                <footer class="bg-light o_footer">
                     <div class="container mt16 mb16" id="footer">
                         <div class="float-right" t-ignore="true" t-if="not editable">
                             Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
@@ -71,11 +72,11 @@
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
                         <div t-attf-class="col-md-12">
+                            <t t-call='portal.record_pager'/>
                             <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
                                 <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
                             </ol>
-                            <t t-call='portal.record_pager'/>
                         </div>
                     </div>
                 </div>
@@ -356,7 +357,7 @@
 
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
-          <div class="ml8 record_pager btn-group btn-group-xs float-right" role="group">
+          <div class="ml8 record_pager btn-group btn-group-xs float-md-right" role="group">
             <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
             <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>
@@ -394,7 +395,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="d-print-none o_portal_chatter o_not_editable"
+        <div id="discussion" class="d-print-none o_portal_chatter o_not_editable p-0"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-pid="pid" t-att-data-hash="hash" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>

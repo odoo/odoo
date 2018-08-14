@@ -7,6 +7,8 @@ var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 var QWeb = core.qweb;
 
+var _t = core._t;
+
 /**
  * Menu item appended in the systray part of the navbar
  *
@@ -20,11 +22,11 @@ var MessagingMenu = Widget.extend({
     name: 'messaging_menu',
     template:'mail.systray.MessagingMenu',
     events: {
-        'click': '_onClick',
         'click .o_mail_preview': '_onClickPreview',
         'click .o_filter_button': '_onClickFilterButton',
         'click .o_new_message': '_onClickNewMessage',
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
+        'show.bs.dropdown': '_onShowDropdown',
     },
     /**
      * @override
@@ -91,10 +93,10 @@ var MessagingMenu = Widget.extend({
     },
     /**
      * @private
-     * @return {boolean} whether the messaging menu is open or not.
+     * @return {boolean} whether the messaging menu is shown or not.
      */
-    _isOpen: function () {
-        return this.$el.hasClass('open');
+    _isShown: function () {
+        return this.$el.hasClass('show');
     },
     /**
      * Open discuss
@@ -149,6 +151,27 @@ var MessagingMenu = Widget.extend({
         this._$previews.html(QWeb.render('mail.systray.MessagingMenu.Previews', {
             previews: previews,
         }));
+    },
+    /**
+     * Display the browser notification request dialog when the user clicks on systray's corresponding notification
+     *
+     * @private
+     */
+    _requestNotificationPermission: function () {
+        var self = this;
+        var def = window.Notification && window.Notification.requestPermission();
+        if (def) {
+            def.then(function (value) {
+                if (value !== 'granted') {
+                    self.call('bus_service', 'sendNotification', self, _t('Permission denied'),
+                        _t('Odoo will not have the permission to send native notifications on this device.'));
+                } else {
+                    self.call('bus_service', 'sendNotification', self, _t('Permission granted'),
+                        _t('Odoo has now the permission to send you native notifications on this device.'));
+                }
+            });
+        }
+        this.$(".o_mail_navbar_request_permission").slideUp();
     },
     /**
      * Get and render list of previews, based on the selected filter
@@ -214,7 +237,7 @@ var MessagingMenu = Widget.extend({
         counter = unreadChannelCounter + inboxCounter + mailFailureCounter;
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
-        if (this._isOpen()) {
+        if (this._isShown()) {
             this._updatePreviews();
         }
     },
@@ -226,11 +249,8 @@ var MessagingMenu = Widget.extend({
     /**
      * @private
      */
-    _onClick: function () {
-        if (!this._isOpen()) {
-            // we are opening the dropdown so update its content
-            this._updatePreviews();
-        }
+    _onShowDropdown: function () {
+        this._updatePreviews();
     },
     /**
      * @private
@@ -269,6 +289,8 @@ var MessagingMenu = Widget.extend({
             var documentID = $target.data('document-id');
             var documentModel = $target.data('document-model');
             this._openDocument(documentModel, documentID);
+        } else if (previewID === 'request_notification') {
+            this._requestNotificationPermission();
         } else {
             // preview of thread
             this.call('mail_service', 'openThread', previewID);

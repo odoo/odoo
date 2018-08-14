@@ -58,6 +58,7 @@ from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
+from .tools import date_utils
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -1253,6 +1254,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return E.tree(element, string=self._description)
 
     @api.model
+    def _get_default_activity_view(self):
+        """ Generates an empty activity view.
+
+        :returns: a activity view as an lxml document
+        :rtype: etree._Element
+        """
+        return E.activity(string=self._description)
+
+    @api.model
     def _get_default_pivot_view(self):
         """ Generates an empty pivot view.
 
@@ -1747,6 +1757,93 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return list(result.values())
 
     @api.model
+    def _read_group_fill_temporal(self, data, groupby, aggregated_fields, annotated_groupbys,
+                                  interval=dateutil.relativedelta.relativedelta(months=1)):
+        """Helper method for filling date/datetime 'holes' in a result set.
+
+        We are in a use case where data are grouped by a date field (typically
+        months but it could be any other interval) and displayed in a chart.
+
+        Assume we group records by month, and we only have data for August,
+        September and December. By default, plotting the result gives something
+        like:
+                                                ___
+                                      ___      |   |
+                                     |   |     |   |
+                                     |   | ___ |   |
+                                     |   ||   ||   |
+                                     |___||___||___|
+                                      Aug  Sep  Dec
+
+        The problem is that December data follows immediately September data,
+        which is misleading for the user. Adding explicit zeroes for missing data
+        gives something like:
+                                                     ___
+                                 ___                |   |
+                                |   |               |   |
+                                |   | ___           |   |
+                                |   ||   |          |   |
+                                |___||___| ___  ___ |___|
+                                 Aug  Sep  Oct  Nov  Dec
+
+        :param list data: the data containing groups
+        :param list groupby: name of the first group by
+        :param aggregated_fields list: list of aggregated fields in the query
+        :param relativedelta interval: interval between to temporal groups
+                expressed as a relativedelta month by default
+        :rtype: list
+        :return: list
+        """
+        first_a_gby = annotated_groupbys[0]
+        if not data:
+            return data
+        if first_a_gby['type'] not in ('date', 'datetime'):
+            return data
+        interval = first_a_gby['interval']
+        groupby_name = groupby[0]
+
+        # existing non null datetimes
+        existing = [d[groupby_name] for d in data if d[groupby_name]]
+
+        if len(existing) < 2:
+            return data
+
+        # assumption: existing data is sorted by field 'groupby_name'
+        first, last = existing[0], existing[-1]
+
+        expected = collections.deque(date_utils.date_range(first, last, interval))
+
+        if len(existing) < len(expected):
+            empty_data = dict.fromkeys(aggregated_fields, False)
+            empty_data['id'] = False
+            empty_data[groupby_name.split(':')[0] + '_count'] = 0
+
+            data = collections.deque(data)
+
+            new_data = []
+
+            # Note: the list 'expected' contains the the dates that should be
+            # represented inside data when it is returned. Notice that 'expected'
+            # is sorted like data, so what we do is empty data progressivly by
+            # popping its elements from first to last. To do this properly, we
+            # need to compare dates together.
+            while expected or data:
+                if not data[0][groupby_name]:
+                    new_data.append(data.popleft())
+                    continue
+                dt = expected.popleft()
+                if data[0][groupby_name] == dt:
+                    new_data.append(data.popleft())
+                else:
+                    new_data.append(dict(empty_data, **{groupby_name: dt}))
+
+            assert not data
+            return new_data
+
+        return data
+
+
+    @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
@@ -1836,7 +1933,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
+            qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
@@ -1846,7 +1943,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
             'interval': time_intervals[gb_function or 'month'] if temporal else None,                
             'tz_convert': tz_convert,
-            'qualified_field': qualified_field
+            'qualified_field': qualified_field,
         }
 
     @api.model
@@ -1975,7 +2072,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         groupby = [groupby] if isinstance(groupby, pycompat.string_types) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
-            if self._fields[f.split(':')[0]].type in ('date', 'datetime')
+            if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
         ]
 
         # iterate on all results and replace the "full" date/datetime value
@@ -2091,8 +2188,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
 
-        data = ({k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.items()} for r in fetched_data)
+        data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
+
+        if self.env.context.get('fill_temporal') and data:
+            data = self._read_group_fill_temporal(data, groupby, aggregated_fields,
+                                                  annotated_groupbys)
+
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
+
         if lazy:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
@@ -2852,28 +2955,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
                     * noupdate: A boolean telling if the record will be updated or not
         """
-        fields = ['id']
+
+        IrModelData = self.env['ir.model.data'].sudo()
         if self._log_access:
-            fields += LOG_ACCESS_COLUMNS
-        quoted_table = '"%s"' % self._table
-        fields_str = ",".join('%s.%s' % (quoted_table, field) for field in fields)
-        query = '''SELECT %s, __imd.noupdate, __imd.module, __imd.name
-                   FROM %s LEFT JOIN ir_model_data __imd
-                       ON (__imd.model = %%s and __imd.res_id = %s.id)
-                   WHERE %s.id IN %%s''' % (fields_str, quoted_table, quoted_table, quoted_table)
-        self._cr.execute(query, (self._name, tuple(self.ids)))
-        res = self._cr.dictfetchall()
-
-        uids = set(r[k] for r in res for k in ['write_uid', 'create_uid'] if r.get(k))
-        names = dict(self.env['res.users'].browse(uids).name_get())
-
+            res = self.sudo().read(LOG_ACCESS_COLUMNS)
+        else:
+            res = [{'id': x} for x in self.ids]
+        xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
+                                                                           ('res_id', 'in', self.ids)],
+                                                                          ['res_id', 'noupdate', 'module', 'name'],
+                                                                          order='id'))
         for r in res:
-            for key in r:
-                value = r[key] = r[key] or False
-                if key in ('write_uid', 'create_uid') and value in names:
-                    r[key] = (value, names[value])
-            r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
-            del r['name'], r['module']
+            value = xml_data.get(r['id'], {})
+            r['xmlid'] = '%(module)s.%(name)s' % value if value else False
+            r['noupdate'] = value.get('noupdate', False)
         return res
 
     @api.multi
@@ -3788,6 +3883,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if table not in query.tables:
                         query.tables.append(table)
 
+        if self._transient:
+            # One single implicit access rule for transient models: owner only!
+            # This is ok because we assert that TransientModels always have
+            # log_access enabled, so that 'create_uid' is always there.
+            domain = [('create_uid', '=', self._uid)]
+            tquery = self._where_calc(domain, active_test=False)
+            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
+            return
+
         # apply main rules on the object
         Rule = self.env['ir.rule']
         where_clause, where_params, tables = Rule.domain_get(self._name, mode)
@@ -3933,10 +4037,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :return: a list of record ids or an integer (if count is True)
         """
         self.sudo(access_rights_uid or self._uid).check_access_rights('read')
-
-        # For transient models, restrict access to the current user, except for the super-user
-        if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
-            args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
         if expression.is_false(self, args):
             # optimization: no need to query, as no record satisfies the domain
@@ -4229,7 +4329,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         result = {record.id: [] for record in self}
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id']):
+        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id'], order='id'):
             result[data['res_id']].append('%(module)s.%(name)s' % data)
         return result
 

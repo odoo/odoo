@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -60,8 +61,16 @@ class IrRule(models.Model):
         if any(rule.model_id.model == self._name for rule in self):
             raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
 
+    def _compute_domain_keys(self):
+        """ Return the list of context keys to use for caching ``_compute_domain``. """
+        return []
+
     @api.model
-    @tools.ormcache('self._uid', 'model_name', 'mode')
+    @tools.conditional(
+        'xml' not in config['dev_mode'],
+        tools.ormcache('self._uid', 'model_name', 'mode',
+                       'tuple(self._context.get(k) for k in self._compute_domain_keys())'),
+    )
     def _compute_domain(self, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))

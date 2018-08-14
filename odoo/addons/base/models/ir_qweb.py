@@ -106,6 +106,10 @@ class IrQWeb(models.AbstractModel, QWeb):
         tools.ormcache('id_or_xml_id', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
     def compile(self, id_or_xml_id, options):
+        try:
+            id_or_xml_id = int(id_or_xml_id)
+        except:
+            pass
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
 
     def load(self, name, options):
@@ -274,33 +278,6 @@ class IrQWeb(models.AbstractModel, QWeb):
                 orelse=[]
             )
         ]
-
-    # for backward compatibility to remove after v10
-    def _compile_widget_options(self, el, directive_type):
-        field_options = super(IrQWeb, self)._compile_widget_options(el, directive_type)
-
-        if ('t-%s-options' % directive_type) in el.attrib:
-            if tools.config['dev_mode']:
-                _logger.warning("Use new syntax t-options instead of t-%s-options for '%s'" % (directive_type, etree.tostring(el)))
-            if not field_options:
-                field_options = el.attrib.pop('t-%s-options' % directive_type)
-
-        if field_options and 'monetary' in field_options:
-            try:
-                options = "{'widget': 'monetary'"
-                for k, v in json.loads(field_options).items():
-                    if k in ('display_currency', 'from_currency'):
-                        options = "%s, '%s': %s" % (options, k, v)
-                    else:
-                        options = "%s, '%s': '%s'" % (options, k, v)
-                options = "%s}" % options
-                field_options = options
-                _logger.warning("Use new syntax for '%s' monetary widget t-options (python dict instead of deprecated JSON syntax)." % etree.tostring(el))
-            except ValueError:
-                pass
-
-        return field_options
-    # end backward
 
     # method called by computing code
 

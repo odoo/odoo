@@ -270,8 +270,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
         'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
         'input input.filter': '_onFilterChange',
-        'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
-        'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
+        'click .match .load-more a': '_onLoadMore',
         'click .match .mv_line td': '_onSelectMoveLine',
         'click .accounting_view tbody .mv_line td': '_onSelectProposition',
         'click .o_reconcile_models button': '_onQuickCreateProposition',
@@ -309,8 +308,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields = {
                 partner_id : new relational_fields.FieldMany2One(self,
                     'partner_id',
-                    self.model.get(recordID),
-                    {mode: 'edit'}
+                    self.model.get(recordID), {
+                        mode: 'edit',
+                        attrs: {
+                            placeholder: self._initialState.st_line.communication_partner_name || '',
+                        }
+                    }
                 )
             };
             self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
@@ -391,6 +394,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         });
 
         var targetLineAmount = state.st_line.amount;
+
         _.each(props, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
@@ -422,9 +426,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         });
 
         // mv_lines
-        var $mv_lines = this.$('.match table tbody').empty();
         var stateMvLines = state.mv_lines || [];
-        _.each(stateMvLines.slice(0, state.limitMoveLines), function (line) {
+        var recs_count = stateMvLines.length > 0 ? stateMvLines[0].recs_count : 0;
+        var remaining = recs_count - stateMvLines.length;
+        var $mv_lines = this.$('.match table tbody').empty();
+
+        _.each(stateMvLines, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
                 $('<span class="line_info_button fa fa-info-circle"/>')
@@ -433,8 +440,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             $mv_lines.append($line);
         });
-        this.$('.match .fa-chevron-right').toggleClass('disabled', stateMvLines.length <= state.limitMoveLines);
-        this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
+        this.$('.match div.load-more').toggle(remaining > 0);
+        this.$('.match div.load-more span').text(remaining);
         this.$('.match').css('max-height', !stateMvLines.length && !state.filter.length ? '0px' : '');
 
         // balance
@@ -467,10 +474,22 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                             if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
                                 field.reset(record);
                             }
+                            if (fieldName === 'tax_id') {
+                                if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
+                                    $('.create_force_tax_included').addClass('d-none');
+                                }
+                                else {
+                                    $('.create_force_tax_included').removeClass('d-none');
+                                }
+                            } 
                         });
                     });
                 });
             });
+            if(state.createForm.tax_id){
+                // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
+                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
+            }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
@@ -546,6 +565,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'many2many',
             name: 'analytic_tag_ids',
         }, {
+            type: 'boolean',
+            name: 'force_tax_included',
+        }, {
             type: 'char',
             name: 'label',
         }, {
@@ -566,13 +588,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 'journal_id', record, {mode: 'edit'});
 
             self.fields.tax_id = new relational_fields.FieldMany2One(self,
-                'tax_id', record, {mode: 'edit'});
+                'tax_id', record, {mode: 'edit', additionalContext: {append_type_to_tax_name: true}});
 
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
 
             self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
                 'analytic_tag_ids', record, {mode: 'edit'});
+
+            self.fields.force_tax_included = new basic_fields.FieldBoolean(self,
+                'force_tax_included', record, {mode: 'edit'});
 
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
@@ -587,6 +612,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
             self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
+            self.fields.force_tax_included.appendTo($create.find('.create_force_tax_included .o_td_field'))
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
@@ -709,13 +735,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onPrevious: function () {
-        this.trigger_up('change_offset', {'data': -1});
-    },
-    /**
-     * @private
-     */
-    _onNext: function () {
+    _onLoadMore: function (ev) {
+        ev.preventDefault();
         this.trigger_up('change_offset', {'data': 1});
     },
     /**

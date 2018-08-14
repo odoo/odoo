@@ -4,7 +4,6 @@
 from . import mrp_document
 from . import res_config_settings
 from . import mrp_bom
-from . import mrp_message
 from . import mrp_routing
 from . import mrp_workcenter
 from . import mrp_production

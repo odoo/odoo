@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         ('ordered_timesheet', 'Ordered quantities'),
         ('delivered_timesheet', 'Timesheets on tasks'),
         ('delivered_manual', 'Milestones (manually set quantities on order)')
-    ], string="Invoice based on", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ])
@@ -24,10 +24,10 @@ class ProductTemplate(models.Model):
     ], string="Service Tracking", default="no",
        help="On Sales order confirmation, this product can generate a project and/or task. From those, you can track the service you are selling.")
     project_id = fields.Many2one(
-        'project.project', 'Project', company_dependent=True, domain=[('sale_line_id', '=', False)],
+        'project.project', 'Project', company_dependent=True, domain=[('billable_type', '=', 'no')],
         help='Select a non billable project on which tasks can be created. This setting must be set for each company.')
     project_template_id = fields.Many2one(
-        'project.project', 'Project Template', company_dependent=True, domain=[('sale_line_id', '=', False)], copy=True,
+        'project.project', 'Project Template', company_dependent=True, domain=[('billable_type', '=', 'no')], copy=True,
         help='Select a non billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
 
     @api.depends('invoice_policy', 'service_type')
@@ -83,3 +83,5 @@ class ProductTemplate(models.Model):
         if self.type == 'service':
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
+        elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
+            self.invoice_policy = 'order'

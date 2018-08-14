@@ -7,7 +7,7 @@
                 <t t-set="address">
                     <address t-field="o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                            <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
+                            <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></div>
                 </t>
                 <div class="page">
                     <h2>
@@ -62,22 +62,22 @@
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="6"/>
-                                <th>Description</th>
-                                <th class="d-none">Source Document</th>
-                                <th class="text-right">Quantity</th>
-                                <th class="text-right d-none d-md-table-cell">Unit Price</th>
+                                <th><span>Description</span></th>
+                                <th class="d-none"><span>Source Document</span></th>
+                                <th class="text-right"><span>Quantity</span></th>
+                                <th class="text-right d-none d-md-table-cell"><span>Unit Price</span></th>
                                 <th t-if="display_discount" class="text-right d-none d-md-table-cell">
                                     <span>Disc.(%)</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
-                                <th class="text-right d-none d-md-table-cell">Taxes</th>
+                                <th class="text-right d-none d-md-table-cell"><span>Taxes</span></th>
                                 <th t-if="display_taxamount and type_is_out" class="text-right d-none d-md-table-cell">
                                     <span>Tax Amount</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
                                 <th class="text-right">
-                                    <t groups="account.group_show_line_subtotals_tax_excluded">Amount</t>
-                                    <t groups="account.group_show_line_subtotals_tax_included">Total Price</t>
+                                    <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
+                                    <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
                                 </th>
                             </tr>
                         </thead>
@@ -107,11 +107,7 @@
                                             <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.invoice_line_tax_ids))"/>
                                         </td>
                                         <td t-if="display_taxamount and type_is_out" class="text-right d-none d-md-table-cell">
-                                            <t t-set="taxes"
-                                               t-value="line.invoice_line_tax_ids.compute_all(line.price_unit, line.currency_id, line.quantity)"/>
-                                            <t t-set="tax_amount"
-                                               t-value="taxes and (taxes['total_included'] - taxes['base']) or 0.0"/>
-                                            <span t-esc="tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            <span t-esc="line.price_tax" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                         <td class="text-right">
                                             <span
@@ -164,7 +160,7 @@
                                             <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
-                                    <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
+                                    <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                                         <tr style="border-bottom:1px solid #dddddd;">
                                             <t t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">
                                                 <td>
@@ -206,6 +202,13 @@
                     </p>
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
+                    </p>                
+                    <p t-if="(o.currency_id.name == 'EUR') and (o.company_id.qr_code) and (o.company_id.qr_code_payment_journal_id.bank_account_id.qr_code_valid)">
+                        <strong class="text-center">Scan me with your banking app.</strong><br /><br />                                 
+                        <img class="border border-dark rounded" t-att-src="o.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(o.residual,(o.reference) if (o.reference) else o.number)"/>
+                    </p>
+                    <p t-if="(o.currency_id.name == 'EUR') and (o.company_id.qr_code) and (o.company_id.qr_code_payment_journal_id.bank_account_id.qr_code_valid == False)">
+                        <strong class="text-center">The SEPA QR Code informations are not set correctly.</strong><br /> 
                     </p>
                 </div>
             </t>

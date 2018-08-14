@@ -23,6 +23,7 @@ from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE, content_disposition
 from odoo.tools import pycompat, consteq
 from odoo.tools.mimetypes import guess_mimetype
+from ast import literal_eval
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -170,9 +171,10 @@ class IrHttp(models.AbstractModel):
             if serve:
                 return serve
 
-        # Don't handle exception but use werkeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode']:
-            raise
+        # Don't handle exception but use werkzeug debugger if server in --dev mode
+        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+            raise exception
+
         try:
             return request._handle_exception(exception)
         except AccessDenied:
@@ -243,10 +245,14 @@ class IrHttp(models.AbstractModel):
         return content_disposition(filename)
 
     @classmethod
+    def _xmlid_to_obj(cls, env, xmlid):
+        return env.ref(xmlid, False)
+
+    @classmethod
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, env=None):
+                       access_token=None, share_id=None, share_token=None, force_ext=False, env=None):
         """ Get file, attachment or downloadable content
 
         If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
@@ -262,9 +268,13 @@ class IrHttp(models.AbstractModel):
         :param str filename_field: if not create an filename with model-id-field
         :param bool download: apply headers to download the file
         :param str mimetype: mintype of the field (for headers)
+        :param share_id: the id of the documents.share that contains the attachment
+        :param share_token: the token of the documents.share that contains the attachment
         :param str default_mimetype: default mintype if no mintype found
         :param str access_token: optional token for unauthenticated access
                                  only available  for ir.attachment
+        :param bool force_ext: if true, adds the extension to the filename
+                                that corresponds to the mimetype
         :param Environment env: by default use request.env
         :returns: (status, headers, content)
         """
@@ -272,11 +282,29 @@ class IrHttp(models.AbstractModel):
         # get object and content
         obj = None
         if xmlid:
-            obj = env.ref(xmlid, False)
+            obj = cls._xmlid_to_obj(env, xmlid)
         elif id and model == 'ir.attachment' and access_token:
             obj = env[model].sudo().browse(int(id))
             if not consteq(obj.access_token, access_token):
                 return (403, [], None)
+        elif id and share_id and share_token:
+            share = env['documents.share'].sudo().browse(int(share_id))
+            if share:
+                if share.state == 'expired':
+                    return (403, [], None)
+                if not consteq(share.access_token, share_token):
+                    return (403, [], None)
+                elif share.type == 'ids' and (id in share.attachment_ids.ids):
+                    obj = env[model].sudo().browse(int(id))
+                elif share.type == 'domain':
+                    obj = env[model].sudo().browse(int(id))
+                    share_domain = []
+                    if share.domain:
+                        share_domain = literal_eval(share.domain)
+                    domain = [['folder_id', '=', share.folder_id.id]] + share_domain
+                    attachments_check = http.request.env['ir.attachment'].sudo().search(domain)
+                    if obj not in attachments_check:
+                        return (403, [], None)
         elif id and model in env.registry:
             obj = env[model].browse(int(id))
 
@@ -337,6 +365,14 @@ class IrHttp(models.AbstractModel):
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
+        if force_ext and (mimetype != default_mimetype):
+            dot_index = filename.rfind('.')
+            if dot_index > -1:
+                if mimetypes.guess_extension(mimetype) != filename[dot_index:]:
+                    filename = filename[:dot_index] + mimetypes.guess_extension(mimetype)
+            else:
+                filename = filename + mimetypes.guess_extension(mimetype)
 
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 

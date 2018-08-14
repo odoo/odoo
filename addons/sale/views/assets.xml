@@ -5,7 +5,11 @@
             <script type="text/javascript" src="/sale/static/src/js/sale.js"></script>
         </xpath>
     </template>
-
+    <template id="assets_backend_onboarding" name="onboarding_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_onboarding.scss"/>
+        </xpath>
+    </template>
     <template id="assets_frontend" inherit_id="web.assets_frontend" name="Sale frontend assets">
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_portal.scss"/>

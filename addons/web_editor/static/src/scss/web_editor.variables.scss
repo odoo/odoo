@@ -220,19 +220,35 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 // Edition colors
 
 // Colors
-$color-alpha: #1cc1a9 !default;
-$color-beta: #875A7B !default;
-$color-gamma: #BA3C3D !default;
-$color-delta: #0D6759 !default;
-$color-epsilon: #0B2E59 !default;
+$o-color-palettes: (
+    (
+
+    ),
+) !default;
+$o-color-palette-number: 1;
+
+// Theme colors
+$o-theme-color-palettes: (
+    (
+        primary: $o-enterprise-primary-color,
+        secondary: $o-enterprise-color,
+        gamma: #5C5B80,
+        delta: #5B899E,
+        epsilon: #E46F78,
+    ),
+) !default;
+$o-theme-color-palette-number: 1;
 
 // Greyscale transparent colours
-$color-black-25: rgba(black, 0.25) !default;
-$color-black-50: rgba(black, 0.5) !default;
-$color-black-75: rgba(black, 0.75) !default;
-$color-white-25: rgba(white, 0.25) !default;
-$color-white-50: rgba(white, 0.5) !default;
-$color-white-75: rgba(white, 0.75) !default;
+$o-transparent-grays: (
+    black-25: rgba(black, 0.25),
+    black-50: rgba(black, 0.5),
+    black-75: rgba(black, 0.75),
+    white-25: rgba(white, 0.25),
+    white-50: rgba(white, 0.5),
+    white-75: rgba(white, 0.75),
+) !default;
+
 
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;

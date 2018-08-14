@@ -25,9 +25,9 @@
 
                             <div class="o_timesheet_plan_stat_buttons oe_button_box">
                                 <t t-foreach="stat_buttons" t-as="stat_button">
-                                    <button class="btn oe_stat_button" t-att-data-domain="stat_button['domain']" t-att-data-res-model="stat_button['res_model']">
+                                    <button class="btn oe_stat_button" t-att-data-domain="stat_button.get('domain')" t-att-data-res-model="stat_button['res_model']" t-att-data-res-id="stat_button.get('res_id')">
                                         <div t-attf-class="fa fa-fw o_button_icon #{stat_button['icon']}" role="img" aria-label="Statistics" title="Statistics"></div>
-                                        <div name="task_count" class="o_field_widget o_stat_info o_readonly_modifier" t-att-title="stat_button['name']">
+                                        <div class="o_field_widget o_stat_info o_readonly_modifier" t-att-title="stat_button['name']">
                                             <span class="o_stat_value" t-if="stat_button.get('count')">
                                                 <t t-esc="stat_button['count']"/>
                                             </span>

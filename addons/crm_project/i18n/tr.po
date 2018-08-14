@@ -7,10 +7,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,11 @@ msgid "Create Task"
 msgstr "Görev Oluştur"
 
 #. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "Yeni bir müşteri oluştur"
+
+#. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
@@ -54,9 +59,19 @@ msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "Kayıtlı Müşteri"
+
+#. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
+
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "Bir müşteriye bağlanmayın"
 
 #. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
@@ -84,9 +99,19 @@ msgid "Lead"
 msgstr "Aday"
 
 #. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "Varolan bir müşteriye bağlantıla"
+
+#. module: crm_project
 #: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr "Proje"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "İlgili Müşteri"
 
 #. module: crm_project
 #: model:ir.model,name:crm_project.model_crm_lead_convert2task

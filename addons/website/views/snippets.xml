@@ -1,142 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="s_cover" name="Cover">
-    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg pt64 pb64" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 100%">
+
+<template id="s_title" name="Title">
+    <section class="pt32 pb32">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6 bg-black-25 pt32 pb32">
-                    <h2 style="font-size:62px">Headline</h2>
-                    <h4>With a great subtitle</h4>
-                    <p>Write one or two paragraphs describing your product, services or a specific feature. To be successful your content needs to be useful to your readers.</p>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-12 s_title pt16 pb16" style="text-align: center;">
+                    <h1 class="s_title_default"><font style="font-size: 62px;">Your Site Title</font></h1>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<template id="s_banner" name="Slider">
-    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000">
-        <!-- Indicators -->
-        <ol class="carousel-indicators d-none">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="carousel-item oe_img_bg active bg-alpha pt48 pb48">
-                <div class="container">
-                    <div class="row content">
-                        <div class="carousel-content col-lg-4 offset-lg-1 mt64">
-                            <h2>Your Slide Title</h2>
-                            <h4>Click to customize this text</h4>
-                            <p><a role="button" href="/contactus" class="btn btn-warning btn-large">Contact us</a></p>
-                        </div>
-                        <div class="carousel-img col-lg-6 offset-lg-1 d-none d-lg-block">
-                            <img class="img-fluid" src="/web/image/website.s_banner_default_image" alt="Slider Odoo Image"/>
-                        </div>
+<template id="s_cover" name="Cover">
+    <section class="s_cover parallax oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
+        <span class="s_parallax_filter"/>
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-12 s_title" data-name="Title">
+                    <h1 class="s_title_thin" style="font-size: 62px; text-align: center;">Catchy Headline</h1>
+                </div>
+                <div class="col-lg-12 s_text pt16 pb16" data-name="Text">
+                    <p class="lead" style="text-align: center;">Write one or two paragraphs describing your product, services or a specific feature.<br/> To be successful your content needs to be useful to your readers.</p>
+                </div>
+                <div class="col-lg-12 s_btn text-center pt16 pb16" data-name="Buttons">
+                    <a href="/aboutus" class="btn btn-delta rounded-circle">About us</a>
+                    <a href="/contactus" class="btn btn-primary rounded-circle">Contact us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_text_image" name="Text - Image">
+    <section class="s_text_image pt32 pb32">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pt16 pb16">
+                    <h2>A Section Subtitle</h2>
+                    <p>Write one or two paragraphs describing your product or services. <br/>To be successful your content needs to be useful to your readers.</p>
+                    <p>Start with the customer – find out what they want and give it to them.</p>
+                    <div class="s_btn text-left pt16 pb16" data-name="Buttons">
+                        <a href="#" class="btn btn-primary">Learn more</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 pt16 pb16">
+                    <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto" alt="Odoo • Text and Image"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_image_text" name="Image - Text">
+    <section class="s_text_image pt32 pb32">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pt16 pb16">
+                    <img src="/web/image/website.s_image_text_default_image" class="img img-fluid mx-auto" alt="Odoo • Image and Text"/>
+                </div>
+                <div class="col-lg-6 pt16 pb16">
+                    <h2>Section Subtitle</h2>
+                    <p>Write one or two paragraphs describing your product or services. <br/>To be successful your content needs to be useful to your readers.</p>
+                    <p>Start with the customer – find out what they want and give it to them.</p>
+                    <div class="s_btn text-left pt16 pb16">
+                        <a href="#" class="btn btn-outline-primary">Discover more</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="carousel-control-prev d-none" data-target="#myCarousel" data-slide="prev" style="width: 10%" role="img" aria-label="Previous" title="Previous"><i class="fa fa-chevron-left"></i></div>
-        <div class="carousel-control-next d-none" data-target="#myCarousel" data-slide="next" style="width: 10%" role="img" aria-label="Next" title="Next"><i class="fa fa-chevron-right"></i></div>
-    </div>
-</template>
-
-<template id="s_text_image" name="Text-Image">
-    <section class="s_text_image pt32 pb32">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 mt32">
-                    <h3 style="text-align: right;">A Section Subtitle</h3>
-                    <p style="text-align: right;">
-                        Write one or two paragraphs describing your product or
-                        services.<br/>To be successful your content needs to be
-                        useful to your readers.
-                    </p><p style="text-align: right;">
-                        Start with the customer – find out what they want
-                        and give it to them.
-                    </p>
-                </div>
-                <div class="col-lg-6">
-                  <img class="img img-fluid float-left mb16" src="/web/image/website.s_text_image_default_image" alt="Odoo text and image block"/>
-                </div>
-            </div>
-        </div>
     </section>
 </template>
 
-<template id="s_image_text" name="Image-Text">
-    <section class="s_image_text pt32 pb32">
+<template id="s_banner" name="Banner">
+    <section class="s_banner parallax s_parallax_is_fixed oe_img_bg pt96 pb96" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+        <span class="s_parallax_filter"/>
         <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                  <img class="img img-fluid d-block mx-auto mb16" src="/web/image/website.s_image_text_default_image"  alt="Odoo image and text block"/>
-                </div>
-                <div class="col-lg-6 mt32">
-                    <h3>A Section Subtitle</h3>
-                    <p>
-                        Write one or two paragraphs describing your product,
-                        services or a specific feature. To be successful
-                        your content needs to be useful to your readers.
-                    </p><p>
-                        Start with the customer – find out what they want
-                        and give it to them.
-                    </p>
-                </div>
-            </div>
-        </div>
+           <div class="row s_nb_column_fixed">
+               <div class="col-lg-7 jumbotron pt32 pb32" style="background-color: rgb(255, 255, 255);" data-name="Box">
+                   <div class="row">
+                       <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
+                           <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
+                       </div>
+                       <div class="col-lg-12 pt8 pb32 s_col_no_bgcolor" data-name="Text">
+                           <p class="lead">This is a simple hero unit, a simple jumbotron-style component <br/>for calling extra attention to featured content or information.</p>
+                       </div>
+                       <div class="col-lg-12 s_btn text-left pt16 pb16" data-name="Button">
+                           <a href="#" class="btn btn-epsilon rounded-circle">Do something</a>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
     </section>
 </template>
 
-<template id="s_big_message" name="Big Message">
-    <section class="jumbotron s_big_message oe_img_bg oe_custom_bg pb32" style="background-image: url('/web/image/website.s_background_image_01');">
+<template id="s_text_block" name="Text block">
+    <section class="s_text_block pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="offset-lg-1 col-lg-8">
-                    <h1>Sell Online. Easily.</h1>
-                    <p>Write one sentence to convince visitor about your message.</p>
-                    <a role="button" class="btn btn-warning btn-lg" href="/contactus">Contact us</a>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_text_block" name="Text Block">
-    <section class="s_text_block pt16 pb16">
-        <div class="container">
-            <h2 class="text-center">A Great Headline</h2>
-            <h3 class="text-center text-muted">A good subtitle</h3>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>
-                        A great way to catch your reader's attention is to tell a story.
-                        Everything you consider writing can be told as a story.
-                    </p><p>
-                        <b>Great stories have personality.</b> Consider telling
-                        a great story that provides personality. Writing a story
-                        with personality for potential clients will assists with
-                        making a relationship connection. This shows up in small
-                        quirks like word choices or phrases. Write from your point
-                        of view, not from someone else's experience.
-                    </p><p>
-                        <b>Great stories are for everyone even when only written for
-                        just one person.</b> If you try to write with a wide general
-                        audience in mind, your story will ring false and be bland.
-                        No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_title" name="Title">
-    <section class="s_title">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="text-center">Your Website Title</h1>
-                    <h3 class="text-center text-muted">And a great subtitle too</h3>
+                <div class="col-lg-10 offset-lg-1 pt32 pb32">
+                    <p class="lead">A great way to catch your reader's attention is to tell a story. <br/>Everything you consider writing can be told as a story.</p>
+                    <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                    <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
                 </div>
             </div>
         </div>
@@ -144,55 +113,23 @@
 </template>
 
 <template id="s_features" name="Features">
-    <section class="s_features pt16 pb16">
+    <section class="s_features pt32 pb32">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 text-center">
-                    <span class="fa fa-suitcase fa-5x" role="img" aria-label="Suitcase" title="Suitcase"></span>
-                    <div>
-                        <h3 class="mt8 mb0">First Feature</h3>
-                        <p class="text-muted">Tell what's the value for the<br/>customer for this feature.</p>
-                    </div>
+                <div class="col-lg-4 pt32 pb32 text-center">
+                    <i class="fa fa-3x fa-gear rounded-circle bg-gamma m-3"/>
+                    <h3>First Feature</h3>
+                    <p>Tell what's the value for the <br/>customer for this feature.</p>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <span class="fa fa-lock fa-5x" role="img" aria-label="Lock" title="Lock"></span>
-                    <div>
-                        <h3 class="mt8 mb0">Second Feature</h3>
-                        <p class="text-muted">Write what the customer would like to know,<br/>not what you want to show.</p>
-                    </div>
+                <div class="col-lg-4 pt32 pb32 text-center">
+                    <i class="fa fa-3x fa-photo rounded bg-epsilon m-3"/>
+                    <h3>Second Feature</h3>
+                    <p>Write what the customer would like to know, <br/>not what you want to show.</p>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <span class="fa fa-heart fa-5x" role="img" aria-label="Heart" title="Heart"></span>
-                    <div>
-                        <h3 class="mt8 mb0">Third Feature</h3>
-                        <p class="text-muted">A small explanation of this great<br/>feature, in clear words.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_big_picture" name="Big Picture">
-    <section class="s_big_picture bg-gray-lighter pb16">
-        <div class="container">
-            <h2 class="text-center">A Punchy Headline</h2>
-            <div class="row">
-                <div class="col-lg-12">
-                  <img class="img img-fluid" src="/web/image/website.s_big_picture_default_image" style="margin: 0 auto;"  alt="Odoo CMS - a big picture"/>
-                </div>
-                <div class="col-lg-6 offset-lg-3 mt16">
-                    <p class="text-center">
-                        <b>A Small Subtitle</b>
-                    </p>
-                    <p class="text-center">
-                        Choose a vibrant image and write an inspiring paragraph
-                        about it. It does not have to be long, but it should
-                        reinforce your image.
-                    </p>
-                    <p class="text-center">
-                        <a href="/contactus">Contact us »</a>
-                    </p>
+                <div class="col-lg-4 pt32 pb32 text-center">
+                    <i class="fa fa-3x fa-leaf rounded-leaf bg-primary m-3"/>
+                    <h3>Third Feature</h3>
+                    <p>A small explanation of this great <br/>feature, in clear words.</p>
                 </div>
             </div>
         </div>
@@ -200,86 +137,213 @@
 </template>
 
 <template id="s_three_columns" name="Three Columns">
-    <section class="s_three_columns pt32 pb48">
+    <section class="s_three_columns pt32 pb32" style="background-color: rgb(239, 239, 239);">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <img class="img img-fluid" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
-                    <h4 class="mt16">Feature One</h4>
-                    <p>
-                        Adapt these three columns to fit you design need.
-                        To duplicate, delete or move columns, select the
-                        column and use the top icons to perform your action.
-                    </p>
+            <div class="row d-flex align-items-stretch">
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
+                    <div class="card">
+                        <img class="card-img-top" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
+                        <div class="card-body">
+                            <h3 class="card-title">Feature One</h3>
+                            <p class="card-text">Adapt these three columns to fit you design need. To duplicate, delete or move columns, select the column and use the top icons to perform your action.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <img class="img img-fluid" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
-                    <h4 class="mt16">Feature Two</h4>
-                    <p>
-                        To add a fourth column, reduce the size of these
-                        three columns using the right icon of each block.
-                        Then, duplicate one of the column to create a new
-                        one as a copy.
-                    </p>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
+                    <div class="card">
+                        <img class="card-img-top" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
+                        <div class="card-body">
+                            <h3 class="card-title">Feature Two</h3>
+                            <p class="card-text">To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the column to create a new one as a copy.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <img class="img img-fluid" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
-                    <h4 class="mt16">Feature Three</h4>
-                    <p>
-                        Delete the above image or replace it with a picture
-                        that illustrates your message. Click on the picture to
-                        change it's <em>rounded corner</em> style.
-                    </p>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16">
+                    <div class="card">
+                        <img class="card-img-top" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
+                        <div class="card-body">
+                            <h3 class="card-title">Feature Three</h3>
+                            <p class="card-text">Delete the above image or replace it with a picture that illustrates your message. Click on the picture to change it's <em>rounded corner</em> style.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<template id="s_well" name="Well">
-    <div class="card s_well clearfix">
-        <div class="card-body">
-            <p>
-                Explain the benefits you offer. Don't write about products or
-                services here, write about solutions.
-            </p>
+<template id="s_picture" name="Picture">
+    <section class="s_picture pt48 pb24" style="background-color: rgb(239, 239, 239);">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-12 s_title pt16 pb16">
+                    <h2 class="s_title_thin" style="text-align: center;"><font style="font-size: 62px;">A punchy Headline</font></h2>
+                </div>
+                <div class="col-lg-12 pt16 pb16">
+                    <p style="text-align: center;">Choose a vibrant image and write an inspiring paragraph about it.<br/> It does not have to be long, but it should reinforce your image.</p>
+                </div>
+                <div class="col-lg-8 offset-lg-2 pb24">
+                    <figure class="figure">
+                        <img src="/web/image/website.s_picture_default_image" class="figure-img img-fluid rounded img-thumbnail padding-large" alt="Odoo • A picture with a caption"/>
+                        <figcaption class="figure-caption py-3 text-center"><i class="fa fa-1x fa-picture-o mr-2"/>Add a caption to enhance the meaning of this image.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_carousel" name="Carousel">
+    <div id="myCarousel" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"/>
+            <li data-target="#myCarousel" data-slide-to="1"/>
+            <li data-target="#myCarousel" data-slide-to="2"/>
+        </ol>
+        <!-- Content -->
+        <div class="carousel-inner">
+            <!-- #01 -->
+            <div class="carousel-item active oe_custom_bg oe_img_bg pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
+                <div class="container">
+                    <div class="row content">
+                        <div class="carousel-content col-lg-7">
+                            <div class="s_title pb8" data-name="Title">
+                                <h2 class="s_title_default"><font style="font-size: 62px;">Slide Title</font></h2>
+                            </div>
+                            <p class="lead">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
+                            <div class="s_btn text-left pt16 pb16" data-name="Buttons">
+                                <a href="/aboutus" class="btn btn-secondary flat">About us</a>
+                                <a href="/contactus" class="btn btn-primary flat">Contact us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #02 -->
+            <div class="carousel-item oe_custom_bg oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
+                <div class="container">
+                    <div class="row content">
+                        <div class="carousel-content col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40">
+                            <h2 style="font-size: 62px;">Clever Slogan</h2>
+                            <div class="s_hr pt8 pb32">
+                                <hr class="s_hr_5px s_hr_dotted border-600 w-25 border-epsilon mx-auto text-center"/>
+                            </div>
+                            <p>Storytelling is powerful.<br/> It draws readers in and engages them..</p>
+                            <div class="s_btn text-center pt16 pb16" data-name="Buttons">
+                                <a href="/start" class="btn btn-epsilon rounded-circle">Start your journey</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #03 -->
+            <div class="carousel-item oe_custom_bg oe_img_bg pt128 pb128" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
+                <div class="container">
+                    <div class="row content">
+                        <div class="carousel-content col-lg-6 offset-lg-6">
+                            <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
+                            <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
+                            <p class="mt24">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
+                            <div class="s_share pt16 pb16">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook rounded shadow-sm"/>
+                                </a>
+                                <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter rounded shadow-sm"/>
+                                </a>
+                                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin rounded shadow-sm"/>
+                                </a>
+                                <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
+                                    <i class="fa fa-google-plus rounded shadow-sm"/>
+                                </a>
+                                <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email">
+                                    <i class="fa fa-envelope rounded shadow-sm"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Controls -->
+        <div class="carousel-control-prev" data-target="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+            <span class="carousel-control-prev-icon"/>
+            <span class="sr-only">Previous</span>
+        </div>
+        <div class="carousel-control-next" data-target="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+            <span class="carousel-control-next-icon"/>
+            <span class="sr-only">Next</span>
         </div>
     </div>
 </template>
 
-<template id="s_panel" name="Panel">
-    <div class="card o_panel s_panel">
-        <h3 class="card-header">Feature Title</h3>
-        <div class="card-body">
-            <p>
-                Panels are a great tool to compare offers or to emphasize on
-                key features. To compare products, use the inside columns.
-            </p>
+<template id="s_alert" name="Alert">
+    <div class="s_alert s_alert_md alert-delta w-100 clearfix">
+        <i class="fa fa-2x fa-info-circle s_alert_icon"/>
+        <div class="s_alert_content">
+            <p>Explain the benefits you offer. <br/>Don't write about products or services here, write about solutions.</p>
         </div>
     </div>
 </template>
 
-<template id="s_image_floating" name="Image Floating">
-    <div class="o_image_floating o_margin_l float-right s_image_floating">
-        <div class="o_container">
-            <img class="img rounded img-fluid" src="/web/image/website.s_image_floating_default_image" alt="Odoo CMS- Sample image floating"/>
+<template id="s_card" name="Card">
+    <div class="s_card card w-100" style="background-color: rgba(255,255,255);">
+        <h4 class="card-header">Feature Title</h4>
+        <div class="card-body">
+            <p class="card-text">A card is a flexible and extensible content container. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options.</p>
         </div>
-        <div class="o_footer">
-            <small class="text-muted">A great way to catch your reader's attention is to tell a story. Everything you consider writing can be told as a story.</small>
+        <div class="card-footer">
+            <i class="fa fa-1x fa-clock-o mr8"/><small>2 days ago</small>
         </div>
     </div>
 </template>
 
 <template id="s_share" name="Share">
-    <div class="oe_share s_share">
-        <h3>
-            <span>Share</span>
-            <a target="_Blank" class="oe_share_facebook" href="https://www.facebook.com/sharer/sharer.php?u={url}" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square"></i></a>
-            <a target="_Blank" class="oe_share_twitter" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter"></i></a>
-            <a target="_Blank" class="oe_share_linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
-            <a target="_Blank" class="oe_share_google" href="https://plus.google.com/share?url={url}" aria-label="Google Plus" title="Google Plus"><i class="fa fa-google-plus-square"></i></a>
-            <a href="mailto:?body={url}&amp;subject={title}" aria-label="Email" title="Email"><i class="fa fa-envelope-o"></i></a>
-        </h3>
+    <div class="s_share">
+        <h4 class="s_share_title">Share</h4>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
+            <i class="fa fa-1x fa-facebook rounded shadow-sm"/>
+        </a>
+        <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
+            <i class="fa fa-1x fa-twitter rounded shadow-sm"/>
+        </a>
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
+            <i class="fa fa-1x fa-linkedin rounded shadow-sm"/>
+        </a>
+        <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
+            <i class="fa fa-1x fa-google-plus rounded shadow-sm"/>
+        </a>
+        <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email">
+            <i class="fa fa-1x fa-envelope rounded shadow-sm"/>
+        </a>
+    </div>
+</template>
+
+<template id="s_rating" name="Rating">
+    <div class="s_rating row">
+        <div class="col-lg-12 s_rating_stars s_rating_3 s_rating_1x pt16 pb16">
+            <h4>Quality</h4>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <div class="s_rating_bar"/>
+        </div>
+    </div>
+</template>
+
+<template id="s_btn" name="Button">
+    <div class="s_btn text-center pt16 pb16" data-name="Buttons">
+        <a href="#" class="btn btn-primary">Read more</a>
+    </div>
+</template>
+
+<template id="s_hr" name="Separator">
+    <div class="s_hr text-left pt32 pb32">
+        <hr class="s_hr_1px s_hr_solid border-600 w-100 mx-auto"/>
     </div>
 </template>
 
@@ -302,21 +366,24 @@
 </template>
 
 <template id="s_comparisons" name="Comparisons">
-    <section class="s_comparisons">
+    <section class="s_comparisons pt48 pb24">
         <div class="container">
-            <h2 class="text-center">Our Offers</h2>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-12 s_title pt16 pb16" style="text-align: center;">
+                    <h1 class="s_title_thin"><font style="font-size: 62px;">Our offers</font></h1>
+                </div>
+            </div>
             <div class="row">
-                <div class="col-lg-4 col-12">
-                    <div class="card bg-gray-light">
-                        <div class="card-header text-center" style="background-color: rgba(255, 255, 255, 0.1)">
-                            <h3 style="margin: 0">Beginner</h3>
-                            <p style="margin: 0">
-                                Starter package
-                            </p>
-                        </div>
+                <div class="col-lg-4 s_col_no_bgcolor text-center pt16 pb16" data-name="Box">
+                    <div class="card" style="background-color: rgb(239, 239, 239);">
+                        <h4 class="card-header">Beginner</h4>
                         <div class="card-body text-center">
-                            <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">35</b><small>.00</small></h3>
-                            <div>user / month (billed annually)</div>
+                            <h2 class="card-title">
+                                <span class="s_comparisons_currency">$</span>
+                                <span class="s_comparisons_price"><b>35</b></span>
+                                <span class="s_comparisons_decimal">.00</span>
+                            </h2>
+                            <small>/ month</small>
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Basic sales &amp; marketing for up to 2 users</li>
@@ -324,23 +391,22 @@
                             <li class="list-group-item">No customization</li>
                             <li class="list-group-item">No support</li>
                         </ul>
-                        <div class="card-footer text-center">
-                            <p class="text-muted">
-                                <i>Instant setup, satisfied or reimbursed.</i>
-                            </p>
-                            <a role="button" href="/contactus" class="btn btn-primary btn-lg">Order now</a>
+                        <div class="card-footer">
+                            <p><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/contactus" class="btn btn-secondary">Order now</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-12">
-                    <div class="card bg-beta">
-                        <div class="card-header text-center" style="background-color: rgba(255, 255, 255, 0.1)">
-                            <h3 style="margin: 0">Professional</h3>
-                            <p style="margin: 0">Enterprise package</p>
-                        </div>
-                        <div class="card-body text-center">
-                            <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">65</b><small>.00</small></h3>
-                            <div>user / month (billed annually)</div>
+                <div class="col-lg-4 s_col_no_bgcolor text-center pt16 pb16" data-name="Box">
+                    <div class="card bg-primary">
+                        <h4 class="card-header">Professional</h4>
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span class="s_comparisons_currency">$</span>
+                                <span class="s_comparisons_price"><b>65</b></span>
+                                <span class="s_comparisons_decimal">.00</span>
+                            </h2>
+                            <small>/ month</small>
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Complete CRM for any size team</li>
@@ -348,21 +414,22 @@
                             <li class="list-group-item">Limited customization</li>
                             <li class="list-group-item">Email support</li>
                         </ul>
-                        <div class="card-footer text-center">
-                            <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
-                            <a role="button" href="/contactus" class="btn btn-primary btn-lg">Order now</a>
+                        <div class="card-footer">
+                            <p><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/contactus" class="btn btn-light">Start now</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-12">
-                    <div class="card bg-gray-light">
-                        <div class="card-header text-center" style="background-color: rgba(255, 255, 255, 0.1)">
-                            <h3 style="margin: 0">Expert</h3>
-                            <p style="margin: 0">Ultimate package</p>
-                        </div>
+                <div class="col-lg-4 s_col_no_bgcolor text-center pt16 pb16" data-name="Box">
+                    <div class="card bg-secondary">
+                        <h4 class="card-header">Expert</h4>
                         <div class="card-body text-center">
-                            <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">125</b><small>.00</small></h3>
-                            <div>user / month (billed annually)</div>
+                            <h2 class="card-title">
+                                <span class="s_comparisons_currency">$</span>
+                                <span class="s_comparisons_price"><b>125</b></span>
+                                <span class="s_comparisons_decimal">.00</span>
+                            </h2>
+                            <small>/ month</small>
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Unlimited CRM power and support</li>
@@ -370,9 +437,9 @@
                             <li class="list-group-item">Unlimited customization</li>
                             <li class="list-group-item">24x7 toll-free support</li>
                         </ul>
-                        <div class="card-footer text-center">
-                            <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
-                            <a role="button" href="/contactus" class="btn btn-primary btn-lg">Contact us</a>
+                        <div class="card-footer">
+                            <p><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/contactus" class="btn btn-light">Contact us</a>
                         </div>
                     </div>
                 </div>
@@ -384,13 +451,11 @@
 <template id="s_company_team" name="Company Team">
     <section class="s_company_team">
         <div class="container">
-            <h1 class="text-center mb16">
-                Meet the Executive Team
-            </h1>
-            <div class="row">
+            <h1 style="text-align: center;">Meet the Executive Team</h1>
+            <div class="row s_nb_column_fixed">
                 <div class="col-lg-6 pt16 pb16">
-                    <div class="row s_no_resize_cols">
-                        <div class="col-lg-4">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <div class="col-lg-4 ">
                             <img alt="Company team" src="/web/image/website.s_company_team_image_1" class="img-fluid rounded-circle d-block mx-auto shadow"/>
                         </div>
                         <div class="col-lg-8">
@@ -404,7 +469,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 pt16 pb16">
-                    <div class="row s_no_resize_cols">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
                         <div class="col-lg-4">
                             <img alt="Company team" src="/web/image/website.s_company_team_image_2" class="img-fluid rounded-circle d-block mx-auto shadow"/>
                         </div>
@@ -419,7 +484,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 pt16 pb16">
-                    <div class="row s_no_resize_cols">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
                         <div class="col-lg-4">
                             <img alt="Company team" src="/web/image/website.s_company_team_image_3" class="img-fluid rounded-circle d-block mx-auto shadow"/>
                         </div>
@@ -434,7 +499,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 pt16 pb16">
-                    <div class="row s_no_resize_cols">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
                         <div class="col-lg-4">
                             <img alt="Company team" src="/web/image/website.s_company_team_image_4" class="img-fluid rounded-circle d-block mx-auto shadow"/>
                         </div>
@@ -453,21 +518,18 @@
     </section>
 </template>
 
-<template id="s_button" name="Call to Action">
-    <section class="jumbotron s_button bg-gray-lighter">
+<template id="s_call_to_action" name="Call to Action">
+    <section class="s_call_to_action pt48 pb24" style="background-color: rgb(239, 239, 239);">
         <div class="container">
             <div class="row">
-                <div class="col-lg-9">
-                    <p class="mb0">
-                        <strong>50,000+ companies run Odoo to grow their businesses.</strong>
-                    </p><p class="mb0">
-                        Join us and make your company a better place.
-                    </p>
+                <div class="col-lg-9 pb24">
+                    <h3><b>50,000+ companies</b> run Odoo to grow their businesses.</h3>
+                    <p class="lead">Join us and make your company a better place.</p>
                 </div>
-                <div class="col-lg-3">
-                    <a role="button" href="/contactus" class="btn btn-primary btn-lg float-right mt8" aria-label="Contact Us Now" title="">
-                        <span>Contact Us Now</span>
-                        <i class="fa fa-chevron-right"></i>
+                <div class="col-lg-3 s_btn text-right pt8 pb24">
+                    <a href="/contactus" class="btn btn-primary btn-lg">
+                        <span>Contact us</span>
+                        <i class="fa fa-1x fa-fw fa-arrow-circle-right ml-1"/>
                     </a>
                 </div>
             </div>
@@ -475,132 +537,178 @@
     </section>
 </template>
 
-<template id="s_faq_collapse" name="FAQ">
-    <section class="s_faq_collapse">
-        <div class="container">
-            <h2 class="page-header"> General Terms and Conditions / Service Policies </h2>
-            <div class="accordion" role="tablist">
-                <div class="card">
-                    <h4 class="card-header bg-gray-lighter" role="tab" data-toggle="collapse">Terms of service</h4>
-                    <div class="collapse" role="tabpanel">
-                        <div class="card-body bg-white-50">
-                            <p>
-                                These terms of service ("Terms", "Agreement") are an agreement between the website
-                                ("Website operator", "us", "we" or "our") and you ("User", "you" or "your").
-                            </p>
-                            <p>
-                                This Agreement sets forth the general terms and conditions of your use of this website
-                                and any of its products or services (collectively, "Website" or "Services").
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h4 class="card-header bg-gray-lighter" role="tab" data-toggle="collapse">Links to other websites</h4>
-                    <div class="collapse" role="tabpanel">
-                        <div class="card-body bg-white-50">
-                            <p>
-                                Although this Website may be linked to other websites, we are not, directly or
-                                indirectly, implying any approval, association, sponsorship, endorsement, or
-                                affiliation with any linked website, unless specifically stated herein.
-                            </p>
-                            <p>
-                                You should carefully review the legal statements and other conditions of use of
-                                any website which you access through a link from this Website. Your linking to
-                                any other off-site pages or other websites is at your own risk.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h4 class="card-header bg-gray-lighter" role="tab" data-toggle="collapse">Use Of Cookies</h4>
-                    <div class="collapse" role="tabpanel">
-                        <div class="card-body bg-white-50">
-                            <p>Website may use cookies to personalize and facilitate maximum navigation of the
-                                User by this site. The User may configure his / her browser to notify and
-                                reject the installation of the cookies sent by us.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
 <template id="s_references" name="References">
-    <section class="s_references bg-gray-lighter pt16 pb16">
+    <section class="s_references pt16 pb16" style="background-color: rgb(239, 239, 239);">
         <div class="container">
             <div class="row">
-                <div class="col-lg-2 mt32">
-                  <h4 class="text-center">Our References</h4>
+                <div class="col-lg-2 pt32">
+                    <h4>References</h4>
                 </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                  <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid " alt="Demo Logo"/>
+                <div class="col-lg-2">
+                    <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid " alt="Demo Logo"/>
                 </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                  <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid " alt="Demo Logo"/>
+                <div class="col-lg-2">
+                    <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid " alt="Demo Logo"/>
                 </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                  <img src="/web/image/website.s_reference_demo_image_3" class="img img-fluid " alt="Demo Logo"/>
+                <div class="col-lg-2">
+                    <img src="/web/image/website.s_reference_demo_image_3" class="img img-fluid " alt="Demo Logo"/>
                 </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                  <img src="/web/image/website.s_reference_demo_image_4" class="img img-fluid " alt="Demo Logo"/>
+                <div class="col-lg-2">
+                    <img src="/web/image/website.s_reference_demo_image_4" class="img img-fluid " alt="Demo Logo"/>
                 </div>
-                <div class="col-lg-2 col-md-3 col-6">
-                  <img src="/web/image/website.s_reference_demo_image_5" class="img img-fluid " alt="Demo Logo"/>
+                <div class="col-lg-2">
+                    <img src="/web/image/website.s_reference_demo_image_5" class="img img-fluid " alt="Demo Logo"/>
                 </div>
             </div>
         </div>
     </section>
 </template>
 
-<template id="s_feature_grid" name="Feature Grid">
-    <section class="s_feature_grid pt16">
+<template id="s_faq_collapse" name="Accordion">
+    <section class="s_faq_collapse pt48 pb32">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-5 offset-lg-1">
-                    <div class="row">
-                        <div class="col-lg-12 pb16">
-                            <h3 class="mb0">List of Features</h3>
-                            <h5 class="text-muted">Add a great slogan</h5>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-12 s_title pt16 pb16">
+                    <h1 class="s_title_thin"><font style="font-size: 62px;">FAQ</font></h1>
+                </div>
+            </div>
+            <div class="row s_col_no_bgcolor">
+                <div class="col-lg-12 pt16 pb16">
+                    <div id="myCollapse" class="accordion" role="tablist">
+                        <div class="card" style="background-color: rgb(255, 255, 255);">
+                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="true" class="card-header text-primary">Terms of service</a>
+                            <div class="collapse show" role="tabpanel">
+                                <div class="card-body">
+                                    <p class="card-text">These terms of service ("Terms", "Agreement") are an agreement between the website ("Website operator", "us", "we" or "our") and you ("User", "you" or "your"). This Agreement sets forth the general terms and conditions of your use of this website and any of its products or services (collectively, "Website" or "Services").</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-comment float-left mb16" role="img" aria-label="Change icons" title="Change icons"></span>
-                            <h4 class="mt0 mb0">Change Icons</h4>
-                            <p>Click on the icon to adapt it to your feature</p><br/>
+                        <div class="card" style="background-color: rgb(255, 255, 255);">
+                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header text-primary">Links to other Websites</a>
+                            <div class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    <p class="card-text">Although this Website may be linked to other websites, we are not, directly or indirectly, implying any approval, association, sponsorship, endorsement, or affiliation with any linked website, unless specifically stated herein.</p>
+                                    <p class="card-text">You should carefully review the legal statements and other conditions of use of any website which you access through a link from this Website. Your linking to any other off-site pages or other websites is at your own risk.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-columns float-left mb16" role="img" aria-label="Duplicate" title="Duplicate"></span>
-                            <h4 class="mt0 mb0">Duplicate</h4>
-                            <p>Duplicate blocks to add more features.</p><br/>
-                        </div>
-                        <div class="col-lg-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-user float-left mb16" role="img" aria-label="Delete blocks" title="Delete blocks"></span>
-                            <h4 class="mt0 mb0">Delete Blocks</h4>
-                            <p>Select and delete blocks to remove some features.</p><br/>
+                        <div class="card" style="background-color: rgb(255, 255, 255);">
+                            <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header text-primary">Use of Cookies</a>
+                            <div class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    <p class="card-text">Website may use cookies to personalize and facilitate maximum navigation of the User by this site. The User may configure his / her browser to notify and reject the installation of the cookies sent by us.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5">
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_features_grid" name="Features Grid">
+    <section class="s_features_grid pt48 pb24">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 s_col_no_bgcolor pb24">
                     <div class="row">
-                        <div class="col-lg-12 pb16">
-                            <h3 class="mb0">Second List</h3>
-                            <h5 class="text-muted">Add a great slogan</h5>
+                        <div class="col-lg-12 pb24" data-name="Box">
+                            <h2>First list of Features</h2>
+                            <h5 class="text-primary">Add a great slogan.</h5>
                         </div>
-                        <div class="col-lg-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-magic float-left mb16" role="img" aria-label="Great value" title="Great value"></span>
-                            <h4 class="mt0 mb0">Great Value</h4>
-                            <p>Tell features the visitor would like to know, not what you'd like to say.</p>
+                        <div class="col-lg-12 pt16 pb16" data-name="Box">
+                            <i class="fa fa-2x fa-font-awesome rounded-circle bg-primary s_features_grid_icon"/>
+                            <div class="s_features_grid_content">
+                                <h4>Change Icons</h4>
+                                <p>Double click an icon to replace it with one of your choice.</p>
+                            </div>
                         </div>
-                        <div class="col-lg-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-bolt float-left mb16" role="img" aria-label="Change background" title="Change background"></span>
-                            <h4 class="mt0 mb0">Change Background</h4>
-                            <p>From the main container, you can change the background to highlight features.</p>
+                        <div class="col-lg-12 pt16 pb16" data-name="Box">
+                            <i class="fa fa-2x fa-files-o rounded-circle bg-primary s_features_grid_icon"/>
+                            <div class="s_features_grid_content">
+                                <h4>Duplicate</h4>
+                                <p>Duplicate blocks and columns to add more features.</p>
+                            </div>
                         </div>
-                        <div class="col-lg-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-picture-o float-left mb16" role="img" aria-label="Sample images" title="Change background"></span>
-                            <h4 class="mt0 mb0">Sample images</h4>
-                            <p>All these icons are licensed under creative commons so that you can use them.</p>
+                        <div class="col-lg-12 pt16 pb16" data-name="Box">
+                            <i class="fa fa-2x fa-trash rounded-circle bg-primary s_features_grid_icon"/>
+                            <div class="s_features_grid_content">
+                                <h4>Delete Blocks</h4>
+                                <p>Select and delete blocks to remove some features.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 s_col_no_bgcolor pb24">
+                    <div class="row">
+                        <div class="col-lg-12 pb24" data-name="Box">
+                            <h2>Second list of Features</h2>
+                            <h5 class="text-secondary">Add a great slogan.</h5>
+                        </div>
+                        <div class="col-lg-12 pt16 pb16" data-name="Box">
+                            <i class="fa fa-2x fa-magic rounded bg-secondary s_features_grid_icon"/>
+                            <div class="s_features_grid_content">
+                                <h4>Great Value</h4>
+                                <p>Turn every feature into a benefit for your reader.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 pt16 pb16" data-name="Box">
+                            <i class="fa fa-2x fa-eyedropper rounded bg-secondary s_features_grid_icon"/>
+                            <div class="s_features_grid_content">
+                                <h4>Edit Styles</h4>
+                                <p>You can edit colors and background to highlight features.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 pt16 pb16" data-name="Box">
+                            <i class="fa fa-2x fa-picture-o rounded bg-secondary s_features_grid_icon"/>
+                            <div class="s_features_grid_content">
+                                <h4>Sample Icons</h4>
+                                <p>All these icons are completely free for commercial use.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_tabs" name="Tabs">
+    <section class="s_tabs">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 pt48 pb48">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link text-primary active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-primary" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-primary" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                <h3>Details</h3>
+                                <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                            </div>
+                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                <h3>Shipping</h3>
+                                <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
+                            </div>
+                            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                <h3>Review</h3>
+                                <blockquote>
+                                    <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                    <footer>— Jane DOE, CEO of <b>MyCompany</b></footer>
+                                </blockquote>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -610,85 +718,109 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="parallax s_parallax oe_img_bg pt96 pb96"
-        style="background-image: url(/web/image/website.s_background_image_04);"
-        data-scroll-background-ratio="1.6"><div class="oe_structure"/></section>
-</template>
-
-<template id="s_parallax_slider" name="Parallax Slider">
-    <section class="parallax s_parallax_slider oe_custom_bg oe_img_bg"
-             style="background-image: url(/web/image/website.s_parallax_slider_default_image);"
-            data-scroll-background-ratio="1.6">
-        <div><div><div class="oe_structure">
-                <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators mb0">
-                        <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
-                    </ol>
-                    <div class="carousel-inner">
-
-                        <div class="carousel-item text_only active">
-                            <div class="container">
-                                <div class="content">
-
-                                    <div class="row">
-                                        <blockquote class="mt48 mb16 col-lg-4 offset-lg-4">
-                                            <p>
-                                                Write a quote here from one of your customers. Quotes are a
-                                                great way to build confidence in your products or services.
-                                            </p>
-                                            <small>Author of this quote</small>
-                                        </blockquote>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="carousel-item text_only">
-                            <div class="container">
-                                <div class="content">
-
-                                    <div class="row">
-                                        <blockquote class="mt48 mb16 col-lg-4 offset-lg-4">
-                                            <p>
-                                                Odoo provides essential platform for our project management.
-                                                Things are better organized and more visible with it.
-                                            </p>
-                                            <small>John Doe, CEO</small>
-                                        </blockquote>
-                                    </div>
-
-                                </div>
-                            </div>
-
+    <section class="s_parallax s_parallax_is_fixed parallax pt160 pb160" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 75%;"/>
+        <span class="s_parallax_filter bg-black-50"/>
+        <div class="oe_structure">
+            <section>
+                <div class="container">
+                    <div class="row s_nb_column_fixed">
+                        <div class="col-lg-12 s_title pt16 pb16" style="text-align: center;">
+                            <h1 class="s_title_boxed"><font style="font-size: 62px;">Your Site Title</font></h1>
                         </div>
                     </div>
                 </div>
-        </div></div></div>
+            </section>
+        </div>
     </section>
+</template>
+
+<template id="s_quotes_carousel" name="Quotes">
+    <div id="myQuoteCarousel" class="s_quotes_carousel s_carousel_default carousel slide" data-interval="10000">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+            <li data-target="#myQuoteCarousel" data-slide-to="2"></li>
+        </ol>
+        <!-- Content -->
+        <div class="carousel-inner">
+            <!-- #01 -->
+            <div class="carousel-item active pt80 pb80" style="background-color: rgb(239, 239, 239);" data-name="Slide">
+                <div class="container">
+                    <div class="row content">
+                        <blockquote class="carousel-content col-lg-6 offset-lg-3" style="background-color: rgb(255, 255, 255);">
+                            <i class="fa fa-1x fa-quote-left rounded-0 bg-secondary s_quotes_carousel_icon"/>
+                            <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                            <footer>
+                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_3" alt=""/>
+                                <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                            </footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <!-- #02 -->
+            <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
+                <div class="container">
+                    <div class="row content">
+                        <blockquote class="col-lg-6" style="background-color: rgb(255, 255, 255);">
+                            <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                            <footer>
+                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_4" alt=""/>
+                                <span>— John DOE, CEO of <b>MyCompany</b></span>
+                            </footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <!-- #03 -->
+            <div class="carousel-item oe_img_bg pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
+                <div class="container">
+                    <div class="row content">
+                        <blockquote class="col-lg-6 offset-lg-6" style="background-color: rgb(255, 255, 255);">
+                            <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                            <footer class="blockquote-footer">
+                                <img class="img" src="/web/image/website.s_quotes_carousel_demo_image_5" alt=""/>
+                                <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                            </footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Controls -->
+        <div class="carousel-control-prev" data-target="#myQuoteCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+            <span class="carousel-control-prev-icon"/>
+            <span class="sr-only">Previous</span>
+        </div>
+        <div class="carousel-control-next" data-target="#myQuoteCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+            <span class="carousel-control-next-icon"/>
+            <span class="sr-only">Next</span>
+        </div>
+    </div>
 </template>
 
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
+
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
                     <i class="fa fa-th-large"/> Structure
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
-                    <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
-                    <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-                    <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
-                    <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
-                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
-                    <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
-                    <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
-                    <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_slider.png"/>
+                    <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/snippets_thumbs/s_title.png"/>
+                    <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.png"/>
+                    <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_image.png"/>
+                    <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_text.png"/>
+                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/snippets_thumbs/s_banner.png"/>
+                    <t t-snippet="website.s_picture" t-thumbnail="/website/static/src/img/snippets_thumbs/s_picture.png"/>
+                    <t t-snippet="website.s_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_carousel.png"/>
+                    <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features.png"/>
+                    <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/snippets_thumbs/s_three_columns.png"/>
                 </div>
             </div>
 
@@ -697,13 +829,14 @@
                     <i class="fa fa-diamond"/> Feature
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
-                    <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
-                    <t t-snippet="website.s_company_team" t-thumbnail="/website/static/src/img/blocks/block_company_team.png"/>
-                    <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
-                    <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
-                    <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
-                    <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_feature_grid.png"/>
+                    <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image_gallery.png"/>
+                    <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/snippets_thumbs/s_comparison.png"/>
+                    <t t-snippet="website.s_company_team" t-thumbnail="/website/static/src/img/snippets_thumbs/s_company_team.png"/>
+                    <t t-snippet="website.s_call_to_action" t-thumbnail="/website/static/src/img/snippets_thumbs/s_call_to_action.png"/>
+                    <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/snippets_thumbs/s_references.png"/>
+                    <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/snippets_thumbs/s_faq.png"/>
+                    <t t-snippet="website.s_features_grid" t-thumbnail="/website/static/src/img/snippets_thumbs/s_features_grid.png"/>
+                    <t t-snippet="website.s_tabs" t-thumbnail="/website/static/src/img/snippets_thumbs/s_tabs.png"/>
                 </div>
             </div>
 
@@ -712,8 +845,8 @@
                     <i class="fa fa-magic icon-fix"/> Effect
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
-                    <t t-snippet="website.s_parallax_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
+                    <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/snippets_thumbs/s_parallax.png"/>
+                    <t t-snippet="website.s_quotes_carousel" t-thumbnail="/website/static/src/img/snippets_thumbs/s_quotes_carousel.png"/>
                 </div>
             </div>
 
@@ -722,13 +855,16 @@
                     <i class="fa fa-indent"/> Inner content
                 </div>
                 <div class="o_panel_body">
-                    <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
-                    <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
-                    <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
-                    <t t-snippet="website.s_facebook_page" t-thumbnail="/website/static/src/img/blocks/facebook_page.png"/>
+                    <t t-snippet="website.s_btn" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.png"/>
+                    <t t-snippet="website.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png"/>
+                    <t t-snippet="website.s_alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.png"/>
+                    <t t-snippet="website.s_card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.png"/>
+                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.png"/>
+                    <t t-snippet="website.s_facebook_page" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.png"/>
+                    <t t-snippet="website.s_rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.png"/>
                 </div>
             </div>
+
         </div>
     </xpath>
 
@@ -739,19 +875,245 @@
 
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
-        <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
+        <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.png"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
-        <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>
-        <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/blocks/button_channel_subscribe.png"/>
-        <t t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
+        <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_local_events.png"/>
+        <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button_channel_subscribe.png"/>
+        <t t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
     </xpath>
 </template>
 
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
-    <div data-js='gallery' data-selector=".o_gallery">
+    <!-- COLOR | .s_three_columns | .s_comparisons -->
+    <div data-js="colorpicker"
+        data-selector=".s_three_columns [class*='col-lg-'], .s_comparisons [class*='col-lg-']"
+        data-target=".card"
+        data-palette-title="Box Color">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+    <!-- COLOR | .s_hr -->
+    <div data-js="colorpicker"
+        data-selector=".s_hr"
+        data-target="hr"
+        data-color-prefix="border-"
+        data-palette-exclude="transparent_grayscale, grayscale"
+        data-palette-title="Separator Color">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+    <!-- COLOR | .s_cards -->
+    <div data-js="colorpicker"
+        data-selector=".s_card, .accordion .card"
+        data-palette-title="Card Color">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+    <!-- COLOR | .s_alert -->
+    <div data-js="colorpicker"
+        data-selector=".s_alert"
+        data-color-prefix="alert-"
+        data-palette-title="Box Color">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+
+    <!-- STYLES | .s_title -->
+    <div data-selector=".s_title" data-target="[class*='s_title_']">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-font"/>Typography</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="s_title_boxed">Boxed</a>
+                <a href="#" class="dropdown-item" data-select-class="s_title_lines">Line-On-Sides</a>
+                <a href="#" class="dropdown-item" data-select-class="s_title_thin">Thin</a>
+                <a href="#" class="dropdown-item" data-select-class="s_title_transparent">Transparent</a>
+                <a href="#" class="dropdown-item" data-select-class="s_title_underlined">Underlined</a>
+                <a href="#" class="dropdown-item" data-select-class="s_title_small_caps">Small Caps</a>
+                <div class="dropdown-divider"/>
+                <a href="#" class="dropdown-item" data-select-class="s_title_default">Default</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- H-ALIGN | .s_btn -->
+    <div data-selector=".s_btn">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-align-left"/>Alignment</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="text-left">Left</a>
+                <a href="#" class="dropdown-item" data-select-class="text-center">Center</a>
+                <a href="#" class="dropdown-item" data-select-class="text-right">Right</a>
+            </div>
+        </div>
+    </div>
+
+    <div data-selector=".s_alert">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows"/>Size</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="s_alert_sm">Small</a>
+                <a href="#" class="dropdown-item" data-select-class="s_alert_md">Medium</a>
+                <a href="#" class="dropdown-item" data-select-class="s_alert_lg">Large</a>
+            </div>
+        </div>
+    </div>
+
+    <div data-selector=".s_alert, .s_card">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-h"/>Width</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="w-25">25%</a>
+                <a href="#" class="dropdown-item" data-select-class="w-50">50%</a>
+                <a href="#" class="dropdown-item" data-select-class="w-75">75%</a>
+                <a href="#" class="dropdown-item" data-select-class="w-100">100%</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLES | .s_rating -->
+    <div data-selector=".s_rating [class*='col-lg-']">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item">Icon</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="s_rating_stars"><i class="fa fa-star"/>Stars</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_squares"><i class="fa fa-square"/>Squares</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_hearts"><i class="fa fa-heart"/>Hearts</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_bar"><i class="fa fa-tasks"/>Progress Bar</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item">Value</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="">0</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_1">1/5</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_2">2/5</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_3">3/5</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_4">4/5</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_5">5/5</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item">Size</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="s_rating_1x">Small</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_2x">Medium</a>
+                <a href="#" class="dropdown-item" data-select-class="s_rating_3x">Big</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLES | .s_hr -->
+    <div data-selector=".s_hr" data-target="hr">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-minus"/>Thickness</a>
+            <div class="dropdown-menu" role="menu">
+                <t t-foreach="range(1,6)" t-as="s_hr_thickness">
+                    <a href="#" class="dropdown-item" t-attf-data-select-class="s_hr_{{s_hr_thickness}}px"><t t-esc="s_hr_thickness"/>px</a>
+                </t>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-pencil"/>Style</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="s_hr_solid">Solid</a>
+                <a href="#" class="dropdown-item" data-select-class="s_hr_dashed">Dashed</a>
+                <a href="#" class="dropdown-item" data-select-class="s_hr_dotted">Dotted</a>
+                <a href="#" class="dropdown-item" data-select-class="s_hr_double">Double</a>
+            </div>
+        </div>
+        <div class="dropdown-divider"/>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-arrows-h"/>Width</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="w-25">25%</a>
+                <a href="#" class="dropdown-item" data-select-class="w-50">50%</a>
+                <a href="#" class="dropdown-item" data-select-class="w-75">75%</a>
+                <a href="#" class="dropdown-item" data-select-class="w-100">100%</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-align-left"/>Alignment</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" data-select-class="mr-auto">Left</a>
+                <a href="#" class="dropdown-item" data-select-class="mx-auto">Center</a>
+                <a href="#" class="dropdown-item" data-select-class="ml-auto">Right</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carousel | .s_carousel | .s_quotes_carousel -->
+    <div data-selector=":not(.o_gallery > .container) > .carousel">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clone"/>Transition</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="slide">Slide</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="carousel-fade slide">Fade</a>
+                <div class="dropdown-divider"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_no_transition">None</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-magic"/>Style</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_bordered">Bordered</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_boxed">Boxed</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_rounded">Rounded</a>
+                <div class="dropdown-divider"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_default">Default</a>
+            </div>
+        </div>
+    </div>
+
+    <div data-js="carousel"
+        data-selector=":not(.o_gallery > .container) > .carousel">
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Speed</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="1000">1s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="2000">2s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="3000">3s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="5000">5s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="10000">10s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
+            </div>
+        </div>
+        <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
+        <a href="#" class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
+    </div>
+
+    <!-- Parallax -->
+    <div data-js="parallax" data-selector=".parallax">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
+            <div class="dropdown-menu" role="menu" name="parallax-scroll">
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
+                <div class="dropdown-divider" role="separator"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
+                <div class="dropdown-divider" role="separator"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
+            </div>
+        </div>
+    </div>
+
+    <div data-js="gallery" data-selector=".o_gallery">
         <a href="#" class="dropdown-item" data-add-images="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add images</a>
         <a href="#" class="dropdown-item" data-remove-all-images="true" data-no-preview="true"><i class="fa fa-trash"/>Remove all images</a>
         <div class="dropdown-divider"/>
@@ -808,36 +1170,7 @@
         <div class="dropdown-divider"/>
     </div>
 
-    <div data-js="background"
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
-        <a tabindex="-1" href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/>Choose Background Image</a>
-    </div>
-
-    <div data-js="background_position"
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
-        <a tabindex="-1" href="#" class="dropdown-item background_position_li" data-background-position="true" data-no-preview="true"><i class="fa fa-arrows"/>Background Image Sizing</a>
-    </div>
-
-    <div data-js="colorpicker"
-        data-selector="section, :not(.o_gallery > .container) > .carousel"
-        data-exclude=".parallax">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
-    </div>
-    <div data-js="colorpicker"
-        data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
-        data-palette-exclude="grayscale"
-        data-palette-default="transparent_grayscale"
-        data-palette-title="Overlay Color">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Overlay color</a>
-            <div class="dropdown-menu" role="menu"/>
-        </div>
-    </div>
-
-    <div data-js='gallery_img' data-selector=".o_gallery img">
+    <div data-js="gallery_img" data-selector=".o_gallery img">
         <div class="dropdown-submenu">
             <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-refresh"/>Re-order</a>
             <div class="dropdown-menu" role="menu" data-no-preview="true">
@@ -849,35 +1182,20 @@
         </div>
     </div>
 
-    <div data-js='carousel'
-        data-selector=":not(.o_gallery > .container) > .carousel">
-        <div class="dropdown-divider"/>
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Slideshow speed</a>
-            <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="1000">1s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="2000">2s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="3000">3s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="5000">5s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="10000">10s</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
-            </div>
-        </div>
-        <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
-        <a href="#"  class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
+    <!-- Facebook Page -->
+    <div data-js="facebookPage" data-selector=".o_facebook_page">
+        <a href="#" class="dropdown-item" data-fb-page-options="true" data-no-preview="true"><i class="fa fa-facebook"/>Options</a>
     </div>
 
-    <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
-        data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]"/>
-
-    <div data-js="sizing_y"
-        data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
+    <!-- Accordion -->
+    <div data-js="collapse"
+         data-selector='.accordion > .card'
+         data-drop-in='.accordion:has(> .card)'>
     </div>
 
     <div data-js="layout_column"
         data-selector="section"
-        data-target="> * > .row"
-        data-exclude=".s_text_block_image_fw, .s_company_team, .s_big_picture">
+        data-target="> * > .row:not(.s_nb_column_fixed)">
         <div class="dropdown-submenu">
             <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-columns"/>Number of columns</a>
             <div class="dropdown-menu" role="menu" data-no-preview="true">
@@ -891,73 +1209,103 @@
         </div>
     </div>
 
-    <div data-js="sizing_x"
-        data-selector=".row:not(.s_no_resize_cols) > [class*='col-lg-']"
-        data-drop-near=".row:not(.s_no_resize_cols) > [class*='col-lg-']">
-    </div>
-
-    <div data-js='content'
-        data-selector="blockquote, .card, .s_panel, .o_facebook_page, .oe_share, .o_image_floating"
-        data-drop-near="p, h1, h2, h3, blockquote, .card, .o_facebook_page, .s_panel, .oe_share"
-        data-drop-in=".content">
-    </div>
-
-    <div data-js='separator'
-        data-selector="hr"
-        data-drop-in=".oe_structure, [data-oe-type=html]">
-    </div>
-
-    <div data-selector=".o_image_floating">
+    <!--  V-ALIGN -->
+    <div data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
         <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-expand"/>Margin</a>
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-v"/>Alignment</a>
             <div class="dropdown-menu" role="menu">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_xl">Extra-Large</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_l">Large</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_m">Medium</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_s">Small</a>
+                <a href="#" class="dropdown-item" data-select-class="align-items-start">Top</a>
+                <a href="#" class="dropdown-item" data-select-class="align-items-center">Middle</a>
+                <a href="#" class="dropdown-item" data-select-class="align-items-end">Bottom</a>
+                <div class="dropdown-divider"/>
+                <a href="#" class="dropdown-item" data-select-class="align-items-stretch">Equal height</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Image -->
+    <div data-js="background"
+        data-selector="section, .parallax, [class*='s_'] .carousel-item"
+        data-exclude=".s_hr, .s_image_gallery">
+        <div class="dropdown-divider"/>
+        <a tabindex="-1" href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/>Background Image</a>
+    </div>
+
+    <!-- Background Image -->
+    <div data-js="background_position"
+        data-selector="section, [class*='s_'] .carousel-item">
+        <a tabindex="-1" href="#" class="dropdown-item background_position_li" data-background-position="true" data-no-preview="true"><i class="fa fa-arrows"/>Background Image Sizing</a>
+    </div>
+
+    <!-- Color | Section -->
+    <div data-js="colorpicker"
+        data-selector="section, [class*='s_'] .carousel-item"
+        data-exclude=".parallax">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+    <!-- FILTER | .s_parallax -->
+    <div data-js="colorpicker"
+        data-selector=".parallax" data-target="> .s_parallax_filter"
+        data-palette-exclude="common, theme"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Overlay Color">
+        <div class="dropdown-divider"/>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Filter</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+    <!-- Color | Columns -->
+    <div data-js="colorpicker"
+        data-selector="section [class*='col-lg-']"
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor > [class*='col-lg-'], .o_gallery [class*='col-lg-']">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
+    </div>
+
+    <div data-selector="section [class*='col-lg-']"
+        data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor > [class*='col-lg-'], .o_gallery [class*='col-lg-']">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-magic"/>Styles</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="border">Border</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="rounded">Rounded</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="shadow">Shadow</a>
+                <div class="dropdown-divider"/>
                 <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
             </div>
         </div>
     </div>
 
-    <div data-selector=".o_image_floating">
-        <div class="dropdown-submenu">
-            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-magnet"/>Float</a>
-            <div class="dropdown-menu" role="menu" data-no-preview="true">
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="float-left">Left</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-select-class="float-right">Right</a>
-            </div>
-        </div>
+    <div data-js="sizing_y"
+        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn">
     </div>
 
-    <div data-js="parallax" data-selector=".parallax">
-        <div class="dropdown-submenu">
-            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
-            <div class="dropdown-menu" role="menu" name="parallax-scroll">
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
-                <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
-                <div class="dropdown-divider" role="separator"/>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
-                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
-            </div>
-        </div>
+    <div data-js="sizing_x"
+        data-selector=".row > [class*='col-lg-']"
+        data-drop-near=".row > [class*='col-lg-']"
+        data-exclude=".s_col_no_resize > [class*='col-lg-']">
     </div>
 
-    <div data-js='ul'
+    <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
+        data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]"/>
+
+    <div data-js="content"
+        data-selector="blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
+        data-drop-near="p, h1, h2, h3, blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
+        data-drop-in=".content">
+    </div>
+
+    <div data-js="ul"
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
         <a href="#" class="dropdown-item" data-toggle-class="o_ul_folded">Folded list</a>
-    </div>
-
-    <div data-js="facebookPage" data-selector=".o_facebook_page">
-        <a href="#" class="dropdown-item" data-fb-page-options="true" data-no-preview="true"><i class="fa fa-facebook"/>Options</a>
-    </div>
-
-    <div data-js='collapse'
-         data-selector='.accordion > .card:has(> .collapse)'
-         data-drop-in='.accordion:has(> .card > .collapse)'>
     </div>
 
     <div data-js="menu_data"
@@ -968,5 +1316,23 @@
     <div data-js="company_data"
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
+
+    <div data-js="topMenuTransparency"
+        data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+        data-no-check="true">
+        <a tabindex="-1" href="#" class="dropdown-item" data-transparent="true" data-no-preview="true"><i class="fa fa-eye-slash"/>Transparent</a>
+    </div>
+
+    <div data-js="topMenuColor"
+        data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+        data-palette-exclude="theme,common"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Top Menu Color"
+        data-no-check="true">
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
+            <div class="dropdown-menu"/>
+        </div>
+    </div>
 </template>
 </odoo>

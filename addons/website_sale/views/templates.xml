@@ -271,7 +271,9 @@
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
         <li class="nav-item">
-            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-field="c.name" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}"></a>
+            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}">
+                <span t-field="c.name"/> <span t-if="not c.website_published" class="text-danger">(Unpublished)</span>
+            </a>
             <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
                 <t t-foreach="c.child_id" t-as="c">
                     <t t-call="website_sale.categories_recursive" />
@@ -1593,6 +1595,15 @@
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
                 </div>
+                <div t-if="payment_tx_id.acquirer_id.provider == 'transfer'">
+                    <div class="card-body" t-if="payment_tx_id.acquirer_id.company_id.qr_code and payment_tx_id.acquirer_id.company_id.qr_code_valid and (payment_tx_id.currency_id.name == 'EUR')">
+                        <h3>Or scan me with your banking app.</h3>
+                        <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
+                    </div>
+                    <div class="card-body"  t-if="payment_tx_id.acquirer_id.company_id.qr_code and (payment_tx_id.acquirer_id.company_id.qr_code_valid == False) and (payment_tx_id.currency_id.name == 'EUR')">
+                        <h3>The SEPA QR Code informations are not set correctly.</h3>
+                    </div>
+                </div>
             </div>
         </div>
     </template>
@@ -1618,8 +1629,8 @@
         </xpath>
     </template>
 
-    <template id="portal_order_page_products_links" name="Orders Followup Products Links" inherit_id="sale.portal_order_page">
-        <xpath expr="//div[@id='product_name']/*" position="replace">
+    <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//td[@id='product_name']/*" position="replace">
             <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">
                 <span t-field="line.name" />
             </a>

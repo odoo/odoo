@@ -37,7 +37,7 @@
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
                     <li t-if="editable" class="dropdown" id="content-menu">
-                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Content</a>
+                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Pages</a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" data-action="edit_menu" href="#" title="Edit Top Menu" class="dropdown-item">Edit Menu</a>
                             <a role="menuitem" href="/website/pages" title="Manage Your Website Pages" class="dropdown-item">Manage Pages</a>
@@ -51,7 +51,7 @@
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" href="#" data-action="customize_theme" class="dropdown-item" id="theme_customize">Customize Theme</a>
                             <a role="menuitem" href="#" data-action="ace" class="dropdown-item" id="html_editor">HTML/CSS Editor</a>
-                            <a role="menuitem" href="/web#action=website.action_website_configuration" class="dropdown-item" id="install_apps">Settings</a>
+                            <a role="menuitem" href="/web#action=website.action_website_add_features" class="dropdown-item" id="install_apps" context="{'search_default_web_features' : 1}">Add Features</a>
                             <div role="separator" class="dropdown-divider"/>
                         </div>
                     </li>
@@ -77,6 +77,21 @@
                     <li class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
+                    <li groups="website.group_multi_website">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_selected_website['name']"/></a>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach="multi_website_websites" t-as="multi_website_website">
+                                <a role="menuitem" href="#"
+                                    t-if="multi_website_selected_website['website_id'] != multi_website_website['website_id']"
+                                    class="dropdown-item oe_menu_text js_multi_website_switch"
+                                    t-att-website-id="str(multi_website_website['website_id'])"
+                                >
+                                    <span t-esc="multi_website_website['name']" />
+                                </a>
+                            </t>
+                        </div>
+                    </li>
+
                     <!-- Page Edition -->
                     <li class="o_new_content_menu" id="new-content-menu">
                         <a href="#"><span class="fa fa-plus"/>New</a>

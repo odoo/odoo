@@ -228,7 +228,7 @@ class CrmTeam(models.Model):
                 short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
                 values.append({x_field: short_name, y_field: 0})
             for data_item in graph_data:
-                index = (datetime.strptime(data_item.get('x_value'), DF).date() - start_date).days
+                index = (data_item.get('x_value') - start_date).days
                 values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'week':

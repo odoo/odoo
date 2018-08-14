@@ -69,7 +69,7 @@
             @extend %dropdown-li-a-padding;
             color: $o-main-text-color;
 
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(xs) {
                 color: white;
                 text-decoration: underline;
             }
@@ -80,4 +80,10 @@
 @include dropdown-menu-mixin;
 .navbar-nav {
     @include dropdown-menu-mixin;
+}
+
+.o_rtl {
+    .dropdown-menu {
+        left: auto;
+    }
 }

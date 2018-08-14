@@ -9,7 +9,7 @@
         <record id="mail_activity_data_call" model="mail.activity.type">
             <field name="name">Call</field>
             <field name="icon">fa-phone</field>
-            <field name="days">2</field>
+            <field name="delay_count">2</field>
             <field name="sequence">6</field>
         </record>
         <record id="mail_activity_data_meeting" model="mail.activity.type">
@@ -20,8 +20,15 @@
         <record id="mail_activity_data_todo" model="mail.activity.type">
             <field name="name">To Do</field>
             <field name="icon">fa-tasks</field>
-            <field name="days">5</field>
+            <field name="delay_count">5</field>
             <field name="sequence">12</field>
+        </record>
+        <record id="mail_activity_data_warning" model="mail.activity.type">
+            <field name="name">Exception</field>
+            <field name="icon">fa-warning</field>
+            <field name="delay_count">0</field>
+            <field name="sequence">99</field>
+            <field name="decoration_type">warning</field>
         </record>
     </data>
 </odoo>

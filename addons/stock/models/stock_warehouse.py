@@ -68,6 +68,7 @@ class Warehouse(models.Model):
         'stock.location.route', 'supplied_wh_id', 'Resupply Routes',
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories")
     warehouse_count = fields.Integer(compute='_compute_warehouse_count')
+    show_resupply = fields.Boolean(compute="_compute_show_resupply")
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
@@ -78,6 +79,10 @@ class Warehouse(models.Model):
         for warehouse in self:
             warehouse.warehouse_count = self.env['stock.warehouse'].search_count([('id', 'not in', warehouse.ids)])
 
+    def _compute_show_resupply(self):
+        for warehouse in self:
+            warehouse.show_resupply = warehouse.user_has_groups("stock.group_stock_multi_warehouses") and warehouse.warehouse_count
+
     @api.model
     def create(self, vals):
         # create view location for warehouse then create all locations
@@ -86,17 +91,8 @@ class Warehouse(models.Model):
         if vals.get('company_id'):
             loc_vals['company_id'] = vals.get('company_id')
         vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
+        sub_locations = self._get_locations_values(vals)
 
-        def_values = self.default_get(['reception_steps', 'delivery_steps'])
-        reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
-        delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
-        sub_locations = {
-            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
-            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
-            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
-            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
-            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
-        }
         for field_name, values in sub_locations.items():
             values['location_id'] = vals['view_location_id']
             if vals.get('company_id'):
@@ -106,11 +102,18 @@ class Warehouse(models.Model):
         # actually create WH
         warehouse = super(Warehouse, self).create(vals)
         # create sequences and operation types
-        new_vals = warehouse.create_sequences_and_picking_types()
+        new_vals = warehouse._create_or_update_sequences_and_picking_types()
         warehouse.write(new_vals)  # TDE FIXME: use super ?
         # create routes and push/stock rules
-        route_vals = warehouse.create_routes()
+        route_vals = warehouse._create_or_update_route()
         warehouse.write(route_vals)
+
+        # Update global route with specific warehouse rule.
+        warehouse._create_or_update_global_routes_rules()
+
+        # create route selectable on the product to resupply the warehouse from another one
+        warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
+
         # update partner data if partner assigned
         if vals.get('partner_id'):
             self._update_partner_data(vals['partner_id'], vals.get('company_id'))
@@ -123,7 +126,8 @@ class Warehouse(models.Model):
         if vals.get('code') or vals.get('name'):
             warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
 
-        # activate and deactivate location according to reception and delivery option
+        warehouses._create_missing_locations(vals)
+
         if vals.get('reception_steps'):
             warehouses._update_location_reception(vals['reception_steps'])
         if vals.get('delivery_steps'):
@@ -142,11 +146,25 @@ class Warehouse(models.Model):
 
         res = super(Warehouse, self).write(vals)
 
-        # check if we need to delete and recreate route
-        if vals.get('reception_steps') or vals.get('delivery_steps'):
-            route_vals = warehouses._update_routes()
-            if route_vals:
-                self.write(route_vals)
+        for warehouse in self:
+            # check if we need to delete and recreate route
+            depends = [depend for depends in [value['depends'] for value in warehouse._get_routes_values().values()] for depend in depends]
+            if any(depend in vals for depend in depends):
+                picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
+                if picking_type_vals:
+                    warehouse.write(picking_type_vals)
+                route_vals = warehouse._create_or_update_route()
+                if route_vals:
+                    warehouse.write(route_vals)
+            # Check if a global rule(mto, buy, ...) need to be modify.
+            # The field that impact those rules are listed in the
+            # _get_global_route_rules_values method under the key named
+            # 'depends'.
+            global_rules = warehouse._get_global_route_rules_values()
+            depends = [depend for depends in [value['depends'] for value in global_rules.values()] for depend in depends]
+            if any(rule in vals for rule in global_rules) or\
+                    any(depend in vals for depend in depends):
+                warehouse._create_or_update_global_routes_rules()
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
@@ -172,100 +190,236 @@ class Warehouse(models.Model):
             transit_loc = ResCompany._company_default_get('stock.warehouse').internal_transit_location_id.id
             self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
 
-    def create_sequences_and_picking_types(self):
+    def _create_or_update_sequences_and_picking_types(self):
+        """ Create or update existing picking types for a warehouse.
+        Pikcing types are stored on the warehouse in a many2one. If the picking
+        type exist this method will update it. The update values can be found in
+        the method _get_picking_type_update_values. If the picking type does not
+        exist it will be created with a new sequence associated to it.
+        """
+        self.ensure_one()
         IrSequenceSudo = self.env['ir.sequence'].sudo()
         PickingType = self.env['stock.picking.type']
-
-        input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
 
         # choose the next available color for the operation types of this warehouse
         all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
         available_colors = [zef for zef in range(0, 12) if zef not in all_used_colors]
         color = available_colors[0] if available_colors else 0
 
-        # suit for each warehouse: reception, internal, pick, pack, ship
-        max_sequence = PickingType.search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')
-        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
-
         warehouse_data = {}
         sequence_data = self._get_sequence_values()
-        # tde todo: backport sequence fix
-        create_data = {
-            'in_type_id': {
-                'name': _('Receipts'),
-                'code': 'incoming',
-                'use_create_lots': True,
-                'use_existing_lots': False,
-                'default_location_src_id': False,
-                'sequence': max_sequence + 1,
-            }, 'out_type_id': {
-                'name': _('Delivery Orders'),
-                'code': 'outgoing',
-                'use_create_lots': False,
-                'use_existing_lots': True,
-                'default_location_dest_id': False,
-                'sequence': max_sequence + 5,
-            }, 'pack_type_id': {
-                'name': _('Pack'),
-                'code': 'internal',
-                'use_create_lots': False,
-                'use_existing_lots': True,
-                'default_location_src_id': self.wh_pack_stock_loc_id.id,
-                'default_location_dest_id': output_loc.id,
-                'sequence': max_sequence + 4,
-            }, 'pick_type_id': {
-                'name': _('Pick'),
-                'code': 'internal',
-                'use_create_lots': False,
-                'use_existing_lots': True,
-                'default_location_src_id': self.lot_stock_id.id,
-                'sequence': max_sequence + 3,
-            }, 'int_type_id': {
-                'name': _('Internal Transfers'),
-                'code': 'internal',
-                'use_create_lots': False,
-                'use_existing_lots': True,
-                'default_location_src_id': self.lot_stock_id.id,
-                'default_location_dest_id': self.lot_stock_id.id,
-                'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.user_has_groups('stock.group_stock_multi_locations'),
-                'sequence': max_sequence + 2,
-            },
-        }
-        data = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name in data:
-            data[field_name].update(create_data[field_name])
+
+        # suit for each warehouse: reception, internal, pick, pack, ship
+        max_sequence = self.env['stock.picking.type'].search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')
+        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
+
+        data = self._get_picking_type_update_values()
+        create_data, max_sequence = self._get_picking_type_create_values(max_sequence)
 
         for picking_type, values in data.items():
-            sequence = IrSequenceSudo.create(sequence_data[picking_type])
-            values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
-            warehouse_data[picking_type] = PickingType.create(values).id
-        PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data['in_type_id']})
-        PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
+            if self[picking_type]:
+                self[picking_type].update(values)
+            else:
+                data[picking_type].update(create_data[picking_type])
+                sequence = IrSequenceSudo.create(sequence_data[picking_type])
+                values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
+                warehouse_data[picking_type] = PickingType.create(values).id
+
+        if 'out_type_id' in warehouse_data:
+            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data['in_type_id']})
+        if 'in_type_id' in warehouse_data:
+            PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
         return warehouse_data
 
-    def create_routes(self):
-        self.ensure_one()
-        routes_data = self.get_routes_dict()
+    def _create_or_update_global_routes_rules(self):
+        """ Some rules are not specific to a warehouse(e.g MTO, Buy, ...)
+        however they contain rule(s) for a specific warehouse. This method will
+        update the rules contained in global routes in order to make them match
+        with the wanted reception, delivery,... steps.
+        """
+        for rule_field, rule_details in self._get_global_route_rules_values().items():
+            values = rule_details['update_values']
+            if self[rule_field]:
+                self[rule_field].write(values)
+            else:
+                values.update(rule_details['create_values'])
+                values.update({'warehouse_id': self.id})
+                self[rule_field] = self.env['stock.rule'].create(values)
+        return True
 
-        reception_route = self._create_or_update_reception_route(routes_data)
-        delivery_route = self._create_or_update_delivery_route(routes_data)
-        mto_pull = self._create_or_update_mto_pull(routes_data)
-        crossdock_route = self._create_or_update_crossdock_route(routes_data)
+    def _find_global_route(self, xml_id, route_name):
+        """ return a route record set from an xml_id or its name. """
+        route = self.env.ref(xml_id, raise_if_not_found=False)
+        if not route:
+            route = self.env['stock.location.route'].search([('name', 'like', _(route_name))], limit=1)
+        if not route:
+            raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+        return route
 
-        # create route selectable on the product to resupply the warehouse from another one
-        self.create_resupply_routes(self.resupply_wh_ids)
-
-        # return routes and mto stock rule to store on the warehouse
+    def _get_global_route_rules_values(self):
+        """ Method used by _create_or_update_global_routes_rules. It's
+        purpose is to return a dict with this format.
+        key: The rule contained in a global route that have to be create/update
+        entry a dict with the following values:
+            -depends: Field that impact the rule. When a field in depends is
+            write on the warehouse the rule set as key have to be update.
+            -create_values: values used in order to create the rule if it does
+            not exist.
+            -update_values: values used to update the route when a field in
+            depends is modify on the warehouse.
+        """
+        # We use 0 since routing are order from stock to cust. If the routing
+        # order is modify, the mto rule will be wrong.
+        rule = self.get_rules_dict()[self.id][self.delivery_steps]
+        rule = [r for r in rule if r.from_loc == self.lot_stock_id][0]
+        location_id = rule.from_loc
+        location_dest_id = rule.dest_loc
+        picking_type_id = rule.picking_type
         return {
-            'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
-            'mto_pull_id': mto_pull.id,
-            'reception_route_id': reception_route.id,
-            'delivery_route_id': delivery_route.id,
-            'crossdock_route_id': crossdock_route.id,
+            'mto_pull_id': {
+                'depends': ['delivery_steps'],
+                'create_values': {
+                    'active': True,
+                    'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
+                    'action': 'pull',
+                    'auto': 'manual',
+                    'propagate': True,
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', 'Make To Order').id
+                },
+                'update_values': {
+                    'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
+                    'location_id': location_dest_id.id,
+                    'location_src_id': location_id.id,
+                    'picking_type_id': picking_type_id.id,
+                }
+            }
+        }
+
+    def _create_or_update_route(self):
+        """ Create or update the warehouse's routes.
+        _get_routes_values method return a dict with:
+            - route field name (e.g: crossdock_route_id).
+            - field that trigger an update on the route (key 'depends').
+            - routing_key used in order to find rules contained in the route.
+            - create values.
+            - update values when a field in depends is modified.
+            - rules default values.
+        This method do an iteration on each route returned and update/create
+        them. In order to update the rules contained in the route it will
+        use the get_rules_dict that return a dict:
+            - a receptions/delivery,... step value as key (e.g  'pick_ship')
+            - a list of routing object that represents the rules needed to
+            fullfil the pupose of the route.
+        The routing_key from _get_routes_values is match with the get_rules_dict
+        key in order to create/update the rules in the route
+        (_find_existing_rule_or_create method is responsible for this part).
+        """
+        # Create routes and active/create their related rules.
+        routes = []
+        rules_dict = self.get_rules_dict()
+        for route_field, route_data in self._get_routes_values().items():
+            # If the route exists update it
+            if self[route_field]:
+                route = self[route_field]
+                route.write(route_data['route_update_values'])
+                route.rule_ids.write({'active': False})
+            # Create the route
+            else:
+                route_data['route_create_values'].update(route_data['route_update_values'])
+                route = self.env['stock.location.route'].create(route_data['route_create_values'])
+                self[route_field] = route
+            # Get rules needed for the route
+            routing_key = route_data.get('routing_key')
+            rules = rules_dict[self.id][routing_key]
+            if 'rules_values' in route_data:
+                route_data['rules_values'].update({'route_id': route.id})
+            else:
+                route_data['rules_values'] = {'route_id': route.id}
+            rules_list = self._get_rule_values(
+                rules, values=route_data['rules_values'])
+            # Create/Active rules
+            self._find_existing_rule_or_create(rules_list)
+            if route_data['route_create_values'].get('warehouse_selectable', False) or route_data['route_update_values'].get('warehouse_selectable', False):
+                routes.append(self[route_field])
+        return {
+            'route_ids': [(4, route.id) for route in routes],
+        }
+
+    def _get_routes_values(self):
+        """ Return information in order to update warehouse routes.
+        - The key is a route field sotred as a Many2one on the warehouse
+        - This key contains a dict with route values:
+            - routing_key: a key used in order to match rules from
+            get_rules_dict function. It would be usefull in order to generate
+            the route's rules.
+            - route_create_values: When the Many2one does not exist the route
+            is created based on values contained in this dict.
+            - route_update_values: When a field contained in 'depends' key is
+            modified and the Many2one exist on the warehouse, the route will be
+            update with the values contained in this dict.
+            - rules_values: values added to the routing in order to create the
+            route's rules.
+        """
+        return {
+            'reception_route_id': {
+                'routing_key': self.reception_steps,
+                'depends': ['reception_steps'],
+                'route_update_values': {
+                    'name': self._format_routename(route_type=self.reception_steps)
+                },
+                'route_create_values': {
+                    'product_categ_selectable': True,
+                    'warehouse_selectable': True,
+                    'product_selectable': False,
+                    'company_id': self.company_id.id,
+                    'sequence': 9,
+                },
+                'rules_values': {
+                    'active': True,
+                    'procure_method': 'make_to_order'
+                }
+            },
+            'delivery_route_id': {
+                'routing_key': self.delivery_steps,
+                'depends': ['delivery_steps'],
+                'route_update_values': {
+                    'name': self._format_routename(route_type=self.delivery_steps)
+                },
+                'route_create_values': {
+                    'product_categ_selectable': True,
+                    'warehouse_selectable': True,
+                    'product_selectable': False,
+                    'company_id': self.company_id.id,
+                    'sequence': 10,
+                },
+                'rules_values': {
+                    'active': True,
+                }
+            },
+            'crossdock_route_id': {
+                'routing_key': 'crossdock',
+                'depends': ['delivery_steps', 'reception_steps'],
+                'route_update_values': {
+                    'name': self._format_routename(route_type='crossdock'),
+                    'active': self.reception_steps != 'one_step' and self.delivery_steps != 'ship_only'
+                },
+                'route_create_values': {
+                    'product_selectable': True,
+                    'product_categ_selectable': True,
+                    'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
+                    'company_id': self.company_id.id,
+                    'sequence': 20,
+                },
+                'rules_values': {
+                    'active': True,
+                    'procure_method': 'make_to_order'
+                }
+            }
         }
 
     def _find_existing_rule_or_create(self, rules_list):
-        """ This method will find existing rule or create new one"""
+        """ This method will find existing rules or create new one. """
         for rule_vals in rules_list:
             existing_rule = self.env['stock.rule'].search([
                 ('picking_type_id', '=', rule_vals['picking_type_id']),
@@ -280,70 +434,36 @@ class Warehouse(models.Model):
             else:
                 existing_rule.write({'active': True})
 
-    def _create_or_update_reception_route(self, routes_data):
-        routes_data = routes_data or self.get_routes_dict()
-        for warehouse in self:
-            if warehouse.reception_route_id:
-                reception_route = warehouse.reception_route_id
-                reception_route.write({'name':  warehouse._format_routename(route_type=warehouse.reception_steps)})
-                reception_route.rule_ids.write({'active': False})
-            else:
-                warehouse.reception_route_id = reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
-            # stock rules for reception
-            routings = routes_data[warehouse.id][warehouse.reception_steps]
-            rules_list = warehouse._get_rule_values(
-                routings, values={'active': True, 'procure_method': 'make_to_order', 'route_id': reception_route.id})
-            warehouse._find_existing_rule_or_create(rules_list)
-        return reception_route
+    def _get_locations_values(self, vals):
+        """ Update the warehouse locations. """
+        def_values = self.default_get(['reception_steps', 'delivery_steps'])
+        reception_steps = vals.get('reception_steps', def_values['reception_steps'])
+        delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+        sub_locations = {
+            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
+            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
+            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
+            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
+            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
+        }
+        return sub_locations
 
-    def _create_or_update_delivery_route(self, routes_data):
-        """ Delivery (MTS) route """
-        routes_data = routes_data or self.get_routes_dict()
+    def _create_missing_locations(self, vals):
+        """ It could happen that the user delete a mandatory location or a
+        module with new locations was installed after some warehouses creation.
+        In this case, this function will create missing locations in order to
+        avoid mistakes during picking types and rules creation.
+        """
+        sub_locations = self._get_locations_values(vals)
         for warehouse in self:
-            if warehouse.delivery_route_id:
-                delivery_route = warehouse.delivery_route_id
-                delivery_route.write({'name': warehouse._format_routename(route_type=warehouse.delivery_steps)})
-                delivery_route.rule_ids.write({'active': False})
-            else:
-                delivery_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.delivery_steps))
-            # stock (pull) rules for delivery
-            routings = routes_data[warehouse.id][warehouse.delivery_steps]
-            rules_list = warehouse._get_rule_values(
-                routings, values={'active': True, 'route_id': delivery_route.id})
-            warehouse._find_existing_rule_or_create(rules_list)
-        return delivery_route
-
-    def _create_or_update_mto_pull(self, routes_data):
-        """ Create MTO stock rule and link it to the generic MTO route """
-        routes_data = routes_data or self.get_routes_dict()
-        Rule = self.env['stock.rule']
-        for warehouse in self:
-            routings = routes_data[warehouse.id][warehouse.delivery_steps]
-            if warehouse.mto_pull_id:
-                mto_pull = warehouse.mto_pull_id
-                mto_pull.write(warehouse._get_mto_rules_values(routings)[0])
-            else:
-                mto_pull = Rule.create(warehouse._get_mto_rules_values(routings)[0])
-        return mto_pull
-
-    def _create_or_update_crossdock_route(self, routes_data):
-        """ Create or update the cross dock operations route, that can be set on
-        products and product categories """
-        routes_data = routes_data or self.get_routes_dict()
-        for warehouse in self:
-            if warehouse.crossdock_route_id:
-                crossdock_route = warehouse.crossdock_route_id
-                crossdock_route.write({'active': warehouse.reception_steps != 'one_step' and warehouse.delivery_steps != 'ship_only'})
-            else:
-                crossdock_route = self.env['stock.location.route'].create(warehouse._get_crossdock_route_values())
-                # note: fixed cross-dock is logically mto
-            routings = routes_data[warehouse.id]['crossdock']
-            pull_list = warehouse._get_rule_values(
-                routings,
-                values={'procure_method': 'make_to_order', 'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', 'route_id': crossdock_route.id})
-            for rule_vals in pull_list:
-                self.env['stock.rule'].create(rule_vals)
-        return crossdock_route
+            missing_location = {}
+            for location, location_values in sub_locations.items():
+                if not warehouse[location] and location not in vals:
+                    location_values['location_id'] = vals.get('view_location_id', warehouse.view_location_id.id)
+                    location_values['company_id'] = vals.get('company_id', warehouse.company_id.id)
+                    missing_location[location] = self.env['stock.location'].create(location_values).id
+            if missing_location:
+                warehouse.write(missing_location)
 
     def create_resupply_routes(self, supplier_warehouses):
         Route = self.env['stock.location.route']
@@ -359,8 +479,11 @@ class Warehouse(models.Model):
             output_location = supplier_wh.lot_stock_id if supplier_wh.delivery_steps == 'ship_only' else supplier_wh.wh_output_stock_loc_id
             # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
             if supplier_wh.delivery_steps == 'ship_only':
-                Rule.create(supplier_wh._get_mto_rules_values([
-                    self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')])[0])
+                routing = [self.Routing(output_location, transit_location, supplier_wh.out_type_id, 'pull')]
+                mto_vals = supplier_wh._get_global_route_rules_values().get('mto_pull_id')
+                values = mto_vals['create_values']
+                mto_rule_val = supplier_wh._get_rule_values(routing, values, name_suffix='MTO')
+                Rule.create(mto_rule_val[0])
 
             inter_wh_route = Route.create(self._get_inter_warehouse_route_values(supplier_wh))
 
@@ -404,48 +527,32 @@ class Warehouse(models.Model):
                  'pick_pack_ship': _('Deliver in 3 steps (pick + pack + ship)')}
         return names[route_type]
 
-    def get_routes_dict(self):
-        # TDE todo: rename me (was get_routes_dict)
+    def get_rules_dict(self):
+        """ Define the rules source/destination locations, picking_type and
+        action needed for each warehouse route configuration.
+        """
         customer_loc, supplier_loc = self._get_partner_locations()
-        return dict((warehouse.id, {
-            'one_step': [],
-            'two_steps': [self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
-            'three_steps': [
-                self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id, 'pull_push'),
-                self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
-            'crossdock': [
-                self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id, 'pull'),
-                self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
-            'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
-            'pick_ship': [
-                self.Routing(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id, 'pull'),
-                self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
-            'pick_pack_ship': [
-                self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id, 'pull'),
-                self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id,'pull'),
-                self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
-            'company_id': warehouse.company_id.id,
-        }) for warehouse in self)
-
-    def _get_reception_delivery_route_values(self, route_type):
         return {
-            'name': self._format_routename(route_type=route_type),
-            'product_categ_selectable': True,
-            'warehouse_selectable': True,
-            'product_selectable': False,
-            'company_id': self.company_id.id,
-            'sequence': 10,
+            warehouse.id: {
+                'one_step': [],
+                'two_steps': [self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
+                'three_steps': [
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id, 'pull_push'),
+                    self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
+                'crossdock': [
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id, 'pull'),
+                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
+                'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
+                'pick_ship': [
+                    self.Routing(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id, 'pull'),
+                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
+                'pick_pack_ship': [
+                    self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id, 'pull'),
+                    self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id, 'pull'),
+                    self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
+                'company_id': warehouse.company_id.id,
+            } for warehouse in self
         }
-
-    @api.model
-    @api.returns('stock.location.route', lambda value: value.id)
-    def _get_mto_route(self):
-        mto_route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
-        if not mto_route:
-            mto_route = self.env['stock.location.route'].search([('name', 'like', _('Make To Order'))], limit=1)
-        if not mto_route:
-            raise UserError(_('Can\'t find any generic Make To Order route.'))
-        return mto_route
 
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
         return {
@@ -458,20 +565,8 @@ class Warehouse(models.Model):
             'company_id': self.company_id.id,
         }
 
-    def _get_crossdock_route_values(self):
-        return {
-            'name': self._format_routename(route_type='crossdock'),
-            'warehouse_selectable': True,
-            'product_selectable': True,
-            'product_categ_selectable': True,
-            'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
-            'company_id': self.company_id.id,
-            'sequence': 20,
-        }
-
     # Pull / Push tools
     # ------------------------------------------------------------
-
 
     def _get_rule_values(self, route_values, values=None, name_suffix=''):
         first_rule = True
@@ -484,7 +579,7 @@ class Warehouse(models.Model):
                 'action': routing.action,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
-                'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
+                'procure_method': first_rule and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,
                 'propagate': routing.picking_type != self.pick_type_id,
@@ -492,14 +587,6 @@ class Warehouse(models.Model):
             route_rule_values.update(values or {})
             rules_list.append(route_rule_values)
             first_rule = False
-        return rules_list
-
-    def _get_mto_rules_values(self, route_values):
-        mto_route = self._get_mto_route()
-        rules_list = self._get_rule_values(route_values, values={
-            'route_id': mto_route.id,
-            'procure_method': 'make_to_order',
-            'active': True}, name_suffix=_('MTO'))
         return rules_list
 
     def _get_supply_pull_rules_values(self, route_values, values=None):
@@ -539,7 +626,7 @@ class Warehouse(models.Model):
         else:
             # We need to delete all the MTO stock rules, otherwise they risk to be used in the system
             Rule.search([
-                '&', ('route_id', '=', self._get_mto_route().id),
+                '&', ('route_id', '=', self._find_global_route('stock.route_warehouse0_mto', 'Make To Order').id),
                 ('location_id.usage', '=', 'transit'),
                 ('action', '!=', 'push'),
                 ('location_src_id', '=', self.lot_stock_id.id)]).write({'active': False})
@@ -555,29 +642,6 @@ class Warehouse(models.Model):
                     ('action', '!=', 'push'),
                     ('location_src_id.usage', '=', 'transit')
         ]).write({'location_id': new_location.id})
-
-    def _update_routes(self):
-        routes_data = self.get_routes_dict()
-        # change the default source and destination location and (de)activate operation types
-        self._update_picking_type()
-        delivery_route = self._create_or_update_delivery_route(routes_data)
-        reception_route = self._create_or_update_reception_route(routes_data)
-        crossdock_route = self._create_or_update_crossdock_route(routes_data)
-        mto_pull = self._create_or_update_mto_pull(routes_data)
-
-        return {
-            'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
-            'mto_pull_id': mto_pull.id,
-            'reception_route_id': reception_route.id,
-            'delivery_route_id': delivery_route.id,
-            'crossdock_route_id': crossdock_route.id,
-        }
-
-    @api.one
-    def _update_picking_type(self):
-        picking_type_values = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in picking_type_values.items():
-            self[field_name].write(values)
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
@@ -635,19 +699,74 @@ class Warehouse(models.Model):
     # Misc
     # ------------------------------------------------------------
 
-    def _get_picking_type_values(self, reception_steps, delivery_steps, pack_stop_location):
-        input_loc, output_loc = self._get_input_output_locations(reception_steps, delivery_steps)
+    def _get_picking_type_update_values(self):
+        """ Return values in order to update the existing picking type when the
+        warehouse's delivery_steps or reception_steps are modify.
+        """
+        input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
         return {
             'in_type_id': {'default_location_dest_id': input_loc.id},
             'out_type_id': {'default_location_src_id': output_loc.id},
             'pick_type_id': {
-                'active': delivery_steps != 'ship_only',
-                'default_location_dest_id': output_loc.id if delivery_steps == 'pick_ship' else pack_stop_location.id},
-            'pack_type_id': {'active': delivery_steps == 'pick_pack_ship'},
+                'active': self.delivery_steps != 'ship_only',
+                'default_location_dest_id': output_loc.id if self.delivery_steps == 'pick_ship' else self.wh_pack_stock_loc_id.id},
+            'pack_type_id': {'active': self.delivery_steps == 'pick_pack_ship'},
             'int_type_id': {},
         }
 
+    def _get_picking_type_create_values(self, max_sequence):
+        """ When a warehouse is created this method return the values needed in
+        order to create the new picking types for this warehouse. Every picking
+        type are created at the same time than the warehouse howver they are
+        activated or archived depending the delivery_steps or reception_steps.
+        """
+        input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
+        return {
+            'in_type_id': {
+                'name': _('Receipts'),
+                'code': 'incoming',
+                'use_create_lots': True,
+                'use_existing_lots': False,
+                'default_location_src_id': False,
+                'sequence': max_sequence + 1,
+            }, 'out_type_id': {
+                'name': _('Delivery Orders'),
+                'code': 'outgoing',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_dest_id': False,
+                'sequence': max_sequence + 5,
+            }, 'pack_type_id': {
+                'name': _('Pack'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.wh_pack_stock_loc_id.id,
+                'default_location_dest_id': output_loc.id,
+                'sequence': max_sequence + 4,
+            }, 'pick_type_id': {
+                'name': _('Pick'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.lot_stock_id.id,
+                'sequence': max_sequence + 3,
+            }, 'int_type_id': {
+                'name': _('Internal Transfers'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.lot_stock_id.id,
+                'default_location_dest_id': self.lot_stock_id.id,
+                'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.user_has_groups('stock.group_stock_multi_locations'),
+                'sequence': max_sequence + 2,
+            },
+        }, max_sequence + 6
+
     def _get_sequence_values(self):
+        """ Each picking type is created with a sequence. This method returns
+        the sequence values associated to each picking type.
+        """
         return {
             'in_type_id': {
                 'name': self.name + ' ' + _('Sequence in'),
@@ -677,7 +796,9 @@ class Warehouse(models.Model):
         }
 
     def _format_rulename(self, from_loc, dest_loc, suffix):
-        rulename = '%s: %s → %s' % (self.code, from_loc.name, dest_loc.name)
+        rulename = '%s: %s' % (self.code, from_loc.name)
+        if dest_loc:
+            rulename += ' → %s' % (dest_loc.name)
         if suffix:
             rulename += ' (' + suffix + ')'
         return rulename

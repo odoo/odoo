@@ -15,10 +15,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -247,16 +247,16 @@ msgid "Name"
 msgstr "İsim"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:152
-#, python-format
-msgid "No more available seats for the ticket"
-msgstr "Etkinlik için daha fazla koltuk yok."
-
-#. module: event_sale
 #: code:addons/event_sale/models/event.py:179
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Etkinlik için daha fazla koltuk yok."
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:152
+#, python-format
+msgid "No more available seats for this ticket type."
+msgstr ""
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:224
@@ -372,7 +372,7 @@ msgstr "Satış Sipariş Satırı"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
 msgid "Seats Used"
-msgstr ""
+msgstr "Koltuklar kullanıldı."
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
@@ -410,7 +410,7 @@ msgstr "Talep Tipi"
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:157
 #, python-format
-msgid "Ticket should belong to either event category or event but not both"
+msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
 
 #. module: event_sale
@@ -461,3 +461,13 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "kayıt.editör.hat"
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
+msgstr ""

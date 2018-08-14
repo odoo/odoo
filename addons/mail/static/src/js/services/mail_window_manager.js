@@ -9,6 +9,7 @@ var core = require('web.core');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var THREAD_WINDOW_WIDTH = 325 + 5;  // 5 pixels between windows
 
@@ -19,34 +20,12 @@ var THREAD_WINDOW_WIDTH = 325 + 5;  // 5 pixels between windows
  * windows.
  */
 MailManager.include({
+    custom_events: _.extend({}, MailManager.prototype.custom_events, {
+        close_blank_thread_window: '_onCloseBlankThreadWindow',
+    }),
 
     // tell where to append thread window
     THREAD_WINDOW_APPENDTO: 'body',
-
-    start: function () {
-        this._super.apply(this, arguments);
-
-        this._availableSlotsForThreadWindows = 0;
-        this._hiddenThreadWindows = [];
-        // used to keep dropdown open when closing thread windows
-        this._keepHiddenThreadWindowsDropdownOpen = false;
-        this._spaceLeftForThreadWindows = 0;
-        this._threadWindows = [];
-        // jQuery element for the dropdown of hidden thread windows
-        // see _renderHiddenThreadWindowsDropdown
-        this._$hiddenThreadWindowsDropdown = null;
-
-        this._mailBus
-            .on('update_message', this, this._onUpdateMessage)
-            .on('new_message', this, this._onNewMessage)
-            .on('new_channel', this, this._onNewChannel)
-            .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
-            .on('unsubscribe_from_channel', this, this._onUnsubscribeFromChannel)
-            .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
-            .on('update_dm_presence', this, this._onUpdateDmPresence);
-
-        core.bus.on('resize', this, _.debounce(this._repositionThreadWindows.bind(this), 100));
-    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -72,18 +51,20 @@ MailManager.include({
         }
     },
     /**
-     * Open a DM in a thread window. This is useful when selecting a DM in the
-     * blank thread window, so that it replaces it with the DM window.
+     * Open a DM chat in a thread window. This is useful when selecting a DM
+     * chatin the blank thread window, so that it replaces it with the DM chat
+     * window.
      *
      * @param {integer} partnerID
      */
-    openDmWindow: function (partnerID) {
-        var dm = this.getDmFromPartnerID(partnerID);
-        if (!dm) {
-            this._openAndDetachDm(partnerID);
+    openDMChatWindowFromBlankThreadWindow: function (partnerID) {
+        var dmChat = this.getDMChatFromPartnerID(partnerID);
+        if (!dmChat) {
+            this._openAndDetachDMChat(partnerID);
         } else {
-            this.openThreadWindow(dm.getID());
+            this.openThreadWindow(dmChat.getID());
         }
+        this._closeBlankThreadWindow();
     },
     /**
      * Open the thread window if discuss is not opened
@@ -128,29 +109,11 @@ MailManager.include({
                     return thread.fetchMessages();
                 }).then(function () {
                     threadWindow.render();
-                    threadWindow.threadWidget.scrollToBottom();
-                    // setTimeout to prevent to execute handler on first
-                    // scrollTo, which is asynchronous
-                    setTimeout(function () {
-                        threadWindow.threadWidget.$el.on('scroll', null, _.debounce(function () {
-                            if (
-                                !threadWindow.isPassive() &&
-                                threadWindow.threadWidget.isAtBottom()
-                            ) {
-                                thread.markAsRead();
-                            }
-                        }, 100));
-                    }, 0);
-                    if (options.passively) {
-                        // mark first unread messages as seen when focusing the
-                        // window, then on scroll to bottom as usual
-                        threadWindow.$('.o_mail_thread, .o_thread_composer')
-                            .one('click', function () {
-                                thread.markAsRead();
-                            });
-                    } else if (
-                        !self._areThreadWindowsHidden() &&
-                        !thread.isFolded()
+                    threadWindow.scrollToBottom();
+                    if (
+                        !self._areAllThreadWindowsHidden() &&
+                        !thread.isFolded() &&
+                        !threadWindow.isPassive()
                     ) {
                         thread.markAsRead();
                     }
@@ -169,6 +132,8 @@ MailManager.include({
      * @param {integer|string} threadID
      * @param {Object} options option to be applied on opening thread window, if
      *   the thread is detached
+     * @param {boolean} [options.passively=false] if set, the window will behave
+     *   passively.
      */
     updateThreadWindow: function (threadID, options) {
         var thread = this.getThread(threadID);
@@ -197,14 +162,14 @@ MailManager.include({
         this._threadWindows.splice(this._availableSlotsForThreadWindows-1, 0, threadWindow);
     },
     /**
-     * States whether the thread windows are hidden or not.
+     * States whether all the thread windows are hidden or not.
      * When discuss is open, the thread windows are hidden.
      *
      * @private
      * @returns {boolean}
      */
-    _areThreadWindowsHidden: function () {
-        return this._isDiscussOpen();
+    _areAllThreadWindowsHidden: function () {
+        return $(this.THREAD_WINDOW_APPENDTO).hasClass('o_no_thread_window');
     },
     /**
      * Close the thread window linked to the thread with ID `threadID`.
@@ -221,6 +186,15 @@ MailManager.include({
             this._threadWindows = _.without(this._threadWindows, threadWindow);
             this._repositionThreadWindows();
             threadWindow.destroy();
+        }
+    },
+    /**
+     * Close the blank thread window.
+     */
+    _closeBlankThreadWindow: function () {
+        var blankThreadWindow = this._getBlankThreadWindow();
+        if (blankThreadWindow) {
+            this._closeThreadWindow(blankThreadWindow.getID());
         }
     },
     /**
@@ -255,8 +229,8 @@ MailManager.include({
      * Get the blank thread window, which is the special thread window that has
      * no thread linked to it.
      *
-     * This is useful in case a DM window may replace the blank thread window,
-     * when we want to open a DM from the blank thread window.
+     * This is useful in case a DM chat window may replace the blank thread
+     * window, when we want to open a DM chat from the blank thread window.
      *
      * @private
      * @returns {mail.ThreadWindow|undefined} the "blank thread" window,
@@ -296,6 +270,41 @@ MailManager.include({
         return _.find(this._threadWindows, function (threadWindow) {
             return threadWindow.getID() === threadID;
         });
+    },
+    /**
+     * @override
+     * @private
+     */
+    _initializeInternalState: function () {
+        this._super.apply(this, arguments);
+
+        this._availableSlotsForThreadWindows = 0;
+        this._hiddenThreadWindows = [];
+        // used to keep dropdown open when closing thread windows
+        this._keepHiddenThreadWindowsDropdownOpen = false;
+        this._spaceLeftForThreadWindows = 0;
+        this._threadWindows = [];
+        // jQuery element for the dropdown of hidden thread windows
+        // see _renderHiddenThreadWindowsDropdown
+        this._$hiddenThreadWindowsDropdown = null;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _listenOnBuses: function () {
+        this._super.apply(this, arguments);
+        this._mailBus
+            .on('update_message', this, this._onUpdateMessage)
+            .on('new_message', this, this._onNewMessage)
+            .on('new_channel', this, this._onNewChannel)
+            .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
+            .on('unsubscribe_from_channel', this, this._onUnsubscribeFromChannel)
+            .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
+            .on('update_dm_presence', this, this._onUpdateDmPresence)
+            .on('update_typing_partners', this, this._onTypingPartnersUpdated);
+
+        core.bus.on('resize', this, _.debounce(this._repositionThreadWindows.bind(this), 100));
     },
     /**
      * Make the hidden thread window dropdown menu, that is render it and set
@@ -370,16 +379,16 @@ MailManager.include({
         threadWindow.toggleFold(false);
     },
     /**
-     * Open and detach the DM in a thread window.
+     * Open and detach the DM chat in a thread window.
      *
-     * This method assumes that no such DM exists locally, so it is kind of a
-     * "create DM and open DM window" operation
+     * This method assumes that no such DM chat exists locally, so it is kind
+     * of a "create DM chat and open DM chat window" operation
      *
      * @private
      * @param {integer} partnerID
-     * @returns {$.Promise<integer>} resolved with ID of the dm channel
+     * @returns {$.Promise<integer>} resolved with ID of the DM chat
      */
-    _openAndDetachDm: function (partnerID) {
+    _openAndDetachDMChat: function (partnerID) {
         return this._rpc({
             model: 'mail.channel',
             method: 'channel_get_and_minimize',
@@ -409,7 +418,7 @@ MailManager.include({
         var blankThreadWindow = this._getBlankThreadWindow();
         if (
             blankThreadWindow &&
-            thread.getType() === 'dm' &&
+            thread.getType() === 'dm_chat' &&
             thread.getDirectPartnerID() === blankThreadWindow.directPartnerID
         ) {
             // the window takes the place of the 'blank' thread window
@@ -496,7 +505,7 @@ MailManager.include({
      * @private
      */
     _repositionThreadWindows: function () {
-        if (this._areThreadWindowsHidden()) {
+        if (this._areAllThreadWindowsHidden()) {
             return;
         }
         this._computeAvailableSlotsForThreadWindows(this._threadWindows.length);
@@ -518,7 +527,9 @@ MailManager.include({
         var index = 0;
         while (index < count && index < this._threadWindows.length) {
             var threadWindow = this._threadWindows[index];
-            threadWindow.$el.css({ right: THREAD_WINDOW_WIDTH*index, bottom: 0 });
+            var cssProps = {bottom: 0};
+            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = THREAD_WINDOW_WIDTH*index;
+            threadWindow.$el.css(cssProps);
             threadWindow.do_show();
             index++;
         }
@@ -529,28 +540,21 @@ MailManager.include({
      *
      * @private
      * @param {mail.model.Message} message
-     * @param {boolean} [scrollBottom=false] if set, thread windows with this
-     *   message should scroll to the bottom if the message is visible
+     * @param {Object} options
+     * @param {boolean} [options.keepBottom=false] if set, thread windows with
+     *   this message should scroll to the bottom if their bottoms are currently
+     *   visible.
+     * @param {boolean} [options.passively=false] if set, thread windows with
+     *   this message become passive, so that they are marked as read only when
+     *   the focus is on the thread window.
      */
-    _updateThreadWindows: function (message, scrollBottom) {
-        var self = this;
+    _updateThreadWindowsFromMessage: function (message, options) {
+        if (this._areAllThreadWindowsHidden()) {
+            return;
+        }
         _.each(this._threadWindows, function (threadWindow) {
             if (_.contains(message.getThreadIDs(), threadWindow.getID())) {
-                var thread = self.getThread(threadWindow.getID());
-                var messageVisible = !self._areThreadWindowsHidden() &&
-                                        !threadWindow.isFolded() &&
-                                        !threadWindow.isHidden() &&
-                                        threadWindow.threadWidget.isAtBottom();
-                if (messageVisible && !threadWindow.isPassive()) {
-                    thread.markAsRead();
-                }
-                thread.fetchMessages()
-                    .then(function () {
-                        threadWindow.render();
-                        if (scrollBottom && messageVisible) {
-                            threadWindow.threadWidget.scrollToBottom();
-                        }
-                    });
+                threadWindow.update(options);
             }
         });
     },
@@ -559,6 +563,14 @@ MailManager.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when manually closing the blank thread window.
+     *
+     * @private
+     */
+    _onCloseBlankThreadWindow: function () {
+        this._closeBlankThreadWindow();
+    },
     /**
      * @private
      * @param {boolean} open
@@ -576,21 +588,21 @@ MailManager.include({
     /**
      * Called when someone asks window manager whether the bottom of `thread` is
      * visible or not. An object `query` is provided in order to reponse on the
-     * key `isDisplayed`.
+     * key `isVisible`.
      *
      * @private
      * @param {mail.model.Thread} thread
      * @param {Object} query
-     * @param {boolean} query.isBottomVisible write on it
+     * @param {boolean} query.isVisible write on it
      */
     _onIsThreadBottomVisible: function (thread, query) {
         _.each(this._threadWindows, function (threadWindow) {
             if (
                 thread.getID() === threadWindow.getID() &&
-                threadWindow.threadWidget.isAtBottom() &&
+                threadWindow.isAtBottom() &&
                 !threadWindow.isHidden()
             ) {
-                query.isBottomVisible = true;
+                query.isVisible = true;
             }
         });
     },
@@ -614,7 +626,24 @@ MailManager.include({
      * @param {Object} message
      */
     _onNewMessage: function (message) {
-        this._updateThreadWindows(message, true);
+        this._updateThreadWindowsFromMessage(message, { keepBottom: true, passively: true });
+    },
+    /**
+     * @private
+     * @param {integer|string} threadID
+     */
+    _onTypingPartnersUpdated: function (threadID) {
+        var threadWindow = this._getThreadWindow(threadID);
+        if (!threadWindow) {
+            return;
+        }
+        var thread = this.getThread(threadID);
+        if (thread.isChannel()) {
+            // call getMentionpartnerSuggestions in order to correctly fetch members
+            thread.getMentionPartnerSuggestions().then(function () {
+                threadWindow.renderTypingNotificationBar();
+            });
+        }
     },
     /**
      * Close the thread window when unsusbscribe from a channel.
@@ -674,7 +703,7 @@ MailManager.include({
      * @param {Object} message
      */
     _onUpdateMessage: function (message) {
-        this._updateThreadWindows(message, false);
+        this._updateThreadWindowsFromMessage(message, { keepBottom: false });
     },
 
 });

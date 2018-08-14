@@ -16,7 +16,6 @@
         'data/digest_data.xml',
         'wizard/pos_box.xml',
         'wizard/pos_details.xml',
-        'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_payment.xml',
         'views/pos_templates.xml',

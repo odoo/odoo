@@ -293,7 +293,7 @@
 
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Receipts</field>
+            <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
@@ -325,7 +325,7 @@
 
         <menuitem id="menu_action_sale_receipt"
             action="action_sale_receipt"
-            parent="account.menu_finance_receivables_documents"
+            parent="account.menu_finance_receivables"
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
@@ -411,7 +411,7 @@
             </field>
         </record>
         <record id="action_purchase_receipt" model="ir.actions.act_window">
-            <field name="name">Purchase Receipts</field>
+            <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
@@ -442,5 +442,5 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt"
-            action="action_purchase_receipt" parent="account.menu_finance_payables_documents" sequence="4"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
 </odoo>

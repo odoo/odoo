@@ -12,8 +12,8 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var ORDER = {
-    ASC: 1,
-    DESC: -1,
+    ASC: 1, // visually, chronological order of thread from bottom to top
+    DESC: -1, // visually, chronological order of thread from top to bottom
 };
 
 var READ_MORE = _t("read more");
@@ -55,7 +55,7 @@ var ThreadWidget = Widget.extend({
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
-            displayOrder: ORDER.ASC,
+            displayOrder: ORDER.DESC,
             displayMarkAsRead: true,
             displayStars: true,
             displayDocumentLinks: true,
@@ -78,20 +78,16 @@ var ThreadWidget = Widget.extend({
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
         };
         this._selectedMessageID = null;
+        this._currentThreadID = null;
     },
-
     /**
      * @override
      */
     destroy: function () {
         clearInterval(this._updateTimestampsInterval);
     },
-
     /**
-     * @param {mail.model.AbstractMessage[]} messages list of messages of the
-     *   thread, ordered by increasing IDs (a higher ID means a more recent
-     *   message).
-     * @param {}
+     * @param {mail.model.AbstractThread} thread the thread to render.
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
@@ -99,10 +95,17 @@ var ThreadWidget = Widget.extend({
      *      - ORDER.DESC: last message is at the top of the thread
      * @param {boolean} [options.displayLoadMore]
      * @param {boolean} [options.isCreateMode]
+     * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
     render: function (thread, options) {
         var self = this;
+
+        var shouldScrollToBottomAfterRendering = false;
+        if (this._currentThreadID === thread.getID() && this.isAtBottom()) {
+            shouldScrollToBottomAfterRendering = true;
+        }
+        this._currentThreadID = thread.getID();
 
         // copy so that reverse do not alter order in the thread object
         var messages = _.clone(thread.getMessages());
@@ -115,9 +118,6 @@ var ThreadWidget = Widget.extend({
             return message.getAttachments();
         })));
 
-        if (modeOptions.displayOrder === ORDER.DESC) {
-            messages.reverse();
-        }
         options = _.extend({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
         });
@@ -160,6 +160,11 @@ var ThreadWidget = Widget.extend({
             }
             prevMessage = message;
         });
+
+        if (modeOptions.displayOrder === ORDER.DESC) {
+            messages.reverse();
+        }
+
         this.$el.html(QWeb.render('mail.widget.Thread', {
             thread: thread,
             displayAuthorMessages: displayAuthorMessages,
@@ -168,12 +173,22 @@ var ThreadWidget = Widget.extend({
             dateFormat: time.getLangDatetimeFormat(),
         }));
 
+        // must be after mail.widget.Thread rendering, so that there is the
+        // DOM element for the 'is typing' notification bar
+        if (thread.hasTypingNotification()) {
+            this.renderTypingNotificationBar(thread);
+        }
+
         _.each(messages, function (message) {
             var $message = self.$('.o_thread_message[data-message-id="'+ message.getID() +'"]');
             $message.find('.o_mail_timestamp').data('date', message.getDate());
 
             self._insertReadMore($message);
         });
+
+        if (shouldScrollToBottomAfterRendering) {
+            this.scrollToBottom();
+        }
 
         if (!this._updateTimestampsInterval) {
             this.updateTimestampsInterval = setInterval(function () {
@@ -223,6 +238,28 @@ var ThreadWidget = Widget.extend({
                 duration: 200,
             });
         return done;
+    },
+    /**
+     * Render the 'is typing...' text on the typing notification bar of the
+     * thread. This is called when there is a change in the list of users
+     * typing something on this thread.
+     *
+     * @param {mail.model.AbstractThread} thread with ThreadTypingMixin
+     */
+    renderTypingNotificationBar: function (thread) {
+        if (this._currentThreadID === thread.getID()) {
+            var shouldScrollToBottomAfterRendering = this.isAtBottom();
+
+            // typing notification bar rendering
+            var $typingBar = this.$('.o_thread_typing_notification_bar');
+            var text = thread.getTypingMembersToText();
+            $typingBar.toggleClass('o_hidden', !text); // hide if no text, because of padding
+            $typingBar.text(text);
+
+            if (shouldScrollToBottomAfterRendering) {
+                this.scrollToBottom();
+            }
+        }
     },
     /**
      * Scroll to the bottom of the thread
@@ -368,11 +405,6 @@ var ThreadWidget = Widget.extend({
             });
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      * @param {Object} options

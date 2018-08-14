@@ -9,8 +9,8 @@
             <div class="oe_import_box col-lg-12 d-none">
                 <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
                       name="file" class="oe_import_file" type="file" style="display:none;"/>
-                <div class="oe_import_with_file">
-                    <a href="#" class="oe_import_toggle">
+                <div class="oe_import_with_file row">
+                    <a href="#" class="oe_import_toggle col-sm-12">
                         Formatting Options…</a>
                     <div class="oe_import_toggled oe_import_options js_import_options col-sm-5">
                         <p t-foreach="widget.opts" t-as="option">
@@ -95,8 +95,8 @@
     <t t-name="ImportView.buttons">
         <button type="button" class="btn btn-primary o_import_import d-none">Import</button>
         <button type="button" class="btn btn-secondary o_import_validate d-none">Test Import</button>
-        <button type="button" class="btn btn-primary oe_import_file">Load File</button>
         <button type="button" class="btn btn-secondary o_import_file_reload d-none">Reload File</button>
+        <button type="button" class="btn btn-primary oe_import_file">Load File</button>
         <button type="button" class="btn btn-secondary o_import_cancel">Cancel</button>
     </t>
 
@@ -130,7 +130,7 @@
     </t>
     <ul t-name="ImportView.error">
         <li t-foreach="errors" t-as="error"
-            t-attf-class="oe_import_report bg-#{error_value[0].type} text-#{error_value[0].type}">
+            t-attf-class="oe_import_report bg-#{error_value[0].type}">
             <t t-call="ImportView.error.each">
                 <t t-set="error" t-value="error_value[0]"/>
             </t>

@@ -53,8 +53,11 @@ tour.register('rte', {
     }
 }, {
     content: "change text bg-color after triple click",
-    trigger: '.note-popover button[data-event="color"]',
+    trigger: '.note-color button.dropdown-toggle:has(.fa-paint-brush)',
     extra_trigger: '#editable_area > section .row > div:first',
+}, {
+    content: "change text backColor",
+    trigger: "button[data-event=backColor]:visible:eq(2)",
 }, {
     content: "change selection to change text color",
     trigger: '#editable_area > section .row > div:first:not(:has(p font)) h1 font',
@@ -64,10 +67,10 @@ tour.register('rte', {
     }
 }, {
     content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
+    trigger: ".note-color button.dropdown-toggle:has(.fa-font)",
 }, {
     content: "change text color",
-    trigger: ".btn-group.show button[data-event=foreColor]:first",
+    trigger: "button[data-event=foreColor]:visible:first",
 }, {
     content: "change selection to change text bg-color again",
     trigger: '#editable_area > section .row > div:first h1 font:eq(2)',
@@ -77,7 +80,7 @@ tour.register('rte', {
     }
 }, {
     content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
+    trigger: ".note-color button.dropdown-toggle:has(.fa-paint-brush)",
 }, {
     content: "change text backColor again",
     trigger: "button[data-event=backColor]:visible:first",
@@ -90,7 +93,7 @@ tour.register('rte', {
     }
 }, {
     content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
+    trigger: ".note-color button.dropdown-toggle:has(.fa-font)",
 }, {
     content: "change text color again",
     trigger: "button[data-event=foreColor]:visible:eq(3)",
@@ -311,7 +314,7 @@ tour.register('rte_inline', {
     trigger: '#wrapwrap img:first[width][height][style*="-radius"][style*="1px"][style*="padding"]',
 }, {
     content: "check the font image src",
-    trigger: '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(0,123,255)/32"]',
+    trigger: '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(0,160,157)/32"]',
 }, {
     content: "check the font class to css",
     trigger: '#wrapwrap img:eq(1)[height]:not([class*="fa"])',

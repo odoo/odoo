@@ -93,8 +93,11 @@ QUnit.module('MessagingMenu', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+        this.MailService = this.services.mail_service;
+        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = false;
     },
     afterEach: function () {
+        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = true;
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
@@ -149,8 +152,6 @@ QUnit.test('messaging menu widget: messaging menu with 1 record', function (asse
 QUnit.test('messaging menu widget: no crash when clicking on inbox notification not associated to a document', function (assert) {
     assert.expect(3);
 
-    var bus = this.services[1].prototype.bus;
-
     var messagingMenu = new MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
         services: this.services,
@@ -185,7 +186,7 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
     var notifications = [
         [['myDB', 'ir.needaction'], message]
     ];
-    bus.trigger('notification', notifications);
+    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
 
     // Open messaging menu
     messagingMenu.$('.dropdown-toggle').click();
@@ -365,6 +366,57 @@ QUnit.test('preview of message on a document', function (assert) {
         "document thread preview should be marked as unread");
     assert.strictEqual(messagingMenu.$('.o_preview_unread .o_last_message_preview').text().replace(/\s/g, ''),
         "Demo:*MessageOnDocument*", "should correctly display the preview");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('update messaging preview on receiving a new message in channel preview', function (assert) {
+    assert.expect(8);
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should display a single channel preview");
+    assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(), "general",
+        "should display channel preview of 'general' channel");
+    assert.strictEqual(messagingMenu.$('.o_preview_counter').text().trim(), "",
+        "should have unread counter of 0 for 'general' channel (no unread messages)");
+    // remove any space-character inside text
+    var lastMessagePreviewText =
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, "");
+    assert.strictEqual(lastMessagePreviewText,
+        "Me:test",
+        "should display author name and inline body of currently last message in the channel");
+
+    // simulate receiving a new message on the channel 'general' (id 1)
+    var data = {
+        id: 100,
+        author_id: [42, "Someone"],
+        body: "<p>A new message content</p>",
+        channel_ids: [1],
+    };
+    var notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should still display a single channel preview");
+    assert.strictEqual(messagingMenu.$('.o_preview_name').text().trim(), "general",
+        "should still display channel preview of 'general' channel");
+    assert.strictEqual(messagingMenu.$('.o_preview_counter').text().trim(), "(1)",
+        "should have incremented unread counter of 'general' channel");
+    // remove any space-character inside text
+    lastMessagePreviewText =
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, "");
+    assert.strictEqual(lastMessagePreviewText,
+        "Someone:Anewmessagecontent",
+        "should display author name and inline body of newly received message");
 
     messagingMenu.destroy();
 });

@@ -41,6 +41,9 @@
 
         .dropdown-item { 
             padding: 10px 10px;
+            &:first-child {
+                display: none;
+            }
 
             .o_thumb {
                 display: none;
@@ -90,6 +93,10 @@ body.o_force_mail_theme_choice {
                     width: 100%;
                     max-width: 25%;
                     transition: all 0.3s ease 0s;
+
+                    &:first-child {
+                        display: block;
+                    }
 
                     .o_thumb {
                         display: none;
@@ -153,6 +160,12 @@ body.o_force_mail_theme_choice {
 }
 
 #web_editor_inside_iframe {
+    &.o_basic_theme {
+        padding-left: 0px !important;
+        #oe_snippets {
+            display: none;
+        }
+    }
     #wrapwrap > main #editable_area {
         padding: 24px;
     }
