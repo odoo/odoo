@@ -29,7 +29,7 @@
                         <t t-esc="selection[key]" /> (<t t-esc="logs.length"/>)
                     </strong>
                 </li>
-                <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="nav-item o_schedule_activity" role="menuitem">
+                <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="nav-item o_edit_activity" role="menuitem">
                     <div class="o_activity_title float-left">
                         <span t-attf-class="fa #{log.icon} fa-fw" role="img" aria-label="Log" title="Log"/>
                         <strong>

@@ -440,7 +440,7 @@ var Chatter = Widget.extend({
      * @private
      */
     _onScheduleActivity: function () {
-        this.fields.activity.scheduleActivity(false);
+        this.fields.activity.scheduleActivity();
     },
 });
 
