@@ -41,6 +41,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Beste ${object.partner_name or ''}<br/>\n"
+"    We zijn blij om u te melden dat uw voorstel ${object.name} geaccepteerd en bevestigd is voor het evenement ${object.event_id.name}.\n"
+"    <br/>\n"
+"    U vind hier meer details:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Bekijk evenement\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Dankje,\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -504,7 +519,7 @@ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
