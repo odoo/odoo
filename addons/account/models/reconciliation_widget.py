@@ -201,6 +201,7 @@ class AccountReconciliation(models.AbstractModel):
             * aml_ids:  The matching account.move.line ids.
         '''
         results = dict((r.id, {'line': r, 'aml_ids': []}) for r in st_lines)
+        excluded_ids = excluded_ids or []
 
         rules = [
             self._get_matching_amls_invoice_rule,
@@ -218,9 +219,23 @@ class AccountReconciliation(models.AbstractModel):
                 candidates_map[res['id']].append(res)
 
             for line_id, fetched_amls in candidates_map.items():
-                if automatic_match_func(results[line_id]['line'], fetched_amls):
-                    results[line_id]['aml_ids'] = [aml['aml_id'] for aml in fetched_amls]
-                    excluded_ids = (excluded_ids or []) + [line_id]
+                st_line = results[line_id]['line']
+
+                candidate_amls = []
+                candidate_amls_ids = []
+                for aml in fetched_amls:
+                    if aml['aml_id'] not in excluded_ids:
+                        candidate_amls.append(aml)
+                        candidate_amls_ids.append(aml['aml_id'])
+
+                if automatic_match_func(results[line_id]['line'], candidate_amls):
+                    results[line_id]['aml_ids'] = candidate_amls_ids
+
+                    # Mark statement line as already processed.
+                    st_lines -= st_line
+
+                    # Exclude move lines.
+                    excluded_ids += candidate_amls_ids
         return results
 
     ####################################################
