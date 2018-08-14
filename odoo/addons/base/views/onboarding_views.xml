@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="onboarding_container">
-        <div class="modal o_onboarding_modal" tabindex="-1" role="dialog">
+        <div class="modal o_onboarding_modal o_technical_modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Closing the onboarding panel</h5>
+                        <h5 class="modal-title">Remove Configuration Tips</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-label="Close">&amp;times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you want to close this onboarding panel?
-                                    This action is definitive.</p>
+                        <p>Do you want to remove this configuration panel?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No
-                        </button>
                         <a type="action" class="btn btn-primary" data-dismiss="modal"
                         data-toggle="collapse" href=".o_onboarding_container"
                         t-att-data-model="close_model" t-att-data-method="close_method">
-                            Yes
+                            Remove
                         </a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
                     </div>
                 </div>
             </div>
