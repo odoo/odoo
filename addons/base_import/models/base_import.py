@@ -951,6 +951,6 @@ DATE_PATTERNS = [
     for fmt in DATE_FORMATS
 ]
 TIME_PATTERNS = [
-    '%H:%M:%s', '%H:%M', '%H', # 24h
-    '%I:%M:%s %p', '%I:%M %p', '%I %p', # 12h
+    '%H:%M:%S', '%H:%M', '%H', # 24h
+    '%I:%M:%S %p', '%I:%M %p', '%I %p', # 12h
 ]
