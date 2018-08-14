@@ -147,8 +147,8 @@ class Task(models.Model):
         return super(Task, self).write(values)
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ Set the correct label for `unit_amount`, depending on company UoM """
-        result = super(Task, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
         return result
