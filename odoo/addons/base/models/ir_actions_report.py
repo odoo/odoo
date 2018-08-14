@@ -162,7 +162,7 @@ class IrActionsReport(models.Model):
 
         :param record_id: The record that will own the attachment.
         :param pdf_content: The optional name content of the file to avoid reading both times.
-        :return: The newly generated attachment if no AccessError, else None.
+        :return: A modified buffer if the previous one has been modified, None otherwise.
         '''
         attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
         if not attachment_name:
@@ -174,14 +174,13 @@ class IrActionsReport(models.Model):
             'res_model': self.model,
             'res_id': record.id,
         }
-        attachment = None
         try:
-            attachment = self.env['ir.attachment'].create(attachment_vals)
+            self.env['ir.attachment'].create(attachment_vals)
         except AccessError:
             _logger.info("Cannot save PDF report %r as attachment", attachment_vals['name'])
         else:
             _logger.info('The PDF document %s is now saved in the database', attachment_vals['name'])
-        return attachment
+        return buffer
 
     @api.model
     def get_wkhtmltopdf_state(self):
@@ -521,7 +520,11 @@ class IrActionsReport(models.Model):
                 if len(res_ids) == 1:
                     # Only one record, so postprocess directly and append the whole pdf.
                     if res_ids[0] in record_map and not res_ids[0] in save_in_attachment:
-                        self.postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
+                        new_stream = self.postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
+                        # If the buffer has been modified, mark the old buffer to be closed as well.
+                        if new_stream and new_stream != pdf_content_stream:
+                            close_streams([pdf_content_stream])
+                            pdf_content_stream = new_stream
                     streams.append(pdf_content_stream)
                 else:
                     # In case of multiple docs, we need to split the pdf according the records.
@@ -542,7 +545,11 @@ class IrActionsReport(models.Model):
                             stream = io.BytesIO()
                             attachment_writer.write(stream)
                             if res_ids[i] and res_ids[i] not in save_in_attachment:
-                                self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                                new_stream = self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                                # If the buffer has been modified, mark the old buffer to be closed as well.
+                                if new_stream and new_stream != stream:
+                                    close_streams([stream])
+                                    stream = new_stream
                             streams.append(stream)
                         close_streams([pdf_content_stream])
                     else:
@@ -557,14 +564,18 @@ class IrActionsReport(models.Model):
                 streams.append(io.BytesIO(content))
 
         # Build the final pdf.
-        writer = PdfFileWriter()
-        for stream in streams:
-            reader = PdfFileReader(stream)
-            writer.appendPagesFromReader(reader)
-        result_stream = io.BytesIO()
-        streams.append(result_stream)
-        writer.write(result_stream)
-        result = result_stream.getvalue()
+        # If only one stream left, no need to merge them (and then, preserve embedded files).
+        if len(streams) == 1:
+            result = streams[0].getvalue()
+        else:
+            writer = PdfFileWriter()
+            for stream in streams:
+                reader = PdfFileReader(stream)
+                writer.appendPagesFromReader(reader)
+            result_stream = io.BytesIO()
+            streams.append(result_stream)
+            writer.write(result_stream)
+            result = result_stream.getvalue()
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
