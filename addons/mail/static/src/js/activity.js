@@ -40,10 +40,8 @@ function _readActivities(self, ids) {
             activity.create_date = moment(time.auto_str_to_date(activity.create_date));
             activity.date_deadline = moment(time.auto_str_to_date(activity.date_deadline));
         });
-
-        // sort activities by due date
+         // sort activities by due date
         activities = _.sortBy(activities, 'date_deadline');
-
         return activities;
     });
 }
@@ -103,7 +101,32 @@ var setDelayLabel = function (activities){
     return activities;
 };
 
-var AbstractActivityField = AbstractField.extend({
+var BasicActivity = AbstractField.extend({
+    events: {
+        'click .o_edit_activity': '_onEditActivity',
+        'click .o_mark_as_done': '_onMarkActivityDone',
+        'click .o_activity_template_preview': '_onPreviewMailTemplate',
+        'click .o_schedule_activity': '_onScheduleActivity',
+        'click .o_activity_template_send': '_onSendMailTemplate',
+        'click .o_unlink_activity': '_onUnlinkActivity',
+    },
+    init: function () {
+        this._super.apply(this, arguments);
+        this._draftFeedback = {};
+    },
+
+    //------------------------------------------------------------
+    // Public
+    //------------------------------------------------------------
+
+    /**
+     * @param {integer} previousActivityTypeID
+     * @return {$.Promise}
+     */
+    scheduleActivity: function () {
+        var callback = this._reload.bind(this, { activity: true, thread: true });
+        return this._openActivityForm(false, callback);
+    },
 
     //------------------------------------------------------------
     // Private
@@ -159,9 +182,9 @@ var AbstractActivityField = AbstractField.extend({
      * @param {integer} id
      * @param {integer} previousActivityTypeID
      * @param {function} callback
-     * @return {$.Promise}
+     * @return {$.Deferred}
      */
-    _scheduleActivity: function (id, previousActivityTypeID, callback) {
+    _openActivityForm: function (id, callback) {
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
@@ -172,7 +195,6 @@ var AbstractActivityField = AbstractField.extend({
             context: {
                 default_res_id: this.res_id,
                 default_res_model: this.model,
-                default_previous_activity_type_id: previousActivityTypeID,
             },
             res_id: id || false,
         };
@@ -193,43 +215,173 @@ var AbstractActivityField = AbstractField.extend({
                 context: this.record.getContext(),
             });
     },
+
+    //------------------------------------------------------------
+    // Handlers
+    //------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {$.Promise}
+     */
+    _onEditActivity: function (ev) {
+        ev.preventDefault();
+        var activityID = $(ev.currentTarget).data('activity-id');
+        return this._openActivityForm(activityID, this._reload.bind(this));
+    },
+     /**
+     * Called when marking an activity as done
+     *
+     * It lets the current user write a feedback in a popup menu.
+     * After writing the feedback and confirm mark as done
+     * is sent, it marks this activity as done for good with the feedback linked
+     * to it.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onMarkActivityDone: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        var self = this;
+        var $popoverElement = $(ev.currentTarget);
+        var activityID = $popoverElement.data('activity-id');
+        var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
+        if (!$popoverElement.data('bs.popover')) {
+            $popoverElement.popover({
+                template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
+                container: $popoverElement,
+                title : _t("Feedback"),
+                html: true,
+                trigger:'click',
+                placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
+                content : function () {
+                    var $popover = $(QWeb.render('mail.activity_feedback_form', { previous_activity_type_id: previousActivityTypeID }));
+                    $popover.find('#activity_feedback').val(self._draftFeedback[activityID]);
+                    $popover.on('click', '.o_activity_popover_done', function (ev) {
+                        ev.stopPropagation();
+                        self._markActivityDone({
+                            activityID: activityID,
+                            feedback: _.escape($popover.find('#activity_feedback').val()),
+                        });
+                    });
+                    $popover.on('click', '.o_activity_popover_done_next', function (ev) {
+                        ev.stopPropagation();
+                        self._markActivityDoneAndScheduleNext({
+                            activityID: activityID,
+                            feedback: _.escape($popover.find('#activity_feedback').val()),
+                        });
+                    });
+                    $popover.on('click', '.o_activity_popover_discard', function (ev) {
+                        ev.stopPropagation();
+                        $popoverElement.popover('hide');
+                    });
+                    return $popover;
+                },
+            }).on('shown.bs.popover', function () {
+                var $popover = $($(this).data("bs.popover").tip);
+                $(".o_mail_activity_feedback.popover").not($popover).popover("hide");
+                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
+                $popover.find('#activity_feedback').focus();
+                $popover.off('focusout');
+                $popover.focusout(function (e) {
+                    // outside click of popover hide the popover
+                    // e.relatedTarget is the element receiving the focus
+                    if (!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
+                        self._draftFeedback[activityID] = $popover.find('#activity_feedback').val();
+                        $popover.popover('hide');
+                    }
+                });
+            }).popover('show');
+        }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {$.Deferred}
+     */
+    _onPreviewMailTemplate: function (ev) {
+        ev.stopPropagation();
+        var templateID = $(ev.currentTarget).data('template-id');
+        var action = {
+            name: _t('Compose Email'),
+            type: 'ir.actions.act_window',
+            res_model: 'mail.compose.message',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: this.res_id,
+                default_model: this.model,
+                default_use_template: true,
+                default_template_id: templateID,
+                force_email: true,
+            },
+        };
+        return this.do_action(action, { on_close: function () {} });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {$.Promise}
+     */
+    _onSendMailTemplate: function (ev) {
+        ev.stopPropagation();
+        var templateID = $(ev.currentTarget).data('template-id');
+        return this._rpc({
+                model: this.model,
+                method: 'activity_send_mail',
+                args: [[this.res_id], templateID],
+            })
+            .then(this._reload.bind(this, {activity: true, thread: true, followers: true}));
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {$.Deferred}
+     */
+    _onScheduleActivity: function (ev) {
+        ev.preventDefault();
+        return this._openActivityForm(false, this._reload.bind(this));
+    },
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @param {Object} options
+     * @returns {$.Promise}
+     */
+    _onUnlinkActivity: function (ev, options) {
+        ev.preventDefault();
+        var activityID = $(ev.currentTarget).data('activity-id');
+        options = _.defaults(options || {}, {
+            model: 'mail.activity',
+            args: [[activityID]],
+        });
+        return this._rpc({
+                model: options.model,
+                method: 'unlink',
+                args: options.args,
+            })
+            .then(this._reload.bind(this, {activity: true}));
+    },
 });
 
 // -----------------------------------------------------------------------------
 // Activities Widget for Form views ('mail_activity' widget)
 // -----------------------------------------------------------------------------
-var Activity = AbstractActivityField.extend({
+var Activity = BasicActivity.extend({
     className: 'o_mail_activity',
-    events: {
+    events:_.extend({}, BasicActivity.prototype.events, {
         'click a': '_onClickRedirect',
-        'click .o_activity_edit': '_onEditActivity',
-        'click .o_activity_unlink': '_onUnlinkActivity',
-        'click .o_activity_done': '_onMarkActivityDone',
-        'click .o_activity_template_preview': '_onPreviewMailTemplate',
-        'click .o_activity_template_send': '_onSendMailTemplate',
-    },
+    }),
     specialData: '_fetchSpecialActivity',
-
     /**
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
         this._activities = this.record.specialData[this.name];
-        this._draftFeedback = {};
-    },
-
-    //------------------------------------------------------------
-    // Public
-    //------------------------------------------------------------
-
-    /**
-     * @param {integer} previousActivityTypeID
-     * @return {$.Promise}
-     */
-    scheduleActivity: function (previousActivityTypeID) {
-        var callback = this._reload.bind(this, { activity: true, thread: true });
-        return this._scheduleActivity(false, previousActivityTypeID, callback);
     },
 
     //------------------------------------------------------------
@@ -293,173 +445,28 @@ var Activity = AbstractActivityField.extend({
      * @param {MouseEvent} ev
      */
     _onClickRedirect: function (ev) {
-        var id = $(ev.target).data('oe-id');
+        var id = $(ev.currentTarget).data('oe-id');
         if (id) {
             ev.preventDefault();
-            var model = $(ev.target).data('oe-model');
+            var model = $(ev.currentTarget).data('oe-model');
             this.trigger_up('redirect', {
                 res_id: id,
                 res_model: model,
             });
         }
     },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     * @param {Object} options
-     */
-    _onEditActivity: function (ev, options) {
-        ev.preventDefault();
-        var self = this;
-        var activity_id = $(ev.currentTarget).data('activity-id');
-        var action = _.defaults(options || {}, {
-            type: 'ir.actions.act_window',
-            res_model: 'mail.activity',
-            view_mode: 'form',
-            view_type: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_res_model: this.model,
-            },
-            res_id: activity_id,
-        });
-        return this.do_action(action, {
-            on_close: function () {
-                self._reload({activity: true, thread: true});
-            },
-        });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPreviewMailTemplate: function (ev) {
-        var templateID = $(ev.target).data('template-id');
-        var action = {
-            name: _t('Compose Email'),
-            type: 'ir.actions.act_window',
-            res_model: 'mail.compose.message',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_model: this.model,
-                default_use_template: true,
-                default_template_id: templateID,
-                force_email: true,
-            },
-        };
-        return this.do_action(action, { on_close: function () {} });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onSendMailTemplate: function (ev) {
-        var templateID = $(ev.target).data('template-id');
-        return this._rpc({
-                model: this.model,
-                method: 'activity_send_mail',
-                args: [[this.res_id], templateID],
-            })
-            .then(this._reload.bind(this, {activity: true, thread: true, followers: true}));
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     * @param {Object} options
-     */
-    _onUnlinkActivity: function (ev, options) {
-        ev.preventDefault();
-        var activityID = $(ev.currentTarget).data('activity-id');
-        options = _.defaults(options || {}, {
-            model: 'mail.activity',
-            args: [[activityID]],
-        });
-        return this._rpc({
-                model: options.model,
-                method: 'unlink',
-                args: options.args,
-            })
-            .then(this._reload.bind(this, {activity: true}));
-    },
-    /**
-     * Called when marking an activity as done from the Chatter.
-     *
-     * It lets the current user write a feedback in a popup menu.
-     * After writing the feedback and confirm mark as done
-     * is sent, it marks this activity as done for good with the feedback linked
-     * to it.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMarkActivityDone: function (ev) {
-        ev.preventDefault();
-        var self = this;
-        var $popoverElement = $(ev.currentTarget);
-        var activityID = $popoverElement.data('activity-id');
-        var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
-        if (!$popoverElement.data('bs.popover')) {
-            $popoverElement.popover({
-                template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
-                container: $popoverElement.parent(), // FIXME Ugly and should probably be in the body as by default but form view should handle destroying popovers
-                title : _t("Feedback"),
-                html: true,
-                trigger:'click',
-                content : function () {
-                    var $popover = $(QWeb.render('mail.activity_feedback_form', { 'previous_activity_type_id': previousActivityTypeID }));
-                    $popover.find('#activity_feedback').val(self._draftFeedback[activityID]);
-                    $popover.on('click', '.o_activity_popover_done', function () {
-                        self._markActivityDone({
-                            activityID: activityID,
-                            feedback: _.escape($popover.find('#activity_feedback').val()),
-                        });
-                    });
-                    $popover.on('click', '.o_activity_popover_done_next', function () {
-                        self._markActivityDoneAndScheduleNext({
-                            activityID: activityID,
-                            feedback: _.escape($popover.find('#activity_feedback').val()),
-                        });
-                    });
-                    $popover.on('click', '.o_activity_popover_discard', function () {
-                        $popoverElement.popover('hide');
-                    });
-                    return $popover;
-                },
-            }).on('shown.bs.popover', function () {
-                var $popover = $($(this).data("bs.popover").tip);
-                $(".o_mail_activity_feedback.popover").not($popover).popover("hide");
-                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
-                $popover.find('#activity_feedback').focus();
-                $popover.off('focusout');
-                $popover.focusout(function (e) {
-                    // outside click of popover hide the popover
-                    // e.relatedTarget is the element receiving the focus
-                    if (!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
-                        self._draftFeedback[activityID] = $popover.find('#activity_feedback').val();
-                        $popover.popover('hide');
-                    }
-                });
-            }).popover('show');
-        }
-    },
+
 });
 
 // -----------------------------------------------------------------------------
 // Activities Widget for Kanban views ('kanban_activity' widget)
 // -----------------------------------------------------------------------------
-var KanbanActivity = AbstractActivityField.extend({
+var KanbanActivity = BasicActivity.extend({
+    className: 'o_mail_activity_kanban',
     template: 'mail.KanbanActivity',
-    events: {
+    events:_.extend({}, BasicActivity.prototype.events, {
         'show.bs.dropdown': '_onDropdownShow',
-        'click .o_schedule_activity': '_onScheduleActivity',
-        'click .o_mark_as_done': '_onMarkActivityDone',
-        'click .o_activity_template_preview': '_onPreviewMailTemplate',
-        'click .o_activity_template_send': '_onSendMailTemplate',
-    },
+    }),
 
     /**
      * @override
@@ -472,7 +479,6 @@ var KanbanActivity = AbstractActivityField.extend({
         });
         this.selection = selection;
         this._setState(record);
-        this._draftFeedback = {};
     },
 
     //------------------------------------------------------------
@@ -534,20 +540,6 @@ var KanbanActivity = AbstractActivityField.extend({
         this.activityState = this.recordData.activity_state;
     },
 
-
-    //------------------------------------------------------------
-    // Public
-    //------------------------------------------------------------
-
-    /**
-     * @param {integer} previousActivityTypeID
-     * @return {$.Promise}
-     */
-    scheduleActivity: function (previousActivityTypeID) {
-        var callback = this._reload.bind(this, { activity: true, thread: true });
-        return this._scheduleActivity(false, previousActivityTypeID, callback);
-    },
-
     //------------------------------------------------------------
     // Handlers
     //------------------------------------------------------------
@@ -557,113 +549,6 @@ var KanbanActivity = AbstractActivityField.extend({
      */
     _onDropdownShow: function () {
         this._renderDropdown();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onMarkActivityDone: function (ev) {
-        ev.stopPropagation();
-        var self = this;
-        var $popoverElement = $(ev.currentTarget);
-        var activityID = $popoverElement.data('activity-id');
-        var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
-
-        if (!$popoverElement.data('bs.popover')) {
-            $popoverElement.popover({
-                template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
-                container: $popoverElement.parent(), // FIXME Ugly and should probably be in the body as by default but form view should handle destroying popovers
-                title : _t("Feedback"),
-                html: true,
-                trigger:'click',
-                content : function () {
-                    var $popover = $(QWeb.render('mail.activity_feedback_form', { 'previous_activity_type_id': previousActivityTypeID }));
-                    $popover.find('#activity_feedback').val(self._draftFeedback[activityID]);
-                    $popover.on('click', function (ev) {
-                        ev.stopPropagation();
-                    });
-                    $popover.on('click', '.o_activity_popover_done', function (ev) {
-                        ev.stopPropagation();
-                        self._markActivityDone({
-                            activityID: activityID,
-                            feedback: _.escape($popover.find('#activity_feedback').val()),
-                        });
-                    });
-                    $popover.on('click', '.o_activity_popover_done_next', function (ev) {
-                        ev.stopPropagation();
-                        self._markActivityDoneAndScheduleNext({
-                            activityID: activityID,
-                            feedback: _.escape($popover.find('#activity_feedback').val()),
-                        });
-                    });
-                    $popover.on('click', '.o_activity_popover_discard', function (ev) {
-                        ev.stopPropagation();
-                        $popoverElement.popover('hide');
-                    });
-                    return $popover;
-                },
-            }).on('shown.bs.popover', function () {
-                var $popover = $($(this).data("bs.popover").tip);
-                $(".o_mail_activity_feedback.popover").not($popover).popover("hide");
-                $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
-                $popover.find('#activity_feedback').focus();
-                $popover.off('focusout');
-                $popover.focusout(function (e) {
-                    // outside click of popover hide the popover
-                    // e.relatedTarget is the element receiving the focus
-                    if (!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
-                        self._draftFeedback[activityID] = $popover.find('#activity_feedback').val();
-                        $popover.popover('hide');
-                    }
-                });
-            }).popover('show');
-        }
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     * @returns {$.Promise}
-     */
-    _onScheduleActivity: function (ev) {
-        var activityID = $(ev.currentTarget).data('activity-id') || false;
-        return this._scheduleActivity(activityID, false, this._reload.bind(this));
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPreviewMailTemplate: function (ev) {
-        ev.stopPropagation();
-        var templateID = $(ev.target).data('template-id');
-        var action = {
-            name: _t('Compose Email'),
-            type: 'ir.actions.act_window',
-            res_model: 'mail.compose.message',
-            views: [[false, 'form']],
-            target: 'new',
-            context: {
-                default_res_id: this.res_id,
-                default_model: this.model,
-                default_use_template: true,
-                default_template_id: templateID,
-                force_email: true,
-            },
-        };
-        return this.do_action(action, { on_close: function () {} });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onSendMailTemplate: function (ev) {
-        ev.stopPropagation();
-        var templateID = $(ev.target).data('template-id');
-        return this._rpc({
-                model: this.model,
-                method: 'activity_send_mail',
-                args: [[this.res_id], templateID],
-            })
-            .then(this._reload.bind(this, {activity: true, thread: true, followers: true}));
     },
 });
 

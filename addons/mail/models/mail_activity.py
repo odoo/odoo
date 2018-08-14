@@ -409,7 +409,7 @@ class MailActivity(models.Model):
             default_res_id=self.res_id,
             default_res_model=self.res_model,
         )
-        self.action_done()
+        self.action_feedback(feedback)
         return {
             'name': _('Schedule an Activity'),
             'context': wizard_ctx,

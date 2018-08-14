@@ -168,7 +168,16 @@ MockServer.include({
             return $.when(this._mockMessageFormat(args));
         }
         if (args.method === 'activity_format') {
-            return $.when(this._mockRead(args.model, args.args, args.kwargs));
+            var res = this._mockRead(args.model, args.args, args.kwargs);
+            res = res.map(function(record) {
+                if (record.mail_template_ids) {
+                    record.mail_template_ids = record.mail_template_ids.map(function(template_id) {
+                        return {id:template_id, name:"template"+template_id};
+                    });
+                }
+                return record;
+            });
+            return $.when(res);
         }
         if (args.method === 'set_message_done') {
             return $.when();

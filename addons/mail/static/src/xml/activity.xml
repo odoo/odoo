@@ -75,13 +75,13 @@
                             </div>
                         </t>
                         <div class="o_thread_message_tools btn-group">
-                            <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_done o_activity_link mr8" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" data-toggle="popover">
+                            <span class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]"><a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
                                 <i class="fa fa-check"/> Mark Done
-                            </a>
-                            <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_activity_edit o_activity_link" t-att-data-activity-id="activity.id">
+                            </a></span>
+                            <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">
                                 <i class="fa fa-pencil"/> Edit
                             </a>
-                            <a role="button" href="#" class="btn btn-link btn-danger text-muted o_activity_unlink o_activity_link" t-att-data-activity-id="activity.id">
+                            <a role="button" href="#" class="btn btn-link btn-danger text-muted o_unlink_activity o_activity_link" t-att-data-activity-id="activity.id">
                                 <i class="fa fa-times"/> Cancel
                             </a>
                         </div>

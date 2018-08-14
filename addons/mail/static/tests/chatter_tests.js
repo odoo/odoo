@@ -1240,7 +1240,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         },
     });
     //Schedule next activity
-    form.$('.o_mail_activity .o_activity_done[data-activity-id=1]').click();
+    form.$('.o_mail_activity .o_mark_as_done[data-activity-id=1]').click();
     assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 1,
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
@@ -1445,16 +1445,16 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         "there should be two activities");
 
     // remove activity 1
-    form.$('.o_mail_activity .o_activity_unlink[data-activity-id=1]').click();
+    form.$('.o_mail_activity .o_unlink_activity[data-activity-id=1]').click();
     assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
         "there should be one remaining activity");
-    assert.ok(!form.$('.o_mail_activity .o_activity_unlink[data-activity-id=1]').length,
+    assert.ok(!form.$('.o_mail_activity .o_unlink_activity[data-activity-id=1]').length,
         "activity 1 should have been removed");
 
     // mark activity done
     assert.ok(!form.$('.o_mail_thread .o_thread_message').length,
         "there should be no chatter message");
-    form.$('.o_mail_activity .o_activity_done[data-activity-id=2]').click();
+    form.$('.o_mail_activity .o_mark_as_done[data-activity-id=2]').click();
     assert.strictEqual(form.$('.o_mail_activity_feedback.popover').length, 1,
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
