@@ -692,7 +692,8 @@ class account_payment(models.Model):
             aml_obj.create(liquidity_aml_dict)
 
         #validate the payment
-        move.post()
+        if not self.journal_id.post_at_bank_rec:
+            move.post()
 
         #reconcile the invoice receivable/payable line(s) with the payment
         if self.invoice_ids:
@@ -728,20 +729,15 @@ class account_payment(models.Model):
                 'amount_currency': -self.amount,
             })
         transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
-        dst_move.post()
+        if not self.destination_journal_id.post_at_bank_rec:
+            dst_move.post()
         return transfer_debit_aml
 
     def _get_move_vals(self, journal=None):
         """ Return dict to create the payment move
         """
         journal = journal or self.journal_id
-        if not journal.sequence_id:
-            raise UserError(_('The journal %s does not have a sequence, please specify one.') % journal.name)
-        if not journal.sequence_id.active:
-            raise UserError(_('The sequence of journal %s is deactivated.') % journal.name)
-        name = self.move_name or journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
         return {
-            'name': name,
             'date': self.payment_date,
             'ref': self.communication or '',
             'company_id': self.company_id.id,
