@@ -355,7 +355,9 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'pos.category',
         fields: ['id', 'name', 'parent_id', 'child_id'],
-        domain: null,
+        domain: function(self) {
+            return self.config.limit_categories ? [['id', 'in', self.config.iface_available_categ_ids]] : [];
+        },
         loaded: function(self, categories){
             self.db.add_categories(categories);
         },
@@ -365,7 +367,13 @@ exports.PosModel = Backbone.Model.extend({
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id','tracking'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
-        domain: [['sale_ok','=',true],['available_in_pos','=',true]],
+        domain: function(self){
+            var domain = [['sale_ok','=',true],['available_in_pos','=',true]];
+            if (self.config.limit_categories) {
+                domain.push(['pos_categ_id', 'in', self.config.iface_available_categ_ids]);
+            }
+            return domain;
+        },
         context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
@@ -1326,7 +1334,12 @@ exports.Orderline = Backbone.Model.extend({
         this.pos   = options.pos;
         this.order = options.order;
         if (options.json) {
-            this.init_from_JSON(options.json);
+            try {
+                this.init_from_JSON(options.json);
+            } catch(error) {
+                console.error('ERROR: attempting to recover product ID', json.product_id,
+                    'not available in the point of sale. Correct the product or clean the browser cache.');
+            }
             return;
         }
         this.product = options.product;
@@ -1347,10 +1360,6 @@ exports.Orderline = Backbone.Model.extend({
     },
     init_from_JSON: function(json) {
         this.product = this.pos.db.get_product_by_id(json.product_id);
-        if (!this.product) {
-            console.error('ERROR: attempting to recover product ID', json.product_id,
-                'not available in the point of sale. Correct the product or clean the browser cache.');
-        }
         this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.set_discount(json.discount);
