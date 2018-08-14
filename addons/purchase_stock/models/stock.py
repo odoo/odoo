@@ -190,6 +190,7 @@ class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
     purchase_order_ids = fields.Many2many('purchase.order', string="Purchase Orders", compute='_compute_purchase_order_ids', readonly=True, store=False)
+    purchase_order_count = fields.Integer('Purchase order count', compute='_compute_purchase_order_ids')
 
     @api.depends('name')
     def _compute_purchase_order_ids(self):
@@ -200,3 +201,10 @@ class ProductionLot(models.Model):
             ]).mapped('move_id').filtered(
                 lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
             lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
+            lot.purchase_order_count = len(stock_moves)
+
+    def action_view_po(self):
+        self.ensure_one()
+        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
+        return action
