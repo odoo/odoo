@@ -361,9 +361,14 @@ class InventoryLine(models.Model):
         if not self.product_id:
             self.theoretical_qty = 0
             return
-        theoretical_qty = sum([x.quantity for x in self._get_quants()])
-        if theoretical_qty and self.product_uom_id and self.product_id.uom_id != self.product_uom_id:
-            theoretical_qty = self.product_id.uom_id._compute_quantity(theoretical_qty, self.product_uom_id)
+        theoretical_qty = self.product_id.get_theoretical_quantity(
+            self.product_id.id,
+            self.location_id.id,
+            lot_id=self.prod_lot_id.id,
+            package_id=self.package_id.id,
+            owner_id=self.partner_id.id,
+            to_uom=self.product_uom_id.id,
+        )
         self.theoretical_qty = theoretical_qty
 
     @api.onchange('product_id')
@@ -419,15 +424,6 @@ class InventoryLine(models.Model):
         for line in self:
             if line.product_id.type != 'product':
                 raise UserError(_("You can only adjust storable products."))
-
-    def _get_quants(self):
-        return self.env['stock.quant'].search([
-            ('company_id', '=', self.company_id.id),
-            ('location_id', '=', self.location_id.id),
-            ('lot_id', '=', self.prod_lot_id.id),
-            ('product_id', '=', self.product_id.id),
-            ('owner_id', '=', self.partner_id.id),
-            ('package_id', '=', self.package_id.id)])
 
     def _get_move_values(self, qty, location_id, location_dest_id, out):
         self.ensure_one()

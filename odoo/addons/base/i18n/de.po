@@ -28,7 +28,7 @@
 # Mathias Neef <mn@copado.de>, 2017
 # Thomas Lengyel <lexustec_fn@yahoo.de>, 2017
 # Marvin Elia Hoppe <marvin_elia@web.de>, 2017
-# Krakataua Katarajtu <shlok@hotmail.de>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
 # Christian Oechsner <carinachristian@gmail.com>, 2017
 # Tom, 2017
 # aNj <anj2j@yahoo.de>, 2017
@@ -755,6 +755,8 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"        Erstelle Elektronische Rechnung mit Zolltarifnummer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -1093,6 +1095,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Das Sperrdatum unumkehrbar fixieren:\n"
+"\n"
+"    * Sie dürfen die Einschränkungen für Buchhalter nicht strenger fassen, wie für Anwender. Das Sperrdatum für Buchhalter muss vor dem für Anwender gesetzt werden.\n"
+"    * Sie dürfen eine nicht abgeschlossene Periode nicht sperren. Dann muss das Sperrdatum für Buchhalter vor dem letzten Tag des Vormonats gesetzt werden.\n"
+"    * Das neue Sperrdatum für Buchhalter muss nach dem vorherigen Sperrdatum liegen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -5716,6 +5725,14 @@ msgid ""
 "    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
 "\n"
 msgstr ""
+"\n"
+"Dieses Modul liefert Unterstützung für Automatische Verkaufsperiodenabschlüsse mit Berechnung von sowohl Perioden- als auch kumulierten Summen (täglich, monatlich, jährlich)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Das Modul hat folgende Merkmale:\n"
+"\n"
+"    Lager: Automatische Verkaufsperiodenabschlüsse unter Berechnung sowohl von periodensumme wie auch kumulierter Summen (täglich, monatlich, jährlich)\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -6725,7 +6742,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:1077
 #, python-format
 msgid " - %r in %s=%r"
-msgstr ""
+msgstr " - %r in %s=%r"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -7349,6 +7366,143 @@ msgid ""
 "<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
 "\"O-BTN.validate\" is scanned.\n"
 msgstr ""
+"==============================\n"
+"Barcode-Modul-Dokumentation\n"
+"==============================\n"
+"\n"
+"Dieses Modul bringt Barcode-Logik und Client-seitige Barcode-Scan-Utilities.\n"
+"\n"
+"\n"
+"Barcode-Kodierung\n"
+"==============================\n"
+"\n"
+"Das Barcode-Modul definiert Barcode-Nomenklaturen, deren Regeln einen bestimmten Typ identifizieren. \n"
+"z.B. Produkte, Standorte. Es enthält die folgenden Funktionen:\n"
+"\n"
+"- Muster zur Identifikation von Barcodes mit einem Zahlenwert (z.B. Gewicht, Preis)\n"
+"- Definition von Barcode-Aliasen, die es erlauben, dasselbe Produkt mit unterschiedlichen Barcodes zu identifizieren.\n"
+"- Unbegrenzte Anzahl von Barcode-Mustern und Definitionen,\n"
+"- Unterstützung der Kodierungen EAN-13, EAN-8 und UPC-A\n"
+"\n"
+"Barcode-Kodierungen\n"
+"-----------------\n"
+"\n"
+"Ein Barcode ist eine beliebige lange Folge von ASCII-Zeichen. Ein EAN-13-Barcode ist ein 13-stelliger\n"
+"Barcode, dessen 13. Stelle die Prüfsumme ist. \n"
+"\n"
+"Einfache Barcodes und Regeln\n"
+"-------------------------\n"
+"\n"
+"Die Standard-Nomenklatur geht von einer EAN-13-Kodierung für Produkt-Barcodes aus. Es definiert eine Regel \n"
+"für Unit Products, deren Codierung EAN-13 ist und deren Muster '.' ist, d.h. jeder Barcode \n"
+"passt zu diesem Muster. Das Scannen des Barcodes eines Produktes, z. B. '5410013101703', entspricht dieser Regel. \n"
+"Der gescannte Artikel wird somit als Einheitsprodukt identifiziert und aus der Produkttabelle abgerufen.\n"
+"\n"
+"Hinweis: Das Sonderzeichen '.' in Mustern wird durch ein beliebiges Zeichen ersetzt. Um das Zeichen explizit in einem Muster anzugeben, escapen Sie es mit '\\'. Das '\\'-Zeichen muss ebenfalls escaped werden um explizit verwendet zu werden.\n"
+"\n"
+"Nehmen wir nun an, dass wir andere Artikel mit Barcodes identifizieren, zum Beispiel Lagerorte. Wir definieren eine\n"
+"neue Regel in der Nomenklatur mit dem entsprechenden Typ (in unserem Beispiel ist der Typ 'Ort'),\n"
+"und dessen Muster z. B. '414.' ist, d. h. jeder Ortsbarcode beginnt mit '414'. Scannen eines Barcodes\n"
+"Ort, z. B. '41401', entspricht dieser Ortsregel, und der entsprechende Ort wird von aus der Orte-Tabelle gezogen.\n"
+"\n"
+"Hinweis: Regeln haben ein Sequenzfeld, das die Reihenfolge angibt, in der die Regeln ausgewertet werden (ASC). In unserem \n"
+"vorigen Beispielen sollte die Regel \"Einheit Produkt\" eine größere Reihenfolge haben als die Regel \"Ort\", \n"
+"weil wir wollen, dass die letztere zuerst bewertet wird.\n"
+"\n"
+"Barcodes mit numerischem Inhalt\n"
+"--------------------------------\n"
+"\n"
+"Barcodes können numerische Inhalte kodieren, die vom Barcode-Modul dekodiert werden. Zu diesem Zweck,\n"
+"muss eine neue Regel für Barcodes mit numerischem Inhalt definiert werden (z.B. Barcodes für Gewichtete \n"
+"Produkte). Der numerische Inhalt eines Musters wird zwischen geschweiften Klammern angegeben (Sonderzeichen '{' und \n"
+"'}'). Der Inhalt der geschweiften Klammern muss eine Folge von 'N's sein (die den gesamten Teil der numerischen \n"
+"Inhalt darstellen), gefolgt von einer Folge von 'D's (die den dezimalen Teil des numerischen Inhalts darstellen). \n"
+"Definieren wir zum Beispiel eine neue Regel für gewichtete Produkte, deren Muster '21.....{NNDDDD} ist. Da\n"
+"wir von einer EAN-13-Kodierung für Produkt-Barcodes ausgehen, muss die Kodierung dieser Regel ebenfalls EAN-13 sein.\n"
+"\n"
+"Nehmen wir nun an, dass wir einen Barcode für ein bestimmtes gewogenes Produkt schreiben wollen, zum Beispiel Orangen. Wir müssen zuerst \n"
+"beim Produkt Orangen einen Barcode definieren, der mit der Regel Gewogenes Produkt übereinstimmt. Dieser Barcode \n"
+"muss mit '21' beginnen und ein korrekter EAN-13 Barcode sein (d. h. die 13. Stelle muss eine korrekte Prüfsumme sein). \n"
+"Außerdem muss der gesamte numerische Inhalt auf eine '0' gesetzt werden. Setzen wir zum Beispiel den Barcode auf \n"
+"'2100001000004'. \n"
+"\n"
+"Wir wollen jetzt einen Barcode für 2,75 kg Orangen schreiben. Dieser Barcode sollte '210000001027506' sein (der \n"
+"numerische Inhaltswert dieses Barcodes ist '02750', und die korrekte Prüfsumme ist '6'). Beim Scannen wird dieser \n"
+"Barcode entspricht der Regel Gewogenes Produkt (da mit '21' beginnt). Der numerische Inhalt wird extrahiert, \n"
+"und durch eine Folge von '0' ersetzt. Für den erhaltenen Barcode wird dann die richtige Prüfsumme berechnet. \n"
+"('210000001000004') und das entsprechende Produkt (Orangen) wird aus der Produkte-Tabelle abgerufen.\n"
+"\n"
+"Hinweis: Die Sonderzeichen '{' und '}' in Mustern werden zur Kennzeichnung numerischer Inhalte verwendet. Bis \n"
+"in einem Muster explizit '{' oder '}' angeben, müssen sie escaped werden.\n"
+"\n"
+"\n"
+"Strenge EAN-13-Feld Barcode-Nomenklaturen\n"
+"--------------------------------------------\n"
+"\n"
+"Viele Barcodescanner entfernen die führende Null beim Scannen von EAN-13-Barcodes. Barcode-Nomenklaturen\n"
+"haben ein boolesches Feld \"Strikten EAN13 verwenden\". Wenn False, wird versucht, einen gescannten Barcode mit einer\n"
+"eine Regel, deren Kodierung EAN-13 ist, wenn der Barcode die Länge 12 hat und durch Voranstellen einer 0,\n"
+"die letzte Ziffer ist die korrekte Prüfsumme, wir stellen dem Barcode automatisch eine 0 voran und versuchen\n"
+"eine Übereinstimmung mit diesem neuen Barcode zu finden. Wenn \"Strikten EAN13 verwenden\" auf True gesetzt ist, dann suchen wir nach einem Muster\n"
+"dem Original entsprechend 12 Stellen lang.\n"
+"\n"
+"\n"
+"Barcodes scannen\n"
+"==============================\n"
+"\n"
+"Scannen\n"
+"--------\n"
+"\n"
+"Verwenden Sie einen USB-Scanner (der Tastatureingaben nachahmt), um mit Barcodes in Odoo zu arbeiten.\n"
+"Der Scanner muss so konfiguriert sein, dass er kein Präfix und einen Wagenrücklauf oder Tabulator als Suffix verwendet.\n"
+"Die Verzögerung zwischen den einzelnen Zeicheneingaben muss kleiner oder gleich 50 Millisekunden sein.\n"
+"Die meisten Barcodescanner sind sofort einsatzbereit.\n"
+"Stellen Sie jedoch sicher, dass der Scanner das gleiche Tastaturlayout wie das angeschlossene Gerät verwendet.\n"
+"Entweder durch Einstellen des Tastaturlayouts auf US QWERTY (Standardwert für die meisten Leser)\n"
+"oder durch Änderung der Tastaturbelegung des Scanners (siehe Handbuch).\n"
+"\n"
+"\n"
+"Barcode-Ereignisse\n"
+"------------------------------\n"
+"\n"
+"Wenn das Modul Barcodes installiert ist, wird ein Singleton der Javascript-Klasse BarcodeEvents instanziiert.\n"
+"Der Zweck dieser Komponente ist es, auf Tastendrucke zu hören, um Barcodes zu erkennen und diese dann zu versenden.\n"
+"auf core.bus innerhalb eines 'barcode_event'.\n"
+"Alle Tastendruckereignisse werden gepuffert, bis während 50ms kein Tastendruck mehr erfolgt oder ein Wagenrücklauf / Tabulatur\n"
+"eingegeben (da die meisten Barcodescanner diese als Suffix verwenden).\n"
+"Wenn die gepufferten Tasten wie ein Barcode aussehen, wird ein Ereignis ausgelöst:\n"
+"core.bus.trigger('barcode_scanned', Strichcode);\n"
+"Andernfalls werden die Tastendrücke `Resent'. Aus Sicherheitsgründen wird jedoch ein Tastendruck-Ereignis programmgesteuert\n"
+"in Handarbeit erstellt, löst kein natives Browser-Verhalten aus. Aus diesem Grund fängt BarcodeEvents keine Tastendrücke ab.\n"
+"deren Ziel ein editierbares Element ist (z.B. Eingabe) oder wenn ctrl/cmd/alt gedrückt wird.\n"
+"Um einen Tastendruck auf ein editierbares Element abzufangen, muss es das Attribut barcode_events=\"true\" haben.\n"
+"\n"
+"\n"
+"Barcode-Handler\n"
+"------------------------------\n"
+"\n"
+"Um den Web-Client konsistent zu halten, sollten Komponenten, die Barcode-Ereignisse abhören wollen, BarcodeHandlerMixin enthalten.\n"
+"Es erfordert die Implementierung der Methode on_barcode_scanned(barcode) und stellt die Methoden start_listening und stop_listening zur Verfügung.\n"
+"Solange es der Nachkomme einer View ist, die von einem ViewManager verwaltet wird, hört er nur zu, während die View angehängt ist.\n"
+"\n"
+"\n"
+"Formularansicht Barcode-Handler\n"
+"------------------------------\n"
+"\n"
+"Es ist möglich, dass eine Formularansicht Barcode-Ereignisse anhört, sie clientseitig und/oder serverseitig behandelt.\n"
+"Wenn der Barcode serverseitig behandelt wird, funktioniert er wie ein onchange. Das entsprechende Modell muss die\n"
+"BarcodeEventsMixin und redefinieren Sie die Methode on_barcode_scanned. Diese Methode empfängt den Barcode gescannt und\n"
+"the `self` ist ein Pseudo-Datensatz, der den Inhalt der Formularansicht repräsentiert, genau wie in @api.onchange Methoden.\n"
+"Barcodes mit dem Präfix'O-CMD' oder'O-BTN' sind für Sonderfunktionen reserviert und werden niemals an on_barcode_scanned übergeben.\n"
+"Der Barcode-Handler in der Formularansicht kann um eine clientseitige Behandlung erweitert werden. Bitte beachten Sie die (hoffentlich) gut genug) dokumentierte Datei für weitere Informationen.\n"
+"\n"
+"\n"
+"Schaltfläche Barcode-Handler\n"
+"------------------------------\n"
+"\n"
+"Fügen Sie einem Button ein Attribut 'barcode_trigger' hinzu, um ihn durch Scannen eines Barcodes auslösen zu können. Beispiel :\n"
+" wird ausgelöst, wenn ein Barcode, der Folgendes enthält\n"
+"\"O-BTN.validate\" wird gescannt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -7676,7 +7830,7 @@ msgstr "Zugriffs-Token"
 #: model:ir.model.fields,field_description:base.field_res_users__has_group_private_addresses
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "Zugriff auf private Adressen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -8872,12 +9026,12 @@ msgstr "Barcode-Scanner Hardware-Treiber"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr ""
+msgstr "Barcode bei Mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr ""
+msgstr "Barcodescan bei Mobile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
@@ -9977,7 +10131,7 @@ msgstr "Berechnen"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
 msgid "Compute taxes with TaxCloud after online delivery computation."
-msgstr ""
+msgstr "Steuern berechnen mit TaxCloud nach Online-Lieferberechnung"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -11499,6 +11653,8 @@ msgstr "Streckenlieferung"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
+"Duplizierung eines Unternehmens ist nicht möglich. Bitte erstellen Sie statt"
+" dessen ein Neues."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:401
@@ -11521,7 +11677,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment
 msgid "EDI Payment"
-msgstr ""
+msgstr "EDI-Zahlung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_payment
@@ -14551,7 +14707,7 @@ msgstr "Irland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
 msgid "Irreversible Lock Date"
-msgstr ""
+msgstr "Endgültiges Sperrdatum"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
@@ -19042,7 +19198,7 @@ msgstr "Privatadresse"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "Sicht auf Privatanschrift"
 
 #. module: base
 #: code:addons/models.py:113
@@ -19429,7 +19585,7 @@ msgstr "R KUNST, UNTERHALTUNG UND ERHOLUNG"
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
@@ -21229,7 +21385,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
 msgid "TaxCloud and Delivery - Ecommerce"
-msgstr ""
+msgstr "TaxCloud und Lieferung - Ecommerce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -21986,6 +22142,9 @@ msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
 "    "
 msgstr ""
+"Dieses Modul stellt sicher, wenn die Lieferkosten online ermittelt wurden "
+"und die Steuern mit TaxCloud berechnet wurden, die Steuerbestimmung sowohl "
+"im Auftrag als auch dem Lieferschein korrekt sind."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade

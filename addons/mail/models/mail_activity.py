@@ -511,6 +511,8 @@ class MailActivityMixin(models.AbstractModel):
             record.activity_date_deadline = record.activity_ids[:1].date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
+        if operator == '=' and not operand:
+            return [('activity_ids', '=', False)]
         return [('activity_ids.date_deadline', operator, operand)]
 
     @api.model

@@ -22,21 +22,10 @@ class FinancialYearOpeningWizard(models.TransientModel):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
-    @api.multi
-    def write(self, vals):
-        if 'fiscalyear_last_day' in vals or 'fiscalyear_last_month' in vals:
-            for wizard in self:
-                company = wizard.company_id
-                vals['fiscalyear_last_day'] = company._verify_fiscalyear_last_day(
-                    company.id,
-                    vals.get('fiscalyear_last_day'),
-                    vals.get('fiscalyear_last_month'))
-        return super(FinancialYearOpeningWizard, self).write(vals)
 
     @api.multi
     def action_save_onboarding_fiscal_year(self):
         self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
-
 
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}

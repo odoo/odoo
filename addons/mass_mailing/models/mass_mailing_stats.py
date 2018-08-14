@@ -97,7 +97,7 @@ class MailMailStats(models.Model):
 
     def set_opened(self, mail_mail_ids=None, mail_message_ids=None):
         statistics = self._get_records(mail_mail_ids, mail_message_ids, [('opened', '=', False)])
-        statistics.write({'opened': fields.Datetime.now()})
+        statistics.write({'opened': fields.Datetime.now(), 'bounced': False})
         return statistics
 
     def set_clicked(self, mail_mail_ids=None, mail_message_ids=None):
@@ -111,6 +111,7 @@ class MailMailStats(models.Model):
         return statistics
 
     def set_bounced(self, mail_mail_ids=None, mail_message_ids=None):
-        statistics = self._get_records(mail_mail_ids, mail_message_ids, [('bounced', '=', False)])
+        statistics = self._get_records(
+            mail_mail_ids, mail_message_ids, [('bounced', '=', False), ('opened', '=', False)])
         statistics.write({'bounced': fields.Datetime.now()})
         return statistics
