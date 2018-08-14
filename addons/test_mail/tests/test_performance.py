@@ -182,7 +182,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(margin=1, admin=10, emp=15):  # test_mail only: 9 - 13
+        with self.assertQueryCount(margin=1, admin=20, emp=25):  # test_mail only: 9 - 13
             record.action_start('Test Start')
 
         record.write({'name': 'Dupe write'})
