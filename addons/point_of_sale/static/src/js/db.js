@@ -86,7 +86,7 @@ var PosDB = core.Class.extend({
     /* adds categories definitions to the database. categories is a list of categories objects as
      * returned by the openerp server. Categories must be inserted before the products or the 
      * product/ categories association may (will) not work properly */
-    add_categories: function(categories){
+    add_categories: function(categories, available_categ_ids){
         var self = this;
         if(!this.category_by_id[this.root_category_id]){
             this.category_by_id[this.root_category_id] = {
@@ -95,12 +95,15 @@ var PosDB = core.Class.extend({
             };
         }
         for(var i=0, len = categories.length; i < len; i++){
+            if (available_categ_ids.length && !available_categ_ids.includes(categories[i].id)){
+                categories[i].invisible = true;
+            }
             this.category_by_id[categories[i].id] = categories[i];
         }
         len = categories.length;
         for(i=0; i < len; i++){
             var cat = categories[i];
-            var parent_id = cat.parent_id[0] || this.root_category_id;
+            var parent_id = this.category_by_id[cat.parent_id[0]] ? cat.parent_id[0] : this.root_category_id;
             this.category_parent[cat.id] = cat.parent_id[0];
             if(!this.category_childs[parent_id]){
                 this.category_childs[parent_id] = [];
@@ -167,7 +170,7 @@ var PosDB = core.Class.extend({
         str  = product.id + ':' + str.replace(/:/g,'') + '\n';
         return str;
     },
-    add_products: function(products){
+    add_products: function(products, available_categ_ids){
         var stored_categories = this.product_by_category_id;
 
         if(!products instanceof Array){
@@ -185,6 +188,9 @@ var PosDB = core.Class.extend({
 
             if(this.category_search_string[categ_id] === undefined){
                 this.category_search_string[categ_id] = '';
+            }
+            if (available_categ_ids.length && !available_categ_ids.includes(categ_id)){
+                product.invisible = true;
             }
             this.category_search_string[categ_id] += search_string;
 

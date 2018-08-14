@@ -695,7 +695,13 @@ var ProductCategoriesWidget = PosBaseWidget.extend({
         if(this.category.id !== db.root_category_id){
             this.breadcrumb.push(this.category);
         }
-        this.subcategories = db.get_category_by_id(db.get_category_childs_ids(this.category.id));
+        var subcategories = db.get_category_by_id(db.get_category_childs_ids(this.category.id));
+        for (var i = subcategories.length - 1; i >= 0; i--){
+            if (subcategories[i].invisible){
+                subcategories.splice(i, 1);
+            }
+        }
+        this.subcategories = subcategories;
     },
 
     get_image_url: function(category){
@@ -862,6 +868,11 @@ var ProductListWidget = PosBaseWidget.extend({
         }, this);
     },
     set_product_list: function(product_list){
+        for (var i = product_list.length - 1; i >= 0; i--){
+            if (product_list[i].invisible){
+                product_list.splice(i, 1);
+            }
+        }
         this.product_list = product_list;
         this.renderElement();
     },

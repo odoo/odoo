@@ -103,6 +103,8 @@ class PosConfig(models.Model):
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
+    iface_available_categ_ids = fields.Many2many('pos.category', string='Available Category Tree',
+        help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -154,6 +156,7 @@ class PosConfig(models.Model):
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     barcode_scanner = fields.Boolean("Barcode Scanner")
     start_category = fields.Boolean("Set Start Category")
+    limit_categories = fields.Boolean("Limit available Categories")
     module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
@@ -316,16 +319,25 @@ class PosConfig(models.Model):
         if not self.tax_regime_selection:
             self.fiscal_position_ids = [(5, 0, 0)]
 
-    @api.onchange('start_category')
+    @api.onchange('start_category', 'limit_categories')
     def _onchange_start_category(self):
         if not self.start_category:
             self.iface_start_categ_id = False
+        if self.limit_categories:
+            if self.iface_start_categ_id not in self.iface_available_categ_ids:
+                self.iface_start_categ_id = False
+
 
     @api.onchange('is_header_or_footer')
     def _onchange_header_footer(self):
         if not self.is_header_or_footer:
             self.receipt_header = False
             self.receipt_footer = False
+
+    @api.onchange('limit_categories')
+    def _onchange_iface_available_categ_ids(self):
+        if not self.start_category:
+            self.iface_available_categ_ids = False
 
     @api.multi
     def name_get(self):

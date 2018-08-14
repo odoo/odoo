@@ -82,7 +82,21 @@
                                     Start selling from a default product category
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
-                                    <field name="iface_start_categ_id"/>
+                                    <field name="iface_start_categ_id" domain="[iface_available_categ_ids and ('id', '=', iface_available_categ_ids[0][2]) or (1, '=', 1)]"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane">
+                                <field name="limit_categories"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="limit_categories"/>
+                                <div class="text-muted">
+                                    Limit the available product cateogries
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
+                                    <field name="iface_available_categ_ids" widget="many2many_tags"/>
                                 </div>
                             </div>
                         </div>

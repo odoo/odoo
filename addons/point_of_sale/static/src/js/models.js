@@ -349,7 +349,7 @@ exports.PosModel = Backbone.Model.extend({
         fields: ['id', 'name', 'parent_id', 'child_id'],
         domain: null,
         loaded: function(self, categories){
-            self.db.add_categories(categories);
+            self.db.add_categories(categories, self.config.iface_available_categ_ids);
         },
     },{
         model:  'product.product',
@@ -368,7 +368,7 @@ exports.PosModel = Backbone.Model.extend({
                 }
                 product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
                 return new exports.Product({}, product);
-            }));
+            }), self.config.iface_available_categ_ids);
         },
     },{
         model:  'account.bank.statement',
