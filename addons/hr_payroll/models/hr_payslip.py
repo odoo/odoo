@@ -301,10 +301,10 @@ class HrPayslip(models.Model):
         inputs_dict = {}
         blacklist = []
         payslip = self.env['hr.payslip'].browse(payslip_id)
-        for worked_days_line in payslip.worked_days_line_ids:
-            worked_days_dict[worked_days_line.code] = worked_days_line
-        for input_line in payslip.input_line_ids:
-            inputs_dict[input_line.code] = input_line
+        for code in payslip.worked_days_line_ids.mapped('code'):
+            worked_days_dict[code] = payslip.worked_days_line_ids.filtered(lambda l: l.code == code)
+        for code in payslip.input_line_ids.mapped('code'):
+            inputs_dict[code] = payslip.input_line_ids.filtered(lambda l: l.code == code)
 
         categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
         inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
