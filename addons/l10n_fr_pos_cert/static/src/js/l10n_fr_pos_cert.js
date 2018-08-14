@@ -226,7 +226,6 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
                     });
                 }
             } else {
-                // Weird core feature, print_receipt is called regularly
                 // without receipt
                 ProxyDevicePrintReceiptParent.apply(this, [receipt]);
             }
