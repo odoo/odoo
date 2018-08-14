@@ -705,12 +705,6 @@ class SaleOrder(models.Model):
             return 'pay'
 
         return 'none'
-        else:
-            action = self.env.ref('sale.action_quotations', False)
-            if action:
-                result = action.read()[0]
-                result['res_id'] = self.id
-                return result
 
     def has_to_be_signed(self):
         return self.company_id.portal_confirmation_sign
