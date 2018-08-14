@@ -850,6 +850,8 @@ class PosOrder(models.Model):
             if return_picking:
                 order._force_picking_done(return_picking)
             if order_picking:
+                # Adjust the procurement method of a picking
+                self._adjust_procure_method(moves)
                 order._force_picking_done(order_picking)
 
             # when the pos.config has no picking_type_id set only the moves will be created
@@ -858,6 +860,24 @@ class PosOrder(models.Model):
                 moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
         return True
+
+    def _adjust_procure_method(self, moves):
+        try:
+            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
+        except:
+            mto_route = False
+        for move in moves:
+            product = move.product_id
+            routes = product.route_ids + product.route_from_categ_ids + move.warehouse_id.route_ids
+            # TODO: optimize with read_group?
+            pull = self.env['stock.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
+                                                        ('location_id', '=', move.location_dest_id.id), ('action', '!=', 'push')], limit=1)
+            if pull and (pull.procure_method == 'make_to_order'):
+                move.procure_method = pull.procure_method
+            elif not pull: # If there is no make_to_stock rule either
+                if mto_route and mto_route.id in [x.id for x in routes]:
+                    move.procure_method = 'make_to_order'
+
 
     def _force_picking_done(self, picking):
         """Force picking in order to be set as done."""
