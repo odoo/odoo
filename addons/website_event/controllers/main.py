@@ -123,7 +123,7 @@ class WebsiteEventController(http.Controller):
             order = 'date_begin desc'
         if searches["country"] != 'all':   # if we are looking for a specific country
             order = 'is_online, ' + order  # show physical events first
-        order = 'website_published desc, ' + order
+        order = 'is_published desc, ' + order
         events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
         values = {
