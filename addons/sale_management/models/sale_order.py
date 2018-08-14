@@ -159,12 +159,12 @@ class SaleOrder(models.Model):
             'res_id': self.id,
         }
 
-    def _get_share_url(self, redirect=False, signup_partner=False):
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         self.ensure_one()
         if self.state not in ['sale', 'done']:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
             return self.get_portal_url() + '&%s' % auth_param
-        return super(SaleOrder, self)._get_share_url(redirect)
+        return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
 
     def get_portal_confirmation_action(self):
         """ Template override default behavior of pay / sign chosen in sales settings """
