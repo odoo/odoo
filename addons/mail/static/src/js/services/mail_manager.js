@@ -445,7 +445,7 @@ var MailManager =  AbstractService.extend({
         var channel = this.getChannel(data.id);
         if (!channel) {
             channel = this._makeChannel(data, options);
-            if (channel.getType() === 'dm') {
+            if (channel.getType() === 'dm_chat') {
                 this._pinnedDmPartners.push(channel.getDirectPartnerID());
                 this.call('bus_service', 'updateOption',
                     'bus_presence_partner_ids',
@@ -1048,7 +1048,7 @@ var MailManager =  AbstractService.extend({
                     userIDs[0] !== session.uid &&
                     dmRedirection
                 ) {
-                    self.createChannel(resID, 'dm').then(dmRedirection);
+                    self.createChannel(resID, 'dm_chat').then(dmRedirection);
                 } else {
                     self._redirectToDocument(resModel, resID);
                 }
@@ -1064,7 +1064,7 @@ var MailManager =  AbstractService.extend({
      */
     _removeChannel: function (channel) {
         if (!channel) { return; }
-        if (channel.getType() === 'dm') {
+        if (channel.getType() === 'dm_chat') {
             var index = this._pinnedDmPartners.indexOf(channel.getDirectPartnerID());
             if (index > -1) {
                 this._pinnedDmPartners.splice(index, 1);

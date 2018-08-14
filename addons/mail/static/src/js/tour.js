@@ -24,7 +24,7 @@ tour.register('mail_tour', [{
     content: _t("Once a message has been starred, you can come back and review it at any time here."),
     position: "bottom",
 }, {
-    trigger: '.o_mail_discuss .o_mail_discuss_sidebar .o_add[data-type="dm"]',
+    trigger: '.o_mail_discuss .o_mail_discuss_sidebar .o_add[data-type="dm_chat"]',
     content: _t("<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"),
     position: 'bottom',
 }]);
