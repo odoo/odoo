@@ -11,6 +11,7 @@ var fieldUtils = require('web.field_utils');
 function computeVariation (value, comparisonValue) {
     var magnitude;
     var signClass;
+
     if (!isNaN(value) && !isNaN(comparisonValue)) {
     	if (comparisonValue === 0) {
         	if (value === 0) {
@@ -21,7 +22,7 @@ function computeVariation (value, comparisonValue) {
                 magnitude = -1;
             }
         } else {
-        	magnitude = Math.sign(comparisonValue) * (value - comparisonValue) / comparisonValue;
+            magnitude = (value - comparisonValue) / Math.abs(comparisonValue);
         }
 	    if (magnitude > 0) {
             signClass = ' o_positive';
