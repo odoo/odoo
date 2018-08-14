@@ -136,7 +136,7 @@ var StatementModel = BasicModel.extend({
         if(!line.st_line.partner_id && line.reconciliation_proposition
             && line.reconciliation_proposition.length == 1 && prop.partner_id){
             return $.when(
-                this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name})).then(
+                this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name}, true)).then(
                 this._computeLine(line),
                 this._performMoveLine(handle)
             );
@@ -218,12 +218,13 @@ var StatementModel = BasicModel.extend({
      * change the partner on the line and fetch the new matched lines
      *
      * @param {string} handle
+     * @param {bool} preserveMode
      * @param {Object} partner
      * @param {string} partner.display_name
      * @param {number} partner.id
      * @returns {Deferred}
      */
-    changePartner: function (handle, partner) {
+    changePartner: function (handle, partner, preserveMode) {
         var self = this;
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
@@ -238,13 +239,13 @@ var StatementModel = BasicModel.extend({
                             }
                         })
                     }
-                    return $.when(self._computeLine(line), self.changeMode(handle, 'match'));
+                    var def = self._computeLine(line);
+                    if(!preserveMode)
+                        def = def.then(self.changeMode(handle, 'match'));
+                    return def;
                 })
                 .then(function () {
-                    if (line.mode === 'create') {
-                        return self.createProposition(handle);
-                    }
-                    return false;
+                    return line.mode === 'create' ? self.createProposition(handle) : false;
                 })
 
     },
@@ -1002,7 +1003,7 @@ var StatementModel = BasicModel.extend({
                     defs.push(self.changePartner(line.handle, {
                         'id': line.reconciliation_proposition[0].partner_id,
                         'display_name': line.reconciliation_proposition[0].partner_name,
-                    }));
+                    }, true));
                 }
             }
 
