@@ -7,87 +7,111 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
 "PO-Revision-Date: 2015-09-07 17:57+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: French (Belgium) (http://www.transifex.com/odoo/odoo-9/"
-"language/fr_BE/)\n"
+"Language-Team: French (Belgium) (http://www.transifex.com/odoo/odoo-9/language/fr_BE/)\n"
 "Language: fr_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
-"                            <span class=\"o_stat_text\">Issue</span>"
+"                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
-#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Convert to Issue"
+#. module: crm_project
+#: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+msgid "Convert to Task"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Create Issue"
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+msgid "Create Task"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
-msgstr "Créé par"
+msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_date
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
-msgstr "Créé le"
+msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
 msgid "Display Name"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
-msgid "ID"
-msgstr "ID"
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
+msgid "ID"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
 msgstr "Derniere fois mis à jour par"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
 msgstr "Dernière mis à jour le"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "crm.lead2projectissue.wizard"
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model,name:crm_project.model_crm_lead_convert2task
+msgid "crm.lead.convert2task"
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
 "PO-Revision-Date: 2016-02-05 10:27+0000\n"
 "Last-Translator: Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>\n"
 "Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
@@ -34,7 +34,7 @@ msgstr "<strong>பெயர்:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
-#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+#: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
 msgstr ""
@@ -45,7 +45,7 @@ msgid "Accouting tests on"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
 msgid "Active"
 msgstr ""
 
@@ -57,8 +57,8 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
 msgstr ""
 
 #. module: account_test
@@ -76,18 +76,13 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
 msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
-
-#. module: account_test
-#: model:ir.actions.act_window,help:account_test.action_accounting_assert
-msgid "Click to create Accounting Test."
 msgstr ""
 
 #. module: account_test
@@ -98,41 +93,40 @@ msgstr ""
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
+#: model:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid "Create a new accounting test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
 msgid "Created by"
 msgstr "உருவாக்கியவர்"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
 msgid "Created on"
 msgstr ""
 "உருவாக்கப்பட்ட \n"
@@ -144,8 +138,8 @@ msgid "Description"
 msgstr "விளக்கம்"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
@@ -155,24 +149,24 @@ msgid "Expression"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
 msgid "Last Updated by"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
 msgid "Last Updated on"
 msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
 
@@ -182,12 +176,12 @@ msgid "Python Code"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
 msgid "Sequence"
 msgstr "வரிசை"
 
@@ -223,12 +217,12 @@ msgid "Test 7 : Closing balance on bank statements"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
 msgid "Test Description"
 msgstr "சோதனை விளக்கம்"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
 msgid "Test Name"
 msgstr "சோதனை பெயர்"
 
@@ -239,7 +233,7 @@ msgid "Tests"
 msgstr "சோதனைகள்"
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:49
+#: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
 msgstr ""
@@ -247,9 +241,9 @@ msgstr ""
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr "accounting.assert.test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr "report.account_test.report_accounttest"
+msgstr ""
