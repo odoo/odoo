@@ -242,7 +242,7 @@ var MailManager =  AbstractService.extend({
                 previewsChannel = self._sortPreviews(previewsChannel);
                 previewsInbox = self._sortPreviews(previewsInbox);
                 previewsFailure = self._sortPreviews(previewsFailure);
-                return _.union(previewsFailure, previewsInbox, previewsChannel, previewsStatic);
+                return _.union(previewsStatic, previewsFailure, previewsInbox, previewsChannel);
             });
     },
     /**
@@ -832,9 +832,9 @@ var MailManager =  AbstractService.extend({
         ) {
             elems.push({
                 title: _t("Odoobot has a request for you"),
-                imageSRC: "/mail/static/src/img/smiley/odoobot.png",
+                imageSRC: "/mail/static/src/img/odoobot.png",
                 status: 'bot',
-                body:  _t("Enable desktop notifications to stay up to date"),
+                body:  _t("Enable desktop notifications to chat"),
                 id: 'request_notification',
             });
         }

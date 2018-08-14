@@ -38,47 +38,41 @@ class MailBot(models.AbstractModel):
             # main flow
             if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
                 self.env.user.odoobot_state = "onboarding_attachement"
-                return _("Great! :) Did you notice that you can also send attachments, like a picture of your cute dog? Try it!")
+                return _("Great! 👍<br/>Now, try to <b>send an attachment</b>, like a picture of your cute dog...")
             elif odoobot_state == 'onboarding_attachement' and values.get("attachment_ids"):
                 self.env.user.odoobot_state = "onboarding_command"
-                return _("Not a cute dog, but you get it :) To access special features, start your sentence with '/' (e.g. /help).")
+                return _("Not a cute dog, but you get it 😊<br/>To access special features, <b>start your sentence with '/'</b>. Try to get help.")
             elif odoobot_state == 'onboarding_command' and command == 'help':
                 self.env.user.odoobot_state = "onboarding_ping"
-                return _("Wow you are a natural! Ping someone to grab its attention with @nameoftheuser. Try to ping me with <b>@OdooBot</b>.")
+                return _("Wow you are a natural!<br/>Ping someone to grab its attention with @nameoftheuser. <b>Try to ping me using @OdooBot</b> in a sentence.")
             elif odoobot_state == 'onboarding_ping' and self._is_bot_pinged(values):
                 self.env.user.odoobot_state = "idle"
-                discuss_href = 'href="/web#action=mail.mail_channel_action_client_chat&active_id=%s"' % record.id
-                discuss_src = 'src="/mail_bot/static/img/odoobot_discuss.png"'
-                chatter_src = 'src="/mail_bot/static/img/odoobot_chatter.png"'
-                return _("That's me! 🎉<br/>") + \
-                    _("There are 3 different ways in Odoo to interact with your colleagues: <br/>\
--via this chat window<br/>\
--via the <a href=%s>Discuss</a> application:<br/><img %s/><br/><br/>\
--or via the chatter:<br/><img %s/><br/><br/>\
-Aaaaand that's it! Enjoy discovering Odoo!") % (discuss_href, discuss_src, chatter_src)
+                return _("Yet, I am here! 🎉<br/>It's the end of this overview, enjoy discovering Odoo!")
             # easter eggs
             elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
                 return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
-            elif odoobot_state == "idle" and body in [_('help'), _('help me'), _('i need help')]:
-                return _("I'm trying to help you, but I'm just a bot... :( You can also check <a href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more information!")
+            elif odoobot_state == "idle" and (('help' in body) or _('help') in body):
+                return _("I'm just a bot... :( You can check <a href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more information!")
             elif odoobot_state == "idle" and _('fuck') in body or "fuck" in body:
-                return _("That's not a really nice thing to say, you know? I'm a bot but I have feelings, ok?! 💔")
+                return _("That's not nice! I'm a bot but I have feelings... 💔")
             else:
                 #repeat question
                 if odoobot_state == 'onboarding_emoji':
-                    return _("Not exactly. To send an emoji, type \":)\" and press enter.")
+                    return _("Not exactly. To continue the tour, send an emoji, <b>type \":)\"</b> and press enter.")
                 elif odoobot_state == 'onboarding_attachement':
-                    return _("I want you to send me an attachement, you should press the button next to the chat bar to select a file.")
+                    return _("To <b>send an attachment</b>, click the 📎 icon on the right, and select a file.")
                 elif odoobot_state == 'onboarding_command':
                     return _("Not sure wat you are doing. Please press / and wait for the propositions. Select \"help\" and press enter")
                 elif odoobot_state == 'onboarding_ping':
-                    return _("Please, ping me. Type and \"@\" and begin to type \"odoobot\". Select the proposition and press enter.")
+                    return _("Sorry, I am not listening. To get someone's attention, <b>ping him</b>. Write \"@odoobot\" and select me.")
                 return random.choice([
-                    _("I'm not smart enough to answer your question, sorry."),
-                    _("I'm afraid I don't understand. Sorry!")
+                    _("I'm not smart enough to answer your question."),
+                    _("Ok, what about you?"),
+                    _("I'm afraid I don't understand. Sorry!"),
+                    _("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language..."),
                 ])
         elif self._is_bot_pinged(values):
-            return random.choice([_("Yaaaay that's me!"), _("Odeyhoooo")])
+            return random.choice([_("Yep, Odoobot is in the place!"), _("Pong.")])
         return False
 
     def _body_contains_emoji(self, body):
