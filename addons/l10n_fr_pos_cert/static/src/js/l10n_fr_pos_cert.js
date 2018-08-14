@@ -51,9 +51,7 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
         if (hash){
             return _t('Certification Number: ') + hash.substring(0, 10) + '...' + hash.substring(hash.length - 10);
         }
-        return _t("Because of a network problem," +
-            " this ticket could not be certified." +
-            " You can ask later for a certified ticket.");
+        return _t("Because of a network problem, this ticket could not be certified.");
     };
 
     /*************************************************************************
