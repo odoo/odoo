@@ -38,10 +38,10 @@ class MailBot(models.AbstractModel):
             # main flow
             if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
                 self.env.user.odoobot_state = "onboarding_attachement"
-                return _("Great! :) Did you notice that you can also send attachments, like a picture of your cute dog? Try it!")
+                return _("Great! 😊 Did you notice that you can also send attachments, like a picture of your cute dog? Try it!")
             elif odoobot_state == 'onboarding_attachement' and values.get("attachment_ids"):
                 self.env.user.odoobot_state = "onboarding_command"
-                return _("Not a cute dog, but you get it :) To access special features, start your sentence with '/' (e.g. /help).")
+                return _("Not a cute dog, but you get it 😊 To access special features, start your sentence with '/' (e.g. /help).")
             elif odoobot_state == 'onboarding_command' and command == 'help':
                 self.env.user.odoobot_state = "onboarding_ping"
                 return _("Wow you are a natural! Ping someone to grab its attention with @nameoftheuser. Try to ping me with <b>@OdooBot</b>.")
@@ -60,7 +60,7 @@ Aaaaand that's it! Enjoy discovering Odoo!") % (discuss_href, discuss_src, chatt
             elif odoobot_state == "idle" and body in ['❤️', _('i love you'), _('love')]:
                 return _("Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️")
             elif odoobot_state == "idle" and body in [_('help'), _('help me'), _('i need help')]:
-                return _("I'm trying to help you, but I'm just a bot... :( You can also check <a href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more information!")
+                return _("I'm trying to help you, but I'm just a bot... 😞 You can also check <a href=\"https://www.odoo.com/page/docs\">our documentation</a>) for more information!")
             elif odoobot_state == "idle" and _('fuck') in body or "fuck" in body:
                 return _("That's not a really nice thing to say, you know? I'm a bot but I have feelings, ok?! 💔")
             else:
