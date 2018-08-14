@@ -665,7 +665,8 @@ MailManager.include({
      * @private
      * @param {integer} channelID
      */
-    _onUnsubscribeFromChannel: function (channelID) {
+    _onUnsubscribeFromChannel: function (ev) {
+        var channelID = ev.data.channel_id;
         this._closeThreadWindow(channelID);
     },
     /**
@@ -704,7 +705,8 @@ MailManager.include({
      * @private
      * @param {mail.model.Thread} thread
      */
-    _onUpdateDmPresence: function (thread) {
+    _onUpdateDmPresence: function (ev) {
+        var thread = ev.data.thread;
         _.each(this._threadWindows, function (threadWindow) {
             if (thread.data.getID() === threadWindow.getID()) {
                 threadWindow.renderHeader();

@@ -179,6 +179,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         core.bus.on('connection_restored', this, this._onConnectionRestored);
 
         // crash manager integration
+        //TODO SUH: ho to convert this????
         core.bus.on('rpc_error', crash_manager, crash_manager.rpc_error);
         window.onerror = function (message, file, line, col, error) {
             // Scripts injected in DOM (eg: google API's js files) won't return a clean error on window.onerror.

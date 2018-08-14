@@ -961,7 +961,7 @@ var MailManager =  AbstractService.extend({
      */
     _openThreadInDiscuss: function (threadID) {
         var thread = this.getThread(threadID);
-        this._mailBus.trigger('open_thread_in_discuss', thread);
+        this._mailBus.trigger('open_thread_in_discuss', {thread: thread});
     },
     /**
      * @private
@@ -1279,8 +1279,8 @@ var MailManager =  AbstractService.extend({
      * @private
      * @param {boolean} open
      */
-    _onDiscussOpen: function (open) {
-        this._discussOpen = open;
+    _onDiscussOpen: function (ev) {
+        this._discussOpen = ev.data.open;
     },
     /**
      * Reset out of focus unread message counter + tab title

@@ -473,7 +473,7 @@ MailManager.include({
                 );
             }
             this._removeChannel(channel);
-            this._mailBus.trigger('unsubscribe_from_channel', data.id);
+            this._mailBus.trigger('unsubscribe_from_channel', {channel_id: data.id});
             this.do_notify(_("Unsubscribed"), message);
         }
     },
@@ -506,7 +506,7 @@ MailManager.include({
         var dmChat = this.getDMChatFromPartnerID(data.id);
         if (dmChat) {
             dmChat.setStatus(data.im_status);
-            this._mailBus.trigger('update_dm_presence', dmChat);
+            this._mailBus.trigger('update_dm_presence', {thread: dmChat});
         }
     },
     /**

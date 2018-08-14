@@ -172,11 +172,11 @@ var BasicActivity = AbstractField.extend({
                 if (rslt_action) {
                     self.do_action(rslt_action, {
                         on_close: function () {
-                            self.trigger_up('reload');
+                            self.trigger('reload');
                         },
                     });
                 } else {
-                    self.trigger_up('reload');
+                    self.trigger('reload');
                 }
             }
         );

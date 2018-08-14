@@ -146,7 +146,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @private
      */
     _warnUpdatedTypingPartners: function () {
-        this.trigger_up('updated_typing_partners');
+        this.trigger('updated_typing_partners');
     },
     /**
      * Warn that the unread counter has been updated on this livechat
@@ -155,7 +155,7 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @private
      */
     _warnUpdatedUnreadCounter: function () {
-        this.trigger_up('updated_unread_counter');
+        this.trigger('updated_unread_counter');
     },
 
     //--------------------------------------------------------------------------

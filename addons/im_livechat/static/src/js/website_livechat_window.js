@@ -31,7 +31,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @override
      */
     close: function () {
-        this.trigger_up('close_chat_window');
+        this.trigger('close_chat_window');
     },
     /**
      * Replace the thread content with provided new content
@@ -49,7 +49,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      */
     toggleFold: function () {
         this._super.apply(this, arguments);
-        this.trigger_up('save_chat_window');
+        this.trigger('save_chat_window');
         this.updateVisualFoldState();
     },
 
@@ -63,7 +63,7 @@ var LivechatWindow = AbstractThreadWindow.extend({
      * @param {Object} messageData
      */
     _postMessage: function (messageData) {
-        this.trigger_up('post_message_chat_window', { messageData: messageData });
+        this.trigger('post_message_chat_window', { messageData: messageData });
         this._super.apply(this, arguments);
     },
 

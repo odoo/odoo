@@ -160,7 +160,7 @@ var ActivityRenderer = AbstractRenderer.extend({
         var $target = $(ev.currentTarget);
         var templateID = $target.data('template-id');
         var activityTypeID = $target.closest('th').data('activity-type-id');
-        this.trigger_up('send_mail_template', {
+        this.trigger('send_mail_template', {
             activityTypeID: activityTypeID,
             templateID: templateID,
         });
@@ -172,7 +172,7 @@ var ActivityRenderer = AbstractRenderer.extend({
      */
     _onResNameClicked: function (ev) {
         var resID = $(ev.currentTarget).data('res-id');
-        this.trigger_up('open_view_form', {resID: resID});
+        this.trigger('open_view_form', {resID: resID});
     },
 });
 

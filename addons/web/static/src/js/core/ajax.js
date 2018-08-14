@@ -85,7 +85,7 @@ function genericJsonRpc (fct_name, params, settings, fct) {
     deferred.fail(function () { // Allow deferred user to disable rpc_error call in fail
         deferred.fail(function (error, event) {
             if (!event.isDefaultPrevented()) {
-                core.bus.trigger('rpc_error', error, event);
+                core.bus.trigger('rpc_error', {error: error, event: event});
             }
         });
     });

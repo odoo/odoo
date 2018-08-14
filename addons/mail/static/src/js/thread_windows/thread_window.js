@@ -95,7 +95,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
         if (this.hasThread()) {
             this._thread.close();
         } else {
-            this.trigger_up('close_blank_thread_window');
+            this.trigger('close_blank_thread_window');
         }
     },
     /**
@@ -281,7 +281,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
                     self.call('mail_service', 'getMailBus')
-                        .trigger('discuss_open', false);
+                        .trigger('discuss_open', {open: false});
                 },
             });
         }
