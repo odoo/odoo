@@ -36,17 +36,6 @@ class FinancialYearOpeningWizard(models.TransientModel):
         """ Forces fiscal year setup state to 'undone'."""
         self.company_id.account_setup_fy_data_done = False
 
-    @api.multi
-    def write(self, vals):
-        if 'fiscalyear_last_day' in vals or 'fiscalyear_last_month' in vals:
-            for wizard in self:
-                company = wizard.company_id
-                vals['fiscalyear_last_day'] = company._verify_fiscalyear_last_day(
-                    company.id,
-                    vals.get('fiscalyear_last_day'),
-                    vals.get('fiscalyear_last_month'))
-        return super(FinancialYearOpeningWizard, self).write(vals)
-
 
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}

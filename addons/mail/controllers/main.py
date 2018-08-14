@@ -176,6 +176,20 @@ class MailController(http.Controller):
 
             models that have an access_token may apply variations on this.
         """
+        # ==============================================================================================
+        # This block of code disappeared on saas-11.3 to be reintroduced by TBE.
+        # This is needed because after a migration from an older version to saas-11.3, the link
+        # received by mail with a message_id no longer work.
+        # So this block of code is needed to guarantee the backward compatibility of those links.
+        if kwargs.get('message_id'):
+            try:
+                message = request.env['mail.message'].sudo().browse(int(kwargs['message_id'])).exists()
+            except:
+                message = request.env['mail.message']
+            if message:
+                model, res_id = message.model, message.res_id
+        # ==============================================================================================
+
         if res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
         return self._redirect_to_record(model, res_id, access_token)

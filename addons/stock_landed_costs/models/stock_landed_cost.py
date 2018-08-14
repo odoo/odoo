@@ -51,6 +51,8 @@ class LandedCost(models.Model):
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
         required=True, states={'done': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string="Company",
+        related='account_journal_id.company_id')
 
     @api.one
     @api.depends('cost_lines.price_unit')
