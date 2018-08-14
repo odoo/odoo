@@ -489,3 +489,28 @@ class TestSaleStock(TestSale):
         so1.picking_ids.button_validate()
         self.assertEqual(so1.picking_ids.state, 'done')
         self.assertEqual(so1.order_line.mapped('qty_delivered'), [1, 1, 1])
+
+    def test_08_log_activity_on_related_picking(self):
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        item1 = self.products['prod_del']
+
+        self.assertEqual(item1.uom_id.id, uom_unit.id)
+
+        so1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': item1.name,
+                'product_id': item1.id,
+                'product_uom_qty': 10,
+                'product_uom': uom_dozen.id,
+                'price_unit': item1.list_price,
+            })],
+        })
+        so1.action_confirm()
+        so1.write({'order_line': [(1, so1.order_line[0].id, {'product_uom_qty': 2})]})
+        activity = self.env['mail.activity'].search([('res_id', 'in', so1.picking_ids.ids)])
+        self.assertIn(activity.res_id, so1.picking_ids.ids)
+        so1.action_cancel()
+        activity = self.env['mail.activity'].search([('res_id', 'in', so1.picking_ids.ids)])
+        self.assertIn(so1.picking_ids.id, activity.mapped('res_id'))
