@@ -126,6 +126,11 @@
             .focussed {
                 background-color: $o-form-lightsecondary;
             }
+            @media (max-width: $screen-md-max) {
+                &:not(.o_list_view_grouped) > td {
+                    padding: 15px !important;
+                }
+            }
         }
     }
 
