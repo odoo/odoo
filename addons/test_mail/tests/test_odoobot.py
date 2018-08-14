@@ -33,7 +33,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
             self.assertNextMessage(
                 self.test_record_employe.with_context({'mail_post_autofollow': True}).message_post(**kwargs),
                 sender=self.odoobot,
-                answer=["Yaaaay that's me!"]  # no the perfect idea to base a test on a random but it should work for test phase, better mock random choice?
+                answer=["Yep, Odoobot is in the place!"] 
             )
         # Odoobot should not be a follower but user_employee and user_admin should
         follower = self.test_record.message_follower_ids.mapped('partner_id')
@@ -50,14 +50,14 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
-            answer="Great! :) Did you notice that you can also send attachments, like a picture of your cute dog? Try it!"
+            answer=("attachment",)
         )
         kwargs['body'] = ''
         kwargs['attachment_ids'] = [1]
         last_message = self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
-            answer="Not a cute dog, but you get it :) To access special features, start your sentence with '/' (e.g. /help)."
+            answer=("help",)
         )
         kwargs['attachment_ids'] = []
 
@@ -65,7 +65,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertNextMessage(
             last_message,  # no message will be post with command help, use last odoobot message instead
             sender=self.odoobot,
-            answer="Wow you are a natural! Ping someone to grab its attention with @nameoftheuser. Try to ping me with <b>@OdooBot</b>."
+            answer=("@OdooBot",)
         )
         # we dont test the end of the flow since it will depends of the installed apps (livechat)
         self.user_employee.odoobot_state = "idle"
@@ -74,13 +74,13 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
-            answer="Aaaaaw that's really cute but, you know, bots don't work that way. You're too human for me! Let's keep it professional ❤️"
+            answer=("too human for me",)
         )
         kwargs['body'] = "Go fuck yourself"
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
-            answer="That's not a really nice thing to say, you know? I'm a bot but I have feelings, ok?! 💔"
+            answer=("I have feelings",)
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
