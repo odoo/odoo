@@ -421,7 +421,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                         $thing.show();
                         break;
                     default:
-                        $thing.find('input').attr('field', '');
+                        $thing.find('input').attr('field', '').prop('checked', false);
                         $thing.hide();
                     }
                 }
