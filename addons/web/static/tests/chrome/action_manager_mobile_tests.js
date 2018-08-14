@@ -135,7 +135,7 @@ QUnit.module('ActionManager', {
 
         actionManager.doAction(1);
 
-        assert.ok($('.o_control_panel .o_cp_switch_buttons button.dropdown-toggle').length, 1,
+        assert.ok($('.o_control_panel .o_cp_switch_buttons button[data-toggle="dropdown"]').length, 1,
             "view switcher button should be displayed");
         assert.ok($('.o_cp_switch_buttons .o_cp_switch_kanban').hasClass('active'),
             "kanban should be the active view");
