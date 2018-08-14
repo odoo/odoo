@@ -249,6 +249,35 @@ function createAsyncView(params) {
     });
 }
 
+// Months are indexed starting at zero
+function patchDate (year, month, day, hours, minutes, seconds) {
+
+    var RealDate = window.Date;
+    var actualDate = new RealDate();
+    var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
+    var timeInterval = actualDate.getTime() - (fakeDate.getTime());
+
+    window.Date = function Date() {
+        if (arguments.length > 0) {
+            return RealDate.apply(this, arguments);
+        } else {
+            // months are indexed from 0!
+            var date = new RealDate();
+            var time = date.getTime();
+            time -= timeInterval;
+            date.setTime(time);
+            return date;
+        }
+    };
+
+    _.mapObject(RealDate, function (val, key) {
+        window.Date[key] = val;
+    });
+    window.Date.prototype = RealDate.prototype;
+
+    return function () {window.Date = RealDate;};
+}
+
 /**
  * Add a mock environment to a widget.  This helper function can simulate
  * various kind of side effects, such as mocking RPCs, changing the session,
@@ -823,6 +852,7 @@ return $.when(
         intercept: intercept,
         observe: observe,
         patch: patch,
+        patchDate: patchDate,
         removeSrcAttribute: removeSrcAttribute,
         triggerKeypressEvent: triggerKeypressEvent,
         triggerMouseEvent: triggerMouseEvent,
