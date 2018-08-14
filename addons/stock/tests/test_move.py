@@ -3158,7 +3158,7 @@ class StockMove(TransactionCase):
 
     def test_immediate_validate_4(self):
         """ In a picking with a single available tracked by lot move, clicking on validate without
-        filling any quantities should open an UserError.
+        filling any quantities should pop up the immediate transfer wizard.
         """
         partner = self.env['res.partner'].create({'name': 'Jean'})
         lot1 = self.env['stock.production.lot'].create({
@@ -3184,12 +3184,11 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
-        # No quantites/lot filled, it should raise.
-        with self.assertRaises(UserError):
-            picking.button_validate()
-        picking.move_lines.move_line_ids[0].qty_done = 5.0
-        # All the information are present (lots and quantities), the wizard won't be opened.
-        picking.button_validate()
+        # No quantites filled, immediate transfer wizard should pop up.
+        immediate_trans_wiz_dict = picking.button_validate()
+        self.assertEqual(immediate_trans_wiz_dict.get('res_model'), 'stock.immediate.transfer')
+        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id'])
+        immediate_trans_wiz.process()
 
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
         # Check move_lines data
