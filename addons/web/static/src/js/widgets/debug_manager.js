@@ -273,7 +273,7 @@ DebugManager.include({
     get_view_fields: function () {
         var model = this._action.res_model,
             self = this;
-        self._rpc({
+        this._rpc({
             model: 'ir.model',
             method: 'search',
             args: [[['model', '=', model]]]
