@@ -38,7 +38,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/product_product_demo.xml',
     ],
     'uninstall_hook': "uninstall_hook",
-    'post_init_hook': 'set_transfer_so_reference',
     'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,
