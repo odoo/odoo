@@ -31,11 +31,17 @@ tour.register('shop_sale_coupon', {
             trigger: '#customize-menu > a',
         },
         {
-            content: "click on 'Promo Code'",
+            content: "enable 'Promo Code' if needed",
             trigger: "#customize-menu a:contains(Promo Code)",
+            run: function () {
+                if (!$('#customize-menu a:contains(Promo Code) input').prop('checked')) {
+                    $('#customize-menu a:contains(Promo Code)').click();
+                }
+            }
         },
         {
             content: "click on 'I have a promo code'",
+            extra_trigger: '.show_coupon',
             trigger: '.show_coupon',
         },
         {
@@ -98,11 +104,6 @@ tour.register('shop_sale_coupon', {
         {
             content: "click on 'Continue Shopping'",
             trigger: "a:contains(Continue Shopping)",
-        },
-        {
-            content: "open customize menu",
-            extra_trigger: '.oe_website_sale #products_grid',
-            trigger: '#customize-menu > a',
         },
     ]
 );
