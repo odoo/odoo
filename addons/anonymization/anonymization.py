@@ -92,9 +92,6 @@ class ir_model_fields_anonymization(osv.osv):
         return model_and_field_ids
 
     def create(self, cr, uid, vals, context=None):
-        raise UserError("""The Odoo Migration Platform no longer accepts anonymized databases.\n
-            If you wish for your data to remain private during migration, please contact us at upgrade@odoo.com""")
-
         # check field state: all should be clear before we can add a new field to anonymize:
         self._check_write(cr, uid, context=context)
 
