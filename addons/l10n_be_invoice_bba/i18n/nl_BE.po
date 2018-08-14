@@ -11,8 +11,7 @@ msgstr ""
 "POT-Creation-Date: 2015-09-07 14:56+0000\n"
 "PO-Revision-Date: 2015-09-08 05:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
-"language/nl_BE/)\n"
+"Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/language/nl_BE/)\n"
 "Language: nl_BE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,12 +31,12 @@ msgstr "Communicatietype"
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
 msgid "Customer Reference"
-msgstr "Referentie klant"
+msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
 msgid "Date"
-msgstr "Datum"
+msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: code:addons/l10n_be_invoice_bba/invoice.py:149
@@ -51,6 +50,8 @@ msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: constraint:account.invoice:0
+#: code:addons/l10n_be_invoice_bba/models/account_invoice.py:34
+#, python-format
 msgid "Invalid BBA Structured Communication !"
 msgstr "Ongeldige gestructureerde mededeling"
 
@@ -62,12 +63,12 @@ msgstr "Factuur"
 #. module: l10n_be_invoice_bba
 #: model:ir.model,name:l10n_be_invoice_bba.model_res_partner
 msgid "Partner"
-msgstr "Relatie"
+msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: selection:res.partner,out_inv_comm_algorithm:0
 msgid "Random"
-msgstr "Willekeurig"
+msgstr ""
 
 #. module: l10n_be_invoice_bba
 #: model:ir.model.fields,help:l10n_be_invoice_bba.field_res_partner_out_inv_comm_algorithm
@@ -97,12 +98,10 @@ msgstr ""
 #: code:addons/l10n_be_invoice_bba/invoice.py:102
 #, python-format
 msgid ""
-"The Partner should have a 3-7 digit Reference Number for the generation of "
-"BBA Structured Communications!\n"
+"The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!\n"
 "Please correct the Partner record."
 msgstr ""
-"De relatie moet een referentienummer van 3-7 cijfers hebben om een "
-"gestructureerde mededeling te kunnen maken.\n"
+"De relatie moet een referentienummer van 3-7 cijfers hebben om een gestructureerde mededeling te kunnen maken.\n"
 "Gelieve de relatie aan te passen."
 
 #. module: l10n_be_invoice_bba
@@ -110,12 +109,10 @@ msgstr ""
 #: code:addons/l10n_be_invoice_bba/invoice.py:115
 #, python-format
 msgid ""
-"The daily maximum of outgoing invoices with an automatically generated BBA "
-"Structured Communications has been exceeded!\n"
+"The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\n"
 "Please create manually a unique BBA Structured Communication."
 msgstr ""
-"Het dagelijkse maximumaantal uitgaande facturen met een automatische "
-"gestructureerde mededeling is overschreden.\n"
+"Het dagelijkse maximumaantal uitgaande facturen met een automatische gestructureerde mededeling is overschreden.\n"
 "Gelieve manueel een unieke gestructureerde mededeling te maken."
 
 #. module: l10n_be_invoice_bba
@@ -125,6 +122,5 @@ msgid ""
 "Unsupported Structured Communication Type Algorithm '%s' !\n"
 "Please contact your Odoo support channel."
 msgstr ""
-"Het algoritme voor de gestructureerde mededeling '%s' wordt niet "
-"ondersteund !\n"
+"Het algoritme voor de gestructureerde mededeling '%s' wordt niet ondersteund !\n"
 "Gelieve contact op te nemen met de supportafdeling van Odoo."

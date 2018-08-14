@@ -7,11 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
 "PO-Revision-Date: 2016-05-18 23:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
-"odoo-9/language/es_DO/)\n"
+"Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "Language: es_DO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,18 +23,33 @@ msgid "<span>Livechat Channel</span>"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Channel"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live Chat"
+msgstr ""
+
+#. module: website_livechat
+#: model:website.menu,name:website_livechat.menu_livechat
+msgid "Live Support"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live chat channel of your website"
 msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.ui.view,arch_db:website_livechat.header_footer_custom
-msgid "Livechat Support"
 msgstr ""
 
 #. module: website_livechat
@@ -46,7 +60,7 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Statistics"
-msgstr "Estadísticas"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -56,6 +70,11 @@ msgstr "Las"
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The Team"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
 msgstr ""
 
 #. module: website_livechat
@@ -69,18 +88,32 @@ msgid "This is no rating for this channel for now."
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website
-msgid "Website"
-msgstr "Sitio web"
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible in Website"
+msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
-#: model:ir.model.fields,field_description:website_livechat.field_website_config_settings_channel_id
+#: model:ir.model,name:website_livechat.model_website
+msgid "Website"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
+msgid "Website Live Channel"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
 msgstr ""
 
@@ -90,16 +123,6 @@ msgid "last feedbacks"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "La dirección URL completa para acceder al documento a través de la Web."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Visible en sitio web"
-
-#~ msgid "Website URL"
-#~ msgstr "URL de la página web"
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "res.config.settings"
+msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
 "PO-Revision-Date: 2016-02-05 08:47+0000\n"
 "Last-Translator: Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>\n"
 "Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
@@ -30,6 +30,11 @@ msgstr "<strong>ஆவணம்:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position Remark:</strong>"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Fiscal Position:</strong>"
 msgstr "<strong>நிதிக் கொள்கை:</strong>"
 
@@ -45,13 +50,13 @@ msgstr "<strong>பங்குதாரர் Ref.:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Payment Term:</strong>"
-msgstr "<strong>கட்டண காலம்:</strong>"
+msgid "<strong>Payment Terms:</strong>"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>வரி இல்லாமல் மொத்தம்</strong>"
+msgid "<strong>Subtotal</strong>"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -79,7 +84,7 @@ msgid "Cancelled Invoice"
 msgstr "ரத்து பொருள்"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_company_id
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__company_id
 msgid "Company"
 msgstr "நிறுவனம்"
 
@@ -89,12 +94,17 @@ msgid "Country"
 msgstr "தேசம்"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_code
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__code
 msgid "Country code"
 msgstr "நாட்டின் குறியீடு"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Credit Note"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__currency_id
 msgid "Currency"
 msgstr "நாணயம்"
 
@@ -114,7 +124,7 @@ msgid "Discount (%)"
 msgstr "தள்ளுபடி(%)"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_display_name
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__display_name
 msgid "Display Name"
 msgstr "காட்சி பெயர்"
 
@@ -134,9 +144,9 @@ msgid "February"
 msgstr "பிப்ரவரி"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -148,10 +158,12 @@ msgstr "இறக்குமதி"
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Intrastat"
-msgstr "Intrastat"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.model.fields,field_description:report_intrastat.field_product_product__intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_product_template__intrastat_id
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
 msgid "Intrastat Code"
@@ -164,20 +176,19 @@ msgid "Intrastat Data"
 msgstr "Intrastat தேதி"
 
 #. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+#: model:ir.actions.report,name:report_intrastat.account_intrastatinvoices
 msgid "Intrastat Invoices"
 msgstr "Intrastat பொருள்"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__intrastat_id
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
 msgid "Intrastat code"
 msgstr "Intrastat குறியீடு"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_res_country_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_res_country__intrastat
 msgid "Intrastat member"
 msgstr "Intrastat உறுப்பினர்"
 
@@ -207,7 +218,7 @@ msgid "June"
 msgstr "ஜூன்"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat___last_update
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat____last_update
 msgid "Last Modified on"
 msgstr "கடைசியாக திருத்திய"
 
@@ -222,7 +233,7 @@ msgid "May"
 msgstr "மே"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_month
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__month
 msgid "Month"
 msgstr "மாதம்"
 
@@ -237,11 +248,6 @@ msgid "October"
 msgstr "அக்டோபர்"
 
 #. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "PRO-FORMA"
-msgstr "ஓர் அமைப்பின்படி"
-
-#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
 msgid "Product Template"
 msgstr "தயாரிப்பு டெம்ப்ளேட்"
@@ -252,22 +258,17 @@ msgid "Quantity"
 msgstr "அளவு"
 
 #. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Refund"
-msgstr "திருப்பிக்கொடுத்தல்"
-
-#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "September"
 msgstr "செப்டம்பர்"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_ref
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__ref
 msgid "Source document"
 msgstr "மூல ஆவணம்"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_supply_units
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__supply_units
 msgid "Supply Units"
 msgstr "வழங்கல் அலகுகள்"
 
@@ -278,11 +279,21 @@ msgstr "வரி"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Tax Amount"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Taxes"
 msgstr "வரி"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_type
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Taxes Amount"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__type
 msgid "Type"
 msgstr "வகை"
 
@@ -297,7 +308,7 @@ msgid "Unit of measure"
 msgstr "அளவிட அலகு"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_value
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__value
 msgid "Value"
 msgstr "மதிப்பு"
 
@@ -308,16 +319,16 @@ msgstr "விற்பனையாளர் மசோதா"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Vendor Refund"
-msgstr "விற்பனையாளர் திரும்பப் பெறும்"
+msgid "Vendor Credit Note"
+msgstr ""
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_weight
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__weight
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Weight"
 msgstr "எடை"
 
 #. module: report_intrastat
-#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_name
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat__name
 msgid "Year"
 msgstr "ஆண்டு"
