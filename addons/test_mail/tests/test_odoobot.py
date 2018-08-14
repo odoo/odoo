@@ -50,14 +50,14 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
-            answer="Great! :) Did you notice that you can also send attachments, like a picture of your cute dog? Try it!"
+            answer="Great! 😊 Did you notice that you can also send attachments, like a picture of your cute dog? Try it!"
         )
         kwargs['body'] = ''
         kwargs['attachment_ids'] = [1]
         last_message = self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
-            answer="Not a cute dog, but you get it :) To access special features, start your sentence with '/' (e.g. /help)."
+            answer="Not a cute dog, but you get it 😊 To access special features, start your sentence with '/' (e.g. /help)."
         )
         kwargs['attachment_ids'] = []
 
