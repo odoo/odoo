@@ -16,6 +16,9 @@
         'views/assets.xml',
         'data/mailbot_data.xml',
     ],
+    'demo': [
+        'data/mailbot_demo.xml',
+    ],
     'qweb': [
         'views/discuss.xml',
     ],
