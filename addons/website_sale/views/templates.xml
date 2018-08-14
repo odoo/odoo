@@ -141,7 +141,7 @@
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
-                <a role="button" class="btn btn-secondary btn-sm a-submit" aria-label="Shopping cart" title="Shopping cart">
+                <a role="button" class="btn btn-secondary btn-sm a-submit" href="#" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -751,10 +751,12 @@
                                 <t t-set="step" t-value="30"/>
                             </t>
                         </div>
-                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                        <div class="col-12 col-xl-4 order-xl-2 d-none d-xl-block">
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/extra_info</t>
+                            </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div class="row">
                                 <div class="col">
                                     <form action="/website_form/" method="post" class="s_website_form container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
@@ -869,13 +871,13 @@
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group oe_website_spinner">
                                 <div class="input-group-prepend">
-                                    <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                                    <a t-attf-href="#" class="btn btn-secondary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                         <i class="fa fa-minus"></i>
                                     </a>
                                 </div>
                                 <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                 <div class="input-group-append">
-                                    <a t-attf-href="#" class="btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                    <a t-attf-href="#" class="btn btn-secondary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
                                         <i class="fa fa-plus"></i>
                                     </a>
                                 </div>
@@ -1032,7 +1034,7 @@
 
     <template id='coupon_form' name='Coupon form'>
         <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <p class="bg-warning">This promo code is not available</p>
+            <p class="bg-warning text-center">This promo code is not available</p>
         </t>
         <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
             method="post" class="mb32" name="coupon_code">
@@ -1059,10 +1061,12 @@
                                 <t t-set="step" t-value="20" />
                             </t>
                         </div>
-                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                        <div class="col-12 col-xl-4 order-xl-2 d-none d-xl-block">
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/checkout</t>
+                            </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <h3 class="page-header mt8">Billing Address</h3>
@@ -1136,7 +1140,7 @@
             </form>
             <div t-attf-class="card #{selected and 'border_primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
-                    <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+                    <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right js_edit_address no-decoration p-0" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
@@ -1167,15 +1171,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                        <div class="col-12 col-xl-4 order-xl-2 d-none d-xl-block">
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/address</t>
+                            </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div>
                                 <t t-if="mode == ('new', 'billing')">
                                     <h2 class="page-header mt8">Your Address
                                         <small> or </small>
-                                        <a role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
+                                        <a role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary'>Log In</a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
@@ -1328,10 +1334,12 @@
                                 </div>
                             </t>
                         </div>
-                        <div class="col-12 col-xl-auto order-xl-2">
-                            <t t-call="website_sale.cart_summary"/>
+                        <div class="col-12 col-xl-4 order-xl-2">
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/payment</t>
+                            </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div class="card">
                                 <div class="card-header"></div>
                                 <div class="card-body" id="shipping_and_billing">
@@ -1390,7 +1398,7 @@
 
 
     <template id="short_cart_summary" name="Short Cart right column">
-        <div class="card js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
+        <div class="card js_cart_summary mb16" t-if="website_sale_order and website_sale_order.website_order_line" >
             <div class="card-body">
                 <h4 class="d-none d-xl-block">Order Total</h4>
                 <hr class="d-none d-xl-block"/>
@@ -1398,7 +1406,7 @@
                     <t t-call="website_sale.total">
                         <t t-set='no_rowspan'>1</t>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block mr-2" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>
@@ -1411,7 +1419,7 @@
         We shouldn't display link to products or long descriptions.
     -->
     <template id="cart_summary" name="Cart right column">
-        <div class="card">
+        <div class="card mb16 d-xl-inline-block">
             <div class="card-body p-xl-0">
                 <div class="toggle_summary d-xl-none">
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
@@ -1420,14 +1428,14 @@
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                     Your cart is empty!
                 </div>
-                <div class="toggle_summary_div d-none d-xl-block">
-                    <table class="table table-striped table-sm o_table_column_fit" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                <div class="toggle_summary_div o_table_column_fit d-none d-xl-block">
+                    <table class="table table-striped table-sm" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                         <thead>
                             <tr>
                                 <th class="border-top-0 td-img">Product</th>
                                 <th class="border-top-0"></th>
-                                <th class="border-top-0 td-qty">Quantity</th>
-                                <th class="border-top-0 text-center td-price">Price</th>
+                                <th class="border-top-0 text-right td-qty">Quantity</th>
+                                <th class="border-top-0 text-right td-price pr-2">Price</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1440,20 +1448,18 @@
                                     <div>
                                         <strong t-field="line.name_short" />
                                     </div>
-                                </td>
-                                <td class='td-qty'>
+                               </td>
+                                <td class='text-right td-qty'>
                                     <div t-esc="line.product_uom_qty" />
                                 </td>
-                                <td class="text-center td-price">
-                                    <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
-                                    <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
+                                <td class="text-right td-price">
+                                    <span class="pr-2" t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
+                                    <span class="pr-2" t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <t t-call="website_sale.total">
-                        <t t-set='redirect'>/shop/payment</t>
-                    </t>
+                    <t t-call="website_sale.total"/>
                 </div>
             </div>
         </div>
@@ -1478,7 +1484,7 @@
                     <h1><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
 
                     <div class="row">
-                        <div class="col-12 col-xl">
+                        <div class="col-12 col-xl-8">
                             <div class="oe_cart">
                                 <div class="thanks_msg">
                                     <h2>Thank you for your order.
@@ -1522,7 +1528,7 @@
                                 <div class="oe_structure mt-3"/>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-auto">
+                        <div class="col-12 col-xl-4">
                             <t t-set="website_sale_order" t-value="order"/>
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="hide_coupon">1</t>
@@ -1545,19 +1551,19 @@
                   </tr>
                   <tr id="order_total_untaxed">
                       <td class="text-right noborder">Subtotal:</td>
-                      <td class="text-left-not-lg text-right-lg noborder" >
+                      <td class="text-right noborder" >
                           <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total_taxes">
                       <td class="text-right noborder">Taxes:</td>
-                      <td class="text-left-not-lg text-right-lg  noborder">
+                      <td class="text-right noborder">
                            <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
                       <td class="text-right"><strong>Total:</strong></td>
-                      <td class="text-left-not-lg text-right-lg">
+                      <td class="text-right">
                           <strong t-field="website_sale_order.amount_total"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
@@ -1569,11 +1575,11 @@
     <template id="reduction_code" inherit_id="website_sale.total" active="True" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_coupon">
-                <td colspan="3" class='noborder text-right-lg text-center'>
+                <td colspan="3" class='noborder text-right'>
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
-                        <button type="button" class="btn btn-link show_coupon">I have a promo code</button>
+                        <button type="button" class="btn btn-link show_coupon px-0">I have a promo code</button>
                     </t>
                     <div t-attf-class="coupon_form #{not force_coupon and 'd-none'}">
                         <t t-call="website_sale.coupon_form"/>
@@ -1588,45 +1594,47 @@
     <template id="payment_confirmation_status">
         <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
-            <div t-att-class="'card %s' % (
-                    (payment_tx_id.state == 'pending' and 'bg-info text-white') or
-                    (payment_tx_id.state == 'done' and 'bg-success text-white') or
-                    (payment_tx_id.state == 'authorized' and 'bg-success text-white') or
-                    'bg-danger text-white')">
-                <div class="card-header">
-                    <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right" target="_blank" aria-label="Edit" title="Edit"
-                            t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                    <t t-if="payment_tx_id.state == 'pending'">
-                        <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
-                    </t>
-                    <t t-if="payment_tx_id.state == 'done'">
-                        <t t-raw="payment_tx_id.acquirer_id.done_msg"/>
-                    </t>
-                    <t t-if="payment_tx_id.state == 'cancel'">
-                        <t t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
-                    </t>
-                    <t t-if="payment_tx_id.state == 'authorized'">
-                        Your payment has been authorized.
-                    </t>
-                </div>
-                <div class="card-body" t-if="payment_tx_id.acquirer_id.post_msg">
-                    <t t-raw="payment_tx_id.acquirer_id.post_msg" />
-                    <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference">
-                        <b>Communication: </b><span t-esc='order.reference'/>
+            <t t-if="payment_tx_id">
+                <div t-att-class="'card %s' % (
+                        (payment_tx_id.state == 'pending' and 'bg-info text-white') or
+                        (payment_tx_id.state == 'done' and 'bg-success text-white') or
+                        (payment_tx_id.state == 'authorized' and 'bg-success text-white') or
+                        'bg-danger text-white')">
+                    <div class="card-header">
+                        <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-right p-0" target="_blank" aria-label="Edit" title="Edit"
+                                t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <t t-if="payment_tx_id.state == 'pending'">
+                            <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
+                        </t>
+                        <t t-if="payment_tx_id.state == 'done'">
+                            <t t-raw="payment_tx_id.acquirer_id.done_msg"/>
+                        </t>
+                        <t t-if="payment_tx_id.state == 'cancel'">
+                            <t t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
+                        </t>
+                        <t t-if="payment_tx_id.state == 'authorized'">
+                            Your payment has been authorized.
+                        </t>
+                    </div>
+                    <div class="card-body" t-if="payment_tx_id.acquirer_id.post_msg">
+                        <t t-raw="payment_tx_id.acquirer_id.post_msg" />
+                        <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference">
+                            <b>Communication: </b><span t-esc='order.reference'/>
+                        </div>
+                    </div>
+                    <div t-if="payment_tx_id.acquirer_id.provider == 'transfer'">
+                        <div class="card-body" t-if="payment_tx_id.acquirer_id.company_id.qr_code and payment_tx_id.acquirer_id.company_id.qr_code_valid and (payment_tx_id.currency_id.name == 'EUR')">
+                            <h3>Or scan me with your banking app.</h3>
+                            <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
+                        </div>
+                        <div class="card-body"  t-if="payment_tx_id.acquirer_id.company_id.qr_code and (payment_tx_id.acquirer_id.company_id.qr_code_valid == False) and (payment_tx_id.currency_id.name == 'EUR')">
+                            <h3>The SEPA QR Code informations are not set correctly.</h3>
+                        </div>
                     </div>
                 </div>
-                <div t-if="payment_tx_id.acquirer_id.provider == 'transfer'">
-                    <div class="card-body" t-if="payment_tx_id.acquirer_id.company_id.qr_code and payment_tx_id.acquirer_id.company_id.qr_code_valid and (payment_tx_id.currency_id.name == 'EUR')">
-                        <h3>Or scan me with your banking app.</h3>
-                        <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference)"/>
-                    </div>
-                    <div class="card-body"  t-if="payment_tx_id.acquirer_id.company_id.qr_code and (payment_tx_id.acquirer_id.company_id.qr_code_valid == False) and (payment_tx_id.currency_id.name == 'EUR')">
-                        <h3>The SEPA QR Code informations are not set correctly.</h3>
-                    </div>
-                </div>
-            </div>
+            </t>
         </div>
     </template>
 
