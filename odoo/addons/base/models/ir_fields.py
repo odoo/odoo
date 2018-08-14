@@ -348,12 +348,12 @@ class IrFieldsConverter(models.AbstractModel):
                         % (len(ids))))
                 id, _name = ids[0]
             else:
-                name_create_enabled_fields = self.env.context.get('name_create_enabled_fields')
-                if name_create_enabled_fields and name_create_enabled_fields.get(field.name):
+                name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
+                if name_create_enabled_fields.get(field.name):
                     try:
                         id, _name = RelatedModel.name_create(name=value)
                     except Exception as e:
-                        error_msg = e.args[0]
+                        error_msg = repr(e)
         else:
             raise self._format_import_error(
                 Exception,
@@ -362,12 +362,14 @@ class IrFieldsConverter(models.AbstractModel):
             )
 
         if id is None:
-            message = _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
-            message += error_msg and ' or ' + error_msg
+            if error_msg:
+                message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
+            else:
+                message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
             raise self._format_import_error(
                 ValueError,
                 message,
-                {'field_type': field_type, 'value': value},
+                {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 {'moreinfo': action})
         return id, field_type, warnings
 
