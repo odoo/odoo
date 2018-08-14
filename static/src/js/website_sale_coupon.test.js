@@ -7,32 +7,13 @@ var base = require("web_editor.base");
 
 tour.register('shop_sale_coupon', {
     test: true,
-    url: '/shop',
+    url: '/shop?search=Large%20Cabinet',
     wait_for: base.ready()
 },
     [
-        /* 0. Test 'Show # found' customize option works correctly */
-        {
-            content: "open customize menu",
-            trigger: '#customize-menu > a',
-        },
-        {
-            content: "click on 'Show # found'",
-            trigger: "#customize-menu a:contains(Show # found)",
-        },
         /* 1. Buy 1 Large Cabinet, enable coupon code & insert 10% code */
         {
-            content: "type Large Cabinet in search",
-            trigger: 'form input[name="search"]',
-            run: "text Large Cabinet",
-        },
-        {
-            content: "start search",
-            trigger: 'form:has(input[name="search"]) .oe_search_button',
-        },
-        {
             content: "select Large Cabinet",
-            extra_trigger: '.oe_search_found', // Wait to be on search results or it sometimes throws concurent error (sent search form + click on product on /shop)
             trigger: '.oe_product_cart a:contains("Large Cabinet")',
         },
         {
@@ -122,10 +103,6 @@ tour.register('shop_sale_coupon', {
             content: "open customize menu",
             extra_trigger: '.oe_website_sale #products_grid',
             trigger: '#customize-menu > a',
-        },
-        {
-            content: "click on 'Show # found'",
-            trigger: "#customize-menu a:contains(Show # found)",
         },
     ]
 );
