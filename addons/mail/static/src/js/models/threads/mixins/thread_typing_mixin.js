@@ -321,7 +321,8 @@ var ThreadTypingMixin = {
      * @private
      * @param {mail.model.AbstractMessage} message
      */
-    _onTypingMessageAdded: function (message) {
+    _onTypingMessageAdded: function (ev) {
+        var message = ev.data;
         var partnerID = message.hasAuthor() ?
                         message.getAuthorID() :
                         this._DEFAULT_TYPING_PARTNER_ID;

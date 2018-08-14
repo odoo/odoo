@@ -552,7 +552,7 @@ var MailManager =  AbstractService.extend({
                             thread.detach({ passively: true });
                         }
                         var query = { isVisible: false };
-                        self._mailBus.trigger('is_thread_bottom_visible', thread, query);
+                        self._mailBus.trigger('is_thread_bottom_visible', {thread: thread, query: query});
                         if (!self.call('bus_service', 'isOdooFocused') || !query.isVisible) {
                             self._notifyIncomingMessage(message);
                         }
