@@ -362,7 +362,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      * @private
      */
     _warnUpdatedUnreadCounter: function () {
-        this.call('mail_service', 'getMailBus').trigger('update_thread_unread_counter', this);
+        this.call('mail_service', 'getMailBus').trigger('update_thread_unread_counter', {message: this});
     },
     /**
      * Warn other mail components that the window state of this thread has

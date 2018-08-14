@@ -216,12 +216,12 @@ var ColumnQuickCreate = Widget.extend({
         }
 
         // ignore clicks in modals
-        if ($(event.target).closest('.modal').length) {
+        if ($(event.data.target).closest('.modal').length) {
             return;
         }
 
         // ignore clicks if target is inside the quick create
-        if (this.el.contains(event.target)) {
+        if (this.el.contains(event.data.target)) {
             return;
         }
 

@@ -378,7 +378,8 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      * @param {Object} messageData
      */
-    _postMessage: function (messageData) {
+    _postMessage: function (ev) {
+        var messageData = ev.data;
         var self = this;
         if (!this.hasThread()) {
             return;

@@ -225,7 +225,7 @@ var ThreadField = AbstractField.extend({
      * @param {mail.model.Message}
      */
     _onUpdateMessage: function (event) {
-        var message = message;
+        var message = event.data.message;
         if (
             message.isLinkedToDocumentThread() &&
             message.getDocumentModel() === this.model &&
