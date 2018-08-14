@@ -9,5 +9,5 @@ class Http(models.AbstractModel):
 
     def session_info(self):
         res = super(Http, self).session_info()
-        res['odoobot_initialized'] = self.env.user.odoobot_state == 'not_initialized'
+        res['odoobot_initialized'] = self.env.user.odoobot_state != 'not_initialized'
         return res
