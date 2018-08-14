@@ -418,7 +418,7 @@ MailManager.include({
         var blankThreadWindow = this._getBlankThreadWindow();
         if (
             blankThreadWindow &&
-            thread.getType() === 'dm' &&
+            thread.getType() === 'dm_chat' &&
             thread.getDirectPartnerID() === blankThreadWindow.directPartnerID
         ) {
             // the window takes the place of the 'blank' thread window
