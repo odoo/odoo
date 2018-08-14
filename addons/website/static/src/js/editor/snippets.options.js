@@ -546,7 +546,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
                         } else if (!self.fbData.small_header) {
                             self.fbData.height = self.fbData.show_facepile ? 225 : 150;
                         }
-                        options.registry.facebookPage.prototype.markFbElement(self, self.$previewPage, self.fbData);
+                        options.registry.facebookPage.prototype.markFbElement(self.getParent(), self.$previewPage, self.fbData);
                     },
                     404: function () {
                         self._toggleWarning(false);
