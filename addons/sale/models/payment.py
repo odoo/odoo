@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
+import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.tools import float_compare
 
-_logger = logging.getLogger(__name__)
+
+class PaymentAcquirer(models.Model):
+    _inherit = 'payment.acquirer'
+
+    so_reference_type = fields.Selection(string='Communication',
+        selection=[
+            ('so_name', _('Based on Document Reference')),
+            ('partner', _('Based on Customer ID'))], default='so_name',
+        help='You can set here the communication type that will appear on sales orders.'
+             'The communication will be given to the customer when they choose the payment method.')
 
 
 class PaymentTransaction(models.Model):
@@ -15,6 +22,18 @@ class PaymentTransaction(models.Model):
     sale_order_ids = fields.Many2many('sale.order', 'sale_order_transaction_rel', 'transaction_id', 'sale_order_id',
                                       string='Sales Orders', copy=False, readonly=True)
     sale_order_ids_nbr = fields.Integer(compute='_compute_sale_order_ids_nbr', string='# of Sales Orders')
+
+    @api.multi
+    def _compute_sale_order_reference(self, order):
+        self.ensure_one()
+        if self.acquirer_id.so_reference_type == 'so_name':
+            identification_number = int(re.match('.*?([0-9]+)$', order.name).group(1))
+            prefix = order.name
+        else:
+            # self.acquirer_id.so_reference_type == 'partner'
+            identification_number = order.partner_id.id
+            prefix = 'CUST'
+        return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_ids_nbr(self):
@@ -43,8 +62,13 @@ class PaymentTransaction(models.Model):
         # to sent the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_pending()
 
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
+        for record in self:
+            sales_orders = record.sale_order_ids.filtered(lambda so: so.state == 'draft')
+            sales_orders.force_quotation_send()
+
+            if record.acquirer_id.provider == 'transfer':
+                for so in sales_orders:
+                    so.reference = record._compute_sale_order_reference(so)
 
     @api.multi
     def _set_transaction_authorized(self):

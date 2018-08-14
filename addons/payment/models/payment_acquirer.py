@@ -640,13 +640,13 @@ class PaymentTransaction(models.Model):
     def _get_payment_transaction_sent_message(self):
         self.ensure_one()
         if self.payment_token_id:
-            message = _('A transaction %s with %s has been initiated using %s credit card.')
+            message = _('A transaction %s with %s initiated using %s credit card.')
             message_vals = (self.reference, self.acquirer_id.name, self.payment_token_id.name)
         elif self.provider in ('manual', 'transfer'):
             message = _('The customer has selected %s to pay this document.')
             message_vals = (self.acquirer_id.name)
         else:
-            message = _('A transaction %s with %s has been initiated.')
+            message = _('A transaction %s with %s initiated.')
             message_vals = (self.reference, self.acquirer_id.name)
         if self.provider not in ('manual', 'transfer'):
             message += ' ' + _('Waiting for payment confirmation...')
