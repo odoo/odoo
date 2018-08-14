@@ -23,11 +23,12 @@ class AccountInvoice(models.Model):
         purchase_line_ids = self.invoice_line_ids.mapped('purchase_line_id')
         purchase_ids = self.invoice_line_ids.mapped('purchase_id').filtered(lambda r: r.order_line <= purchase_line_ids)
 
-        result['domain'] = {'purchase_id': [
-            ('invoice_status', '=', 'to invoice'),
-            ('partner_id', 'child_of', self.partner_id.id),
-            ('id', 'not in', purchase_ids.ids),
-            ]}
+        domain = [('invoice_status', '=', 'to invoice')]
+        if self.partner_id:
+            domain += [('partner_id', 'child_of', self.partner_id.id)]
+        if purchase_ids:
+            domain += [('id', 'not in', purchase_ids.ids)]
+        result['domain'] = {'purchase_id': domain}
         return result
 
     def _prepare_invoice_line_from_po_line(self, line):
