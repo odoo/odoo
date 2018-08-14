@@ -61,6 +61,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/tax_adjustments.xml',
         'wizard/wizard_tax_adjustments_view.xml',
         'views/res_config_settings_views.xml',
+        'views/account_invoice_import_wizard_view.xml',
         'views/account_journal_dashboard_view.xml',
         'views/account_portal_templates.xml',
         'report/account_report_payment_receipt_templates.xml',
