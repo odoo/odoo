@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # * mail
 # 
+# Translators:
+# Ranjit Pillai <rpi@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Turkesh Patel <turkesh4friends@gmail.com>, 2018
+# Dharmraj Jhala <dja@openerp.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"Last-Translator: Dharmraj Jhala <dja@openerp.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,7 +135,7 @@ msgstr ""
 #: code:addons/mail/models/mail_template.py:226
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (નકલ)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:234
@@ -173,6 +179,15 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -383,7 +398,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
-msgstr ""
+msgstr "સક્રિય"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_active_domain
@@ -396,7 +411,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:80
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "ઉમેરો"
 
 #. module: mail
 #. openerp-web
@@ -508,7 +523,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:20
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "બધા"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -586,7 +601,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_id
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Author"
-msgstr ""
+msgstr "લેખક"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -673,7 +688,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "રદ કરો"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
@@ -683,7 +698,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "રદ થયેલ"
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -716,7 +731,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Change"
-msgstr ""
+msgstr "બદલો"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
@@ -820,7 +835,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
 msgid "Closed"
-msgstr ""
+msgstr "બંધ થયેલ"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -891,7 +906,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_body
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_body
 msgid "Contents"
-msgstr ""
+msgstr "સમાવિષ્ટો"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_fold_state
@@ -944,7 +959,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "બનાવનાર"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
@@ -980,7 +995,7 @@ msgstr ""
 #: code:addons/mail/models/res_partner.py:19
 #, python-format
 msgid "Customers"
-msgstr ""
+msgstr "ગ્રાહકો"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_date
@@ -988,7 +1003,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_date
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_date
 msgid "Date"
-msgstr ""
+msgstr "તારીખ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_last_post
@@ -1062,7 +1077,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
 msgid "Default"
-msgstr ""
+msgstr "પ્રમાણભૂત"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_null_value
@@ -1128,7 +1143,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_description
 #: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Description"
-msgstr ""
+msgstr "વર્ણન"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_description
@@ -1179,7 +1194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "પ્રદર્શન નામ"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1227,7 +1242,7 @@ msgstr ""
 #: selection:mail.message,message_type:0
 #: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
-msgstr ""
+msgstr "ઈ-મેઈલ"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1323,7 +1338,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_mail_mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
-msgstr ""
+msgstr "ઈ-મેઈલ"
 
 #. module: mail
 #: code:addons/mail/models/update.py:101
@@ -1368,7 +1383,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "વિસ્તૃત ગાળકો ..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_fail_counter
@@ -1450,7 +1465,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/followers.xml:21
 #, python-format
 msgid "Follow"
-msgstr ""
+msgstr "અનુસરો"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
@@ -1673,7 +1688,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_from
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_email_from
 msgid "From"
-msgstr ""
+msgstr "તરફથી"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -1700,7 +1715,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_tree
 msgid "Groups"
-msgstr ""
+msgstr "જૂથો"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -1743,7 +1758,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_id
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_id
 msgid "ID"
-msgstr ""
+msgstr "ઓળખ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_thread_id
@@ -2285,7 +2300,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "છોડો"
 
 #. module: mail
 #. openerp-web
@@ -2333,7 +2348,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
-msgstr ""
+msgstr "લોગ"
 
 #. module: mail
 #. openerp-web
@@ -2435,7 +2450,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Members"
-msgstr ""
+msgstr "સભ્યો"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_group_ids
@@ -2451,7 +2466,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_message
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Message"
-msgstr ""
+msgstr "સંદેશ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_mail_message_id
@@ -2606,7 +2621,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: model:ir.ui.view,arch_db:mail.view_message_tree
 msgid "Messages"
-msgstr ""
+msgstr "સંદેશાઓ"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -2632,7 +2647,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_email_template_search
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Model"
-msgstr ""
+msgstr "નમુનો"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_res_model
@@ -2649,7 +2664,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Month"
-msgstr ""
+msgstr "મહિનો"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_name
@@ -2658,7 +2673,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_test_name
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Name"
-msgstr ""
+msgstr "નામ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_record_name
@@ -2799,7 +2814,7 @@ msgstr ""
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
 msgid "Note"
-msgstr ""
+msgstr "નોંધ"
 
 #. module: mail
 #. openerp-web
@@ -3117,7 +3132,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
 msgid "Open"
-msgstr ""
+msgstr "ખોલો"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -3223,12 +3238,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "માલિક"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "પિતૃ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_parent_id
@@ -3273,7 +3288,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "ભાગીદાર"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -3465,7 +3480,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_references
 msgid "References"
-msgstr ""
+msgstr "સંદર્ભ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_res_id
@@ -3701,14 +3716,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ક્રમ"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:138
 #, python-format
 msgid "Settings"
-msgstr ""
+msgstr "સુયોજનો"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_shortcode_type
@@ -3724,7 +3739,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_source
 msgid "Shortcut"
-msgstr ""
+msgstr "ટુંકાણ"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:632
@@ -3804,7 +3819,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Status"
-msgstr ""
+msgstr "સ્થિતિ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_model_object_field
@@ -3830,7 +3845,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_subject
 #, python-format
 msgid "Subject"
-msgstr ""
+msgstr "વિષય"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_subject
@@ -3996,7 +4011,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_to
 msgid "To"
-msgstr ""
+msgstr "પ્રતિ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_to
@@ -4032,7 +4047,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/thread.js:231
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "આજે"
 
 #. module: mail
 #. openerp-web
@@ -4087,7 +4102,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_message_type
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_message_type
 msgid "Type"
-msgstr ""
+msgstr "પ્રકાર"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_uuid
@@ -4318,12 +4333,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "User"
-msgstr ""
+msgstr "વપરાશકર્તા"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "વપરાશકર્તાઓ"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:676
@@ -4337,7 +4352,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
-msgstr ""
+msgstr "દેખાવ"
 
 #. module: mail
 #. openerp-web
@@ -4629,7 +4644,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
-msgstr ""
+msgstr "ના"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:913

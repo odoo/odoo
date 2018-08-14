@@ -59,6 +59,13 @@ class AccountInvoice(models.Model):
             data['account_id'] = account.id
         return data
 
+    def _onchange_product_id(self):
+        domain = super(AccountInvoice, self)._onchange_product_id()
+        if self.purchase_id:
+            # Use the purchase uom by default
+            self.uom_id = self.product_id.uom_po_id
+        return domain
+
     # Load all unsold PO lines
     @api.onchange('purchase_id')
     def purchase_order_change(self):
@@ -78,7 +85,7 @@ class AccountInvoice(models.Model):
         self.purchase_id = False
         return {}
 
-    @api.onchange('currency_id', 'date_invoice')
+    @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
@@ -161,10 +168,18 @@ class AccountInvoice(models.Model):
                                 valuation_total_qty += val_stock_move.product_qty
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
+                    
+                    
+                    # SECCION MODIFICADA POR TRESCLOUD
                     if inv.currency_id.id != company_currency.id:
+                        if 'is_foreign_purchase' not in i_line.purchase_line_id._fields:
+                            #si el modulo de importaciones ecuatoriano no esta instalado
+                            #se bypasea pues en la version ecuatoriana el valor ya se encontraba en USD
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                    # La siguiente linea fue modificada por Trescloud 
-                    if self.validation_adj_price_unit(valuation_price_unit, i_line, line, acc): 
+                    if self.validation_adj_price_unit(valuation_price_unit, i_line, line, acc):
+                        #FIN SECCION MODIFICADA POR TRESCLOUD
+
+                    
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []

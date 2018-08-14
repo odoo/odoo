@@ -311,7 +311,7 @@
                                 </kanban>
                             </field>
                             <field name="picking_type_entire_packs" invisible="1"/>
-                            <field name="pack_operation_pack_ids" options="{'reload_on_button': True}" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot">
+                            <field name="pack_operation_pack_ids" options="{'reload_on_button': True}" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot" mode="tree,kanban">
                                 <tree editable="bottom" decoration-muted="qty_done&gt;0">
                                     <field name="package_id" required="1" string="Package To Move" domain="[('location_id', '=', location_id)]"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
@@ -326,6 +326,41 @@
                                     <button name="show_details" string="Modify" type="object" icon="fa-pencil"
                                             states="confirmed,assigned,waiting,partially_available" groups="base.group_no_one"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="package_id" required="1" string="Package To Move" domain="[('location_id', '=', location_id)]"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
+                                    <field name="from_loc" groups="stock.group_stock_multi_locations,stock.group_tracking_lot"/>
+                                    <field name="to_loc" groups="stock.group_stock_multi_locations,stock.group_tracking_lot"/>
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot" context="{'default_location_id': location_dest_id}" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="qty_done" invisible="1"/>
+                                    <field name="lots_visible" invisible="1"/>
+                                    <field name="is_done"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.package_id.value"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                        <span><t t-esc="record.from_loc.value"/> to <t t-esc="record.to_loc.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.qty_done.string'/>: <t t-esc="record.qty_done.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                             <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>

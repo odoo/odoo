@@ -1,32 +1,196 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail_channel
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# amos lin <seeing@edirect168.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-08 10:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hello,</p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>To confirm, please visit the following link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"</data>"
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>您好：</p>\n"
+"<p>您已請求訂閱信件列表。\n"
+"<strong>${object.name}</strong></p>\n"
+"<p>要確認，請點選以下鏈接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如果這是一個誤發或您沒有請求此操作，請忽略此信件。</p>\n"
+"</data>"
+
+#. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hello,</p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>To confirm, please visit the following link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"</data>"
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>您好：</p>\n"
+"<p>您已請求取消訂閱信件列表。\n"
+"<strong>${object.name}</strong></p>\n"
+"<p>要確認，請點選以下鏈接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如果這是一個誤發或您沒有請求此操作，請忽略此信件。</p>\n"
+"</data>"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
+msgstr "<span class=\"oe_snippet_thumbnail_title\">討論組</span>"
+
+#. module: website_mail_channel
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
+#, python-format
+msgid "Add a Subscribe Button"
+msgstr "添加訂閱按鈕"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid "Alone we can do so little, together we can do so much"
+msgstr "一個人的力量有限，團隊的力量無堅不摧"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Archives"
-msgstr "封存"
+msgstr "存檔"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid "Browse archives"
+msgstr "瀏覽存檔"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
+msgid "By date"
+msgstr "日期"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
+msgid "By thread"
+msgstr "線程"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "Change Discussion List"
+msgstr "變更討論列表"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
+msgid "Description"
+msgstr "說明"
+
+#. module: website_mail_channel
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
+#, python-format
+msgid "Discussion List"
+msgstr "討論列表"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
+msgid "Discussion Path"
+msgstr "討論路徑"
+
+#. module: website_mail_channel
+#: model:ir.model,name:website_mail_channel.model_mail_channel
+msgid "Discussion channel"
+msgstr "討論頻道"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid "Follow-Ups"
+msgstr "後續跟進"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr "無效或過期的確認鏈接。"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
+msgid "Mailing List"
+msgstr "信件列表"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
+msgid "Mailing Lists"
+msgstr "信件列表"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:20
+#, python-format
+msgid "Mailing-List"
+msgstr "信件列表"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr "消息說明：可以選擇主題或正文的開始部分作為消息的描述。"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid ""
+"Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
+"pull-right\"/>"
+msgstr "需要取消訂閱？ 在這裡！<span class=\"fa fa-2x fa-arrow-down pull-right\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "送出信件"
+msgstr "寄出信件"
+
+#. module: website_mail_channel
+#: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
+msgid "Please confirm subscription to ${object.name}"
+msgstr "請確認訂閱$ {object.name}"
+
+#. module: website_mail_channel
+#: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
+msgid "Please confirm unsubscription to ${object.name}"
+msgstr "請確認取消訂閱 ${object.name}"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:21
+#, python-format
+msgid "Post to"
+msgstr "寄到"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
+msgid "Published"
+msgstr "已發佈"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -35,17 +199,142 @@ msgstr "參考"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid "Stay in touch with our Community"
+msgstr "請通過我們的社區和我們保持聯繫"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Subscribe"
 msgstr "訂閱"
 
 #. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#, python-format
+msgid "Unsubscribe"
+msgstr "退訂"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
+msgid ""
+"Used to display messages in a paragraph-based chatter using a unique path;"
+msgstr "用於顯示原則基礎的討論消息，使用統一路徑；"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
+msgid "Visible on the website as a comment"
+msgstr "作為可見於網站的評論"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "You have been correctly"
+msgstr "您一直是正確的"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "a confirmation email has been sent."
+msgstr "已發送確認電子信件"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "archives"
+msgstr "存檔"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+msgid "attachments"
+msgstr "附件"
+
+#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
-msgstr "由"
+msgstr "by"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.group_message
+#: model:ir.ui.view,arch_db:website_mail_channel.group_messages
+msgid "mailing list archives"
+msgstr "信件列表存檔  "
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid ""
+"members<br/>\n"
+"                    <i class=\"fa fa-fw fa-envelope-o\"/>"
+msgstr "成員"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+msgid "messages / month"
+msgstr "訊息 / 月"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid "more replies"
+msgstr "更多的回復"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.messages_short
+msgid "replies"
+msgstr "回復"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "send mail"
+msgstr "發送信件"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "show"
 msgstr "顯示"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "subscribed"
+msgstr "已訂閱"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "to the mailing list."
+msgstr "到信件列表"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "unsubscribe"
+msgstr "退訂"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "unsubscribed"
+msgstr "退訂"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "your email..."
+msgstr "您的電子信件..."
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr "地址"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already unsubscribed or was never subscribed to the mailing list, you may"
+" want to check that the address was correct."
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:238
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr "地址 %s 已經取消訂閱或從未訂閱任何信件列表"

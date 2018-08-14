@@ -230,13 +230,18 @@
                         <group>
                             <field name="voucher_type" invisible="True"/>
                             <field name="currency_id" invisible="True"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="pay_now" required="1"/>
-                            <field name="account_id"/>
+                            <field name="payment_journal_id"
+                                   attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="journal_id" domain="[('type','=','sale')]" widget="selection" groups="account.group_account_user"/>
+                            <field name="journal_id"
+                                   domain="[('type','=','sale')]"
+                                   widget="selection"
+                                   groups="account.group_account_user"/>
                             <field name="date"/>
                             <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                             <field name="name" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
@@ -245,7 +250,7 @@
                     </group>
                     <notebook>
                         <page string="Sales Information">
-                            <field name="line_ids">
+                            <field name="line_ids" mode="tree,kanban">
                                 <tree string="Voucher Lines" editable="bottom">
                                     <field name="product_id"/>
                                     <field name="name"/>
@@ -258,6 +263,32 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="product_id"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="quantity"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <span><t t-esc="record.quantity.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
 			                <group>
                                 <group class="oe_subtotal_footer oe_right">
@@ -338,30 +369,32 @@
                     <h1>
                         <field name="number" readonly="1"/>
                     </h1>
-                    <field name="voucher_type" invisible="True"/>
                     <group>
                         <group>
+                            <field name="voucher_type" invisible="True"/>
+                            <field name="currency_id" invisible="True"/>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Vendor" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
                             <field name="pay_now" required="1"/>
-                            <field name="account_id"/>
-                            <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
-                            <field name="reference"/>
+                            <field name="payment_journal_id"
+                                   attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="account_id" groups="account.group_account_user" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="reference"/>
                         </group>
                         <group>
+                            <field name="journal_id"
+                                   domain="[('type','=','purchase')]"
+                                   widget="selection"
+                                   groups="account.group_account_user"/>
                             <field name="date" string="Bill Date"/>
                             <field name="date_due" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="journal_id"
-                                domain="[('type','=','purchase')]"
-                                widget="selection"
-                                groups="account.group_account_user"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Bill Information">
-                            <field name="line_ids">
+                            <field name="line_ids" mode="tree,kanban">
                                 <tree string="Voucher Lines" editable="bottom">
                                     <field name="product_id"/>
                                     <field name="name"/>
@@ -374,6 +407,32 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="product_id"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="quantity"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <span><t t-esc="record.quantity.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                             <group>
                                 <group class="oe_subtotal_footer oe_right">

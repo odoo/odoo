@@ -27,13 +27,13 @@
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Expenses">
-                <header>
+                <header invisible="context.get('expense_adding_line')">
                     <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,reported,done"/>
                     <button name="view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box">
+                    <div class="oe_button_box" invisible="context.get('expense_adding_line')">
                         <button name="action_get_attachment_view"
                             class="oe_stat_button"
                             icon="fa-book"
@@ -164,7 +164,7 @@
                     <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Expense"/>
                     <filter domain="[('state', '=', 'reported')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
-                    <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
+                    <filter domain="[('state', '!=', 'refused')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
                     <separator />
                     <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
@@ -454,7 +454,7 @@
                             <field name="account_move_id" invisible="1"/>
                         </group>
                     </group>
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True}" context="{'expense_adding_line': True}">
                             <tree>
                                 <field name="date"/>
                                 <field name="name"/>

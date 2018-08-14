@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # nasaaskii <nasaaskii@gmail.com>, 2017
 # Erdenebold Ts <erdenebold10@gmail.com>, 2017
-# Bayarkhuu Bataa <bbayarkhuu@gmail.com>, 2017
-# Batsaihan Purevjav <batsaihan.p@gmail.com>, 2017
+# Bayarkhuu Bataa, 2017
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
+# Batsaihan Purevjav <batsaihan.p@gmail.com>, 2017
 # ERDENESAIKHAN BATZORIG <esab.orgil@gmail.com>, 2017
 # Jacara <baskhuujacara@gmail.com>, 2017
 # Unurjargal Tsoodol <unuruu25@gmail.com>, 2017
@@ -210,12 +210,12 @@ msgstr "Автоматаар 1 гүйлгээ тулгагдсан байна."
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "15 өдөр"
+msgstr "15 хоног дотор"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr "30 Цэвэр өдөрүүд"
+msgstr "30 хоног дотор"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -1418,7 +1418,7 @@ msgstr "Дансны төрөл"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr "Зөвшөөрөгдсөн Дансны төрөлүүд"
+msgstr "Зөвшөөрөгдсөн дансны төрлүүд"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -1626,6 +1626,11 @@ msgstr "Хаяг"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
 msgstr "Тохируулах татвар"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1877,7 +1882,7 @@ msgstr "Валютаарх дүн"
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
 #: model:ir.ui.view,arch_db:account.invoice_tree
 msgid "Amount Due"
-msgstr "Хугацаа хэтэрсэн дүн"
+msgstr "Нэхэмжлэлийн үлдэгдэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
@@ -2257,7 +2262,7 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
 msgstr ""
-"Нэхэмжлэл төлөгдөх Банкны Дансны Дугаар. Энэ хэрэв захиалагч бол компаний "
+"Нэхэмжлэл төлөгдөх Банкны Дансны Дугаар. Энэ хэрэв захиалагч бол компанийн "
 "банкны данс эсвэл нийлүүлэгч байвал нийлүүлэгчийн төлбөр буцаалтын данс, "
 "бусад тохиолдолд харилцагчийн банкны дансны дугаар байна."
 
@@ -2321,6 +2326,12 @@ msgstr "Хөдөлгөөний Урьдчилсан тохируулгаарх �
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Банкны хуулга"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3795,7 +3806,7 @@ msgstr "Үндсэн татвар"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_id
 msgid "Default company currency"
-msgstr "Компаний үндсэн валют"
+msgstr "Компанийн үндсэн валют"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_purchase_tax_id
@@ -3855,7 +3866,7 @@ msgstr "Энэ кассын бүртгэлээс ямар шалтгаанаар
 #: model:ir.ui.view,arch_db:account.view_account_type_form
 #, python-format
 msgid "Description"
-msgstr "Тодорхойлолт"
+msgstr "Гүйлгээний утга"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_note
@@ -5083,7 +5094,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send customer statements from Odoo, you must:"
-msgstr "Хэрэв та захиалагчийн хуулгыг Odoo-с илгээж чаддаг байхыг хүсвэл:"
+msgstr "Хэрэв та захиалагчийн тооцоог Odoo-с илгээж чаддаг байхыг хүсвэл:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5361,7 +5372,7 @@ msgstr "Нэхэмжлэлийн мөр"
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "Компаний хэмжээнд нэхэмжлэлийн дугаар үл давхцах ёстой!"
+msgstr "Компанийн хэмжээнд нэхэмжлэлийн дугаар үл давхцах ёстой!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
@@ -5849,7 +5860,7 @@ msgstr "Нээлттэй үлдээ"
 #: model:ir.ui.view,arch_db:account.report_journal
 #, python-format
 msgid "Label"
-msgstr "Шошго"
+msgstr "Гүйлгээний утга"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
@@ -6219,7 +6230,7 @@ msgstr "Үндсэн гарчиг 1(тод,доогуур зураастай)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr "Компаний үндсэн валют."
+msgstr "Компанийн үндсэн валют."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
@@ -6906,7 +6917,7 @@ msgstr "Нээх"
 #: code:addons/account/static/src/xml/account_payment.xml:82
 #, python-format
 msgid "Open Payment"
-msgstr "Нээлттэй Төлбөр"
+msgstr "Төлбөрийг нээх"
 
 #. module: account
 #. openerp-web
@@ -7038,7 +7049,7 @@ msgstr "Хэтэрсэн зээл өрийн багаж"
 #: code:addons/account/models/account_invoice.py:119
 #, python-format
 msgid "Outstanding debits"
-msgstr "Хэтэрсэн өр"
+msgstr "Илүү төлбөр"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7635,7 +7646,8 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
-"Валют нь компаний валютаас ялгаатай бол валют баганатайгаар тайланг хэвлэнэ."
+"Валют нь компанийн валютаас ялгаатай бол валют баганатайгаар тайланг "
+"хэвлэнэ."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7995,7 +8007,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
 msgid "Reference/Description"
-msgstr "Код/Тодорхойлолт"
+msgstr "Гүйлгээний утга"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:958
@@ -8091,12 +8103,12 @@ msgstr "Энгийн"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr "Хугацаа хэтэрсэн үлдсэн дүн нь компанийн валютаар."
+msgstr "Нэхэмжлэлийн үлдэгдэл компанийн валютаар."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr "Хугацаа хэтэрсэн үлдсэн дүн нь нэхэмжлэлийн валютаар."
+msgstr "Нэхэмжлэлийн үлдэгдэл нэхэмжлэлийн валютаар."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -8470,7 +8482,7 @@ msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
 msgstr ""
-"Захиалагчийн хуулга (илүүдсэн нэхэмжлэлүүд)-г шилжилтийн үед гараараа илгээх"
+"Захиалагчийн тооцоо (илүүдсэн нэхэмжлэлүүд)-г шилжилтийн үед гараараа илгээх"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9215,7 +9227,7 @@ msgstr "Бүртгэлийн код болон нэр компанийн хэм�
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr "Дансны код нь компаний хэмжээнд үл давхцах байх ёстой !"
+msgstr "Дансны код нь компанийн хэмжээнд үл давхцах байх ёстой !"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
@@ -9469,8 +9481,8 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
-"Эдгээр төрөлүүд нь танай улсын дагууд тодорхойлогддог. Төрөлүүд нь "
-"данснуудын тухай мэдээллийг агуулдаг тул энэ мэдээллийг тодорхойлж өгдөг."
+"Эдгээр төрлүүд нь танай улсын дагууд тодорхойлогддог. Төрлүүд нь данснуудын "
+"тухай мэдээллийг агуулдаг тул энэ мэдээллийг тодорхойлж өгдөг."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10687,6 +10699,14 @@ msgstr ""
 "тулгалтыг эхлээд арилгах хэрэгтэй."
 
 #. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
@@ -11102,7 +11122,7 @@ msgstr "эсвэл"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr "Хэтэрсэн өглөг"
+msgstr "илүү төлбөр"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

@@ -6,7 +6,7 @@
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
@@ -22,13 +22,15 @@
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
+"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,7 +154,7 @@ msgid ""
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
-msgstr ""
+msgstr "<i/>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -201,7 +203,7 @@ msgstr "Discutez en ligne avec un de nos collaborateurs"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Click to create a new canned response."
-msgstr ""
+msgstr "Cliquez ici pour créer une nouvelle réponse standardisée."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -299,6 +301,9 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Délai (en secondes) d'ouverture automatique de la fenêtre de conversation. "
+"Remarque : l'action sélectionnée doit être « Fenêtre contextuelle "
+"automatique » pour que ce paramètre soit pris en compte."
 
 #. module: im_livechat
 #. openerp-web
@@ -523,6 +528,10 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
+"Les statistiques pour canal d'assistance en ligne vous permettent d'évaluer "
+"et d'analyser facilement les performances d'une session d'assistance en "
+"ligne. Obtenez des informations à propos des sessions manquées, de "
+"l'audience, de la durée d'une session, etc."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -678,6 +687,8 @@ msgstr "Note : :rating_%d"
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
+"Expression régulière spécifiant les pages Web sur lesquelles cette règle "
+"sera appliquée."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -782,6 +793,11 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"La règle sera uniquement appliquée pour ces pays. Exemple : si vous "
+"sélectionnez « Belgique» et « États-Unis » et que vous définissez l'action "
+"sur « Masquer le bouton », le bouton d'assistance sera masqué sur l'URL "
+"spécifiée pour les visiteurs situés dans ces deux pays. Cette fonctionnalité"
+" nécessite que GeoIP soit installé sur votre serveur."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -880,6 +896,9 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"Vous pouvez créer des canaux pour chaque site Web sur lequel vous souhaitez\n"
+" intégrer le widget d'assistance en ligne. Cela permet aux visiteurs\n"
+" de votre site de discuter en temps réel avec vos opérateurs."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action

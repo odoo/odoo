@@ -3,25 +3,25 @@
 # * base_action_rule
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Bohdan Lisnenko, 2016
 # ТАрас <tratatuta@i.ua>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # Sergiy <jshmitz@me.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -68,7 +68,7 @@ msgstr "Додати підписників"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_is_assigned_to_admin
 msgid "Assigned to admin user"
-msgstr ""
+msgstr "Призначено адміністратору"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -79,22 +79,22 @@ msgstr "Дія"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "На підставі модифікації форми"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "На основі умовного часу"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Перед оновленням домену"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Перед оновлення фільтру"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -104,12 +104,12 @@ msgstr "Скасовано"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "Позначте це, якщо цей контакт є клієнтом."
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr ""
+msgstr "Натисніть, щоб встановити автоматичне правило дії."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -119,7 +119,7 @@ msgstr "Завершено"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Список назв полів, розділених комами, який ініціює обмін."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -153,7 +153,7 @@ msgstr "Кінцевий термін"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Затримка після активації дати"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
@@ -162,16 +162,19 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Затримка після дати запуску.\n"
+"Ви можете поставити негативне число, якщо вам потрібна затримка до\n"
+"тригерної дата, наприклад, надсилання нагадування за 15 хвилин до зустрічі."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Затримка після тригерної дати"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range_type
 msgid "Delay type"
-msgstr ""
+msgstr "Тип затримки"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
@@ -189,11 +192,12 @@ msgstr "Домен"
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
 msgid "Examples: email reminders, call object service, etc."
 msgstr ""
+"Приклади: нагадування електронною поштою, послуга виклику об'єктів тощо."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Fields to Change"
-msgstr ""
+msgstr "Поля для зміни"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
@@ -203,7 +207,7 @@ msgstr "Фільтр"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Дає порядок послідовності при відображенні списку правил."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -212,6 +216,9 @@ msgid ""
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"Перейдіть на свою сторінку \"Допоміжний документ\" та встановіть параметри "
+"фільтра у вікні \"Пошук\" (Приклад фільтра на основі результатів "
+"пошуку/нагод: дата створення \"дорівнює\" 01/01/2012)."
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -231,7 +238,7 @@ msgstr "ІД"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
+msgstr "Якщо є, ця умова повинна бути виконана до виконання правила дій."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
@@ -239,7 +246,7 @@ msgstr ""
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "Якщо є, ця умова повинна бути виконана до оновлення запису."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -253,6 +260,9 @@ msgid ""
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
+"У цьому ж перегляді \"Пошуку\" виберіть меню \"Зберегти поточний фільтр\", "
+"введіть назву (наприклад: Створити 01/01/2012) та додайте параметр "
+"\"Поділитися з усіма користувачами\""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -288,17 +298,17 @@ msgstr "Останнє оновлення"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
 msgid "Last run"
-msgstr ""
+msgstr "Останній запус"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
+msgstr "Id ліду"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
 msgid "Line ids"
-msgstr ""
+msgstr "Id рядка"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -328,27 +338,27 @@ msgstr "Нова"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Тригер полів для зміни"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation"
-msgstr ""
+msgstr "На створення"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Creation & Update"
-msgstr ""
+msgstr "На створення та оновлення"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "При видаленні"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Update"
-msgstr ""
+msgstr "На оновлення"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_partner_id
@@ -386,6 +396,8 @@ msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
 msgstr ""
+"Виберіть, коли потрібно виконати дію, і виберіть записи та/або умови "
+"синхронізації."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -401,17 +413,17 @@ msgstr "Дії на сервері"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Server actions to run"
-msgstr ""
+msgstr "Серверні дії для запуску"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_user_id
 msgid "Set Responsible"
-msgstr ""
+msgstr "Встановити відповідального"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "Встановити вибір на основі пошукового фільтра:"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -426,27 +438,27 @@ msgstr "Тема"
 #. module: base_action_rule
 #: model:ir.actions.server,name:base_action_rule.test_action
 msgid "Test Server Action"
-msgstr ""
+msgstr "Перевірка дії сервера"
 
 #. module: base_action_rule
 #: model:ir.actions.server,name:base_action_rule.test_action_context
 msgid "Test Server Action Context"
-msgstr ""
+msgstr "Ситуація перевірки дії на сервері"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
-msgstr ""
+msgstr "Перевірка ліду на стадії \"виконано\""
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_draft
 msgid "Test lead in state 'draft'"
-msgstr ""
+msgstr "Перевірка ліду на стадії \"чернетка\""
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_open
 msgid "Test lead in state 'open'"
-msgstr ""
+msgstr "Перевірка ліду на стадії \"відкрито\""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -456,7 +468,7 @@ msgstr "Дата початку"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "Використовувати календар"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -467,11 +479,16 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Використовуйте автоматичні дії, щоб автоматично запускати дії для\n"
+"різних екранів. Приклад: лід, створений певним користувачем\n"
+"автоматично встановлюється для певної команди продажу або\n"
+"нагоди, яка як і раніше мала статус очікування від 14 днів,\n"
+"викликає автоматичне електронне нагадування."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
 msgid "User id"
-msgstr ""
+msgstr "Id користувача"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -479,6 +496,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Під час обчислення умовного часу на основі дня можна скористатись календарем"
+" для обчислення дати за робочими днями."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
@@ -486,16 +505,18 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Коли спрацює стан.\n"
+"Якщо є, буде перевірено планувальником. Якщо порожньо, буде перевірено при створенні та оновленні."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
 msgid "When to Run"
-msgstr ""
+msgstr "Коли почати"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Якщо цей прапорець не позначено, правило сховане і не буде виконано."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -503,3 +524,5 @@ msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
 msgstr ""
+"Ви також можете використовувати фільтри замість вибору записів. Щоб створити"
+" новий фільтр:"

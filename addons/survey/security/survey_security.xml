@@ -46,7 +46,7 @@
             <field name="name">Public access to user_input</field>
             <field name="model_id" ref="survey.model_survey_user_input"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
             <field eval="0" name="perm_unlink"/>
             <field eval="0" name="perm_write"/>
             <field eval="1" name="perm_read"/>

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Francesc Bassas i Bullich <francesc@babu.cat>, 2016
 # Bàrbara Partegàs <barbararof@gmail.com>, 2016
@@ -13099,6 +13099,18 @@ msgid "Memos pad"
 msgstr "Pad de memoràndum"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -15382,7 +15394,7 @@ msgstr "Eliminar l'acció contextual relacionada amb aquesta acció de servidor"
 #: code:addons/base/ir/ir_model.py:514
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr "Canvi de nom de camp \"% s\" no està permès"
+msgstr "Canvi de nom de camp \"%s\" no està permès"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_repair
@@ -17043,6 +17055,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "Tailàndia - Informes Comptables"
 
 #. module: base
+#: code:addons/base/res/res_users.py:288
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -18130,8 +18148,8 @@ msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: "
 "%s"
 msgstr ""
-"Impossible processar el mòdul \"% s\" perquè no es va resoldre la "
-"dependència externa:% s"
+"Impossible processar el mòdul \" %s\" perquè no es va resoldre la "
+"dependència externa: %s"
 
 #. module: base
 #: code:addons/base/module/module.py:314

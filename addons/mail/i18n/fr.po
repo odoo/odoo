@@ -4,12 +4,13 @@
 # 
 # Translators:
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Nicolas Martinelli <nim@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Florian Hatat, 2016
 # Frédéric LIETART <stuff@tifred.fr>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
@@ -22,11 +23,10 @@
 # Agathe Mollé <molleagathe@gmail.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Martin Malorni <mmalorni@gmail.com>, 2016
-# ShevAbam <shevabam@gmail.com>, 2016
+# ShevAbam, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Benedicte HANET <hanetb@gmail.com>, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
@@ -38,7 +38,6 @@
 # Julien Martin <204336@supinfo.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
-# Micky Jault <micky037@hotmail.fr>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # invitu <contact@invitu.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
@@ -309,6 +308,15 @@ msgstr ""
 "            Pour mentionner un canal, saisissez <b>#channel</b>.<br>\n"
 "            Pour exécuter une commande, saisissez <b>/command</b>.<br>\n"
 "            Pour insérer des réponses prédéfinies dans votre message, saisissez <b>:shortcut</b>.<br>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -979,7 +987,7 @@ msgstr "Choisissez un model pour afficher ses valeurs."
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Choose an example"
-msgstr "Choisir un exemple"
+msgstr "Prendre l'enregistrement"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:340
@@ -2270,7 +2278,7 @@ msgstr "Invite des gens"
 #: code:addons/mail/static/src/js/client_action.js:649
 #, python-format
 msgid "Invite people to #%s"
-msgstr "Inviter des joueurs à"
+msgstr "Inviter des personnes à #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -5048,7 +5056,7 @@ msgstr "plus d'information"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "record:"
-msgstr "enregistrement:"
+msgstr "suivant en exemple :"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:935

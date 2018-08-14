@@ -3,20 +3,21 @@
 # * base_iban
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Jiří P., 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Jiří P., 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -27,13 +28,13 @@ msgstr "Bankovní účty"
 #: code:addons/base_iban/models/res_partner_bank.py:57
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "BBAN nelze vypočítat, protože číslo účtu není IBAN."
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:26
 #, python-format
 msgid "No IBAN !"
-msgstr ""
+msgstr "Není IBAN!"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:34
@@ -42,6 +43,8 @@ msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"Zdá se, že IBAN není správný. Měli jste zadat něco podobného %s\n"
+"Kde B = národní kód banky, S = kód pobočky, C = číslo účtu, k = kontrolní číslice"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:30
@@ -53,4 +56,4 @@ msgstr "IBAN je neplatný, měl by začínat kódem země"
 #: code:addons/base_iban/models/res_partner_bank.py:40
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Tento IBAN neprojde ověřovací kontrolou, ověřte jej prosím."

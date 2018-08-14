@@ -61,6 +61,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Nu se poate găsi un cont de intrare stoc pentru produsul %s. Trebuie să "
+"definiți unul în categoria produsului sau în locație, înainte de a procesa "
+"această operație."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -98,6 +101,9 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
+"Alegeți data contabilă la care doriți să evaluați mișcările stocurilor "
+"create de inventar în locul celei implicite (data de încheiere a "
+"inventarului)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -217,7 +223,7 @@ msgstr ""
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr ""
+msgstr "Include costuri adiționale în costul produsului."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -270,7 +276,7 @@ msgstr "Linie factura"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Costuri adiționale"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
@@ -317,7 +323,7 @@ msgstr "Nicio diferență între prețul standard și noul preț!"
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
+msgstr "Fără costuri adiționale"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
@@ -346,6 +352,8 @@ msgstr "Perpetuu (automat)"
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
+"Evaluarea permanentă a inventarului (mișcările de stoc generează notele "
+"contabile)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -443,7 +451,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
-msgstr ""
+msgstr "Contabilitate stocuri"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_history
@@ -462,7 +470,7 @@ msgstr "Cont Intrare Stoc"
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr "Registru de stoc"
+msgstr "Jurnal de stoc"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -516,6 +524,9 @@ msgid ""
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
+"Am depistat că valoarea produsului %s este zero. Această înseamnă că "
+"probabil este o eroare de configurare. Verificați metoda de cost și preșul "
+"standard. "
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -655,6 +666,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
 msgstr ""
+"Nu aveți niciun jurnal de stoc definit pe categoria de produse, verificați "
+"dacă ați instalat un plan de conturi"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111

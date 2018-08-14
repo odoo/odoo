@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # nasaaskii <nasaaskii@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 # Jacara <baskhuujacara@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -274,6 +275,15 @@ msgstr ""
 "            Сувгийг дурсахдаа <b>#channel</b> гэж бичнэ.<br>\n"
 "            Команд бичихдээ <b>/command</b> гэж бичнэ.<br>\n"
 "            Бэлдсэн хариултыг оруулж ирэхдээ <b>:shortcut</b> гэж бичнэ.<br>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -651,7 +661,7 @@ msgstr "Бүх"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr "Бүр зурвасууд"
+msgstr "Бүх зурвасууд"
 
 #. module: mail
 #. openerp-web
@@ -2712,7 +2722,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr "Зурвасын дэд төрөлүүд"
+msgstr "Зурвасын дэд төрлүүд"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_subtype_ids
@@ -2720,7 +2730,7 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
-"Хэрэглэгчийн ханан дээр нийтлэгдэх зурвасын дэд төрөлүүд араас нь дагалдана."
+"Хэрэглэгчийн ханан дээр нийтлэгдэх зурвасын дэд төрлүүд араас нь дагалдана."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_type
@@ -2913,7 +2923,7 @@ msgstr "Үйлдэл шаардлагатай хүлээн авалт"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "Never"
-msgstr "Хэзээч үгүй"
+msgstr "Хэзээ ч үгүй"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
@@ -4126,7 +4136,7 @@ msgstr "Дэд төрөл"
 #: model:ir.actions.act_window,name:mail.action_view_message_subtype
 #: model:ir.ui.menu,name:mail.menu_message_subtype
 msgid "Subtypes"
-msgstr "Дэд төрөлүүд"
+msgstr "Дэд төрлүүд"
 
 #. module: mail
 #: selection:mail.compose.message,message_type:0

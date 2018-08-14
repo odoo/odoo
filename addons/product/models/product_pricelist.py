@@ -106,7 +106,7 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date') or fields.Date.today()
+            date = self._context.get('date') or fields.Date.context_today(self)
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
@@ -346,7 +346,7 @@ class PricelistItem(models.Model):
         'product.category', 'Product Category', ondelete='cascade',
         help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
     min_quantity = fields.Integer(
-        'Min. Quantity', default=1,
+        'Min. Quantity', default=0,
         help="For the rule to apply, bought/sold quantity must be greater "
              "than or equal to the minimum quantity specified in this field.\n"
              "Expressed in the default unit of measure of the product.")
@@ -370,7 +370,7 @@ class PricelistItem(models.Model):
              'Cost Price : The base price will be the cost price.\n'
              'Other Pricelist : Computation of the base price based on another Pricelist.')
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist')
-    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade')
+    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True)
     price_surcharge = fields.Float(
         'Price Surcharge', digits=dp.get_precision('Product Price'),
         help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')

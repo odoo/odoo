@@ -256,11 +256,13 @@ class account_payment(models.Model):
                 self.partner_type = 'customer'
             elif self.payment_type == 'outbound':
                 self.partner_type = 'supplier'
+            else:
+                self.partner_type = False
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):
             res['domain'] = {}
-        res['domain']['journal_id'] = self.payment_type == 'inbound' and [('at_least_one_inbound', '=', True)] or [('at_least_one_outbound', '=', True)]
+        res['domain']['journal_id'] = self.payment_type == 'inbound' and [('at_least_one_inbound', '=', True)] or self.payment_type == 'outbound' and [('at_least_one_outbound', '=', True)] or []
         res['domain']['journal_id'].append(('type', 'in', ('bank', 'cash')))
         return res
 
@@ -341,7 +343,9 @@ class account_payment(models.Model):
     def unlink(self):
         if any(bool(rec.move_line_ids) for rec in self):
             raise UserError(_("You can not delete a payment that is already posted"))
-        if any(rec.move_name for rec in self):
+        
+        #TRESCLOUD - se agrega el bypass_move_name_restriction
+        if not self._context.get('bypass_move_name_restriction') and any(rec.move_name for rec in self):
             raise UserError(_('It is not allowed to delete a payment that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(account_payment, self).unlink()
 

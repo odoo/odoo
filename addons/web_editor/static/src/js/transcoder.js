@@ -9,17 +9,12 @@ var getMatchedCSSRules = function (a) {
         var sheets = document.styleSheets;
         for(var i = sheets.length-1; i >= 0 ; i--) {
             var rules;
-            if (sheets[i].rules) {
-                rules = sheets[i].rules;
-            } else {
-                //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
-                try {
-                    rules = sheets[i].cssRules;
-                } catch(e) {
-                    console.warn("Can't read the css rules of: " + sheets[i].href, e);
-                    continue;
-                }
-                rules = sheets[i].cssRules;
+            // try...catch because browser may not able to enumerate rules for cross-domain sheets
+            try {
+                rules = sheets[i].rules || sheets[i].cssRules;
+            } catch (e) {
+                console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                continue;
             }
             if (rules) {
                 for(var r = rules.length-1; r >= 0; r--) {
@@ -131,6 +126,20 @@ var getMatchedCSSRules = function (a) {
         delete style['text-decoration-style'];
     }
 
+    // text-align inheritance does not seem to get past <td> elements on some
+    // mail clients
+    if (style['text-align'] === 'inherit') {
+        var $el = $(a).parent();
+        do {
+            var align = $el.css('text-align');
+            if (_.indexOf(['left', 'right', 'center', 'justify'], align) >= 0) {
+                style['text-align'] = align;
+                break;
+            }
+            $el = $el.parent();
+        } while (!$el.is('html'));
+    }
+
     return style;
 };
 
@@ -173,14 +182,34 @@ var img_to_font = function ($editable) {
     });
 };
 
+/*
+ * Utility function to apply function over descendants elements
+ *
+ * This is needed until the following issue of jQuery is solved:
+ *  https://github.com./jquery/sizzle/issues/403
+ *
+ * @param {Element} node The root Element node
+ * @param {Function} func The function applied over descendants
+ */
+var applyOverDescendants = function (node, func) {
+    node = node.firstChild;
+    while (node) {
+        if (node.nodeType === 1) {
+            func(node);
+            applyOverDescendants(node, func);
+        }
+        node = node.nextSibling;
+    }
+};
+
 // convert class into inline style to send by mail
 var class_to_style = function ($editable) {
     if (!rulesCache.length) {
         getMatchedCSSRules($editable[0]);
     }
-    $editable.find('*').each(function () {
-        var $target = $(this);
-        var css = getMatchedCSSRules(this);
+    applyOverDescendants($editable[0], function (node) {
+        var $target = $(node);
+        var css = getMatchedCSSRules(node);
         var style = $target.attr("style") || "";
         _.each(css, function (v,k) {
             if (!(new RegExp('(^|;)\s*' + k).test(style))) {
@@ -200,9 +229,9 @@ var style_to_class = function ($editable) {
 
     var $c = $('<span/>').appendTo("body");
 
-    $editable.find('*').each(function () {
-        var $target = $(this);
-        var css = getMatchedCSSRules(this);
+    applyOverDescendants($editable[0], function (node) {
+        var $target = $(node);
+        var css = getMatchedCSSRules(node);
         var style = "";
         _.each(css, function (v,k) {
             if (!(new RegExp('(^|;)\s*' + k).test(style))) {

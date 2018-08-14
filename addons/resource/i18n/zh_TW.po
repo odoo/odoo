@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-02-10 09:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
@@ -27,7 +29,12 @@ msgstr "%s (副本)"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
-msgstr "活躍"
+msgstr "有效"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "休息日"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_code
@@ -49,7 +56,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_date
@@ -57,7 +64,24 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
+msgid "Day of Week"
+msgstr "星期"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
+msgid "Define the schedule of resource"
+msgstr "定義資源調度"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr "定義您的項目成員可計劃的工時和時間表"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -70,7 +94,12 @@ msgstr "顯示名稱"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 msgid "Duration"
-msgstr "持續時間"
+msgstr "有效期"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
+msgid "Efficiency Factor"
+msgstr "效率因子"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
@@ -79,15 +108,21 @@ msgid "End Date"
 msgstr "結束日期"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:738
+#, python-format
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr "錯誤！休假的開始日期必須小於結束日期。"
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Friday"
-msgstr "星期五"
+msgstr "週五"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -95,12 +130,36 @@ msgid "Hours"
 msgstr "小時"
 
 #. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Human"
+msgstr "人類"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves_resource_id
+msgid ""
+"If empty, this is a generic holiday for the company. If a resource is set, "
+"the holiday/leave is only for this resource"
+msgstr "如果為空，表示公司的一個通用假期，如果設定了一個資源，假期/休假只適用於該資源。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "如果這有效字段設為否，那麼可以隱藏此記錄且並不刪除它。"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Inactive"
+msgstr "無效"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
@@ -108,7 +167,7 @@ msgstr "編號"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_uid
@@ -116,7 +175,7 @@ msgstr "最後修改:"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date
@@ -124,7 +183,19 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Leave Detail"
+msgstr "休假詳情"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Leave Month"
+msgstr "休假月份"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -132,9 +203,14 @@ msgid "Leaves"
 msgstr "休假"
 
 #. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "物料"
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Monday"
-msgstr "星期一"
+msgstr "週一"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -142,14 +218,19 @@ msgstr "星期一"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
-msgstr "理由"
+msgstr "原因"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "用於管理資源訪問權限的使用者名稱"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
@@ -162,6 +243,32 @@ msgid "Resource"
 msgstr "資源"
 
 #. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "資源日曆"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_resource
+msgid "Resource Detail"
+msgstr "資源詳情"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Leaves"
+msgstr "資源休假"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
+msgid "Resource Type"
+msgstr "資源類型"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
+msgid "Resource's Calendar"
+msgstr "資源的日曆"
+
+#. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model:ir.ui.view,arch_db:resource.resource_resource_tree
@@ -169,9 +276,37 @@ msgid "Resources"
 msgstr "資源"
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Leaves"
+msgstr "資源休假"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr "資源允許您創建和管理資源參與的特定的計劃階段。您還能在其每週工作時間基礎上設定其效率和工作量。"
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
-msgstr "星期六"
+msgstr "週六"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "搜索資源"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Leaves"
+msgstr "搜索工作期間休假"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "搜索工作時間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -179,24 +314,50 @@ msgid "Start Date"
 msgstr "開始日期"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
+msgid "Start and End time of working."
+msgstr "工作的開始和結束時間。"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
 msgid "Starting Date"
-msgstr "開始日期"
+msgstr "起始日期"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Leave by Month"
+msgstr "休假的起始日期，按月"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
-msgstr "星期日"
+msgstr "週日"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:714
+#, python-format
+msgid "The efficiency factor cannot be equal to 0."
+msgstr "效率因子不能等於0。"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
+msgstr ""
+"該字段描述資源完成任務的效率。例如5天的資源分配給他5個任務，預設情況下這個階段會顯示100％的負載，但是如果我們把效率提高到200％，那麼他的負載只會是50％。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
-msgstr "星期四"
+msgstr "週四"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
-msgstr "星期二"
+msgstr "週二"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -207,12 +368,38 @@ msgstr "類型"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_user_id
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
-msgstr "星期三"
+msgstr "週三"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "工作詳情"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
+msgid "Work from"
+msgstr "工作起始"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_to
+msgid "Work to"
+msgstr "工作截止"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
+msgid "Workgroup Manager"
+msgstr "工作組管理員"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Working Period"
+msgstr "工作期間"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form

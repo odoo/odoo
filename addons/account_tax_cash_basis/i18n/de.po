@@ -10,13 +10,14 @@
 # Mathias Neef <mn@copado.de>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
 "PO-Revision-Date: 2016-09-07 08:55+0000\n"
-"Last-Translator: Tina Rittmüller <tr@ife.de>, 2016\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr "Buchungssatz"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
-msgstr ""
+msgstr "Verwendung des Kontos bei der Erfassung der Steuerzahlungsbasis"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -53,7 +54,7 @@ msgstr "Teilausgleich Offene Posten"
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:39
 #, python-format
 msgid "Please configure a Tax Received Account for tax %s"
-msgstr ""
+msgstr "Konfigurieren Sie bitte ein Konto für Steuerrückerstattungen in %s."
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
@@ -61,6 +62,9 @@ msgid ""
 "Select this if the tax should use cash basis,which will create an entry for "
 "this tax on a given account during reconciliation"
 msgstr ""
+"Wählen Sie diese Option, wenn die Steuer auf Cash-Basis berechnet werden "
+"soll, wodurch bei der Abstimmung ein Eintrag für diese Steuer auf einem "
+"bestimmten Konto erzeugt wird."
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -90,6 +94,10 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Technisches Feld, das verwendet wird, um die Abgleichung der "
+"Steuerzahlungsbasis zu verfolgen, die bei der Stornierung der Quelle "
+"benötigt wird: Es wird die umgekehrte Journalbuchung gebucht, um auch diesen"
+" Teil zu stornieren."
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80

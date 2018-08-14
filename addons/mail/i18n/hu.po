@@ -3,8 +3,9 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
+# krnkris, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
@@ -194,6 +195,15 @@ msgstr ""
 "            Beilleszthet régebbi válaszokat az üzenetébe ide írva <b>:hivatkozas</b>.<br>"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:550
 #, python-format
 msgid ""
@@ -230,8 +240,8 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
-"<div><p>Tisztelt,</p><p>%s meghívást kapott a %s dokumentum követéséhez: "
-"%s.</p></div>"
+"<div><p>Üdvözlöm,</p><p>%s meghívta Önt, hogy kövesse a következő %s "
+"dokumentumot: %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
@@ -493,7 +503,7 @@ msgstr "Értesíteni kívánt csatornák hozzáadása..."
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr "Értesíteni kívánt kapcsolatok hozzáadása..."
+msgstr "Értesíteni kívánt kapcsolattartók hozzáadása..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_partner_ids
@@ -607,7 +617,7 @@ msgstr "Alkalmaz"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr "Csatolj egy fájlt"
+msgstr "Fájl csatolása"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_attachment_ids
@@ -706,7 +716,7 @@ msgstr "Elérhető tömeges levelezéshez"
 #: code:addons/mail/static/src/xml/followers.xml:87
 #, python-format
 msgid "Be careful with channels following internal notifications"
-msgstr "Legyen elővigyázatos, belső értesítéseket követő csatornákkal"
+msgstr "Legyen óvatos a belső értesítéseket követő csatornákkal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_body_html
@@ -736,7 +746,7 @@ msgstr "Visszadobták"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégsem"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
@@ -746,7 +756,7 @@ msgstr "Email elvetése"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavonva"
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -1227,12 +1237,12 @@ msgstr "Hozzászól"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion channel"
-msgstr "Hozzászólási csatorna"
+msgstr "Beszélgetési csatorna"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
 msgid "Discussions"
-msgstr "Hozzászólások"
+msgstr "Beszélgetések"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_display_name
@@ -1290,7 +1300,7 @@ msgstr "Dinamikus helykitöltő generátor"
 #: code:addons/mail/static/src/js/followers.js:114
 #, python-format
 msgid "Edit Subscription of "
-msgstr "Szerkessze ezt a feliratkozást "
+msgstr "A következő feliratkozás szerkesztése:"
 
 #. module: mail
 #. openerp-web
@@ -1542,7 +1552,7 @@ msgstr "Behajtott"
 #: code:addons/mail/static/src/xml/followers.xml:21
 #, python-format
 msgid "Follow"
-msgstr "Követ"
+msgstr "Követés"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
@@ -1754,7 +1764,7 @@ msgstr "Csak követők"
 #: code:addons/mail/static/src/xml/followers.xml:25
 #, python-format
 msgid "Following"
-msgstr "Követés"
+msgstr "Követve"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -1995,8 +2005,8 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
-"Ha bejelölt, az ügyfél kap egy email figyelmeztetést arról, hogy hozzá lett "
-"adva a dokumentum követőihez."
+"Ha bejelölésre kerül, a partnerek kapni fognak egy értesítést e-mailben "
+"arról, hogy hozzáadásra kerültek a dokumentum követőihez."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
@@ -2130,7 +2140,7 @@ msgstr "Meghívás"
 #: code:addons/mail/static/src/js/followers.js:143
 #, python-format
 msgid "Invite Follower"
-msgstr "Követő meghívása"
+msgstr "Követők meghívása"
 
 #. module: mail
 #. openerp-web
@@ -2421,8 +2431,8 @@ msgstr ""
 msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
-"Azon partnerek listája, akik hozzá lesznek adva ennek a dokumentumnak a "
-"követéséhez."
+"Azon partnerek listája, akik hozzáadásra fognak kerülni a jelenlegi "
+"dokumentum követőiként."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:663
@@ -2450,27 +2460,27 @@ msgstr "Élő társalgás"
 #: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
-msgstr "Napló"
+msgstr "Rögzítés"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Naplózzon egy jegyzetet. Követőket nem értesíti."
+msgstr "Rögzítsen egy megjegyzést. A követők nem kerülnek értesítésre."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_is_log
 msgid "Log an Internal Note"
-msgstr "Egy Belső megjegyzés rögzítése"
+msgstr "Belső megjegyzés rögzítése"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log an internal note"
-msgstr "Egy belső megjegyzés rögzítése"
+msgstr "Belső megjegyzés rögzítése"
 
 #. module: mail
 #. openerp-web
@@ -2480,8 +2490,8 @@ msgid ""
 "Log an internal note which will not be sent to followers, but which can be read\n"
 "                    by users accessing this document."
 msgstr ""
-"Egy belső üzenet rögzítése, mely nem lesz kiküldve a követők részére, de olvasható lesz azoknak\n"
-"                    akik a dokumentumhoz hozzáférnek."
+"Egy belső üzenet rögzítése, amely nem kerül elküldésre a követők részére, de olvasható lesz azon felhasználók számára,\n"
+"                    akik hozzáférnek ezen dokumentumhoz."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -2945,7 +2955,7 @@ msgstr "Válaszokhoz nincs hozzáfűzve"
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
 msgid "Note"
-msgstr "Jegyzet"
+msgstr "Megjegyzés"
 
 #. module: mail
 #. openerp-web
@@ -2971,7 +2981,7 @@ msgstr "Értesítések"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers"
-msgstr "Kiértesített követők"
+msgstr "Követők értesítése"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_notify
@@ -3773,7 +3783,7 @@ msgstr "Mentse új sablonként"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr "Mentse mint új sablon"
+msgstr "Mentés új sablonként"
 
 #. module: mail
 #. openerp-web
@@ -4331,7 +4341,7 @@ msgstr "Visszavonás"
 #: code:addons/mail/static/src/xml/followers.xml:23
 #, python-format
 msgid "Unfollow"
-msgstr "Követés leállítása"
+msgstr "Követés befejezése"
 
 #. module: mail
 #: sql_constraint:mail.alias:0
@@ -4567,7 +4577,7 @@ msgid ""
 " If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
 msgstr ""
 "Figyelem! \n"
-"Ha kiiktat egy követőt, Ő nem lesz értesítve erről a dokumentumról szóló levelekről vagy fórumokról. Tényleg el akarja távolítani a dokumentum a nyomkövetéséről?"
+"Ha eltávolít egy követőt, az nem fog értesítést kapni az ezen dokumentumhoz kapcsolódó e-mailekről vagy beszélgetésekről. Valóban el akarja távolítani ezt a követőt?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -4607,7 +4617,7 @@ msgstr "Ki követheti a csoport tevékenységét?"
 #: code:addons/mail/static/src/xml/composer.xml:18
 #, python-format
 msgid "Write something..."
-msgstr "Írj valamit..."
+msgstr "Írjon valamit..."
 
 #. module: mail
 #. openerp-web
@@ -4782,7 +4792,7 @@ msgstr "asztali üzenetek bekapcsolása"
 #: code:addons/mail/static/src/js/followers.js:222
 #, python-format
 msgid "followers"
-msgstr "követők"
+msgstr "követő"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link

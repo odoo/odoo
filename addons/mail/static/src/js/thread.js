@@ -199,6 +199,10 @@ var Thread = Widget.extend({
         });
     },
     on_click_redirect: function (event) {
+        // ignore inherited branding
+        if ($(event.target).data('oe-field') !== undefined) {
+            return;
+        }
         var id = $(event.target).data('oe-id');
         if (id) {
             event.preventDefault();

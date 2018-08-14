@@ -3,29 +3,30 @@
 # * event
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
 # Rolandas <info@paninfo.lt>, 2016
-# Anatolij <an@cq.lt>, 2016
+# Anatolij, 2016
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
 # Arminas Grigonis <arminas@versada.lt>, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -411,6 +412,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Gerb., ${object.name},</p>\n"
+"<p>Dėkojame už Jūsų užklausą.</p>\n"
+"<p>Čia Jūsų įvykio požymis ${object.event_id.name}.</p>\n"
+"<p>Kreipkitės, jei iškils klausimų.</p>\n"
+"<p>Linkėjimai,</p>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -802,7 +809,7 @@ msgstr "Paspauskite, norėdami pridėti naują įvykį"
 #: code:addons/event/models/event.py:220
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Uždarymo data negali būti nurodyta prieš Pradžios datą."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_company_id
@@ -892,7 +899,7 @@ msgstr "Kontaktas"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Kontroleriai ir rodiniai"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -1049,7 +1056,7 @@ msgstr "El. paštas"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "El. laiškų planavimas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
@@ -1356,7 +1363,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Skubiai"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1436,7 +1443,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "Kanban spalvos indeksas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
@@ -2053,7 +2060,7 @@ msgstr "Supraskite tobulėjimo konceptą ir architektūrą;"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "Suprasti įvairius modulius;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
@@ -2085,7 +2092,7 @@ msgstr "Ateinantis"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Artimiausi renginiai nuo šiandien"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -2102,7 +2109,7 @@ msgstr "Kintamieji &amp; Operatoriai"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
+msgstr "Sandėlio valdymas, gamyba (MRP) ir pardavimai, importas/exportas."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -2164,12 +2171,12 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "Jūsų registracija į ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2186,7 +2193,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail

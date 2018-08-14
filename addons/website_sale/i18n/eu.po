@@ -3,19 +3,23 @@
 # * website_sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # oihane <oihanecruce@gmail.com>, 2017
 # Ainara Galdona Usatorre <ainaragaldona@avanzosc.es>, 2017
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
 # ibinka lete <ilete@fpbidasoa.net>, 2017
 # Gorka Toledo <gorka.toledo@gmail.com>, 2017
+# Eneko <eastigarraga@codesyntax.com>, 2018
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
+# Gari Araolaza <garaolaza@codesyntax.com>, 2018
+# Naomi Hidalgo <naomihid96@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-18 14:21+0000\n"
-"PO-Revision-Date: 2017-07-18 14:21+0000\n"
-"Last-Translator: Gorka Toledo <gorka.toledo@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 14:34+0000\n"
+"PO-Revision-Date: 2017-11-30 14:34+0000\n"
+"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +51,8 @@ msgid ""
 "<br/>\n"
 "                                <strong>Payment Status:</strong>"
 msgstr ""
+"<br/>\n"
+"                               <strong>Ordainketa egoera:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -54,6 +60,8 @@ msgid ""
 "<br/>\n"
 "                                e.g. for computers:"
 msgstr ""
+"<br/>\n"
+"                               adib. ordenagailuetarako:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -61,26 +69,28 @@ msgid ""
 "<i class=\"fa fa-3x fa-credit-card text-muted\" aria-hidden=\"true\"/><br/>\n"
 "                                                Are you sure you want to pay with this card: <br/>"
 msgstr ""
+"<i class=\"fa fa-3x fa-credit-card text-muted\" aria-hidden=\"true\"/><br/>\n"
+"                                                Ziur al zaude txartel honekin ordaindu nahi duzula: <br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "<i class=\"fa fa-check\"/> Ship to this address"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/>Bidali helbide honetara "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "<i class=\"fa fa-cog\"/> Configure Transfer Details"
-msgstr ""
+msgstr "<i class=\"fa fa-cog\"/>Konfiguratu transferentzia xehetasunak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> Galdetu gure adituei"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "<i class=\"fa fa-plus-square\" aria-hidden=\"true\"/> Add an address"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-square\" aria-hidden=\"true\"/>Helbidea gehitu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -93,6 +103,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
 "                    My cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                 Nire saskia "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -104,7 +116,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
-msgstr ""
+msgstr "<small><i class=\"fa fa-trash-o\"/>Ezabatu</small>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -114,11 +126,15 @@ msgid ""
 "                                </span>\n"
 "                                <span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
 msgstr ""
+"<span class=\"btn btn-primary pull-right btn-lg o_website_form_send o_default_snippet_text\">\n"
+"                                   <span>Hurrengoa</span><span class=\"fa fa-long-arrow-right\"/>\n"
+"</span>\n"
+"<span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
 msgid "<span class=\"col-xs-6 text-right h4\">Total:</span>"
-msgstr ""
+msgstr "<span class=\"col-xs-6 text-right h4\">Totala:</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
@@ -126,6 +142,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Taxes may be updated "
 "after providing shipping address\"> Taxes:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Taxes may be updated "
+"after providing shipping address\">Zergak:</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
@@ -138,6 +156,8 @@ msgid ""
 "<span class=\"fa fa-2x fa-credit-card\"/>\n"
 "                                                Saved Cards"
 msgstr ""
+"<span class=\"fa fa-2x fa-credit-card\"/>\n"
+"Gordetako txartelak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -152,6 +172,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left\" aria-hidden=\"true\"/>\n"
 "                                            <span class=\"sr-only\">Previous</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\" aria-hidden=\"true\"/>\n"
+"                                           <span class=\"sr-only\">Aurrekoa</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -159,6 +181,8 @@ msgid ""
 "<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
 "                                            <span class=\"sr-only\">Next</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
+"                                             <span class=\"sr-only\">Hurrengoa</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -188,16 +212,19 @@ msgid ""
 "                <span class=\"hidden-xs\">Continue Shopping</span>\n"
 "                <span class=\"visible-xs-inline\">Continue</span>"
 msgstr ""
+"<span class=\"fa fa-long-arrow-left\"/>\n"
+"                 <span class=\"hidden-xs\">Jarraitu erosten</span>\n"
+"                 <span class=\"visible-xs-inline\">Jarraitu</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"fa fa-long-arrow-left\"/> Back"
-msgstr ""
+msgstr "<span class=\"fa fa-long-arrow-left\"/>Itzuli"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "<span class=\"fa fa-long-arrow-left\"/> Return to Cart"
-msgstr ""
+msgstr "<span class=\"fa fa-long-arrow-left\"/>Itzuli saskira "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -282,6 +309,9 @@ msgid ""
 "                                        <strong>Several Prices</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Hainbat prezio</strong>\n"
+"                                     </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -290,6 +320,9 @@ msgid ""
 "                                        <strong>Unique Price</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Prezio bakarra</strong>\n"
+"                                     </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -306,6 +339,9 @@ msgid ""
 "                                        <strong>You are in the US?</strong><br/>                                        \n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Estatu Batuetan zaude?</strong><br/>                             \n"
+"                                   </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -314,6 +350,9 @@ msgid ""
 "                                        <strong>You have a broad catalog?</strong><br/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                       <strong>Katalogo zabal bat daukazu?</strong><br/>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -324,6 +363,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                   <span class=\"fa fa-check-square-o\"/>\n"
+"                                   <strong>Pertsonalizatu zure produktuen katalogoa</strong><br/>\n"
+"                                          <span class=\"small\"/>\n"
+"                                </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -362,6 +406,9 @@ msgid ""
 "                                    <span class=\"small\">Recommended for Starters</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong>Paypal</strong>\n"
+"                                   <span class=\"small\">Berrientzako gomendatuta</span>\n"
+"                                   </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -376,6 +423,8 @@ msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-lock\"/><strong>Wire "
 "transfer</strong> (slow and inefficient)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-lock\"/><strong>Bankuko "
+"transferentzia</strong> (motela eta eraginkorra)</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -391,6 +440,8 @@ msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Free delivery</strong><br/>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong>Doako banaketa</strong><br/>\n"
+"                          </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -403,7 +454,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "<span>Next </span><span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "<span>Hurrengoa</span><span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
@@ -415,7 +466,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "<strong>Add to Cart</strong>"
-msgstr ""
+msgstr "<strong>Saskira gehitu</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -459,6 +510,8 @@ msgid ""
 "<strong>Features and benefits:</strong> what the product does and why that "
 "is good"
 msgstr ""
+"<strong>Ezaugarriak eta onurak:</strong> produktua zer egiten duen eta "
+"zergatik da ona"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -470,7 +523,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>High-quality pictures</strong>"
-msgstr ""
+msgstr "<strong>Kalitate oneko irudiak</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -482,38 +535,38 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Mandatory content</strong><br/>"
-msgstr ""
+msgstr "<strong>Beharrezko edukia</strong><br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Next actions:</strong>"
-msgstr ""
+msgstr "<strong>Hurrengo ekintzak:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Order Details:</strong>"
-msgstr ""
+msgstr "<strong>Eskaeraren xehetasunak:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Method:</strong>"
-msgstr ""
+msgstr "<strong>Ordainketa metodoa:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Payment information:</strong>"
-msgstr ""
+msgstr "<strong>Ordainketaren informazioa:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Price</strong> with currency"
-msgstr ""
+msgstr "<strong>Prezioa</strong> monetarekin "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Product/Service name</strong>"
-msgstr ""
+msgstr "<strong>Produktuaren/zerbitzuaren izena</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -554,7 +607,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Short description</strong>"
-msgstr ""
+msgstr "<strong>Deskribapen laburra</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -562,6 +615,8 @@ msgid ""
 "<strong>Technical information:</strong> what do you get and how does it "
 "work?"
 msgstr ""
+"<strong>Informazio teknikoa:</strong> zer lortzen duzu eta nola "
+"funtzionatzen du?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -574,7 +629,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Total:</strong>"
-msgstr ""
+msgstr "<strong>Totala:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -582,11 +637,13 @@ msgid ""
 "<strong>Value proposition:</strong> what’s the end-benefit of this product "
 "and who is it for?"
 msgstr ""
+"<strong>Balio proposamena:</strong> zein da produktuaren bukaerako onura eta"
+" norentzat da?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Variants</strong> like size or color"
-msgstr ""
+msgstr "Tamaina edo kolorea bezalako <strong>aldagaiak</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -639,17 +696,17 @@ msgstr ""
 #. module: website_sale
 #: selection:website.config.settings,sale_pricelist_setting_split_1:0
 msgid "A single sales price per product"
-msgstr ""
+msgstr "Produktu bakoitzeko salmenta prezio bakarra"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandonned_orders
 msgid "Abandonned Orders"
-msgstr ""
+msgstr "Abandonatutako eskaerak "
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_abandonned_orders_ecommerce
 msgid "Abandonned eCommerce Orders"
-msgstr ""
+msgstr "Abandonatutako eCommerce eskaerak"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier_accessory_product_ids
@@ -664,19 +721,19 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Accessories: screen, mouse"
-msgstr ""
+msgstr "Osagarriak: pantaila, sagua"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
-msgstr ""
+msgstr "Produktu osagarriak "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_portal
 msgid "Activate the customer portal"
-msgstr ""
+msgstr "Aktibatu bezeroaren ataria"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
@@ -697,7 +754,7 @@ msgstr "gehitu saskira"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Add to Cart button"
-msgstr ""
+msgstr "Saskira gehitu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -715,6 +772,8 @@ msgstr ""
 #: selection:website.config.settings,sale_pricelist_setting_split_2:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
 msgstr ""
+"Prezio-politika aurreratua formuletan oinarrituta (deskontuak, marjinak, "
+"biribiltzea)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.option_collapse_products_categories
@@ -725,12 +784,12 @@ msgstr "Produktu guztiak"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist_selectable
 msgid "Allow the end user to choose this price list"
-msgstr ""
+msgstr "Utzi azken erabiltzaileari prezioen zerrenda hau aukeratzen"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Allow to use on"
-msgstr ""
+msgstr "Erabiltzeko onartu "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_group_sale_pricelist
@@ -738,6 +797,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Baimendu prezio ezberdinak kudeatzea bezero kategorien arabera.\n"
+"                Adibidez: %10 saltokientzat, 5 Euroko promozioa produktu honetan eta abar."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_alternative_product_ids
@@ -773,14 +834,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability
 msgid "Availability"
-msgstr ""
+msgstr "Eskuragarritasuna"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "Erabilgarritasunaren abisua"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
@@ -802,17 +863,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Billing Address"
-msgstr ""
+msgstr "Fakturaziorako helbidea "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Billing<span class=\"chevron\"/>"
-msgstr ""
+msgstr "Fakturazioa<span class=\"chevron\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Can take up to several days to receive the money"
-msgstr ""
+msgstr "Dirua jasotzeko egun batzuk igaro daitezke "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_quantity
@@ -827,7 +888,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 msgid "Catalog"
-msgstr ""
+msgstr "Katalogoa "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
@@ -865,19 +926,19 @@ msgstr "Aldatu"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
 msgid "Children Categories"
-msgstr ""
+msgstr "Haurren kategoriak "
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:37
 #, python-format
 msgid "Choose an image from the library."
-msgstr ""
+msgstr "Aukeratu irudi bat liburutegitik."
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
-msgstr ""
+msgstr "Gabonak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -889,18 +950,20 @@ msgstr "Herria"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
+"Egin klik <i>'Berria'</i> goiko eskuineko iskinean dagoen botoian zure lehen"
+" produktua sortzeko."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:33
 #, python-format
 msgid "Click here to set an image describing your product."
-msgstr ""
+msgstr "Egin klik hemen zure produktua deskribatzen duen irudia ezartzeko."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Click here to unfold a Good Product Page"
-msgstr ""
+msgstr "Egin klik hemen produktuaren orrialde on bat zabaltzeko"
 
 #. module: website_sale
 #. openerp-web
@@ -908,25 +971,26 @@ msgstr ""
 #, python-format
 msgid "Click on <b>Save</b> to add the image to the product description."
 msgstr ""
+"Egin klik <b>Gorde</b> botoian produktuaren deskribapenari irudia gehitzeko."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:23
 #, python-format
 msgid "Click on <em>Continue</em> to create the product."
-msgstr ""
+msgstr "Egin klik <em>Jarraitu</em> botoian produktua sortzeko."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:57
 #, python-format
 msgid "Click on this button so your customers can see it."
-msgstr ""
+msgstr "Egin klik botoi honetan zure bezeroek ikus dezaten."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid "Click to define a new category."
-msgstr ""
+msgstr "Egin klik kategoria berri bat definitzeko."
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -961,12 +1025,12 @@ msgstr "Ordenagailuak"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Configure your delivery methods (pricing, destinations)"
-msgstr ""
+msgstr "Konfiguratu zure banaketa metodoak (prezioak, helmugak)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Configure your pricelists"
-msgstr ""
+msgstr "Konfiguratu zure prezio zerrenda "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -976,22 +1040,22 @@ msgstr "Baieztatu"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Baieztatu <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order"
-msgstr ""
+msgstr "Eskaera konfirmatu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Eskaera konfirmatu <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Confirmation<span class=\"chevron\"/>"
-msgstr ""
+msgstr "Konfirmazioa <span class=\"chevron\"/> "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1007,17 +1071,17 @@ msgstr "Herrialdea"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Country..."
-msgstr ""
+msgstr "Herrialdea... "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Coupon Code"
-msgstr ""
+msgstr "Kupoi kodea "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Create tax mapping for foreign customers"
-msgstr ""
+msgstr "Atzerriko bezeroentzako zergen mapak sortzea "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1041,12 +1105,12 @@ msgstr "Noiz sortua"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Currencies"
-msgstr ""
+msgstr "Monetak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Customer Segments"
-msgstr ""
+msgstr "Bezeroen segmentuak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1056,17 +1120,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_dhl
 msgid "DHL integration"
-msgstr ""
+msgstr "DHL integrazioa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_currency_id
 msgid "Default Currency"
-msgstr ""
+msgstr "Lehenetsitako moneta "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id
 msgid "Default Pricelist"
-msgstr ""
+msgstr "Lehenetsitako prezio zerrenda "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
@@ -1086,7 +1150,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Delivery Strategy"
-msgstr ""
+msgstr "Banaketa estrategia "
 
 #. module: website_sale
 #: selection:website.config.settings,sale_delivery_settings:0
@@ -1094,6 +1158,8 @@ msgid ""
 "Delivery methods are only used internally: the customer doesn't pay for "
 "shipping costs"
 msgstr ""
+"Banaketa metodoak barrutik soilik erabiltzen dira: bezeroak ez du banaketako"
+" gasturik ordaintzen"
 
 #. module: website_sale
 #: selection:website.config.settings,sale_delivery_settings:0
@@ -1101,6 +1167,8 @@ msgid ""
 "Delivery methods are selectable on the website: the customer pays for "
 "shipping costs"
 msgstr ""
+"Banaketa metodoak webgunean aukeratu daitezke: bezeroak gastuak ordaintzen "
+"ditu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1115,7 +1183,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_description
 msgid "Description for the website"
-msgstr ""
+msgstr "Webgunerako deskribapena "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_sequence
@@ -1144,7 +1212,7 @@ msgstr "Izena erakutsi"
 #. module: website_sale
 #: selection:product.template,availability:0
 msgid "Display Nothing"
-msgstr ""
+msgstr "Ez erakutsi ezer"
 
 #. module: website_sale
 #. openerp-web
@@ -1156,12 +1224,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_code
 msgid "E-commerce Promotional Code"
-msgstr ""
+msgstr "ECommerce promozio kodea "
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_europe
 msgid "EUR"
-msgstr ""
+msgstr "EUR"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1173,17 +1241,18 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:27
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
-msgstr ""
+msgstr "Editatu produktuaren prezioa kopuruan klik eginez."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Edit this address"
-msgstr ""
+msgstr "Helbide hau editatu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Edit your payment policies and security to reassure your visitors"
 msgstr ""
+"Editatu zure ordainketa politikak eta segurtasuna zure bisitariak lasaitzeko"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1194,19 +1263,20 @@ msgstr "Emaila"
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_order_mail_template
 msgid "Email sent to customer at the end of the checkout process"
 msgstr ""
+"Bezeroari bidalitako posta elektronikoa fakturazio prozesuaren amaieran"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
 #, python-format
 msgid "Enter a name for your new product"
-msgstr ""
+msgstr "Idatzi zure produktu berrirako izena "
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:89
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Errorea! Ezin duzu errekurtsibitate kategoriak sortu."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.External_Hard_Drive
@@ -1216,17 +1286,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
 msgid "Extra Info<span class=\"chevron\"/>"
-msgstr ""
+msgstr "Informazio gehigarria <span class=\"chevron\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra Step"
-msgstr ""
+msgstr "Urrats gehigarria "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_fedex
 msgid "Fedex integration"
-msgstr ""
+msgstr "Fedex integrazioa "
 
 #. module: website_sale
 #. openerp-web
@@ -1245,27 +1315,28 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Free delivery (see Delivery Strategy section)"
-msgstr ""
+msgstr "Doako banaketa (ikusi banaketa estrategia atala)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
-msgstr ""
+msgstr "Webgunetik "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Give us your feedback..."
-msgstr ""
+msgstr "Eman zure iritzia..."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_module_portal
 msgid "Give your customers access to their documents."
-msgstr ""
+msgstr "Eman zure bezeroei beraien dokumentuetara sartzeko baimena."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"Produktu kategorien zerrenda bistaratzen duen sekuentzia ordena ematen du."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1273,31 +1344,33 @@ msgid ""
 "Go through the checkout process and make sure every single step is tailored "
 "to your activity:"
 msgstr ""
+"Joan ordainketa prozesura eta ziurtatu urrats bakoitza zure jarduerara "
+"egokituta dagoela:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_html_class
 msgid "HTML Classes"
-msgstr ""
+msgstr "HTML klaseak"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_value_html_color
 msgid "HTML Color Index"
-msgstr ""
+msgstr "HTML kolore indizea "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP bideratzea"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a coupon code? Fill in this field and apply."
-msgstr ""
+msgstr "Baduzu kupoi kodea? Eremu hau bete eta aplikatu."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Headset
 msgid "Headset"
-msgstr ""
+msgstr "Aurikularrak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1319,7 +1392,7 @@ msgstr "Izkutatuta"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "I agree to the"
-msgstr ""
+msgstr "Ados nago"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_id
@@ -1360,7 +1433,7 @@ msgstr "Irudia"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
-msgstr ""
+msgstr "Irudiaren izena"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_product_image_ids
@@ -1368,7 +1441,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template_product_image_ids
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Images"
-msgstr ""
+msgstr "Irudiak"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1416,7 +1489,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:474
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Email baliogabea! Mesedez, sar ezazu helbide elektroniko egokia."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
@@ -1452,7 +1525,7 @@ msgstr "Ordenagailu eramangarriak"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category___last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_style___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Azken aldaketa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
@@ -1477,7 +1550,7 @@ msgstr "Noiz eguneratua"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Legal Name"
-msgstr ""
+msgstr "Izen legala "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1490,9 +1563,14 @@ msgid "List displaying"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Log In"
+msgstr "Saioa hasi "
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Logo"
-msgstr ""
+msgstr "Logoa"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1510,7 +1588,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery
 msgid "Manage shipping internally"
-msgstr ""
+msgstr "Kudeatu bidalketa barrutik"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
@@ -1528,7 +1606,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "Merchant Connectors"
-msgstr ""
+msgstr "Merkataritzako konektoreak"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1538,7 +1616,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "More Info"
-msgstr ""
+msgstr "Informazio gehiago"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_website_multiimage
@@ -1557,7 +1635,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale.js:15
 #, python-format
 msgid "My Cart"
-msgstr ""
+msgstr "Nire saskia "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_name
@@ -1570,7 +1648,7 @@ msgstr "Izena"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.network
 msgid "Network"
-msgstr ""
+msgstr "Sarea"
 
 #. module: website_sale
 #. openerp-web
@@ -1579,7 +1657,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
 msgid "New Product"
-msgstr ""
+msgstr "Produktu berria "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1589,7 +1667,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined."
-msgstr ""
+msgstr "Ez dago definitutako produkturik."
 
 #. module: website_sale
 #: selection:website.config.settings,sale_delivery_settings:0
@@ -1599,19 +1677,19 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "No, choose another method"
-msgstr ""
+msgstr "Ez, beste metodo bat aukeratu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "None website"
-msgstr ""
+msgstr "Ez dago webgunerik "
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale.xml:12
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "Ados"
 
 #. module: website_sale
 #. openerp-web
@@ -1619,26 +1697,28 @@ msgstr ""
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
 msgstr ""
+"Behin <b>\"Gorde\"</b> botoian klikatzerakoan, zure produktua eguneratu "
+"egingo da."
 
 #. module: website_sale
 #: selection:website.config.settings,group_website_multiimage:0
 msgid "One image per product"
-msgstr ""
+msgstr "Produktu bakoitzeko irudi bakarra"
 
 #. module: website_sale
 #: selection:website.config.settings,module_website_sale_options:0
 msgid "One-step \"add to cart\""
-msgstr ""
+msgstr "Urrats bat \"saskira gehitu\""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Online users: we do it for you!"
-msgstr ""
+msgstr "Lineako erabiltzaileak: zuretzako egiten dugu!"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_only_services
 msgid "Only Services"
-msgstr ""
+msgstr "Zerbitzuak bakarrik "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_options
@@ -1658,7 +1738,7 @@ msgstr "Eskaria"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_order_mail_template
 msgid "Order Confirmation Email"
-msgstr ""
+msgstr "Eskaeraren baieztapen eposta "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_website_order_line
@@ -1676,7 +1756,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
 msgid "Orders"
-msgstr ""
+msgstr "Eskaerak"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
@@ -1693,17 +1773,17 @@ msgstr "Kidea"
 #: code:addons/website_sale/controllers/main.py:834
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Ordaindu orain "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Ordaindu orain <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "Payment"
-msgstr ""
+msgstr "Ordainketa "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_acquirer_id
@@ -1718,17 +1798,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
-msgstr ""
+msgstr "Ordainketaren informazioa "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Payment Method:"
-msgstr ""
+msgstr "Ordainketa metodoa:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Payment Methods"
-msgstr ""
+msgstr "Ordainketa metodoak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1739,13 +1819,13 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:758
 #, python-format
 msgid "Payment transaction (%s) failed : <%s>"
-msgstr ""
+msgstr "Ordainketa transakzioa (%s) huts egin du: <%s>"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:755
 #, python-format
 msgid "Payment transaction failed (%s)"
-msgstr ""
+msgstr "Ordainketa transakzioa huts egin du (%s)"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:759
@@ -1757,7 +1837,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Payment<span class=\"chevron\"/>"
-msgstr ""
+msgstr "Ordainketa <span class=\"chevron\"/>"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Pen_Drive
@@ -1772,12 +1852,12 @@ msgstr "Telefono"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Pictures gallery:"
-msgstr ""
+msgstr "Irudi galeria: "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Policies"
-msgstr ""
+msgstr "Politikak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1793,7 +1873,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/backend.py:65
 #, python-format
 msgid "Previous Sales"
-msgstr ""
+msgstr "Aurreko salmentak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
@@ -1815,7 +1895,7 @@ msgstr "Pricelist"
 #: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 msgid "Pricelists"
-msgstr ""
+msgstr "Prezio-zerrendak"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1825,7 +1905,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_pricelist_setting_split_1
 msgid "Pricing Strategy"
-msgstr ""
+msgstr "Prezioen estrategia "
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.printer
@@ -1851,7 +1931,7 @@ msgstr "Produktu atributua"
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Product Images"
-msgstr ""
+msgstr "Produktu irudiak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -1861,12 +1941,12 @@ msgstr "Produktu Izena"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Product Pages"
-msgstr ""
+msgstr "Produktu orrialdeak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr ""
+msgstr "Produktuen kategoria publikoak"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -1881,12 +1961,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Product categories list"
-msgstr ""
+msgstr "Produktu kategorien zerrenda"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Product descriptions"
-msgstr ""
+msgstr "Produktu deskribapenak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -1897,7 +1977,7 @@ msgstr "Produktua ez dago erabilgarri"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
 msgid "Product not found!"
-msgstr ""
+msgstr "Produktua ez da aurkitu!"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action
@@ -1910,13 +1990,13 @@ msgstr "Produktuak"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
-msgstr ""
+msgstr "Sustatu "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_rating_rating_website_published
 #: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 msgid "Published"
-msgstr ""
+msgstr "Argitaratua "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -1972,19 +2052,19 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Quick and easy to set up"
-msgstr ""
+msgstr "Azkarra eta erraza konfiguratzeko"
 
 #. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Radio"
-msgstr ""
+msgstr "Irratia "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_rating_rating
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_ids
 msgid "Rating"
-msgstr ""
+msgstr "Sailkatu "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_last_value
@@ -2001,7 +2081,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_product_tmpl_id
 msgid "Related Product"
-msgstr ""
+msgstr "Erlazionatutako produktua"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
@@ -2034,7 +2114,7 @@ msgstr "Sales"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:9
 #, python-format
 msgid "Sales /"
-msgstr ""
+msgstr "Salmentak /"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
@@ -2044,7 +2124,7 @@ msgstr "Salmenta eskaria"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_pricelist_setting_split_2
 msgid "Sales Price"
-msgstr ""
+msgstr "Salmenta prezioa "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2062,27 +2142,27 @@ msgstr "Salesperson"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Save my payment data"
-msgstr ""
+msgstr "Gorde nire ordainketa datuak"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Screen
 msgid "Screen"
-msgstr ""
+msgstr "Pantaila "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Secure Payment"
-msgstr ""
+msgstr "Ordainketa segurua "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to configure delivery methods and shipping connectors"
-msgstr ""
+msgstr "Ikusi banaketa metodoak eta bidalketa konektoreak nola konfiguratu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to configure payment methods"
-msgstr ""
+msgstr "Ikusi ordainketa metodoak nola konfiguratu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2092,12 +2172,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to customize your catalog page"
-msgstr ""
+msgstr "Ikusi zure katalogo orria nola pertsonalizatu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to do it"
-msgstr ""
+msgstr "Ikusi nola egin "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2112,7 +2192,7 @@ msgstr ""
 #. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Select"
-msgstr ""
+msgstr "Aukeratu "
 
 #. module: website_sale
 #. openerp-web
@@ -2126,12 +2206,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Select this address"
-msgstr ""
+msgstr "Aukeratu helbide hau "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Select your pricing preference and allow discounts"
-msgstr ""
+msgstr "Aukeratu zure prezioen lehentasuna eta deskontuak baimendu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2141,17 +2221,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_selectable
 msgid "Selectable"
-msgstr ""
+msgstr "Aukeragarria "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sell"
-msgstr ""
+msgstr "Saldu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sell More"
-msgstr ""
+msgstr "Saldu gehiago "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
@@ -2190,7 +2270,7 @@ msgstr ""
 #. module: website_sale
 #: selection:website.config.settings,group_website_multiimage:0
 msgid "Several images per product"
-msgstr ""
+msgstr "Hainbat irudi produktu bakoitzeko "
 
 #. module: website_sale
 #: selection:website.config.settings,sale_pricelist_setting_split_1:0
@@ -2198,11 +2278,13 @@ msgid ""
 "Several prices selectable through a drop-down list or applied automatically "
 "via Geo-IP"
 msgstr ""
+"Hainbat prezio aukeratzeko goitibeherako zerrendan edo automatikoki "
+"aplikatukoak Geo-IP bidez"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.bill_to
 msgid "Ship To:"
-msgstr ""
+msgstr "Bidali:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -2213,17 +2295,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.address
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shipping Address"
-msgstr ""
+msgstr "Bidaltzeko helbidea "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Bidalketa konektoreak "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_delivery_settings
 msgid "Shipping Management"
-msgstr ""
+msgstr "Bidalketa kudeaketa "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
@@ -2239,7 +2321,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "Shop - Confirm payment"
-msgstr ""
+msgstr "Denda - Baieztatu ordainketa"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2254,12 +2336,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Shopping Cart"
-msgstr ""
+msgstr "Erosketa saskia "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Shopping Experience"
-msgstr ""
+msgstr "Erosketetan esperientzia "
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_website_multi_image
@@ -2269,17 +2351,22 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "Erakutsi prezioen zerrenda produktuetan"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Erakutsi prezio-zerrendak bezeroei"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Sign Up"
+msgstr "Izena eman "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Size"
-msgstr ""
+msgstr "Tamaina"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_size_x
@@ -2298,7 +2385,7 @@ msgstr "Y tamaina"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Tamaina txikiko irudia "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image_small
@@ -2324,27 +2411,27 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:485
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Beharrezko eremu batzuk hutsik daude."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
 msgid "Sorry, this product is not available anymore."
-msgstr ""
+msgstr "Barkatu, produktu hau ez dago erabilgarri "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sort by price"
-msgstr ""
+msgstr "Ordenatu prezioaren arabera "
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Speakers
 msgid "Speakers"
-msgstr ""
+msgstr "Hizlariak"
 
 #. module: website_sale
 #: selection:website.config.settings,sale_pricelist_setting_split_2:0
 msgid "Specific prices per customer segment, currency, etc."
-msgstr ""
+msgstr "Bezeroaren segmentu, moneta edo abarren araberako prezio bereziak"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_sale_pricelist_setting_split_2
@@ -2356,27 +2443,27 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Start your online shop by creating 3 products pages.<br/>"
-msgstr ""
+msgstr "Hasi zure denda linean produktuen 3 orrialde sortuz.<br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
-msgstr ""
+msgstr "Estatua / Probintzia"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province..."
-msgstr ""
+msgstr "Estatua / Probintzia..."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Street <span class=\"hidden-xs\"> and Number</span>"
-msgstr ""
+msgstr "Kalea <span class=\"hidden-xs\"> eta zenbakia</span>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_name
 msgid "Style Name"
-msgstr ""
+msgstr "Estiloaren izena "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_style_ids
@@ -2384,7 +2471,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_style_ids
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Styles"
-msgstr ""
+msgstr "Estiloak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2415,7 +2502,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Suggest options and accessories"
-msgstr ""
+msgstr "Proposatu aukerak eta osagarriak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2425,7 +2512,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
-msgstr ""
+msgstr "Proposatutako osagarriak: "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -2492,7 +2579,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_url
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "URL osoa dokumentura sartzeko webgunearen bidez."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2506,24 +2593,24 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "The payment seems to have been canceled."
-msgstr ""
+msgstr "Ordainketa hori bertan behera utzi dela dirudi."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "There are two strategies to sell more to a customer:"
-msgstr ""
+msgstr "Bi estrategia daude bezeroei gehiago saltzeko:"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:23
 #, python-format
 msgid "There is no recent online sale."
-msgstr ""
+msgstr "Ez dago azken lineako salmentarik."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "There seems to be an error with your request."
-msgstr ""
+msgstr "Badirudi zure eskaerak errore bat duela."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image
@@ -2535,7 +2622,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "This promo code is not available"
-msgstr ""
+msgstr "Promozio kode hau ez dago erabilgarri "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2558,12 +2645,12 @@ msgstr "Total"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_tx_id
 msgid "Transaction"
-msgstr ""
+msgstr "Transakzioa "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "Transaction processing ..."
-msgstr ""
+msgstr "Transakzioa prozesatzen... "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_type
@@ -2573,12 +2660,12 @@ msgstr "Mota"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_ups
 msgid "UPS integration"
-msgstr ""
+msgstr "UPS integrazioa "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_usps
 msgid "USPS integration"
-msgstr ""
+msgstr "USPS integrazioa "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2588,12 +2675,12 @@ msgstr "Unitateko prezioa"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 msgid "Unpaid Orders"
-msgstr ""
+msgstr "Ordaindu gabeko eskaerak "
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 msgid "Unpaid eCommerce Orders"
-msgstr ""
+msgstr "Ordaindu gabeko eCommerce eskaerak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2613,13 +2700,13 @@ msgstr "Use pricelists to adapt your price per customers"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
-msgstr ""
+msgstr "Saskia ikusi ("
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Webgunean ikusgai "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_rating_rating_website_published
@@ -2640,20 +2727,20 @@ msgstr "Website"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website Categories"
-msgstr ""
+msgstr "Webguneko kategoriak "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_message_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_message_ids
 msgid "Website Comments"
-msgstr ""
+msgstr "Webguneko iruzkinak "
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 msgid "Website Product Categories"
-msgstr ""
+msgstr "Webguneko produktuen kategoriak "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -2661,19 +2748,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_public_categ_ids
 msgid "Website Product Category"
-msgstr ""
+msgstr "Webguneko produktuaren kategoria "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Website Public Categories"
-msgstr ""
+msgstr "Webguneko kategoria publikoak "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "Webgune sekuentzia "
 
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
@@ -2709,14 +2796,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
-msgstr ""
+msgstr "Webguneko prezioa "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
 msgid "Website public price"
-msgstr ""
+msgstr "Webguneko prezio publikoa "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
@@ -2731,27 +2818,28 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "Yes, pay with this card"
-msgstr ""
+msgstr "Bai, txartela honekin ordaindu "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "You can setup 3 types of <strong>payment methods in Odoo:</strong>"
 msgstr ""
+"<strong>Odoo-n hiru ordainketa metodo</strong> mota konfigura ditzakezu:"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandonned_orders_ecommerce
 msgid "You don't have any cancelled order from the website."
-msgstr ""
+msgstr "Ez duzu bertan bera utzitako eskaerarik webgunean."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "You don't have any confirmed order from the website."
-msgstr ""
+msgstr "Ez duzu baieztaturiko eskaerarik webgunean."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 msgid "You don't have any unpaid order from the website."
-msgstr ""
+msgstr "Ez duzu ordaindu gabeko eskaerarik webgunean. "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -2779,38 +2867,38 @@ msgstr "Zure Eskaera"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Your Reference"
-msgstr ""
+msgstr "Zure erreferentzia "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
-msgstr ""
+msgstr "Zure saskia hutsik dago! "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your order has been confirmed, thank you for your loyalty."
-msgstr ""
+msgstr "Zure eskaera baieztatu da, eskerrik asko zure leialtasunagatik."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Zure ordainketa baimendua izan da."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your payment has been received."
-msgstr ""
+msgstr "Zure ordainketa jaso egin da. "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your transaction is waiting a manual confirmation."
-msgstr ""
+msgstr "Zure transakzioa eskuzko baieztapenaren zain dago. "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your transaction is waiting confirmation."
-msgstr ""
+msgstr "Zure transakzioa baieztapenaren zain dago."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -2830,17 +2918,17 @@ msgstr "kodea..."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_comment
 msgid "comment"
-msgstr ""
+msgstr "iruzkina "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_comment
 msgid "comments"
-msgstr ""
+msgstr "iruzkinak "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
 msgid "eBay connector"
-msgstr ""
+msgstr "eBay konektorea "
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
@@ -2851,12 +2939,12 @@ msgstr "eCommerce"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 msgid "eCommerce Orders"
-msgstr ""
+msgstr "eCommerce eskaerak "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.search count
 msgid "found)"
-msgstr ""
+msgstr "aurkitu)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2891,7 +2979,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "set company logo"
-msgstr ""
+msgstr "konpainiaren logoa ezarri "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -2901,7 +2989,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "use Odoo API to import through scripts"
-msgstr ""
+msgstr "erabili Odoo APIa script bidez inportatzeko"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
@@ -2916,7 +3004,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "what do the customers think of the product"
-msgstr ""
+msgstr "Bezeroek produktuari buruz zer pentsatzen dute"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -2926,12 +3014,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "☑ 30-days money-back guarantee"
-msgstr ""
+msgstr "☑ 30 egun dirua itzultzeko bermea "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "☑ Invoice sent by e-Mail"
-msgstr ""
+msgstr "☑ Epostaz bidalitako faktura "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

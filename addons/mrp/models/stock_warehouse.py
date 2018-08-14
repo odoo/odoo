@@ -29,12 +29,12 @@ class StockWarehouse(models.Model):
         return result
 
     def _get_manufacture_route_id(self):
-        manufacture_route_id = self.env.ref('mrp.route_warehouse0_manufacture').id
-        if not manufacture_route_id:
-            manufacture_route_id = self.env['stock.location.route'].search([('name', 'like', _('Manufacture'))], limit=1).id
-        if not manufacture_route_id:
+        manufacture_route = self.env.ref('mrp.route_warehouse0_manufacture', raise_if_not_found=False)
+        if not manufacture_route:
+            manufacture_route = self.env['stock.location.route'].search([('name', 'like', _('Manufacture'))], limit=1)
+        if not manufacture_route:
             raise exceptions.UserError(_('Can\'t find any generic Manufacture route.'))
-        return manufacture_route_id
+        return manufacture_route.id
 
     def _get_manufacture_pull_rules_values(self, route_values):
         if not self.manu_type_id:

@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2016
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Collex100, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
+"Last-Translator: Collex100, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1618,6 +1618,11 @@ msgid "Adjustment Tax"
 msgstr "Корректировка налога"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2305,6 +2310,12 @@ msgstr "Настройка сверки с банком"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Банковская выписка"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10726,6 +10737,14 @@ msgid ""
 msgstr ""
 "Вы не можете отменить счет, который частично оплачен. Сначала надо отменить "
 "сверку связанных записей."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

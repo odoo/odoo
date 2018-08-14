@@ -58,11 +58,11 @@
                     <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
                     <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
                     <filter string="Reconciled" domain="[('state','=','reconciled')]"/>
-                    <separator/>
+                    <separator name="state"/>
                     <filter string="Partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                     <filter string="Payment Method" domain="[]" context="{'group_by': 'payment_method_id'}"/>
-                    <filter string="State" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
                     <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </search>
@@ -120,6 +120,52 @@
             </field>
         </record>
 
+        <!--Codigo modificado por TRESCLOUD-->
+        <record model="ir.ui.view" id="account_payment_kanban">
+            <field name="name">account.payment.kanban</field>
+            <field name="model">account.payment</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="payment_date"/>
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="payment_method_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                    <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="partner_type" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.partner_id.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><field name="amount" widget="monetary"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 text-muted">
+                                        <span><t t-esc="record.journal_id.value"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'reconciled': 'warning', 'posted': 'warning', 'sent': 'warning',
+                                            'paid': 'success'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Fin del Codigo modificado por TRESCLOUD-->
+
         <record id="view_account_payment_graph" model="ir.ui.view">
             <field name="name">account.payment.graph</field>
             <field name="model">account.payment</field>
@@ -136,7 +182,7 @@
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer'}</field>
             <field name="domain">[('partner_type', '=', 'customer')]</field>
             <field name="view_id" ref="view_account_payment_tree"/>
@@ -154,7 +200,7 @@
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier'}</field>
             <field name="domain">[('partner_type', '=', 'supplier')]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
@@ -226,7 +272,6 @@
             <field name="context">{'default_invoice_ids': [(4, active_id, None)]}</field>
             <field name="target">new</field>
         </record>
-
 
         <!-- Register payment from several invoices -->
 

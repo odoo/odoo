@@ -53,8 +53,16 @@ class HrPayslip(models.Model):
 
     @api.multi
     def action_payslip_done(self):
+        #TRESCLOUD, movemos el super al inicio para que primero
+        #se ejecute el metodo compute_sheet (y se corrijan las lineas de nomina)
+        #y posteriormente se realice el asiento contable
+        res = super(HrPayslip, self).action_payslip_done()
         precision = self.env['decimal.precision'].precision_get('Payroll')
         for slip in self:
+            if self.env.context.get('bypass_core_accounting_move'):
+                #TRESCLOUD agregado para no ejecutar el metodo del core
+                #y poder hacer el metodo facilmente heredable
+                break
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
@@ -105,7 +113,7 @@ class HrPayslip(models.Model):
             move = self.env['account.move'].create(move_dict)
             slip.write({'move_id': move.id, 'date': date})
             move.post()
-        return super(HrPayslip, self).action_payslip_done()
+        return res
     
     #El siguiente método fue agregado TRESCLOUD
     @api.model
@@ -130,7 +138,7 @@ class HrPayslip(models.Model):
         Este metodo devuelve las líneas del debe del asiento contable que se deben generar, va ser modificado en ecua_hr
         '''
         debit_line = {
-            'name': line.name,
+            'name': line.name + ', ' + line.employee_id.name,
             'partner_id': line._get_partner_id(credit_account=False),
             'account_id': debit_account_id,
             'journal_id': slip.journal_id.id,
@@ -149,7 +157,7 @@ class HrPayslip(models.Model):
         Este metodo devuelve las líneas del haber del asiento contable que se deben generar, va ser modificado en ecua_hr
         '''
         credit_line = [(0, 0, {
-            'name': line.name,
+            'name': line.name + ', ' + line.employee_id.name,
             'partner_id': line._get_partner_id(credit_account=True),
             'account_id': credit_account_id,
             'journal_id': slip.journal_id.id,

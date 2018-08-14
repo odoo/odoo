@@ -20,6 +20,8 @@ from odoo.tools import html2text, ustr
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
+SMTP_TIMEOUT = 60
+
 
 class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
@@ -192,7 +194,7 @@ class IrMailServer(models.Model):
         """Returns a new SMTP connection to the give SMTP server, authenticated
            with ``user`` and ``password`` if provided, and encrypted as requested
            by the ``encryption`` parameter.
-        
+
            :param host: host or IP of SMTP server to connect to
            :param int port: SMTP port to connect to
            :param user: optional username to authenticate with
@@ -205,9 +207,9 @@ class IrMailServer(models.Model):
             if not 'SMTP_SSL' in smtplib.__all__:
                 raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
                                   "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
-            connection = smtplib.SMTP_SSL(host, port)
+            connection = smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT)
         else:
-            connection = smtplib.SMTP(host, port)
+            connection = smtplib.SMTP(host, port, timeout=SMTP_TIMEOUT)
         connection.set_debuglevel(smtp_debug)
         if encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
@@ -397,6 +399,7 @@ class IrMailServer(models.Model):
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
+        del message['Bcc']
 
         smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses, [email_to, email_cc, email_bcc])))
         assert smtp_to_list, self.NO_VALID_RECIPIENT
@@ -409,7 +412,7 @@ class IrMailServer(models.Model):
             message['To'] = x_forge_to
 
         # Do not actually send emails in testing mode!
-        if getattr(threading.currentThread(), 'testing', False):
+        if getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode():
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 

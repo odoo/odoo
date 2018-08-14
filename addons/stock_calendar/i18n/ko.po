@@ -3,15 +3,16 @@
 # * stock_calendar
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # 최재호 <hwangtog@gmail.com>, 2017
+# Linkup <link-up@naver.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2017\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: stock_calendar
 #: model:ir.ui.view,arch_db:stock_calendar.view_procurement_form_stock_inherit
 msgid "Calculate dates according to Orderpoint"
-msgstr ""
+msgstr "주문 시점에 따라 날짜 계산"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
@@ -36,11 +37,13 @@ msgid ""
 "That way the scheduler will only take into account the goods needed until "
 "the second delivery and put the procurement date as the first delivery."
 msgstr ""
+"달력에서 상품이 배달 될 요일을 정의 할 수 있습니다. 그런 식으로 스케줄러는 두 번째 배달까지 필요한 제품을 고려하여 조달 날짜를 첫 "
+"번째 배달로 지정합니다."
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
 msgid "Last Execution Date"
-msgstr ""
+msgstr "최근 실행 날짜"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_leaves
@@ -55,12 +58,12 @@ msgstr "최소 재고 규칙"
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_delivery_date
 msgid "Next Delivery Date"
-msgstr ""
+msgstr "다음 배달 날짜"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_purchase_date
 msgid "Next Purchase Date"
-msgstr ""
+msgstr "다음 구매 일"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_procurement_order
@@ -93,7 +96,7 @@ msgstr ""
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
 msgid "The date the next purchase order should be sent to the vendor"
-msgstr ""
+msgstr "다음 구매 주문서를 공급 업체에 보내야하는 날짜"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_attendance

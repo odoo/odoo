@@ -255,6 +255,7 @@ class HrPayslip(models.Model):
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
+            copied_payslip.compute_sheet()
             copied_payslip.action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
@@ -491,6 +492,41 @@ class HrPayslip(models.Model):
                 res = self.env.cr.fetchone()
                 return res and res[0] or 0.0
 
+        def _get_rules_by_move(localdict, sorted_rules):
+            '''Buscamos los moves en las reglas de tipo move, y retornamos la
+            permutacion de reglas y moves'''
+            rules_by_move = []
+            aml_obj = self.sudo().env['account.move.line'] #usamos sudo para poder acceder a los registros contables
+            for rule in sorted_rules:
+                move_ids = []
+                if rule.amount_select in ['account_move']:
+                    #si es del nuevo tipo, basado en movimientos contables, buscamos
+                    #los movimiento
+                    payslip = self.search([('id','=',localdict['payslip'].id)])
+                    partner = payslip.employee_id.address_home_id.commercial_partner_id
+                    if not partner:
+                        raise UserError(u'El empleado %s no tiene una empresa configurada' % payslip.employee_id.name)
+                    account = rule.account_credit
+                    if not account:
+                        raise UserError(u'La regla salarial %s es de tipo Neteo Saldo Contable, solo debe tener una cuenta acreedora configurada' % rule.name)
+                    if rule.account_debit or rule.condition_acc:
+                        raise UserError(u'La regla salarial %s es de tipo Neteo Saldo Contable, solo debe tener una cuenta acreedora configurada' % rule.name)
+                    move_ids = aml_obj.search([
+                        ('partner_id','=',partner.id), 
+                        ('date_maturity','>=',payslip.date_from),
+                        ('date_maturity','<=',payslip.date_to),
+                        ('account_id','=',account.id),
+                        ('debit','>',0.0), #escuchamos en el debe
+                        ('full_reconcile_id','=',False),
+                    ])
+                if move_ids:
+                    for move in move_ids:
+                        rules_by_move.append((rule,move))
+                else:
+                    #se retonra el objeto vacio aml_obj para facilitar la programacion
+                    rules_by_move.append((rule,aml_obj))
+            return rules_by_move
+
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         rules_dict = {}
@@ -525,12 +561,25 @@ class HrPayslip(models.Model):
         for contract in contracts:
             employee = contract.employee_id
             localdict = dict(baselocaldict, employee=employee, contract=contract)
-            #Variable agregada por TRESCLOUD
+            
+            
+            #Seccion modificada por TRESCLOUD
             sequence = 0
-            for rule in sorted_rules:
-                #Variable modificada por TRESCLOUD
+            sorted_rules_and_moves = _get_rules_by_move(localdict, sorted_rules)
+            for rule, move in sorted_rules_and_moves:
                 sequence += 1
-                key = rule.code + '-' + str(contract.id)
+                key = rule.code + '-' + str(contract.id) + '-'+str(move.id)
+                localdict['force_amount'] = 0.0
+                if move.amount_residual:
+                    localdict['force_amount'] = move.amount_residual #todo en validar regla en satisfy_condition
+                elif not move.full_reconcile_id:
+                    #cuando la cuenta no es de tipo por pagar no tiene amount_Residual
+                    #en este caso tomamos el valor de debito
+                    localdict['force_amount'] = abs(move.debit)
+                #fin seccion modificada por TRESCLOUD
+                
+                
+                
                 localdict['result'] = None
                 localdict['result_qty'] = 1.0
                 localdict['result_rate'] = 100
@@ -542,10 +591,20 @@ class HrPayslip(models.Model):
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     tot_rule = amount * qty * rate / 100.0
-                    localdict[rule.code] = tot_rule
+                    
+                    
+                    #MODIFICADO POR TRESCLOUD PARA PERMITIR SUMAR VARIOS REGISTROS
+                    #DE LA MISMA REGLA SALARIAL
+                    if localdict.get(rule.code):
+                        localdict[rule.code] += tot_rule
+                    else:
+                        localdict[rule.code] = tot_rule
                     rules_dict[rule.code] = rule
                     #sum the amount for its salary category
-                    localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, localdict[rule.code] - previous_amount)
+                    #FIN MODIFICACION TRESCLOUD
+                    
+                    
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
@@ -572,6 +631,7 @@ class HrPayslip(models.Model):
                         'employee_id': contract.employee_id.id,
                         'quantity': qty,
                         'rate': rate,
+                        'receivable_move_line_id': move.id, #TRESCLOUD agregado
                     }
                 else:
                     #blacklist this rule and its children

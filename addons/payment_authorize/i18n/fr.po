@@ -3,22 +3,23 @@
 # * payment_authorize
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Cyrille de Lambert <cdelambert@teclib.com>, 2016
+# Cyrille de Lambert <cdelambert@auguria.net>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +59,8 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize : données reçues sans référence (%s), trans_id (%s) ou empreinte "
+"(%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -112,7 +115,7 @@ msgstr "Transaction"
 #: code:addons/payment_authorize/models/payment.py:347
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "La création du profil client dans Authorize.Net a échoué."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -120,6 +123,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Contient la référence unique pour cette combinaison partenaire/jeton de "
+"paiement dans le backend Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

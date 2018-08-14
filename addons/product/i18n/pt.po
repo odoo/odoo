@@ -3,21 +3,22 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
 # Joao Vieira <joao.f.vieira@gmail.com>, 2016
 # Manuela Silva <manuela.silva@sky.com>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
-# Daniel Reis <dreis.pt@gmail.com>, 2016
+# Daniel Reis, 2016
 # Andre Mendes <afm@thinkopen.solutions>, 2016
+# Nuno Silva <nuno.silva@arxi.pt>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Andre Mendes <afm@thinkopen.solutions>, 2016\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2018\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,6 +152,9 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Preço de Catálogo  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Custo  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Outra Lista de Preços  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -189,6 +193,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Aviso</strong>: adicionar ou apagar atributos\n"
+"                        irá apagar e recriar variantes existentes e levar\n"
+"                        à perda das suas personalizações."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -269,6 +276,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Um artigo armazenável é um artigo passível de ter gestão de stock. A app \"Inventário\" tem de estar instalada.\n"
+"Por outro lado, um artigo consumível é um artigo que não tem gestão de stock.\n"
+"Um serviço é um artigo não-material que é prestado.\n"
+"O conteúdo digital é um artigo não-material que vende online. Os ficheiros anexados aos artigos são aqueles vendidos no comércio eletrónico, como e-books, música, imagens,... O módulo \"Artigo Digital\" tem que estar instalado."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -376,7 +387,7 @@ msgstr "Atributo"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Nome do Atributo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
@@ -432,6 +443,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Preço base para cálculo.\n"
+"Preço Público: O preço base será o preço de venda ao público.\n"
+"Preço de Custo : O preço base será o preço de custo.\n"
+"Outra Lista de Preços : Cálculo do preço base com base noutra Lista de Preços."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -1015,7 +1030,7 @@ msgstr "Erro! Não pode criar categorias recursivas."
 #: code:addons/product/models/product_attribute.py:97
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
-msgstr ""
+msgstr "Erro ! Não pode usar este atributo com o valor seguinte."
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -1249,7 +1264,7 @@ msgstr "Global"
 #: model:product.product,name:product.membership_0
 #: model:product.template,name:product.membership_0_product_template
 msgid "Gold Membership"
-msgstr ""
+msgstr "Hora(s)"
 
 #. module: product
 #: model:product.product,name:product.product_product_24
@@ -1329,6 +1344,9 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Quantas vezes esta Unidade de Medida é maior que a Unidade de Medida de "
+"referência desta categoria: 1 * (esta unidade) = coeficiente * (unidade de "
+"referência)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
@@ -2004,7 +2022,7 @@ msgstr "Valor do Atributo de Produto"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Atributo e Valores do Artigo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
@@ -2056,7 +2074,7 @@ msgstr "Unidade de medida do produto"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Categorias de Unidade de Medida"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2147,7 +2165,7 @@ msgstr "Unidade de compra da Medida"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr ""
+msgstr "Quantidade por Embalagem"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2545,6 +2563,8 @@ msgstr ""
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Campo técnico. Usado para pesquisas em listas de preços não armazenadas na "
+"base de dados."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2670,7 +2690,7 @@ msgstr ""
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "O número de artigos sob esta categoria (Não inclui as sub-categorias)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -2724,7 +2744,7 @@ msgstr ""
 #: code:addons/product/models/product_uom.py:44 sql_constraint:product.uom:0
 #, python-format
 msgid "The rounding precision must be greater than 0!"
-msgstr ""
+msgstr "A precisão do arredondamento tem de ser maior que 0!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_lst_price
@@ -2732,6 +2752,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"O preço de venda é gerido no modelo de artigo. Clique em 'Preços de "
+"Variante' para definir os preços acrescidos no atributo."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2762,7 +2784,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "O número total de artigos que pode ter por palete ou caixa."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2962,6 +2984,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Unidades de medida que pertençam à mesma categoria podem ser\n"
+"            convertidas entre si. Por exemplo, na catedoria\n"
+"            <i>'Tempo'</i>, terá as seguintes unidades de medida:\n"
+"            Horas, Dias."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3017,7 +3043,7 @@ msgstr "Informação da Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Preço Acrescido de Variante"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3054,7 +3080,7 @@ msgstr "Informação do Vendedor"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "Listas de Preços de Fornecedor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3204,6 +3230,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Não pode definir a precisão decimal de 'Conta' como maior que o fator de "
+"arredondamento da moeda principal da empresa"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3211,6 +3239,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Tem que definir um coeficiente de conversão entre várias\n"
+"            Unidades de Medida dentro da mesma categoria."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3231,6 +3261,8 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"Deve definir um artigo para tudo o que vender, seja um artigo físico, um "
+"consumível ou um serviço que prestar a clientes."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11

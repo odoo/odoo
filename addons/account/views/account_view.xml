@@ -16,7 +16,7 @@
                              <field name="code" placeholder="code"/>
                              <field name="name"/>
                              <field name="user_type_id" widget="selection"/>
-                             <field name="tax_ids" widget="many2many_tags"/>
+                             <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="
                              {'no_create_edit': True}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -115,11 +115,51 @@
                 </search>
             </field>
         </record>
+        <!--Codigo modificado por TRESCLOUD-->
+        <record model="ir.ui.view" id="account_account_kanban">
+            <field name="name">account.account.kanban</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="user_type_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.code.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.user_type_id.string'/>: <t t-esc="record.user_type_id.value"/></span>
+                                    </div>
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.currency_id.string'/>: <t t-esc="record.currency_id.value"/></span>
+                                    </div>
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.company_id.string'/>: <t t-esc="record.company_id.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Fin del Codigo modificado por TRESCLOUD-->
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
             <field name="help" type="html">
@@ -243,6 +283,39 @@
                 </tree>
             </field>
         </record>
+        <!--Codigo modificado por TRESCLOUD-->
+        <record model="ir.ui.view" id="account_journal_kanban">
+            <field name="name">account.journal.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="belongs_to_company" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.type.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.company_id.string'/>: <t t-esc="record.company_id.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Fin del Codigo modificado por TRESCLOUD-->
         <record id="view_account_journal_search" model="ir.ui.view">
             <field name="name">account.journal.search</field>
             <field name="model">account.journal</field>
@@ -385,7 +458,7 @@
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a journal.
@@ -874,6 +947,32 @@
                 </tree>
             </field>
         </record>
+        <!--Codigo modificado por TRESCLOUD-->
+        <record model="ir.ui.view" id="account_account_type_kanban">
+            <field name="name">account.account.type.kanban</field>
+            <field name="model">account.account.type</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.type.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Fin del Codigo modificado por TRESCLOUD-->
         <record id="view_account_type_form" model="ir.ui.view">
             <field name="name">account.account.type.form</field>
             <field name="model">account.account.type</field>
@@ -897,7 +996,7 @@
             <field name="name">Account Types</field>
             <field name="res_model">account.account.type</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

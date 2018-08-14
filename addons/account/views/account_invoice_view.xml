@@ -99,7 +99,47 @@
                 </tree>
             </field>
         </record>
-
+        <!--Codigo modificado por TRESCLOUD-->
+        <record model="ir.ui.view" id="invoice_tax_kanban">
+            <field name="name">account.invoice.tax.kanban</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="sequence"/>
+                    <field name="manual"/>
+                    <field name="name"/>
+                    <field name="account_id" groups="account.group_account_user"/>
+                    <field name="base"/>
+                    <field name="amount"/>
+                    <field name="currency_id" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><span><t t-esc="record.account_id.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.base.string'/>: <t t-esc="record.base.value"/></span>
+                                    </div>
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.amount.string'/>: <t t-esc="record.amount.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Fin del Codigo modificado por TRESCLOUD-->
         <record id="view_invoice_tax_form" model="ir.ui.view">
             <field name="name">account.invoice.tax.form</field>
             <field name="model">account.invoice.tax</field>
@@ -257,7 +297,7 @@
                     </group>
                     <notebook>
                         <page string="Bill">
-                            <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
+                            <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids" mode="tree,kanban">
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id"
@@ -278,11 +318,38 @@
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="product_id"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <span><t t-esc="record.quantity.value"/> <t t-esc="record.uom_id.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                             <group>
                                 <group>
                                     <div class="oe_inline">
-                                        <field name="tax_line_ids">
+                                        <field name="tax_line_ids" mode="tree,kanban">
                                             <tree editable="bottom" string="Taxes">
                                                 <field name="name"/>
                                                 <!--Need invisible fields for on_change to create all necessary info -->
@@ -294,6 +361,27 @@
                                                 <field name="amount"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </tree>
+                                            <!--Codigo modificado por TRESCLOUD-->
+                                            <kanban class="o_kanban_mobile">
+                                                <field name="name"/>
+                                                <field name="tax_id"/>
+                                                <field name="amount"/>
+                                                <templates>
+                                                    <t t-name="kanban-box">
+                                                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                            <div class="row">
+                                                                <div class="col-xs-8 text-muted">
+                                                                    <strong><span><t t-esc="record.tax_id.value or ''"/></span></strong>
+                                                                </div>
+                                                                <div class="col-xs-4 text-muted">
+                                                                    <span class="text-right"><t t-esc="record.amount.value or ''"/></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </templates>
+                                            </kanban>
+                                            <!--Fin del Codigo modificado por TRESCLOUD-->
                                         </field>
                                     </div>
                                 </group>
@@ -471,7 +559,7 @@
                                     <field name="name"/>
                                 </group>
                             </group>
-                            <field name="tax_line_ids">
+                            <field name="tax_line_ids" mode="tree,kanban">
                                 <tree editable="bottom" string="Taxes" create="0">
                                     <field name="name"/>
                                     <!--Need invisible fields for on_change to create all necessary info -->
@@ -483,6 +571,27 @@
                                     <field name="amount"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="name"/>
+                                    <field name="tax_id"/>
+                                    <field name="amount"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <strong><span><t t-esc="record.tax_id.value or ''"/></span></strong>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="text-right"><t t-esc="record.amount.value or ''"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                         </page>
                     </notebook>

@@ -201,6 +201,7 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average'):
+            
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
 
             # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
@@ -229,7 +230,7 @@ class StockMove(models.Model):
             # product_obj = self.pool.get('product.product')
             if any(q.qty <= 0 for q in move.quant_ids) or move.product_qty == 0:
                 # if there is a negative quant, the standard price shouldn't be updated
-                return
+                continue
             # Note: here we can't store a quant.cost directly as we may have moved out 2 units
             # (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't
             # know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the
@@ -296,7 +297,8 @@ class StockMove(models.Model):
         debit_value = self.company_id.currency_id.round(valuation_amount * qty)
 
         # check that all data is correct
-        if self.company_id.currency_id.is_zero(debit_value):
+        #La siguiente línea fue modificada por TRESCLOUD
+        if self.company_id.currency_id.is_zero(debit_value) and not self.env.context.get('generate_accounting_entry_price_zero', False):
             if self.product_id.cost_method == 'standard':
                 raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (self.product_id.name,))
             return []
@@ -311,8 +313,34 @@ class StockMove(models.Model):
             # in case of a customer return in anglo saxon mode, for products in average costing method, the stock valuation
             # is made using the original average price to negate the delivery effect.
             if self.location_id.usage == 'customer' and self.origin_returned_move_id:
-                debit_value = self.origin_returned_move_id.price_unit * qty
-                credit_value = debit_value
+                #TRESCLOUD: Acorde a nuestros calculos en contabilidad anglosajona asì como la
+                #devolucion en compras es al costo promedio vigente, lo mismo debe pasar con la de ventas
+                #caso contrario no se netea la cuenta de bienes recibidos no facturados.
+                #debit_value = self.origin_returned_move_id.price_unit * qty
+                credit_value = self.origin_returned_move_id.price_unit * qty
+
+            #se deja la seccion comentada para habitilcion en el futuro
+#             #TRESCLOUD - devolucion en manufactura, caso materia prima
+#             # in case of raw material return in anglo saxon mode, for products in average costing method, the stock_input
+#             # account books the real purchase price, while the stock account books the average price. The difference is
+#             # booked in the dedicated price difference account.
+#             if self.location_dest_id.usage == 'internal' and \
+#                self.location_id.usage == 'production' and \
+#                self.origin_returned_move_id and \
+#                self.origin_returned_move_id.raw_material_production_id:
+#                 debit_value = self.origin_returned_move_id.price_unit * qty
+#             #TRESCLOUD - devolucion en manufactura, caso producto terminado
+#             # in case of raw material return in anglo saxon mode, for products in average costing method, the stock_input
+#             # account books the real purchase price, while the stock account books the average price. The difference is
+#             # booked in the dedicated price difference account.
+#             if self.location_dest_id.usage == 'production' and \
+#                self.location_id.usage == 'internal' and \
+#                self.origin_returned_move_id and \
+#                self.origin_returned_move_id.production_id:
+#                 debit_value = self.origin_returned_move_id.price_unit * qty
+#             #FIN MODIFICACION TRESCLOUD
+
+            
         partner_id = (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
         debit_line_vals = {
             'name': self.name,

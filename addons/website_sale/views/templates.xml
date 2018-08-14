@@ -405,8 +405,8 @@
                                 <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                                   <div class="carousel-outer">
                                     <div class="carousel-inner">
-                                        <div class="item active" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update']}"/>
-                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.product_variant_id.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + (product.product_variant_id['__last_update'] or '')}"/>
+                                        <div t-if="variant_img" class="item active" itemprop="image" t-field="product.product_variant_id.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + (product.product_variant_id['__last_update'] or '')}"/>
+                                        <div t-attf-class="item#{'' if variant_img else ' active'}" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update']}"/>
                                         <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
                                             <div class="item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
                                         </t>
@@ -425,11 +425,11 @@
                                   </div>
 
                                   <ol class="carousel-indicators" t-if="len(image_ids) or variant_img">
-                                    <li data-target="#o-carousel-product" data-slide-to="0" class="active">
-                                        <img class="img img-responsive js_variant_img_small" t-attf-src="/website/image/product.template/{{product.id}}/image/90x90" t-att-alt="product.name"/>
+                                    <li t-if="variant_img" data-target="#o-carousel-product" data-slide-to="0" class="active">
+                                        <img class="img img-responsive js_variant_img_small" t-attf-src="/website/image/product.product/{{product.product_variant_id.id}}/image/90x90" t-att-alt="product.name"/>
                                     </li>
-                                    <li t-if="variant_img" data-target="#o-carousel-product" data-slide-to="1" class="">
-                                        <img class="img img-responsive" t-attf-src="/website/image/product.product/{{product.product_variant_id.id}}/image/90x90" t-att-alt="product.name"/>
+                                    <li data-target="#o-carousel-product" t-att-data-slide-to="1 if variant_img else 0" t-att-class="'' if variant_img else 'active'">
+                                        <img class="img img-responsive" t-attf-src="/website/image/product.template/{{product.id}}/image/90x90" t-att-alt="product.name"/>
                                     </li>
                                     <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
                                         <li data-target="#o-carousel-product" t-att-data-slide-to="pimg_index + (variant_img and 2 or 1)">
@@ -607,19 +607,13 @@
     <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
       <xpath expr="//t[@t-placeholder='select']" position="replace">
         <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_id.id"/>
-        <t t-call="website_sale.variants">
-          <t t-set="ul_class" t-value="'nav-stacked'"/>
-        </t>
         <t t-if="len(product.product_variant_ids) &gt; 1">
           <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-            <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
+            <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price"/>
             <span t-esc="variant_id.name_get()[0][1]"/>
-            <span class="badge" t-if="variant_id.price_extra">
-              <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-options='{
-                    "widget": "monetary",
-                    "from_currency": product.currency_id,
-                    "display_currency": website.currency_id
-                  }'/>
+            <t t-set="diff_price" t-value="variant_id.price - variant_id.product_tmpl_id.price"/>
+            <span class="badge" t-if="diff_price != 0">
+              <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(diff_price)" t-esc-options='{"widget": "monetary", "display_currency": "website.currency_id"}'/>
             </span>
           </label>
         </t>
@@ -720,6 +714,7 @@
     </template>
 
     <template id="wizard_checkout" name="Wizard Checkout">
+        <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
         <ul class="wizard pull-right">
             <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
                 <t t-if="step&gt;10 and step&lt;50">
@@ -875,7 +870,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -952,7 +947,7 @@
                             <span t-esc="line.product_id.with_context(display_default_code=False).display_name" class="h6" />
                         </a>
                         <br />
-                        <small>Qty: <t t-esc="int(line.product_uom_qty)" /></small>
+                        <small>Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" /></small>
                     </div>
                 </div>
             </t>
@@ -1089,6 +1084,7 @@
                                             <t t-foreach="shippings" t-as="ship">
                                                 <div class="col-sm-12 col-md-6 one_kanban">
                                                     <t t-call="website_sale.address_kanban">
+                                                        <t t-set="actual_partner" t-value="order.partner_id" />
                                                         <t t-set='contact' t-value="ship"/>
                                                         <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
                                                         <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
@@ -1122,7 +1118,7 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
@@ -1155,7 +1151,9 @@
                                 <t t-if="mode == ('new', 'billing')">
                                     <h3 class="page-header mt16">Your Address
                                         <small> or </small>
-                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
+                                        <t t-set="signup_text">Sign Up</t>
+                                        <t t-set="login_text">Log In</t>
+                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', signup_text) or ('login', login_text)"/>
                                         <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
                                     </h3>
                                 </t>
@@ -1320,10 +1318,11 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div t-esc="line.product_uom_qty" />
+                                            <div t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                         </td>
                                         <td class="text-center">
-                                            <span t-field="line.price_unit" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
+                                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -1469,7 +1468,7 @@
                                           </td>
                                           <td>
                                               <div id="quote_qty">
-                                                  <span t-field="line.product_uom_qty"/>
+                                                  <span t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
                                                   <span t-field="line.product_uom"/>
                                               </div>
                                           </td>
@@ -1569,12 +1568,6 @@
         </t>
         <t t-if="tx_ids and state == 'pending' and validation">
             <p>Your transaction is waiting a manual confirmation.</p>
-            <br />
-            <t t-if="tx_post_msg">
-                <div class="hidden-print">
-                    <t t-raw="tx_post_msg" />
-                </div>
-            </t>
         </t>
         <t t-if="tx_ids and state not in ['done', 'cancel', 'pending', 'authorized']">
             <p>Your transaction is waiting confirmation.</p>

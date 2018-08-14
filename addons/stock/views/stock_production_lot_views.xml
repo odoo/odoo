@@ -35,11 +35,31 @@
                 </group>
                 <notebook>
                     <page string="Products">
-                        <field name="quant_ids">
+                        <field name="quant_ids" mode="tree,kanban">
                             <tree string="Stock Moves">
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="qty"/>
                             </tree>
+                            <!--Codigo modificado por TRESCLOUD-->
+                            <kanban class="o_kanban_mobile">
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="qty"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                            <div class="row">
+                                                <div class="col-xs-8 text-muted">
+                                                    <strong><span><t t-esc="record.location_id.value or ''"/></span></strong>
+                                                </div>
+                                                <div class="col-xs-4 text-muted">
+                                                    <strong><span><t t-esc="record.qty.value or ''"/></span></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <!--Fin del Codigo modificado por TRESCLOUD-->
                          </field>
                     </page>
                 </notebook>

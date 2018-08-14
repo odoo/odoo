@@ -189,7 +189,7 @@ class AccountInvoice(models.Model):
     @api.depends('move_id.line_ids.amount_residual')
     def _compute_payments(self):
         payment_lines = []
-        for line in self.move_id.line_ids:
+        for line in self.move_id.line_ids.filtered(lambda l: l.account_id.id == self.account_id.id):
             payment_lines.extend(filter(None, [rp.credit_move_id.id for rp in line.matched_credit_ids]))
             payment_lines.extend(filter(None, [rp.debit_move_id.id for rp in line.matched_debit_ids]))
         self.payment_move_line_ids = self.env['account.move.line'].browse(list(set(payment_lines)))
@@ -213,7 +213,7 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry Name', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Vendor Reference',
+    reference = fields.Char(string='Vendor Reference', copy=False,
         help="The partner reference of this invoice.", readonly=True, states={'draft': [('readonly', False)]})
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -431,7 +431,8 @@ class AccountInvoice(models.Model):
         for invoice in self:
             # Delete non-manual tax lines
             self._cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (invoice.id,))
-            self.invalidate_cache()
+            if self._cr.rowcount:
+                self.invalidate_cache()
 
             # Generate one tax line per tax, however many invoice lines it's applied to
             tax_grouped = invoice.get_taxes_values()
@@ -448,7 +449,8 @@ class AccountInvoice(models.Model):
         for invoice in self:
             if invoice.state not in ('draft', 'cancel'):
                 raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
-            elif invoice.move_name:
+            #TRESCLOUD - se agrega el bypass_move_name_restriction
+            elif not self._context.get('bypass_move_name_restriction') and invoice.move_name:
                 raise UserError(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(AccountInvoice, self).unlink()
 
@@ -703,7 +705,7 @@ class AccountInvoice(models.Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.with_context(date=self.date or self.date_invoice or fields.Date.context_today(self))
+                currency = self.currency_id.with_context(date=self._get_currency_rate_date() or fields.Date.context_today(self))
                 if not (line.get('currency_id') and line.get('amount_currency')):
                     line['currency_id'] = currency.id
                     line['amount_currency'] = currency.round(line['price'])
@@ -735,12 +737,8 @@ class AccountInvoice(models.Model):
                         tax_ids.append((4, child.id, None))
             analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
             #Codigo agregado por TRESCLOUD
-            try:
-                #Colocamos este código en un try para que si internal_number no existe se mantenga
-                #el funcionamiento nativo
-                name = line.invoice_id.internal_number or line.name.split('\n')[0][:64]
-            except:
-                name = line.name.split('\n')[0][:64]
+            #Adicionamos el display_name que en nuestro core se computa como "Fact 001-001-0000001"
+            name = " ".join([line.invoice_id.display_name,line.name.split('\n')[0][:64]])
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
@@ -757,8 +755,6 @@ class AccountInvoice(models.Model):
                 'invoice_id': self.id,
                 'analytic_tag_ids': analytic_tag_ids
             }
-            if line['account_analytic_id']:
-                move_line_dict['analytic_line_ids'] = [(0, 0, line._get_analytic_line())]
             res.append(move_line_dict)
         return res
 
@@ -776,12 +772,8 @@ class AccountInvoice(models.Model):
                         done_taxes.append(child_tax.id)
                 done_taxes.append(tax.id)
                 #Codigo agregado por TRESCLOUD
-                try:
-                    #Colocamos este código en un try para que si internal_number no existe se mantenga
-                    #el funcionamiento nativo
-                    name = tax_line.invoice_id.internal_number or tax_line.name
-                except:
-                    name = tax_line.name
+                #Adicionamos el display_name que en nuestro core se computa como "Fact 001-001-0000001"
+                name = " ".join([tax_line.invoice_id.display_name,tax_line.name])
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -837,11 +829,20 @@ class AccountInvoice(models.Model):
         return line
 
     #Este metodo es agregado por TresCloud
-    def _get_payable_accounts(self, total, total_currency, iml, ctx):
+    def _payable_receivable_moves_get(self, total, total_currency, iml, ctx):
         """"
-            Se agrega el metodo get_payable_accounts para poder modificar la forma en que el sistema agrega los movimientos contables en cuentas por pagar.
+        Carga los account.move.lines correspondientes a la cuenta de contrapartida por cobrar o por pagar
+        Tiene la siguientes modificaciones:
+        - Modifica el nombre del asiento, agregando la palabra "Cuota 1 de 3" cuando corresponde
+        - Permite heredar para proyecto X haciendo una CxC o CxP por cada división
+        @self: corresponde a una sola factura, pues al invocar el metodo se puso inv._payable....
+        
+        #TODO: Dejar como estaba en el core original de odoo, pero con una modificacion que
+        permita pasar por contexto un listado de criterios de agrupacion, util para usar
+        divisiones.
+        
+        #NOTA: Es redefinido por completo en alguns proyectos (Proyecto X)
         """
-        name = self.name or '/'
         diff_currency = self.currency_id != self.company_currency_id
         if self.payment_term_id:
             totlines = self.with_context(ctx).payment_term_id.with_context(currency_id=self.company_currency_id.id,
@@ -863,10 +864,17 @@ class AccountInvoice(models.Model):
                 res_amount_currency -= amount_currency or 0
                 if i + 1 == len(totlines):
                     amount_currency += res_amount_currency
+                #agregado por trescloud
+                array_name = []
+                array_name.append(self.display_name)
+                if self.name:
+                    array_name.append(self.name)
+                name = ' '.join(item for item in array_name)
+                if len(totlines) > 1: #solo agregamos el "Cuota 1 de 3" cuando hay mas de una cuota
+                    name = name + ' Cuota ' + str(count) + ' de ' + str(len(totlines))
                 iml.append({
                     'type': 'dest',
-                    # Codigo modificado por TRESCLOUD
-                    'name': 'Cuota ' + str(count) + ' de ' + str(len(totlines)),
+                    'name': name,
                     'price': t[1],
                     'account_id': self.account_id.id,
                     'date_maturity': t[0],
@@ -875,6 +883,11 @@ class AccountInvoice(models.Model):
                     'invoice_id': self.id
                 })
         else:
+            array_name = []
+            array_name.append(self.display_name)
+            if self.name:
+                array_name.append(self.name)
+            name = ' '.join(item for item in array_name)
             iml.append({
                 'type': 'dest',
                 'name': name,
@@ -886,6 +899,14 @@ class AccountInvoice(models.Model):
                 'invoice_id': self.id
             })
         return iml
+
+    @api.multi
+    def _get_account_partner(self):
+        '''Se crea el metodo para poder sobreescribir en personalizaciones de clientes particulares
+        A favor de este partner se realiza el asiento contable,
+        por seguridad otro metodo busca el commercial_partner_id asociado al indicado aqui.
+        '''
+        return self.partner_id
 
     @api.multi
     def action_move_create(self):
@@ -913,10 +934,19 @@ class AccountInvoice(models.Model):
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
-            #La siguiente linea fue creada por TresCloud
-            iml = self._get_payable_accounts(total, total_currency, iml, ctx)
-            #El codigo removido en esa seccion esta en el metodo _get_payable_accounts
-            part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
+            
+            #SECCION MODIFICADA POR TRESCLOUD
+            #El codigo removido en esa seccion esta en el nuevo metodo _payable_receivable_accounts_get
+            #TODO: usar "iml +=" para mantener estetica similar al invoice_line_move_line_get y tax_line_move_line_get
+            iml = inv._payable_receivable_moves_get(total, total_currency, iml, ctx)
+            #para pasar el msg de error a otros metodos
+            if self._context.get('error_msg'):
+                ctx.update({'error_msg': self._context['error_msg']})
+            #hook para hacer los asientos contables a favor de terceros
+            move_partner_id = inv._get_account_partner()
+            part = self.env['res.partner']._find_accounting_partner(move_partner_id)
+            #FIN DE SECCIÓN MODIFICADA POR TRESCLOUD
+            
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
             line = inv.group_lines(iml, line)
 
@@ -963,25 +993,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def line_get_convert(self, line, part):
-        return {
-            'date_maturity': line.get('date_maturity', False),
-            'partner_id': part,
-            'name': line['name'],
-            'debit': line['price'] > 0 and line['price'],
-            'credit': line['price'] < 0 and -line['price'],
-            'account_id': line['account_id'],
-            'analytic_line_ids': line.get('analytic_line_ids', []),
-            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
-            'currency_id': line.get('currency_id', False),
-            'quantity': line.get('quantity', 1.00),
-            'product_id': line.get('product_id', False),
-            'product_uom_id': line.get('uom_id', False),
-            'analytic_account_id': line.get('account_analytic_id', False),
-            'invoice_id': line.get('invoice_id', False),
-            'tax_ids': line.get('tax_ids', False),
-            'tax_line_id': line.get('tax_line_id', False),
-            'analytic_tag_ids': line.get('analytic_tag_ids', False),
-        }
+        return self.env['product.product']._convert_prepared_anglosaxon_line(line, part)
 
     @api.multi
     def action_cancel(self):
@@ -1065,6 +1077,9 @@ class AccountInvoice(models.Model):
         copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
         return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
 
+    def _get_currency_rate_date(self):
+        return self.date or self.date_invoice
+
     @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
         """ Prepare the dict of values to create the new refund from the invoice.
@@ -1104,6 +1119,7 @@ class AccountInvoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
+        values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
 
         if date:
@@ -1224,7 +1240,7 @@ class AccountInvoiceLine(models.Model):
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
-        'invoice_id.date_invoice')
+        'invoice_id.date_invoice', 'invoice_id.date')
     def _compute_price(self):
         currency = self.invoice_id and self.invoice_id.currency_id or None
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
@@ -1233,7 +1249,7 @@ class AccountInvoiceLine(models.Model):
             taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
-            price_subtotal_signed = self.invoice_id.currency_id.with_context(date=self.invoice_id.date_invoice).compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)
+            price_subtotal_signed = self.invoice_id.currency_id.with_context(date=self.invoice_id._get_currency_rate_date()).compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
 
@@ -1312,7 +1328,16 @@ class AccountInvoiceLine(models.Model):
         '''
         Este metodo va ser modificado en ecua_fiscal_positions_core para agregar el impuesto de retencion renta
         '''
+        if self._context.get('force_supplier_taxes_id'):
+            return self._context.get('force_supplier_taxes_id')
         return self.product_id.supplier_taxes_id or self.account_id.tax_ids
+
+    def _set_currency(self):
+        company = self.invoice_id.company_id
+        currency = self.invoice_id.currency_id
+        if company and currency:
+            if company.currency_id != currency:
+                self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
     def _set_taxes(self):
         """ Used in on_change to set taxes and price."""
@@ -1332,8 +1357,10 @@ class AccountInvoiceLine(models.Model):
             prec = self.env['decimal.precision'].precision_get('Product Price')
             if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=prec) == 0:
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
+                self._set_currency()
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
+            self._set_currency()
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -1359,9 +1386,6 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = 0.0
             domain['uom_id'] = []
         else:
-            # Use the purchase uom by default
-            self.uom_id = self.product_id.uom_po_id
-
             if part.lang:
                 product = self.product_id.with_context(lang=part.lang)
             else:
@@ -1385,8 +1409,6 @@ class AccountInvoiceLine(models.Model):
             domain['uom_id'] = [('category_id', '=', product.uom_id.category_id.id)]
 
             if company and currency:
-                if company.currency_id != currency:
-                    self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = product.uom_id._compute_price(self.price_unit, self.uom_id)
@@ -1475,7 +1497,15 @@ class AccountInvoiceTax(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base', compute='_compute_base_amount')
 
-
+    # DO NOT FORWARD-PORT!!! ONLY FOR v10
+    @api.model
+    def create(self, vals):
+        inv_tax = super(AccountInvoiceTax, self).create(vals)
+        # Workaround to make sure the tax amount is rounded to the currency precision since the ORM
+        # won't round it automatically at creation.
+        if inv_tax.company_id.tax_calculation_rounding_method == 'round_globally':
+            inv_tax.amount = inv_tax.currency_id.round(inv_tax.amount)
+        return inv_tax
 
 
 class AccountPaymentTerm(models.Model):
@@ -1506,6 +1536,7 @@ class AccountPaymentTerm(models.Model):
     def compute(self, value, date_ref=False):
         date_ref = date_ref or fields.Date.today()
         amount = value
+        sign = value < 0 and -1 or 1
         result = []
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
@@ -1514,7 +1545,7 @@ class AccountPaymentTerm(models.Model):
         prec = currency.decimal_places
         for line in self.line_ids:
             if line.value == 'fixed':
-                amt = round(line.value_amount, prec)
+                amt = sign * round(line.value_amount, prec)
             elif line.value == 'percent':
                 amt = round(value * (line.value_amount / 100.0), prec)
             elif line.value == 'balance':

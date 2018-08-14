@@ -411,7 +411,7 @@ class AccountAssetAsset(models.Model):
     @api.model
     def create(self, vals):
         asset = super(AccountAssetAsset, self.with_context(mail_create_nolog=True)).create(vals)
-        asset.compute_depreciation_board()
+        asset.sudo().compute_depreciation_board()
         return asset
 
     @api.multi

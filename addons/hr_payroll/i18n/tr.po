@@ -5,7 +5,7 @@
 # Translators:
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Murat Kaplan <muratk@projetgrup.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
@@ -14,13 +14,14 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
 # selim kartal <kartalselim37@gmail.com>, 2016
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: selim kartal <kartalselim37@gmail.com>, 2016\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +46,10 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Bordro oluşturulduğunda durum 'Taslak' dır. \n"
+"* Eğer bordro onaylanmadıysa, durum 'Bekliyor' dur.\n"
+"* Eğer bordro doğrulandıysa, durum 'Yapıldı' olarak ayarlanır.\n"
+"* Kullanıcı bordroyu iptal ederse durum 'İptal Edildi' olur."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -241,7 +246,7 @@ msgstr "Bordro İptal"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "Yapılan bordrolar iptal edilemez."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -696,7 +701,7 @@ msgid ""
 "It is used in computation for percentage and fixed amount. For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr ""
+msgstr "Bu, yüzde ve sabitlenmiş miktarların hesabı için kullanıldı."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount

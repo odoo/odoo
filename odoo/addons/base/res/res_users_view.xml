@@ -73,7 +73,7 @@
                             <field name="view_access"/>
                         </page>
                         <page string="Access Rights">
-                            <field name="model_access">
+                            <field name="model_access" mode="tree,kanban">
                                 <tree string="Access Rules" editable="top">
                                     <field name="model_id"/>
                                     <field name="perm_read"/>
@@ -94,15 +94,89 @@
                                         <field name="perm_unlink"/>
                                     </group>
                                 </form>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="model_id"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.model_id.value or ''"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.name.string'/>: <t t-esc="record.name.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.perm_read.string'/>: <t t-esc="record.perm_read.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.perm_write.string'/>: <t t-esc="record.perm_write.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.perm_create.string'/>: <t t-esc="record.perm_create.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.perm_unlink.string'/>: <t t-esc="record.perm_unlink.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                         </page>
                         <page string="Rules">
-                            <field name="rule_groups">
+                            <field name="rule_groups" mode="tree,kanban">
                                 <tree string="Rules">
                                     <field name="name"/>
                                     <field name="model_id"/>
                                     <field name="global"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="name"/>
+                                    <field name="model_id"/>
+                                    <field name="global"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.model_id.value or ''"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.name.string'/>: <t t-esc="record.name.value"/></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-muted">
+                                                         <span><t t-esc='record.global.string'/>: <t t-esc="record.global.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                         </page><page string="Notes">
                             <field name="comment"/>

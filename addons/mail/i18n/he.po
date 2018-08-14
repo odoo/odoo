@@ -5,8 +5,8 @@
 # Translators:
 # ExcaliberX <excaliberx@gmail.com>, 2017
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# fishfurbanter <fishfurbanter@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Fishfur A Banter <fishfurbanter@gmail.com>, 2017
 # Mor Kir <morki@013.net.il>, 2017
 # Moshe Flam <pashute@gmail.com>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
@@ -182,6 +182,15 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -2382,7 +2391,7 @@ msgstr ""
 #: code:addons/mail/models/mail_mail.py:318
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "שליחת דוא\"ל נכשלה"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
@@ -4068,7 +4077,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr ""
+msgstr "מעקב"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form

@@ -3,28 +3,29 @@
 # * sale_stock
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Bohdan Lisnenko, 2016
+# Martin Trigaux, 2016
 # ТАрас <tratatuta@i.ua>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Zoriana Zaiats, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>Референс клієнта:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -55,6 +56,8 @@ msgid ""
 "Allow to modify the sales order dates to postpone deliveries and "
 "procurements"
 msgstr ""
+"Дозвольте змінювати дати замовлення на продаж, щоб відкласти поставки та "
+"закупівлі"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -220,7 +223,7 @@ msgstr "Забезпечення"
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid "Procurements and deliveries dates are based on the sales order dates"
-msgstr ""
+msgstr "Дати закупівель та поставок базуються на датах замовлення на продаж"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -280,7 +283,7 @@ msgstr "Дні підстрахування для продажів"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Sales Safety Days *"
-msgstr ""
+msgstr " запобіжні дні для продажу *"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -323,17 +326,17 @@ msgstr "Переміщення запасів"
 #: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "Цей товар запакований %.2f %s. Вам потрібно відправити %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "Повернути"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
 msgid "To Refund in SO"
-msgstr ""
+msgstr "Повернути у замовленнях на продаж"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -346,6 +349,7 @@ msgstr "Переміщення"
 msgid ""
 "Trigger a decrease of the delivered quantity in the associated Sale Order"
 msgstr ""
+"Запустити зменшення кількості доставки у відповідному розпорядженні продажу"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -376,6 +380,8 @@ msgid ""
 "You plan to sell %s %s but you only have %s %s available!\n"
 "The stock on hand is %s %s."
 msgstr ""
+"Ви плануєте продати %s %s, але ви маєте лише %s %s в доступності!\n"
+"Запас на руках %s %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

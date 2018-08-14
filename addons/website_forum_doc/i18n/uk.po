@@ -4,22 +4,23 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2016
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Bohdan Lisnenko, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Zoriana Zaiats, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
@@ -29,12 +30,12 @@ msgstr "&amp;times;"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">або</span>"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_crm_after_sale
 msgid "After-sale communication"
-msgstr ""
+msgstr "Спілкування після продажу"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -44,7 +45,7 @@ msgstr "Структура поганої відповіді"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Bad questions"
-msgstr ""
+msgstr "Погані запитання "
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -52,21 +53,23 @@ msgid ""
 "Before submiting the question, help us improve its quality by\n"
 "                        editing the question and the main answer."
 msgstr ""
+"Перш ніж надсилати запитання, допоможіть нам покращити якість шляхом\n"
+" редагування питання та основної відповіді."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Benefits of having done this setup"
-msgstr ""
+msgstr "Переваги здійснення цього налаштування"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_cms_ecommerce
 msgid "CMS & eCommerce"
-msgstr ""
+msgstr "CMS та електронна комерція"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_child_ids
 msgid "Children Table Of Content"
-msgstr ""
+msgstr "Дитячий стіл вмісту"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_crm_claim
@@ -108,7 +111,7 @@ msgstr "Видалити"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Describe the business solution"
-msgstr ""
+msgstr "Опишіть ділове рішення"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
@@ -128,24 +131,24 @@ msgstr "Документація"
 #: model:ir.actions.act_window,name:website_forum_doc.action_forum_doc_post
 #: model:ir.ui.menu,name:website_forum_doc.menu_forum_doc_posts
 msgid "Documentation Posts"
-msgstr ""
+msgstr "Публікації документації"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_documentation_stage_id
 msgid "Documentation Stage"
-msgstr ""
+msgstr "Етап документації"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_documentation_toc_list
 msgid "Documentation TOC"
-msgstr ""
+msgstr "TOC документації"
 
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_documentation_toc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_documentation_toc_id
 #: model:ir.ui.menu,name:website_forum_doc.menu_documentation
 msgid "Documentation ToC"
-msgstr ""
+msgstr "ToC документації"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_draft
@@ -155,12 +158,12 @@ msgstr "Чернетка"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
 msgid "Edit Post"
-msgstr ""
+msgstr "Редагувати публікацію"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_hrm_contract
 msgid "Employee Contract"
-msgstr ""
+msgstr "Трудовий контракт"
 
 #. module: website_forum_doc
 #: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
@@ -171,12 +174,12 @@ msgstr "Помилка! Ви не можете створювати рекурс
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Explain how to configure Odoo"
-msgstr ""
+msgstr "Поясніть, як налаштувати Odoo"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Explain how to implement it in Odoo"
-msgstr ""
+msgstr "Поясніть, як реалізувати це в Odoo"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_forum_id
@@ -186,37 +189,37 @@ msgstr "Форум"
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Публікація форуму"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
 msgid "Functional Documentation"
-msgstr ""
+msgstr "Функціональна документація"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Good answer structure"
-msgstr ""
+msgstr "Хороша структура відповіді "
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Good question titles"
-msgstr ""
+msgstr "Хороші заголовки запитань"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "How to compute future inventories for a product?"
-msgstr ""
+msgstr "Як розрахувати майбутні товарні запаси для товару?"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "How to forecast sales revenues?"
-msgstr ""
+msgstr "Як прогнозувати продажі?"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_hrm
 msgid "Human Resources Management"
-msgstr ""
+msgstr "Управління персоналом"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
@@ -255,12 +258,12 @@ msgstr "Останнє оновлення"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
 msgid "Lead & Opportunity"
-msgstr ""
+msgstr "Лід та нагода"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_left
 msgid "Left Parent"
-msgstr ""
+msgstr "Залишений батько "
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_name
@@ -270,22 +273,22 @@ msgstr "Назва"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Need more info?"
-msgstr ""
+msgstr "Необхідно більше інформації?"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "No business benefit"
-msgstr ""
+msgstr "Ніякої користі бізнесу"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_id
 msgid "Parent Table Of Content"
-msgstr ""
+msgstr "Батьківський стіл вмісту"
 
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_documentation_stage
 msgid "Post Stage"
-msgstr ""
+msgstr "Етап публікації"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_post_ids
@@ -295,47 +298,47 @@ msgstr "Дописи"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Promote question to documentation"
-msgstr ""
+msgstr "Просувайте питання до документації"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "Promote to Doc"
-msgstr ""
+msgstr "Просувайте до документації"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_publish
 msgid "Publish"
-msgstr ""
+msgstr "Опублікувати"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Publish in Chapter:"
-msgstr ""
+msgstr "Опублікувати в розділі:"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Push to documentation"
-msgstr ""
+msgstr "Натисніть на документацію"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Question:"
-msgstr ""
+msgstr "Питання:"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Related question"
-msgstr ""
+msgstr "Пов'язане питання"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Related topics"
-msgstr ""
+msgstr "Пов'язані теми"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_review
 msgid "Review"
-msgstr ""
+msgstr "Огляд"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_right
@@ -345,7 +348,7 @@ msgstr "Правий батько"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_0
 msgid "Sales & Warehouse"
-msgstr ""
+msgstr "Продажі та Склад"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale
@@ -355,12 +358,12 @@ msgstr "Керування продажами"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
 msgid "Sales orders"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Samples"
-msgstr ""
+msgstr "Зразки"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation
@@ -388,22 +391,22 @@ msgstr "Назва стадії"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "The answer is understandable for someone who does not know Odoo"
-msgstr ""
+msgstr "Відповідь зрозуміла для тих, хто не знає Odoo"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "The question describes a real business problem, not a software problem"
-msgstr ""
+msgstr "Питання описує справжню бізнес-задачу, а не програмну проблему"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "The question title is short and descriptive"
-msgstr ""
+msgstr "Заголовок питання короткий і описовий"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
 msgid "This documentation is produced using the best posts from the"
-msgstr ""
+msgstr "Ця документація виробляється з використанням найкращих публікацій з"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
@@ -412,11 +415,14 @@ msgid ""
 "                                        from the Q&amp;A section where you can\n"
 "                                        discuss it and get feedback."
 msgstr ""
+"Ця сторінка документації була вилучена\n"
+" з розділу запитань та відповідей де ви можете\n"
+" обговорити це питання та отримати відповідь."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "This question has been included in the"
-msgstr ""
+msgstr "Це питання було включено в"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -424,6 +430,8 @@ msgid ""
 "To be promoted in the official documentation the question\n"
 "                        and answer must satisfy the following criteria:"
 msgstr ""
+"Для просування в офіційну документацію поставте питання\n"
+"і відповідь має відповідати наступним критеріям:"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
@@ -431,6 +439,8 @@ msgid ""
 "Tracks leads, boost opportunities and close deals.\n"
 "                    This serie of how-to will help you develop your business."
 msgstr ""
+"Ведення лідів, збільшення нагод та закриті угоди.\n"
+"                    Ця серія методів допоможе розвинути ваш бізнес."
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
@@ -441,33 +451,34 @@ msgstr "Вебсайт"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
 msgstr ""
+"Який звіт я повинен використовувати для обчислення ймовірностей на стадії?"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What's the available stock field?"
-msgstr ""
+msgstr "Який наявний рядок складу?"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "cancel"
-msgstr ""
+msgstr "закрити"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
 msgid "community forum"
-msgstr ""
+msgstr "community форум"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
-msgstr ""
+msgstr "есе"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essays"
-msgstr ""
+msgstr "есе"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
-msgstr ""
+msgstr "офіційна документація "

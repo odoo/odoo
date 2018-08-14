@@ -46,11 +46,31 @@
                     </group>
                     <notebook>
                         <page string="Accounts">
-                            <field name="account_ids">
+                            <field name="account_ids" mode="tree,kanban">
                                 <tree>
                                     <field name="code"/>
                                     <field name="name"/>
                                 </tree>
+                                <!--Codigo modificado por TRESCLOUD-->
+                                <kanban class="o_kanban_mobile">
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-6 text-muted">
+                                                        <strong><span><t t-esc="record.code.value or ''"/></span></strong>
+                                                    </div>
+                                                    <div class="col-xs-6 text-muted">
+                                                        <span class="text-right"><t t-esc="record.name.value or ''"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <!--Fin del Codigo modificado por TRESCLOUD-->
                             </field>
                         </page>
                     </notebook>
@@ -93,10 +113,10 @@
                         </group>
                         <notebook>
                             <page string="Budget Lines">
-                                <field name="crossovered_budget_line" context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                                <field name="crossovered_budget_line" context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}" mode="tree,kanban">
                                     <tree string="Budget Lines">
                                         <field name="general_budget_id"/>
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" required="1"/>
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date" groups="base.group_no_one"/>
@@ -110,7 +130,7 @@
                                             <group>
                                                 <field name="general_budget_id"/>
                                                 <field name="planned_amount" widget="monetary"/>
-                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" required="1"/>
                                             </group>
                                             <group>
                                                 <label for="date_from" string="Period"/>
@@ -123,6 +143,55 @@
                                             </group>
                                         </group>
                                     </form>
+                                    <!--Codigo modificado por TRESCLOUD-->
+                                    <kanban class="o_kanban_mobile">
+                                        <field name="general_budget_id"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="planned_amount" sum="Planned Amount" widget="monetary"/>
+                                        <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div t-attf-class="oe_kanban_global_click_edit">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <strong>
+                                                                <field name='general_budget_id'/>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span><t t-esc='record.analytic_account_id.string'/>: <t t-esc='record.analytic_account_id.value'/></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span><t t-esc='record.date_from.string'/>: <t t-esc='record.date_from.value'/></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span><t t-esc='record.date_to.string'/>: <t t-esc='record.date_to.value'/></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span><t t-esc='record.planned_amount.string'/>: <t t-esc='record.planned_amount.value'/></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 text-muted">
+                                                            <span><t t-esc='record.practical_amount.string'/>: <t t-esc='record.practical_amount.value'/></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                    <!--Fin del Codigo modificado por TRESCLOUD-->
                                 </field>
                             </page>
                         </notebook>

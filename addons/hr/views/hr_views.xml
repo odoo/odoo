@@ -76,7 +76,7 @@
                             </page>
                             <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
                                 <group>
-                                    <group string="Citizenship &amp; Other Information">
+                                    <group name="citizenship" string="Citizenship &amp; Other Information">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id" groups="hr.group_hr_user"/>
                                         <field name="passport_id" groups="hr.group_hr_user"/>
@@ -314,12 +314,35 @@
             </field>
         </record>
 
+        <!--Codigo modificado por TRESCLOUD-->
+        <record id="view_employee_category_kanban" model="ir.ui.view">
+            <field name="name">hr.employee.category.kanban</field>
+            <field name="model">hr.employee.category</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="open_view_categ_form" model="ir.actions.act_window">
             <field name="name">Employee Tags</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
         </record>
+        <!--Fin del codigo modificado por TRESCLOUD-->
 
         <menuitem
             id="menu_view_employee_category_form"

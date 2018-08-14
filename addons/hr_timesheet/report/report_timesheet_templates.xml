@@ -36,7 +36,7 @@
                                                <span t-field="l.user_id.partner_id.name"/>
                                             </td>
                                             <td >
-                                                <span t-field="l.name"/>
+                                                <span t-field="l.name" t-options="{'widget': 'text'}"/>
                                             </td>
                                             <td t-if="show_task or show_project">
                                                 <t t-if="show_project"><span t-field="l.project_id.name"/></t>

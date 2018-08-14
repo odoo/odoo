@@ -3,7 +3,7 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # kent_ocean <ke.tanabe@gmail.com>, 2016
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
@@ -277,6 +277,15 @@ msgstr ""
 "            <b>#channel </b>と入力すると、チャネルを指定できます。<br>\n"
 "            <b>/command</b>と入力すると、コマンドを実行できます。<br>\n"
 "            <b>:shortcut</b>と入力すると、メッセージに缶詰応答を挿入できます。<br>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550

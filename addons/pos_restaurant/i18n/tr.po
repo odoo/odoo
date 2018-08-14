@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Murat Kaplan <muratk@projetgrup.com>, 2016
@@ -12,13 +12,14 @@
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Azar Huseynli <azerbay1984@gmail.com>, 2016\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
+"Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası "
+"tabloları tanımlayıp konumlandırabileceğiniz yerdir."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -77,7 +80,7 @@ msgstr "Yazıcının iç kimliği"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_name
 msgid "An internal identification of the restaurant floor"
-msgstr ""
+msgstr "Restoran katının iç kimliği"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -211,6 +214,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Her Sipariş Yazıcısı, yazıcının ve bir ürün kategori listesinin "
+"bulunabileceği, PosBox/Donanım Proxy si tarafından tanımlanan bir IP "
+"adresine sahiptir. Bir Sipariş Yazıcısı ait olduğu kategorilerinden "
+"birindeki güncellemeler için çıktı alacaktır"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -279,6 +286,8 @@ msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
 msgstr ""
+"Eğer yanlışsa, masa iptal etkin değildir ve satış noktası için erişilebilir "
+"olmayacaktır."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -357,6 +366,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Sipariş Yazıcılar, garson siparişi güncellediğinde mutfakta / barda sipariş "
+"güncellemelerini yazdırmak için restoranlar ve barlar tarafından kullanılır."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_orderline_notes
@@ -526,7 +537,7 @@ msgstr "Yazıcının proxy donanımının ip adresi veya hostname'i"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "Bu sipariş ile hizmet edilen müşteri sayısı"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_color
@@ -534,11 +545,12 @@ msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
 msgstr ""
+"Zemin düzeninin arka plan rengi, (html uyumlu bir biçimde belirtilmelidir)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "Bu masadaki müşteri hizmetinin varsayılan numarası."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
@@ -553,13 +565,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "Bu siparişin servis edildiği masa."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
+"Geçerli bir 'arka plan' CSS özellik değeri olarak ifade edilen masanın rengi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
@@ -572,24 +585,25 @@ msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
 msgstr ""
+"Masanın piksel olarak yatay pozisyonda sol tarafından merkezine konumu."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "Masanın piksel olarak dikey olarak "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "Piksel olarak masanın genişliği"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr ""
+msgstr "Bu zeminde henüz masalar yok, kullanın"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -601,7 +615,7 @@ msgstr "Transfer"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
 msgid "Used to sort Floors"
-msgstr ""
+msgstr "Kullanılmış Zemin Çeşitleri"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -634,7 +648,7 @@ msgstr "bir ile"
 #: code:addons/pos_restaurant/static/src/js/floors.js:412
 #, python-format
 msgid "You must be connected to the internet to save your changes."
-msgstr ""
+msgstr "Değişikliklerinizi kaydetmek için internete bağlı olmalısınız."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -649,14 +663,14 @@ msgstr "de"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:17
 #, python-format
 msgid "at table"
-msgstr ""
+msgstr "Masada"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
-msgstr ""
+msgstr "Yeni masalar oluşturmak için düzenleme araç çubuğundaki buton"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -673,14 +687,14 @@ msgstr "pos.config"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 msgid "restaurant.floor"
-msgstr ""
+msgstr "restaurant.floor"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
 msgid "restaurant.printer"
-msgstr ""
+msgstr "restaurant.printer"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
-msgstr ""
+msgstr "restaurant.table"

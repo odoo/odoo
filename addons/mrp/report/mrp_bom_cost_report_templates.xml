@@ -26,8 +26,8 @@
                                 <tr>
                                     <th colspan="3">Raw Materials</th>
                                     <th class="col-sm-2 text-right">Quantity</th>
-                                    <th class="col-sm-2 text-right">Unit Cost</th>
-                                    <th class="col-sm-2 text-right">Total Cost</th>
+                                    <th id="hd_unit_cost" class="col-sm-2 text-right">Unit Cost</th>
+                                    <th id="hd_total_cost" class="col-sm-2 text-right">Total Cost</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,14 +38,14 @@
                                     <td class="text-right">
                                         <span t-esc="bom_line['product_uom_qty']"/> <span t-esc="bom_line['product_uom'].name" groups="product.group_uom"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td id="price_unit" class="text-right">
                                         <span t-esc="bom_line['price_unit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                     </td>
-                                    <td class="text-right">
+                                    <td id="total_price" class="text-right">
                                         <span t-esc="bom_line['total_price']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="tr_total_cost">
                                     <th colspan="5" class="text-right">Total Cost of Raw Materials</th>
                                     <th class="text-right">
                                         <span t-esc="line['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>

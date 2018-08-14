@@ -260,7 +260,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
 
-        model_fields = dst_partner._fields
+        model_fields = dst_partner.fields_get().keys()
 
         def write_serializer(item):
             if isinstance(item, models.BaseModel):
@@ -269,7 +269,8 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item
         # get all fields that are not computed or x2many
         values = dict()
-        for column, field in model_fields.iteritems():
+        for column in model_fields:
+            field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:

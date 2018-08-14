@@ -240,14 +240,16 @@
                                     <span><t t-esc="dashboard.account_balance"/></span>
                                 </div>
                             </div>
-                            <div class="row" name="latest_statement" t-if="dashboard.last_balance != dashboard.account_balance">
-                                <div class="col-xs-6">
-                                    <span title="Latest Statement">Latest Statement</span>
+                            <t t-if="dashboard.last_balance != dashboard.account_balance">
+                                <div class="row" name="latest_statement">
+                                    <div class="col-xs-6">
+                                        <span title="Latest Statement">Latest Statement</span>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <span><t t-esc="dashboard.last_balance"/></span>
+                                    </div>
                                 </div>
-                                <div class="col-xs-6 text-right">
-                                    <span><t t-esc="dashboard.last_balance"/></span>
-                                </div>
-                            </div>
+                            </t>
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase">

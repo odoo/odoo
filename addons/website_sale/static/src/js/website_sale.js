@@ -168,7 +168,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 }
                 else {
                     $q.parents('li:first').addClass("hidden");
-                    $('a[href^="/shop/checkout"]').addClass("hidden");
+                    $('a[href*="/shop/checkout"]').addClass("hidden");
                 }
 
                 $q.html(data.cart_quantity).hide().fadeIn(600);

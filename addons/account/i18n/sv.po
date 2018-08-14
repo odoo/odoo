@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Robert Frykelius <robert.frykelius@linserv.se>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
 # lasch a <bmail440@gmail.com>, 2016
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
@@ -19,8 +19,8 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Zou Haojun <haojunzou84@gmail.com>, 2016
-# Frida E <frida.eddestal@gmail.com>, 2017
-# Lord Cobol <mattias@invaliddesign.com>, 2017
+# Frida E, 2017
+# Lord Cobol, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
 # Egils Verkstad <egils@riseup.net>, 2017
 msgid ""
@@ -710,7 +710,7 @@ msgstr "<strong>Skatteregion-notering:</strong> "
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>Faktureringsdatum:</strong>"
+msgstr "<strong>Fakt datum:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -1482,6 +1482,11 @@ msgid "Adjustment Tax"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1722,7 +1727,7 @@ msgstr "Valutabelopp"
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
 #: model:ir.ui.view,arch_db:account.invoice_tree
 msgid "Amount Due"
-msgstr "Förfallet belopp"
+msgstr "Utestående belopp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
@@ -2148,6 +2153,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Bankkontoutdrag"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -8480,7 +8491,7 @@ msgstr "Momsbeskrivning"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax Excluded Price"
-msgstr ""
+msgstr "Pris ex.moms"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -10205,6 +10216,14 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account

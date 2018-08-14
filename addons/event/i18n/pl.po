@@ -6,20 +6,21 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2016
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
 # zieloo <zieloo@gmail.com>, 2016
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,6 +289,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Drogi ${object.name},</p>\n"
+"<p>Dziękujemy za Twoje zgłoszenie.</p>\n"
+"<p>Tu znajdziesz swoją wejściówkę na wydarzenie  ${object.event_id.name}.</p>\n"
+"<p>Jeśli masz jakieś pytania, proszę daj nam znać.</p>\n"
+"<p>Serdecznie pozdrawiamy,</p>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -474,7 +481,7 @@ msgstr "zaawansowane JQuery"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After each registration"
-msgstr ""
+msgstr "Po każdej rejestracji"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -585,7 +592,7 @@ msgstr "Identyfikator strona widoczna"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Identyfikator środkowa lewa strona"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -768,7 +775,7 @@ msgstr "Kontakt"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Kontrolery i widoki"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -916,6 +923,8 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
+"Podczas tej konferencji nasz zespół przedstawi szczegółowy przegląd naszych "
+"aplikacji biznesowych. Poznasz wszystkie zalety płynące z ich korzystania."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -965,7 +974,7 @@ msgstr "Data początku wydarzenia"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr ""
+msgstr "Kategorie wydarzeń"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1523,14 +1532,14 @@ msgstr "Liczba rejestracji"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "Oficjalna strona Odoo"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo Web Client"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1682,7 +1691,7 @@ msgstr "Stan rejestracji"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
 msgid "Registration Survey"
-msgstr ""
+msgstr "Ankieta rejestracji"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1747,7 +1756,7 @@ msgstr "Odpowiedzialny"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_barcode
 msgid "Scan badges to confirm attendances"
-msgstr ""
+msgstr "Skanuj identyfikatory, aby potwierdzić obecność"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
@@ -1904,7 +1913,7 @@ msgstr "Jutro"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "Program i detale"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
@@ -1934,7 +1943,7 @@ msgstr "Niepotwierdzone rezerwacje miejsc"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr ""
+msgstr "Podkreśl"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2066,7 +2075,7 @@ msgstr "Twoja rejestracja na ${object.event_id.name}"
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2083,7 +2092,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail

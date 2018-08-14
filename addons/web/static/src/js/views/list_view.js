@@ -315,7 +315,7 @@ var ListView = View.extend({
 
                 this._limit = new_state.limit;
                 this.current_min = new_state.current_min;
-                this.reload_content().then(function() {
+                this.reload_content_when_ready().then(function() {
                     // Reset the scroll position to the top on page changed only
                     if (!limit_changed) {
                         self.set_scrollTop(0);
@@ -452,6 +452,12 @@ var ListView = View.extend({
         });
         return reloaded.promise();
     }),
+    /**
+     * Proxy allowing override when reload_content can't be called directly
+     */
+    reload_content_when_ready: function() {
+        return this.reload_content.apply(this, arguments);
+    },
     reload: function () {
         return this.reload_content();
     },
@@ -1075,7 +1081,7 @@ ListView.List = Class.extend({
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
             if (value instanceof Array && !_.isEmpty(value)
-                    && !record.get(column.id + '__display')) {
+                    && (!record.get(column.id + '__display') && record.get(column.id + '__display') !== '')) {
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
@@ -1431,7 +1437,7 @@ ListView.Groups = Class.extend({
                     } else if (column.id in group.aggregates) {
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
-                        $('<td class="oe_number">')
+                        $('<td class="oe_number o_list_number">')
                             .html(column.format(r, {process_modifiers: false}))
                             .appendTo($row);
                     } else {

@@ -4,28 +4,29 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2016
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Bohdan Lisnenko, 2016
+# Martin Trigaux, 2016
+# Zoriana Zaiats, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:01+0000\n"
 "PO-Revision-Date: 2016-09-29 14:01+0000\n"
-"Last-Translator: Yaroslav Molochko <onorua@gmail.com>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "(Free)"
-msgstr ""
+msgstr "(Безкоштовно)"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -106,7 +107,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Use this tag:</strong>"
-msgstr ""
+msgstr "<strong>Використовуйте цей тег:</strong>"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:96
@@ -176,6 +177,8 @@ msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
+"Створіть назву вашої нової події та натисніть <em>\"Продовжити\"</em>. "
+"Наприклад: Технічний тренінг"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event_show_menu
@@ -196,7 +199,7 @@ msgstr "Спеціальне меню"
 #: code:addons/website_event/static/src/js/website.tour.event.js:28
 #, python-format
 msgid "Drag this block and drop it in your page."
-msgstr ""
+msgstr "Перетягніть цей блок і залиште його на вашій сторінці."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -211,7 +214,7 @@ msgstr "Редагувати бейдж"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "End of Registration"
-msgstr ""
+msgstr "Кінець реєстрації"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -257,7 +260,7 @@ msgstr "Подію опубліковано"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration is closed."
-msgstr ""
+msgstr "Реєстрація події закрита."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -314,7 +317,7 @@ msgstr "Передмова"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
 msgid "Is Participating"
-msgstr ""
+msgstr "Участь"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:55
@@ -406,7 +409,7 @@ msgstr "Наші тренінги"
 #: model:ir.ui.view,arch_db:website_event.event_details
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Participating"
-msgstr ""
+msgstr "Участь"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -443,6 +446,11 @@ msgstr "Зареєструватися"
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register Now"
 msgstr "Зареєструватися зараз"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Registration for this event is now closed"
+msgstr "Реєстрація на цю подію зараз закрита"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -521,12 +529,12 @@ msgstr "Видимий на сайті"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr ""
+msgstr "Відобразити на Google картах"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Ми раді підтвердити вашу реєстрацію на нашу подію"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -567,7 +575,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
-msgstr ""
+msgstr "Ваша реєстрація"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -587,4 +595,4 @@ msgstr "по"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "unpublished"
-msgstr ""
+msgstr "неопубліковано"
