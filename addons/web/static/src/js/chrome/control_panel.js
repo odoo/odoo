@@ -129,6 +129,7 @@ var ControlPanel = Widget.extend({
      * elements that are not in status.cp_content
      */
     update: function(ev) {
+
         var status = ev.data ? ev.data.cp_status : ev;
         var options = ev.data ? ev.data.options : ev.options;
 
