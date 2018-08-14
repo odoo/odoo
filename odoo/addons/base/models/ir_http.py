@@ -252,7 +252,7 @@ class IrHttp(models.AbstractModel):
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, share_id=None, share_token=None, force_ext=False, env=None):
+                       access_token=None, share_id=None, share_token=None, env=None):
         """ Get file, attachment or downloadable content
 
         If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
@@ -273,8 +273,6 @@ class IrHttp(models.AbstractModel):
         :param str default_mimetype: default mintype if no mintype found
         :param str access_token: optional token for unauthenticated access
                                  only available  for ir.attachment
-        :param bool force_ext: if true, adds the extension to the filename
-                                that corresponds to the mimetype
         :param Environment env: by default use request.env
         :returns: (status, headers, content)
         """
@@ -365,14 +363,6 @@ class IrHttp(models.AbstractModel):
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
                 mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
-
-        if force_ext and (mimetype != default_mimetype):
-            dot_index = filename.rfind('.')
-            if dot_index > -1:
-                if mimetypes.guess_extension(mimetype) != filename[dot_index:]:
-                    filename = filename[:dot_index] + mimetypes.guess_extension(mimetype)
-            else:
-                filename = filename + mimetypes.guess_extension(mimetype)
 
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
