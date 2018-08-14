@@ -607,6 +607,8 @@ class crm_lead(format_address, osv.osv):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
         """
+        if not email:
+            return []
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
             partner_match_domain.append(('email_from', '=ilike', email))
