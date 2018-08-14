@@ -22,3 +22,9 @@ def uninstall_hook(cr, registry):
                     rec._onchange_team_type()
 
     cr.after("commit", partial(update_dashboard_graph_model, cr.dbname))
+
+
+def set_transfer_so_reference(cr, registry):
+    # so_reference_type default values is 'none' except for wire transfer.
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['payment.acquirer'].search([('provider', '=', 'transfer')]).write({'so_reference_type': 'so_name'})

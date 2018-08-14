@@ -10,8 +10,9 @@ class PaymentAcquirer(models.Model):
 
     so_reference_type = fields.Selection(string='Communication',
         selection=[
+            ('none', _('Free Communication')),
             ('so_name', _('Based on Document Reference')),
-            ('partner', _('Based on Customer ID'))], default='so_name',
+            ('partner', _('Based on Customer ID'))], default='none',
         help='You can set here the communication type that will appear on sales orders.'
              'The communication will be given to the customer when they choose the payment method.')
 
@@ -62,13 +63,11 @@ class PaymentTransaction(models.Model):
         # to sent the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_pending()
 
-        for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state == 'draft')
-            sales_orders.force_quotation_send()
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
+        sales_orders.force_quotation_send()
 
-            if record.acquirer_id.provider == 'transfer':
-                for so in sales_orders:
-                    so.reference = record._compute_sale_order_reference(so)
+        for so in sales_orders:
+            so.reference = self._compute_sale_order_reference(so)
 
     @api.multi
     def _set_transaction_authorized(self):
