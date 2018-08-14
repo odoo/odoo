@@ -37,7 +37,7 @@
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
                     <li t-if="editable" class="dropdown" id="content-menu">
-                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Pages</a>
+                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Pages</a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" data-action="edit_menu" href="#" title="Edit Top Menu" class="dropdown-item">Edit Menu</a>
                             <a role="menuitem" href="/website/pages" title="Manage Your Website Pages" class="dropdown-item">Manage Pages</a>
@@ -47,7 +47,7 @@
                     </li>
                     <!-- Customize -->
                     <li class="dropdown" id="customize-menu">
-                        <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Customize</a>
+                        <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Customize</a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" href="#" data-action="customize_theme" class="dropdown-item" id="theme_customize">Customize Theme</a>
                             <a role="menuitem" href="#" data-action="ace" class="dropdown-item" id="html_editor">HTML/CSS Editor</a>
