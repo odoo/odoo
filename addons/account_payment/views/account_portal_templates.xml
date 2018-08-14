@@ -89,6 +89,7 @@
             <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.payment_confirmation_status">
                     <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
+                    <t t-set="reference" t-value="invoice.reference"/>
                 </t>
             </div>
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
@@ -134,6 +135,9 @@
                 <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
                 <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+                <div t-if="payment_tx_id.acquirer_id.post_msg and payment_tx_id.acquirer_id.provider == 'transfer' and invoice.reference">
+                    <b>Communication: </b><span t-esc='invoice.reference'/>
+                </div>
             </t>
             <t t-if="success == 'pay_invoice' and invoice.state == 'paid' and not invoice.payment_acquirer_id">
                 Done, your online payment has been successfully processed. Thank you for your order.

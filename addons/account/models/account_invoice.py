@@ -248,8 +248,8 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry Name', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Payment Ref.', copy=False,
-        help="The partner reference of this invoice.", readonly=True, states={'draft': [('readonly', False)]})
+    reference = fields.Char(string='Payment Ref.', copy=False, readonly=True, states={'draft': [('readonly', False)]},
+        help='The payment communication that will be automatically populated once the invoice validation. You can also write a free communication.')
     comment = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
@@ -1270,7 +1270,7 @@ class AccountInvoice(models.Model):
             invoice.message_subscribe([invoice.partner_id.id])
 
             # Auto-compute reference, if not already existing and if configured on company
-            if not invoice.reference and invoice.company_id.invoice_reference_type != 'none' and invoice.type == 'out_invoice':
+            if not invoice.reference and invoice.type == 'out_invoice':
                 invoice.reference = invoice._get_computed_reference()
         self._check_duplicate_supplier_reference()
 
