@@ -4,12 +4,9 @@ import logging
 import pytz
 import werkzeug
 
-from datetime import datetime
-
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -162,8 +159,8 @@ class Event(models.Model):
         return result
 
     def _get_event_resource_urls(self, attendees):
-        url_date_start = datetime.strptime(self.date_begin, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
-        url_date_stop = datetime.strptime(self.date_end, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
+        url_date_start = self.date_begin.strftime('%Y%m%dT%H%M%SZ')
+        url_date_stop = self.date_end.strftime('%Y%m%dT%H%M%SZ')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,

@@ -1343,10 +1343,7 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 return result
 
-        name = product.name_get()[0][1]
-        if product.description_sale:
-            name += '\n' + product.description_sale
-        vals['name'] = name
+        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
 
         self._compute_tax_id()
 
@@ -1486,3 +1483,12 @@ class SaleOrderLine(models.Model):
     def _is_delivery(self):
         self.ensure_one()
         return False
+
+    def get_sale_order_line_multiline_description_sale(self, product):
+        """ Compute a default multiline description for this sales order line.
+        This method exists so it can be overridden in other modules to change how the default name is computed.
+        In general only the product is used to compute the name, and this method would not be necessary (we could directly override the method in product).
+        BUT in event_sale we need to know specifically the sales order line as well as the product to generate the name:
+            the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
+        """
+        return product.get_product_multiline_description_sale()

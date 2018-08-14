@@ -239,3 +239,21 @@ class SaleOrder(models.Model):
         self.modified(['create_date'])
         if self.env.recompute and self.env.context.get('recompute', True):
             self.recompute()
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    name_short = fields.Char(compute="_compute_name_short")
+
+    @api.multi
+    @api.depends('product_id.display_name')
+    def _compute_name_short(self):
+        """ Compute a short name for this sale order line, to be used on the website where we don't have much space.
+            To keep it short, instead of using the first line of the description, we take the product name without the internal reference.
+        """
+        for record in self:
+            record.name_short = record.product_id.with_context(display_default_code=False).display_name
+
+    def get_description_following_lines(self):
+        return self.name.splitlines()[1:]
