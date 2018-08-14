@@ -401,6 +401,8 @@ class HttpCase(TransactionCase):
         self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
         self.xmlrpc_db = xmlrpclib.ServerProxy(url_8 + 'db')
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
+        cls = type(self)
+        self._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
         super(HttpCase, self).setUp()
@@ -458,7 +460,7 @@ class HttpCase(TransactionCase):
         Other lines are relayed to the test log.
 
         """
-        logger = _logger.getChild('phantomjs')
+        logger = self._logger.getChild('phantomjs')
         t0 = datetime.now()
         td = timedelta(seconds=timeout)
         buf = bytearray()
@@ -1397,10 +1399,11 @@ class TagsSelector(object):
         tags = getattr(arg, 'test_tags', set())
         inter_no_test = self.exclude.intersection(tags)
         if inter_no_test:
-            _logger.debug("Test '%s' not selected because of following tag(s): '%s'", arg, inter_no_test)
+            _logger.debug("Test '%s' not selected because it is tagged with : %s (exclusions: %s)", arg, inter_no_test, self.exclude)
             return False
         inter_to_test = self.include.intersection(tags)
         if not inter_to_test:
-            _logger.debug("Test '%s' not selected because it was not tagged with '%s'", arg, self.include)
+            _logger.debug("Test '%s' not selected because it was not tagged with %s", arg, self.include)
             return False
+        _logger.debug("Test '%s' selected: tagged with %s, exclusions: %s, inclusions: %s", arg, tags, self.exclude, self.include)
         return True
