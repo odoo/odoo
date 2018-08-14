@@ -102,9 +102,11 @@
 
     <t t-name="ImportView.create_record_option">
         <div class="o_create_record_option">
-            <div t-attf-class="o_import_#{id} mt4" t-if="type == 'many2one' or type == 'many2many'">
-                <input type="checkbox" class="o_import_create_option" t-att-id="id"/>
-                <span>Create if doesn't exist</span>
+            <div t-attf-class="mt4">
+                <label>
+                    <input type="checkbox" class="o_import_create_option"/>
+                    Create if doesn't exist
+                </label>
             </div>
         </div>
     </t>

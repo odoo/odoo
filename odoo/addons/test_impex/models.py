@@ -40,6 +40,7 @@ MODELS = [
 for name, field in MODELS:
     class NewModel(models.Model):
         _name = 'export.%s' % name
+        _rec_name = 'value'
         const = fields.Integer(default=4)
         value = field
 
@@ -54,11 +55,6 @@ for name, field in MODELS:
                 return self.browse(record_ids).name_get()
             else:
                 return []
-
-        @api.model
-        def name_create(self, name):
-            return self.create({'value': name}).name_get()[0]
-
 
 class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
