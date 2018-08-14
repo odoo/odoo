@@ -2,14 +2,14 @@
 <odoo>
     <data>
         <!-- QWeb Reports -->
-        <report 
+        <report
             id="account_invoices"
             model="account.invoice"
             string="Invoices"
             report_type="qweb-pdf"
             name="account.report_invoice_with_payments"
             file="account.report_invoice_with_payments"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
             print_report_name="(object._get_printed_report_name())"
             groups="account.group_account_invoice"
         />
@@ -21,11 +21,11 @@
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
             print_report_name="(object._get_printed_report_name())"
         />
 
-        <report 
+        <report
             id="action_report_print_overdue"
             model="res.partner"
             report_type="qweb-pdf"
@@ -35,7 +35,7 @@
             print_report_name="'Due Payments - %s' % (object.name)"
         />
 
-        <report 
+        <report
             id="action_report_general_ledger"
             model="account.report.general.ledger"
             string="General Ledger"
@@ -44,7 +44,7 @@
             file="account.report_generalledger"
             />
 
-        <report 
+        <report
             id="action_report_trial_balance"
             model="account.balance.report"
             string="Trial Balance"
@@ -53,7 +53,7 @@
             file="account.report_trialbalance"
             />
 
-        <report 
+        <report
             id="action_report_financial"
             model="account.financial.report"
             string="Financial report"
@@ -73,7 +73,7 @@
             file="account.report_agedpartnerbalance"
         />
 
-        <report 
+        <report
             id="action_report_journal"
             model="account.common.journal.report"
             string="Journals Audit"
@@ -82,7 +82,7 @@
             file="account.report_journal"
             />
 
-        <report 
+        <report
             id="action_report_partnerledger"
             model="account.report.partner.ledger"
             string="Partner Ledger"
