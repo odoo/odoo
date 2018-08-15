@@ -282,8 +282,8 @@ MailManager.include({
             });
         } else {
             // if no channel_ids specified, this is a 'mark all read' in inbox
-            _.each(this._threads, function (thread) {
-                thread.resetNeedactionCounter();
+            _.each(this.getChannels(), function (channel) {
+                channel.resetNeedactionCounter();
             });
         }
         var inbox = this.getMailbox('inbox');
