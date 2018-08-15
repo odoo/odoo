@@ -73,6 +73,7 @@ class IrModuleModule(models.Model):
                 'arch': view.arch,
                 'arch_fs': view.arch_fs,
                 'priority': view.priority,
+                'mode': view.mode,
                 'active': view.active,
                 'inherit_id': view.inherit_id and view.inherit_id.id,
                 'theme_template_id': view.id,

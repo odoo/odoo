@@ -20,6 +20,7 @@ class ThemeView(models.Model):
     key = fields.Char()
     type = fields.Char()
     priority = fields.Integer(default=16, required=True)
+    mode = fields.Selection([('primary', "Base view"), ('extension', "Extension View")])
     active = fields.Boolean(default=True)
     arch = fields.Text()
     arch_fs = fields.Char(default=compute_arch_fs)
