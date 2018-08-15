@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests import common
 
 from datetime import date, datetime
-from unittest.mock import patch
+from dateutil import relativedelta
 
 class Test_Lunch(common.TransactionCase):
 
@@ -73,18 +73,14 @@ class Test_Lunch(common.TransactionCase):
             'alert_type': 'week',
             'tuesday': True
         })
-
-        patcher_date = patch('odoo.addons.lunch.models.lunch.datetime.date', wraps=date)
-        patcher_datetime = patch('odoo.addons.lunch.models.lunch.datetime.datetime', wraps=datetime)
-        mock_date = patcher_date.start()
-        mock_datetime = patcher_datetime.start()
-
-        mock_date.today.return_value = date(2018, 8, 14)  # a Tuesday
-        mock_datetime.now.return_value = datetime(2018, 8, 14, 9, 0, 0)
+        wednesday = date.today() + relativedelta.relativedelta(days=7, weekday=2)
+        next_tuesday = datetime.today() + relativedelta.relativedelta(days=14, weekday=1)
+        next_wednesday = datetime.today() + relativedelta.relativedelta(days=14, weekday=2)
 
         # We check that we can make an order on a Tuesday
         order_01 = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,
+            'date': date.today() + relativedelta.relativedelta(days=7, weekday=1),
             'order_line_ids': [(0, 0, {
                 'product_id': self.product_Bolognese_id.id,
             })]
@@ -95,7 +91,7 @@ class Test_Lunch(common.TransactionCase):
             # Planning an order to an non-authorized day must not be possible
             order_02 = self.env['lunch.order'].create({
                 'user_id': self.demo_user.id,
-                'date': "2018-08-15",
+                'date': wednesday,
                 'order_line_ids': [(0, 0, {
                     'product_id': self.product_Bolognese_id.id,
                 })]
@@ -105,13 +101,13 @@ class Test_Lunch(common.TransactionCase):
             'message': 'Working one more day',
             'partner_id': self.product_Bolognese_id.supplier.id,
             'alert_type': 'specific',
-            'specific_day': date(2018, 8, 15)
+            'specific_day': wednesday,
         })
 
         # should now be possible to order tomorrow
         order_03 = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,
-            'date': "2018-08-15",
+            'date': wednesday,
             'order_line_ids': [(0, 0, {
                 'product_id': self.product_Bolognese_id.id,
             })]
@@ -120,7 +116,7 @@ class Test_Lunch(common.TransactionCase):
         # should be possible to planned on an allowed day
         order_04 = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,
-            'date': "2018-08-21",  # next Tuesday
+            'date': next_tuesday,
             'order_line_ids': [(0, 0, {
                 'product_id': self.product_Bolognese_id.id,
             })]
@@ -137,7 +133,7 @@ class Test_Lunch(common.TransactionCase):
         # Planning an order Wednesday must now be possible
         order_05 = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,
-            'date': "2018-08-22",  # next Wednesday
+            'date': next_wednesday,
             'order_line_ids': [(0, 0, {
                 'product_id': self.product_Bolognese_id.id,
             })]
@@ -145,5 +141,3 @@ class Test_Lunch(common.TransactionCase):
         order_05.order_line_ids.order()
 
 
-        patcher_date.stop()
-        patcher_datetime.stop()
