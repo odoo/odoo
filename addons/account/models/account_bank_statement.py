@@ -525,7 +525,7 @@ class AccountBankStatementLine(models.Model):
             # company in currency A, statement in currency B and transaction in currency A
             # counterpart line must have currency B and amount is computed using the rate between A and B
             amount_currency = amount/st_line_currency_rate
-        
+
         # last case is company in currency A, statement in currency A and transaction in currency A
         # and in this case counterpart line does not need any second currency nor amount_currency
 
@@ -623,6 +623,14 @@ class AccountBankStatementLine(models.Model):
             total -= aml_rec.debit - aml_rec.credit
             aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
+            if aml_rec.journal_id.post_at_bank_rec and aml_rec.payment_id and aml_rec.move_id.state == 'draft':
+                # In case the journal is set to only post payments when performing bank
+                # reconciliation, we modify its date and post it.
+                aml_rec.move_id.date = self.date
+                aml_rec.payment_id.payment_date = self.date
+                aml_rec.move_id.post()
+                # We check the paid status of the invoices reconciled with this payment
+                aml_rec.payment_id.reconciled_invoice_ids.filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
 
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.

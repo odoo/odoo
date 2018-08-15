@@ -314,7 +314,20 @@ class AccountChartTemplate(models.Model):
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
                 'sequence': 10
             })
+
+        if company.country_id.code in self.get_countries_posting_at_bank_rec():
+            bank_journals.write({'post_at_bank_rec': True})
+
         return bank_journals
+
+    def get_countries_posting_at_bank_rec(self):
+        """ Returns the list of the country codes of the countries for which, by default,
+        bank journals should be created so that the payments posted in them only
+        generate draft account.move objects, which get in turn posted when their
+        payment gets reconciled with a bank statement line.
+        This function is an extension hook for localization modules.
+        """
+        return []
 
     @api.model
     def _get_default_bank_journals_data(self):

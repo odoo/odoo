@@ -692,7 +692,8 @@ class account_payment(models.Model):
             aml_obj.create(liquidity_aml_dict)
 
         #validate the payment
-        move.post()
+        if not self.journal_id.post_at_bank_rec:
+            move.post()
 
         #reconcile the invoice receivable/payable line(s) with the payment
         if self.invoice_ids:
@@ -728,7 +729,8 @@ class account_payment(models.Model):
                 'amount_currency': -self.amount,
             })
         transfer_debit_aml = aml_obj.create(transfer_debit_aml_dict)
-        dst_move.post()
+        if not self.destination_journal_id.post_at_bank_rec:
+            dst_move.post()
         return transfer_debit_aml
 
     def _get_move_vals(self, journal=None):

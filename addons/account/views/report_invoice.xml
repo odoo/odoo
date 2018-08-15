@@ -11,7 +11,7 @@
                 </t>
                 <div class="page">
                     <h2>
-                        <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+                        <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
                         <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                         <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
                         <span t-if="o.type == 'out_refund'">Credit Note</span>
@@ -32,7 +32,7 @@
                             <strong>Invoice Date:</strong>
                             <p t-field="o.date_invoice"/>
                         </div>
-                        <div t-att-class="o_grid_layout" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')" name="due_date">
+                        <div t-att-class="o_grid_layout" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p t-field="o.date_due"/>
                         </div>
@@ -190,13 +190,13 @@
                     </p>
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
-                    </p>                
+                    </p>
                     <p t-if="(o.currency_id.name == 'EUR') and (o.company_id.qr_code) and (o.company_id.qr_code_payment_journal_id.bank_account_id.qr_code_valid)">
-                        <strong class="text-center">Scan me with your banking app.</strong><br /><br />                                 
+                        <strong class="text-center">Scan me with your banking app.</strong><br /><br />
                         <img class="border border-dark rounded" t-att-src="o.company_id.qr_code_payment_journal_id.bank_account_id.build_qr_code_url(o.residual,(o.reference) if (o.reference) else o.number)"/>
                     </p>
                     <p t-if="(o.currency_id.name == 'EUR') and (o.company_id.qr_code) and (o.company_id.qr_code_payment_journal_id.bank_account_id.qr_code_valid == False)">
-                        <strong class="text-center">The SEPA QR Code informations are not set correctly.</strong><br /> 
+                        <strong class="text-center">The SEPA QR Code informations are not set correctly.</strong><br />
                     </p>
                 </div>
             </t>
