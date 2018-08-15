@@ -181,6 +181,8 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
+
+        todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
@@ -188,9 +190,9 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense.sheet',
             'target': 'current',
             'context': {
-                'default_expense_line_ids': [line.id for line in self],
+                'default_expense_line_ids': todo.ids,
                 'default_employee_id': self[0].employee_id.id,
-                'default_name': self[0].name if len(self.ids) == 1 else ''
+                'default_name': todo[0].name if len(todo) == 1 else ''
             }
         }
 
