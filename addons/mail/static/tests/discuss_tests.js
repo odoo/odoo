@@ -43,9 +43,15 @@ QUnit.module('Discuss', {
                         string: "Need Action",
                         type: 'boolean',
                     },
+                    needaction_partner_ids: {
+                        string: "Partners with Need Action",
+                        type: 'many2many',
+                        relation: 'res.partner',
+                    },
                     starred_partner_ids: {
-                        string: "partner ids",
-                        type: 'integer',
+                        string: "Favorited By",
+                        type: 'many2many',
+                        relation: 'res.partner',
                     },
                     model: {
                         string: "Related Document model",
@@ -700,8 +706,97 @@ QUnit.test('convert emoji sources to unicodes on message_post', function (assert
                 discuss.destroy();
                 done();
         });
+    });
+});
+
+QUnit.test('mark all messages as read from Inbox', function (assert) {
+    var done = assert.async();
+    assert.expect(9);
+
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<p>test 1</p>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }, {
+        author_id: [6, 'Test User'],
+        body: '<p>test 2</p>',
+        id: 2,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }];
+
+    this.data.initMessaging = {
+        needaction_inbox_counter: 2,
+    };
+
+    var markAllReadDef = $.Deferred();
+    var objectDiscuss;
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        debug: true,
+        mockRPC: function (route, args) {
+            if (args.method === 'mark_all_as_read') {
+                _.each(this.data['mail.message'].records, function (message) {
+                    message.needaction = false;
+                });
+                var notificationData = {
+                    type: 'mark_as_read',
+                    message_ids: [1, 2],
+                };
+                var notification = [[false, 'res.partner', 3], notificationData];
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
+                markAllReadDef.resolve();
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        objectDiscuss = discuss;
+
+        var $inbox = discuss.$('.o_mail_discuss_item[data-thread-id="mailbox_inbox"]');
+        assert.strictEqual($inbox.length, 1,
+            "there should be an 'Inbox' item in Discuss sidebar");
+        assert.strictEqual($inbox.find('.o_mail_sidebar_needaction').text().trim(), "2",
+            "the mailbox counter of 'Inbox' should be 2");
+        assert.ok($inbox.hasClass('o_active'),
+            "'Inbox' should be the currently active thread");
+        assert.strictEqual(discuss.$('.o_thread_message').length, 2,
+            "there should be 2 messages in inbox");
+
+        var $markAllReadButton = $('.o_mail_discuss_button_mark_all_read');
+        assert.strictEqual($markAllReadButton.length, 1,
+            "there should be a 'Mark All As Read' button");
+        assert.strictEqual($markAllReadButton.attr('style'),
+            'display: inline-block;',
+            "the 'Mark All As Read' button should be visible");
+        assert.notOk($markAllReadButton.prop('disabled'),
+            "the 'Mark All As Read' button should not be disabled");
+
+        $markAllReadButton.click();
+
+        markAllReadDef.then(function () {
+            // immediately jump to end of the fadebout animation on messages
+            $inbox = discuss.$('.o_mail_discuss_item[data-thread-id="mailbox_inbox"]');
+            discuss.$('.o_thread_message').stop(false, true);
+            assert.strictEqual($inbox.find('.o_mail_sidebar_needaction').text().trim(), "0",
+                "the mailbox counter of 'Inbox' should have reset to 0");
+            assert.strictEqual(discuss.$('.o_thread_message').length, 0,
+                "there should no message in inbox anymore");
+
+            discuss.destroy();
+            done();
         });
     });
+});
 
 });
 });
