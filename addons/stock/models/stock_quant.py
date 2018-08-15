@@ -323,8 +323,8 @@ class StockQuant(models.Model):
 
     @api.model
     def delete_empty_quants(self):
-        self.search([('quantity', '=', 0),
-                     ('reserved_quantity', '=', 0)]).unlink()
+        self.sudo().search([('quantity', '=', 0),
+                            ('reserved_quantity', '=', 0)]).unlink()
 
 
 class QuantPackage(models.Model):
