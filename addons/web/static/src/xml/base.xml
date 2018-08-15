@@ -1573,7 +1573,7 @@
 </t>
 
 <t t-name="AttachDocument">
-    <button class="btn btn-secondary o_attachment_button">
+    <button t-attf-class="btn o_attachment_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
         <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>
         <span class="d-none">
             <t t-call="HiddenInputFile">
