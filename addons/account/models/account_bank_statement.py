@@ -730,7 +730,7 @@ class AccountBankStatementLine(models.Model):
             self.write({'move_name': move.name})
             payment and payment.write({'payment_reference': move.name})
         elif self.move_name:
-            raise UserError(_('Operation not allowed. Since your statement line already received a number, you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.'))
+            raise UserError(_('Operation not allowed. Since your statement line already received a number (%s), you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.') % (self.move_name))
 
         #create the res.partner.bank if needed
         if self.account_number and self.partner_id and not self.bank_account_id:
