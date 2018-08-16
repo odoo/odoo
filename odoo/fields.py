@@ -2659,7 +2659,9 @@ class Many2many(_RelationalMulti):
                 elif act[0] in (5, 6):
                     if recs and recs[-1] == record:
                         flush()
-                    links.difference_update(pair for pair in links if pair[0] == record.id)
+                    # must reify the RHS as Python can update the subject on
+                    # the fly leading to "RuntimeError: Set changed size during iteration"
+                    links.difference_update([pair for pair in links if pair[0] == record.id])
                     if act[0] == 6:
                         links.update((record.id, id2) for id2 in act[2])
 

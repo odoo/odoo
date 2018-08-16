@@ -100,6 +100,15 @@
         <button type="button" class="btn btn-secondary o_import_cancel">Cancel</button>
     </t>
 
+    <t t-name="ImportView.create_record_option">
+        <div class="mt4">
+            <label title="Creates new records if they can't be found (instead of failing to import). Note that the value in the column will be used as the new record's 'name', and assumes this is sufficient to create the record.">
+                <input type="checkbox"/>
+                Create if doesn't exist
+            </label>
+        </div>
+    </t>
+
     <t t-name="ImportView.preview">
         <thead>
             <tr t-if="headers" class="oe_import_grid-header">
