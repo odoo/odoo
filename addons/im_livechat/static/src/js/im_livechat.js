@@ -276,10 +276,10 @@ var LivechatButton = Widget.extend({
      * @param {Object} message
      * @return {$.Deferred}
      */
-    _sendMessage: function (message) {
+    _sendMessage: function (ev) {
         var self = this;
         return session
-            .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: message.content})
+            .rpc('/mail/chat_post', {uuid: this._livechat.getUUID(), message_content: ev.data.content})
             .then(function () {
                 self._chatWindow.scrollToBottom();
             });

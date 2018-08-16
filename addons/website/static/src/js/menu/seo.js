@@ -74,8 +74,8 @@ var SuggestionList = Widget.extend({
                 var suggestion = new Suggestion(self, {
                     keyword: keyword,
                 });
-                suggestion.on('selected', self, function (word, language) {
-                    self.trigger('selected', word, language);
+                suggestion.on('selected', self, function (ev) {
+                    self.trigger('selected', {word: ev.data.word, language: ev.data.language});
                 });
                 suggestion.appendTo(self.$el);
             }
@@ -106,8 +106,8 @@ var Keyword = Widget.extend({
             language: this.language,
             htmlPage: this.htmlPage,
         });
-        this.suggestionList.on('selected', this, function (word, language) {
-            this.trigger('selected', word, language);
+        this.suggestionList.on('selected', this, function (ev) {
+            this.trigger('selected', {word: ev.data.word, language: ev.data.language});
         });
         this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
 
@@ -183,8 +183,8 @@ var KeywordList = Widget.extend({
                self.trigger('list-not-full');
                self.trigger('content-updated', true);
             });
-            keyword.on('selected', self, function (word, language) {
-                self.trigger('selected', word, language);
+            keyword.on('selected', self, function (ev) {
+                self.trigger('selected', {word: ev.data.word, language: ev.data.word});
             });
             keyword.appendTo(self.$el);
         }

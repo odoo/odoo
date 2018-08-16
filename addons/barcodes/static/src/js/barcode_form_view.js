@@ -298,7 +298,7 @@ FormController.include({
      * @param {DOM Object} target
      * @returns {Deferred}
      */
-    _barcodeScanned: function (barcode, target) {
+    _barcodeScanned: function (ev) {
         var barcode = ev.data.barcode;
         var target = ev.data.target;
         var self = this;
