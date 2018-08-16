@@ -3397,11 +3397,10 @@ class BaseModel(object):
 
         # Delete the records' properties.
         with self.env.norecompute():
-            self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
-
             self.delete_workflow()
 
             self.check_access_rule('unlink')
+            self.env['ir.property'].search([('res_id', 'in', refs)]).sudo().unlink()
 
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})
