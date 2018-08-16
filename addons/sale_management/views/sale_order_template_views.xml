@@ -48,16 +48,10 @@
                                 <field name="display_type" invisible="1"/>
                                 <group attrs="{'invisible': [('display_type', '!=', False)]}">
                                     <group>
-                                        <field
-                                            name="product_id"
-                                            attrs="{
-                                                'required': [('display_type', '=', False)]
-                                            }"
-                                        />
+                                        <field name="product_id" attrs="{'required': [('display_type', '=', False)]}"/>
                                         <label for="product_uom_qty"/>
                                         <div>
-                                            <field
-                                                name="product_uom_qty" class="oe_inline"/>
+                                            <field name="product_uom_qty" class="oe_inline"/>
                                         </div>
                                         <field name="price_unit" invisible="1"/>
                                         <label for="discount" groups="sale.group_discount_per_so_line"/>
@@ -93,9 +87,7 @@
                                 <field
                                     name="product_uom_id"
                                     groups="uom.group_uom"
-                                    attrs="{
-                                        'required': [('display_type', '=', False)]
-                                    }"
+                                    attrs="{'required': [('display_type', '=', False)]}"
                                 />
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
                                 <field name="price_unit" invisible="1"/>

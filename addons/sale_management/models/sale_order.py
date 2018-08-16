@@ -225,12 +225,12 @@ class SaleOrderOption(models.Model):
     order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
     line_id = fields.Many2one('sale.order.line', on_delete="set null")
     name = fields.Text('Description', required=True)
-    product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])
+    product_id = fields.Many2one('product.product', 'Product', required=True, domain=[('sale_ok', '=', True)])
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
     quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
-    sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of suggested product.")
+    sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of optional products.")
 
     @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
