@@ -410,7 +410,7 @@ class TestCowViewSaving(common.TransactionCase):
 
     def test_cow_generic_view_with_already_existing_specific(self):
         """ Writing on a generic view should check if a website specific view already exists
-            (The flow of this test will happen when editing a generic view in the front end and changing more than one oe_structure)
+            (The flow of this test will happen when editing a generic view in the front end and changing more than one element)
         """
         # 1. Test with calling write directly
         View = self.env['ir.ui.view']
@@ -430,11 +430,11 @@ class TestCowViewSaving(common.TransactionCase):
         view_arch = '''<t name="Second View" t-name="website.second_view">
                           <t t-call="website.layout">
                             <div id="wrap">
-                              <div class="oe_structure"/>
+                              <div class="editable_part"/>
                               <div class="container">
                                   <h1>Second View</h1>
                               </div>
-                              <div class="oe_structure"/>
+                              <div class="editable_part"/>
                             </div>
                           </t>
                        </t>'''
@@ -445,12 +445,12 @@ class TestCowViewSaving(common.TransactionCase):
         })
 
         total_views = View.search_count([])
-        second_view.with_context(website_id=1).save('<div class="oe_structure" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.ui.view">First oe_structure</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
-        second_view.with_context(website_id=1).save('<div class="oe_structure" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.ui.view">Second oe_structure</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
+        second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.ui.view">First editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
+        second_view.with_context(website_id=1).save('<div class="editable_part" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.ui.view">Second editable_part</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
         self.assertEqual(total_views + 1, View.search_count([]), "Second save should have wrote on the view copied during first save")
 
-        total_specific_view = View.search_count([('arch_db', 'like', 'First oe_structure'), ('arch_db', 'like', 'Second oe_structure')])
-        self.assertEqual(total_specific_view, 1, "both oe_structure should have been replaced on a created specific view")
+        total_specific_view = View.search_count([('arch_db', 'like', 'First editable_part'), ('arch_db', 'like', 'Second editable_part')])
+        self.assertEqual(total_specific_view, 1, "both editable_part should have been replaced on a created specific view")
 
     def test_cow_complete_flow(self):
         View = self.env['ir.ui.view']

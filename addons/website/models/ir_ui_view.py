@@ -292,6 +292,12 @@ class View(models.Model):
     def _read_template_keys(self):
         return super(View, self)._read_template_keys() + ['website_id']
 
+    @api.model
+    def _save_oe_structure_hook(self):
+        res = super(View, self)._save_oe_structure_hook()
+        res['website_id'] = self.env['website'].get_current_website().id
+        return res
+
     @api.multi
     def save(self, value, xpath=None):
         self.ensure_one()
