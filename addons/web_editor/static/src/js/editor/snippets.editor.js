@@ -288,6 +288,7 @@ var SnippetEditor = Widget.extend({
             option.__order = i++;
             return option.attachTo($el);
         });
+        $ul.append($('<div/>', {class: 'dropdown-divider mt-2'}));
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
